@@ -1,0 +1,8 @@
+#!/bin/sh
+DT=$(echo -e '' | dmenu -p "File or directory: ") 
+IT=$(echo -e '' | dmenu -p "ip extension: " )
+
+tar cf - ${DT} | pv | netcat 192.168.178.${IT} 7000
+# tar cf - ${DT} | pv | netcat ${IT} 7000
+
+

@@ -1,0 +1,2 @@
+#!/bin/sh
+netcat -l -p 7000 | pv | tar x

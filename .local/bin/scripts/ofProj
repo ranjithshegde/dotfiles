@@ -1,0 +1,37 @@
+#!/bin/sh
+
+DR=$(echo -e '' | dmenu -p "Enter directory: ")
+AD=$(echo -e '' | dmenu -p "Addons, comma separated: ")
+PN=$(echo -e '' | dmenu -p "Project name: ")
+
+mkdir -p $PG_OF_PATH/${DR} && cd $PG_OF_PATH/${DR}
+
+sleep 1
+
+projectGenerator -a"${AD}" ${PN} && cd ${PN}
+
+sleep 1
+
+git init
+
+sleep 1
+
+ctags -R .
+
+sleep 2
+
+compiledb -n make
+
+sleep 2
+
+echo .cache >.gitignore
+
+echo .ccls >>.gitignore
+
+echo obj/ >>.gitignore
+
+echo tags >>.gitignore
+
+echo compile_commands.json >>.gitignore
+
+st -e nvim src/ofApp.h

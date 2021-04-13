@@ -1,0 +1,39 @@
+#!/bin/bash
+
+declare options=("ddg 
+aur
+aw
+gl
+hub
+lab
+yt")
+
+choice=$(echo -e "${options}"| dmenu -i -p 'Pick engine: ')
+
+case "$choice" in
+	ddg)URL='https://duckduckgo.com/?q='		
+		;;
+	aw) URL='https://wiki.archlinux.org/?search='
+		;;
+
+	gl) URL='https://www.google.com/search?hl=en&q='
+		;;
+
+	hub) URL='https://github.com/search?q='
+		;;
+
+	aur) URL='https://aur.archlinux.org/packages/?O=0&K='
+		;;
+
+	lab) URL='https://gitlab.com/search?search='
+		;;
+
+	yt) URL='https://www.youtube.com/results?search_query='
+		;;
+	esac
+
+QUERY=$(echo '' | dmenu -p "Search:")
+if [ -n "$QUERY" ]; then
+echo "open ${URL}${QUERY}" >> "$QUTE_FIFO" || qutebrowser "${URL}${QUERY}"
+fi
+

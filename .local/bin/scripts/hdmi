@@ -1,0 +1,16 @@
+#!/usr/bin/zsh
+
+C=$(xrandr --listmonitors)
+
+N=$(echo -e "${C}" | dmenu -i -p 'Pick a monitor: ')
+
+xrandr --output ${N} --auto
+
+# sleep 5
+
+# sudo -A modprobe snd_hda_codec_hdmi
+
+# systemctl --user restart pipewire.service
+
+# systemctl --user restart pipewire-pulse.service
+

@@ -1,0 +1,29 @@
+#!/bin/sh
+
+declare options=("Perf
+Bal
+Prac
+Min
+Ultra")
+
+choice=$(echo -e "${options[@]}" | dmenu -i -p 'Power profile: ')
+
+case "$choice" in
+	Ultra)
+		sudo -A /home/ranjith/.local/bin/scripts/superpower 
+		;;
+	Min)
+		sudo -A  /home/ranjith/.local/bin/scripts/useable 
+		;;
+	Prac)
+		sudo -A  /home/ranjith/.local/bin/scripts/sensible 
+		;;
+	Bal)
+		 sudo -A /home/ranjith/.local/bin/scripts/balance 
+		;;
+	Perf)
+		 sudo -A /home/ranjith/.local/bin/scripts/beast 
+		;;
+	
+esac
+

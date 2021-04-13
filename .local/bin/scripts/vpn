@@ -1,0 +1,13 @@
+#!/usr/bin/zsh
+
+# choice = $(echo -e "please enter a country" | dmenu -i)
+
+sudo systemctl start nordvpnd.socket
+
+sleep 1
+
+sudo systemctl start nordvpnd.service
+
+sleep 1
+# nordvpn connect ${choice}
+nordvpn connect Netherlands
