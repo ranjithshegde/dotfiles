@@ -83,9 +83,10 @@ return packer.startup(function(use)
 
     use {
         'salkin-mada/scnvim',
+        -- 'davidgranstrom/scnvim',
         -- branch = 'assets',
         branch = 'salkin-dev',
-        run = function() fn 'scnvim#install()' end,
+        run = function() fn['scnvim#install']() end,
         config = function()
             -- G.scnvim_floating_args_max_width = 60
             G.scnvim_floating_args_register = "s"

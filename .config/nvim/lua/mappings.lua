@@ -23,6 +23,9 @@ function M.general()
 	{'x', 'J', ':move \'>+1<CR>gv-gv'},
 	{'n', '<leader>qf', ':copen<CR>'},
 	{'n', '<leader>lf', ':lopen<CR>'},
+	-- visual cut for replase
+	{'v', '<leader>p', '"_dP'},
+	{'s', '<leader>p', '"_dP'},
 	-- Indent
 	{'v', '<', '<gv'},
         {'v', '>', '>gv'},
@@ -86,7 +89,7 @@ function M.edit_config_files()
 
         {'n', '<leader>aR', "<cmd>lua require('utils').Restart()<CR>"},
         {'n', '<leader>am', ':' .. open_func .. " ~/.config/nvim/lua/mappings.lua<CR>"},
-        {'n', '<leader>al', ':' .. open_func .. " ~/.config/nvim/lua/settings/init.lua<CR>"},
+        {'n', '<leader>al', ':' .. open_func .. " ~/.config/nvim/lua/settings.lua<CR>"},
         {'n', '<leader>ap', ':' .. open_func .. " ~/.config/nvim/lua/plugins.lua<CR>"},
         {'n', '<leader>as', ':' .. open_func .. " ~/.config/nvim/lua/statusline.lua<CR>"},
         -- {'n', '<leader>agl', ':' .. open_func .. " ~/.config/nvim/lua/galaxylineconf.lua<CR>"},

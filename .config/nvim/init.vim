@@ -1,6 +1,7 @@
 "**************Neovim basics -------------------------------------------------------------
 lua require ('plugins')
 lua require ('settings').settings()
+" lua require ('settings')
 lua require 'mappings'.general()
 lua require 'mappings'.autoComplete()
 lua require 'statusline'

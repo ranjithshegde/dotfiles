@@ -1,6 +1,7 @@
 local utils = {}
-G = vim.g
+
 Api = vim.api
+G = vim.g
 Var = Api.nvim_set_var
 Exec = Api.nvim_command
 Op = Api.nvim_get_option
