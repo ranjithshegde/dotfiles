@@ -140,7 +140,7 @@ function M.telescope()
 	-- Location list
         {'n', '<space>l', tele("loclist")},
 	-- live grep
-        {'n', '<space>g', tele("live_grep")},
+        {'n', '<space>G', tele("live_grep")},
 	-- Help tags
         {'n', '<space>ht', tele("help_tags")},
 	-- registers list
@@ -151,6 +151,14 @@ function M.telescope()
         {'n', '<space>c', tele("commands")},
 	-- commands history
         {'n', '<space>C', tele("command_history")},
+	-- git branches
+        {'n', '<space>gb', tele("git_branches")},
+	-- git commits
+        {'n', '<space>gc', tele("git_commits")},
+	-- git status
+        {'n', '<space>gs', tele("git_status")},
+	-- git files
+        {'n', '<space>gf', tele("git_files")},
 	-- colorschemes
         -- {'n', '<space>c', telF("colorscheme(No_preview())")},
 	-- Unicode
@@ -175,11 +183,13 @@ end
 function M.git()
     local opts = {nowait = true, noremap = true, silent = false}
     local maps = {
+    {'n', '<leader>gg', ':G<cr>'},
     {'n', '<leader>gc', ':Git commit %<cr>'},
     {'n', '<leader>ga', ':Git add %<cr>'},
     {'n', '<leader>gd', ':Git difftool<cr>'},
     {'n', '<leader>gb', ':Git blame<cr>'},
-    {'n', '<leader>gp', ':Git push<cr>'},
+    {'n', '<leader>gp', ':Gitsigns preview_hunk<cr>'},
+    {'n', '<leader>gP', ':Git push<cr>'},
     {'n', '<leader>gf', ':Git fetch<cr>'},
     {'n', '<leader>gl', ':Gclog<cr>'}
   }

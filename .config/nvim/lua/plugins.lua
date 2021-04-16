@@ -1,10 +1,9 @@
-local u = require('utils')
+require('utils')
 
 local fn = vim.fn
 local install_path = fn.stdpath('data') .. '/site/pack/packer/start/packer.nvim'
 if fn.empty(fn.glob(install_path)) > 0 then
-    -- Exec('!git clone https://github.com/wbthomason/packer.nvim ' .. install_path)
-  fn.system({'git', 'clone', 'https://github.com/wbthomason/packer.nvim', install_path})
+    fn.system({'git', 'clone', 'https://github.com/wbthomason/packer.nvim', install_path})
 end
 
 Exec 'autocmd BufWritePost,BufLeave plugins.lua PackerCompile'
@@ -15,17 +14,11 @@ return packer.startup(function(use)
 
     use 'wbthomason/packer.nvim'
 
-    use 'norcalli/snippets.nvim'
-
     use 'liuchengxu/vim-which-key'
 
     use 'vimwiki/vimwiki'
 
-    -- use 'tjdevries/cyclist.vim'
-
     -- use 'SirVer/ultisnips'
-
-    -- use 'vigoux/LanguageTool.nvim'
 
     use {'rhysd/vim-grammarous', opt = true}
 
@@ -35,20 +28,38 @@ return packer.startup(function(use)
 
     use {'jbyuki/instant.nvim', config = function() G.instant_username = 'Ranjith' end}
 
-    use {'lervag/vimtex', config = function() G.vimtex_viewer_method = 'zathura' end}
-
     use {'lewis6991/gitsigns.nvim', config = function() require('gitsigns').setup() end}
 
+    -- Markdown preview
+    -- use {'iamcco/markdown-preview.nvim',
+    -- run = function() fn['mkdp#util#install']() end
+    -- }
+
+    -- completion and snippets
     use {
         'ranjithshegde/completion-nvim',
-        requires = {'windwp/nvim-autopairs', 'hrsh7th/vim-vsnip', 'hrsh7th/vim-vsnip-integ'}
+        requires = {
+            'norcalli/snippets.nvim', 'windwp/nvim-autopairs', 'hrsh7th/vim-vsnip',
+            'hrsh7th/vim-vsnip-integ'
+        }
     }
 
+    -- Tim pope
     use {
         'tpope/vim-fugitive', 'tpope/vim-commentary', 'tpope/vim-unimpaired', 'tpope/vim-surround',
         'tpope/vim-repeat', 'tpope/vim-eunuch'
     }
 
+    -- vimTex
+    use {
+        'lervag/vimtex',
+        config = function()
+            G.vimtex_viewer_method = 'zathura'
+            -- G.vimtex_format_enabled = 1
+        end
+    }
+
+    -- StatusLine
     use {
         -- 'glepnir/galaxyline.nvim',
         -- branch = 'main',
@@ -56,21 +67,24 @@ return packer.startup(function(use)
         requires = {'kyazdani42/nvim-web-devicons', opt = true}
     }
 
+    -- Telescope
     use {
         'nvim-telescope/telescope.nvim',
         requires = {'nvim-lua/popup.nvim', 'nvim-lua/plenary.nvim'}
         -- 'nvim-telescope/telescope-symbols.nvim','nvim-telescope/telescope-project.nvim','razak17/telescope-packer.nvim'
     }
 
+    -- TreeSitter
     use {
         'nvim-treesitter/nvim-treesitter',
         requires = {
             'nvim-treesitter/playground', 'nvim-treesitter/nvim-treesitter-refactor',
-            'p00f/nvim-ts-rainbow', 'ranjithshegde/nvim-treesitter-textobjects'
+            'p00f/nvim-ts-rainbow', 'nvim-treesitter/nvim-treesitter-textobjects'
             -- 'JoosepAlviste/nvim-ts-context-commentstring'
         }
     }
 
+    -- Floating terminal
     use {
         'voldikss/vim-floaterm',
         config = function()
@@ -81,6 +95,7 @@ return packer.startup(function(use)
         end
     }
 
+    -- SuperCollider
     use {
         'salkin-mada/scnvim',
         -- 'davidgranstrom/scnvim',
@@ -99,6 +114,7 @@ return packer.startup(function(use)
         end
     }
 
+    -- Colorizer
     use {
         'norcalli/nvim-colorizer.lua',
         config = function()
@@ -114,6 +130,7 @@ return packer.startup(function(use)
         end
     }
 
+    -- Indents and chars
     use {
         'lukas-reineke/indent-blankline.nvim',
         branch = 'lua',

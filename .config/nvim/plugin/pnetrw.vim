@@ -37,3 +37,14 @@ endfunction
 noremap <silent> <leader>e :call ToggleNetrw()<CR>
 
 
+
+"************** Arduino ---------------------------------------------------------------------
+
+" au filetype arduino nnoremap <F5> :w <CR> :!arduino-cli compile --fqbn arduino:avr:uno % <CR>
+
+" au filetype arduino nnoremap <F7> :w <CR> :!arduino-cli compile --fqbn teensy:avr:teensy31 % <CR>
+
+" au filetype arduino nnoremap <F6> :w <CR> :!arduino-cli upload -p /dev/ttyACM0 --fqbn arduino:avr:uno % <CR>
+
+" au filetype arduino nnoremap <F8> :w <CR> :!arduino-cli upload -p /dev/ttyACM0 --fqbn teensy:avr:teensy31 % <CR>
+

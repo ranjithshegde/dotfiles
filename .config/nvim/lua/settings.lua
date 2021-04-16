@@ -19,10 +19,12 @@ end
 --                              Vim basics                            --
 ------------------------------------------------------------------------
 function settings.options()
-    Cmd 'colo nvcode'
+    -- Cmd 'colo nvcode'
+    Cmd 'colo zephyr'
     -- Cmd 'colo snazzy'
     Cmd 'set nohlsearch'
-    Cmd 'hi LineNr ctermbg=none guibg=none'
+    -- Cmd 'hi Normal guibg=none'
+    -- Cmd 'hi LineNr ctermbg=none guibg=none'
 
     u.opt('w', 'number', true)
     u.opt('w', 'relativenumber', true)
@@ -45,6 +47,13 @@ function settings.options()
     -- u.opt('o', 'guicursor', "n:blinkwait60-blinkon175-blinkoff175,i-ci-ve:ver25")
     o.shortmess = o.shortmess .. "c"
     G.termdebug_wide = 1
+
+    -- if Op("filetype") == "tex" then
+    --     u.opt('o', 'foldexpr', 'vimtex#fold#level(v:lnum)')
+    --     u.opt('o', 'foldtext', 'vimtex#fold#text()')
+    -- else
+    --     u.opt('o', 'foldexpr', 'nvim_treesitter#foldexpr()')
+    -- end
 end
 
 ------------------------------------------------------------------------
@@ -251,7 +260,6 @@ function settings.completion()
         -- {'BufEnter', '*.md', 'lua require"completion".on_attach()'},
         -- {'BufEnter', '*.scd', 'lua require"completion".on_attach()'}
     }, 'completion_attach')
-
 end
 
 ------------------------------------------------------------------------
@@ -259,8 +267,7 @@ end
 ------------------------------------------------------------------------
 
 function settings.lsp_settings()
-    -- Autopairs, edited
-    -- require('nvim-autopairs').setup()
+
     local npairs = require("nvim-autopairs")
     npairs.setup()
 
@@ -300,7 +307,7 @@ function settings.lsp_settings()
         if rc.document_formatting then
             u.create_augroup({
                 {
-                    'BufWritePre', '*.js,*.jsx,*.py,*.c,*.cpp,*.h,*.hpp,*.sh',
+                    'BufWritePre', '*.js,*.jsx,*.py,*.c,*.h,*.hpp,*.sh',
                     'lua vim.lsp.buf.formatting_sync(nil, 1000)'
                 }
             }, 'lsp_auto_format')

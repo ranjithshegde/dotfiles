@@ -1,7 +1,6 @@
 ------------------------------------------------------------------------
 --                              statusline                            --
 ------------------------------------------------------------------------
-
 require("el").reset_windows()
 
 local builtin = require("el.builtin")
@@ -81,6 +80,14 @@ local scnvim = function()
     end
 end
 
+local scContext = function()
+    if Op("filetype") == "supercollider" then
+    return Api.nvim_exec([[
+     echo nvim_treesitter#statusline(90)
+module->expression_statement->call->identifier]], false)
+    end
+end
+
 local git_branch = subscribe.buf_autocmd("el_git_branch", "BufEnter", function(window, buffer)
     local branch = extensions.git_branch(window, buffer)
     vim.cmd(string.format('hi MyGit guibg=%s guifg=%s', colors.bg, colors.yellow))
@@ -104,21 +111,23 @@ require("el").setup({
             separators.left,
 	    sections.highlight("MyDiff", git_changes),
 	    separators.left,
-            sections.split,
+            sections.split, 
 	    sections.highlight("Diag", lsp_statusline.segment),
-            sections.highlight("SuperC", scnvim),
-	    lsp_statusline.server_progress, sections.split,
+	    sections.split,
+            -- sections.highlight("Diag", scContext),
+	    sections.highlight("SuperC", scnvim),
+            lsp_statusline.server_progress,
+	    sections.split,
             sections.highlight("DevIconH", file_icon),
             sections.highlight("Filename", builtin.tail_file),
             sections.collapse_builtin({" ", builtin.modified_flag}),
 	    separators.right,
-	    -- builtin.quickfix,
-	    -- builtin.preview,
-	    builtin.line_with_width(3), ":",
-            builtin.column_with_width(2),
+            -- builtin.quickfix,
+            -- builtin.preview,
+            builtin.line_with_width(3), ":", builtin.column_with_width(2),
 	    separators.left,
-            sections.highlight("MyGit",builtin.percentage_through_file),
-	    sections.highlight("MyScroll", scroll),
+            sections.highlight("MyGit", builtin.percentage_through_file),
+            sections.highlight("MyScroll", scroll),
             sections.collapse_builtin({builtin.help_list, builtin.readonly_list})
         }
     end
@@ -129,7 +138,6 @@ require("el").setup({
 ------------------------------------------------------------------------
 
 local M = {}
--- local icons = require('nvim-web-devicons')
 -- Separators
 local left_separator = ''
 local right_separator = ''

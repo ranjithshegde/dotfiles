@@ -85,7 +85,7 @@ config.set('content.javascript.enabled', True, 'qute://*/*')
 #   - true
 #   - false
 #   - ask
-config.set('content.notifications', False, 'https://6.mediainformer.click')
+config.set('content.notifications.enabled', False, 'https://6.mediainformer.click')
 
 # Which unbound keys to forward to the webview in normal mode.
 # Type: String

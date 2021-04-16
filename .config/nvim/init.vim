@@ -1,7 +1,6 @@
 "**************Neovim basics -------------------------------------------------------------
 lua require ('plugins')
 lua require ('settings').settings()
-" lua require ('settings')
 lua require 'mappings'.general()
 lua require 'mappings'.autoComplete()
 lua require 'statusline'
@@ -20,6 +19,7 @@ nn <silent><leader>fm = gg=G<C-o>zz
 set dictionary+=$HOME/.local/share/dict/words
 
 "************************ Whichkey -------------------------------------------------
+
 " nnoremap <silent><Space> :silent WhichKey '<Space>'<CR>
 " nnoremap <silent><leader> :silent WhichKey '\'<CR>
 " nnoremap <silent> <buffer>, :silent WhichKey ','<CR>
@@ -29,6 +29,7 @@ set dictionary+=$HOME/.local/share/dict/words
 " nnoremap <silent>;  :silent WhichKey ';'<CR>
 
 "************************ Built in LSP-------------------------------------------------
+
 nnoremap <silent> K :call <SID>show_documentation()<CR>
 " Use keyords, hower functions and vim help-system as available
 function! s:show_documentation()
@@ -40,19 +41,6 @@ function! s:show_documentation()
     lua vim.lsp.buf.hover()
   endif
 endfunction
-
-"************** FileTypes & AutoCompiles-----------------------------------------------
-
-"Open new floating terminal
-nnoremap <leader>fr :FloatermNew ranger<CR>
-
-augroup mappings
-  autocmd FileType * lua require'mappings'.nvim_lsp()
-  autocmd FileType gitcommit lua require'mappings'.git_commit()
-  autocmd FileType cpp,c,arduino lua require'mappings'.arduino()
-" html browser
-  au filetype html nmap <F4> : exec 'silent !qutebrowser % &'
-augroup end 
 
 "**************	OpenFrameworks----------------------------------------------------------------
 
@@ -86,16 +74,19 @@ func! WordProcessor()
   packadd vim-grammarous
   " packadd LanguageTool.nvim
 endfu
-autocmd filetype txt,vimwiki,tex call WordProcessor()
 com! Gram call WordProcessor()
 
-"************** Arduino ---------------------------------------------------------------------
+"************** FileTypes & AutoCompiles-----------------------------------------------
 
-" au filetype arduino nnoremap <F5> :w <CR> :!arduino-cli compile --fqbn arduino:avr:uno % <CR>
+"Open new floating terminal
+nnoremap <leader>fr :FloatermNew ranger<CR>
 
-" au filetype arduino nnoremap <F7> :w <CR> :!arduino-cli compile --fqbn teensy:avr:teensy31 % <CR>
+augroup fileTypes
+  au FileType * lua require'mappings'.nvim_lsp()
+  au FileType gitcommit lua require'mappings'.git_commit()
+  au FileType cpp,c,arduino lua require'mappings'.arduino()
+  au filetype txt,vimwiki,tex call WordProcessor()
+  au filetype html nmap <F4> : exec 'silent !qutebrowser % &'
+augroup end 
 
-" au filetype arduino nnoremap <F6> :w <CR> :!arduino-cli upload -p /dev/ttyACM0 --fqbn arduino:avr:uno % <CR>
-
-" au filetype arduino nnoremap <F8> :w <CR> :!arduino-cli upload -p /dev/ttyACM0 --fqbn teensy:avr:teensy31 % <CR>
 
