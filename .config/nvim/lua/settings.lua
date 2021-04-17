@@ -248,7 +248,6 @@ function settings.completion()
     G.completion_auto_change_source = 0
 
     if Op("filetype") == "supercollider" then
-        -- Var('completion_enable_snippet', "UltiSnips")
         -- G.completion_enable_snippet = 'UltiSnips'
         G.completion_enable_snippet = 'snippets.nvim'
     else
@@ -257,8 +256,6 @@ function settings.completion()
     u.create_augroup({
         {'BufEnter', '*', 'lua require"completion".on_attach()'},
         {'BufEnter', '*.txt,*.md,*.scd', ':let g:completion_auto_change_source=1'}
-        -- {'BufEnter', '*.md', 'lua require"completion".on_attach()'},
-        -- {'BufEnter', '*.scd', 'lua require"completion".on_attach()'}
     }, 'completion_attach')
 end
 
@@ -336,6 +333,16 @@ function settings.lsp_settings()
         local rc = client.resolved_capabilities
         rc.document_formatting = false
     end
+
+    -- local myBorder = {"╔", "═", "╗", "║", "╝", "═", "╚", "║"}
+
+    vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, {
+        -- border = "{ '╔', '═' ,'╗', '║','╝', '═', '╚', '║' }"
+        border = "double"
+    })
+
+    vim.lsp.handlers["textDocument/signatureHelp"] =
+        vim.lsp.with(vim.lsp.handlers.signature_help, {border = "double"})
 end
 
 ------------------------------------------------------------------------

@@ -1,13 +1,32 @@
 require('utils')
-
+-- Defs
 local fn = vim.fn
+local camel = fn.stdpath('data') .. '/site/pack/plugins/opt/CamelCaseMotion.nvim'
+local zypher = fn.stdpath('data') .. '/site/pack/plugins/start/zypher-nvim'
 local install_path = fn.stdpath('data') .. '/site/pack/packer/start/packer.nvim'
+
+--------------------------------------------------------------------------------------------------------
+--				Custom Plugins 							      --
+--------------------------------------------------------------------------------------------------------
+-- CamelCaseMotion
+if fn.empty(fn.glob(camel)) > 0 then
+    fn.system({'git', 'clone', 'https://github.com/bkad/CamelCaseMotion.git', camel})
+end
+
+-- Colorscheme zypher
+if fn.empty(fn.glob(zypher)) > 0 then
+    fn.system({'git', 'clone', 'https://github.com/glepnir/zephyr-nvim.git', zypher})
+end
+
 if fn.empty(fn.glob(install_path)) > 0 then
     fn.system({'git', 'clone', 'https://github.com/wbthomason/packer.nvim', install_path})
 end
 
 Exec 'autocmd BufWritePost,BufLeave plugins.lua PackerCompile'
 
+--------------------------------------------------------------------------------------------------------
+--				Main Plugins 							      --
+--------------------------------------------------------------------------------------------------------
 local packer = require('packer')
 
 return packer.startup(function(use)
@@ -137,7 +156,8 @@ return packer.startup(function(use)
         config = function()
             G.indent_blankline_buftype_exclude = {'terminal'}
             G.indent_blankline_filetype_exclude = {'packer', 'netrw'}
-            G.indent_blankline_char = '▏'
+            -- G.indent_blankline_char = '▏'
+            G.indent_blankline_char =  '┊'
             G.indent_blankline_use_treesitter = true
             G.indent_blankline_show_trailing_blankline_indent = false
             G.indent_blankline_show_current_context = true
@@ -152,3 +172,5 @@ return packer.startup(function(use)
     }
 
 end)
+
+

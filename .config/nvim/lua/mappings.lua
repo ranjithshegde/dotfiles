@@ -12,7 +12,7 @@ function M.general()
     local maps = {
         -- Window movement
 	{'i', '<C-J>', '<C-W><C-J>'},
-	{'i', '<C-K>', '<C-W><C-K>'},
+	-- {'i', '<C-K>', '<C-W><C-K>'},
         {'i', '<C-L>', '<C-W><C-L>'},
 	{'i', '<C-H>', '<C-W><C-H>'},
 	{'n', '<C-J>', '<C-W><C-J>'},
@@ -56,6 +56,7 @@ end
 
 function M.nvim_lsp()
     local opts = {noremap = true, silent = true}
+    -- local pop_opts = {popup_opts = {border = "double"}}
 
     local bufmaps = {
         {'n', ',D', '<cmd>lua vim.lsp.buf.declaration()<CR>'},
@@ -64,9 +65,9 @@ function M.nvim_lsp()
         {'n', ',t', '<cmd>lua vim.lsp.buf.type_definition()<CR>'},
         {"n", ',s', "<cmd>lua vim.lsp.buf.signature_help()<CR>"},
         {'n', ',pd', "<cmd>lua require'utils'.peek_definition()<CR>"},
-        {'n', '[d', '<cmd>lua vim.lsp.diagnostic.goto_prev()<CR>'},
-        {'n', ']d', '<cmd>lua vim.lsp.diagnostic.goto_next()<CR>'},
-        {'n', ',ld', '<cmd>lua vim.lsp.diagnostic.show_line_diagnostics()<CR>'},
+        {'n', '[d', '<cmd>lua vim.lsp.diagnostic.goto_prev({popup_opts = {border = "double"}})<CR>'},
+        {'n', ']d', '<cmd>lua vim.lsp.diagnostic.goto_next({popup_opts = {border = "double"}})<CR>'},
+        {'n', ',ld', '<cmd>lua vim.lsp.diagnostic.show_line_diagnostics({popup_opts = {border = "double"}})<CR>'},
         {'n', ',rn', '<cmd>lua vim.lsp.buf.rename()<CR>'},
         {"n", ",ac", "<cmd>lua vim.lsp.buf.code_action()<CR>"},
         {"n", ",ff", "<cmd>lua vim.lsp.buf.formatting()<CR>"},

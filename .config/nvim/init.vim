@@ -28,13 +28,37 @@ set dictionary+=$HOME/.local/share/dict/words
 " vnoremap <silent> , :silent WhichKeyVisual ','<CR>
 " nnoremap <silent>;  :silent WhichKey ';'<CR>
 
+"************************ CamelCase -------------------------------------------------
+function! CamelCase()
+  packadd CamelCaseMotion
+  map <silent> w <Plug>CamelCaseMotion_w
+  map <silent> b <Plug>CamelCaseMotion_b
+  map <silent> e <Plug>CamelCaseMotion_e
+  map <silent> ge <Plug>CamelCaseMotion_ge
+  sunmap w
+  sunmap b
+  sunmap e
+  sunmap ge
+
+  omap <silent> iw <Plug>CamelCaseMotion_iw
+  xmap <silent> iw <Plug>CamelCaseMotion_iw
+  omap <silent> ib <Plug>CamelCaseMotion_ib
+  xmap <silent> ib <Plug>CamelCaseMotion_ib
+  omap <silent> ie <Plug>CamelCaseMotion_ie
+  xmap <silent> ie <Plug>CamelCaseMotion_ie
+
+  imap <silent> <S-Left> <C-o><Plug>CamelCaseMotion_b
+  imap <silent> <S-Right> <C-o><Plug>CamelCaseMotion_w
+endfunction
+com! Cam call CamelCase()
+
 "************************ Built in LSP-------------------------------------------------
 
 nnoremap <silent> K :call <SID>show_documentation()<CR>
 " Use keyords, hower functions and vim help-system as available
 function! s:show_documentation()
-  if (&ft=='supercollider')
-    execute &keywordprg . " " . expand('<cword>')
+  if (&ft==#'supercollider')
+    execute &keywordprg . ' ' . expand('<cword>')
   elseif (index(['vim','help'], &filetype) >= 0)
     execute 'h '.expand('<cword>')
   else
