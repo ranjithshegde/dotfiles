@@ -270,17 +270,6 @@ function M.scnvim()
 		{'n', '<leader>es', ':tabnew ~/.config/SuperCollider/startup.scd<cr>'},
 	}
 	u.bufmaps(bufmaps, opts)
-
-	local optS = { noremap = true, silent = true }
-	local maps = {
-		{'i', '<C-l>', '<cmd>lua return require"snippets".expand_or_advance(1)<CR><ESC>gH'},
-		{'i', '<C-h>', '<cmd>lua return require"snippets".advance_snippet(-1)<CR><ESC>gH'},
-		{'n', '<C-l>', '<cmd>lua return require"snippets".expand_or_advance(1)<CR>gH'},
-		{'n', '<C-h>', '<cmd>lua return require"snippets".advance_snippet(-1)<CR>gH'},
-		{'s', '<C-l>', '<cmd>lua return require"snippets".expand_or_advance(1)<CR><ESC>gH'},
-		{'s', '<C-h>', '<cmd>lua return require"snippets".advance_snippet(-1)<CR><ESC>gH'},
-	}
-	u.maps(maps, optS)
 end
 
 -- ******************************** cpp -openFrameworks ---------------------------------------

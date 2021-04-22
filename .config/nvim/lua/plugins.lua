@@ -2,7 +2,7 @@ require('utils')
 -- Defs
 local fn = vim.fn
 local camel = fn.stdpath('data') .. '/site/pack/plugins/opt/CamelCaseMotion.nvim'
-local zypher = fn.stdpath('data') .. '/site/pack/plugins/start/zypher-nvim'
+local zephyr = fn.stdpath('data') .. '/site/pack/plugins/start/zephyr-nvim'
 local install_path = fn.stdpath('data') .. '/site/pack/packer/start/packer.nvim'
 
 --------------------------------------------------------------------------------------------------------
@@ -14,8 +14,8 @@ if fn.empty(fn.glob(camel)) > 0 then
 end
 
 -- Colorscheme zypher
-if fn.empty(fn.glob(zypher)) > 0 then
-    fn.system({'git', 'clone', 'https://github.com/glepnir/zephyr-nvim.git', zypher})
+if fn.empty(fn.glob(zephyr)) > 0 then
+    fn.system({'git', 'clone', 'https://github.com/glepnir/zephyr-nvim.git', zephyr})
 end
 
 if fn.empty(fn.glob(install_path)) > 0 then
@@ -37,7 +37,7 @@ return packer.startup(function(use)
 
     use 'vimwiki/vimwiki'
 
-    -- use 'SirVer/ultisnips'
+    use 'SirVer/ultisnips'
 
     use {'rhysd/vim-grammarous', opt = true}
 
@@ -58,8 +58,8 @@ return packer.startup(function(use)
     use {
         'ranjithshegde/completion-nvim',
         requires = {
-            'norcalli/snippets.nvim', 'windwp/nvim-autopairs', 'hrsh7th/vim-vsnip',
-            'hrsh7th/vim-vsnip-integ'
+            'windwp/nvim-autopairs', 'hrsh7th/vim-vsnip', 'hrsh7th/vim-vsnip-integ'
+            -- 'norcalli/snippets.nvim',
         }
     }
 
@@ -98,7 +98,8 @@ return packer.startup(function(use)
         'nvim-treesitter/nvim-treesitter',
         requires = {
             'nvim-treesitter/playground', 'nvim-treesitter/nvim-treesitter-refactor',
-            'p00f/nvim-ts-rainbow', 'nvim-treesitter/nvim-treesitter-textobjects'
+            'p00f/nvim-ts-rainbow', 'nvim-treesitter/nvim-treesitter-textobjects',
+            -- 'theHamsta/nvim-treesitter-pairs'
             -- 'JoosepAlviste/nvim-ts-context-commentstring'
         }
     }
@@ -125,8 +126,7 @@ return packer.startup(function(use)
             -- G.scnvim_floating_args_max_width = 60
             G.scnvim_floating_args_register = "s"
             G.scnvim_floating_args_show_full = true
-            G.scnvim_snippet_format = 'snippets.nvim'
-            -- G.scnvim_snippet_format = 'UltiSnips'
+            -- G.scnvim_snippet_format = 'snippets.nvim'
             -- G.scnvim_scdoc = 1
             Cmd 'autocmd FileType supercollider lua require "mappings".scnvim()'
             Cmd 'autocmd FileType supercollider setlocal wrap'
@@ -157,7 +157,7 @@ return packer.startup(function(use)
             G.indent_blankline_buftype_exclude = {'terminal'}
             G.indent_blankline_filetype_exclude = {'packer', 'netrw'}
             -- G.indent_blankline_char = '▏'
-            G.indent_blankline_char =  '┊'
+            G.indent_blankline_char = '┊'
             G.indent_blankline_use_treesitter = true
             G.indent_blankline_show_trailing_blankline_indent = false
             G.indent_blankline_show_current_context = true
@@ -172,5 +172,4 @@ return packer.startup(function(use)
     }
 
 end)
-
 

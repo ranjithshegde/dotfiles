@@ -49,7 +49,7 @@ config.set('content.headers.user_agent',
 #   - adblock: Use Brave's ABP-style adblocker
 #   - hosts: Use hosts blocking
 #   - both: Use both hosts blocking and Brave's ABP-style adblocker
-c.content.blocking.method = 'both'
+c.content.blocking.method = 'auto'
 
 # Load images automatically in web pages.
 # Type: Bool

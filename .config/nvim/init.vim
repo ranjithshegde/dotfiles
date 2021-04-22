@@ -4,6 +4,7 @@ lua require ('settings').settings()
 lua require 'mappings'.general()
 lua require 'mappings'.autoComplete()
 lua require 'statusline'
+lua require 'scnvim'
 
 function! TabLine()
   return luaeval("require'statusline'.init()")
@@ -70,10 +71,10 @@ endfunction
 
 augroup c
   autocmd!
-  autocmd FileType cpp,hpp,glsl call MakeRun()
+  autocmd FileType c,cpp,hpp,glsl call Clang()
 augroup end
 
-function! MakeRun()
+function! Clang()
   packadd vim-ccls
   nnoremap <buffer> <leader>rt :!ctags -R .<CR>
   let g:ccls_levels = 5

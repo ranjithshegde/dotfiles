@@ -23,3 +23,4 @@ https://castel.dev/post/lecture-notes-1/ How I'm able to take notes in mathemati
 https://gitlab.com/famiu/dot-nvim/-/tree/master/lua/config/lsp lua/config/lsp · master · Famiu Haque / dot-nvim · GitLab
 https://forum.pdpatchrepo.info/topic/13134/things-i-wish-i-had-known-when-i-started-pd/27 "Things I wish I had known when I started Pd" | PURE DATA forum~
 https://github.com/noib3/dotfil3s/tree/master/defaults/neovim/after/ftplugin/tex dotfil3s/defaults/neovim/after/ftplugin/tex at master · noib3/dotfil3s
+https://github.com/fsouza/dotfiles/blob/main/nvim/lua/fsouza/lsp/efm.lua dotfiles/efm.lua at main · fsouza/dotfiles

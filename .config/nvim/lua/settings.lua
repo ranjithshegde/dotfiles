@@ -6,13 +6,12 @@ function settings.settings()
     settings.vimwiki()
     settings.options()
     settings.treesitter()
-    -- settings.ultisnips()
+    settings.ultisnips()
     settings.lsp_settings()
     settings.langServers()
     settings.lsp_lintFormat()
     settings.telescope()
     settings.completion()
-    settings.snippets()
 end
 
 ------------------------------------------------------------------------
@@ -23,7 +22,7 @@ function settings.options()
     Cmd 'colo zephyr'
     -- Cmd 'colo snazzy'
     Cmd 'set nohlsearch'
-    -- Cmd 'hi Normal guibg=none'
+    Cmd 'hi Normal guibg=none'
     -- Cmd 'hi LineNr ctermbg=none guibg=none'
 
     u.opt('w', 'number', true)
@@ -70,7 +69,7 @@ function settings.vimwiki()
     l.auto_diary_index = 1
     l.auto_generate_tags = 1
     l.autowriteall = 1
-    Cmd("let g:vimwiki_ext2syntax = {'.md':'markdown', '.markdown':'markdown','.mdown':'markdown'}")
+    -- Cmd("let g:vimwiki_ext2syntax = {'.md':'markdown', '.markdown':'markdown','.mdown':'markdown'}")
     G.vimwiki_filetypes = {'markdown'}
     G.vimwiki_list = {l}
     G.vimwiki_markdown_link_ext = 1
@@ -80,24 +79,12 @@ end
 --                              Snippets                              --
 ------------------------------------------------------------------------
 
--- function settings.ultisnips()
---     local snippet_directories = {"UltiSnips", "scnvim-data"}
---     Var('UltiSnipsExpandTrigger', "<tab>")
---     Var('UltiSnipsJumpForwardTrigger', "<tab>")
---     Var('UltiSnipsJumpBackwardTrigger', "<c-tab>")
---     Var('UltiSnipsSnippetDirectories', snippet_directories)
--- end
-
-function settings.snippets()
-    -- require'snippets'.set_ux(require 'snippets.inserters.text_markers')
-    package.path = package.path ..
-                       ";/home/ranjith/.local/share/nvim/site/pack/packer/start/scnvim/scnvim-data/scnvim_snippets.lua"
-    require'snippets'.snippets = {supercollider = require 'scnvim_snippets'}
-    -- local snippets = require'snippets'.snippets
-    -- local scnvim_snippets = require'scnvim.utils'.get_snippets()
-    -- if scnvim_snippets then
-    --     snippets.supercollider = scnvim_snippets
-    -- end
+function settings.ultisnips()
+    local snippet_directories = {"UltiSnips", "scnvim-data"}
+    Var('UltiSnipsExpandTrigger', "<tab>")
+    Var('UltiSnipsJumpForwardTrigger', "<tab>")
+    Var('UltiSnipsJumpBackwardTrigger', "<c-tab>")
+    Var('UltiSnipsSnippetDirectories', snippet_directories)
 end
 
 ------------------------------------------------------------------------
@@ -109,6 +96,7 @@ function settings.treesitter()
     require'nvim-treesitter.configs'.setup {
         highlight = {enable = true, use_languagetree = true},
         indent = {enable = true},
+        -- autopairs = {enable = true},
         incremental_selection = {
             enable = true,
             keymaps = {
@@ -240,16 +228,15 @@ function settings.completion()
             {mode = '<c-p>'}, {mode = '<c-n>'}, {mode = 'thes'}
         },
         default = {
-            {complete_items = {'UltiSnips', 'lsp', 'snippet', 'snippets.nvim', 'path'}},
-            {mode = '<c-p>'}, {mode = '<c-n>'}, {mode = 'thes'}
+            {complete_items = {'UltiSnips', 'lsp', 'snippet', 'path'}}, {mode = '<c-p>'},
+            {mode = '<c-n>'}, {mode = 'thes'}
         }
     }
     G.completion_enable_auto_signature = 1
     G.completion_auto_change_source = 0
 
     if Op("filetype") == "supercollider" then
-        -- G.completion_enable_snippet = 'UltiSnips'
-        G.completion_enable_snippet = 'snippets.nvim'
+        G.completion_enable_snippet = 'UltiSnips'
     else
         G.completion_enable_snippet = 'vim-vsnip'
     end
@@ -265,11 +252,20 @@ end
 
 function settings.lsp_settings()
 
-    local npairs = require("nvim-autopairs")
+    -- autopairs
+    local npairs = require('nvim-autopairs')
     npairs.setup()
+    -- npairs.setup({check_ts = true})
+    -- local ts_conds = require('nvim-autopairs.ts-conds')
 
-    OnEnter = function() return require("nvim-autopairs").check_break_line_char() end
-    vim.api.nvim_set_keymap("i", "<CR>", "v:lua.OnEnter()", {expr = true})
+    local Rule = require('nvim-autopairs.rule')
+    npairs.add_rules({
+        Rule("|", "|", "supercollider")
+        -- :with_pair(ts_conds)
+    })
+
+    -- OnEnter = function() return require("nvim-autopairs").check_break_line_char() end
+    -- vim.api.nvim_set_keymap("i", "<CR>", "v:lua.OnEnter()", {expr = true})
 
     require('icons').init()
     Lsp = require 'lspconfig'
@@ -431,27 +427,28 @@ function settings.lsp_lintFormat()
                         "(.*)\\s+on\\s+line\\s+(\\d+)\\s+at\\s+column\\s+(\\d+)\\s*$",
                         {line = 2, column = 3, message = 1}
                     }
-                }
-            },
-            languagetool = {
-                command = "languagetool",
-                debounce = 200,
-                args = {"-"},
-                offsetLine = 0,
-                offsetColumn = 0,
-                sourceName = "languagetool",
-                formatLines = 2,
-                formatPattern = {
-                    "^\\d+?\\.\\)\\s+Line\\s+(\\d+),\\s+column\\s+(\\d+),\\s+([^\\n]+)\nMessage:\\s+(.*)$",
-                    {line = 1, column = 2, message = {4, 3}}
+                },
+                languagetool = {
+                    command = "languagetool",
+                    debounce = 200,
+                    args = {"%file"},
+                    -- args = {"-"},
+                    offsetLine = 0,
+                    offsetColumn = 0,
+                    sourceName = "languagetool",
+                    formatLines = 2,
+                    formatPattern = {
+                        "^\\d+?\\.\\)\\s+Line\\s+(\\d+),\\s+column\\s+(\\d+),\\s+([^\\n]+)\nMessage:\\s+(.*)$",
+                        {line = 1, column = 2, message = {4, 3}}
+                    }
                 }
             },
             formatters = {},
             filetypes = {
-                markdown = "write-good",
-                vimwiki = "write-good",
-                tex = "write-good",
-                text = "languagetool"
+                markdown = {"langugetool", "write-good"},
+                vimwiki = {"write-good", "languagetool"},
+                tex = {"langugetool", "write-good"},
+                text = {"languagetool", "write-good"}
             },
             formatFiletypes = {}
         }
@@ -467,13 +464,6 @@ function settings.lsp_lintFormat()
         lintStdin = true,
         lintFormats = {"%f:%l %m", "%f:%l:%c %m", "%f: %l: %m"}
     }
-    -- local writegood = {
-    -- lintCommand = "write-good --text=%text",
-    -- lintFormats = {"%f:%l %m", "%f:%l:%c %m", "%f: %l: %m"}
-    -- formatPattern = {
-    --     "(.*)\\s+on\\s+line\\s+(\\d+)\\s+at\\s+column\\s+(\\d+)\\s*$",
-    -- }
-    -- }
 
     local shfmt = {formatCommand = "shfmt -ci -s -bn", formatStdin = true}
 

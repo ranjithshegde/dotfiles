@@ -10,7 +10,9 @@ local subscribe = require("el.subscribe")
 local lsp_statusline = require("el.plugins.lsp_status")
 local icons = require('icons')
 local colors = Colors
+local separators = {left = "  ", right = "  "}
 
+--*********************************** File Icon ---------------------------------
 local file_icon = subscribe.buf_autocmd("el_file_icon", "BufRead", function(_, bufnr)
     local icon = extensions.file_icon(_, bufnr)
     if icon then
@@ -19,6 +21,7 @@ local file_icon = subscribe.buf_autocmd("el_file_icon", "BufRead", function(_, b
     return ""
 end)
 
+--*********************************** Vim Mode ---------------------------------
 local mode = function()
     local alias = {
         n = '  ☉ ',
@@ -47,6 +50,7 @@ local mode = function()
     return current_mode
 end
 
+--*********************************** Scroll position ---------------------------------
 local scroll = function()
     local current_line = vim.fn.line('.')
     local total_lines = vim.fn.line('$')
@@ -72,6 +76,7 @@ local scroll = function()
     return chars[index]
 end
 
+--*********************************** SuperCollider ---------------------------------
 local scnvim = function()
     local scstatus = "📡" .. Fn("scnvim#statusline#server_status", {})
     vim.cmd(string.format('hi SuperC guibg=%s guifg=%s', colors.blue, colors.bg))
@@ -80,6 +85,7 @@ local scnvim = function()
     end
 end
 
+--*********************************** TreeSitter ---------------------------------
 local scContext = function()
     if Op("filetype") == "supercollider" then
     return Api.nvim_exec([[
@@ -88,6 +94,7 @@ module->expression_statement->call->identifier]], false)
     end
 end
 
+--*********************************** Git branch ---------------------------------
 local git_branch = subscribe.buf_autocmd("el_git_branch", "BufEnter", function(window, buffer)
     local branch = extensions.git_branch(window, buffer)
     vim.cmd(string.format('hi MyGit guibg=%s guifg=%s', colors.bg, colors.yellow))
@@ -96,13 +103,13 @@ local git_branch = subscribe.buf_autocmd("el_git_branch", "BufEnter", function(w
     end
 end)
 
+--*********************************** GitSigns changes ---------------------------------
 local git_changes = subscribe.buf_autocmd("el_git_changes", "BufWritePost", function(window, buffer)
     vim.cmd(string.format('hi MyDiff guibg=%s guifg=%s', colors.bg, colors.blue))
     return extensions.git_changes(window, buffer)
 end)
 
-local separators = {left = "  ", right = "  "}
-
+--*********************************** Status config ---------------------------------
 require("el").setup({
     generator = function(_, _)
         return {
@@ -144,11 +151,13 @@ local right_separator = ''
 -- Blank Between Components
 local space = ' '
 
+--*********************************** Working Dir ---------------------------------
 local workDir = function(dir)
     local home = vim.call("expand", "%")
     return home
 end
 
+--*********************************** File label ---------------------------------
 local getTabLabel = function(n)
     local current_win = Api.nvim_tabpage_get_win(n)
     local current_buf = Api.nvim_win_get_buf(current_win)
@@ -168,6 +177,7 @@ local getTabLabel = function(n)
     return file_name
 end
 
+--*********************************** Highlight groups ---------------------------------
 local set_colours = function()
     -- SET TABLINE COLOURS
     Exec('hi TabLineSel gui=Bold guibg=#8ec07c guifg=#292929')
@@ -177,6 +187,7 @@ local set_colours = function()
     Exec('hi TabLineFill guibg=None gui=None')
 end
 
+--*********************************** Tabline module ---------------------------------
 function M.init()
     set_colours()
     local tabline = ''
