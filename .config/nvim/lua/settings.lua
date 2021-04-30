@@ -153,7 +153,6 @@ function settings.treesitter()
             },
             swap = {
                 enable = true,
-                -- disable = {"cpp"},
                 swap_next = {
                     [";ss"] = "@statement.outer",
                     [";sp"] = "@parameter.inner",
@@ -187,21 +186,7 @@ function settings.treesitter()
             lint_events = {"BufWrite", "CursorHold"}
         },
         rainbow = {enable = true},
-        extended_mode = true,
-        refactor = {
-            highlight_definitions = {enable = false},
-            highlight_current_scope = {enable = false},
-            navigation = {
-                enable = true,
-                keymaps = {
-                    goto_definition = ";d",
-                    list_definitions = ";D",
-                    list_definitions_toc = ";O",
-                    goto_next_usage = ";*",
-                    goto_previous_usage = ";#"
-                }
-            }
-        }
+        extended_mode = true
     }
 end
 
@@ -246,13 +231,10 @@ function settings.lsp_settings()
     -- autopairs
     local npairs = require('nvim-autopairs')
     npairs.setup()
-    -- npairs.setup({check_ts = true})
-    -- local ts_conds = require('nvim-autopairs.ts-conds')
 
     local Rule = require('nvim-autopairs.rule')
     npairs.add_rules({
         Rule("|", "|", "supercollider")
-        -- :with_pair(ts_conds)
     })
 
     -- OnEnter = function() return require("nvim-autopairs").check_break_line_char() end
@@ -278,7 +260,6 @@ function settings.lsp_settings()
     All_attach = function(client, bufnr)
         require'completion'.on_attach(client)
         Lsp_status.on_attach(client)
-        -- require('folding').on_attach()
         local rc = client.resolved_capabilities
 
         if rc.document_highlight then

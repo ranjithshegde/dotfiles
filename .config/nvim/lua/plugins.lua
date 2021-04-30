@@ -39,20 +39,20 @@ return packer.startup(function(use)
 
     -- use "fhill2/floating.nvim"
 
-    use {
-        "folke/which-key.nvim",
-        config = function() require("which-key").setup {} end
-    }
+    use {'m-pilia/vim-ccls', opt = true}
 
     use {'rhysd/vim-grammarous', opt = true}
 
-    use {'m-pilia/vim-ccls', opt = true}
-
     use {'neovim/nvim-lspconfig', requires = {'nvim-lua/lsp-status.nvim'}}
+
+    use {"folke/which-key.nvim", config = function() require("which-key").setup {} end}
 
     use {'jbyuki/instant.nvim', config = function() G.instant_username = 'Ranjith' end}
 
     use {'lewis6991/gitsigns.nvim', config = function() require('gitsigns').setup() end}
+
+    -- StatusLine
+    use {'tjdevries/express_line.nvim', requires = {'kyazdani42/nvim-web-devicons', opt = true}}
 
     -- Markdown preview
     -- use {'iamcco/markdown-preview.nvim',
@@ -83,14 +83,6 @@ return packer.startup(function(use)
         end
     }
 
-    -- StatusLine
-    use {
-        -- 'glepnir/galaxyline.nvim',
-        -- branch = 'main',
-        'tjdevries/express_line.nvim',
-        requires = {'kyazdani42/nvim-web-devicons', opt = true}
-    }
-
     -- Telescope
     use {
         'nvim-telescope/telescope.nvim',
@@ -102,8 +94,9 @@ return packer.startup(function(use)
     use {
         'nvim-treesitter/nvim-treesitter',
         requires = {
-            'nvim-treesitter/playground', 'nvim-treesitter/nvim-treesitter-refactor',
-            'p00f/nvim-ts-rainbow', 'nvim-treesitter/nvim-treesitter-textobjects'
+            'nvim-treesitter/playground', 'p00f/nvim-ts-rainbow',
+            'nvim-treesitter/nvim-treesitter-textobjects'
+            -- 'nvim-treesitter/nvim-treesitter-refactor',
             -- 'theHamsta/nvim-treesitter-pairs'
             -- 'JoosepAlviste/nvim-ts-context-commentstring'
         }
@@ -128,7 +121,6 @@ return packer.startup(function(use)
         branch = 'salkin-dev',
         run = function() fn['scnvim#install']() end,
         config = function()
-            -- G.scnvim_floating_args_max_width = 60
             G.scnvim_floating_args_register = "s"
             G.scnvim_floating_args_show_full = true
             -- G.scnvim_snippet_format = 'snippets.nvim'
