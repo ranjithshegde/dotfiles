@@ -24,6 +24,8 @@ compiledb -n make
 
 sleep 2
 
+clang-format -style=webkit -dump-config >.clang-format
+
 echo .cache >.gitignore
 
 echo .ccls >>.gitignore

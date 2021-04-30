@@ -1,7 +1,7 @@
 require('utils')
 -- Defs
 local fn = vim.fn
-local camel = fn.stdpath('data') .. '/site/pack/plugins/opt/CamelCaseMotion.nvim'
+local camel = fn.stdpath('data') .. '/site/pack/plugins/opt/CamelCaseMotion'
 local zephyr = fn.stdpath('data') .. '/site/pack/plugins/start/zephyr-nvim'
 local install_path = fn.stdpath('data') .. '/site/pack/packer/start/packer.nvim'
 
@@ -33,11 +33,16 @@ return packer.startup(function(use)
 
     use 'wbthomason/packer.nvim'
 
-    use 'liuchengxu/vim-which-key'
-
     use 'vimwiki/vimwiki'
 
     use 'SirVer/ultisnips'
+
+    -- use "fhill2/floating.nvim"
+
+    use {
+        "folke/which-key.nvim",
+        config = function() require("which-key").setup {} end
+    }
 
     use {'rhysd/vim-grammarous', opt = true}
 
@@ -98,7 +103,7 @@ return packer.startup(function(use)
         'nvim-treesitter/nvim-treesitter',
         requires = {
             'nvim-treesitter/playground', 'nvim-treesitter/nvim-treesitter-refactor',
-            'p00f/nvim-ts-rainbow', 'nvim-treesitter/nvim-treesitter-textobjects',
+            'p00f/nvim-ts-rainbow', 'nvim-treesitter/nvim-treesitter-textobjects'
             -- 'theHamsta/nvim-treesitter-pairs'
             -- 'JoosepAlviste/nvim-ts-context-commentstring'
         }
@@ -155,11 +160,8 @@ return packer.startup(function(use)
         branch = 'lua',
         config = function()
             G.indent_blankline_buftype_exclude = {'terminal'}
-            G.indent_blankline_filetype_exclude = {'packer', 'netrw'}
-            -- G.indent_blankline_char = '▏'
             G.indent_blankline_char = '┊'
             G.indent_blankline_use_treesitter = true
-            G.indent_blankline_show_trailing_blankline_indent = false
             G.indent_blankline_show_current_context = true
             G.indent_blankline_context_patterns = {
                 'class', 'return', 'function', 'method', '^if', '^while', 'jsx_element', '^for',
@@ -170,6 +172,5 @@ return packer.startup(function(use)
 
         end
     }
-
 end)
 

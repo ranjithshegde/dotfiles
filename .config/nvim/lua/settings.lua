@@ -18,12 +18,11 @@ end
 --                              Vim basics                            --
 ------------------------------------------------------------------------
 function settings.options()
-    -- Cmd 'colo nvcode'
     Cmd 'colo zephyr'
-    -- Cmd 'colo snazzy'
-    Cmd 'set nohlsearch'
     Cmd 'hi Normal guibg=none'
-    -- Cmd 'hi LineNr ctermbg=none guibg=none'
+    -- Cmd 'colo tokyonight'
+    -- G.tokyonight_style = "day"
+    Cmd 'set nohlsearch'
 
     u.opt('w', 'number', true)
     u.opt('w', 'relativenumber', true)
@@ -31,28 +30,20 @@ function settings.options()
     u.opt('o', 'hidden', true)
     u.opt('o', 'splitright', true)
     u.opt('o', 'splitbelow', true)
-    u.opt('o', 'shiftround', true)
     u.opt('o', 'termguicolors', true)
     u.opt('o', 'signcolumn', 'true')
     u.opt('o', 'updatetime', 300)
     u.opt('o', 'scrolloff', 10)
-    -- u.opt('b', 'shiftwidth', 2)
+    u.opt('b', 'shiftwidth', 0)
     u.opt('o', 'clipboard', [[unnamed,unnamedplus]])
     u.opt('o', 'completeopt', [[menuone,noinsert,noselect]])
     u.opt('o', 'fillchars', "stlnc:»,vert:║,fold:·")
     u.opt('o', 'foldmethod', 'expr')
     u.opt('o', 'foldexpr', 'nvim_treesitter#foldexpr()')
-    -- u.opt('o', 'timeoutlen', 250)
-    -- u.opt('o', 'guicursor', "n:blinkwait60-blinkon175-blinkoff175,i-ci-ve:ver25")
+    -- u.opt('o', 'timeoutlen', 0)
+    u.opt('o', 'timeoutlen', 500)
     o.shortmess = o.shortmess .. "c"
     G.termdebug_wide = 1
-
-    -- if Op("filetype") == "tex" then
-    --     u.opt('o', 'foldexpr', 'vimtex#fold#level(v:lnum)')
-    --     u.opt('o', 'foldtext', 'vimtex#fold#text()')
-    -- else
-    --     u.opt('o', 'foldexpr', 'nvim_treesitter#foldexpr()')
-    -- end
 end
 
 ------------------------------------------------------------------------
@@ -96,7 +87,7 @@ function settings.treesitter()
     require'nvim-treesitter.configs'.setup {
         highlight = {enable = true, use_languagetree = true},
         indent = {enable = true},
-        -- autopairs = {enable = true},
+        autopairs = {enable = true},
         incremental_selection = {
             enable = true,
             keymaps = {
@@ -300,7 +291,7 @@ function settings.lsp_settings()
         if rc.document_formatting then
             u.create_augroup({
                 {
-                    'BufWritePre', '*.js,*.jsx,*.py,*.c,*.h,*.hpp,*.sh',
+                    'BufWritePre', '*.js,*.jsx,*.py,*.c,*.h,*.hpp,*.cpp,*.sh',
                     'lua vim.lsp.buf.formatting_sync(nil, 1000)'
                 }
             }, 'lsp_auto_format')
@@ -314,6 +305,8 @@ function settings.lsp_settings()
 
     Capabilities = vim.lsp.protocol.make_client_capabilities()
     Capabilities.textDocument.completion.completionItem.snippetSupport = true;
+    Capabilities.textDocument.completion.completionItem.resolveSupport =
+        {properties = {'documentation', 'detail', 'additionalTextEdits'}}
     -- Capabilities = vim.tbl_extend('keep', Capabilities, Lsp_status.capabilities);
 
     Cinit = function(client)
@@ -330,13 +323,9 @@ function settings.lsp_settings()
         rc.document_formatting = false
     end
 
-    -- local myBorder = {"╔", "═", "╗", "║", "╝", "═", "╚", "║"}
-
-    vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, {
-        -- border = "{ '╔', '═' ,'╗', '║','╝', '═', '╚', '║' }"
-        border = "double"
-    })
-
+    -- borders for floating windows
+    vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover,
+                                                          {border = "double"})
     vim.lsp.handlers["textDocument/signatureHelp"] =
         vim.lsp.with(vim.lsp.handlers.signature_help, {border = "double"})
 end
@@ -358,7 +347,6 @@ function settings.langServers()
         cmake = {on_attach = All_attach},
         tsserver = {on_attach = All_attach},
         clangd = {
-            -- init_options = {clangdFileStatus = true},
             handlers = Lsp_status.extensions.clangd.setup(),
             on_attach = All_attach,
             capabilities = Capabilities,
@@ -371,19 +359,12 @@ function settings.langServers()
         ccls = {
             on_init = Cinit,
             handlers = {["textDocument/publishDiagnostics"] = function(...) return nil end},
-            init_options = {
-                cache = {directory = "/tmp/ccls"}
-                -- cache = {directory = "/home/ranjith/.cache/ccls"}
-                -- client = {snippetSupport = true}
-            }
+            init_options = {cache = {directory = "/tmp/ccls"}}
         },
         sumneko_lua = {
             on_attach = All_attach,
             capabilities = Capabilities,
-            cmd = {
-                -- "/usr/bin/lua-language-server", "-E", "/usr/bin/lua-language-server" .. "/main.lua"},
-                "lua-language-server", "-E", "lua-language-server" .. "/main.lua"
-            },
+            cmd = {"lua-language-server", "-E", "lua-language-server" .. "/main.lua"},
             settings = {
                 Lua = {
                     runtime = {version = 'LuaJIT', path = vim.split(package.path, ';')},
@@ -541,5 +522,15 @@ function settings.telescope()
         return require('telescope.themes').get_dropdown(
                    {borderchars = borders, width = 0.5, previewer = false, prompt_title = false})
     end
+
+    -- local opts = {noremap = true, silent = true}
+    -- local maps = {
+    --     {
+    --         'n', '<leader>F',
+    --         "<cmd>lua require'floating'.open({view1 = {}, view1_action = {'open_term'}})<CR>"
+    --     }
+    -- }
+    -- u.maps(maps, opts)
+
 end
 return settings

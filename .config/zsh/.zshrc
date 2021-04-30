@@ -102,9 +102,9 @@ zplug "zsh-users/zsh-syntax-highlighting"
 
 zplug "agura-lex/find-the-command"
 
-zplug "mafredri/zsh-async", from:"github", use:"async.zsh"
+# zplug "mafredri/zsh-async", from:"github", use:"async.zsh"
 
-zplug "Tarrasch/zsh-bd"
+# zplug "Tarrasch/zsh-bd"
 
 zplug romkatv/powerlevel10k, as:theme, depth:1
 

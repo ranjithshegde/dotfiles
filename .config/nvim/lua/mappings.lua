@@ -11,10 +11,6 @@ function M.general()
     local opts = {nowait = true, noremap = true, silent = false}
     local maps = {
         -- Window movement
-	{'i', '<C-J>', '<C-W><C-J>'},
-	-- {'i', '<C-K>', '<C-W><C-K>'},
-        {'i', '<C-L>', '<C-W><C-L>'},
-	{'i', '<C-H>', '<C-W><C-H>'},
 	{'n', '<C-J>', '<C-W><C-J>'},
 	{'n', '<C-K>', '<C-W><C-K>'},
         {'n', '<C-L>', '<C-W><C-L>'},
@@ -35,19 +31,6 @@ function M.general()
         {'n', '<leader>t', ':vspl term://zsh<cr>'},
         {'n', ';K', ':TSHighlightCapturesUnderCursor<cr>'},
         {'n', ';P', ':TSPlaygroundToggle<cr>'},
-	-- whichkey failsafes
-        -- {'n', 'gI', 'gi'},
-        -- {'v', 'g', 'g'},
-        -- {'n', 'g', 'g'},
-        -- {'n', 'gg', 'gg'},
-        -- {'n', 'gj', 'gj'},
-        -- {'n', 'gk', 'gk'},
-        -- {'n', 'gf', 'gf'},
-        -- {'n', 'gt', 'gt'},
-        -- {'n', 'gx', 'gx'},
-        -- {'n', 'gn', 'gn'},
-        -- {'n', 'gv', 'gv'},
-        -- {'n', 'gF', 'gF'},
     }
   u.maps(maps,opts)
 end
@@ -125,7 +108,7 @@ function M.telescope()
 	-- document symbol
         {'n', '<space>s', tele("lsp_document_symbols")},
 	-- Oldfiles
-        {'n', '<space>o', tele("oldfiles")},
+        {'n', '<space>rf', tele("oldfiles")},
 	-- Code action
         {'n', '<space>ac', tele("lsp_code_actions")},
 	-- Document diagnostics
@@ -168,6 +151,10 @@ function M.telescope()
         {'n', '<space>S', telF("lsp_workspace_symbols({query = vim.fn.expand('<cword>')})")},
 	-- Switch buffers
         {'n', '<space>b', tele("buffers")},
+	-- grep ofProjects
+        {'n', '<space>og', telF("live_grep({cwd='~/Documents/ofWorkspace', follow = true, hidden = true})")},
+	-- find-files ofProjects
+        {'n', '<space>of', telF("find_files({cwd='~/Documents/ofWorkspace'})")},
 	--  Serach dotfiles
         {'n', '<space>df', telF("find_files({cwd='~/.config/'})")},
 	--  Serach HOME
@@ -291,6 +278,8 @@ function M.clang()
 		{'n', '<F6>', ':w <CR> :!make RunRelease<CR>'},
 		-- Compile cpp file
 		{'n', '<F7>', ':w <CR> :!g++ % -o %< && ./%< <CR>'},
+		-- Compile cpp file
+		{'n', '<F8>', ':w <CR> :!g++ -g % -o %< && ./%< <CR>'},
 
 		-- bases
 		{'n',';b', ':CclsBase<CR>'},
