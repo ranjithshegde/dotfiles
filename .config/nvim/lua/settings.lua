@@ -233,9 +233,7 @@ function settings.lsp_settings()
     npairs.setup()
 
     local Rule = require('nvim-autopairs.rule')
-    npairs.add_rules({
-        Rule("|", "|", "supercollider")
-    })
+    npairs.add_rules({Rule("|", "|", "supercollider")})
 
     -- OnEnter = function() return require("nvim-autopairs").check_break_line_char() end
     -- vim.api.nvim_set_keymap("i", "<CR>", "v:lua.OnEnter()", {expr = true})
@@ -272,7 +270,7 @@ function settings.lsp_settings()
         if rc.document_formatting then
             u.create_augroup({
                 {
-                    'BufWritePre', '*.js,*.jsx,*.py,*.c,*.h,*.hpp,*.cpp,*.sh',
+                    'BufWritePre', '*.js,*.jsx,*.py,*.c,*.h,*.hpp,*.sh',
                     'lua vim.lsp.buf.formatting_sync(nil, 1000)'
                 }
             }, 'lsp_auto_format')

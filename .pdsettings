@@ -76,7 +76,8 @@ path61: /home/ranjith/.local/lib/pd/extra/abstractions/pdx
 path62: /home/ranjith/.local/lib/pd/extra/earplug~
 path63: /home/ranjith/.local/lib/pd/extra/pix_opencv
 path64: /home/ranjith/.local/lib/pd/extra/ofelia
-npath: 64
+path65: /home/ranjith/.local/lib/pd/extra/flucoma
+npath: 65
 standardpath: 1
 verbose: 1
 loadlib1: cyclone

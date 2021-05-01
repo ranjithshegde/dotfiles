@@ -23,6 +23,7 @@ if fn.empty(fn.glob(install_path)) > 0 then
 end
 
 Exec 'autocmd BufWritePost,BufLeave plugins.lua PackerCompile'
+Exec("autocmd BufReadPost *.conf setl ft=conf")
 
 --------------------------------------------------------------------------------------------------------
 --				Main Plugins 							      --
@@ -45,14 +46,27 @@ return packer.startup(function(use)
 
     use {'neovim/nvim-lspconfig', requires = {'nvim-lua/lsp-status.nvim'}}
 
-    use {"folke/which-key.nvim", config = function() require("which-key").setup {} end}
-
     use {'jbyuki/instant.nvim', config = function() G.instant_username = 'Ranjith' end}
 
     use {'lewis6991/gitsigns.nvim', config = function() require('gitsigns').setup() end}
 
     -- StatusLine
     use {'tjdevries/express_line.nvim', requires = {'kyazdani42/nvim-web-devicons', opt = true}}
+
+    -- vimTex
+    use {
+        'lervag/vimtex',
+        ft = {"tex", "bib"},
+        config = function() G.vimtex_viewer_method = 'zathura' end
+    }
+
+    -- WhichKey
+    use {
+        "folke/which-key.nvim",
+        config = function()
+            require("which-key").setup {layout = {width = {max = 80}, {spacing = 10}}}
+        end
+    }
 
     -- Markdown preview
     -- use {'iamcco/markdown-preview.nvim',
@@ -62,25 +76,13 @@ return packer.startup(function(use)
     -- completion and snippets
     use {
         'ranjithshegde/completion-nvim',
-        requires = {
-            'windwp/nvim-autopairs', 'hrsh7th/vim-vsnip', 'hrsh7th/vim-vsnip-integ'
-            -- 'norcalli/snippets.nvim',
-        }
+        requires = {'windwp/nvim-autopairs', 'hrsh7th/vim-vsnip', 'hrsh7th/vim-vsnip-integ'}
     }
 
     -- Tim pope
     use {
         'tpope/vim-fugitive', 'tpope/vim-commentary', 'tpope/vim-unimpaired', 'tpope/vim-surround',
         'tpope/vim-repeat', 'tpope/vim-eunuch'
-    }
-
-    -- vimTex
-    use {
-        'lervag/vimtex',
-        config = function()
-            G.vimtex_viewer_method = 'zathura'
-            -- G.vimtex_format_enabled = 1
-        end
     }
 
     -- Telescope
@@ -117,7 +119,6 @@ return packer.startup(function(use)
     use {
         'salkin-mada/scnvim',
         -- 'davidgranstrom/scnvim',
-        -- branch = 'assets',
         branch = 'salkin-dev',
         run = function() fn['scnvim#install']() end,
         config = function()
@@ -134,7 +135,6 @@ return packer.startup(function(use)
     use {
         'norcalli/nvim-colorizer.lua',
         config = function()
-            Exec("autocmd BufReadPost *.conf setl ft=conf")
             require'colorizer'.setup {
                 '*',
                 html = {mode = 'foreground'},
@@ -143,7 +143,8 @@ return packer.startup(function(use)
                 'sh',
                 'conf'
             }
-        end
+        end,
+        opt = true
     }
 
     -- Indents and chars

@@ -103,9 +103,10 @@ _G.packer_plugins = {
     path = "/home/ranjith/.local/share/nvim/site/pack/packer/start/nvim-autopairs"
   },
   ["nvim-colorizer.lua"] = {
-    config = { "\27LJ\2\nÄ\1\0\0\4\0\n\0\0146\0\0\0'\2\1\0B\0\2\0016\0\2\0'\2\3\0B\0\2\0029\0\4\0005\2\5\0005\3\6\0=\3\a\0025\3\b\0=\3\t\2B\0\2\1K\0\1\0\bcss\1\0\1\vrgb_fn\2\thtml\1\0\1\tmode\15foreground\1\5\0\0\6*\15javascript\ash\tconf\nsetup\14colorizer\frequire,autocmd BufReadPost *.conf setl ft=conf\tExec\0" },
-    loaded = true,
-    path = "/home/ranjith/.local/share/nvim/site/pack/packer/start/nvim-colorizer.lua"
+    config = { "\27LJ\2\n‹\1\0\0\4\0\b\0\v6\0\0\0'\2\1\0B\0\2\0029\0\2\0005\2\3\0005\3\4\0=\3\5\0025\3\6\0=\3\a\2B\0\2\1K\0\1\0\bcss\1\0\1\vrgb_fn\2\thtml\1\0\1\tmode\15foreground\1\5\0\0\6*\15javascript\ash\tconf\nsetup\14colorizer\frequire\0" },
+    loaded = false,
+    needs_bufread = false,
+    path = "/home/ranjith/.local/share/nvim/site/pack/packer/opt/nvim-colorizer.lua"
   },
   ["nvim-lspconfig"] = {
     loaded = true,
@@ -114,10 +115,6 @@ _G.packer_plugins = {
   ["nvim-treesitter"] = {
     loaded = true,
     path = "/home/ranjith/.local/share/nvim/site/pack/packer/start/nvim-treesitter"
-  },
-  ["nvim-treesitter-refactor"] = {
-    loaded = true,
-    path = "/home/ranjith/.local/share/nvim/site/pack/packer/start/nvim-treesitter-refactor"
   },
   ["nvim-treesitter-textobjects"] = {
     loaded = true,
@@ -209,53 +206,59 @@ _G.packer_plugins = {
   },
   vimtex = {
     config = { "\27LJ\2\n6\0\0\2\0\3\0\0046\0\0\0'\1\2\0=\1\1\0K\0\1\0\fzathura\25vimtex_viewer_method\6G\0" },
-    loaded = true,
-    path = "/home/ranjith/.local/share/nvim/site/pack/packer/start/vimtex"
+    loaded = false,
+    needs_bufread = true,
+    path = "/home/ranjith/.local/share/nvim/site/pack/packer/opt/vimtex"
   },
   vimwiki = {
     loaded = true,
     path = "/home/ranjith/.local/share/nvim/site/pack/packer/start/vimwiki"
   },
   ["which-key.nvim"] = {
-    config = { "\27LJ\2\n;\0\0\3\0\3\0\a6\0\0\0'\2\1\0B\0\2\0029\0\2\0004\2\0\0B\0\2\1K\0\1\0\nsetup\14which-key\frequire\0" },
+    config = { "\27LJ\2\n|\0\0\5\0\t\0\r6\0\0\0'\2\1\0B\0\2\0029\0\2\0005\2\a\0005\3\4\0005\4\3\0=\4\5\0035\4\6\0>\4\1\3=\3\b\2B\0\2\1K\0\1\0\vlayout\1\0\0\1\0\1\fspacing\3\n\nwidth\1\0\0\1\0\1\bmax\3P\nsetup\14which-key\frequire\0" },
     loaded = true,
     path = "/home/ranjith/.local/share/nvim/site/pack/packer/start/which-key.nvim"
   }
 }
 
 time("Defining packer_plugins", false)
--- Config for: which-key.nvim
-time("Config for which-key.nvim", true)
-try_loadstring("\27LJ\2\n;\0\0\3\0\3\0\a6\0\0\0'\2\1\0B\0\2\0029\0\2\0004\2\0\0B\0\2\1K\0\1\0\nsetup\14which-key\frequire\0", "config", "which-key.nvim")
-time("Config for which-key.nvim", false)
--- Config for: vim-floaterm
-time("Config for vim-floaterm", true)
-try_loadstring("\27LJ\2\nš\1\0\0\2\0\a\0\r6\0\0\0)\1\1\0=\1\1\0006\0\0\0)\1\1\0=\1\2\0006\0\0\0'\1\4\0=\1\3\0006\0\0\0'\1\6\0=\1\5\0K\0\1\0\t<F9>\27floaterm_keymap_toggle\n<F10>\24floaterm_keymap_new\23floaterm_autoclose\24floaterm_autoinsert\6G\0", "config", "vim-floaterm")
-time("Config for vim-floaterm", false)
--- Config for: nvim-colorizer.lua
-time("Config for nvim-colorizer.lua", true)
-try_loadstring("\27LJ\2\nÄ\1\0\0\4\0\n\0\0146\0\0\0'\2\1\0B\0\2\0016\0\2\0'\2\3\0B\0\2\0029\0\4\0005\2\5\0005\3\6\0=\3\a\0025\3\b\0=\3\t\2B\0\2\1K\0\1\0\bcss\1\0\1\vrgb_fn\2\thtml\1\0\1\tmode\15foreground\1\5\0\0\6*\15javascript\ash\tconf\nsetup\14colorizer\frequire,autocmd BufReadPost *.conf setl ft=conf\tExec\0", "config", "nvim-colorizer.lua")
-time("Config for nvim-colorizer.lua", false)
 -- Config for: instant.nvim
 time("Config for instant.nvim", true)
 try_loadstring("\27LJ\2\n2\0\0\2\0\3\0\0046\0\0\0'\1\2\0=\1\1\0K\0\1\0\fRanjith\21instant_username\6G\0", "config", "instant.nvim")
 time("Config for instant.nvim", false)
--- Config for: scnvim
-time("Config for scnvim", true)
-try_loadstring("\27LJ\2\nì\1\0\0\3\0\a\0\r6\0\0\0'\1\2\0=\1\1\0006\0\0\0+\1\2\0=\1\3\0006\0\4\0'\2\5\0B\0\2\0016\0\4\0'\2\6\0B\0\2\1K\0\1\0001autocmd FileType supercollider setlocal wrapCautocmd FileType supercollider lua require \"mappings\".scnvim()\bCmd#scnvim_floating_args_show_full\6s\"scnvim_floating_args_register\6G\0", "config", "scnvim")
-time("Config for scnvim", false)
--- Config for: vimtex
-time("Config for vimtex", true)
-try_loadstring("\27LJ\2\n6\0\0\2\0\3\0\0046\0\0\0'\1\2\0=\1\1\0K\0\1\0\fzathura\25vimtex_viewer_method\6G\0", "config", "vimtex")
-time("Config for vimtex", false)
--- Config for: gitsigns.nvim
-time("Config for gitsigns.nvim", true)
-try_loadstring("\27LJ\2\n6\0\0\3\0\3\0\0066\0\0\0'\2\1\0B\0\2\0029\0\2\0B\0\1\1K\0\1\0\nsetup\rgitsigns\frequire\0", "config", "gitsigns.nvim")
-time("Config for gitsigns.nvim", false)
+-- Config for: vim-floaterm
+time("Config for vim-floaterm", true)
+try_loadstring("\27LJ\2\nš\1\0\0\2\0\a\0\r6\0\0\0)\1\1\0=\1\1\0006\0\0\0)\1\1\0=\1\2\0006\0\0\0'\1\4\0=\1\3\0006\0\0\0'\1\6\0=\1\5\0K\0\1\0\t<F9>\27floaterm_keymap_toggle\n<F10>\24floaterm_keymap_new\23floaterm_autoclose\24floaterm_autoinsert\6G\0", "config", "vim-floaterm")
+time("Config for vim-floaterm", false)
+-- Config for: which-key.nvim
+time("Config for which-key.nvim", true)
+try_loadstring("\27LJ\2\n|\0\0\5\0\t\0\r6\0\0\0'\2\1\0B\0\2\0029\0\2\0005\2\a\0005\3\4\0005\4\3\0=\4\5\0035\4\6\0>\4\1\3=\3\b\2B\0\2\1K\0\1\0\vlayout\1\0\0\1\0\1\fspacing\3\n\nwidth\1\0\0\1\0\1\bmax\3P\nsetup\14which-key\frequire\0", "config", "which-key.nvim")
+time("Config for which-key.nvim", false)
 -- Config for: indent-blankline.nvim
 time("Config for indent-blankline.nvim", true)
 try_loadstring("\27LJ\2\nÎ\3\0\0\2\0\t\0\0166\0\0\0005\1\2\0=\1\1\0006\0\0\0'\1\4\0=\1\3\0006\0\0\0+\1\2\0=\1\5\0006\0\0\0+\1\2\0=\1\6\0006\0\0\0005\1\b\0=\1\a\0K\0\1\0\1\21\0\0\nclass\vreturn\rfunction\vmethod\b^if\v^while\16jsx_element\t^for\f^object\v^table\nblock\14arguments\17if_statement\16else_clause\16jsx_element\29jsx_self_closing_element\18try_statement\17catch_clause\21import_statement\19operation_type&indent_blankline_context_patterns*indent_blankline_show_current_context$indent_blankline_use_treesitter\bâ”Š\26indent_blankline_char\1\2\0\0\rterminal%indent_blankline_buftype_exclude\6G\0", "config", "indent-blankline.nvim")
 time("Config for indent-blankline.nvim", false)
+-- Config for: gitsigns.nvim
+time("Config for gitsigns.nvim", true)
+try_loadstring("\27LJ\2\n6\0\0\3\0\3\0\0066\0\0\0'\2\1\0B\0\2\0029\0\2\0B\0\1\1K\0\1\0\nsetup\rgitsigns\frequire\0", "config", "gitsigns.nvim")
+time("Config for gitsigns.nvim", false)
+-- Config for: scnvim
+time("Config for scnvim", true)
+try_loadstring("\27LJ\2\nì\1\0\0\3\0\a\0\r6\0\0\0'\1\2\0=\1\1\0006\0\0\0+\1\2\0=\1\3\0006\0\4\0'\2\5\0B\0\2\0016\0\4\0'\2\6\0B\0\2\1K\0\1\0001autocmd FileType supercollider setlocal wrapCautocmd FileType supercollider lua require \"mappings\".scnvim()\bCmd#scnvim_floating_args_show_full\6s\"scnvim_floating_args_register\6G\0", "config", "scnvim")
+time("Config for scnvim", false)
+vim.cmd [[augroup packer_load_aucmds]]
+vim.cmd [[au!]]
+  -- Filetype lazy-loads
+time("Defining lazy-load filetype autocommands", true)
+vim.cmd [[au FileType tex ++once lua require("packer.load")({'vimtex'}, { ft = "tex" }, _G.packer_plugins)]]
+vim.cmd [[au FileType bib ++once lua require("packer.load")({'vimtex'}, { ft = "bib" }, _G.packer_plugins)]]
+time("Defining lazy-load filetype autocommands", false)
+vim.cmd("augroup END")
+vim.cmd [[augroup filetypedetect]]
+time("Sourcing ftdetect script at: /home/ranjith/.local/share/nvim/site/pack/packer/opt/vimtex/ftdetect/tex.vim", true)
+vim.cmd [[source /home/ranjith/.local/share/nvim/site/pack/packer/opt/vimtex/ftdetect/tex.vim]]
+time("Sourcing ftdetect script at: /home/ranjith/.local/share/nvim/site/pack/packer/opt/vimtex/ftdetect/tex.vim", false)
+vim.cmd("augroup END")
 if should_profile then save_profiles() end
 
 END

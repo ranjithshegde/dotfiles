@@ -4,226 +4,227 @@ local u = require('utils')
 -- ******************************** General functions ---------------------------------------
 
 function M.general()
-    M.edit_config_files()
-    M.git()
-    M.telescope()
+	M.edit_config_files()
+	M.git()
+	M.telescope()
 
-    local opts = {nowait = true, noremap = true, silent = false}
-    local maps = {
-        -- Window movement
-	{'n', '<C-J>', '<C-W><C-J>'},
-	{'n', '<C-K>', '<C-W><C-K>'},
-        {'n', '<C-L>', '<C-W><C-L>'},
-	{'n', '<C-H>', '<C-W><C-H>'},
-	{'x', 'K', ':move \'<-2<CR>gv-gv'},
-	{'x', 'J', ':move \'>+1<CR>gv-gv'},
-	{'n', '<leader>qf', ':copen<CR>'},
-	{'n', '<leader>lf', ':lopen<CR>'},
-	-- visual cut for replase
-	{'v', '<leader>p', '"_dP'},
-	{'s', '<leader>p', '"_dP'},
-	-- Indent
-	{'v', '<', '<gv'},
-        {'v', '>', '>gv'},
-	-- Escape in terminal mode
-        {'t', '<Esc>', '<C-\\><C-n>'},
-	{'n', '<leader>ht', ':sp term://zsh<cr>'},
-        {'n', '<leader>t', ':vspl term://zsh<cr>'},
-        {'n', ';K', ':TSHighlightCapturesUnderCursor<cr>'},
-        {'n', ';P', ':TSPlaygroundToggle<cr>'},
-    }
-  u.maps(maps,opts)
+	local opts = {nowait = true, noremap = true, silent = false}
+	local maps = {
+		-- Window movement
+		{'n', '<C-J>', '<C-W><C-J>'},
+		{'n', '<C-K>', '<C-W><C-K>'},
+		{'n', '<C-L>', '<C-W><C-L>'},
+		{'n', '<C-H>', '<C-W><C-H>'},
+		{'x', 'K', ':move \'<-2<CR>gv-gv'},
+		{'x', 'J', ':move \'>+1<CR>gv-gv'},
+		{'n', '<leader>qf', ':copen<CR>'},
+		{'n', '<leader>lf', ':lopen<CR>'},
+		-- visual cut for replase
+		{'v', '<leader>p', '"_dP'},
+		{'s', '<leader>p', '"_dP'},
+		-- Indent
+		{'v', '<', '<gv'},
+		{'v', '>', '>gv'},
+		-- Escape in terminal mode
+		{'t', '<Esc>', '<C-\\><C-n>'},
+		{'n', '<leader>ht', ':sp term://zsh<cr>'},
+		{'n', '<leader>t', ':vspl term://zsh<cr>'},
+		{'n', ';K', ':TSHighlightCapturesUnderCursor<cr>'},
+		{'n', ';P', ':TSPlaygroundToggle<cr>'},
+	}
+	u.maps(maps,opts)
 end
 
 -- ******************************** language server ---------------------------------------
 
 function M.nvim_lsp()
-    local opts = {noremap = true, silent = true}
-    -- local pop_opts = {popup_opts = {border = "double"}}
+	local opts = {noremap = true, silent = true}
+	-- local pop_opts = {popup_opts = {border = "double"}}
 
-    local bufmaps = {
-        {'n', ',D', '<cmd>lua vim.lsp.buf.declaration()<CR>'},
-        {'n', ',d', '<cmd>lua vim.lsp.buf.definition()<CR>'},
-        {'n', ',i', '<cmd>lua vim.lsp.buf.implementation()<CR>'},
-        {'n', ',t', '<cmd>lua vim.lsp.buf.type_definition()<CR>'},
-        {"n", ',s', "<cmd>lua vim.lsp.buf.signature_help()<CR>"},
-        {'n', ',pd', "<cmd>lua require'utils'.peek_definition()<CR>"},
-        {'n', '[d', '<cmd>lua vim.lsp.diagnostic.goto_prev({popup_opts = {border = "double"}})<CR>'},
-        {'n', ']d', '<cmd>lua vim.lsp.diagnostic.goto_next({popup_opts = {border = "double"}})<CR>'},
-        {'n', ',ld', '<cmd>lua vim.lsp.diagnostic.show_line_diagnostics({popup_opts = {border = "double"}})<CR>'},
-        {'n', ',rn', '<cmd>lua vim.lsp.buf.rename()<CR>'},
-        {"n", ",ac", "<cmd>lua vim.lsp.buf.code_action()<CR>"},
-        {"n", ",ff", "<cmd>lua vim.lsp.buf.formatting()<CR>"},
-        {"n", ",rf", "<cmd>lua vim.lsp.buf.range_formatting()<CR>"},
-        {'n', ',sl', '<cmd>lua vim.lsp.diagnostic.set_loclist()<CR>'},
-        {'n', ',wa', '<cmd>lua vim.lsp.buf.add_workspace_folder()<CR>'},
-        {'n', ',wr', '<cmd>lua vim.lsp.buf.remove_workspace_folder()<CR>'},
-        {'n', ',wl', '<cmd>lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))<CR>'},
-    }
+	local bufmaps = {
+		{'n', ',D', '<cmd>lua vim.lsp.buf.declaration()<CR>'},
+		{'n', ',d', '<cmd>lua vim.lsp.buf.definition()<CR>'},
+		{'n', ',i', '<cmd>lua vim.lsp.buf.implementation()<CR>'},
+		{'n', ',t', '<cmd>lua vim.lsp.buf.type_definition()<CR>'},
+		{"n", ',s', "<cmd>lua vim.lsp.buf.signature_help()<CR>"},
+		{'n', ',pd', "<cmd>lua require'utils'.peek_definition()<CR>"},
+		{'n', '[d', '<cmd>lua vim.lsp.diagnostic.goto_prev({popup_opts = {border = "double"}})<CR>'},
+		{'n', ']d', '<cmd>lua vim.lsp.diagnostic.goto_next({popup_opts = {border = "double"}})<CR>'},
+		{'n', ',ld', '<cmd>lua vim.lsp.diagnostic.show_line_diagnostics({popup_opts = {border = "double"}})<CR>'},
+		{'n', ',rn', '<cmd>lua vim.lsp.buf.rename()<CR>'},
+		{"n", ",ac", "<cmd>lua vim.lsp.buf.code_action()<CR>"},
+		{"n", ",ff", "<cmd>lua vim.lsp.buf.formatting()<CR>"},
+		{"n", ",rf", "<cmd>lua vim.lsp.buf.range_formatting()<CR>"},
+		{'n', ',sl', '<cmd>lua vim.lsp.diagnostic.set_loclist()<CR>'},
+		{'n', ',wa', '<cmd>lua vim.lsp.buf.add_workspace_folder()<CR>'},
+		{'n', ',wr', '<cmd>lua vim.lsp.buf.remove_workspace_folder()<CR>'},
+		{'n', ',wl', '<cmd>lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))<CR>'},
+	}
 
-    u.bufmaps(bufmaps, opts)
+	u.bufmaps(bufmaps, opts)
 end
 
 -- ******************************** vim basic calls ---------------------------------------
 
 function M.edit_config_files()
-    local open_func = "tabnew"
-    local opts = {nowait = true, noremap = true, silent = true}
-    local maps = {
+	local open_func = "tabnew"
+	local opts = {nowait = true, noremap = true, silent = true}
+	local maps = {
 
-        {'n', '<leader>aR', "<cmd>lua require('utils').Restart()<CR>"},
-        {'n', '<leader>am', ':' .. open_func .. " ~/.config/nvim/lua/mappings.lua<CR>"},
-        {'n', '<leader>al', ':' .. open_func .. " ~/.config/nvim/lua/settings.lua<CR>"},
-        {'n', '<leader>ap', ':' .. open_func .. " ~/.config/nvim/lua/plugins.lua<CR>"},
-        {'n', '<leader>as', ':' .. open_func .. " ~/.config/nvim/lua/statusline.lua<CR>"},
-        -- {'n', '<leader>agl', ':' .. open_func .. " ~/.config/nvim/lua/galaxylineconf.lua<CR>"},
-        {'n', '<leader>aut', ':' .. open_func .. " ~/.config/nvim/lua/utils/init.lua<CR>"},
-        {'n', '<leader>ar', ':' .. open_func .. ' $MYVIMRC<CR>'}
-    }
+		{'n', '<leader>aR', "<cmd>lua require('utils').Restart()<CR>"},
+		{'n', '<leader>aP', "<cmd>PackerSync<CR>"},
+		{'n', '<leader>am', ':' .. open_func .. " ~/.config/nvim/lua/mappings.lua<CR>"},
+		{'n', '<leader>al', ':' .. open_func .. " ~/.config/nvim/lua/settings.lua<CR>"},
+		{'n', '<leader>ap', ':' .. open_func .. " ~/.config/nvim/lua/plugins.lua<CR>"},
+		{'n', '<leader>as', ':' .. open_func .. " ~/.config/nvim/lua/statusline.lua<CR>"},
+		-- {'n', '<leader>agl', ':' .. open_func .. " ~/.config/nvim/lua/galaxylineconf.lua<CR>"},
+		{'n', '<leader>aut', ':' .. open_func .. " ~/.config/nvim/lua/utils/init.lua<CR>"},
+		{'n', '<leader>ar', ':' .. open_func .. ' $MYVIMRC<CR>'}
+	}
 
-    u.maps(maps, opts)
+	u.maps(maps, opts)
 end
 
 -- ******************************** Telescope ---------------------------------------
 
 function M.telescope()
-    local tele = function(name)
-        return string.format(":lua require('telescope.builtin').%s()<cr>", name)
-    end
-    local telF = function(name)
-        return string.format(":lua require('telescope.builtin').%s<cr>", name)
-    end
-    local telE = function(name)
-        return string.format(":lua require'telescope'.extensions.%s()<cr>", name)
-    end
+	local tele = function(name)
+		return string.format(":lua require('telescope.builtin').%s()<cr>", name)
+	end
+	local telF = function(name)
+		return string.format(":lua require('telescope.builtin').%s<cr>", name)
+	end
+	local telE = function(name)
+		return string.format(":lua require'telescope'.extensions.%s()<cr>", name)
+	end
 
-    local opts = {nowait = true, noremap = true, silent = true}
-    local maps = {
-        -- openFrameworks and other projects
-        {'n', '<space>p', telE("project.project")},
-        -- Plugins
-        {'n', '<space>P', telE("packer.plugins")},
-	-- Fuzzy find files in cwd
-        {'n', '<space>f', tele("find_files")},
-	-- document symbol
-        {'n', '<space>s', tele("lsp_document_symbols")},
-	-- Oldfiles
-        {'n', '<space>rf', tele("oldfiles")},
-	-- Code action
-        {'n', '<space>ac', tele("lsp_code_actions")},
-	-- Document diagnostics
-        {'n', '<space>d', tele("lsp_document_diagnostics")},
-	-- Workspace diagnostics
-        {'n', '<space>D', tele("lsp_workspace_diagnostics")},
-	-- Code action
-        {'n', '<space>rc', tele("lsp_range_code_actions")},
-	-- References under cursor
-        {'n', ',r', tele("lsp_references")},
-	-- Quickfix list
-        {'n', '<space>q', tele("quickfix")},
-	-- Location list
-        {'n', '<space>l', tele("loclist")},
-	-- live grep
-        {'n', '<space>G', tele("live_grep")},
-	-- Help tags
-        {'n', '<space>ht', tele("help_tags")},
-	-- registers list
-        {'n', '<space>"', tele("registers")},
-	-- File explorer
-        {'n', '<space>e', tele("file_browser")},
-	-- commands explorer
-        {'n', '<space>c', tele("commands")},
-	-- commands history
-        {'n', '<space>C', tele("command_history")},
-	-- git branches
-        {'n', '<space>gb', tele("git_branches")},
-	-- git commits
-        {'n', '<space>gc', tele("git_commits")},
-	-- git status
-        {'n', '<space>gs', tele("git_status")},
-	-- git files
-        {'n', '<space>gf', tele("git_files")},
-	-- colorschemes
-        -- {'n', '<space>c', telF("colorscheme(No_preview())")},
-	-- Unicode
-        {'n', '<space>m', tele("symbols")},
-	-- Workspace symbol under cursor
-        {'n', '<space>S', telF("lsp_workspace_symbols({query = vim.fn.expand('<cword>')})")},
-	-- Switch buffers
-        {'n', '<space>b', tele("buffers")},
-	-- grep ofProjects
-        {'n', '<space>og', telF("live_grep({cwd='~/Documents/ofWorkspace', follow = true, hidden = true})")},
-	-- find-files ofProjects
-        {'n', '<space>of', telF("find_files({cwd='~/Documents/ofWorkspace'})")},
-	--  Serach dotfiles
-        {'n', '<space>df', telF("find_files({cwd='~/.config/'})")},
-	--  Serach HOME
-        {'n', '<space>hf', telF("find_files({cwd='~'})")},
-	-- Search plugins
-        {'n', '<space>vf', telF("find_files({cwd='~/.local/share/nvim/'})")}
-    }
-    u.maps(maps, opts)
+	local opts = {nowait = true, noremap = true, silent = true}
+	local maps = {
+		-- openFrameworks and other projects
+		{'n', '<space>p', telE("project.project")},
+		-- Plugins
+		{'n', '<space>P', telE("packer.plugins")},
+		-- Fuzzy find files in cwd
+		{'n', '<space>f', tele("find_files")},
+		-- document symbol
+		{'n', '<space>s', tele("lsp_document_symbols")},
+		-- Oldfiles
+		{'n', '<space>rf', tele("oldfiles")},
+		-- Code action
+		{'n', '<space>ac', tele("lsp_code_actions")},
+		-- Document diagnostics
+		{'n', '<space>d', tele("lsp_document_diagnostics")},
+		-- Workspace diagnostics
+		{'n', '<space>D', tele("lsp_workspace_diagnostics")},
+		-- Code action
+		{'n', '<space>rc', tele("lsp_range_code_actions")},
+		-- References under cursor
+		{'n', ',r', tele("lsp_references")},
+		-- Quickfix list
+		{'n', '<space>q', tele("quickfix")},
+		-- Location list
+		{'n', '<space>l', tele("loclist")},
+		-- live grep
+		{'n', '<space>G', tele("live_grep")},
+		-- Help tags
+		{'n', '<space>ht', tele("help_tags")},
+		-- registers list
+		{'n', '<space>"', tele("registers")},
+		-- File explorer
+		{'n', '<space>e', tele("file_browser")},
+		-- commands explorer
+		{'n', '<space>c', tele("commands")},
+		-- commands history
+		{'n', '<space>C', tele("command_history")},
+		-- git branches
+		{'n', '<space>gb', tele("git_branches")},
+		-- git commits
+		{'n', '<space>gc', tele("git_commits")},
+		-- git status
+		{'n', '<space>gs', tele("git_status")},
+		-- git files
+		{'n', '<space>gf', tele("git_files")},
+		-- colorschemes
+		-- {'n', '<space>c', telF("colorscheme(No_preview())")},
+		-- Unicode
+		{'n', '<space>m', tele("symbols")},
+		-- Workspace symbol under cursor
+		{'n', '<space>S', telF("lsp_workspace_symbols({query = vim.fn.expand('<cword>')})")},
+		-- Switch buffers
+		{'n', '<space>b', tele("buffers")},
+		-- grep ofProjects
+		{'n', '<space>og', telF("live_grep({cwd='~/Documents/ofWorkspace', follow = true, hidden = true})")},
+		-- find-files ofProjects
+		{'n', '<space>of', telF("find_files({cwd='~/Documents/ofWorkspace'})")},
+		--  Serach dotfiles
+		{'n', '<space>df', telF("find_files({cwd='~/.config/'})")},
+		--  Serach HOME
+		{'n', '<space>hf', telF("find_files({cwd='~'})")},
+		-- Search plugins
+		{'n', '<space>vf', telF("find_files({cwd='~/.local/share/nvim/'})")}
+	}
+	u.maps(maps, opts)
 end
 
 -- ******************************** Git ---------------------------------------
 
 -- fugitive mappings
 function M.git()
-    local opts = {nowait = true, noremap = true, silent = false}
-    local maps = {
-    {'n', '<leader>gg', ':G<cr>'},
-    {'n', '<leader>gc', ':Git commit %<cr>'},
-    {'n', '<leader>ga', ':Git add %<cr>'},
-    {'n', '<leader>gd', ':Git difftool<cr>'},
-    {'n', '<leader>gb', ':Git blame<cr>'},
-    {'n', '<leader>gp', ':Gitsigns preview_hunk<cr>'},
-    {'n', '<leader>gP', ':Git push<cr>'},
-    {'n', '<leader>gf', ':Git fetch<cr>'},
-    {'n', '<leader>gl', ':Gclog<cr>'}
-  }
+	local opts = {nowait = true, noremap = true, silent = false}
+	local maps = {
+		{'n', '<leader>gg', ':G<cr>'},
+		{'n', '<leader>gc', ':Git commit %<cr>'},
+		{'n', '<leader>ga', ':Git add %<cr>'},
+		{'n', '<leader>gd', ':Git difftool<cr>'},
+		{'n', '<leader>gb', ':Git blame<cr>'},
+		{'n', '<leader>gp', ':Gitsigns preview_hunk<cr>'},
+		{'n', '<leader>gP', ':Git push<cr>'},
+		{'n', '<leader>gf', ':Git fetch<cr>'},
+		{'n', '<leader>gl', ':Gclog<cr>'}
+	}
 
-    u.maps(maps, opts)
+	u.maps(maps, opts)
 end
 
 -- When in a git commit window
 function M.git_commit()
-    local opts = {nowait = true, noremap = true, silent = false}
-    local bufmaps = {
-    {'n', '<C-e>', ':wq<cr>'},
-    {'i', '<C-e>', '<esc>:wp<cr>'}
-  }
-    u.bufmaps(bufmaps, opts)
+	local opts = {nowait = true, noremap = true, silent = false}
+	local bufmaps = {
+		{'n', '<C-e>', ':wq<cr>'},
+		{'i', '<C-e>', '<esc>:wp<cr>'}
+	}
+	u.bufmaps(bufmaps, opts)
 end
 
 -- ******************************** Arduino ---------------------------------------
 
 function M.arduino()
-    local opts = {nowait = true, noremap = true, silent = false}
-    local bufmaps = {
-        {'n', '<leader>bld', ':w <CR> :FloatermNew platformio run <CR>'},
-        {'n', '<leader>tag', ':w <cr> :!pio run -t compiledb<CR>'},
-        {'n', '<leader>upl', ':w <cr> :!platformio run --target upload<CR>'}
-    }
-    u.bufmaps(bufmaps, opts)
+	local opts = {nowait = true, noremap = true, silent = false}
+	local bufmaps = {
+		{'n', '<leader>bld', ':w <CR> :FloatermNew platformio run <CR>'},
+		{'n', '<leader>tag', ':w <cr> :!pio run -t compiledb<CR>'},
+		{'n', '<leader>upl', ':w <cr> :!platformio run --target upload<CR>'}
+	}
+	u.bufmaps(bufmaps, opts)
 end
 
 -- ******************************** Snippets ---------------------------------------
 function M.autoComplete()
-    -- change completion mode
-    Cmd('imap <c-j> <Plug>(completion_next_source)')
-    Cmd('imap <c-k> <Plug>(completion_prev_source)')
-      --vsnip commapds
-      --expand
-    Cmd('imap <expr> <C-h> vsnip#expandable() ? "<Plug>(vsnip-expand)"  : "<C-h>"')
-    Cmd('smap <expr> <C-h> vsnip#expandable() ? "<Plug>(vsnip-expand)"  : "<C-h>"')
-      --expand or jump
-    Cmd('imap <expr> <C-l> vsnip#available(1) ? "<Plug>(vsnip-expand-or-jump)" : "<C-l>"')
-    Cmd('smap <expr> <C-l> vsnip#available(1) ? "<Plug>(vsnip-expand-or-jump)" : "<C-l>"')
-      --Plugs
-    Cmd('nmap  s  <Plug>(vsnip-select-text)')
-    Cmd('xmap  s  <Plug>(vsnip-select-text)')
-    Cmd('nmap  S  <Plug>(vsnip-cut-text)')
-    Cmd('xmap  S  <Plug>(vsnip-cut-text)')
+	-- change completion mode
+	Cmd('imap <c-j> <Plug>(completion_next_source)')
+	Cmd('imap <c-k> <Plug>(completion_prev_source)')
+	--vsnip commapds
+	--expand
+	Cmd('imap <expr> <C-h> vsnip#expandable() ? "<Plug>(vsnip-expand)"  : "<C-h>"')
+	Cmd('smap <expr> <C-h> vsnip#expandable() ? "<Plug>(vsnip-expand)"  : "<C-h>"')
+	--expand or jump
+	Cmd('imap <expr> <C-l> vsnip#available(1) ? "<Plug>(vsnip-expand-or-jump)" : "<C-l>"')
+	Cmd('smap <expr> <C-l> vsnip#available(1) ? "<Plug>(vsnip-expand-or-jump)" : "<C-l>"')
+	--Plugs
+	Cmd('nmap  s  <Plug>(vsnip-select-text)')
+	Cmd('xmap  s  <Plug>(vsnip-select-text)')
+	Cmd('nmap  S  <Plug>(vsnip-cut-text)')
+	Cmd('xmap  S  <Plug>(vsnip-cut-text)')
 end
 
 -- ******************************** SuperCollider ---------------------------------------
