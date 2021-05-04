@@ -1,6 +1,6 @@
 import os
 import sys
-config.load_autoconfig(True)
+config.load_autoconfig(False)
 
 # Additional arguments to pass to Qt, without leading `--`. With
 # QtWebEngine, some Chromium arguments (see
@@ -44,12 +44,7 @@ config.set('content.headers.user_agent',
 config.set('content.headers.user_agent',
            'Mozilla/5.0 ({os_info}) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99 Safari/537.36', 'https://*.slack.com/*')
 
-# Valid values:
-#   - auto: Use Brave's ABP-style adblocker if available, host blocking otherwise
-#   - adblock: Use Brave's ABP-style adblocker
-#   - hosts: Use hosts blocking
-#   - both: Use both hosts blocking and Brave's ABP-style adblocker
-c.content.blocking.method = 'auto'
+c.content.blocking.method = 'both'
 
 # Load images automatically in web pages.
 # Type: Bool

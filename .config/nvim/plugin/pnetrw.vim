@@ -21,10 +21,10 @@ let g:NetrwIsOpen=0
 
 function! ToggleNetrw()
   if g:NetrwIsOpen
-    let i = bufnr("$")
+    let i = bufnr('$')
     while (i >= 1)
-      if (getbufvar(i, "&filetype") == "netrw")
-	silent exe "bwipeout " . i 
+      if (getbufvar(i, '&filetype') ==# 'netrw')
+	silent exe 'bwipeout ' . i 
       endif
       let i-=1
     endwhile
@@ -37,6 +37,25 @@ endfunction
 noremap <silent> <leader>e :call ToggleNetrw()<CR>
 
 
+" function! LF()
+"     let temp = tempname()
+"     exec 'silent !lf -selection-path=' . shellescape(temp)
+"     if !filereadable(temp)
+"         redraw!
+"         return
+"     endif
+"     let names = readfile(temp)
+"     if empty(names)
+"         redraw!
+"         return
+"     endif
+"     exec 'edit ' . fnameescape(names[0])
+"     for name in names[1:]
+"         exec 'argadd ' . fnameescape(name)
+"     endfor
+"     redraw!
+" endfunction
+" command! -bar LF call LF()
 
 "************** Arduino ---------------------------------------------------------------------
 

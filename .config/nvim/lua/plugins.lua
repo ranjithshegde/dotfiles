@@ -1,4 +1,4 @@
-require('utils')
+local u = require('utils')
 -- Defs
 local fn = vim.fn
 local camel = fn.stdpath('data') .. '/site/pack/plugins/opt/CamelCaseMotion'
@@ -18,12 +18,16 @@ if fn.empty(fn.glob(zephyr)) > 0 then
     fn.system({'git', 'clone', 'https://github.com/glepnir/zephyr-nvim.git', zephyr})
 end
 
+-- selfmanage packer
 if fn.empty(fn.glob(install_path)) > 0 then
     fn.system({'git', 'clone', 'https://github.com/wbthomason/packer.nvim', install_path})
 end
 
-Exec 'autocmd BufWritePost,BufLeave plugins.lua PackerCompile'
-Exec("autocmd BufReadPost *.conf setl ft=conf")
+-- Plugin autocommand
+u.create_augroup({
+    {'BufWrite', 'plugins.lua', 'PackerCompile'}, {'BufReadPost', '*.conf', 'setl ft=conf '},
+    {'BufNewFile,BufReadPost', '*.vs,*.fs', 'set ft=glsl'}, {'FileType', 'glsl', 'packadd vim-glsl'}
+}, 'PluginLoad')
 
 --------------------------------------------------------------------------------------------------------
 --				Main Plugins 							      --
@@ -36,22 +40,25 @@ return packer.startup(function(use)
 
     use 'vimwiki/vimwiki'
 
-    use 'SirVer/ultisnips'
-
     -- use "fhill2/floating.nvim"
 
     use {'m-pilia/vim-ccls', opt = true}
 
     use {'rhysd/vim-grammarous', opt = true}
 
+    use {'SirVer/ultisnips', ft = {"supercollider"}}
+
     use {'neovim/nvim-lspconfig', requires = {'nvim-lua/lsp-status.nvim'}}
 
-    use {'jbyuki/instant.nvim', config = function() G.instant_username = 'Ranjith' end}
+    use {'jbyuki/instant.nvim', config = function() G.instant_username = 'Ranjith' end, opt = true}
 
     use {'lewis6991/gitsigns.nvim', config = function() require('gitsigns').setup() end}
 
     -- StatusLine
     use {'tjdevries/express_line.nvim', requires = {'kyazdani42/nvim-web-devicons', opt = true}}
+
+    -- Cmake
+    use {'cdelledonne/vim-cmake', config = function() G.cmake_link_compile_commands = 1 end}
 
     -- vimTex
     use {
@@ -70,7 +77,9 @@ return packer.startup(function(use)
 
     -- Markdown preview
     -- use {'iamcco/markdown-preview.nvim',
-    -- run = function() fn['mkdp#util#install']() end
+    -- run = function() fn['mkdp#util#install'](),
+    -- cmd = 'MarkdownPreview'
+    -- end
     -- }
 
     -- completion and snippets
@@ -82,7 +91,7 @@ return packer.startup(function(use)
     -- Tim pope
     use {
         'tpope/vim-fugitive', 'tpope/vim-commentary', 'tpope/vim-unimpaired', 'tpope/vim-surround',
-        'tpope/vim-repeat', 'tpope/vim-eunuch'
+        'tpope/vim-repeat'
     }
 
     -- Telescope
@@ -154,13 +163,14 @@ return packer.startup(function(use)
         config = function()
             G.indent_blankline_buftype_exclude = {'terminal'}
             G.indent_blankline_char = '┊'
+            G.indent_blankline_space_char = '.'
             G.indent_blankline_use_treesitter = true
             G.indent_blankline_show_current_context = true
             G.indent_blankline_context_patterns = {
                 'class', 'return', 'function', 'method', '^if', '^while', 'jsx_element', '^for',
-                '^object', '^table', 'block', 'arguments', 'if_statement', 'else_clause',
-                'jsx_element', 'jsx_self_closing_element', 'try_statement', 'catch_clause',
-                'import_statement', 'operation_type'
+                'inherits', 'access_specifier', '^object', '^table', 'block', 'arguments',
+                'if_statement', 'else_clause', 'jsx_element', 'jsx_self_closing_element',
+                'try_statement', 'catch_clause', 'import_statement', 'operation_type'
             }
 
         end

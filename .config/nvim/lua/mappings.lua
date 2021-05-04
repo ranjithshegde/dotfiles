@@ -77,7 +77,7 @@ function M.edit_config_files()
 		{'n', '<leader>al', ':' .. open_func .. " ~/.config/nvim/lua/settings.lua<CR>"},
 		{'n', '<leader>ap', ':' .. open_func .. " ~/.config/nvim/lua/plugins.lua<CR>"},
 		{'n', '<leader>as', ':' .. open_func .. " ~/.config/nvim/lua/statusline.lua<CR>"},
-		-- {'n', '<leader>agl', ':' .. open_func .. " ~/.config/nvim/lua/galaxylineconf.lua<CR>"},
+		{'n', '<leader>ac', ':' .. open_func .. " ~/.config/nvim/lua/cmake.lua<CR>"},
 		{'n', '<leader>aut', ':' .. open_func .. " ~/.config/nvim/lua/utils/init.lua<CR>"},
 		{'n', '<leader>ar', ':' .. open_func .. ' $MYVIMRC<CR>'}
 	}
@@ -113,7 +113,7 @@ function M.telescope()
 		-- Code action
 		{'n', '<space>ac', tele("lsp_code_actions")},
 		-- Document diagnostics
-		{'n', '<space>d', tele("lsp_document_diagnostics")},
+		{'n', '<space>dd', tele("lsp_document_diagnostics")},
 		-- Workspace diagnostics
 		{'n', '<space>D', tele("lsp_workspace_diagnostics")},
 		-- Code action
@@ -268,19 +268,21 @@ function M.clang()
 		-- Switch source header
 		{'n', 'mv', ':ClangdSwitchSourceHeader<CR>'},
 		-- Compile c file
-		{'n', '<F2>', ':w <CR> :!gcc % -o %< && ./%< <CR>'},
+		{'n', '<F1>', ':w <CR> :!gcc % -o %< && ./%< <CR>'},
 		-- avoid preprocessor errors
-		{'n', '<F3>', ':w <CR> :!gcc % -lm -o %< && ./%< <CR>'},
+		{'n', '<F2>', ':w <CR> :!gcc % -lm -o %< && ./%< <CR>'},
+		-- Compile cpp file
+		{'n', '<F3>', ':w <CR> :!g++ -g % -o %< && ./%< <CR>'},
 		-- Compile Debug openFrameworks
 		{'n', '<F4>', ':w <CR> :!make Debug -j12<CR>'},
 		-- Compile openFrameworks
 		{'n', '<F5>', ':w <CR> :FloatermNew make -j12 && make RunRelease<CR>'},
 		-- run openFrameworks
 		{'n', '<F6>', ':w <CR> :!make RunRelease<CR>'},
-		-- Compile cpp file
-		{'n', '<F7>', ':w <CR> :!g++ % -o %< && ./%< <CR>'},
-		-- Compile cpp file
-		{'n', '<F8>', ':w <CR> :!g++ -g % -o %< && ./%< <CR>'},
+		-- Build Cmake
+		{'n', '<F7>', ':w <CR> :CMakeGenerate<CR>'},
+		-- run Cmake
+		{'n', '<F8>', ':w <CR> :CMakeBuild<CR>'},
 
 		-- bases
 		{'n',';b', ':CclsBase<CR>'},
@@ -310,6 +312,27 @@ function M.clang()
 		-- variables
 		{'n',';v', ':CclsVars<CR>'},
 	}
+	u.bufmaps(bufmaps, opts)
+end
+
+-- ******************************** CMake ---------------------------------------
+
+function M.cmake()
+	local opts = { nowait = true, noremap = true, silent = false }
+	local bufmaps = {
+
+		{'n', '<leader>cb', ':lua require("cmake").cmake_build()<cr>'},
+		{'n', '<leader>cd', ':lua require("cmake").cmake_gen_debug()<cr>'},
+		{'n', '<leader>cg', ':lua require("cmake").cmake_gen()<cr>'},
+		{'n', '<leader>cc', ':lua require("cmake").cmake_clean_build()<cr>'},
+		{'n', '<leader>ci', ':lua require("cmake").cmake_install()<cr>'},
+		{'n', '<leader>ct', ':lua require("cmake").catch_test()<cr>'},
+		{'n', '<leader>cb', ':lua require("cmake").cmake_build()<cr>'},
+		{'n', '<leader>ct', ':lua require("cmake").catch_test()<cr>'},
+		{'n', '<C-t>', ':lua require("cmake").fuzzy_catch()<cr>'},
+
+	}
+
 	u.bufmaps(bufmaps, opts)
 end
 
