@@ -135,7 +135,7 @@ function settings.treesitter()
                 },
                 goto_next_end = {
                     ["]N"] = "@function.outer",
-                    ["]="] = "@class.outer",
+                    -- ["]="] = "@class.outer",
                     ["]I"] = "@function.inner"
                 },
                 goto_previous_start = {
@@ -147,7 +147,7 @@ function settings.treesitter()
                 },
                 goto_previous_end = {
                     ["[N"] = "@function.outer",
-                    ["[="] = "@class.outer",
+                    -- ["[="] = "@class.outer",
                     ["[I"] = "@function.inner"
                 }
             },

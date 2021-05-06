@@ -1,28 +1,23 @@
 "**************Neovim basics -------------------------------------------------------------
 lua require ('plugins')
 lua require ('settings').settings()
-lua require 'mappings'.general()
-lua require 'mappings'.autoComplete()
+lua require ('mappings').general()
+lua require ('mappings').autoComplete()
 lua require 'statusline'
 lua require 'cmake'
-" lua require 'scnvim'
 
+" Custom tabline
 function! TabLine()
 	return luaeval("require'statusline'.init()")
 endfunction
 set tabline=%!TabLine()
 
+" Change local grep
 if executable('rg') 
 	set grepprg=rg\ --vimgrep 
 endif
 
-nn <silent><leader>fm = gg=G<C-o>zz
-
 set dictionary+=$HOME/.local/share/dict/words
-
-" augroup terminal_setup | au!
-"   autocmd TermOpen * nnoremap <buffer><LeftRelease><RightRelease>i
-" augroup end
 
 "************************ Built in LSP-------------------------------------------------
 
@@ -67,10 +62,12 @@ func! WordProcessor()
 endfu
 com! Gram call WordProcessor()
 
+"************** File permissions  ----------------------------------------------------
 func! SuWrite()
 	w !sudo tee %
 endfu
 com! Su call SuWrite()
+
 "************** FileTypes & AutoCompiles-----------------------------------------------
 
 "Open new floating terminal

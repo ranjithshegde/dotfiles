@@ -1,9 +1,18 @@
 local u = require('utils')
--- Defs
+
+-- -------------------------- Defs **********************************************************************
 local fn = vim.fn
 local camel = fn.stdpath('data') .. '/site/pack/plugins/opt/CamelCaseMotion'
 local zephyr = fn.stdpath('data') .. '/site/pack/plugins/start/zephyr-nvim'
 local install_path = fn.stdpath('data') .. '/site/pack/packer/start/packer.nvim'
+
+-- Plugin autocommand
+u.create_augroup({
+    {'BufWritePost, BufLeave', 'plugins.lua', 'PackerCompile'},
+    {'BufReadPost', '*.conf', 'setl ft=conf '},
+    {'BufNewFile, BufReadPost', '*.vs,*.fs', 'set ft=glsl'},
+    {'FileType', 'glsl', 'packadd vim-glsl'}
+}, 'PluginLoad')
 
 --------------------------------------------------------------------------------------------------------
 --				Custom Plugins 							      --
@@ -22,12 +31,6 @@ end
 if fn.empty(fn.glob(install_path)) > 0 then
     fn.system({'git', 'clone', 'https://github.com/wbthomason/packer.nvim', install_path})
 end
-
--- Plugin autocommand
-u.create_augroup({
-    {'BufWrite', 'plugins.lua', 'PackerCompile'}, {'BufReadPost', '*.conf', 'setl ft=conf '},
-    {'BufNewFile,BufReadPost', '*.vs,*.fs', 'set ft=glsl'}, {'FileType', 'glsl', 'packadd vim-glsl'}
-}, 'PluginLoad')
 
 --------------------------------------------------------------------------------------------------------
 --				Main Plugins 							      --
@@ -57,9 +60,6 @@ return packer.startup(function(use)
     -- StatusLine
     use {'tjdevries/express_line.nvim', requires = {'kyazdani42/nvim-web-devicons', opt = true}}
 
-    -- Cmake
-    use {'cdelledonne/vim-cmake', config = function() G.cmake_link_compile_commands = 1 end}
-
     -- vimTex
     use {
         'lervag/vimtex',
@@ -75,9 +75,18 @@ return packer.startup(function(use)
         end
     }
 
+    -- Cmake
+    use {
+        'cdelledonne/vim-cmake',
+        opt = true,
+        cmd = 'CMakeGenerate',
+        config = function() G.cmake_link_compile_commands = 1 end
+    }
+
     -- Markdown preview
     -- use {'iamcco/markdown-preview.nvim',
     -- run = function() fn['mkdp#util#install'](),
+    -- opt = true,
     -- cmd = 'MarkdownPreview'
     -- end
     -- }
@@ -129,6 +138,7 @@ return packer.startup(function(use)
         'salkin-mada/scnvim',
         -- 'davidgranstrom/scnvim',
         branch = 'salkin-dev',
+	ft = 'supercollider',
         run = function() fn['scnvim#install']() end,
         config = function()
             G.scnvim_floating_args_register = "s"

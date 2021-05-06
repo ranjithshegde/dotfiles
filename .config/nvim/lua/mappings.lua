@@ -29,8 +29,10 @@ function M.general()
 		{'t', '<Esc>', '<C-\\><C-n>'},
 		{'n', '<leader>ht', ':sp term://zsh<cr>'},
 		{'n', '<leader>t', ':vspl term://zsh<cr>'},
+		-- Treesitter basics
 		{'n', ';K', ':TSHighlightCapturesUnderCursor<cr>'},
 		{'n', ';P', ':TSPlaygroundToggle<cr>'},
+		{'n', '<leader>fm', 'gg=G<C-o>zz'},
 	}
 	u.maps(maps,opts)
 end
@@ -51,11 +53,11 @@ function M.nvim_lsp()
 		{'n', '[d', '<cmd>lua vim.lsp.diagnostic.goto_prev({popup_opts = {border = "double"}})<CR>'},
 		{'n', ']d', '<cmd>lua vim.lsp.diagnostic.goto_next({popup_opts = {border = "double"}})<CR>'},
 		{'n', ',ld', '<cmd>lua vim.lsp.diagnostic.show_line_diagnostics({popup_opts = {border = "double"}})<CR>'},
-		{'n', ',rn', '<cmd>lua vim.lsp.buf.rename()<CR>'},
+		{'n', ',R', '<cmd>lua vim.lsp.buf.rename()<CR>'},
 		{"n", ",ac", "<cmd>lua vim.lsp.buf.code_action()<CR>"},
 		{"n", ",ff", "<cmd>lua vim.lsp.buf.formatting()<CR>"},
-		{"n", ",rf", "<cmd>lua vim.lsp.buf.range_formatting()<CR>"},
-		{'n', ',sl', '<cmd>lua vim.lsp.diagnostic.set_loclist()<CR>'},
+		{"n", ",fr", "<cmd>lua vim.lsp.buf.range_formatting()<CR>"},
+		{'n', ',dl', '<cmd>lua vim.lsp.diagnostic.set_loclist()<CR>'},
 		{'n', ',wa', '<cmd>lua vim.lsp.buf.add_workspace_folder()<CR>'},
 		{'n', ',wr', '<cmd>lua vim.lsp.buf.remove_workspace_folder()<CR>'},
 		{'n', ',wl', '<cmd>lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))<CR>'},
@@ -268,7 +270,7 @@ function M.clang()
 		-- Switch source header
 		{'n', 'mv', ':ClangdSwitchSourceHeader<CR>'},
 		-- Compile c file
-		{'n', '<F1>', ':w <CR> :!gcc % -o %< && ./%< <CR>'},
+		-- {'n', '<F1>', ':w <CR> :!gcc % -o %< && ./%< <CR>'},
 		-- avoid preprocessor errors
 		{'n', '<F2>', ':w <CR> :!gcc % -lm -o %< && ./%< <CR>'},
 		-- Compile cpp file
@@ -283,6 +285,8 @@ function M.clang()
 		{'n', '<F7>', ':w <CR> :CMakeGenerate<CR>'},
 		-- run Cmake
 		{'n', '<F8>', ':w <CR> :CMakeBuild<CR>'},
+		-- Toggle Cmake
+		{'n', '<F11>', ':w <CR> :CMakeClose<CR>'},
 
 		-- bases
 		{'n',';b', ':CclsBase<CR>'},
@@ -326,10 +330,9 @@ function M.cmake()
 		{'n', '<leader>cg', ':lua require("cmake").cmake_gen()<cr>'},
 		{'n', '<leader>cc', ':lua require("cmake").cmake_clean_build()<cr>'},
 		{'n', '<leader>ci', ':lua require("cmake").cmake_install()<cr>'},
-		{'n', '<leader>ct', ':lua require("cmake").catch_test()<cr>'},
+		-- {'n', '<leader>ct', ':lua require("cmake").catch_test()<cr>'},
 		{'n', '<leader>cb', ':lua require("cmake").cmake_build()<cr>'},
-		{'n', '<leader>ct', ':lua require("cmake").catch_test()<cr>'},
-		{'n', '<C-t>', ':lua require("cmake").fuzzy_catch()<cr>'},
+		-- {'n', '<C-t>', ':lua require("cmake").fuzzy_catch()<cr>'},
 
 	}
 

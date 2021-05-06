@@ -36,41 +36,41 @@ function CMake.catch_test()
 end
 
 -- Fuzzy execution of catch2 tests using tags
-function CMake.fuzzy_catch()
-	local test_executable_name = "tests"
-	local test = "build/" .. test_executable_name
-	local catch2tagoutput = CMake.shell("./" .. test .. " -t")
-	local newtags = {}
+-- function CMake.fuzzy_catch()
+-- 	local test_executable_name = "tests"
+-- 	local test = "build/" .. test_executable_name
+-- 	local catch2tagoutput = CMake.shell("./" .. test .. " -t")
+-- 	local newtags = {}
 
-	-- Run through terminal output, get lines containing tags and filter them to only contain tags
-	for i = 1, #catch2tagoutput do
-		-- Only include lines containing square brackets (a tag in catch)
-		if string.match(catch2tagoutput[i], "%[") then
-			-- Tag line
-			local newtag = string.gsub(catch2tagoutput[i], "%s%d", "")
-			newtag = string.gsub(newtag, "%s", "")
+-- 	-- Run through terminal output, get lines containing tags and filter them to only contain tags
+-- 	for i = 1, #catch2tagoutput do
+-- 		-- Only include lines containing square brackets (a tag in catch)
+-- 		if string.match(catch2tagoutput[i], "%[") then
+-- 			-- Tag line
+-- 			local newtag = string.gsub(catch2tagoutput[i], "%s%d", "")
+-- 			newtag = string.gsub(newtag, "%s", "")
 
-			-- Insert into new array
-			table.insert(newtags, newtag)
-		end
-	end
+-- 			-- Insert into new array
+-- 			table.insert(newtags, newtag)
+-- 		end
+-- 	end
 
-	local counter = 0
-	local callback = function(tag)
-		counter = counter + 1
-		-- print(test)
-		-- print(test .. " " .. tag)
-		-- Exec("term " .. test .. " " .. tag)
-		-- testcmd = string.format("%s -t %s", test, tag)
-		-- M.terminal(testcmd)
-	end
+-- 	local counter = 0
+-- 	local callback = function(tag)
+-- 		counter = counter + 1
+-- 		-- print(test)
+-- 		-- print(test .. " " .. tag)
+-- 		-- Exec("term " .. test .. " " .. tag)
+-- 		-- testcmd = string.format("%s -t %s", test, tag)
+-- 		-- M.terminal(testcmd)
+-- 	end
 
-	-- Run fuzzy command on it
-	CMake.fzf(newtags, callback)
+-- 	-- Run fuzzy command on it
+-- 	CMake.fzf(newtags, callback)
 
-	-- M.terminal(test .. " " .. chosentag)
+-- 	-- M.terminal(test .. " " .. chosentag)
 
-	print(counter)
-end
+-- 	print(counter)
+-- end
 
 return CMake
