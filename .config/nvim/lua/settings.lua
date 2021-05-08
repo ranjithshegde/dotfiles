@@ -20,8 +20,6 @@ end
 function settings.options()
     Cmd 'colo zephyr'
     Cmd 'hi Normal guibg=none'
-    -- Cmd 'colo tokyonight'
-    -- G.tokyonight_style = "day"
     Cmd 'set nohlsearch'
 
     u.opt('w', 'number', true)
@@ -34,7 +32,8 @@ function settings.options()
     u.opt('o', 'signcolumn', 'true')
     u.opt('o', 'updatetime', 300)
     u.opt('o', 'scrolloff', 10)
-    -- u.opt('b', 'shiftwidth', 0)
+    u.opt('b', 'shiftwidth', 0)
+    u.opt('b', 'tabstop', 4)
     u.opt('o', 'clipboard', [[unnamed,unnamedplus]])
     u.opt('o', 'completeopt', [[menuone,noinsert,noselect]])
     u.opt('o', 'fillchars', "stlnc:»,vert:║,fold:·")

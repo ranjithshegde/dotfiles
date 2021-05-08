@@ -14,7 +14,7 @@ try
 lua << END
   local time
   local profile_info
-  local should_profile = true
+  local should_profile = false
   if should_profile then
     local hrtime = vim.loop.hrtime
     profile_info = {}
@@ -85,7 +85,7 @@ _G.packer_plugins = {
     path = "/home/ranjith/.local/share/nvim/site/pack/packer/start/gitsigns.nvim"
   },
   ["indent-blankline.nvim"] = {
-    config = { "\27LJ\2\n’\4\0\0\2\0\v\0\0196\0\0\0005\1\2\0=\1\1\0006\0\0\0'\1\4\0=\1\3\0006\0\0\0'\1\6\0=\1\5\0006\0\0\0+\1\2\0=\1\a\0006\0\0\0+\1\2\0=\1\b\0006\0\0\0005\1\n\0=\1\t\0K\0\1\0\1\23\0\0\nclass\vreturn\rfunction\vmethod\b^if\v^while\16jsx_element\t^for\rinherits\21access_specifier\f^object\v^table\nblock\14arguments\17if_statement\16else_clause\16jsx_element\29jsx_self_closing_element\18try_statement\17catch_clause\21import_statement\19operation_type&indent_blankline_context_patterns*indent_blankline_show_current_context$indent_blankline_use_treesitter\6. indent_blankline_space_char\bâ”Š\26indent_blankline_char\1\2\0\0\rterminal%indent_blankline_buftype_exclude\6G\0" },
+    config = { "\27LJ\2\n \4\0\0\2\0\v\0\0196\0\0\0005\1\2\0=\1\1\0006\0\0\0'\1\4\0=\1\3\0006\0\0\0'\1\6\0=\1\5\0006\0\0\0+\1\2\0=\1\a\0006\0\0\0+\1\2\0=\1\b\0006\0\0\0005\1\n\0=\1\t\0K\0\1\0\1\25\0\0\nclass\vreturn\rfunction\vmethod\b^if\v^while\16jsx_element\t^for\rinherits\21access_specifier\f^object\v^table\nblock\14arguments\n^case\f^switch\17if_statement\16else_clause\16jsx_element\29jsx_self_closing_element\18try_statement\17catch_clause\21import_statement\19operation_type&indent_blankline_context_patterns*indent_blankline_show_current_context$indent_blankline_use_treesitter\6. indent_blankline_space_char\bâ”Š\26indent_blankline_char\1\2\0\0\rterminal%indent_blankline_buftype_exclude\6G\0" },
     loaded = true,
     path = "/home/ranjith/.local/share/nvim/site/pack/packer/start/indent-blankline.nvim"
   },
@@ -229,22 +229,22 @@ _G.packer_plugins = {
 }
 
 time("Defining packer_plugins", false)
--- Config for: vim-floaterm
-time("Config for vim-floaterm", true)
-try_loadstring("\27LJ\2\nš\1\0\0\2\0\a\0\r6\0\0\0)\1\1\0=\1\1\0006\0\0\0)\1\1\0=\1\2\0006\0\0\0'\1\4\0=\1\3\0006\0\0\0'\1\6\0=\1\5\0K\0\1\0\t<F9>\27floaterm_keymap_toggle\n<F10>\24floaterm_keymap_new\23floaterm_autoclose\24floaterm_autoinsert\6G\0", "config", "vim-floaterm")
-time("Config for vim-floaterm", false)
--- Config for: gitsigns.nvim
-time("Config for gitsigns.nvim", true)
-try_loadstring("\27LJ\2\n6\0\0\3\0\3\0\0066\0\0\0'\2\1\0B\0\2\0029\0\2\0B\0\1\1K\0\1\0\nsetup\rgitsigns\frequire\0", "config", "gitsigns.nvim")
-time("Config for gitsigns.nvim", false)
 -- Config for: which-key.nvim
 time("Config for which-key.nvim", true)
 try_loadstring("\27LJ\2\n|\0\0\5\0\t\0\r6\0\0\0'\2\1\0B\0\2\0029\0\2\0005\2\a\0005\3\4\0005\4\3\0=\4\5\0035\4\6\0>\4\1\3=\3\b\2B\0\2\1K\0\1\0\vlayout\1\0\0\1\0\1\fspacing\3\n\nwidth\1\0\0\1\0\1\bmax\3P\nsetup\14which-key\frequire\0", "config", "which-key.nvim")
 time("Config for which-key.nvim", false)
+-- Config for: gitsigns.nvim
+time("Config for gitsigns.nvim", true)
+try_loadstring("\27LJ\2\n6\0\0\3\0\3\0\0066\0\0\0'\2\1\0B\0\2\0029\0\2\0B\0\1\1K\0\1\0\nsetup\rgitsigns\frequire\0", "config", "gitsigns.nvim")
+time("Config for gitsigns.nvim", false)
 -- Config for: indent-blankline.nvim
 time("Config for indent-blankline.nvim", true)
-try_loadstring("\27LJ\2\n’\4\0\0\2\0\v\0\0196\0\0\0005\1\2\0=\1\1\0006\0\0\0'\1\4\0=\1\3\0006\0\0\0'\1\6\0=\1\5\0006\0\0\0+\1\2\0=\1\a\0006\0\0\0+\1\2\0=\1\b\0006\0\0\0005\1\n\0=\1\t\0K\0\1\0\1\23\0\0\nclass\vreturn\rfunction\vmethod\b^if\v^while\16jsx_element\t^for\rinherits\21access_specifier\f^object\v^table\nblock\14arguments\17if_statement\16else_clause\16jsx_element\29jsx_self_closing_element\18try_statement\17catch_clause\21import_statement\19operation_type&indent_blankline_context_patterns*indent_blankline_show_current_context$indent_blankline_use_treesitter\6. indent_blankline_space_char\bâ”Š\26indent_blankline_char\1\2\0\0\rterminal%indent_blankline_buftype_exclude\6G\0", "config", "indent-blankline.nvim")
+try_loadstring("\27LJ\2\n \4\0\0\2\0\v\0\0196\0\0\0005\1\2\0=\1\1\0006\0\0\0'\1\4\0=\1\3\0006\0\0\0'\1\6\0=\1\5\0006\0\0\0+\1\2\0=\1\a\0006\0\0\0+\1\2\0=\1\b\0006\0\0\0005\1\n\0=\1\t\0K\0\1\0\1\25\0\0\nclass\vreturn\rfunction\vmethod\b^if\v^while\16jsx_element\t^for\rinherits\21access_specifier\f^object\v^table\nblock\14arguments\n^case\f^switch\17if_statement\16else_clause\16jsx_element\29jsx_self_closing_element\18try_statement\17catch_clause\21import_statement\19operation_type&indent_blankline_context_patterns*indent_blankline_show_current_context$indent_blankline_use_treesitter\6. indent_blankline_space_char\bâ”Š\26indent_blankline_char\1\2\0\0\rterminal%indent_blankline_buftype_exclude\6G\0", "config", "indent-blankline.nvim")
 time("Config for indent-blankline.nvim", false)
+-- Config for: vim-floaterm
+time("Config for vim-floaterm", true)
+try_loadstring("\27LJ\2\nš\1\0\0\2\0\a\0\r6\0\0\0)\1\1\0=\1\1\0006\0\0\0)\1\1\0=\1\2\0006\0\0\0'\1\4\0=\1\3\0006\0\0\0'\1\6\0=\1\5\0K\0\1\0\t<F9>\27floaterm_keymap_toggle\n<F10>\24floaterm_keymap_new\23floaterm_autoclose\24floaterm_autoinsert\6G\0", "config", "vim-floaterm")
+time("Config for vim-floaterm", false)
 
 -- Command lazy-loads
 time("Defining lazy-load commands", true)
@@ -255,21 +255,21 @@ vim.cmd [[augroup packer_load_aucmds]]
 vim.cmd [[au!]]
   -- Filetype lazy-loads
 time("Defining lazy-load filetype autocommands", true)
+vim.cmd [[au FileType supercollider ++once lua require("packer.load")({'scnvim', 'ultisnips'}, { ft = "supercollider" }, _G.packer_plugins)]]
 vim.cmd [[au FileType tex ++once lua require("packer.load")({'vimtex'}, { ft = "tex" }, _G.packer_plugins)]]
 vim.cmd [[au FileType bib ++once lua require("packer.load")({'vimtex'}, { ft = "bib" }, _G.packer_plugins)]]
-vim.cmd [[au FileType supercollider ++once lua require("packer.load")({'ultisnips', 'scnvim'}, { ft = "supercollider" }, _G.packer_plugins)]]
 time("Defining lazy-load filetype autocommands", false)
 vim.cmd("augroup END")
 vim.cmd [[augroup filetypedetect]]
-time("Sourcing ftdetect script at: /home/ranjith/.local/share/nvim/site/pack/packer/opt/ultisnips/ftdetect/snippets.vim", true)
-vim.cmd [[source /home/ranjith/.local/share/nvim/site/pack/packer/opt/ultisnips/ftdetect/snippets.vim]]
-time("Sourcing ftdetect script at: /home/ranjith/.local/share/nvim/site/pack/packer/opt/ultisnips/ftdetect/snippets.vim", false)
-time("Sourcing ftdetect script at: /home/ranjith/.local/share/nvim/site/pack/packer/opt/vimtex/ftdetect/tex.vim", true)
-vim.cmd [[source /home/ranjith/.local/share/nvim/site/pack/packer/opt/vimtex/ftdetect/tex.vim]]
-time("Sourcing ftdetect script at: /home/ranjith/.local/share/nvim/site/pack/packer/opt/vimtex/ftdetect/tex.vim", false)
 time("Sourcing ftdetect script at: /home/ranjith/.local/share/nvim/site/pack/packer/opt/scnvim/ftdetect/supercollider.vim", true)
 vim.cmd [[source /home/ranjith/.local/share/nvim/site/pack/packer/opt/scnvim/ftdetect/supercollider.vim]]
 time("Sourcing ftdetect script at: /home/ranjith/.local/share/nvim/site/pack/packer/opt/scnvim/ftdetect/supercollider.vim", false)
+time("Sourcing ftdetect script at: /home/ranjith/.local/share/nvim/site/pack/packer/opt/vimtex/ftdetect/tex.vim", true)
+vim.cmd [[source /home/ranjith/.local/share/nvim/site/pack/packer/opt/vimtex/ftdetect/tex.vim]]
+time("Sourcing ftdetect script at: /home/ranjith/.local/share/nvim/site/pack/packer/opt/vimtex/ftdetect/tex.vim", false)
+time("Sourcing ftdetect script at: /home/ranjith/.local/share/nvim/site/pack/packer/opt/ultisnips/ftdetect/snippets.vim", true)
+vim.cmd [[source /home/ranjith/.local/share/nvim/site/pack/packer/opt/ultisnips/ftdetect/snippets.vim]]
+time("Sourcing ftdetect script at: /home/ranjith/.local/share/nvim/site/pack/packer/opt/ultisnips/ftdetect/snippets.vim", false)
 vim.cmd("augroup END")
 if should_profile then save_profiles() end
 

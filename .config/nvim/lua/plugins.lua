@@ -138,7 +138,7 @@ return packer.startup(function(use)
         'salkin-mada/scnvim',
         -- 'davidgranstrom/scnvim',
         branch = 'salkin-dev',
-	ft = 'supercollider',
+        ft = 'supercollider',
         run = function() fn['scnvim#install']() end,
         config = function()
             G.scnvim_floating_args_register = "s"
@@ -178,8 +178,8 @@ return packer.startup(function(use)
             G.indent_blankline_show_current_context = true
             G.indent_blankline_context_patterns = {
                 'class', 'return', 'function', 'method', '^if', '^while', 'jsx_element', '^for',
-                'inherits', 'access_specifier', '^object', '^table', 'block', 'arguments',
-                'if_statement', 'else_clause', 'jsx_element', 'jsx_self_closing_element',
+                'inherits', 'access_specifier', '^object', '^table', 'block', 'arguments', '^case', '^public', '^private', '^protected',
+                '^switch', 'if_statement', 'else_clause', 'jsx_element', 'jsx_self_closing_element',
                 'try_statement', 'catch_clause', 'import_statement', 'operation_type'
             }
 

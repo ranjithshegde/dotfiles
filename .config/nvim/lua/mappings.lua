@@ -269,9 +269,7 @@ function M.clang()
 	local bufmaps = {
 		-- Switch source header
 		{'n', 'mv', ':ClangdSwitchSourceHeader<CR>'},
-		-- Compile c file
-		-- {'n', '<F1>', ':w <CR> :!gcc % -o %< && ./%< <CR>'},
-		-- avoid preprocessor errors
+		-- Compile c file, avoid preprocessor errors
 		{'n', '<F2>', ':w <CR> :!gcc % -lm -o %< && ./%< <CR>'},
 		-- Compile cpp file
 		{'n', '<F3>', ':w <CR> :!g++ -g % -o %< && ./%< <CR>'},
@@ -330,7 +328,7 @@ function M.cmake()
 		{'n', '<leader>cg', ':lua require("cmake").cmake_gen()<cr>'},
 		{'n', '<leader>cc', ':lua require("cmake").cmake_clean_build()<cr>'},
 		{'n', '<leader>ci', ':lua require("cmake").cmake_install()<cr>'},
-		-- {'n', '<leader>ct', ':lua require("cmake").catch_test()<cr>'},
+		{'n', '<leader>ct', ':lua require("cmake").catch_test()<cr>'},
 		{'n', '<leader>cb', ':lua require("cmake").cmake_build()<cr>'},
 		-- {'n', '<C-t>', ':lua require("cmake").fuzzy_catch()<cr>'},
 
