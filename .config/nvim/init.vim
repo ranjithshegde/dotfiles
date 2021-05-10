@@ -13,10 +13,8 @@ endfunction
 set tabline=%!TabLine()
 
 " Change local grep
-if executable('rg') 
-	set grepprg=rg\ --vimgrep 
-endif
-
+set grepprg=rg\ --vimgrep 
+" Set dictionary
 set dictionary+=$HOME/.local/share/dict/words
 
 "************************ Built in LSP-------------------------------------------------
@@ -36,11 +34,12 @@ endfunction
 "**************	OpenFrameworks----------------------------------------------------------------
 
 function! Clang()
-	packadd vim-ccls
+	" packadd vim-ccls
 	nnoremap <buffer> <leader>rt :!ctags -R .<CR>
 	let g:ccls_levels = 5
 	setlocal commentstring=//%s
 	lua require 'mappings'.clang()
+	lua require 'mappings'.cmake()
 endfunction
 
 "************** Word Processor ----------------------------------------------------------------
@@ -58,7 +57,6 @@ func! WordProcessor()
 	setlocal spell spelllang=en_us
 	set complete+=k
 	packadd vim-grammarous
-	" packadd LanguageTool.nvim
 endfu
 com! Gram call WordProcessor()
 
@@ -73,15 +71,19 @@ com! Su call SuWrite()
 "Open new floating terminal
 nnoremap <leader>fr :FloatermNew ranger<CR>
 
-augroup fileTypes
+augroup GenericFiles
 	au FileType * lua require'mappings'.nvim_lsp()
-	au FileType c,cpp,hpp,glsl,cmake call Clang()
-	au FileType cpp,c,arduino,cmake lua require'mappings'.cmake()
 	au FileType gitcommit lua require'mappings'.git_commit()
-	au FileType cpp,c,arduino lua require'mappings'.arduino()
 	au filetype text,vimwiki,tex call WordProcessor()
 	au filetype html nmap <F4> : exec 'silent !qutebrowser % &'
+	au FileType java let b:dispatch = 'javac %'
 augroup end 
+
+augroup CFiles
+	au FileType c,cpp,cmake call Clang()
+	au FileType cpp,c,arduino lua require'mappings'.arduino()
+augroup end
+
 
 "************************ CamelCase -------------------------------------------------
 function! CamelCase()

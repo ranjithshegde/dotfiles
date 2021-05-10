@@ -315,15 +315,15 @@ end
 function settings.langServers()
 
     local configs = {
-        vimls = {on_attach = All_attach},
-        bashls = {on_attach = All_attach, filetypes = {"sh", "zsh"}},
         texlab = {on_attach = All_attach},
         cssls = {on_attach = All_attach},
         yamlls = {on_attach = All_attach},
         jsonls = {on_attach = All_attach},
         pyright = {on_attach = All_attach},
-        cmake = {on_attach = All_attach},
         tsserver = {on_attach = All_attach},
+        cmake = {on_attach = All_attach, capabilities = Capabilities},
+        vimls = {on_attach = All_attach, capabilities = Capabilities},
+        bashls = {on_attach = All_attach, filetypes = {"sh", "zsh"}},
         clangd = {
             handlers = Lsp_status.extensions.clangd.setup(),
             on_attach = All_attach,
@@ -510,5 +510,14 @@ function settings.telescope()
     -- }
     -- u.maps(maps, opts)
 
+end
+
+function settings.jdtls()
+    require('jdtls').start_or_attach({
+        on_attach = All_attach,
+        capabilities = Capabilities,
+        cmd = {'jdlsp'}
+    })
+    require('jdtls.setup').add_commands()
 end
 return settings

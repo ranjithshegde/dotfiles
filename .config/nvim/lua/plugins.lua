@@ -45,7 +45,8 @@ return packer.startup(function(use)
 
     -- use "fhill2/floating.nvim"
 
-    use {'m-pilia/vim-ccls', opt = true}
+    -- use {'m-pilia/vim-ccls', opt = true}
+    use {'m-pilia/vim-ccls', ft = 'cpp'}
 
     use {'rhysd/vim-grammarous', opt = true}
 
@@ -55,7 +56,11 @@ return packer.startup(function(use)
 
     use {'jbyuki/instant.nvim', config = function() G.instant_username = 'Ranjith' end, opt = true}
 
-    use {'lewis6991/gitsigns.nvim', config = function() require('gitsigns').setup() end}
+    use {
+        'lewis6991/gitsigns.nvim',
+        cmd = 'Gitsigns',
+        config = function() require('gitsigns').setup() end
+    }
 
     -- StatusLine
     use {'tjdevries/express_line.nvim', requires = {'kyazdani42/nvim-web-devicons', opt = true}}
@@ -73,6 +78,13 @@ return packer.startup(function(use)
         config = function()
             require("which-key").setup {layout = {width = {max = 80}, {spacing = 10}}}
         end
+    }
+
+    -- Java Lsp
+    use {
+        'mfussenegger/nvim-jdtls',
+        ft = "java",
+        config = function() require('settings').jdtls() end
     }
 
     -- Cmake
@@ -99,8 +111,8 @@ return packer.startup(function(use)
 
     -- Tim pope
     use {
-        'tpope/vim-fugitive', 'tpope/vim-commentary', 'tpope/vim-unimpaired', 'tpope/vim-surround',
-        'tpope/vim-repeat'
+        'tpope/vim-fugitive', 'tpope/vim-commentary', 'tpope/vim-repeat', 'tpope/vim-surround',
+        'tpope/vim-unimpaired', {'tpope/vim-dispatch', cmd = {'Make', 'Dispatch'}}
     }
 
     -- Telescope
@@ -116,9 +128,6 @@ return packer.startup(function(use)
         requires = {
             'nvim-treesitter/playground', 'p00f/nvim-ts-rainbow',
             'nvim-treesitter/nvim-treesitter-textobjects'
-            -- 'nvim-treesitter/nvim-treesitter-refactor',
-            -- 'theHamsta/nvim-treesitter-pairs'
-            -- 'JoosepAlviste/nvim-ts-context-commentstring'
         }
     }
 
@@ -178,9 +187,10 @@ return packer.startup(function(use)
             G.indent_blankline_show_current_context = true
             G.indent_blankline_context_patterns = {
                 'class', 'return', 'function', 'method', '^if', '^while', 'jsx_element', '^for',
-                'inherits', 'access_specifier', '^object', '^table', 'block', 'arguments', '^case', '^public', '^private', '^protected',
-                '^switch', 'if_statement', 'else_clause', 'jsx_element', 'jsx_self_closing_element',
-                'try_statement', 'catch_clause', 'import_statement', 'operation_type'
+                'inherits', 'access_specifier', '^object', '^table', 'block', 'arguments', '^case',
+                '^public', '^private', '^protected', '^switch', 'if_statement', 'else_clause',
+                'jsx_element', 'jsx_self_closing_element', 'try_statement', 'catch_clause',
+                'import_statement', 'operation_type'
             }
 
         end

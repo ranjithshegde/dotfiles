@@ -31,6 +31,7 @@ end
 -- TODO: Get a smarter way of doing this that picks up the executable name automatically
 function CMake.catch_test()
 	local test_executable_name = "tests"
+	local rootDir = vim.fn.getcwd()
 	CMake.terminal("cmake --build " .. G.cmake_build_dir .. " && ./" .. G.cmake_build_dir .. "/" ..
 		test_executable_name, "tabnew")
 end
