@@ -45,7 +45,6 @@ return packer.startup(function(use)
 
     -- use "fhill2/floating.nvim"
 
-    -- use {'m-pilia/vim-ccls', opt = true}
     use {'m-pilia/vim-ccls', ft = 'cpp'}
 
     use {'rhysd/vim-grammarous', opt = true}
@@ -56,6 +55,7 @@ return packer.startup(function(use)
 
     use {'jbyuki/instant.nvim', config = function() G.instant_username = 'Ranjith' end, opt = true}
 
+    -- Git Signs
     use {
         'lewis6991/gitsigns.nvim',
         cmd = 'Gitsigns',
@@ -87,20 +87,12 @@ return packer.startup(function(use)
         config = function() require('settings').jdtls() end
     }
 
-    -- Cmake
-    use {
-        'cdelledonne/vim-cmake',
-        opt = true,
-        cmd = 'CMakeGenerate',
-        config = function() G.cmake_link_compile_commands = 1 end
-    }
-
     -- Markdown preview
-    -- use {'iamcco/markdown-preview.nvim',
-    -- run = function() fn['mkdp#util#install'](),
-    -- opt = true,
+    -- use {
+    -- 'iamcco/markdown-preview.nvim',
+    -- run = function() fn['mkdp#util#install']() end,
+    -- opt = true
     -- cmd = 'MarkdownPreview'
-    -- end
     -- }
 
     -- completion and snippets
@@ -112,7 +104,8 @@ return packer.startup(function(use)
     -- Tim pope
     use {
         'tpope/vim-fugitive', 'tpope/vim-commentary', 'tpope/vim-repeat', 'tpope/vim-surround',
-        'tpope/vim-unimpaired', {'tpope/vim-dispatch', cmd = {'Make', 'Dispatch'}}
+        'tpope/vim-unimpaired',
+        {'tpope/vim-dispatch', cmd = {'Make', 'Dispatch'}}
     }
 
     -- Telescope

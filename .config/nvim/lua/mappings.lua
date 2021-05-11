@@ -17,8 +17,10 @@ function M.general()
 		{'n', '<C-H>', '<C-W><C-H>'},
 		{'x', 'K', ':move \'<-2<CR>gv-gv'},
 		{'x', 'J', ':move \'>+1<CR>gv-gv'},
-		{'n', '<leader>qf', ':copen<CR>'},
-		{'n', '<leader>lf', ':lopen<CR>'},
+		{'n', '-', ':copen<CR>'},
+		{'n', '=', ':lopen<CR>'},
+		{'n', '_', ':cclose<CR>'},
+		{'n', '+', ':lclose<CR>'},
 		-- visual cut for replase
 		{'v', '<leader>p', '"_dP'},
 		{'s', '<leader>p', '"_dP'},
@@ -270,21 +272,21 @@ function M.clang()
 		-- Switch source header
 		{'n', 'mv', ':ClangdSwitchSourceHeader<CR>'},
 		-- Compile c file, avoid preprocessor errors
-		{'n', '<F2>', ':w <CR> :!gcc % -lm -o %< && ./%< <CR>'},
+		{'n', '<F2>', ':w <CR> :Dispatch gcc % -lm -o %<<CR> :Dispatch ./%<<CR>'},
 		-- Compile cpp file
-		{'n', '<F3>', ':w <CR> :!g++ -g % -o %< && ./%< <CR>'},
+		{'n', '<F3>', ':w <CR> :Dispatch g++ -d % -o %<<CR> :Dispatch ./%<<CR>'},
 		-- Compile Debug openFrameworks
-		{'n', '<F4>', ':w <CR> :!make Debug -j12<CR>'},
+		{'n', '<F4>', ':w <CR> :Make Debug -j12<CR>'},
 		-- Compile openFrameworks
-		{'n', '<F5>', ':w <CR> :FloatermNew make -j12 && make RunRelease<CR>'},
+		{'n', '<F5>', ':w <CR> :Make -j12 && make RunRelease<CR>'},
 		-- run openFrameworks
-		{'n', '<F6>', ':w <CR> :!make RunRelease<CR>'},
+		{'n', '<F6>', ':w <CR> :Make RunRelease<CR>'},
 		-- Build Cmake
-		{'n', '<F7>', ':w <CR> :CMakeGenerate<CR>'},
-		-- run Cmake
-		{'n', '<F8>', ':w <CR> :CMakeBuild<CR>'},
-		-- Toggle Cmake
-		{'n', '<F11>', ':w <CR> :CMakeClose<CR>'},
+		{'n', '<F7>', ':w <CR> :lua require("cmake").cmake_gen()<CR>'},
+		-- run Make
+		{'n', '<F8>', ':w <CR> :Make -C build<CR>'},
+		-- Build debug
+		{'n', '<F11>', ':w <CR> :lua require("cmake").cmake_gen_debug()<CR>'},
 
 		-- bases
 		{'n',';b', ':CclsBase<CR>'},
@@ -324,14 +326,10 @@ function M.cmake()
 	local bufmaps = {
 
 		{'n', '<leader>cb', ':lua require("cmake").cmake_build()<cr>'},
-		{'n', '<leader>cd', ':lua require("cmake").cmake_gen_debug()<cr>'},
-		{'n', '<leader>cg', ':lua require("cmake").cmake_gen()<cr>'},
 		{'n', '<leader>cc', ':lua require("cmake").cmake_clean_build()<cr>'},
 		{'n', '<leader>ci', ':lua require("cmake").cmake_install()<cr>'},
 		{'n', '<leader>ct', ':lua require("cmake").catch_test()<cr>'},
-		{'n', '<leader>cb', ':lua require("cmake").cmake_build()<cr>'},
 		-- {'n', '<C-t>', ':lua require("cmake").fuzzy_catch()<cr>'},
-
 	}
 
 	u.bufmaps(bufmaps, opts)

@@ -84,7 +84,11 @@ end
 function settings.treesitter()
 
     require'nvim-treesitter.configs'.setup {
-        highlight = {enable = true, use_languagetree = true},
+        highlight = {
+            enable = true,
+            use_languagetree = true,
+            additional_vim_regex_highlighting = true
+        },
         indent = {enable = true},
         autopairs = {enable = true},
         incremental_selection = {

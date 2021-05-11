@@ -4,8 +4,15 @@ local CMake = {}
 
 G.extra_cmake_flags = "-DCMAKE_EXPORT_COMPILE_COMMANDS=ON"
 G.cmake_build_dir = "build"
+G.compiledb = "ln -s build/compile_commands.json ."
 
-function CMake.terminal(cmd, opencmd)
+function CMake.terminal(cmd)
+-- function CMake.terminal(cmd, opencmd)
+	-- Exec(opencmd or "new")
+	Exec("Dispatch " .. cmd) -- TODO: Exit when exit code is 0
+end
+
+function CMake.newTerm(cmd, opencmd)
 	Exec(opencmd or "new")
 	Exec("terminal " .. cmd) -- TODO: Exit when exit code is 0
 end
@@ -13,25 +20,23 @@ end
 function CMake.cmake_build() CMake.terminal("cmake --build " .. G.cmake_build_dir) end
 
 function CMake.cmake_install()
-	CMake.terminal("cmake --build " .. G.cmake_build_dir .. " --config Release --target install")
+	CMake.newTerm("cmake --build " .. G.cmake_build_dir .. " --config Release --target install")
 end
 
 function CMake.cmake_gen_debug()
-	-- cmake -DCMAKE_BUILD_TYPE='Release' -B build -S .
 	CMake.terminal(
 		"mkdir build; cmake -DCMAKE_BUILD_TYPE='Debug' " .. G.extra_cmake_flags .. " -B " ..
-		G.cmake_build_dir .. " -S .")
+		G.cmake_build_dir .. " -S ." .. ";" ..G.compiledb)
 end
 
 function CMake.cmake_gen()
 	CMake.terminal("mkdir build; cmake -DCMAKE_BUILD_TYPE='Release' " .. G.extra_cmake_flags ..
-		" -B " .. G.cmake_build_dir .. " -S .")
+		" -B " .. G.cmake_build_dir .. " -S ." .. ";" ..G.compiledb)
 end
 
 -- TODO: Get a smarter way of doing this that picks up the executable name automatically
 function CMake.catch_test()
 	local test_executable_name = "tests"
-	local rootDir = vim.fn.getcwd()
 	CMake.terminal("cmake --build " .. G.cmake_build_dir .. " && ./" .. G.cmake_build_dir .. "/" ..
 		test_executable_name, "tabnew")
 end
