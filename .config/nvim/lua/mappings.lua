@@ -15,12 +15,13 @@ function M.general()
 		{'n', '<C-K>', '<C-W><C-K>'},
 		{'n', '<C-L>', '<C-W><C-L>'},
 		{'n', '<C-H>', '<C-W><C-H>'},
+		--line movement
 		{'x', 'K', ':move \'<-2<CR>gv-gv'},
 		{'x', 'J', ':move \'>+1<CR>gv-gv'},
+		-- quickfix
 		{'n', '-', ':copen<CR>'},
-		{'n', '=', ':lopen<CR>'},
-		{'n', '_', ':cclose<CR>'},
-		{'n', '+', ':lclose<CR>'},
+		{'n', '+', ':lopen<CR>'},
+		{'n', '_', ':pclose | cclose | lclose<CR>'},
 		-- visual cut for replase
 		{'v', '<leader>p', '"_dP'},
 		{'s', '<leader>p', '"_dP'},
@@ -46,6 +47,7 @@ function M.nvim_lsp()
 	-- local pop_opts = {popup_opts = {border = "double"}}
 
 	local bufmaps = {
+		{'n', '<F1>', '<cmd>TlistToggle<CR>'},
 		{'n', ',D', '<cmd>lua vim.lsp.buf.declaration()<CR>'},
 		{'n', ',d', '<cmd>lua vim.lsp.buf.definition()<CR>'},
 		{'n', ',i', '<cmd>lua vim.lsp.buf.implementation()<CR>'},
@@ -56,10 +58,11 @@ function M.nvim_lsp()
 		{'n', ']d', '<cmd>lua vim.lsp.diagnostic.goto_next({popup_opts = {border = "double"}})<CR>'},
 		{'n', ',ld', '<cmd>lua vim.lsp.diagnostic.show_line_diagnostics({popup_opts = {border = "double"}})<CR>'},
 		{'n', ',R', '<cmd>lua vim.lsp.buf.rename()<CR>'},
-		{"n", ",ac", "<cmd>lua vim.lsp.buf.code_action()<CR>"},
 		{"n", ",ff", "<cmd>lua vim.lsp.buf.formatting()<CR>"},
-		{"n", ",fr", "<cmd>lua vim.lsp.buf.range_formatting()<CR>"},
-		{'n', ',dl', '<cmd>lua vim.lsp.diagnostic.set_loclist()<CR>'},
+		{"n", ",ac", "<cmd>lua vim.lsp.buf.code_action()<CR>"},
+		{"v", ",ac", "<cmd>lua vim.lsp.buf.range_code_action()<CR>"},
+		{"v", ",ff", "<cmd>lua vim.lsp.buf.range_formatting()<CR>"},
+		{'n', ',ll', '<cmd>lua vim.lsp.diagnostic.set_loclist()<CR>'},
 		{'n', ',wa', '<cmd>lua vim.lsp.buf.add_workspace_folder()<CR>'},
 		{'n', ',wr', '<cmd>lua vim.lsp.buf.remove_workspace_folder()<CR>'},
 		{'n', ',wl', '<cmd>lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))<CR>'},
@@ -101,27 +104,25 @@ function M.telescope()
 	local telE = function(name)
 		return string.format(":lua require'telescope'.extensions.%s()<cr>", name)
 	end
+	local follow_links = {
+		cwd = vim.loop.cwd(),
+		follow = true,
+	}
 
 	local opts = {nowait = true, noremap = true, silent = true}
 	local maps = {
 		-- openFrameworks and other projects
 		{'n', '<space>p', telE("project.project")},
-		-- Plugins
-		{'n', '<space>P', telE("packer.plugins")},
 		-- Fuzzy find files in cwd
 		{'n', '<space>f', tele("find_files")},
 		-- document symbol
 		{'n', '<space>s', tele("lsp_document_symbols")},
 		-- Oldfiles
 		{'n', '<space>rf', tele("oldfiles")},
-		-- Code action
-		{'n', '<space>ac', tele("lsp_code_actions")},
 		-- Document diagnostics
 		{'n', '<space>dd', tele("lsp_document_diagnostics")},
 		-- Workspace diagnostics
 		{'n', '<space>D', tele("lsp_workspace_diagnostics")},
-		-- Code action
-		{'n', '<space>rc', tele("lsp_range_code_actions")},
 		-- References under cursor
 		{'n', ',r', tele("lsp_references")},
 		-- Quickfix list
@@ -148,18 +149,20 @@ function M.telescope()
 		{'n', '<space>gs', tele("git_status")},
 		-- git files
 		{'n', '<space>gf', tele("git_files")},
-		-- colorschemes
-		-- {'n', '<space>c', telF("colorscheme(No_preview())")},
+		-- Ctags
+		{'n', '<space>T', tele("tags")},
+		-- TS symbols
+		{'n', '<space>t', tele("treesitter")},
 		-- Unicode
 		{'n', '<space>m', tele("symbols")},
-		-- Workspace symbol under cursor
-		{'n', '<space>S', telF("lsp_workspace_symbols({query = vim.fn.expand('<cword>')})")},
 		-- Switch buffers
 		{'n', '<space>b', tele("buffers")},
+		-- Workspace symbol under cursor
+		{'n', '<space>S', telF("lsp_workspace_symbols({query = vim.fn.expand('<cword>')})")},
 		-- grep ofProjects
-		{'n', '<space>og', telF("live_grep({cwd='~/Documents/ofWorkspace', follow = true, hidden = true})")},
+		{'n', '<space>og', telF("live_grep({cwd ='~/Documents/ofWorkspace/',follow = true,})")},
 		-- find-files ofProjects
-		{'n', '<space>of', telF("find_files({cwd='~/Documents/ofWorkspace'})")},
+		{'n', '<space>og', telF("find_files({cwd ='~/Documents/ofWorkspace/',follow = true,})")},
 		--  Serach dotfiles
 		{'n', '<space>df', telF("find_files({cwd='~/.config/'})")},
 		--  Serach HOME
@@ -274,7 +277,9 @@ function M.clang()
 		-- Compile c file, avoid preprocessor errors
 		{'n', '<F2>', ':w <CR> :Dispatch gcc % -lm -o %<<CR> :Dispatch ./%<<CR>'},
 		-- Compile cpp file
-		{'n', '<F3>', ':w <CR> :Dispatch g++ -d % -o %<<CR> :Dispatch ./%<<CR>'},
+		-- {'n', '<F3>', ':w <CR> :Dispatch g++ -d % -o %<<CR> :Dispatch ./%<<CR>'},
+		-- {'n', '<F3>', ':w <CR> :Dispatch g++ -g % -o %<<CR> :Dispatch ./%<<CR>'},
+		{'n', '<F3>', ':w <CR> :Dispatch g++ -g % -o %<;./%<<CR>'},
 		-- Compile Debug openFrameworks
 		{'n', '<F4>', ':w <CR> :Make Debug -j12<CR>'},
 		-- Compile openFrameworks
@@ -284,9 +289,9 @@ function M.clang()
 		-- Build Cmake
 		{'n', '<F7>', ':w <CR> :lua require("cmake").cmake_gen()<CR>'},
 		-- run Make
-		{'n', '<F8>', ':w <CR> :Make -C build<CR>'},
+		{'n', '<F8>', ':w <CR> :Make -j12 -C build<CR>'},
 		-- Build debug
-		{'n', '<F11>', ':w <CR> :lua require("cmake").cmake_gen_debug()<CR>'},
+		{'n', '<F12>', ':w <CR> :lua require("cmake").cmake_gen_debug()<CR>'},
 
 		-- bases
 		{'n',';b', ':CclsBase<CR>'},

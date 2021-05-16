@@ -14,7 +14,6 @@ endfunction
 augroup ProjectDrawer
   autocmd!
   autocmd WinEnter * if winnr('$') == 1 && getbufvar(winbufnr(winnr()), "&filetype") == "netrw" |q|endif
-  " autocmd WinEnter * if winnr('$') == 1 && getbufvar(winbufnr(winnr()), "&filetype") == "netrw" || &buftype == 'quickfix' |q|endif
   autocmd filetype netrw call NetrwMapping()
 augroup END
 "Netrw Toggle
@@ -36,35 +35,3 @@ function! ToggleNetrw()
   endif
 endfunction
 noremap <silent> <leader>e :call ToggleNetrw()<CR>
-
-
-" function! LF()
-"     let temp = tempname()
-"     exec 'silent !lf -selection-path=' . shellescape(temp)
-"     if !filereadable(temp)
-"         redraw!
-"         return
-"     endif
-"     let names = readfile(temp)
-"     if empty(names)
-"         redraw!
-"         return
-"     endif
-"     exec 'edit ' . fnameescape(names[0])
-"     for name in names[1:]
-"         exec 'argadd ' . fnameescape(name)
-"     endfor
-"     redraw!
-" endfunction
-" command! -bar LF call LF()
-
-"************** Arduino ---------------------------------------------------------------------
-
-" au filetype arduino nnoremap <F5> :w <CR> :!arduino-cli compile --fqbn arduino:avr:uno % <CR>
-
-" au filetype arduino nnoremap <F7> :w <CR> :!arduino-cli compile --fqbn teensy:avr:teensy31 % <CR>
-
-" au filetype arduino nnoremap <F6> :w <CR> :!arduino-cli upload -p /dev/ttyACM0 --fqbn arduino:avr:uno % <CR>
-
-" au filetype arduino nnoremap <F8> :w <CR> :!arduino-cli upload -p /dev/ttyACM0 --fqbn teensy:avr:teensy31 % <CR>
-

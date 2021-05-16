@@ -89,11 +89,16 @@ function cpp_init() {
 	) >$project_name/src/main.cpp
 
 	(
-		echo "cmake_minimum_required(VERSION 2.8.9)"
+		echo "cmake_minimum_required(VERSION 3.2.0)"
+		echo ""
 		echo "project($project_name)"
-		echo "include_directories($project_name PUBLIC include)"
-		echo 'file(GLOB_RECURSE SOURCES "src/*".cpp)'
+		echo 'file(GLOB_RECURSE SOURCES'
+		echo 'src/*.cpp'
+		echo ')'
+		echo ""
 		echo "add_executable($project_name \${SOURCES})"
+		echo "target_include_directories($project_name PUBLIC \${CMAKE_CURRENT_SOURCE_DIR}/include)"
+		echo ""
 		echo "install(TARGETS $project_name DESTINATION /usr/bin)"
 	) >$project_name/CMakeLists.txt
 

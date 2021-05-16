@@ -49,11 +49,24 @@ return packer.startup(function(use)
 
     use {'rhysd/vim-grammarous', opt = true}
 
+    use {'yegappan/taglist', cmd = 'TlistToggle'}
+
     use {'SirVer/ultisnips', ft = {"supercollider"}}
 
     use {'neovim/nvim-lspconfig', requires = {'nvim-lua/lsp-status.nvim'}}
 
+    -- StatusLine
+    use {'tjdevries/express_line.nvim', requires = {'kyazdani42/nvim-web-devicons', opt = true}}
+
+    -- Coautoring
     use {'jbyuki/instant.nvim', config = function() G.instant_username = 'Ranjith' end, opt = true}
+
+    -- Java Lsp
+    use {
+        'mfussenegger/nvim-jdtls',
+        ft = "java",
+        config = function() require('settings').jdtls() end
+    }
 
     -- Git Signs
     use {
@@ -61,9 +74,6 @@ return packer.startup(function(use)
         cmd = 'Gitsigns',
         config = function() require('gitsigns').setup() end
     }
-
-    -- StatusLine
-    use {'tjdevries/express_line.nvim', requires = {'kyazdani42/nvim-web-devicons', opt = true}}
 
     -- vimTex
     use {
@@ -78,13 +88,6 @@ return packer.startup(function(use)
         config = function()
             require("which-key").setup {layout = {width = {max = 80}, {spacing = 10}}}
         end
-    }
-
-    -- Java Lsp
-    use {
-        'mfussenegger/nvim-jdtls',
-        ft = "java",
-        config = function() require('settings').jdtls() end
     }
 
     -- Markdown preview
@@ -104,24 +107,24 @@ return packer.startup(function(use)
     -- Tim pope
     use {
         'tpope/vim-fugitive', 'tpope/vim-commentary', 'tpope/vim-repeat', 'tpope/vim-surround',
-        'tpope/vim-unimpaired',
-        {'tpope/vim-dispatch', cmd = {'Make', 'Dispatch'}}
+        'tpope/vim-unimpaired', {'tpope/vim-dispatch', cmd = {'Make', 'Dispatch'}}
     }
 
     -- Telescope
     use {
         'nvim-telescope/telescope.nvim',
-        requires = {'nvim-lua/popup.nvim', 'nvim-lua/plenary.nvim'}
-        -- 'nvim-telescope/telescope-symbols.nvim','nvim-telescope/telescope-project.nvim','razak17/telescope-packer.nvim'
+        requires = {
+            'nvim-lua/popup.nvim', 'nvim-lua/plenary.nvim'
+            -- 'nvim-telescope/telescope-symbols.nvim','nvim-telescope/telescope-project.nvim'
+        }
     }
 
     -- TreeSitter
     use {
-        'nvim-treesitter/nvim-treesitter',
-        requires = {
-            'nvim-treesitter/playground', 'p00f/nvim-ts-rainbow',
-            'nvim-treesitter/nvim-treesitter-textobjects'
-        }
+        {
+            'nvim-treesitter/nvim-treesitter',
+            requires = {'p00f/nvim-ts-rainbow', 'nvim-treesitter/nvim-treesitter-textobjects'}
+        }, {'nvim-treesitter/playground', cmd = 'TSPlaygroundToggle'}
     }
 
     -- Floating terminal

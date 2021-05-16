@@ -19,7 +19,7 @@ end
 ------------------------------------------------------------------------
 function settings.options()
     Cmd 'colo zephyr'
-    Cmd 'hi Normal guibg=none'
+    -- Cmd 'hi Normal guibg=none'
     Cmd 'set nohlsearch'
 
     u.opt('w', 'number', true)
@@ -493,27 +493,6 @@ end
 function settings.telescope()
     require('telescope').setup {}
     require'telescope'.load_extension('project')
-
-    local borders = {
-        {'─', '│', '─', '│', '┌', '┐', '┘', '└'},
-        prompt = {"─", "│", " ", "│", '┌', '┐', "│", "│"},
-        results = {"─", "│", "─", "│", "├", "┤", "┘", "└"},
-        preview = {'─', '│', '─', '│', '┌', '┐', '┘', '└'}
-    }
-    No_preview = function()
-        return require('telescope.themes').get_dropdown(
-                   {borderchars = borders, width = 0.5, previewer = false, prompt_title = false})
-    end
-
-    -- local opts = {noremap = true, silent = true}
-    -- local maps = {
-    --     {
-    --         'n', '<leader>F',
-    --         "<cmd>lua require'floating'.open({view1 = {}, view1_action = {'open_term'}})<CR>"
-    --     }
-    -- }
-    -- u.maps(maps, opts)
-
 end
 
 function settings.jdtls()
