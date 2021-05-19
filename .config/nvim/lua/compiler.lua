@@ -1,0 +1,205 @@
+require('utils')
+
+local Compiler = {}
+
+-- Set C environment based on functions
+function Compiler.set_ctype()
+    if Compiler.has_Cmake() then
+        require('mappings').cmake()
+        require('mappings').clang()
+    elseif Compiler.has_makefile() then
+        require('mappings').makeC()
+        require('mappings').clang()
+    elseif Compiler.has_pio_file() then
+        Exec("set makeprg=pio\\ run")
+        require('settings').smbc()
+        require('mappings').smbc()
+        require('mappings').clang()
+    else
+        require('mappings').ctests()
+        require('mappings').clang()
+    end
+end
+
+------------------------------------------------------------------------
+--                                CMake 	                          --
+------------------------------------------------------------------------
+
+-- Variables
+G.extra_cmake_flags = "-DCMAKE_EXPORT_COMPILE_COMMANDS=ON"
+G.cmake_build_dir = "build"
+G.compiledb = "ln -s build/compile_commands.json ."
+-- set browser
+local browser = 'qutebrowser'
+function Compiler.open_in_browser(url) Compiler.silent_shell(browser .. " " .. url) end
+
+-- check if project has a Makefile
+function Compiler.has_makefile()
+    local name = "Makefile"
+    local f = io.open(name, "r")
+    if f ~= nil then
+        io.close(f)
+        return true
+    else
+        return false
+    end
+end
+
+-- check if project has a CMakefile
+function Compiler.has_Cmake()
+    local name = "CMakeLists.txt"
+    local f = io.open(name, "r")
+    if f ~= nil then
+        io.close(f)
+        return true
+    else
+        return false
+    end
+end
+
+-- set default terminal to Dispatch
+function Compiler.terminal(cmd) Exec("Dispatch " .. cmd) end
+
+-- set alternate terminal to native terminal
+function Compiler.newTerm(cmd, opencmd)
+    Exec(opencmd or "new")
+    Exec("terminal " .. cmd)
+end
+
+-- set silent exec option
+function Compiler.silent_shell(cmd) Exec("silent exe '!" .. cmd .. " &'") end
+
+-- Cmake generate
+function Compiler.cmake_gen()
+    Compiler.terminal("mkdir build; cmake -DCMAKE_BUILD_TYPE='Release' " .. G.extra_cmake_flags ..
+                          " -B " .. G.cmake_build_dir .. " -S ." .. ";" .. G.compiledb)
+end
+
+-- Cmake generate debug
+function Compiler.cmake_gen_debug()
+    Compiler.terminal("mkdir build; cmake -DCMAKE_BUILD_TYPE='Debug' " .. G.extra_cmake_flags ..
+                          " -B " .. G.cmake_build_dir .. " -S ." .. ";" .. G.compiledb)
+end
+
+-- Cmake Build
+function Compiler.cmake_build() Compiler.terminal("cmake --build " .. G.cmake_build_dir) end
+
+-- Cmake Install
+function Compiler.cmake_install()
+    Compiler.newTerm("cmake --build " .. G.cmake_build_dir .. " --config Release --target install")
+end
+
+------------------------------------------------------------------------
+--                                SMBC  	                          --
+------------------------------------------------------------------------
+
+function Compiler.compiletags()
+    local create_tags_cmd = "pio run -t compiledb"
+    local controllers = Compiler.pio_env()
+    Compiler.silent_shell(create_tags_cmd)
+    -- Just choose the first controller in environment list
+    Compiler.linktags(controllers[1])
+end
+
+-- This is a dirty hack for LSP. There must be a nicer way of doing this. Right?
+function Compiler.linktags(microcontroller)
+    local board = microcontroller or "teensy31"
+    local link_cmd = "ln -sf .pio/build/" .. board .. "/compile_commands.json ."
+    Compiler.silent_shell(link_cmd)
+end
+
+-- Check if there is a platformio init file in root
+function Compiler.has_pio_file()
+    local name = "platformio.ini"
+    local f = io.open(name, "r")
+    if f ~= nil then
+        io.close(f)
+        return true
+    else
+        return false
+    end
+end
+
+-- get all lines from a file, returns an empty
+-- list/table if the file does not exist
+function Compiler.lines_from(file)
+    if not Compiler.has_pio_file() then
+        return {}
+    end
+    local lines = {}
+    for line in io.lines(file) do
+        lines[#lines + 1] = line
+    end
+    return lines
+end
+
+-- Found out which controllers are defined in the pio file
+function Compiler.pio_env()
+    -- lua match pattern for the pattern [env:name_of_controller] pattern
+    local search_pattern = "%[env:%w*%]"
+    local result = {}
+
+    -- Check for platformio.ini file in root
+    if Compiler.has_pio_file() then
+        local lines = Compiler.lines_from("platformio.ini")
+        for i = 1, #lines do
+            local search = lines[i]:match(search_pattern)
+            if search ~= nil then
+                -- Remove beginning of tag
+                search = string.gsub(search, "%[env:", "")
+
+                -- Remove end of tag
+                search = string.gsub(search, "%]", "")
+
+                -- Leaving only a word:
+                result[#result + 1] = search
+            end
+        end
+
+        return result
+    end
+end
+
+-- print the board being compiled for
+function Compiler.print_env()
+    local env = Compiler.pio_env()
+    print("Controllers defined in this platformio project:")
+    for name = 1, #env do
+        print(env[name])
+    end
+end
+
+-- print serial monitor
+function Compiler.monitor()
+    local cmd = "pio device monitor"
+    Compiler.terminal(cmd)
+end
+
+-- Clean directory
+function Compiler.pio_clean()
+    local cmd = "pio -t clean"
+    Compiler.terminal(cmd)
+end
+
+-- check directory
+function Compiler.pio_check()
+    local cmd = "pio check --skip-packages"
+    Compiler.terminal(cmd)
+end
+
+function Compiler.teensypins()
+    local url = "https://www.pjrc.com/teensy/pinout.html"
+    Compiler.open_in_browser(url)
+end
+
+function Compiler.teensyspecs()
+    local url = "https://www.pjrc.com/teensy/techspecs.html"
+    Compiler.open_in_browser(url)
+end
+
+function Compiler.arduinoref()
+    local url = "https://www.arduino.cc/reference/en/"
+    Compiler.open_in_browser(url)
+end
+
+return Compiler

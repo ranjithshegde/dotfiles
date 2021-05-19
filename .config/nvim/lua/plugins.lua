@@ -119,14 +119,6 @@ return packer.startup(function(use)
         }
     }
 
-    -- TreeSitter
-    use {
-        {
-            'nvim-treesitter/nvim-treesitter',
-            requires = {'p00f/nvim-ts-rainbow', 'nvim-treesitter/nvim-treesitter-textobjects'}
-        }, {'nvim-treesitter/playground', cmd = 'TSPlaygroundToggle'}
-    }
-
     -- Floating terminal
     use {
         'voldikss/vim-floaterm',
@@ -136,6 +128,18 @@ return packer.startup(function(use)
             G.floaterm_keymap_new = '<F10>'
             G.floaterm_keymap_toggle = '<F9>'
         end
+    }
+
+    -- TreeSitter
+    use {
+        {
+            'nvim-treesitter/nvim-treesitter',
+            requires = {'p00f/nvim-ts-rainbow', 'nvim-treesitter/nvim-treesitter-textobjects'}
+        },
+        {
+            'nvim-treesitter/playground',
+            cmd = {'TSPlaygroundToggle', 'TSHighlightCapturesUnderCursor'}
+        }, {'nvim-treesitter/nvim-treesitter-refactor', ft = 'supercollider'}
     }
 
     -- SuperCollider

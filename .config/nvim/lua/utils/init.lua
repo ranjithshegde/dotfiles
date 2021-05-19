@@ -21,7 +21,9 @@ end
 
 function utils.UnloadAllModules()
     -- Lua patterns for the modules to unload
-    local unload_modules = {'^mappings$', '^plugins$', '^settings$', '^galaxylineconf$', '^utils$'}
+    local unload_modules = {
+        '^mappings$', '^cmake', '^plugins$', '^settings$', '^statusline$', '^utils$'
+    }
     for k, _ in pairs(package.loaded) do
         for _, v in ipairs(unload_modules) do
             if k:match(v) then
@@ -121,7 +123,7 @@ utils.create_augroup({{'TextYankPost * silent! lua HighlightOnYank()'}}, 'YankHi
 
 -- automatically create non-existent directories on :e
 -- utils.create_augroup({"BufWritePre,FileWritePre * silent! call mkdir(expand('<afile>:p:h'), 'p')"},
-                     -- 'CreateDirectory')
+-- 'CreateDirectory')
 
 -- ************** LSP  ---------------------------------------------------------
 

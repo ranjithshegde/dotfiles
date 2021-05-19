@@ -188,6 +188,20 @@ function settings.treesitter()
             use_virtual_text = true,
             lint_events = {"BufWrite", "CursorHold"}
         },
+        refactor = {
+            highlight_definitions = {enable = false},
+            highlight_current_scope = {enable = false},
+            navigation = {
+                enable = true,
+                keymaps = {
+                    goto_definition = ";d",
+                    list_definitions = ";D",
+                    list_definitions_toc = ";O",
+                    goto_next_usage = ";*",
+                    goto_previous_usage = ";#"
+                }
+            }
+        },
         rainbow = {enable = true},
         extended_mode = true
     }
@@ -503,4 +517,21 @@ function settings.jdtls()
     })
     require('jdtls.setup').add_commands()
 end
+
+function settings.smbc()
+    local commands = {
+        "PioCompiledb lua require('compiler').compiletags()",
+        "PioMonitor lua require('compiler').monitor()",
+		"PioCheck lua require('compiler').pio_check()",
+        "PioEnv lua require('compiler').print_env()",
+        "PioClean lua require('compiler').pio_clean()",
+        "TeensyPinout lua require('compiler').teensypins()",
+        "TeensySpecs lua require('compiler').teensyspecs()",
+        "ArduinoRef lua require('compiler').arduinoref()"
+    }
+    for index = 1, #commands do
+        vim.cmd("command! " .. commands[index])
+    end
+end
+
 return settings

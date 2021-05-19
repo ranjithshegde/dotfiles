@@ -4,7 +4,7 @@ lua require ('settings').settings()
 lua require ('mappings').general()
 lua require ('mappings').autoComplete()
 lua require 'statusline'
-lua require 'cmake'
+lua require 'compiler'
 
 " hi Normal guibg=none ctermbg=none
 " hi LineNr guibg=none ctermbg=none
@@ -41,15 +41,14 @@ function! s:show_documentation()
 	endif
 endfunction
 
-"**************	OpenFrameworks----------------------------------------------------------------
+"**************	C Projects ----------------------------------------------------------------
 
 function! Clang()
-	" packadd vim-ccls
-	nnoremap <buffer> <leader>rt :!ctags -R .<CR>
 	let g:ccls_levels = 5
 	setlocal commentstring=//%s
-	lua require 'mappings'.clang()
-	lua require 'mappings'.cmake()
+	lua require('compiler').set_ctype()
+	" lua require 'mappings'.clang()
+	" lua require 'mappings'.cmake()
 endfunction
 
 "************** Word Processor ----------------------------------------------------------------
@@ -91,7 +90,7 @@ augroup end
 
 augroup CFiles
 	au FileType c,cpp,cmake call Clang()
-	au FileType cpp,c,arduino lua require'mappings'.arduino()
+	" au FileType cpp,c,arduino lua require'mappings'.arduino()
 augroup end
 
 

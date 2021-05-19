@@ -84,7 +84,7 @@ function M.edit_config_files()
 		{'n', '<leader>al', ':' .. open_func .. " ~/.config/nvim/lua/settings.lua<CR>"},
 		{'n', '<leader>ap', ':' .. open_func .. " ~/.config/nvim/lua/plugins.lua<CR>"},
 		{'n', '<leader>as', ':' .. open_func .. " ~/.config/nvim/lua/statusline.lua<CR>"},
-		{'n', '<leader>ac', ':' .. open_func .. " ~/.config/nvim/lua/cmake.lua<CR>"},
+		{'n', '<leader>ac', ':' .. open_func .. " ~/.config/nvim/lua/compiler.lua<CR>"},
 		{'n', '<leader>aut', ':' .. open_func .. " ~/.config/nvim/lua/utils/init.lua<CR>"},
 		{'n', '<leader>ar', ':' .. open_func .. ' $MYVIMRC<CR>'}
 	}
@@ -203,18 +203,6 @@ function M.git_commit()
 	u.bufmaps(bufmaps, opts)
 end
 
--- ******************************** Arduino ---------------------------------------
-
-function M.arduino()
-	local opts = {nowait = true, noremap = true, silent = false}
-	local bufmaps = {
-		{'n', '<leader>bld', ':w <CR> :FloatermNew platformio run <CR>'},
-		{'n', '<leader>tag', ':w <cr> :!pio run -t compiledb<CR>'},
-		{'n', '<leader>upl', ':w <cr> :!platformio run --target upload<CR>'}
-	}
-	u.bufmaps(bufmaps, opts)
-end
-
 -- ******************************** Snippets ---------------------------------------
 function M.autoComplete()
 	-- change completion mode
@@ -267,32 +255,71 @@ function M.scnvim()
 	u.bufmaps(bufmaps, opts)
 end
 
--- ******************************** cpp -openFrameworks ---------------------------------------
-function M.clang()
-	local opts = { nowait = true, noremap = true, silent = true }
+-- ******************************** Arduino ---------------------------------------
 
+function M.smbc()
+	local opts = {nowait = true, noremap = true, silent = true}
 	local bufmaps = {
-		-- Switch source header
-		{'n', 'mv', ':ClangdSwitchSourceHeader<CR>'},
-		-- Compile c file, avoid preprocessor errors
-		{'n', '<F2>', ':w <CR> :Dispatch gcc % -lm -o %<<CR> :Dispatch ./%<<CR>'},
-		-- Compile cpp file
-		-- {'n', '<F3>', ':w <CR> :Dispatch g++ -d % -o %<<CR> :Dispatch ./%<<CR>'},
-		-- {'n', '<F3>', ':w <CR> :Dispatch g++ -g % -o %<<CR> :Dispatch ./%<<CR>'},
-		{'n', '<F3>', ':w <CR> :Dispatch g++ -g % -o %<;./%<<CR>'},
+		-- Show documentation
+		{'n', '<F2>', ":ArduinoRef<CR>"},
+		-- Print arduino board
+		{'n', '<F3>', ":PioEnv<CR>"},
+		-- Clean directory
+		{'n', '<F4>', ":PioClean<CR>"},
+		-- Build arduino project
+		{'n', '<F5>', ':w <CR>:Make<CR>'},
+		-- Upload arduino project
+		{'n', '<F6>', ':w <CR>:Make --target upload<CR>'},
+		-- Print arduino board
+		{'n', '<F7>', ":PioCheck<CR>"},
+		-- Monitor arduino output
+		{'n', '<F8>', ":PioMonitor<CR>"},
+		-- Compile tags & link it
+		{'n', '<leader>rt', ":PioCompiledb<CR>"},
+		-- Show teensy pins image
+		{'n', '<leader>rp', ":TeensyPinout<CR>"},
+		-- Show teensy specs image
+		{'n', '<leader>rs', ":TeensySpecs<CR>"},
+	}
+	u.bufmaps(bufmaps, opts)
+end
+
+-- ******************************** cpp -openFrameworks ---------------------------------------
+
+function M.makeC()
+	local opts = { nowait = true, noremap = true, silent = true }
+	local bufmaps = {
 		-- Compile Debug openFrameworks
 		{'n', '<F4>', ':w <CR> :Make Debug -j12<CR>'},
 		-- Compile openFrameworks
 		{'n', '<F5>', ':w <CR> :Make -j12 && make RunRelease<CR>'},
 		-- run openFrameworks
 		{'n', '<F6>', ':w <CR> :Make RunRelease<CR>'},
-		-- Build Cmake
-		{'n', '<F7>', ':w <CR> :lua require("cmake").cmake_gen()<CR>'},
-		-- run Make
-		{'n', '<F8>', ':w <CR> :Make -j12 -C build<CR>'},
-		-- Build debug
-		{'n', '<F12>', ':w <CR> :lua require("cmake").cmake_gen_debug()<CR>'},
+	}
+	u.bufmaps(bufmaps, opts)
+end
 
+-- ********************************  Simple C mappings ---------------------------------------
+
+function M.ctests()
+	local opts = { nowait = true, noremap = true, silent = true }
+	local bufmaps = {
+		-- Compile c file, avoid preprocessor errors
+		{'n', '<F5>', ':w <CR> :Dispatch gcc % -lm -o %<<CR> :Dispatch ./%<<CR>'},
+		-- Compile cpp file
+		{'n', '<F6>', ':w <CR> :Dispatch g++ -g % -o %<;./%<<CR>'},
+		-- {'n', '<F3>', ':w <CR> :Dispatch g++ -d % -o %<<CR> :Dispatch ./%<<CR>'},
+	}
+	u.bufmaps(bufmaps, opts)
+end
+
+-- ******************************** General Clang mappings ---------------------------------------
+function M.clang()
+	local opts = { nowait = true, noremap = true, silent = true }
+
+	local bufmaps = {
+		-- Switch source header
+		{'n', 'mv', ':ClangdSwitchSourceHeader<CR>'},
 		-- bases
 		{'n',';b', ':CclsBase<CR>'},
 		--   bases of up to 3 levels
@@ -329,14 +356,15 @@ end
 function M.cmake()
 	local opts = { nowait = true, noremap = true, silent = false }
 	local bufmaps = {
-
-		{'n', '<leader>cb', ':lua require("cmake").cmake_build()<cr>'},
-		{'n', '<leader>cc', ':lua require("cmake").cmake_clean_build()<cr>'},
-		{'n', '<leader>ci', ':lua require("cmake").cmake_install()<cr>'},
-		{'n', '<leader>ct', ':lua require("cmake").catch_test()<cr>'},
-		-- {'n', '<C-t>', ':lua require("cmake").fuzzy_catch()<cr>'},
+		-- Build Cmake
+		{'n', '<F5>', ':w <CR> :lua require("compiler").cmake_gen()<CR>'},
+		-- run Make
+		{'n', '<F6>', ':w <CR> :Make -j12 -C build<CR>'},
+		-- Build debug
+		{'n', '<F4>', ':w <CR> :lua require("compiler").cmake_gen_debug()<CR>'},
+		-- Dispatch install
+		{'n', '<F7>', 'w <CR> :lua require("compiler").cmake_install()<cr>'},
 	}
-
 	u.bufmaps(bufmaps, opts)
 end
 
