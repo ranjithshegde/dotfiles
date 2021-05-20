@@ -19,7 +19,6 @@ end
 ------------------------------------------------------------------------
 function settings.options()
     Cmd 'colo zephyr'
-    -- Cmd 'hi Normal guibg=none'
     Cmd 'set nohlsearch'
 
     u.opt('w', 'number', true)
@@ -59,7 +58,7 @@ function settings.vimwiki()
     l.auto_diary_index = 1
     l.auto_generate_tags = 1
     l.autowriteall = 1
-    -- Cmd("let g:vimwiki_ext2syntax = {'.md':'markdown', '.markdown':'markdown','.mdown':'markdown'}")
+    Cmd("let g:vimwiki_ext2syntax = {'.md':'markdown', '.markdown':'markdown','.mdown':'markdown'}")
     G.vimwiki_filetypes = {'markdown'}
     G.vimwiki_list = {l}
     G.vimwiki_markdown_link_ext = 1
@@ -287,7 +286,7 @@ function settings.lsp_settings()
         if rc.document_formatting then
             u.create_augroup({
                 {
-                    'BufWritePre', '*.js,*.jsx,*.py,*.c,*.h,*.hpp,*.sh',
+                    'BufWritePre', '*.js,*.jsx,*.py,*.hpp,*.sh',
                     'lua vim.lsp.buf.formatting_sync(nil, 1000)'
                 }
             }, 'lsp_auto_format')

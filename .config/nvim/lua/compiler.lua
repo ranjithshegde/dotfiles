@@ -1,4 +1,4 @@
-require('utils')
+local u = require('utils')
 
 local Compiler = {}
 
@@ -29,9 +29,6 @@ end
 G.extra_cmake_flags = "-DCMAKE_EXPORT_COMPILE_COMMANDS=ON"
 G.cmake_build_dir = "build"
 G.compiledb = "ln -s build/compile_commands.json ."
--- set browser
-local browser = 'qutebrowser'
-function Compiler.open_in_browser(url) Compiler.silent_shell(browser .. " " .. url) end
 
 -- check if project has a Makefile
 function Compiler.has_makefile()
@@ -57,6 +54,9 @@ function Compiler.has_Cmake()
     end
 end
 
+-- set default make to Dispatch Make
+function Compiler.make(cmd) Exec("Make " .. cmd) end
+
 -- set default terminal to Dispatch
 function Compiler.terminal(cmd) Exec("Dispatch " .. cmd) end
 
@@ -66,8 +66,6 @@ function Compiler.newTerm(cmd, opencmd)
     Exec("terminal " .. cmd)
 end
 
--- set silent exec option
-function Compiler.silent_shell(cmd) Exec("silent exe '!" .. cmd .. " &'") end
 
 -- Cmake generate
 function Compiler.cmake_gen()
@@ -94,9 +92,10 @@ end
 ------------------------------------------------------------------------
 
 function Compiler.compiletags()
-    local create_tags_cmd = "pio run -t compiledb"
+    local create_tags_cmd = "-t compiledb"
+    -- local create_tags_cmd = "pio run -t compiledb"
     local controllers = Compiler.pio_env()
-    Compiler.silent_shell(create_tags_cmd)
+    Compiler.make(create_tags_cmd)
     -- Just choose the first controller in environment list
     Compiler.linktags(controllers[1])
 end
@@ -105,7 +104,7 @@ end
 function Compiler.linktags(microcontroller)
     local board = microcontroller or "teensy31"
     local link_cmd = "ln -sf .pio/build/" .. board .. "/compile_commands.json ."
-    Compiler.silent_shell(link_cmd)
+    u.silent_shell(link_cmd)
 end
 
 -- Check if there is a platformio init file in root
@@ -138,7 +137,6 @@ function Compiler.pio_env()
     -- lua match pattern for the pattern [env:name_of_controller] pattern
     local search_pattern = "%[env:%w*%]"
     local result = {}
-
     -- Check for platformio.ini file in root
     if Compiler.has_pio_file() then
         local lines = Compiler.lines_from("platformio.ini")
@@ -147,10 +145,8 @@ function Compiler.pio_env()
             if search ~= nil then
                 -- Remove beginning of tag
                 search = string.gsub(search, "%[env:", "")
-
                 -- Remove end of tag
                 search = string.gsub(search, "%]", "")
-
                 -- Leaving only a word:
                 result[#result + 1] = search
             end
@@ -189,17 +185,17 @@ end
 
 function Compiler.teensypins()
     local url = "https://www.pjrc.com/teensy/pinout.html"
-    Compiler.open_in_browser(url)
+    u.open_in_browser(url)
 end
 
 function Compiler.teensyspecs()
     local url = "https://www.pjrc.com/teensy/techspecs.html"
-    Compiler.open_in_browser(url)
+    u.open_in_browser(url)
 end
 
 function Compiler.arduinoref()
     local url = "https://www.arduino.cc/reference/en/"
-    Compiler.open_in_browser(url)
+    u.open_in_browser(url)
 end
 
 return Compiler

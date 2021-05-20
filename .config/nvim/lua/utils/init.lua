@@ -8,6 +8,7 @@ Op = Api.nvim_get_option
 Fn = Api.nvim_call_function
 Cmd = vim.cmd
 
+local browser = 'qutebrowser'
 local scopes = {o = vim.o, b = vim.bo, w = vim.wo, g = vim.g}
 
 -- **************Neovim options ---------------------------------------------------------
@@ -22,7 +23,7 @@ end
 function utils.UnloadAllModules()
     -- Lua patterns for the modules to unload
     local unload_modules = {
-        '^mappings$', '^cmake', '^plugins$', '^settings$', '^statusline$', '^utils$'
+        '^mappings$', '^compiler$', '^plugins$', '^settings$', '^statusline$', '^utils$'
     }
     for k, _ in pairs(package.loaded) do
         for _, v in ipairs(unload_modules) do
@@ -189,5 +190,16 @@ function utils.getCompletionItems(prefix)
 end
 
 utils.complete_item = {item = utils.getCompletionItems}
+
+-- ************** Open with browser ---------------------------------------------------------
+
+-- set silent exec option
+function utils.silent_shell(cmd) Exec("silent exe '!" .. cmd .. " &'") end
+
+-- set browser
+function utils.open_in_browser(url)
+	utils.silent_shell(browser .. " " .. url)
+end
+
 
 return utils

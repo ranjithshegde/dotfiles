@@ -47,8 +47,6 @@ function! Clang()
 	let g:ccls_levels = 5
 	setlocal commentstring=//%s
 	lua require('compiler').set_ctype()
-	" lua require 'mappings'.clang()
-	" lua require 'mappings'.cmake()
 endfunction
 
 "************** Word Processor ----------------------------------------------------------------
@@ -90,7 +88,6 @@ augroup end
 
 augroup CFiles
 	au FileType c,cpp,cmake call Clang()
-	" au FileType cpp,c,arduino lua require'mappings'.arduino()
 augroup end
 
 
