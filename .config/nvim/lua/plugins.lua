@@ -71,8 +71,9 @@ return packer.startup(function(use)
     -- Git Signs
     use {
         'lewis6991/gitsigns.nvim',
-        cmd = 'Gitsigns',
-        config = function() require('gitsigns').setup() end
+        -- cmd = 'Gitsigns',
+        config = function() require('gitsigns').setup() end,
+        opt = true,
     }
 
     -- vimTex
@@ -106,8 +107,8 @@ return packer.startup(function(use)
 
     -- Tim pope
     use {
-        'tpope/vim-fugitive', 'tpope/vim-commentary', 'tpope/vim-repeat', 'tpope/vim-surround',
-        'tpope/vim-unimpaired', {'tpope/vim-dispatch', cmd = {'Make', 'Dispatch'}}
+        'tpope/vim-commentary', 'tpope/vim-repeat', 'tpope/vim-surround', 'tpope/vim-unimpaired',
+        {'tpope/vim-dispatch', cmd = {'Make', 'Dispatch'}}, {'tpope/vim-fugitive', opt = true}
     }
 
     -- Telescope

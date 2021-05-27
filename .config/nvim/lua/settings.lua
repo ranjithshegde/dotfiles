@@ -1,6 +1,7 @@
 local settings = {}
 local u = require('utils')
 local o = vim.o
+require("lsp-codelens").setup()
 
 function settings.settings()
     settings.vimwiki()
@@ -58,7 +59,6 @@ function settings.vimwiki()
     l.auto_diary_index = 1
     l.auto_generate_tags = 1
     l.autowriteall = 1
-    Cmd("let g:vimwiki_ext2syntax = {'.md':'markdown', '.markdown':'markdown','.mdown':'markdown'}")
     G.vimwiki_filetypes = {'markdown'}
     G.vimwiki_list = {l}
     G.vimwiki_markdown_link_ext = 1
@@ -83,11 +83,7 @@ end
 function settings.treesitter()
 
     require'nvim-treesitter.configs'.setup {
-        highlight = {
-            enable = true,
-            use_languagetree = true,
-            additional_vim_regex_highlighting = true
-        },
+        highlight = {enable = true, languagetree = true, additional_vim_regex_highlighting = true},
         indent = {enable = true},
         autopairs = {enable = true},
         incremental_selection = {
@@ -188,8 +184,8 @@ function settings.treesitter()
             lint_events = {"BufWrite", "CursorHold"}
         },
         refactor = {
-            highlight_definitions = {enable = false},
-            highlight_current_scope = {enable = false},
+            highlight_definitions = {enable = true},
+            highlight_current_scope = {enable = true},
             navigation = {
                 enable = true,
                 keymaps = {
@@ -224,7 +220,6 @@ function settings.completion()
             {mode = '<c-n>'}, {mode = 'thes'}
         }
     }
-    G.completion_enable_auto_signature = 1
     G.completion_auto_change_source = 0
 
     if Op("filetype") == "supercollider" then
@@ -261,9 +256,11 @@ function settings.lsp_settings()
     Lsp_status = require('lsp-status')
     Lsp_status.register_progress()
 
-    local signHover = {
-        {"CursorHoldI", "<buffer>", [[lua vim.lsp.buf.signature_help()]]},
-        {"CursorMoved", "<buffer>", [[lua vim.lsp.buf.clear_references()]]}
+    local codeLens = {
+        {
+            "CursorHold, CursorHoldI, InsertLeave", "<buffer>",
+            [[lua require'lsp-codelens'.buf_codelens_refresh()]]
+        }
     }
 
     local docHigh = {
@@ -271,6 +268,7 @@ function settings.lsp_settings()
         {"CursorMoved", "<buffer>", [[lua vim.lsp.buf.clear_references()]]},
         {"CursorMovedI", "<buffer>", [[lua vim.lsp.buf.clear_references()]]}
     }
+
     All_attach = function(client, bufnr)
         require'completion'.on_attach(client)
         Lsp_status.on_attach(client)
@@ -292,10 +290,9 @@ function settings.lsp_settings()
             }, 'lsp_auto_format')
         end
 
-        if rc.signatureHelpProvider then
-            u.create_bufgroup(signHover, 'bufgroup')
+        if client.resolved_capabilities.code_lens then
+            u.create_bufgroup(codeLens, 'lensGroup')
         end
-
     end
 
     Capabilities = vim.lsp.protocol.make_client_capabilities()
@@ -307,12 +304,17 @@ function settings.lsp_settings()
     Cinit = function(client)
         local rc = client.resolved_capabilities
         rc.document_formatting = false
+        rc.document_range_formatting = false
         rc.document_highlight = false
+        rc.document_symbol = false
+        rc.workspace_symbol = false
         rc.rename = false
         rc.hover = false
-        rc.signature_help = false
         rc.completion = false
+        rc.code_action = false
+        u.create_bufgroup(codeLens, 'lensGroup')
     end
+
     EfmInit = function(client)
         local rc = client.resolved_capabilities
         rc.document_formatting = false
@@ -332,15 +334,20 @@ end
 function settings.langServers()
 
     local configs = {
-        texlab = {on_attach = All_attach},
         cssls = {on_attach = All_attach},
         yamlls = {on_attach = All_attach},
         jsonls = {on_attach = All_attach},
-        pyright = {on_attach = All_attach},
-        tsserver = {on_attach = All_attach},
+        -- pylsp = {on_attach = All_attach, capabilities = Capabilities},
+        pyright = {
+            on_attach = All_attach,
+            capabilities = Capabilities,
+            root_dir = function() return vim.loop.cwd() end
+        },
+        tsserver = {on_attach = All_attach, capabilities = Capabilities},
         cmake = {on_attach = All_attach, capabilities = Capabilities},
         vimls = {on_attach = All_attach, capabilities = Capabilities},
         bashls = {on_attach = All_attach, filetypes = {"sh", "zsh"}},
+        texlab = {on_attach = All_attach, settings = {texlab = {chktex = {onOpenAndSave = true}}}},
         clangd = {
             handlers = Lsp_status.extensions.clangd.setup(),
             on_attach = All_attach,
@@ -353,12 +360,14 @@ function settings.langServers()
         },
         ccls = {
             on_init = Cinit,
-            handlers = {["textDocument/publishDiagnostics"] = function(...) return nil end},
+            handlers = {
+                ["textDocument/publishDiagnostics"] = function(...) return nil end,
+                ["textDocument/signatureHelp"] = function(...) return nil end
+            },
             init_options = {cache = {directory = "/tmp/ccls"}}
         },
         sumneko_lua = {
             on_attach = All_attach,
-            capabilities = Capabilities,
             cmd = {"lua-language-server", "-E", "lua-language-server" .. "/main.lua"},
             settings = {
                 Lua = {
@@ -430,6 +439,29 @@ function settings.lsp_lintFormat()
         }
     }
 
+    local rootDir = function() return vim.fn.getcwd() or Lsp.util.root_pattern('.git/') end
+    local rootMarker = {vim.fn.getcwd() or {".git/"}}
+
+    local checkmake = {lintCommand = "checkmake", lintStdin = true}
+    local yamllint = {lintCommand = "yamllint -f parsable -", lintStdin = true}
+    local shfmt = {formatCommand = "shfmt -ci -s -bn", formatStdin = true}
+    local phpstan = {lintCommand = "./vendor/bin/phpstan analyze --error-format raw --no-progress"}
+    local rustywind = {formatCommand = "rustywind --stdin", formatStdin = true}
+    local prettier = {formatCommand = "prettier --stdin-filepath ${INPUT}", formatStdin = true}
+    local isort = {formatCommand = "isort --stdout --profile black -", formatStdin = true}
+    local black = {formatCommand = "black --fast --quiet -", formatStdin = true}
+
+    local mypy = {
+        lintCommand = "mypy --show-column-numbers --ignore-missing-imports",
+        lintFormats = {"%f:%l:%c: %trror: %m", "%f:%l:%c: %tarning: %m", "%f:%l:%c: %tote: %m"},
+        lintSource = "mypy"
+    }
+    local flake8 = {
+        lintCommand = "flake8 --max-line-length 160 --format '%(path)s:%(row)d:%(col)d: %(code)s %(code)s %(text)s' --stdin-display-name ${INPUT} -",
+        lintStdin = true,
+        lintFormats = {"%f:%l:%c: %m"},
+        lintSource = "flake8"
+    }
     local shellcheck = {
         lintCommand = "shellcheck -f gcc -x -",
         lintStdin = true,
@@ -440,33 +472,16 @@ function settings.lsp_lintFormat()
         lintStdin = true,
         lintFormats = {"%f:%l %m", "%f:%l:%c %m", "%f: %l: %m"}
     }
-
-    local shfmt = {formatCommand = "shfmt -ci -s -bn", formatStdin = true}
-
     local luaformat = {
         -- formatCommand = "lua-format -i ${--tab-width:tabSize} ${--indent-width:tabSize} --spaces-inside-table-braces --single-quote-to-double-quote",
         formatCommand = "lua-format -i --keep-simple-function-one-line --break-after-operator --no-keep-simple-control-block-one-line --column-limit=100",
         formatStdin = true
     }
-    local prettier = {formatCommand = "prettier --stdin-filepath ${INPUT}", formatStdin = true}
     local vint = {
         lintCommand = "vint --enable-neovim",
         lintStdin = false,
         lintFormats = {"%f:%l:%c: %m"}
     }
-
-    local checkmake = {lintCommand = "checkmake", lintStdin = true}
-    local yamllint = {lintCommand = "yamllint -f parsable -", lintStdin = true}
-    local flake8 = {
-        lintCommand = "flake8 --stdin-display-name ${INPUT} -",
-        lintStdin = true,
-        lintFormats = {"%f:%l:%c: %m"}
-    }
-    local phpstan = {lintCommand = "./vendor/bin/phpstan analyze --error-format raw --no-progress"}
-    local rustywind = {formatCommand = "rustywind --stdin", formatStdin = true}
-
-    local rootDir = function() return vim.fn.getcwd() or Lsp.util.root_pattern('.git/') end
-    local rootMarker = {vim.fn.getcwd() or {".git/"}}
 
     local languages = {
         lua = {luaformat},
@@ -474,7 +489,7 @@ function settings.lsp_lintFormat()
         zsh = {shellcheck, shfmt},
         vim = {vint},
         php = {phpstan},
-        python = {flake8},
+        python = {flake8, isort, black, mypy},
         yaml = {yamllint},
         make = {checkmake},
         rust = {rustywind},
@@ -488,12 +503,7 @@ function settings.lsp_lintFormat()
         filetypes = vim.tbl_keys(languages),
         root_dir = rootDir,
         on_attach = All_attach,
-        init_options = {
-            documentFormatting = true,
-            codeAction = true,
-            documentSymbol = true,
-            hover = true
-        },
+        init_options = {documentFormatting = true, codeAction = true, documentSymbol = true},
         settings = {rootMarkers = rootMarker, languages = languages}
     })
 
@@ -508,6 +518,10 @@ function settings.telescope()
     require'telescope'.load_extension('project')
 end
 
+------------------------------------------------------------------------
+--                         uncalled 	                              --
+------------------------------------------------------------------------
+
 function settings.jdtls()
     require('jdtls').start_or_attach({
         on_attach = All_attach,
@@ -521,7 +535,7 @@ function settings.smbc()
     local commands = {
         "PioCompiledb lua require('compiler').compiletags()",
         "PioMonitor lua require('compiler').monitor()",
-		"PioCheck lua require('compiler').pio_check()",
+        "PioCheck lua require('compiler').pio_check()",
         "PioEnv lua require('compiler').print_env()",
         "PioClean lua require('compiler').pio_clean()",
         "TeensyPinout lua require('compiler').teensypins()",

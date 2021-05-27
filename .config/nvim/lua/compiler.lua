@@ -16,6 +16,7 @@ function Compiler.set_ctype()
         require('mappings').smbc()
         require('mappings').clang()
     else
+        Exec("set makeprg=g++")
         require('mappings').ctests()
         require('mappings').clang()
     end
@@ -66,11 +67,19 @@ function Compiler.newTerm(cmd, opencmd)
     Exec("terminal " .. cmd)
 end
 
-
 -- Cmake generate
 function Compiler.cmake_gen()
     Compiler.terminal("mkdir build; cmake -DCMAKE_BUILD_TYPE='Release' " .. G.extra_cmake_flags ..
                           " -B " .. G.cmake_build_dir .. " -S ." .. ";" .. G.compiledb)
+end
+
+function Compiler.cmake_clean()
+	Compiler.terminal("rm -r " .. G.cmake_build_dir .. ";" .. "rm compile_commands.json")
+end
+
+function Compiler.cmake_clean_gen()
+	Compiler.cmake_clean()
+	Compiler.cmake_gen()
 end
 
 -- Cmake generate debug
@@ -87,7 +96,14 @@ function Compiler.cmake_install()
     Compiler.newTerm("cmake --build " .. G.cmake_build_dir .. " --config Release --target install")
 end
 
-------------------------------------------------------------------------
+-- local bin = Api.nvim_call_function('fnamemodify', {'.', ":p:h:t"})
+
+function Compiler.cmake_run()
+    local bin = vim.fn.fnamemodify(vim.fn.getcwd(), ":t")
+    Compiler.terminal("./build/" .. bin)
+end
+
+-----------------------------------------------------------------------
 --                                SMBC  	                          --
 ------------------------------------------------------------------------
 
@@ -168,7 +184,7 @@ end
 -- print serial monitor
 function Compiler.monitor()
     local cmd = "pio device monitor"
-    Compiler.terminal(cmd)
+    Compiler.newTerm(cmd)
 end
 
 -- Clean directory

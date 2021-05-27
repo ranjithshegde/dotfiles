@@ -75,6 +75,19 @@ com! Su call SuWrite()
 
 "************** FileTypes & AutoCompiles-----------------------------------------------
 
+function! GitRepo() 
+silent! !git rev-parse --is-inside-work-tree
+if v:shell_error == 0
+	PackerLoad vim-fugitive
+	PackerLoad gitsigns.nvim
+endif
+endfunction
+
+augroup GitRepos
+	au BufEnter * call GitRepo()
+augroup end
+
+
 "Open new floating terminal
 nnoremap <leader>fr :FloatermNew ranger<CR>
 
@@ -83,13 +96,19 @@ augroup GenericFiles
 	au FileType gitcommit lua require'mappings'.git_commit()
 	au filetype text,vimwiki,tex call WordProcessor()
 	au filetype html nmap <F4> : exec 'silent !qutebrowser % &'
-	au FileType java let b:dispatch = 'javac %'
 augroup end 
+
+augroup MakeDispatch
+	au FileType java let b:dispatch = 'javac %'
+	au FileType lua let b:dispatch = 'lua %'
+	au FileType python let b:dispatch = 'python %'
+	au FileType javascript let b:dispatch = 'node %'
+	au FileType java,lua,python,javascript nn <F5> <cmd>w<CR><cmd>Dispatch<CR>
+augroup END
 
 augroup CFiles
 	au FileType c,cpp,cmake call Clang()
 augroup end
-
 
 "************************ CamelCase -------------------------------------------------
 function! CamelCase()

@@ -99,7 +99,7 @@ function cpp_init() {
 		echo "add_executable($project_name \${SOURCES})"
 		echo "target_include_directories($project_name PUBLIC \${CMAKE_CURRENT_SOURCE_DIR}/include)"
 		echo ""
-		echo "install(TARGETS $project_name DESTINATION /usr/bin)"
+		echo "install(TARGETS $project_name DESTINATION /usr/local/bin)"
 	) >$project_name/CMakeLists.txt
 
 	(

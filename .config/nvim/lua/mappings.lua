@@ -54,6 +54,7 @@ function M.nvim_lsp()
 		{'n', ',t', '<cmd>lua vim.lsp.buf.type_definition()<CR>'},
 		{"n", ',s', "<cmd>lua vim.lsp.buf.signature_help()<CR>"},
 		{'n', ',pd', "<cmd>lua require'utils'.peek_definition()<CR>"},
+		{'n', ',c', "<cmd>lua require'lsp-codelens'.buf_codelens_action()<CR>"},
 		{'n', '[d', '<cmd>lua vim.lsp.diagnostic.goto_prev({popup_opts = {border = "double"}})<CR>'},
 		{'n', ']d', '<cmd>lua vim.lsp.diagnostic.goto_next({popup_opts = {border = "double"}})<CR>'},
 		{'n', ',ld', '<cmd>lua vim.lsp.diagnostic.show_line_diagnostics({popup_opts = {border = "double"}})<CR>'},
@@ -117,6 +118,8 @@ function M.telescope()
 		{'n', '<space>f', tele("find_files")},
 		-- document symbol
 		{'n', '<space>s', tele("lsp_document_symbols")},
+		-- document symbol
+		{'n', '<space>S', tele("lsp_dynamic_workspace_symbols")},
 		-- Oldfiles
 		{'n', '<space>rf', tele("oldfiles")},
 		-- Document diagnostics
@@ -158,11 +161,11 @@ function M.telescope()
 		-- Switch buffers
 		{'n', '<space>b', tele("buffers")},
 		-- Workspace symbol under cursor
-		{'n', '<space>S', telF("lsp_workspace_symbols({query = vim.fn.expand('<cword>')})")},
+		{'n', '<space>k', telF("lsp_workspace_symbols({query = vim.fn.expand('<cword>')})")},
 		-- grep ofProjects
 		{'n', '<space>og', telF("live_grep({cwd ='~/Documents/ofWorkspace/',follow = true,})")},
 		-- find-files ofProjects
-		{'n', '<space>og', telF("find_files({cwd ='~/Documents/ofWorkspace/',follow = true,})")},
+		{'n', '<space>of', telF("find_files({cwd ='~/Documents/ofWorkspace/',follow = true,})")},
 		--  Serach dotfiles
 		{'n', '<space>df', telF("find_files({cwd='~/.config/'})")},
 		--  Serach HOME
@@ -305,10 +308,11 @@ function M.ctests()
 	local opts = { nowait = true, noremap = true, silent = true }
 	local bufmaps = {
 		-- Compile c file, avoid preprocessor errors
-		{'n', '<F5>', ':w <CR> :Dispatch gcc % -lm -o %<<CR> :Dispatch ./%<<CR>'},
+		{'n', '<F4>', ':w <CR> :Dispatch gcc % -lm -o %<<CR> :Dispatch ./%<<CR>'},
 		-- Compile cpp file
-		{'n', '<F6>', ':w <CR> :Dispatch g++ -g % -o %<;./%<<CR>'},
-		-- {'n', '<F3>', ':w <CR> :Dispatch g++ -d % -o %<<CR> :Dispatch ./%<<CR>'},
+		{'n', '<F5>', ':w <CR> :Make -g % -o %<<CR>'},
+		-- Run binary
+		{'n', '<F6>', ':w <CR> :Dispatch ./%<<CR>'},
 	}
 	u.bufmaps(bufmaps, opts)
 end
@@ -356,12 +360,16 @@ end
 function M.cmake()
 	local opts = { nowait = true, noremap = true, silent = false }
 	local bufmaps = {
-		-- Build Cmake
-		{'n', '<F5>', ':w <CR> :lua require("compiler").cmake_gen()<CR>'},
-		-- run Make
-		{'n', '<F6>', ':w <CR> :Make -j12 -C build<CR>'},
+		-- Clean build
+		{'n', '<F2>', ':w <CR> :lua require("compiler").cmake_clean()<CR>'},
 		-- Build debug
-		{'n', '<F4>', ':w <CR> :lua require("compiler").cmake_gen_debug()<CR>'},
+		{'n', '<F3>', ':w <CR> :lua require("compiler").cmake_gen_debug()<CR>'},
+		-- Build Cmake
+		{'n', '<F4>', ':w <CR> :lua require("compiler").cmake_gen()<CR>'},
+		-- run Make
+		{'n', '<F5>', ':w <CR> :Make -j12 -C build<CR>'},
+		-- Dispatch run
+		{'n', '<F6>', 'w <CR> :lua require("compiler").cmake_run()<cr>'},
 		-- Dispatch install
 		{'n', '<F7>', 'w <CR> :lua require("compiler").cmake_install()<cr>'},
 	}
