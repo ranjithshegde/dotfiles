@@ -119,12 +119,14 @@ end
 
 -- ************** vim settings  ---------------------------------------------------------
 
-function _G.HighlightOnYank() vim.highlight.on_yank {higroup = "IncSearch", timeout = 200} end
-utils.create_augroup({{'TextYankPost * silent! lua HighlightOnYank()'}}, 'YankHighlight')
+function _G.HighlightOnYank()
+	vim.highlight.on_yank {higroup = "IncSearch", timeout = 200}
+end
 
--- automatically create non-existent directories on :e
--- utils.create_augroup({"BufWritePre,FileWritePre * silent! call mkdir(expand('<afile>:p:h'), 'p')"},
--- 'CreateDirectory')
+utils.create_augroup(
+	{{'TextYankPost', '*', 'silent! lua HighlightOnYank()'}},
+	'YankHighlight'
+)
 
 -- ************** LSP  ---------------------------------------------------------
 
@@ -160,8 +162,8 @@ end
 
 function utils.preview_location_callback(_, method, result)
     local context = 15
-	-- local border = {"double"}
-	-- local opts = {context = 15, border = {"double"}}
+    -- local border = {"double"}
+    -- local opts = {context = 15, border = {"double"}}
     if result == nil or vim.tbl_isempty(result) then
         print("No location found: " .. method)
         return nil
@@ -201,9 +203,6 @@ utils.complete_item = {item = utils.getCompletionItems}
 function utils.silent_shell(cmd) Exec("silent exe '!" .. cmd .. " &'") end
 
 -- set browser
-function utils.open_in_browser(url)
-	utils.silent_shell(browser .. " " .. url)
-end
-
+function utils.open_in_browser(url) utils.silent_shell(browser .. " " .. url) end
 
 return utils

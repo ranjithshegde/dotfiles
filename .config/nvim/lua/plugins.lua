@@ -55,7 +55,7 @@ return packer.startup(function(use)
     use {'tjdevries/express_line.nvim', requires = {'kyazdani42/nvim-web-devicons', opt = true}}
 
     -- Coautoring
-    use {'jbyuki/instant.nvim', config = function() G.instant_username = 'Ranjith' end, opt = true}
+    use {'jbyuki/instant.nvim', config = function() G.instant_username = 'Ranjith' end}
 
     -- Java Lsp
     use {
@@ -97,7 +97,7 @@ return packer.startup(function(use)
     -- completion and snippets
     use {
         'ranjithshegde/completion-nvim',
-        requires = {'windwp/nvim-autopairs', 'hrsh7th/vim-vsnip', 'hrsh7th/vim-vsnip-integ'}
+        requires = {'windwp/nvim-autopairs', 'hrsh7th/vim-vsnip', {'hrsh7th/vim-vsnip-integ'}, opt = true}
     }
 
     -- Tim pope
@@ -140,14 +140,10 @@ return packer.startup(function(use)
 
     -- SuperCollider
     use {
-        -- 'salkin-mada/scnvim',
         'davidgranstrom/scnvim',
-        -- branch = 'salkin-dev',
         ft = 'supercollider',
         run = function() fn['scnvim#install']() end,
         config = function()
-            -- G.scnvim_floating_args_register = "s"
-            -- G.scnvim_floating_args_show_full = true
             -- G.scnvim_snippet_format = 'snippets.nvim'
             -- G.scnvim_scdoc = 1
             Cmd 'autocmd FileType supercollider lua require "mappings".scnvim()'

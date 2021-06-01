@@ -86,7 +86,7 @@ function M.edit_config_files()
 		{'n', '<leader>ap', ':' .. open_func .. " ~/.config/nvim/lua/plugins.lua<CR>"},
 		{'n', '<leader>as', ':' .. open_func .. " ~/.config/nvim/lua/statusline.lua<CR>"},
 		{'n', '<leader>ac', ':' .. open_func .. " ~/.config/nvim/lua/compiler.lua<CR>"},
-		{'n', '<leader>aut', ':' .. open_func .. " ~/.config/nvim/lua/utils/init.lua<CR>"},
+		{'n', '<leader>au', ':' .. open_func .. " ~/.config/nvim/lua/utils/init.lua<CR>"},
 		{'n', '<leader>ar', ':' .. open_func .. ' $MYVIMRC<CR>'}
 	}
 
