@@ -404,6 +404,10 @@ function settings.lsp_lintFormat()
     Lsp.diagnosticls.setup {
         cmd = {"diagnostic-languageserver", "--stdio"},
         filetypes = {"markdown", "tex", "text"},
+        handlers = {
+            ["textDocument/publishDiagnostics"] = vim.lsp.with(
+                vim.lsp.diagnostic.on_publish_diagnostics, {virtual_text = false})
+        },
         init_options = {
             linters = {
                 ["write-good"] = {
@@ -450,9 +454,7 @@ function settings.lsp_lintFormat()
                 mdidote = {
                     command = "textidote",
                     debounce = 500,
-                    args = {
-                        "--type", "md", "--check", "en", "--output", "singleline", "--no-color"
-                    },
+                    args = {"--type", "md", "--check", "en", "--output", "singleline", "--no-color"},
                     offsetLine = 0,
                     offsetColumn = 0,
                     sourceName = "textidote",
@@ -535,6 +537,10 @@ function settings.lsp_lintFormat()
         filetypes = vim.tbl_keys(languages),
         root_dir = rootDir,
         on_attach = All_attach,
+        handlers = {
+            ["textDocument/publishDiagnostics"] = vim.lsp.with(
+                vim.lsp.diagnostic.on_publish_diagnostics, {virtual_text = false})
+        },
         init_options = {documentFormatting = true, codeAction = true},
         settings = {rootMarkers = rootMarker, languages = languages}
     })

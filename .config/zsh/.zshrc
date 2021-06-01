@@ -84,6 +84,7 @@ fi
 
 
 alias config='/usr/bin/git --git-dir=/home/ranjith/Nextcloud/dotfiles --work-tree=/home/ranjith'
+alias cvim='GIT_DIR=/home/ranjith/Nextcloud/dotfiles GIT_WORK_TREE=$HOME vim'
 
 # Zplug-------------------------------------------------------------------------------
 

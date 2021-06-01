@@ -63,7 +63,6 @@ func! WordProcessor()
 	" spelling and thesaurus
 	setlocal spell spelllang=en_us
 	set complete+=k
-	packadd vim-grammarous
 endfu
 com! Gram call WordProcessor()
 

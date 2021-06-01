@@ -45,8 +45,6 @@ return packer.startup(function(use)
 
     use {'m-pilia/vim-ccls', ft = 'cpp'}
 
-    use {'rhysd/vim-grammarous', opt = true}
-
     use {'yegappan/taglist', cmd = 'TlistToggle'}
 
     use {'SirVer/ultisnips', ft = {"supercollider"}}
