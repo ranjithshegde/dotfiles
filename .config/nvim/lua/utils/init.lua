@@ -205,4 +205,50 @@ function utils.silent_shell(cmd) Exec("silent exe '!" .. cmd .. " &'") end
 -- set browser
 function utils.open_in_browser(url) utils.silent_shell(browser .. " " .. url) end
 
+-- set execute
+function utils.exec(cmd)
+	Exec(cmd)
+end
+
+-- Start Instant server
+function utils.Start()
+	local id = vim.fn.input("Enter extension: ")
+	Exec'PackerLoad instant.nvim'
+	utils.exec("InstantStartServer 192.168.178." ..id .. " 8080")
+end
+
+-- Start Single session
+function utils.Session()
+	local id = vim.fn.input("Enter extension: ")
+	utils.exec("InstantStartSession 192.168.178." ..id .. " 8080")
+end
+
+-- Start Single buffer
+function utils.Single()
+	local id = vim.fn.input("Enter extension: ")
+	utils.exec("InstantStartSingle 192.168.178." ..id .. " 8080")
+end
+
+-- Follow a user
+function utils.Follow()
+	local name = vim.fn.input("User to follow: ")
+	utils.exec("InstantFollow " .. name)
+end
+
+-- Join Single session
+function utils.JoinSession()
+	Exec'PackerLoad instant.nvim'
+	local id = vim.fn.input("Enter extension: ")
+	utils.exec("InstantJoinSession 192.168.178." ..id .. " 8080")
+	utils.Follow()
+end
+
+-- Join Single buffer
+function utils.JoinSingle()
+	Exec'PackerLoad instant.nvim'
+	local id = vim.fn.input("Enter extension: ")
+	utils.exec("InstantJoinSingle 192.168.178." ..id .. " 8080")
+	utils.Follow()
+end
+
 return utils

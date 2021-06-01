@@ -55,7 +55,7 @@ return packer.startup(function(use)
     use {'tjdevries/express_line.nvim', requires = {'kyazdani42/nvim-web-devicons', opt = true}}
 
     -- Coautoring
-    use {'jbyuki/instant.nvim', config = function() G.instant_username = 'Ranjith' end}
+    use {'jbyuki/instant.nvim', config = function() G.instant_username = 'Ranjith' end, opt = true}
 
     -- Java Lsp
     use {

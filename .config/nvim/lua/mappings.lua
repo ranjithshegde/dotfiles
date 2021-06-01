@@ -7,6 +7,7 @@ function M.general()
 	M.edit_config_files()
 	M.git()
 	M.telescope()
+	M.coauthor()
 
 	local opts = {nowait = true, noremap = true, silent = false}
 	local maps = {
@@ -374,6 +375,27 @@ function M.cmake()
 		{'n', '<F7>', 'w <CR> :lua require("compiler").cmake_install()<cr>'},
 	}
 	u.bufmaps(bufmaps, opts)
+end
+
+-- ******************************** CoAuthor ---------------------------------------
+
+function M.coauthor()
+	local opts = { nowait = true, noremap = true, silent = false }
+	local maps = {
+		-- Start server
+		{'n','<leader>ii',"<cmd>lua require('utils').Start()<CR>"},
+		-- Start session
+		{'n','<leader>is',"<cmd>lua require('utils').Session()<CR>"},
+		-- Start buffer
+		{'n','<leader>ib',"<cmd>lua require('utils').Single()<CR>"},
+		-- Join session
+		{'n','<leader>ij',"<cmd>lua require('utils').JoinSession()<CR>"},
+		-- Join buffer
+		{'n','<leader>iJ',"<cmd>lua require('utils').JoinSingle()<CR>"},
+		-- Follow user
+		{'n','<leader>if',"<cmd>lua require('utils').Follow()<CR>"}
+	}
+	u.maps(maps,opts)
 end
 
 return M
