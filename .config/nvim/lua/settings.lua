@@ -29,7 +29,7 @@ function settings.options()
     u.opt('o', 'splitright', true)
     u.opt('o', 'splitbelow', true)
     u.opt('o', 'termguicolors', true)
-    u.opt('o', 'signcolumn', 'true')
+    u.opt('o', 'signcolumn', 'yes')
     u.opt('o', 'updatetime', 300)
     u.opt('o', 'scrolloff', 10)
     u.opt('b', 'shiftwidth', 0)
@@ -213,11 +213,11 @@ function settings.completion()
     G.completion_chain_complete_list = {
         tex = {
             {complete_items = {'lsp', 'snippet'}}, {complete_items = {'vimtex', 'snippet'}},
-            {mode = '<c-p>'}, {mode = '<c-n>'}, {mode = 'thes'}
+            {mode = '<c-p>'}, {mode = '<c-n>'}
         },
         default = {
             {complete_items = {'UltiSnips', 'lsp', 'snippet', 'path'}}, {mode = '<c-p>'},
-            {mode = '<c-n>'}, {mode = 'thes'}
+            {mode = '<c-n>'}
         }
     }
     G.completion_auto_change_source = 0
@@ -229,7 +229,7 @@ function settings.completion()
     end
     u.create_augroup({
         {'BufEnter', '*', 'lua require"completion".on_attach()'},
-        {'BufEnter', '*.txt,*.md,*.scd', ':let g:completion_auto_change_source=1'}
+        {'FileType', 'tex,bib,supercollider,text,markdown', 'let g:completion_auto_change_source=1'}
     }, 'completion_attach')
 end
 
@@ -273,6 +273,7 @@ function settings.lsp_settings()
         require'completion'.on_attach(client)
         Lsp_status.on_attach(client)
         local rc = client.resolved_capabilities
+        vim.fn['vsnip#get_complete_items'](vim.fn['bufnr']())
 
         if rc.document_highlight then
             Cmd('hi LspReferenceRead cterm=bold ctermbg=red guibg=#98971a')
@@ -313,6 +314,8 @@ function settings.lsp_settings()
         rc.completion = false
         rc.code_action = false
         u.create_bufgroup(codeLens, 'lensGroup')
+        -- can_resolve = client.server_capabilities.codeLensProvider.resolveProvider == true;
+        -- supports_command = client.resolved_capabilities.execute_command;
     end
 
     EfmInit = function(client)
@@ -337,17 +340,28 @@ function settings.langServers()
         cssls = {on_attach = All_attach},
         yamlls = {on_attach = All_attach},
         jsonls = {on_attach = All_attach},
-        -- pylsp = {on_attach = All_attach, capabilities = Capabilities},
+        bashls = {on_attach = All_attach, filetypes = {"sh", "zsh"}},
+        cmake = {on_attach = All_attach, capabilities = Capabilities},
+        vimls = {on_attach = All_attach, capabilities = Capabilities},
+        tsserver = {on_attach = All_attach, capabilities = Capabilities},
         pyright = {
             on_attach = All_attach,
             capabilities = Capabilities,
             root_dir = function() return vim.loop.cwd() end
         },
-        tsserver = {on_attach = All_attach, capabilities = Capabilities},
-        cmake = {on_attach = All_attach, capabilities = Capabilities},
-        vimls = {on_attach = All_attach, capabilities = Capabilities},
-        bashls = {on_attach = All_attach, filetypes = {"sh", "zsh"}},
-        texlab = {on_attach = All_attach, settings = {texlab = {chktex = {onOpenAndSave = true}}}},
+        texlab = {
+            on_attach = All_attach,
+            capabilities = Capabilities,
+            settings = {texlab = {chktex = {onOpenAndSave = true}}}
+        },
+        ccls = {
+            on_init = Cinit,
+            handlers = {
+                ["textDocument/publishDiagnostics"] = function(...) return nil end,
+                ["textDocument/signatureHelp"] = function(...) return nil end
+            },
+            init_options = {cache = {directory = "/tmp/ccls"}}
+        },
         clangd = {
             handlers = Lsp_status.extensions.clangd.setup(),
             on_attach = All_attach,
@@ -357,14 +371,6 @@ function settings.langServers()
                 "--completion-style=detailed", "--cross-file-rename"
             },
             commands = {CHover = {function() u.clang_hover() end}}
-        },
-        ccls = {
-            on_init = Cinit,
-            handlers = {
-                ["textDocument/publishDiagnostics"] = function(...) return nil end,
-                ["textDocument/signatureHelp"] = function(...) return nil end
-            },
-            init_options = {cache = {directory = "/tmp/ccls"}}
         },
         sumneko_lua = {
             on_attach = All_attach,
@@ -417,7 +423,6 @@ function settings.lsp_lintFormat()
                     command = "languagetool",
                     debounce = 200,
                     args = {"%file"},
-                    -- args = {"-"},
                     offsetLine = 0,
                     offsetColumn = 0,
                     sourceName = "languagetool",
@@ -426,13 +431,43 @@ function settings.lsp_lintFormat()
                         "^\\d+?\\.\\)\\s+Line\\s+(\\d+),\\s+column\\s+(\\d+),\\s+([^\\n]+)\nMessage:\\s+(.*)$",
                         {line = 1, column = 2, message = {4, 3}}
                     }
+                },
+                textidote = {
+                    command = "textidote",
+                    debounce = 500,
+                    args = {
+                        "--type", "tex", "--check", "en", "--output", "singleline", "--no-color"
+                    },
+                    offsetLine = 0,
+                    offsetColumn = 0,
+                    sourceName = "textidote",
+                    formatLines = 1,
+                    formatPattern = {
+                        "\\(L(\\d+)C(\\d+)-L(\\d+)C(\\d+)\\):(.+)\".+\"$",
+                        {line = 1, column = 2, endLine = 3, endColumn = 4, message = 5}
+                    }
+                },
+                mdidote = {
+                    command = "textidote",
+                    debounce = 500,
+                    args = {
+                        "--type", "md", "--check", "en", "--output", "singleline", "--no-color"
+                    },
+                    offsetLine = 0,
+                    offsetColumn = 0,
+                    sourceName = "textidote",
+                    formatLines = 1,
+                    formatPattern = {
+                        "\\(L(\\d+)C(\\d+)-L(\\d+)C(\\d+)\\):(.+)\".+\"$",
+                        {line = 1, column = 2, endLine = 3, endColumn = 4, message = 5}
+                    }
                 }
             },
             formatters = {},
             filetypes = {
-                markdown = {"langugetool", "write-good"},
-                vimwiki = {"write-good", "languagetool"},
-                tex = {"langugetool", "write-good"},
+                markdown = {"mdidote", "write-good"},
+                vimwiki = {"write-good", "mdidote"},
+                tex = {"textidote", "write-good"},
                 text = {"languagetool", "write-good"}
             },
             formatFiletypes = {}
@@ -445,7 +480,6 @@ function settings.lsp_lintFormat()
     local checkmake = {lintCommand = "checkmake", lintStdin = true}
     local yamllint = {lintCommand = "yamllint -f parsable -", lintStdin = true}
     local shfmt = {formatCommand = "shfmt -ci -s -bn", formatStdin = true}
-    local phpstan = {lintCommand = "./vendor/bin/phpstan analyze --error-format raw --no-progress"}
     local rustywind = {formatCommand = "rustywind --stdin", formatStdin = true}
     local prettier = {formatCommand = "prettier --stdin-filepath ${INPUT}", formatStdin = true}
     local isort = {formatCommand = "isort --stdout --profile black -", formatStdin = true}
@@ -484,26 +518,24 @@ function settings.lsp_lintFormat()
     }
 
     local languages = {
-        lua = {luaformat},
-        sh = {shellcheck, shfmt},
-        zsh = {shellcheck, shfmt},
         vim = {vint},
-        php = {phpstan},
-        python = {flake8, isort, black, mypy},
         yaml = {yamllint},
-        make = {checkmake},
-        rust = {rustywind},
         json = {prettier},
         toml = {prettier},
+        lua = {luaformat},
+        make = {checkmake},
+        rust = {rustywind},
+        vimwiki = {markdownlint},
         markdown = {markdownlint},
-        vimwiki = {markdownlint}
+        sh = {shellcheck, shfmt},
+        zsh = {shellcheck, shfmt},
+        python = {flake8, isort, black, mypy}
     }
-
     Lsp.efm.setup({
         filetypes = vim.tbl_keys(languages),
         root_dir = rootDir,
         on_attach = All_attach,
-        init_options = {documentFormatting = true, codeAction = true, documentSymbol = true},
+        init_options = {documentFormatting = true, codeAction = true},
         settings = {rootMarkers = rootMarker, languages = languages}
     })
 

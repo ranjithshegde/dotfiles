@@ -78,7 +78,6 @@ com! Su call SuWrite()
 function! GitRepo() 
 silent! !git rev-parse --is-inside-work-tree
 if v:shell_error == 0
-	PackerLoad vim-fugitive
 	PackerLoad gitsigns.nvim
 endif
 endfunction
@@ -96,6 +95,7 @@ augroup GenericFiles
 	au FileType gitcommit lua require'mappings'.git_commit()
 	au filetype text,vimwiki,tex call WordProcessor()
 	au filetype html nmap <F4> : exec 'silent !qutebrowser % &'
+	" au FileType * call vsnip#get_complete_items(bufnr())
 augroup end 
 
 augroup MakeDispatch

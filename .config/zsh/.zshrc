@@ -50,8 +50,6 @@ alias wget --hsts-file="$XDG_CACHE_HOME/wget-hsts"
 VISUAL=nvim; export VISUAL EDITOR=nvim; export EDITOR
 
 setopt correct
-# eval $(thefuck --alias)
-# eval $(thefuck --alias FUCK)
 # Colours for Less pager-----------------------------------------------------------------
 
 export LESS_TERMCAP_mb=$'\e[1;32m'

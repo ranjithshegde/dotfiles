@@ -91,6 +91,8 @@
 
 from __future__ import (absolute_import, division, print_function)
 
+from ranger_udisk_menu.mounter import mount
+
 from collections import deque
 import os
 import re
@@ -1962,6 +1964,7 @@ class yank(Command):
             if mode
         )
 
+
 class compress(Command):
     def execute(self):
         """ Compress marked files to current directory """
@@ -2023,6 +2026,7 @@ class extract_here(Command):
 
         obj.signal_bind('after', refresh)
         self.fm.loader.add(obj)
+
 
 class paste_ext(Command):
     """

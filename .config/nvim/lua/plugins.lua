@@ -43,8 +43,6 @@ return packer.startup(function(use)
 
     use 'vimwiki/vimwiki'
 
-    -- use "fhill2/floating.nvim"
-
     use {'m-pilia/vim-ccls', ft = 'cpp'}
 
     use {'rhysd/vim-grammarous', opt = true}
@@ -95,7 +93,6 @@ return packer.startup(function(use)
     -- use {
     -- 'iamcco/markdown-preview.nvim',
     -- run = function() fn['mkdp#util#install']() end,
-    -- opt = true
     -- cmd = 'MarkdownPreview'
     -- }
 
@@ -108,7 +105,7 @@ return packer.startup(function(use)
     -- Tim pope
     use {
         'tpope/vim-commentary', 'tpope/vim-repeat', 'tpope/vim-surround', 'tpope/vim-unimpaired',
-        {'tpope/vim-dispatch', cmd = {'Make', 'Dispatch'}}, {'tpope/vim-fugitive', opt = true}
+        {'tpope/vim-dispatch', cmd = {'Make', 'Dispatch'}}, {'tpope/vim-fugitive', cmd = {'G', 'Git'} }
     }
 
     -- Telescope
@@ -145,14 +142,14 @@ return packer.startup(function(use)
 
     -- SuperCollider
     use {
-        'salkin-mada/scnvim',
-        -- 'davidgranstrom/scnvim',
-        branch = 'salkin-dev',
+        -- 'salkin-mada/scnvim',
+        'davidgranstrom/scnvim',
+        -- branch = 'salkin-dev',
         ft = 'supercollider',
         run = function() fn['scnvim#install']() end,
         config = function()
-            G.scnvim_floating_args_register = "s"
-            G.scnvim_floating_args_show_full = true
+            -- G.scnvim_floating_args_register = "s"
+            -- G.scnvim_floating_args_show_full = true
             -- G.scnvim_snippet_format = 'snippets.nvim'
             -- G.scnvim_scdoc = 1
             Cmd 'autocmd FileType supercollider lua require "mappings".scnvim()'
@@ -173,7 +170,7 @@ return packer.startup(function(use)
                 'conf'
             }
         end,
-        opt = true
+        cmd = {'ColorizerAttachToBuffer', 'ColorizerToggle'}
     }
 
     -- Indents and chars
@@ -183,7 +180,7 @@ return packer.startup(function(use)
         config = function()
             G.indent_blankline_buftype_exclude = {'terminal'}
             G.indent_blankline_char = '┊'
-            G.indent_blankline_space_char = '.'
+            -- G.indent_blankline_space_char = '|'
             G.indent_blankline_use_treesitter = true
             G.indent_blankline_show_current_context = true
             G.indent_blankline_context_patterns = {

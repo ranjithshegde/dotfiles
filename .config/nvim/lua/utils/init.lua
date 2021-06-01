@@ -160,13 +160,17 @@ end
 
 function utils.preview_location_callback(_, method, result)
     local context = 15
+	-- local border = {"double"}
+	-- local opts = {context = 15, border = {"double"}}
     if result == nil or vim.tbl_isempty(result) then
         print("No location found: " .. method)
         return nil
     end
     if vim.tbl_islist(result) then
+        -- utils.floating_buf, utils.floating_win = vim.lsp.util.preview_location(result[1], opts)
         utils.floating_buf, utils.floating_win = utils.preview_location(result[1], context)
     else
+        -- utils.floating_buf, utils.floating_win = vim.lsp.util.preview_location(result,opts)
         utils.floating_buf, utils.floating_win = utils.preview_location(result, context)
     end
 end

@@ -105,35 +105,19 @@ function M.telescope()
 	local telE = function(name)
 		return string.format(":lua require'telescope'.extensions.%s()<cr>", name)
 	end
-	local follow_links = {
-		cwd = vim.loop.cwd(),
-		follow = true,
-	}
+	-- local follow_links = {
+	-- 	cwd = vim.loop.cwd(),
+	-- 	follow = true,
+	-- }
 
 	local opts = {nowait = true, noremap = true, silent = true}
 	local maps = {
-		-- openFrameworks and other projects
-		{'n', '<space>p', telE("project.project")},
+		-- Switch buffers
+		{'n', '<space>b', tele("buffers")},
 		-- Fuzzy find files in cwd
 		{'n', '<space>f', tele("find_files")},
-		-- document symbol
-		{'n', '<space>s', tele("lsp_document_symbols")},
-		-- document symbol
-		{'n', '<space>S', tele("lsp_dynamic_workspace_symbols")},
 		-- Oldfiles
 		{'n', '<space>rf', tele("oldfiles")},
-		-- Document diagnostics
-		{'n', '<space>dd', tele("lsp_document_diagnostics")},
-		-- Workspace diagnostics
-		{'n', '<space>D', tele("lsp_workspace_diagnostics")},
-		-- References under cursor
-		{'n', ',r', tele("lsp_references")},
-		-- Quickfix list
-		{'n', '<space>q', tele("quickfix")},
-		-- Location list
-		{'n', '<space>l', tele("loclist")},
-		-- live grep
-		{'n', '<space>G', tele("live_grep")},
 		-- Help tags
 		{'n', '<space>ht', tele("help_tags")},
 		-- registers list
@@ -144,6 +128,30 @@ function M.telescope()
 		{'n', '<space>c', tele("commands")},
 		-- commands history
 		{'n', '<space>C', tele("command_history")},
+		-- Unicode
+		{'n', '<space>m', tele("symbols")},
+		-- openFrameworks and other projects
+		{'n', '<space>p', telE("project.project")},
+		-- Ctags
+		{'n', '<space>T', tele("tags")},
+		-- TS symbols
+		{'n', '<space>t', tele("treesitter")},
+		-- References under cursor
+		{'n', ',r', tele("lsp_references")},
+		-- document symbol
+		{'n', '<space>s', tele("lsp_document_symbols")},
+		-- document symbol
+		{'n', '<space>S', tele("lsp_dynamic_workspace_symbols")},
+		-- Document diagnostics
+		{'n', '<space>dd', tele("lsp_document_diagnostics")},
+		-- Workspace diagnostics
+		{'n', '<space>D', tele("lsp_workspace_diagnostics")},
+		-- Quickfix list
+		{'n', '<space>q', tele("quickfix")},
+		-- Location list
+		{'n', '<space>l', tele("loclist")},
+		-- live grep
+		{'n', '<space>G', tele("live_grep")},
 		-- git branches
 		{'n', '<space>gb', tele("git_branches")},
 		-- git commits
@@ -152,26 +160,18 @@ function M.telescope()
 		{'n', '<space>gs', tele("git_status")},
 		-- git files
 		{'n', '<space>gf', tele("git_files")},
-		-- Ctags
-		{'n', '<space>T', tele("tags")},
-		-- TS symbols
-		{'n', '<space>t', tele("treesitter")},
-		-- Unicode
-		{'n', '<space>m', tele("symbols")},
-		-- Switch buffers
-		{'n', '<space>b', tele("buffers")},
-		-- Workspace symbol under cursor
-		{'n', '<space>k', telF("lsp_workspace_symbols({query = vim.fn.expand('<cword>')})")},
-		-- grep ofProjects
-		{'n', '<space>og', telF("live_grep({cwd ='~/Documents/ofWorkspace/',follow = true,})")},
-		-- find-files ofProjects
-		{'n', '<space>of', telF("find_files({cwd ='~/Documents/ofWorkspace/',follow = true,})")},
-		--  Serach dotfiles
-		{'n', '<space>df', telF("find_files({cwd='~/.config/'})")},
 		--  Serach HOME
 		{'n', '<space>hf', telF("find_files({cwd='~'})")},
+		--  Serach dotfiles
+		{'n', '<space>df', telF("find_files({cwd='~/.config/'})")},
 		-- Search plugins
-		{'n', '<space>vf', telF("find_files({cwd='~/.local/share/nvim/'})")}
+		{'n', '<space>vf', telF("find_files({cwd='~/.local/share/nvim/'})")},
+		-- Custom workfolder
+		{'n', '<space>K', telF('live_grep({cwd = vim.fn.input("cwd: ")})')},
+		-- Workspace symbol under cursor
+		{'n', '<space>k', telF("lsp_workspace_symbols({query = vim.fn.expand('<cword>')})")},
+		-- find-files ofProjects
+		{'n', '<space>of', telF("find_files({cwd ='~/Documents/ofWorkspace/',follow = true,})")},
 	}
 	u.maps(maps, opts)
 end
@@ -248,8 +248,8 @@ function M.scnvim()
 		--Start WFSCollider
 		{'n', '<F4>', ':call scnvim#sclang#send_silent("WFSLib.startup")<CR>'},
 		-- Echo args
-		{'n', ';a', ':call scnvim#util#args_popup_toggle()<cr>'},
-		-- {'n', ';a', ':call scnvim#util#echo_args()<cr>'},
+		-- {'n', ';a', ':call scnvim#util#args_popup_toggle()<cr>'},
+		{'n', ';a', ':call scnvim#util#echo_args()<cr>'},
 		-- Regenerate Ctags
 		{'n', '<leader>rt', ':SCNvimTags<cr>'},
 		-- Edit startup file

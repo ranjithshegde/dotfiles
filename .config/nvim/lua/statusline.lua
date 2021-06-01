@@ -20,6 +20,22 @@ local file_icon = subscribe.buf_autocmd("el_file_icon", "BufRead", function(_, b
 	return ""
 end)
 
+local colors = {
+    bg = '#32302f',
+    bg2 = '#008080',
+    bg3 = '#d79921',
+    white = '#fbf1c7',
+    yellow = '#d79921',
+    cyan = '#008080',
+    grey = '#928374',
+    green = '#98971a',
+    purple = '#b16286',
+    orange = '#d65d0e',
+    blue = '#458588',
+    red = '#cc241d'
+}
+
+
 --*********************************** Vim Mode ---------------------------------
 local mode = function()
 	local alias = {
