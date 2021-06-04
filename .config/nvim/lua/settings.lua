@@ -1,5 +1,5 @@
 local settings = {}
-local u = require('utils')
+local u = require("utils")
 local o = vim.o
 require("lsp-codelens").setup()
 
@@ -19,28 +19,30 @@ end
 --                              Vim basics                            --
 ------------------------------------------------------------------------
 function settings.options()
-    Cmd 'colo zephyr'
-    Cmd 'set nohlsearch'
+    Cmd "set nohlsearch"
+    -- Cmd 'colo base16-equilibrium-light'
+    Cmd "colo zephyr"
 
-    u.opt('w', 'number', true)
-    u.opt('w', 'relativenumber', true)
-    u.opt('w', 'cursorline', true)
-    u.opt('o', 'hidden', true)
-    u.opt('o', 'splitright', true)
-    u.opt('o', 'splitbelow', true)
-    u.opt('o', 'termguicolors', true)
-    u.opt('o', 'signcolumn', 'yes')
-    u.opt('o', 'updatetime', 300)
-    u.opt('o', 'scrolloff', 10)
-    u.opt('b', 'shiftwidth', 0)
-    u.opt('b', 'tabstop', 4)
-    u.opt('o', 'clipboard', [[unnamed,unnamedplus]])
-    u.opt('o', 'completeopt', [[menuone,noinsert,noselect]])
-    u.opt('o', 'fillchars', "stlnc:»,vert:║,fold:·")
-    u.opt('o', 'foldmethod', 'expr')
-    u.opt('o', 'foldexpr', 'nvim_treesitter#foldexpr()')
+    u.opt("w", "number", true)
+    u.opt("w", "relativenumber", true)
+    u.opt("w", "cursorline", true)
+    u.opt("o", "hidden", true)
+    u.opt("o", "splitright", true)
+    u.opt("o", "splitbelow", true)
+    u.opt("o", "termguicolors", true)
+    u.opt("o", "signcolumn", "yes")
+    u.opt("o", "updatetime", 300)
+    u.opt("o", "scrolloff", 10)
+    u.opt("b", "shiftwidth", 0)
+    u.opt("b", "tabstop", 4)
+    u.opt("o", "clipboard", [[unnamed,unnamedplus]])
+    u.opt("o", "completeopt", [[menuone,noinsert,noselect]])
+    u.opt("o", "fillchars", "stlnc:»,vert:║,fold:·")
+    u.opt("o", "foldmethod", "expr")
+    u.opt("o", "foldexpr", "nvim_treesitter#foldexpr()")
     -- u.opt('o', 'timeoutlen', 0)
-    u.opt('o', 'timeoutlen', 500)
+    u.opt("o", "timeoutlen", 500)
+    u.opt("o", "conceallevel", 1)
     o.shortmess = o.shortmess .. "c"
     G.termdebug_wide = 1
 end
@@ -52,17 +54,16 @@ end
 function settings.vimwiki()
     local l = {}
     -- l.path = '$HOME/Documents/vimWiki'
-    l.path = '$HOME/Nextcloud/Documents/vimWiki'
-    l.syntax = 'markdown'
-    l.ext = '.md'
+    l.path = "$HOME/Nextcloud/Documents/vimWiki"
+    l.syntax = "markdown"
+    l.ext = ".md"
     l.auto_tags = 1
     l.auto_diary_index = 1
     l.auto_generate_tags = 1
     l.autowriteall = 1
-    G.vimwiki_filetypes = {'markdown'}
+    G.vimwiki_filetypes = {"markdown"}
     G.vimwiki_list = {l}
     G.vimwiki_markdown_link_ext = 1
-
 end
 ------------------------------------------------------------------------
 --                              Snippets                              --
@@ -70,10 +71,10 @@ end
 
 function settings.ultisnips()
     local snippet_directories = {"UltiSnips", "scnvim-data"}
-    Var('UltiSnipsExpandTrigger', "<tab>")
-    Var('UltiSnipsJumpForwardTrigger', "<tab>")
-    Var('UltiSnipsJumpBackwardTrigger', "<c-tab>")
-    Var('UltiSnipsSnippetDirectories', snippet_directories)
+    Var("UltiSnipsExpandTrigger", "<tab>")
+    Var("UltiSnipsJumpForwardTrigger", "<tab>")
+    Var("UltiSnipsJumpBackwardTrigger", "<c-tab>")
+    Var("UltiSnipsSnippetDirectories", snippet_directories)
 end
 
 ------------------------------------------------------------------------
@@ -81,10 +82,9 @@ end
 ------------------------------------------------------------------------
 
 function settings.treesitter()
-
-    require'nvim-treesitter.configs'.setup {
+    require "nvim-treesitter.configs".setup {
         highlight = {enable = true, languagetree = true, additional_vim_regex_highlighting = true},
-        indent = {enable = true},
+        indent = {enable = true, disable = {"python"}},
         autopairs = {enable = true},
         incremental_selection = {
             enable = true,
@@ -103,17 +103,17 @@ function settings.treesitter()
                     ["if"] = "@function.inner",
                     ["aC"] = "@class.outer",
                     ["iC"] = "@class.inner",
-                    ['ac'] = '@conditional.outer',
-                    ['ic'] = '@conditional.inner',
-                    ['ae'] = '@block.outer',
-                    ['ie'] = '@block.inner',
-                    ['al'] = '@loop.outer',
-                    ['il'] = '@loop.inner',
-                    ['is'] = '@statement.inner',
-                    ['as'] = '@statement.outer',
-                    ['ad'] = '@comment.outer',
-                    ['am'] = '@call.outer',
-                    ['im'] = '@call.inner',
+                    ["ac"] = "@conditional.outer",
+                    ["ic"] = "@conditional.inner",
+                    ["ae"] = "@block.outer",
+                    ["ie"] = "@block.inner",
+                    ["al"] = "@loop.outer",
+                    ["il"] = "@loop.inner",
+                    ["is"] = "@statement.inner",
+                    ["as"] = "@statement.outer",
+                    ["ad"] = "@comment.outer",
+                    ["am"] = "@call.outer",
+                    ["im"] = "@call.inner",
                     ["iF"] = {
                         supercollider = "(function_definition) @function",
                         cpp = "(function_definition) @function",
@@ -207,30 +207,35 @@ end
 ------------------------------------------------------------------------
 
 function settings.completion()
-
-    require'completion'.addCompletionSource('vimtex', u.complete_item)
+    require "completion".addCompletionSource("vimtex", u.complete_item)
 
     G.completion_chain_complete_list = {
         tex = {
-            {complete_items = {'lsp', 'snippet'}}, {complete_items = {'vimtex', 'snippet'}},
-            {mode = '<c-p>'}, {mode = '<c-n>'}
+            {complete_items = {"lsp", "snippet"}},
+            {complete_items = {"vimtex", "snippet"}},
+            {mode = "<c-p>"},
+            {mode = "<c-n>"}
         },
         default = {
-            {complete_items = {'UltiSnips', 'lsp', 'snippet', 'path'}}, {mode = '<c-p>'},
-            {mode = '<c-n>'}
+            {complete_items = {"UltiSnips", "lsp", "snippet", "path"}},
+            {mode = "<c-p>"},
+            {mode = "<c-n>"}
         }
     }
     G.completion_auto_change_source = 0
 
     if Op("filetype") == "supercollider" then
-        G.completion_enable_snippet = 'UltiSnips'
+        G.completion_enable_snippet = "UltiSnips"
     else
-        G.completion_enable_snippet = 'vim-vsnip'
+        G.completion_enable_snippet = "vim-vsnip"
     end
-    u.create_augroup({
-        {'BufEnter', '*', 'lua require"completion".on_attach()'},
-        {'FileType', 'tex,bib,supercollider,text,markdown', 'let g:completion_auto_change_source=1'}
-    }, 'completion_attach')
+    u.create_augroup(
+        {
+            {"FileType", "*", 'lua require"completion".on_attach()'},
+            {"FileType", "tex,bib,supercollider,text,markdown", "let g:completion_auto_change_source=1"}
+        },
+        "completion_attach"
+    )
 end
 
 ------------------------------------------------------------------------
@@ -238,27 +243,27 @@ end
 ------------------------------------------------------------------------
 
 function settings.lsp_settings()
-
     -- autopairs
-    local npairs = require('nvim-autopairs')
+    local npairs = require("nvim-autopairs")
     npairs.setup()
 
-    local Rule = require('nvim-autopairs.rule')
+    local Rule = require("nvim-autopairs.rule")
     npairs.add_rules({Rule("|", "|", "supercollider")})
 
     -- OnEnter = function() return require("nvim-autopairs").check_break_line_char() end
     -- vim.api.nvim_set_keymap("i", "<CR>", "v:lua.OnEnter()", {expr = true})
 
-    require('icons').init()
-    Lsp = require 'lspconfig'
+    require("icons").init()
+    Lsp = require "lspconfig"
 
     -- Status bar for LSP
-    Lsp_status = require('lsp-status')
+    Lsp_status = require("lsp-status")
     Lsp_status.register_progress()
 
     local codeLens = {
         {
-            "CursorHold, CursorHoldI, InsertLeave", "<buffer>",
+            "CursorHold, CursorHoldI, InsertLeave",
+            "<buffer>",
             [[lua require'lsp-codelens'.buf_codelens_refresh()]]
         }
     }
@@ -270,36 +275,41 @@ function settings.lsp_settings()
     }
 
     All_attach = function(client, bufnr)
-        require'completion'.on_attach(client)
+        require "completion".on_attach(client)
         Lsp_status.on_attach(client)
         local rc = client.resolved_capabilities
-        vim.fn['vsnip#get_complete_items'](vim.fn['bufnr']())
+        vim.fn["vsnip#get_complete_items"](vim.fn["bufnr"]())
 
         if rc.document_highlight then
-            Cmd('hi LspReferenceRead cterm=bold ctermbg=red guibg=#98971a')
-            Cmd('hi LspReferenceText cterm=bold ctermbg=red guibg=grey')
-            Cmd('hi LspReferenceWrite cterm=bold ctermbg=red guibg= #fbf1c7')
-            u.create_bufgroup(docHigh, 'bufgroup')
+            Cmd("hi LspReferenceRead cterm=bold ctermbg=red guibg=#98971a")
+            Cmd("hi LspReferenceText cterm=bold ctermbg=red guibg=grey")
+            Cmd("hi LspReferenceWrite cterm=bold ctermbg=red guibg= #fbf1c7")
+            u.create_bufgroup(docHigh, "bufgroup")
         end
 
         if rc.document_formatting then
-            u.create_augroup({
+            u.create_augroup(
                 {
-                    'BufWritePre', '*.js,*.jsx,*.py,*.hpp,*.sh',
-                    'lua vim.lsp.buf.formatting_sync(nil, 1000)'
-                }
-            }, 'lsp_auto_format')
+                    {
+                        "BufWritePre",
+                        "*.js,*.jsx,*.hpp,*.sh",
+                        "lua vim.lsp.buf.formatting_sync(nil, 1000)"
+                    }
+                },
+                "lsp_auto_format"
+            )
         end
 
         if client.resolved_capabilities.code_lens then
-            u.create_bufgroup(codeLens, 'lensGroup')
+            u.create_bufgroup(codeLens, "lensGroup")
         end
     end
 
     Capabilities = vim.lsp.protocol.make_client_capabilities()
-    Capabilities.textDocument.completion.completionItem.snippetSupport = true;
-    Capabilities.textDocument.completion.completionItem.resolveSupport =
-        {properties = {'documentation', 'detail', 'additionalTextEdits'}}
+    Capabilities.textDocument.completion.completionItem.snippetSupport = true
+    Capabilities.textDocument.completion.completionItem.resolveSupport = {
+        properties = {"documentation", "detail", "additionalTextEdits"}
+    }
     -- Capabilities = vim.tbl_extend('keep', Capabilities, Lsp_status.capabilities);
 
     Cinit = function(client)
@@ -313,7 +323,7 @@ function settings.lsp_settings()
         rc.hover = false
         rc.completion = false
         rc.code_action = false
-        u.create_bufgroup(codeLens, 'lensGroup')
+        u.create_bufgroup(codeLens, "lensGroup")
         -- can_resolve = client.server_capabilities.codeLensProvider.resolveProvider == true;
         -- supports_command = client.resolved_capabilities.execute_command;
     end
@@ -324,10 +334,8 @@ function settings.lsp_settings()
     end
 
     -- borders for floating windows
-    vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover,
-                                                          {border = "double"})
-    vim.lsp.handlers["textDocument/signatureHelp"] =
-        vim.lsp.with(vim.lsp.handlers.signature_help, {border = "double"})
+    vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, {border = "double"})
+    vim.lsp.handlers["textDocument/signatureHelp"] = vim.lsp.with(vim.lsp.handlers.signature_help, {border = "double"})
 end
 
 ------------------------------------------------------------------------
@@ -335,7 +343,6 @@ end
 ------------------------------------------------------------------------
 
 function settings.langServers()
-
     local configs = {
         cssls = {on_attach = All_attach},
         yamlls = {on_attach = All_attach},
@@ -347,7 +354,9 @@ function settings.langServers()
         pyright = {
             on_attach = All_attach,
             capabilities = Capabilities,
-            root_dir = function() return vim.loop.cwd() end
+            root_dir = function()
+                return vim.loop.cwd()
+            end
         },
         texlab = {
             on_attach = All_attach,
@@ -357,8 +366,12 @@ function settings.langServers()
         ccls = {
             on_init = Cinit,
             handlers = {
-                ["textDocument/publishDiagnostics"] = function(...) return nil end,
-                ["textDocument/signatureHelp"] = function(...) return nil end
+                ["textDocument/publishDiagnostics"] = function(...)
+                    return nil
+                end,
+                ["textDocument/signatureHelp"] = function(...)
+                    return nil
+                end
             },
             init_options = {cache = {directory = "/tmp/ccls"}}
         },
@@ -367,22 +380,32 @@ function settings.langServers()
             on_attach = All_attach,
             capabilities = Capabilities,
             cmd = {
-                "clangd", "--clang-tidy", "--background-index", "--all-scopes-completion",
-                "--completion-style=detailed", "--cross-file-rename"
+                "clangd",
+                "--clang-tidy",
+                "--background-index",
+                "--all-scopes-completion",
+                "--completion-style=detailed",
+                "--cross-file-rename"
             },
-            commands = {CHover = {function() u.clang_hover() end}}
+            commands = {
+                CHover = {
+                    function()
+                        u.clang_hover()
+                    end
+                }
+            }
         },
         sumneko_lua = {
             on_attach = All_attach,
             cmd = {"lua-language-server", "-E", "lua-language-server" .. "/main.lua"},
             settings = {
                 Lua = {
-                    runtime = {version = 'LuaJIT', path = vim.split(package.path, ';')},
-                    diagnostics = {globals = {'vim'}},
+                    runtime = {version = "LuaJIT", path = vim.split(package.path, ";")},
+                    diagnostics = {globals = {"vim"}},
                     workspace = {
                         library = {
-                            [vim.fn.expand('$VIMRUNTIME/lua')] = true,
-                            [vim.fn.expand('$VIMRUNTIME/lua/vim/lsp')] = true
+                            [vim.fn.expand("$VIMRUNTIME/lua")] = true,
+                            [vim.fn.expand("$VIMRUNTIME/lua/vim/lsp")] = true
                         }
                     }
                 }
@@ -400,13 +423,14 @@ end
 ------------------------------------------------------------------------
 
 function settings.lsp_lintFormat()
-
     Lsp.diagnosticls.setup {
         cmd = {"diagnostic-languageserver", "--stdio"},
         filetypes = {"markdown", "tex", "text"},
         handlers = {
             ["textDocument/publishDiagnostics"] = vim.lsp.with(
-                vim.lsp.diagnostic.on_publish_diagnostics, {virtual_text = false})
+                vim.lsp.diagnostic.on_publish_diagnostics,
+                {virtual_text = false}
+            )
         },
         init_options = {
             linters = {
@@ -440,14 +464,20 @@ function settings.lsp_lintFormat()
                     command = "textidote",
                     debounce = 500,
                     args = {
-                        "--type", "tex", "--check", "en", "--output", "singleline", "--no-color"
+                        "--type",
+                        "tex",
+                        "--check",
+                        "en",
+                        "--output",
+                        "singleline",
+                        "--no-color"
                     },
                     offsetLine = 0,
                     offsetColumn = 0,
                     sourceName = "textidote",
                     formatLines = 1,
                     formatPattern = {
-                        "\\(L(\\d+)C(\\d+)-L(\\d+)C(\\d+)\\):(.+)\".+\"$",
+                        '\\(L(\\d+)C(\\d+)-L(\\d+)C(\\d+)\\):(.+)".+"$',
                         {line = 1, column = 2, endLine = 3, endColumn = 4, message = 5}
                     }
                 },
@@ -460,7 +490,7 @@ function settings.lsp_lintFormat()
                     sourceName = "textidote",
                     formatLines = 1,
                     formatPattern = {
-                        "\\(L(\\d+)C(\\d+)-L(\\d+)C(\\d+)\\):(.+)\".+\"$",
+                        '\\(L(\\d+)C(\\d+)-L(\\d+)C(\\d+)\\):(.+)".+"$',
                         {line = 1, column = 2, endLine = 3, endColumn = 4, message = 5}
                     }
                 }
@@ -479,23 +509,27 @@ function settings.lsp_lintFormat()
     local rootDir = function() return vim.fn.getcwd() or Lsp.util.root_pattern('.git/') end
     local rootMarker = {vim.fn.getcwd() or {".git/"}}
 
+    -- local rootDir = vim.loop.cwd
+    -- local rootMarker = {".git/"}
+
     local checkmake = {lintCommand = "checkmake", lintStdin = true}
     local yamllint = {lintCommand = "yamllint -f parsable -", lintStdin = true}
     local shfmt = {formatCommand = "shfmt -ci -s -bn", formatStdin = true}
     local rustywind = {formatCommand = "rustywind --stdin", formatStdin = true}
     local prettier = {formatCommand = "prettier --stdin-filepath ${INPUT}", formatStdin = true}
     local isort = {formatCommand = "isort --stdout --profile black -", formatStdin = true}
-    local black = {formatCommand = "black --fast --quiet -", formatStdin = true}
+    local black = {formatCommand = "black --fast -", formatStdin = true}
 
     local mypy = {
-        lintCommand = "mypy --show-column-numbers --ignore-missing-imports",
+        lintCommand = "mypy --show-column-numbers",
         lintFormats = {"%f:%l:%c: %trror: %m", "%f:%l:%c: %tarning: %m", "%f:%l:%c: %tote: %m"},
         lintSource = "mypy"
     }
     local flake8 = {
         lintCommand = "flake8 --max-line-length 160 --format '%(path)s:%(row)d:%(col)d: %(code)s %(code)s %(text)s' --stdin-display-name ${INPUT} -",
         lintStdin = true,
-        lintFormats = {"%f:%l:%c: %m"},
+        lintIgnoreExitCode = true,
+        lintFormats = {"%f:%l:%c: %t%n%n%n %m"},
         lintSource = "flake8"
     }
     local shellcheck = {
@@ -510,7 +544,8 @@ function settings.lsp_lintFormat()
     }
     local luaformat = {
         -- formatCommand = "lua-format -i ${--tab-width:tabSize} ${--indent-width:tabSize} --spaces-inside-table-braces --single-quote-to-double-quote",
-        formatCommand = "lua-format -i --keep-simple-function-one-line --break-after-operator --no-keep-simple-control-block-one-line --column-limit=100",
+        -- formatCommand = "lua-format -i --keep-simple-function-one-line --break-after-operator --no-keep-simple-control-block-one-line --column-limit=100",
+        formatCommand = "luafmt ${-i:tabWidth} --stdin",
         formatStdin = true
     }
     local vint = {
@@ -533,18 +568,21 @@ function settings.lsp_lintFormat()
         zsh = {shellcheck, shfmt},
         python = {flake8, isort, black, mypy}
     }
-    Lsp.efm.setup({
-        filetypes = vim.tbl_keys(languages),
-        root_dir = rootDir,
-        on_attach = All_attach,
-        handlers = {
-            ["textDocument/publishDiagnostics"] = vim.lsp.with(
-                vim.lsp.diagnostic.on_publish_diagnostics, {virtual_text = false})
-        },
-        init_options = {documentFormatting = true, codeAction = true},
-        settings = {rootMarkers = rootMarker, languages = languages}
-    })
-
+    Lsp.efm.setup(
+        {
+            filetypes = vim.tbl_keys(languages),
+            root_dir = rootDir,
+            on_attach = All_attach,
+            handlers = {
+                ["textDocument/publishDiagnostics"] = vim.lsp.with(
+                    vim.lsp.diagnostic.on_publish_diagnostics,
+                    {virtual_text = false}
+                )
+            },
+            init_options = {documentFormatting = true, codeAction = true},
+            settings = {rootMarkers = rootMarker, languages = languages}
+        }
+    )
 end
 
 ------------------------------------------------------------------------
@@ -552,8 +590,8 @@ end
 ------------------------------------------------------------------------
 
 function settings.telescope()
-    require('telescope').setup {}
-    require'telescope'.load_extension('project')
+    require("telescope").setup {}
+    require "telescope".load_extension("project")
 end
 
 ------------------------------------------------------------------------
@@ -561,12 +599,14 @@ end
 ------------------------------------------------------------------------
 
 function settings.jdtls()
-    require('jdtls').start_or_attach({
-        on_attach = All_attach,
-        capabilities = Capabilities,
-        cmd = {'jdlsp'}
-    })
-    require('jdtls.setup').add_commands()
+    require("jdtls").start_or_attach(
+        {
+            on_attach = All_attach,
+            capabilities = Capabilities,
+            cmd = {"jdlsp"}
+        }
+    )
+    require("jdtls.setup").add_commands()
 end
 
 function settings.smbc()

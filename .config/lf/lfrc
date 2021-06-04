@@ -1,0 +1,233 @@
+#!/bin/sh
+
+# cmd fzf $vi $(find . -name "$1" | fzf)
+# map f push :fzf<space>
+
+
+
+# Basic Settings
+
+set previewer stpv
+set cleaner stpvimgclr
+&stpvimg --listen $id
+
+set preview true
+set hidden true
+set drawbox true
+set icons true
+set ignorecase true
+
+# Async pase
+cmd paste &{{
+    set -- $(lf -remote load)
+    mode="$1"
+    shift
+    case "$mode" in
+        copy) cp -rn -- "$@" .;;
+        move) mv -n -- "$@" .;;
+    esac
+    lf -remote "send load"
+    lf -remote "send clear"
+}}
+
+
+# y (select for copy) and P to paste soft-link
+# d (select for cut) and P to paste hard-link
+cmd link %{{
+    set -- $(lf -remote load)
+    mode="$1"
+    shift
+    if [ "$#" -lt 1 ]; then
+        lf -remote "send $id echo no files to link"
+        exit 0
+    fi
+    case "$mode" in
+        # symbolically copy mode is indicating a soft link
+        copy) ln -sr -t . -- "$@";;
+        # while a move mode is indicating a hard link
+        move) ln -t . -- "$@";;
+    esac
+}}
+map P :link
+
+
+# Copy progress
+cmd paste &{{
+    set -- $(lf -remote load)
+    mode="$1"
+    shift
+    case "$mode" in
+        copy)
+            rsync -av --ignore-existing --progress -- "$@" . |
+            stdbuf -i0 -o0 -e0 tr '\r' '\n' |
+            while IFS= read -r line; do
+                lf -remote "send $id echo $line"
+            done
+            ;;
+        move) mv -n -- "$@" .;;
+    esac
+    lf -remote "send load"
+    lf -remote "send clear"
+}}
+
+# Custom Functions
+cmd open ${{
+    case $(file --mime-type "$f" -bL) in
+        text/*|application/json) $EDITOR "$f";;
+        *) xdg-open "$f" ;;
+    esac
+}}
+
+cmd mkdir ${{
+  printf "Directory Name: "
+  read ans
+  mkdir $ans
+}}
+
+cmd mkfile ${{
+  printf "File Name: "
+  read ans
+  $EDITOR $ans
+}}
+map <c-f> :fzf_jump
+
+cmd chmod ${{
+  printf "Mode Bits: "
+  read ans
+
+  for file in "$fx"
+  do
+    chmod $ans $file
+  done
+
+  lf -remote 'send reload'
+}}
+
+cmd sudomkfile ${{
+  printf "File Name: "
+  read ans
+  sudo $EDITOR $ans
+}}
+
+
+cmd fzf_jump ${{
+  res="$(find . -maxdepth 3 | fzf --reverse --header='Jump to location')"
+  if [ -f "$res" ]; then
+    cmd="select"
+  elif [ -d "$res" ]; then
+    cmd="cd"
+  fi
+  lf -remote "send $id $cmd \"$res\""
+}}
+
+# cmd dragon %dragon-drag-and-drop -a -x $fx
+# cmd dragon-stay %dragon-drag-and-drop -a $fx
+# cmd dragon-individual %dragon-drag-and-drop $fx
+# cmd cpdragon %cpdragon
+# cmd mvdragon %mvdragon
+# cmd dlfile %dlfile
+
+# # Archive bindings
+# cmd unarchive ${{
+#   case "$f" in
+#       *.zip) unzip "$f" ;;
+#       *.tar.gz) tar -xzvf "$f" ;;
+#       *.tar.bz2) tar -xjvf "$f" ;;
+#       *.tar) tar -xvf "$f" ;;
+#       *) echo "Unsupported format" ;;
+#   esac
+# }}
+
+# cmd zip %zip -r "$f" "$f"
+# cmd tar %tar cvf "$f.tar" "$f"
+# cmd targz %tar cvzf "$f.tar.gz" "$f"
+# cmd tarbz2 %tar cjvf "$f.tar.bz2" "$f"
+
+# Trash cli bindings
+cmd trash ${{
+    set -f
+    if gio trash 2>/dev/null; then
+        gio trash $fx
+    else
+        mkdir -p ~/.trash
+        mv -- $fx ~/.trash
+    fi
+}}
+
+# # Bindings
+# # Remove some defaults
+# map m
+# map o
+# map n
+# map "'"
+# map '"'
+# map d
+# map c
+# map e
+# map f
+
+# # File Openers
+# map ee $$EDITOR "$f"
+# map u $view "$f"
+
+# # Archive Mappings
+# map az zip
+# map at tar
+# map ag targz
+# map ab targz
+# map au unarchive
+
+# # Trash Mappings
+# map dd trash
+# map tc clear_trash
+# map tr restore_trash
+
+# # Broot Mapping
+# map f broot_jump
+
+# # Dragon Mapping
+# map dr dragon
+# map ds dragon-stay
+# map di dragon-individual
+# map dm mvdragon
+# map dc cpdragon
+# map dl dlfile
+
+# map ss stripspace
+
+# # Basic Functions
+# map . set hidden!
+# map DD delete
+# map p paste
+# map x cut
+# map y copy
+# map <enter> open
+# map mf mkfile
+# map mr sudomkfile
+# map md mkdir
+# map ms $mkscript
+# map ch chmod
+# map bg setwallpaper
+# map o open_config
+# map br $vimv $fx
+# map r rename
+# map H top
+# map L bottom
+# map R reload
+# map C clear
+# map U unselect
+
+# # Movement
+# map gtr cd ~/.local/share/Trash/files
+# map gus cd /run/media/brodie
+# map gD cd ~/downloads
+# map ge cd ~/desktop
+
+# map gc cd ~/.config
+# map gC cd ~/.local/share/cell
+# map gl cd ~/.local
+# map gE cd /etc
+# map gU. cd /usr
+# map gUs cd /usr/share
+
+# map \;j cd ~

@@ -55,14 +55,18 @@ func! WordProcessor()
 	map j gj
 	map k gk
 	" formatting text
-	setlocal formatoptions=1
+	" setlocal formatoptions-=l
 	setlocal noexpandtab
-	setlocal wrap
+	setlocal wrap 
 	setlocal linebreak
-	set thesaurus+=$HOME/.config/nvim/thesaurus/mthesaur.txt
+	setlocal tw=120
+	setlocal colorcolumn
 	" spelling and thesaurus
+	set thesaurus+=$HOME/.config/nvim/thesaurus/mthesaur.txt
 	setlocal spell spelllang=en_us
 	set complete+=k
+	"add double spacing
+	nn <leader><Space> :g/^/pu =\"\n\"<CR>
 endfu
 com! Gram call WordProcessor()
 
@@ -75,10 +79,10 @@ com! Su call SuWrite()
 "************** FileTypes & AutoCompiles-----------------------------------------------
 
 function! GitRepo() 
-silent! !git rev-parse --is-inside-work-tree
-if v:shell_error == 0
-	PackerLoad gitsigns.nvim
-endif
+	silent! !git rev-parse --is-inside-work-tree
+	if v:shell_error == 0
+		PackerLoad gitsigns.nvim
+	endif
 endfunction
 
 augroup GitRepos
@@ -92,8 +96,8 @@ nnoremap <leader>fr :FloatermNew ranger<CR>
 augroup GenericFiles
 	au FileType * lua require'mappings'.nvim_lsp()
 	au FileType gitcommit lua require'mappings'.git_commit()
-	au filetype text,vimwiki,tex call WordProcessor()
-	au filetype html nmap <F4> : exec 'silent !qutebrowser % &'
+	au FileType text,vimwiki,tex call WordProcessor()
+	au FileType html nmap <F4> : exec 'silent !qutebrowser % &'
 	" au FileType * call vsnip#get_complete_items(bufnr())
 augroup end 
 

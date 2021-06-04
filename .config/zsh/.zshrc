@@ -39,14 +39,16 @@ alias ls=lsd
 alias python=python3
 alias grep='grep --color=auto'
 alias weather='curl wttr.in/"rotterdam"'
-# alias wget='wget --hsts-file="$XDG_CACHE_HOME/wget-hsts"'
 alias cat=bat
 alias pd='/usr/bin/pdl'
 alias abook='abook --config "$XDG_CONFIG_HOME"/abook/abookrc --datafile "$XDG_DATA_HOME"/abook/addressbook'
 alias nv-settings='nvidia-settings --config="$XDG_CONFIG_HOME"/nvidia/settings'
 alias yarn="yarn --use-yarnrc $XDG_CONFIG_HOME/yarn/config"
 alias wget --hsts-file="$XDG_CACHE_HOME/wget-hsts"
-# export BROWSER=w3m
+
+alias config='/usr/bin/git --git-dir=/home/ranjith/Nextcloud/dotfiles --work-tree=/home/ranjith'
+alias cvim='GIT_DIR=/home/ranjith/Nextcloud/dotfiles GIT_WORK_TREE=$HOME vim'
+
 VISUAL=nvim; export VISUAL EDITOR=nvim; export EDITOR
 
 setopt correct
@@ -83,8 +85,6 @@ if [ "${gnupg_SSH_AUTH_SOCK_by:-0}" -ne $$ ]; then
 fi
 
 
-alias config='/usr/bin/git --git-dir=/home/ranjith/Nextcloud/dotfiles --work-tree=/home/ranjith'
-alias cvim='GIT_DIR=/home/ranjith/Nextcloud/dotfiles GIT_WORK_TREE=$HOME vim'
 
 # Zplug-------------------------------------------------------------------------------
 

@@ -8,22 +8,27 @@ Op = Api.nvim_get_option
 Fn = Api.nvim_call_function
 Cmd = vim.cmd
 
-local browser = 'qutebrowser'
+local browser = "qutebrowser"
 local scopes = {o = vim.o, b = vim.bo, w = vim.wo, g = vim.g}
 
 -- **************Neovim options ---------------------------------------------------------
 
 function utils.opt(scope, key, value)
     scopes[scope][key] = value
-    if scope ~= 'o' then
-        scopes['o'][key] = value
+    if scope ~= "o" then
+        scopes["o"][key] = value
     end
 end
 
 function utils.UnloadAllModules()
     -- Lua patterns for the modules to unload
     local unload_modules = {
-        '^mappings$', '^compiler$', '^plugins$', '^settings$', '^statusline$', '^utils$'
+        "^mappings$",
+        "^compiler$",
+        "^plugins$",
+        "^settings$",
+        "^statusline$",
+        "^utils$"
     }
     for k, _ in pairs(package.loaded) do
         for _, v in ipairs(unload_modules) do
@@ -37,61 +42,61 @@ end
 
 -- Reload Vim configuration
 function utils.Reload()
-    Cmd('LspStop')
+    Cmd("LspStop")
     utils.UnloadAllModules()
-    Cmd('source $MYVIMRC')
+    Cmd("source $MYVIMRC")
 end
 
 -- Restart Vim without having to close and run again
 function utils.Restart()
     utils.Reload()
-    Cmd('doautocmd VimEnter')
+    Cmd("doautocmd VimEnter")
 end
 
 -- ************** Multi AutoCommands ---------------------------------------------------------
 
 function utils.create_bufgroups(definitions)
     for group_name, definition in pairs(definitions) do
-        Exec('augroup ' .. group_name)
-        Exec('autocmd! * <buffer>')
+        Exec("augroup " .. group_name)
+        Exec("autocmd! * <buffer>")
         for _, def in ipairs(definition) do
-            local command = table.concat(vim.tbl_flatten {'autocmd', def}, ' ')
+            local command = table.concat(vim.tbl_flatten {"autocmd", def}, " ")
             Exec(command)
         end
-        Exec('augroup END')
+        Exec("augroup END")
     end
 end
 
 function utils.create_augroups(definitions)
     for group_name, definition in pairs(definitions) do
-        Exec('augroup ' .. group_name)
-        Exec('autocmd!')
+        Exec("augroup " .. group_name)
+        Exec("autocmd!")
         for _, def in ipairs(definition) do
-            local command = table.concat(vim.tbl_flatten {'autocmd', def}, ' ')
+            local command = table.concat(vim.tbl_flatten {"autocmd", def}, " ")
             Exec(command)
         end
-        Exec('augroup END')
+        Exec("augroup END")
     end
 end
 
 -- ************** Single AutoCommands ---------------------------------------------------------
 
 function utils.create_augroup(autocmds, name)
-    Exec('augroup ' .. name)
-    Exec('autocmd!')
+    Exec("augroup " .. name)
+    Exec("autocmd!")
     for _, autocmd in ipairs(autocmds) do
-        Exec('autocmd ' .. table.concat(autocmd, ' '))
+        Exec("autocmd " .. table.concat(autocmd, " "))
     end
-    Exec('augroup END')
+    Exec("augroup END")
 end
 
 function utils.create_bufgroup(autocmds, name)
-    Exec('augroup ' .. name)
-    Exec('autocmd! * <buffer>')
+    Exec("augroup " .. name)
+    Exec("autocmd! * <buffer>")
     for _, autocmd in ipairs(autocmds) do
-        Exec('autocmd ' .. table.concat(autocmd, ' '))
+        Exec("autocmd " .. table.concat(autocmd, " "))
     end
-    Exec('augroup END')
+    Exec("augroup END")
 end
 
 -- ************** Mappings ---------------------------------------------------------
@@ -120,24 +125,26 @@ end
 -- ************** vim settings  ---------------------------------------------------------
 
 function _G.HighlightOnYank()
-	vim.highlight.on_yank {higroup = "IncSearch", timeout = 200}
+    vim.highlight.on_yank {higroup = "IncSearch", timeout = 200}
 end
 
-utils.create_augroup(
-	{{'TextYankPost', '*', 'silent! lua HighlightOnYank()'}},
-	'YankHighlight'
-)
+utils.create_augroup({{"TextYankPost", "*", "silent! lua HighlightOnYank()"}}, "YankHighlight")
 
 -- ************** LSP  ---------------------------------------------------------
 
 -- Hover for Clangd
 function utils.clang_hover()
-    local name = 'clangd'
-    local clients = vim.tbl_filter(function(c) return c.name == name end,
-                                   vim.lsp.get_active_clients())
+    local name = "clangd"
+    local clients =
+        vim.tbl_filter(
+        function(c)
+            return c.name == name
+        end,
+        vim.lsp.get_active_clients()
+    )
     local match, client = next(clients)
-    assert(match, 'No active client found with same name=' .. name)
-    client.request('textDocument/hover', vim.lsp.util.make_position_params())
+    assert(match, "No active client found with same name=" .. name)
+    client.request("textDocument/hover", vim.lsp.util.make_position_params())
 end
 
 -- Peek Definition
@@ -154,8 +161,8 @@ function utils.preview_location(location, context, before_context)
         vim.fn.bufload(bufnr)
     end
     local range = location.targetRange or location.range
-    local contents = vim.api.nvim_buf_get_lines(bufnr, range.start.line - before_context,
-                                                range["end"].line + 1 + context, false)
+    local contents =
+        vim.api.nvim_buf_get_lines(bufnr, range.start.line - before_context, range["end"].line + 1 + context, false)
     local filetype = vim.api.nvim_buf_get_option(bufnr, "filetype")
     return vim.lsp.util.open_floating_preview(contents, filetype)
 end
@@ -182,16 +189,15 @@ function utils.peek_definition()
         vim.api.nvim_set_current_win(utils.floating_win)
     else
         local params = vim.lsp.util.make_position_params()
-        return vim.lsp.buf_request(0, "textDocument/definition", params,
-                                   utils.preview_location_callback)
+        return vim.lsp.buf_request(0, "textDocument/definition", params, utils.preview_location_callback)
     end
 end
 
 -- ************** Custom completion sources  ---------------------------------------------------------
 
 function utils.getCompletionItems(prefix)
-    vim.api.nvim_call_function('vimtex#complete#omnifunc', {1, ''})
-    local items = vim.api.nvim_call_function('vimtex#complete#omnifunc', {0, prefix})
+    vim.api.nvim_call_function("vimtex#complete#omnifunc", {1, ""})
+    local items = vim.api.nvim_call_function("vimtex#complete#omnifunc", {0, prefix})
     return items
 end
 
@@ -200,55 +206,59 @@ utils.complete_item = {item = utils.getCompletionItems}
 -- ************** Open with browser ---------------------------------------------------------
 
 -- set silent exec option
-function utils.silent_shell(cmd) Exec("silent exe '!" .. cmd .. " &'") end
+function utils.silent_shell(cmd)
+    Exec("silent exe '!" .. cmd .. " &'")
+end
 
 -- set browser
-function utils.open_in_browser(url) utils.silent_shell(browser .. " " .. url) end
+function utils.open_in_browser(url)
+    utils.silent_shell(browser .. " " .. url)
+end
 
 -- set execute
 function utils.exec(cmd)
-	Exec(cmd)
+    Exec(cmd)
 end
 
 -- Start Instant server
 function utils.Start()
-	local id = vim.fn.input("Enter extension: ")
-	Exec'PackerLoad instant.nvim'
-	utils.exec("InstantStartServer 192.168.178." ..id .. " 8080")
+    local id = vim.fn.input("Enter extension: ")
+    Exec "PackerLoad instant.nvim"
+    utils.exec("InstantStartServer 192.168.178." .. id .. " 8080")
 end
 
 -- Start Single session
 function utils.Session()
-	local id = vim.fn.input("Enter extension: ")
-	utils.exec("InstantStartSession 192.168.178." ..id .. " 8080")
+    local id = vim.fn.input("Enter extension: ")
+    utils.exec("InstantStartSession 192.168.178." .. id .. " 8080")
 end
 
 -- Start Single buffer
 function utils.Single()
-	local id = vim.fn.input("Enter extension: ")
-	utils.exec("InstantStartSingle 192.168.178." ..id .. " 8080")
+    local id = vim.fn.input("Enter extension: ")
+    utils.exec("InstantStartSingle 192.168.178." .. id .. " 8080")
 end
 
 -- Follow a user
 function utils.Follow()
-	local name = vim.fn.input("User to follow: ")
-	utils.exec("InstantFollow " .. name)
+    local name = vim.fn.input("User to follow: ")
+    utils.exec("InstantFollow " .. name)
 end
 
 -- Join Single session
 function utils.JoinSession()
-	Exec'PackerLoad instant.nvim'
-	local id = vim.fn.input("Enter extension: ")
-	utils.exec("InstantJoinSession 192.168.178." ..id .. " 8080")
-	utils.Follow()
+    Exec "PackerLoad instant.nvim"
+    local id = vim.fn.input("Enter extension: ")
+    utils.exec("InstantJoinSession 192.168.178." .. id .. " 8080")
+    utils.Follow()
 end
 
 -- Join Single buffer
 function utils.JoinSingle()
-	Exec'PackerLoad instant.nvim'
-	local id = vim.fn.input("Enter extension: ")
-	utils.exec("InstantJoinSingle 192.168.178." ..id .. " 8080")
-	utils.Follow()
+    Exec "PackerLoad instant.nvim"
+    local id = vim.fn.input("Enter extension: ")
+    utils.exec("InstantJoinSingle 192.168.178." .. id .. " 8080")
+    utils.Follow()
 end
 
 return utils
