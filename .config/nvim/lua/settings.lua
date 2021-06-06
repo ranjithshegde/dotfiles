@@ -211,7 +211,7 @@ function settings.completion()
 
     G.completion_chain_complete_list = {
         tex = {
-            {complete_items = {"lsp", "snippet"}},
+            {complete_items = {"lsp","snippet"}},
             {complete_items = {"vimtex", "snippet"}},
             {mode = "<c-p>"},
             {mode = "<c-n>"}
@@ -231,7 +231,8 @@ function settings.completion()
     end
     u.create_augroup(
         {
-            {"FileType", "*", 'lua require"completion".on_attach()'},
+            {"FileType", "supercollider,text,conf", 'lua require"completion".on_attach()'},
+            -- {"FileType", "*", 'lua require"completion".on_attach()'},
             {"FileType", "tex,bib,supercollider,text,markdown", "let g:completion_auto_change_source=1"}
         },
         "completion_attach"
@@ -522,6 +523,7 @@ function settings.lsp_lintFormat()
 
     local mypy = {
         lintCommand = "mypy --show-column-numbers",
+        -- lintCommand = "mypy --show-column-numbers --config-file=~/.config/mypy/config",
         lintFormats = {"%f:%l:%c: %trror: %m", "%f:%l:%c: %tarning: %m", "%f:%l:%c: %tote: %m"},
         lintSource = "mypy"
     }

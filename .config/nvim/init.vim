@@ -52,15 +52,15 @@ endfunction
 "************** Word Processor ----------------------------------------------------------------
 func! WordProcessor()
 	" movement changes
-	map j gj
-	map k gk
+	" map j gj
+	" map k gk
 	" formatting text
 	" setlocal formatoptions-=l
 	setlocal noexpandtab
 	setlocal wrap 
 	setlocal linebreak
-	setlocal tw=120
-	setlocal colorcolumn
+	setlocal tw=150
+	setlocal colorcolumn=
 	" spelling and thesaurus
 	set thesaurus+=$HOME/.config/nvim/thesaurus/mthesaur.txt
 	setlocal spell spelllang=en_us
@@ -96,9 +96,8 @@ nnoremap <leader>fr :FloatermNew ranger<CR>
 augroup GenericFiles
 	au FileType * lua require'mappings'.nvim_lsp()
 	au FileType gitcommit lua require'mappings'.git_commit()
-	au FileType text,vimwiki,tex call WordProcessor()
+	au FileType text,tex,vimwiki.markdown call WordProcessor()
 	au FileType html nmap <F4> : exec 'silent !qutebrowser % &'
-	" au FileType * call vsnip#get_complete_items(bufnr())
 augroup end 
 
 augroup MakeDispatch

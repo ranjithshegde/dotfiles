@@ -188,9 +188,12 @@ function M.git()
         {"n", "<leader>gd", ":Git difftool<cr>"},
         {"n", "<leader>gb", ":Git blame<cr>"},
         {"n", "<leader>gp", ":Gitsigns preview_hunk<cr>"},
+        {"n", "<leader>gs", ":Gitsigns stage_hunk<cr>"},
         {"n", "<leader>gP", ":Git push<cr>"},
         {"n", "<leader>gf", ":Git fetch<cr>"},
-        {"n", "<leader>gl", ":Gclog<cr>"}
+        {"n", "<leader>gl", ":Gclog<cr>"},
+        {"n", "]h", ":Gitsigns next_hunk<cr>"},
+        {"n", "[h", ":Gitsigns prev_hunk<cr>"}
     }
 
     u.maps(maps, opts)

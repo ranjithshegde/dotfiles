@@ -233,11 +233,11 @@ c.colors.tabs.bar.bg = "#1c1f34"
 
 # Background color of unselected odd tabs.
 # Type: QtColor
-c.colors.tabs.odd.bg = "#482c34"
+c.colors.tabs.odd.bg = "darkgrey"
 
 # Background color of unselected even tabs.
 # Type: QtColor
-c.colors.tabs.even.bg = "#682c34"
+c.colors.tabs.even.bg = "grey"
 
 # Background color of selected odd tabs.
 # Type: QtColor
