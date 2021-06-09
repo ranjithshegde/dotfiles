@@ -22,27 +22,25 @@ function settings.options()
     Cmd "set nohlsearch"
     -- Cmd 'colo base16-equilibrium-light'
     Cmd "colo zephyr"
-
-    u.opt("w", "number", true)
-    u.opt("w", "relativenumber", true)
-    u.opt("w", "cursorline", true)
-    u.opt("o", "hidden", true)
-    u.opt("o", "splitright", true)
-    u.opt("o", "splitbelow", true)
-    u.opt("o", "termguicolors", true)
-    u.opt("o", "signcolumn", "yes")
-    u.opt("o", "updatetime", 300)
-    u.opt("o", "scrolloff", 10)
-    u.opt("b", "shiftwidth", 0)
-    u.opt("b", "tabstop", 4)
-    u.opt("o", "clipboard", [[unnamed,unnamedplus]])
-    u.opt("o", "completeopt", [[menuone,noinsert,noselect]])
-    u.opt("o", "fillchars", "stlnc:»,vert:║,fold:·")
-    u.opt("o", "foldmethod", "expr")
-    u.opt("o", "foldexpr", "nvim_treesitter#foldexpr()")
-    -- u.opt('o', 'timeoutlen', 0)
-    u.opt("o", "timeoutlen", 500)
-    u.opt("o", "conceallevel", 1)
+    o.number = true
+    o.relativenumber = true
+    o.cursorline = true
+    o.timeoutlen = 500
+    o.signcolumn = "yes"
+    o.hidden = true
+    o.splitright = true
+    o.splitbelow = true
+    o.termguicolors = true
+    o.updatetime = 300
+    o.scrolloff = 10
+    o.shiftwidth = 0
+    o.tabstop = 4
+    o.conceallevel = 1
+    o.foldmethod = "expr"
+    o.foldexpr = "nvim_treesitter#foldexpr()"
+    o.fillchars = "stlnc:»,vert:║,fold:·"
+    o.completeopt = "menuone,noinsert,noselect"
+    o.clipboard = "unnamed,unnamedplus"
     o.shortmess = o.shortmess .. "c"
     G.termdebug_wide = 1
 end
@@ -195,6 +193,12 @@ function settings.treesitter()
                     goto_next_usage = ";*",
                     goto_previous_usage = ";#"
                 }
+            },
+            smart_rename = {
+                enable = true,
+                keymaps = {
+                    smart_rename = ";r"
+                }
             }
         },
         rainbow = {enable = true},
@@ -211,7 +215,7 @@ function settings.completion()
 
     G.completion_chain_complete_list = {
         tex = {
-            {complete_items = {"lsp","snippet"}},
+            {complete_items = {"lsp", "snippet"}},
             {complete_items = {"vimtex", "snippet"}},
             {mode = "<c-p>"},
             {mode = "<c-n>"}
@@ -451,7 +455,7 @@ function settings.lsp_lintFormat()
                 languagetool = {
                     command = "languagetool",
                     debounce = 200,
-                    args = {"%file"},
+                    args = {"--languagemodel", "/usr/share/Ngram", "%file"},
                     offsetLine = 0,
                     offsetColumn = 0,
                     sourceName = "languagetool",
@@ -471,6 +475,8 @@ function settings.lsp_lintFormat()
                         "en",
                         "--output",
                         "singleline",
+                        "--languagemodel",
+                        "/usr/share/Ngram",
                         "--no-color"
                     },
                     offsetLine = 0,
@@ -501,13 +507,15 @@ function settings.lsp_lintFormat()
                 markdown = {"mdidote", "write-good"},
                 vimwiki = {"write-good", "mdidote"},
                 tex = {"textidote", "write-good"},
-                text = {"languagetool", "write-good"}
+                text = "languagetool"
             },
             formatFiletypes = {}
         }
     }
 
-    local rootDir = function() return vim.fn.getcwd() or Lsp.util.root_pattern('.git/') end
+    local rootDir = function()
+        return vim.fn.getcwd() or Lsp.util.root_pattern(".git/")
+    end
     local rootMarker = {vim.fn.getcwd() or {".git/"}}
 
     -- local rootDir = vim.loop.cwd
@@ -520,7 +528,6 @@ function settings.lsp_lintFormat()
     local prettier = {formatCommand = "prettier --stdin-filepath ${INPUT}", formatStdin = true}
     local isort = {formatCommand = "isort --stdout --profile black -", formatStdin = true}
     local black = {formatCommand = "black --fast -", formatStdin = true}
-
     local mypy = {
         lintCommand = "mypy --show-column-numbers",
         -- lintCommand = "mypy --show-column-numbers --config-file=~/.config/mypy/config",

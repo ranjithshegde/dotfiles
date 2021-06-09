@@ -9,16 +9,8 @@ Fn = Api.nvim_call_function
 Cmd = vim.cmd
 
 local browser = "qutebrowser"
-local scopes = {o = vim.o, b = vim.bo, w = vim.wo, g = vim.g}
 
 -- **************Neovim options ---------------------------------------------------------
-
-function utils.opt(scope, key, value)
-    scopes[scope][key] = value
-    if scope ~= "o" then
-        scopes["o"][key] = value
-    end
-end
 
 function utils.UnloadAllModules()
     -- Lua patterns for the modules to unload

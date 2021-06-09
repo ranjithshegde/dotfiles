@@ -314,7 +314,7 @@ config.bind(",m", "spawn vlc {url}")
 config.bind(",z", "hint links spawn st -e youtube-dl {hint-url}")
 config.bind("xb", "config-cycle statusbar.show always never")
 config.bind("xt", "config-cycle tabs.show always never")
-config.bind(",p", "spawn --userscript qute-pass --dmenu-invocation dmenu")
+config.bind(",p", "spawn --userscript /usr/share/qutebrowser/userscripts/password_fill")
 config.bind(
     ",P", "spawn --userscript qute-pass --dmenu-invocation dmenu --password-only"
 )

@@ -19,6 +19,7 @@ function M.general()
         --line movement
         {"x", "K", ":move '<-2<CR>gv-gv"},
         {"x", "J", ":move '>+1<CR>gv-gv"},
+		{"n", "gm", ":call cursor(0, virtcol('$')/2 )<CR>"},
         -- quickfix
         {"n", "-", ":copen<CR>"},
         {"n", "+", ":lopen<CR>"},
@@ -192,8 +193,8 @@ function M.git()
         {"n", "<leader>gP", ":Git push<cr>"},
         {"n", "<leader>gf", ":Git fetch<cr>"},
         {"n", "<leader>gl", ":Gclog<cr>"},
-        {"n", "]h", ":Gitsigns next_hunk<cr>"},
-        {"n", "[h", ":Gitsigns prev_hunk<cr>"}
+        {"n", "]h", ":Gitsigns next_hunk<cr>:Gitsigns preview_hunk<CR>"},
+        {"n", "[h", ":Gitsigns prev_hunk<cr>:Gitsigns preview_hunk<CR>"}
     }
 
     u.maps(maps, opts)

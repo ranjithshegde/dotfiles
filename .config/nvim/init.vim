@@ -51,16 +51,11 @@ endfunction
 
 "************** Word Processor ----------------------------------------------------------------
 func! WordProcessor()
-	" movement changes
-	" map j gj
-	" map k gk
-	" formatting text
-	" setlocal formatoptions-=l
 	setlocal noexpandtab
 	setlocal wrap 
 	setlocal linebreak
 	setlocal tw=150
-	setlocal colorcolumn=
+	setlocal colorcolumn=150
 	" spelling and thesaurus
 	set thesaurus+=$HOME/.config/nvim/thesaurus/mthesaur.txt
 	setlocal spell spelllang=en_us

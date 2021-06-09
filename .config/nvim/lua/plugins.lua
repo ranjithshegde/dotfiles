@@ -96,6 +96,9 @@ return packer.startup(
                         "-shell-escape"
                     }
                 }
+				Cmd'nmap <F5> <plug>(vimtex-compile)'
+				Cmd'nmap <F6> <plug>(vimtex-view)'
+				Cmd'nmap <F3> <plug>(vimtex-clean-full)'
             end
         }
 

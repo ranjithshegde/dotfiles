@@ -62,8 +62,9 @@ time("try_loadstring definition", true)
 local function try_loadstring(s, component, name)
   local success, result = pcall(loadstring(s))
   if not success then
-    print('Error running ' .. component .. ' for ' .. name)
-    error(result)
+    vim.schedule(function()
+      vim.api.nvim_notify('packer.nvim: Error running ' .. component .. ' for ' .. name .. ': ' .. result, vim.log.levels.ERROR, {})
+    end)
   end
   return result
 end
@@ -229,7 +230,7 @@ _G.packer_plugins = {
     path = "/home/ranjith/.local/share/nvim/site/pack/packer/start/vim-vsnip-integ"
   },
   vimtex = {
-    config = { "\27LJ\2\nù\1\0\0\3\0\t\0\f6\0\0\0'\1\2\0=\1\1\0006\0\0\0'\1\4\0=\1\3\0006\0\0\0005\1\a\0005\2\6\0=\2\b\1=\1\5\0K\0\1\0\foptions\1\0\0\1\2\0\0\18-shell-escape\28vimtex_compiler_latexmk\nabdmg\16tex_conceal\fzathura\25vimtex_viewer_method\6G\0" },
+    config = { "\27LJ\2\n®\2\0\0\3\0\r\0\0216\0\0\0'\1\2\0=\1\1\0006\0\0\0'\1\4\0=\1\3\0006\0\0\0005\1\a\0005\2\6\0=\2\b\1=\1\5\0006\0\t\0'\2\n\0B\0\2\0016\0\t\0'\2\v\0B\0\2\0016\0\t\0'\2\f\0B\0\2\1K\0\1\0(nmap <F3> <plug>(vimtex-clean-full)\"nmap <F6> <plug>(vimtex-view)%nmap <F5> <plug>(vimtex-compile)\bCmd\foptions\1\0\0\1\2\0\0\18-shell-escape\28vimtex_compiler_latexmk\nabdmg\16tex_conceal\fzathura\25vimtex_viewer_method\6G\0" },
     loaded = false,
     needs_bufread = true,
     path = "/home/ranjith/.local/share/nvim/site/pack/packer/opt/vimtex"
@@ -246,10 +247,6 @@ _G.packer_plugins = {
 }
 
 time("Defining packer_plugins", false)
--- Config for: which-key.nvim
-time("Config for which-key.nvim", true)
-try_loadstring("\27LJ\2\n|\0\0\5\0\t\0\r6\0\0\0'\2\1\0B\0\2\0029\0\2\0005\2\a\0005\3\4\0005\4\3\0=\4\5\0035\4\6\0>\4\1\3=\3\b\2B\0\2\1K\0\1\0\vlayout\1\0\0\1\0\1\fspacing\3\n\nwidth\1\0\0\1\0\1\bmax\3P\nsetup\14which-key\frequire\0", "config", "which-key.nvim")
-time("Config for which-key.nvim", false)
 -- Config for: indent-blankline.nvim
 time("Config for indent-blankline.nvim", true)
 try_loadstring("\27LJ\2\nº\4\0\0\2\0\v\0\0196\0\0\0005\1\2\0=\1\1\0006\0\0\0'\1\4\0=\1\3\0006\0\0\0'\1\6\0=\1\5\0006\0\0\0+\1\2\0=\1\a\0006\0\0\0+\1\2\0=\1\b\0006\0\0\0005\1\n\0=\1\t\0K\0\1\0\1\28\0\0\nclass\vreturn\rfunction\vmethod\b^if\v^while\16jsx_element\t^for\rinherits\21access_specifier\f^object\v^table\nblock\14arguments\n^case\f^public\r^private\15^protected\f^switch\17if_statement\16else_clause\16jsx_element\29jsx_self_closing_element\18try_statement\17catch_clause\21import_statement\19operation_type&indent_blankline_context_patterns*indent_blankline_show_current_context$indent_blankline_use_treesitter\6. indent_blankline_space_char\b‚îä\26indent_blankline_char\1\2\0\0\rterminal%indent_blankline_buftype_exclude\6G\0", "config", "indent-blankline.nvim")
@@ -258,41 +255,45 @@ time("Config for indent-blankline.nvim", false)
 time("Config for vim-floaterm", true)
 try_loadstring("\27LJ\2\nö\1\0\0\2\0\a\0\r6\0\0\0)\1\1\0=\1\1\0006\0\0\0)\1\1\0=\1\2\0006\0\0\0'\1\4\0=\1\3\0006\0\0\0'\1\6\0=\1\5\0K\0\1\0\t<F9>\27floaterm_keymap_toggle\n<F10>\24floaterm_keymap_new\23floaterm_autoclose\24floaterm_autoinsert\6G\0", "config", "vim-floaterm")
 time("Config for vim-floaterm", false)
+-- Config for: which-key.nvim
+time("Config for which-key.nvim", true)
+try_loadstring("\27LJ\2\n|\0\0\5\0\t\0\r6\0\0\0'\2\1\0B\0\2\0029\0\2\0005\2\a\0005\3\4\0005\4\3\0=\4\5\0035\4\6\0>\4\1\3=\3\b\2B\0\2\1K\0\1\0\vlayout\1\0\0\1\0\1\fspacing\3\n\nwidth\1\0\0\1\0\1\bmax\3P\nsetup\14which-key\frequire\0", "config", "which-key.nvim")
+time("Config for which-key.nvim", false)
 
 -- Command lazy-loads
 time("Defining lazy-load commands", true)
+vim.cmd [[command! -nargs=* -range -bang -complete=file Git lua require("packer.load")({'vim-fugitive'}, { cmd = "Git", l1 = <line1>, l2 = <line2>, bang = <q-bang>, args = <q-args> }, _G.packer_plugins)]]
 vim.cmd [[command! -nargs=* -range -bang -complete=file TSPlaygroundToggle lua require("packer.load")({'playground'}, { cmd = "TSPlaygroundToggle", l1 = <line1>, l2 = <line2>, bang = <q-bang>, args = <q-args> }, _G.packer_plugins)]]
+vim.cmd [[command! -nargs=* -range -bang -complete=file TSHighlightCapturesUnderCursor lua require("packer.load")({'playground'}, { cmd = "TSHighlightCapturesUnderCursor", l1 = <line1>, l2 = <line2>, bang = <q-bang>, args = <q-args> }, _G.packer_plugins)]]
+vim.cmd [[command! -nargs=* -range -bang -complete=file G lua require("packer.load")({'vim-fugitive'}, { cmd = "G", l1 = <line1>, l2 = <line2>, bang = <q-bang>, args = <q-args> }, _G.packer_plugins)]]
 vim.cmd [[command! -nargs=* -range -bang -complete=file ColorizerAttachToBuffer lua require("packer.load")({'nvim-colorizer.lua'}, { cmd = "ColorizerAttachToBuffer", l1 = <line1>, l2 = <line2>, bang = <q-bang>, args = <q-args> }, _G.packer_plugins)]]
 vim.cmd [[command! -nargs=* -range -bang -complete=file ColorizerToggle lua require("packer.load")({'nvim-colorizer.lua'}, { cmd = "ColorizerToggle", l1 = <line1>, l2 = <line2>, bang = <q-bang>, args = <q-args> }, _G.packer_plugins)]]
-vim.cmd [[command! -nargs=* -range -bang -complete=file G lua require("packer.load")({'vim-fugitive'}, { cmd = "G", l1 = <line1>, l2 = <line2>, bang = <q-bang>, args = <q-args> }, _G.packer_plugins)]]
-vim.cmd [[command! -nargs=* -range -bang -complete=file TlistToggle lua require("packer.load")({'taglist'}, { cmd = "TlistToggle", l1 = <line1>, l2 = <line2>, bang = <q-bang>, args = <q-args> }, _G.packer_plugins)]]
-vim.cmd [[command! -nargs=* -range -bang -complete=file Make lua require("packer.load")({'vim-dispatch'}, { cmd = "Make", l1 = <line1>, l2 = <line2>, bang = <q-bang>, args = <q-args> }, _G.packer_plugins)]]
 vim.cmd [[command! -nargs=* -range -bang -complete=file Dispatch lua require("packer.load")({'vim-dispatch'}, { cmd = "Dispatch", l1 = <line1>, l2 = <line2>, bang = <q-bang>, args = <q-args> }, _G.packer_plugins)]]
-vim.cmd [[command! -nargs=* -range -bang -complete=file TSHighlightCapturesUnderCursor lua require("packer.load")({'playground'}, { cmd = "TSHighlightCapturesUnderCursor", l1 = <line1>, l2 = <line2>, bang = <q-bang>, args = <q-args> }, _G.packer_plugins)]]
-vim.cmd [[command! -nargs=* -range -bang -complete=file Git lua require("packer.load")({'vim-fugitive'}, { cmd = "Git", l1 = <line1>, l2 = <line2>, bang = <q-bang>, args = <q-args> }, _G.packer_plugins)]]
+vim.cmd [[command! -nargs=* -range -bang -complete=file Make lua require("packer.load")({'vim-dispatch'}, { cmd = "Make", l1 = <line1>, l2 = <line2>, bang = <q-bang>, args = <q-args> }, _G.packer_plugins)]]
+vim.cmd [[command! -nargs=* -range -bang -complete=file TlistToggle lua require("packer.load")({'taglist'}, { cmd = "TlistToggle", l1 = <line1>, l2 = <line2>, bang = <q-bang>, args = <q-args> }, _G.packer_plugins)]]
 time("Defining lazy-load commands", false)
 
 vim.cmd [[augroup packer_load_aucmds]]
 vim.cmd [[au!]]
   -- Filetype lazy-loads
 time("Defining lazy-load filetype autocommands", true)
-vim.cmd [[au FileType supercollider ++once lua require("packer.load")({'ultisnips', 'nvim-treesitter-refactor', 'scnvim'}, { ft = "supercollider" }, _G.packer_plugins)]]
-vim.cmd [[au FileType bib ++once lua require("packer.load")({'vimtex'}, { ft = "bib" }, _G.packer_plugins)]]
+vim.cmd [[au FileType supercollider ++once lua require("packer.load")({'nvim-treesitter-refactor', 'ultisnips', 'scnvim'}, { ft = "supercollider" }, _G.packer_plugins)]]
 vim.cmd [[au FileType tex ++once lua require("packer.load")({'vimtex'}, { ft = "tex" }, _G.packer_plugins)]]
 vim.cmd [[au FileType java ++once lua require("packer.load")({'nvim-jdtls'}, { ft = "java" }, _G.packer_plugins)]]
 vim.cmd [[au FileType cpp ++once lua require("packer.load")({'vim-ccls'}, { ft = "cpp" }, _G.packer_plugins)]]
+vim.cmd [[au FileType bib ++once lua require("packer.load")({'vimtex'}, { ft = "bib" }, _G.packer_plugins)]]
 time("Defining lazy-load filetype autocommands", false)
 vim.cmd("augroup END")
 vim.cmd [[augroup filetypedetect]]
 time("Sourcing ftdetect script at: /home/ranjith/.local/share/nvim/site/pack/packer/opt/ultisnips/ftdetect/snippets.vim", true)
 vim.cmd [[source /home/ranjith/.local/share/nvim/site/pack/packer/opt/ultisnips/ftdetect/snippets.vim]]
 time("Sourcing ftdetect script at: /home/ranjith/.local/share/nvim/site/pack/packer/opt/ultisnips/ftdetect/snippets.vim", false)
-time("Sourcing ftdetect script at: /home/ranjith/.local/share/nvim/site/pack/packer/opt/vimtex/ftdetect/tex.vim", true)
-vim.cmd [[source /home/ranjith/.local/share/nvim/site/pack/packer/opt/vimtex/ftdetect/tex.vim]]
-time("Sourcing ftdetect script at: /home/ranjith/.local/share/nvim/site/pack/packer/opt/vimtex/ftdetect/tex.vim", false)
 time("Sourcing ftdetect script at: /home/ranjith/.local/share/nvim/site/pack/packer/opt/scnvim/ftdetect/supercollider.vim", true)
 vim.cmd [[source /home/ranjith/.local/share/nvim/site/pack/packer/opt/scnvim/ftdetect/supercollider.vim]]
 time("Sourcing ftdetect script at: /home/ranjith/.local/share/nvim/site/pack/packer/opt/scnvim/ftdetect/supercollider.vim", false)
+time("Sourcing ftdetect script at: /home/ranjith/.local/share/nvim/site/pack/packer/opt/vimtex/ftdetect/tex.vim", true)
+vim.cmd [[source /home/ranjith/.local/share/nvim/site/pack/packer/opt/vimtex/ftdetect/tex.vim]]
+time("Sourcing ftdetect script at: /home/ranjith/.local/share/nvim/site/pack/packer/opt/vimtex/ftdetect/tex.vim", false)
 vim.cmd("augroup END")
 if should_profile then save_profiles() end
 
