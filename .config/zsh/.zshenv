@@ -39,3 +39,4 @@ export GRADLE_USER_HOME="$XDG_DATA_HOME"/gradle
 export SSB_HOME="$XDG_DATA_HOME"/zoom
 export CUDA_CACHE_PATH="$XDG_CACHE_HOME"/nv
 export MYPY_CACHE_DIR="$XDG_CACHE_HOME"/mypy
+export GIT_SSH_COMMAND='ssh -v'

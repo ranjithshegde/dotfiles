@@ -1,4 +1,5 @@
 "**************Neovim basics -------------------------------------------------------------
+" source ~/.config/nvim/lua/plugins.lua
 lua require ('plugins')
 lua require ('settings').settings()
 lua require ('mappings').general()
@@ -29,9 +30,9 @@ set dictionary+=$HOME/.local/share/dict/words
 
 "************************ Built in LSP-------------------------------------------------
 
-nnoremap <silent> K :call <SID>show_documentation()<CR>
+nnoremap <silent> K :call Show_documentation()<CR>
 " Use keyords, hower functions and vim help-system as available
-function! s:show_documentation()
+function! Show_documentation()
 	if (&ft==#'supercollider')
 		execute &keywordprg . ' ' . expand('<cword>')
 	elseif (index(['vim','help'], &filetype) >= 0)
@@ -62,6 +63,7 @@ func! WordProcessor()
 	set complete+=k
 	"add double spacing
 	nn <leader><Space> :g/^/pu =\"\n\"<CR>
+	nn zG <cmd>call writefile([expand("<cword>")], "/usr/share/words.txt", "a")<CR>
 endfu
 com! Gram call WordProcessor()
 

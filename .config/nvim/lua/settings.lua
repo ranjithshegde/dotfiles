@@ -20,8 +20,10 @@ end
 ------------------------------------------------------------------------
 function settings.options()
     Cmd "set nohlsearch"
-    -- Cmd 'colo base16-equilibrium-light'
-    Cmd "colo zephyr"
+    -- Cmd "colo lvim"
+	o.background="light"
+    Cmd "colo vscode"
+    -- Cmd "colo solarized"
     o.number = true
     o.relativenumber = true
     o.cursorline = true
@@ -212,7 +214,6 @@ end
 
 function settings.completion()
     require "completion".addCompletionSource("vimtex", u.complete_item)
-
     G.completion_chain_complete_list = {
         tex = {
             {complete_items = {"lsp", "snippet"}},
@@ -236,7 +237,6 @@ function settings.completion()
     u.create_augroup(
         {
             {"FileType", "supercollider,text,conf", 'lua require"completion".on_attach()'},
-            -- {"FileType", "*", 'lua require"completion".on_attach()'},
             {"FileType", "tex,bib,supercollider,text,markdown", "let g:completion_auto_change_source=1"}
         },
         "completion_attach"
@@ -471,12 +471,15 @@ function settings.lsp_lintFormat()
                     args = {
                         "--type",
                         "tex",
+						"--read-all",
                         "--check",
                         "en",
-                        "--output",
-                        "singleline",
                         "--languagemodel",
                         "/usr/share/Ngram",
+						"--dict",
+						"/usr/share/words.txt",
+                        "--output",
+                        "singleline",
                         "--no-color"
                     },
                     offsetLine = 0,
@@ -506,7 +509,7 @@ function settings.lsp_lintFormat()
             filetypes = {
                 markdown = {"mdidote", "write-good"},
                 vimwiki = {"write-good", "mdidote"},
-                tex = {"textidote", "write-good"},
+                tex = "textidote",
                 text = "languagetool"
             },
             formatFiletypes = {}

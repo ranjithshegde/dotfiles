@@ -17,7 +17,7 @@ function utils.UnloadAllModules()
     local unload_modules = {
         "^mappings$",
         "^compiler$",
-        "^plugins$",
+        -- "^plugins$",
         "^settings$",
         "^statusline$",
         "^utils$"

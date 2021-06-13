@@ -175,6 +175,7 @@ return packer.startup(
         -- SuperCollider
         use {
             "davidgranstrom/scnvim",
+			-- branch = "topic/arghints-lua",
             ft = "supercollider",
             run = function()
                 fn["scnvim#install"]()
@@ -208,11 +209,13 @@ return packer.startup(
             "lukas-reineke/indent-blankline.nvim",
             branch = "lua",
             config = function()
-                G.indent_blankline_buftype_exclude = {"terminal"}
                 G.indent_blankline_char = "┊"
-                G.indent_blankline_space_char = "."
+                G.indent_blankline_char_highlight = "LineNr"
+                -- G.indent_blankline_space_char = "."
                 G.indent_blankline_use_treesitter = true
                 G.indent_blankline_show_current_context = true
+                G.indent_blankline_buftype_exclude = {"terminal", "nofile"}
+				G.indent_blankline_filetype_exclude = {"help", "packer"}
                 G.indent_blankline_context_patterns = {
                     "class",
                     "return",
