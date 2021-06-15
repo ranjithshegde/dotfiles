@@ -1,7 +1,7 @@
 local settings = {}
 local u = require("utils")
 local o = vim.o
-require("lsp-codelens").setup()
+-- require("lsp-codelens").setup()
 
 function settings.settings()
     settings.vimwiki()
@@ -20,9 +20,9 @@ end
 ------------------------------------------------------------------------
 function settings.options()
     Cmd "set nohlsearch"
-    -- Cmd "colo lvim"
-	o.background="light"
-    Cmd "colo vscode"
+    Cmd "colo lvim"
+    -- o.background="light"
+    -- Cmd "colo vscode"
     -- Cmd "colo solarized"
     o.number = true
     o.relativenumber = true
@@ -98,6 +98,7 @@ function settings.treesitter()
         textobjects = {
             select = {
                 enable = true,
+                disable = {"latex"},
                 keymaps = {
                     ["af"] = "@function.outer",
                     ["if"] = "@function.inner",
@@ -339,8 +340,8 @@ function settings.lsp_settings()
     end
 
     -- borders for floating windows
-    vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, {border = "double"})
-    vim.lsp.handlers["textDocument/signatureHelp"] = vim.lsp.with(vim.lsp.handlers.signature_help, {border = "double"})
+    vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, {border = "rounded"})
+    vim.lsp.handlers["textDocument/signatureHelp"] = vim.lsp.with(vim.lsp.handlers.signature_help, {border = "rounded"})
 end
 
 ------------------------------------------------------------------------
@@ -471,13 +472,13 @@ function settings.lsp_lintFormat()
                     args = {
                         "--type",
                         "tex",
-						"--read-all",
+                        "--read-all",
                         "--check",
                         "en",
                         "--languagemodel",
                         "/usr/share/Ngram",
-						"--dict",
-						"/usr/share/words.txt",
+                        "--dict",
+                        "/usr/share/words.txt",
                         "--output",
                         "singleline",
                         "--no-color"
@@ -494,7 +495,19 @@ function settings.lsp_lintFormat()
                 mdidote = {
                     command = "textidote",
                     debounce = 500,
-                    args = {"--type", "md", "--check", "en", "--output", "singleline", "--no-color"},
+                    args = {
+                        "--type",
+                        "md",
+                        "--check",
+                        "en",
+                        "--languagemodel",
+                        "/usr/share/Ngram",
+                        "--dict",
+                        "/usr/share/words.txt",
+                        "--output",
+                        "singleline",
+                        "--no-color"
+                    },
                     offsetLine = 0,
                     offsetColumn = 0,
                     sourceName = "textidote",

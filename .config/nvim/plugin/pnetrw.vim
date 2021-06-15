@@ -8,30 +8,30 @@ let g:netrw_altv = 1
 let g:loaded_netrwFileHandlers = 1
 
 function! NetrwMapping()
-  nnoremap <buffer> cd  :execute "cd ".b:netrw_curdir<cr>:pwd<cr>
+	nnoremap <buffer> cd  :execute "cd ".b:netrw_curdir<cr>:pwd<cr>
 endfunction
 
 augroup ProjectDrawer
-  autocmd!
-  autocmd WinEnter * if winnr('$') == 1 && getbufvar(winbufnr(winnr()), "&filetype") == "netrw" |q|endif
-  autocmd filetype netrw call NetrwMapping()
+	autocmd!
+	autocmd WinEnter * if winnr('$') == 1 && getbufvar(winbufnr(winnr()), "&filetype") == "netrw" |q|endif
+	autocmd filetype netrw call NetrwMapping()
 augroup END
 "Netrw Toggle
 let g:NetrwIsOpen=0
 
 function! ToggleNetrw()
-  if g:NetrwIsOpen
-    let i = bufnr('$')
-    while (i >= 1)
-      if (getbufvar(i, '&filetype') ==# 'netrw')
-	silent exe 'bwipeout ' . i 
-      endif
-      let i-=1
-    endwhile
-    let g:NetrwIsOpen=0
-  else
-    let g:NetrwIsOpen=1
-    silent Lexplore
-  endif
+	if g:NetrwIsOpen
+		let i = bufnr('$')
+		while (i >= 1)
+			if (getbufvar(i, '&filetype') ==# 'netrw')
+				silent exe 'bwipeout ' . i 
+			endif
+			let i-=1
+		endwhile
+		let g:NetrwIsOpen=0
+	else
+		let g:NetrwIsOpen=1
+		silent Lexplore
+	endif
 endfunction
 noremap <silent> <leader>e :call ToggleNetrw()<CR>

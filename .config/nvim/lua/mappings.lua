@@ -54,9 +54,12 @@ function M.nvim_lsp()
         {"n", ",d", "<cmd>lua vim.lsp.buf.definition()<CR>"},
         {"n", ",i", "<cmd>lua vim.lsp.buf.implementation()<CR>"},
         {"n", ",t", "<cmd>lua vim.lsp.buf.type_definition()<CR>"},
-        {"n", ",s", "<cmd>lua vim.lsp.buf.signature_help()<CR>"},
+        {"n", ",cc", "<cmd>lua vim.lsp.codelens.display()<CR>"},
+        {"n", ",cr", "<cmd>lua vim.lsp.codelens.run()<CR>"},
+        {"n", ",cR", "<cmd>lua vim.lsp.codelens.refresh()<CR>"},
+        {"n", ",cg", "<cmd>lua vim.lsp.codelens.get()<CR>"},
         {"n", ",pd", "<cmd>lua require'utils'.peek_definition()<CR>"},
-        {"n", ",c", "<cmd>lua require'lsp-codelens'.buf_codelens_action()<CR>"},
+        {"n", ",s", '<cmd>lua vim.lsp.buf.signature_help({popup_opts = {border = "rounded"}})<CR>'},
         {"n", "[d", '<cmd>lua vim.lsp.diagnostic.goto_prev({popup_opts = {border = "double"}})<CR>'},
         {"n", "]d", '<cmd>lua vim.lsp.diagnostic.goto_next({popup_opts = {border = "double"}})<CR>'},
         {"n", ",ld", '<cmd>lua vim.lsp.diagnostic.show_line_diagnostics({popup_opts = {border = "double"}})<CR>'},
@@ -104,7 +107,7 @@ function M.telescope()
         return string.format(":lua require('telescope.builtin').%s<cr>", name)
     end
     local telE = function(name)
-        return string.format(":lua require'telescope'.extensions.%s()<cr>", name)
+        return string.format(":lua require'telescope'.extensions.%s<cr>", name)
     end
     -- local follow_links = {
     -- 	cwd = vim.loop.cwd(),
@@ -132,7 +135,7 @@ function M.telescope()
         -- Unicode
         {"n", "<space>m", tele("symbols")},
         -- openFrameworks and other projects
-        {"n", "<space>p", telE("project.project")},
+        {"n", "<space>p", telE("project.project{display_type = 'full'}")},
         -- Ctags
         {"n", "<space>T", tele("tags")},
         -- TS symbols
