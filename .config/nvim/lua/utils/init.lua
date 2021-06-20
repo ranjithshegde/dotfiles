@@ -17,7 +17,7 @@ function utils.UnloadAllModules()
     local unload_modules = {
         "^mappings$",
         "^compiler$",
-        -- "^plugins$",
+        "^plugins$",
         "^settings$",
         "^statusline$",
         "^utils$"
@@ -251,6 +251,14 @@ function utils.JoinSingle()
     local id = vim.fn.input("Enter extension: ")
     utils.exec("InstantJoinSingle 192.168.178." .. id .. " 8080")
     utils.Follow()
+end
+
+-- Toggle virtual diagnostics
+utils.virtDiagnostics = {}
+utils.virtDiagnostics.show = true
+utils.virtDiagnostics.toggle = function()
+    utils.virtDiagnostics.show = not utils.virtDiagnostics.show
+    vim.lsp.diagnostic.display(vim.lsp.diagnostic.get(0, 1), 0, 1, {virtual_text = utils.virtDiagnostics.show})
 end
 
 return utils

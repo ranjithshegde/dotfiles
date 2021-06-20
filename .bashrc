@@ -42,4 +42,4 @@ ranger-cd() {
 }
 
 
-alias config='/usr/bin/git --git-dir=/home/ranjith/Nextcloud/dotfiles --work-tree=/home/ranjith'
+alias config='/usr/bin/git --git-dir=/home/ranjith/Software/Workspaces/Repos/dotfiles --work-tree=/home/ranjith'

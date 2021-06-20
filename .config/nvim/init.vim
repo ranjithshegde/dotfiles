@@ -6,16 +6,7 @@ lua require ('mappings').general()
 lua require ('mappings').autoComplete()
 lua require 'statusline'
 lua require 'compiler'
-
-" hi Normal guibg=none ctermbg=none
-" hi LineNr guibg=none ctermbg=none
-" hi Folded guibg=none ctermbg=none
-" hi NonText guibg=none ctermbg=none
-" hi SpecialKey guibg=none ctermbg=none
-" hi VertSplit guibg=none ctermbg=none
-" hi SignColumn guibg=none ctermbg=none
-" hi EndOfBuffer guibg=none ctermbg=none
-
+source ~/.cache/calendar.vim/credentials.vim
 
 " Custom tabline
 function! TabLine()
@@ -67,13 +58,11 @@ func! WordProcessor()
 endfu
 com! Gram call WordProcessor()
 
-"************** File permissions  ----------------------------------------------------
+"************** Functions ----------------------------------------------------
 func! SuWrite()
 	w !sudo tee %
 endfu
 com! Su call SuWrite()
-
-"************** FileTypes & AutoCompiles-----------------------------------------------
 
 function! GitRepo() 
 	silent! !git rev-parse --is-inside-work-tree
@@ -86,6 +75,19 @@ augroup GitRepos
 	au BufEnter * call GitRepo()
 augroup end
 
+function! NoBack()
+	hi Normal guibg=none ctermbg=none
+	hi LineNr guibg=none ctermbg=none
+	hi Folded guibg=none ctermbg=none
+	hi NonText guibg=none ctermbg=none
+	hi SpecialKey guibg=none ctermbg=none
+	hi VertSplit guibg=none ctermbg=none
+	hi SignColumn guibg=none ctermbg=none
+	hi EndOfBuffer guibg=none ctermbg=none
+endfunction
+com! Traback call NoBack()
+
+"************** FileTypes & AutoCompiles-----------------------------------------------
 
 "Open new floating terminal
 nnoremap <leader>fr :FloatermNew ranger<CR>
@@ -103,6 +105,13 @@ augroup MakeDispatch
 	au FileType python let b:dispatch = 'python %'
 	au FileType javascript let b:dispatch = 'node %'
 	au FileType java,lua,python,javascript nn <F5> <cmd>w<CR><cmd>Dispatch<CR>
+augroup END
+
+augroup TexRemap
+	autocmd!
+	au FileType tex,bib nmap <F3> <plug>(vimtex-clean-full)
+	au FileType tex,bib nmap <F5> <plug>(vimtex-compile)
+	au FileType tex,bib nmap <F6> <plug>(vimtex-view)
 augroup END
 
 augroup CFiles

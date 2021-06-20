@@ -6,6 +6,6 @@ echo 'on' > /sys/bus/usb/devices/1-8/power/control &
 xrandr --rate 144
 cpupower frequency-set -g powersave &
 x86_energy_perf_policy power &
-asusctl -f silent &
+asusctl profile silent -f silent -t false &
 
 echo "Powersave mode with unmonitored N-key"

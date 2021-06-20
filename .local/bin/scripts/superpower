@@ -6,7 +6,7 @@ echo 'auto' > /sys/bus/usb/devices/1-8/power/control &
 cpupower frequency-set -g powersave
 x86_energy_perf_policy power
 # intel-undervolt apply
-asusctl -f silent &
+asusctl profile silent &
 xrandr --rate 60
 
 echo "N-key watchced, aggressive powersaving"

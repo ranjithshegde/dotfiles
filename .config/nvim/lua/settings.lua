@@ -1,7 +1,6 @@
 local settings = {}
 local u = require("utils")
 local o = vim.o
--- require("lsp-codelens").setup()
 
 function settings.settings()
     settings.vimwiki()
@@ -20,10 +19,10 @@ end
 ------------------------------------------------------------------------
 function settings.options()
     Cmd "set nohlsearch"
-    Cmd "colo lvim"
+    Cmd "colo zephyr"
+    -- Cmd "colo lvim"
     -- o.background="light"
     -- Cmd "colo vscode"
-    -- Cmd "colo solarized"
     o.number = true
     o.relativenumber = true
     o.cursorline = true
@@ -53,8 +52,7 @@ end
 
 function settings.vimwiki()
     local l = {}
-    -- l.path = '$HOME/Documents/vimWiki'
-    l.path = "$HOME/Nextcloud/Documents/vimWiki"
+    l.path = '$HOME/Documents/vimWiki'
     l.syntax = "markdown"
     l.ext = ".md"
     l.auto_tags = 1
@@ -204,8 +202,10 @@ function settings.treesitter()
                 }
             }
         },
-        rainbow = {enable = true},
-        extended_mode = true
+        rainbow = {
+            enable = true,
+            extended_mode = true
+        }
     }
 end
 
@@ -270,7 +270,7 @@ function settings.lsp_settings()
         {
             "CursorHold, CursorHoldI, InsertLeave",
             "<buffer>",
-            [[lua require'lsp-codelens'.buf_codelens_refresh()]]
+            [[lua vim.lsp.codelens.refresh()]]
         }
     }
 
@@ -330,8 +330,6 @@ function settings.lsp_settings()
         rc.completion = false
         rc.code_action = false
         u.create_bufgroup(codeLens, "lensGroup")
-        -- can_resolve = client.server_capabilities.codeLensProvider.resolveProvider == true;
-        -- supports_command = client.resolved_capabilities.execute_command;
     end
 
     EfmInit = function(client)

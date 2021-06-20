@@ -1,11 +1,10 @@
 #!/bin/sh
 
-echo powersave > /sys/module/pcie_aspm/parameters/policy
-echo 'on' > /sys/bus/usb/devices/1-8/power/control
+echo default > /sys/module/pcie_aspm/parameters/policy
 # echo 'performance' > /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor
 cpupower frequency-set -g performance
 x86_energy_perf_policy balance-performance
-asusctl -f normal
+asusctl profile normal -f normal -t false
 
 echo "all performance governers turned to on-demand"
 

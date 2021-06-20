@@ -96,9 +96,9 @@ return packer.startup(
                         "-shell-escape"
                     }
                 }
-				Cmd'nmap <F5> <plug>(vimtex-compile)'
-				Cmd'nmap <F6> <plug>(vimtex-view)'
-				Cmd'nmap <F3> <plug>(vimtex-clean-full)'
+                G.vimtex_compiler_latexmk_engines = {
+                    _ = "-xelatex"
+                }
             end
         }
 
@@ -145,7 +145,7 @@ return packer.startup(
                 "nvim-lua/popup.nvim",
                 "nvim-lua/plenary.nvim",
                 -- 'nvim-telescope/telescope-symbols.nvim',
-				'nvim-telescope/telescope-project.nvim'
+                "nvim-telescope/telescope-project.nvim"
             }
         }
 
@@ -157,6 +157,15 @@ return packer.startup(
                 G.floaterm_autoclose = 1
                 G.floaterm_keymap_new = "<F10>"
                 G.floaterm_keymap_toggle = "<F9>"
+            end
+        }
+
+        use {
+            "itchyny/calendar.vim",
+            cmd = "Calendar",
+            config = function()
+                G.calendar_google_calendar = 1
+                G.calendar_google_task = 1
             end
         }
 
@@ -176,7 +185,6 @@ return packer.startup(
         -- SuperCollider
         use {
             "davidgranstrom/scnvim",
-			-- branch = "topic/arghints-lua",
             ft = "supercollider",
             run = function()
                 fn["scnvim#install"]()
@@ -216,7 +224,7 @@ return packer.startup(
                 G.indent_blankline_use_treesitter = true
                 G.indent_blankline_show_current_context = true
                 G.indent_blankline_buftype_exclude = {"terminal", "nofile"}
-				G.indent_blankline_filetype_exclude = {"help", "packer"}
+                G.indent_blankline_filetype_exclude = {"help", "packer"}
                 G.indent_blankline_context_patterns = {
                     "class",
                     "return",

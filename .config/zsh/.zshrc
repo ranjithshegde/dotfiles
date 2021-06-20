@@ -46,8 +46,8 @@ alias nv-settings='nvidia-settings --config="$XDG_CONFIG_HOME"/nvidia/settings'
 alias yarn="yarn --use-yarnrc $XDG_CONFIG_HOME/yarn/config"
 alias wget --hsts-file="$XDG_CACHE_HOME/wget-hsts"
 
-alias config='/usr/bin/git --git-dir=/home/ranjith/Nextcloud/dotfiles --work-tree=/home/ranjith'
-alias cvim='GIT_DIR=/home/ranjith/Nextcloud/dotfiles GIT_WORK_TREE=$HOME vim'
+alias config='/usr/bin/git --git-dir=/home/ranjith/Software/Workspaces/Repos/dotfiles --work-tree=/home/ranjith'
+alias cvim='GIT_DIR=/home/ranjith/Software/Workspaces/Repos/dotfiles GIT_WORK_TREE=$HOME vim'
 
 VISUAL=nvim; export VISUAL EDITOR=nvim; export EDITOR
 

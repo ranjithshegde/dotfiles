@@ -1,6 +1,7 @@
 #!/bin/sh
 
-declare options=("Perf
+declare options=("Beast
+Perf
 Bal
 Prac
 Min
@@ -22,8 +23,10 @@ case "$choice" in
 		 sudo -A /home/ranjith/.local/bin/scripts/balance 
 		;;
 	Perf)
-		 sudo -A /home/ranjith/.local/bin/scripts/beast 
+		 sudo -A /home/ranjith/.local/bin/scripts/performance 
 		;;
-	
+	Beast)
+		sudo -A /home/ranjith/.local/bin/scripts/beast 
+		;;
 esac
 
