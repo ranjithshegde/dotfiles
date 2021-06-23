@@ -97,6 +97,9 @@ augroup GenericFiles
 	au FileType gitcommit lua require'mappings'.git_commit()
 	au FileType text,tex,vimwiki.markdown call WordProcessor()
 	au FileType html nmap <F4> : exec 'silent !qutebrowser % &'
+	au FileType cpp,c,lua,python,javascript,java,toml,yaml,conf,json,supercollider,bib set foldexpr=nvim_treesitter#foldexpr()
+	au FileType vimwiki,markdown setlocal tabstop=2
+	au FileType tex set foldexpr=vimtex#fold#level(v:lnum)
 augroup end 
 
 augroup MakeDispatch

@@ -7,5 +7,6 @@ xrandr --rate 144
 cpupower frequency-set -g powersave &
 x86_energy_perf_policy power &
 asusctl profile silent -f silent -t false &
+rfkill unblock wlan
 
 echo "Powersave mode with unmonitored N-key"

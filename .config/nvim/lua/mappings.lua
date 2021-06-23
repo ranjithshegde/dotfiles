@@ -331,7 +331,7 @@ function M.clang()
 
     local bufmaps = {
         -- Switch source header
-        {"n", "mv", ":ClangdSwitchSourceHeader<CR>"},
+        {"n", "<leader>s", ":ClangdSwitchSourceHeader<CR>"},
         -- bases
         {"n", ";b", ":CclsBase<CR>"},
         --   bases of up to 3 levels
@@ -355,7 +355,9 @@ function M.clang()
         -- memberTypes
         {"n", ";t", ":CclsMemberTypeHierarchy -float<CR>"},
         -- variables
-        {"n", ";v", ":CclsVars<CR>"}
+        {"n", ";v", ":CclsVars<CR>"},
+		-- open makefile
+		{"n", "<leader>m", "<cmd>lua require('compiler').makefile(vim.g.makeFile)<CR>"}
     }
     u.bufmaps(bufmaps, opts)
 end
@@ -376,7 +378,7 @@ function M.cmake()
         -- Dispatch run
         {"n", "<F6>", 'w <CR> :lua require("compiler").cmake_run()<cr>'},
         -- Dispatch install
-        {"n", "<F7>", 'w <CR> :lua require("compiler").cmake_install()<cr>'}
+        {"n", "<F7>", 'w <CR> :lua require("compiler").cmake_install()<cr>'},
     }
     u.bufmaps(bufmaps, opts)
 end

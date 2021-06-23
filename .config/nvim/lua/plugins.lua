@@ -46,6 +46,8 @@ return packer.startup(
 
         use "vimwiki/vimwiki"
 
+        -- use "stevearc/aerial.nvim"
+
         use {"m-pilia/vim-ccls", ft = "cpp"}
 
         use {"yegappan/taglist", cmd = "TlistToggle"}
@@ -111,11 +113,14 @@ return packer.startup(
         }
 
         -- Markdown preview
-        -- use {
-        -- 'iamcco/markdown-preview.nvim',
-        -- run = function() fn['mkdp#util#install']() end,
-        -- cmd = 'MarkdownPreview'
-        -- }
+        use {
+            "iamcco/markdown-preview.nvim",
+            run = function()
+                fn["mkdp#util#install"]()
+            end,
+            ft = {"vimwiki"},
+            cmd = "MarkdownPreview"
+        }
 
         -- completion and snippets
         use {

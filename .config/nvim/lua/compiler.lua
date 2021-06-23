@@ -7,14 +7,17 @@ function Compiler.set_ctype()
     if Compiler.has_Cmake() then
         require('mappings').cmake()
         require('mappings').clang()
+		G.makeFile = "CMakeLists.txt"
     elseif Compiler.has_makefile() then
         require('mappings').makeC()
         require('mappings').clang()
+		G.makeFile = "Makefile"
     elseif Compiler.has_pio_file() then
         Exec("set makeprg=pio\\ run")
         require('settings').smbc()
         require('mappings').smbc()
         require('mappings').clang()
+		G.makeFile = "platformio.ini"
     else
         Exec("set makeprg=g++")
         require('mappings').ctests()
@@ -60,6 +63,11 @@ function Compiler.make(cmd) Exec("Make " .. cmd) end
 
 -- set default terminal to Dispatch
 function Compiler.terminal(cmd) Exec("Dispatch " .. cmd) end
+
+-- open Makefile
+function Compiler.makefile(file)
+	Exec("tabnew " .. file)
+end
 
 -- set alternate terminal to native terminal
 function Compiler.newTerm(cmd, opencmd)

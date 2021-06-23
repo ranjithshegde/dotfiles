@@ -19,8 +19,8 @@ end
 ------------------------------------------------------------------------
 function settings.options()
     Cmd "set nohlsearch"
-    Cmd "colo zephyr"
-    -- Cmd "colo lvim"
+    -- Cmd "colo zephyr"
+    Cmd "colo lvim"
     -- o.background="light"
     -- Cmd "colo vscode"
     o.number = true
@@ -38,12 +38,13 @@ function settings.options()
     o.tabstop = 4
     o.conceallevel = 1
     o.foldmethod = "expr"
-    o.foldexpr = "nvim_treesitter#foldexpr()"
-    o.fillchars = "stlnc:»,vert:║,fold:·"
+    -- o.foldexpr = "nvim_treesitter#foldexpr()"
+    o.fillchars = "stlnc:»,vert:║,fold:-"
     o.completeopt = "menuone,noinsert,noselect"
     o.clipboard = "unnamed,unnamedplus"
     o.shortmess = o.shortmess .. "c"
     G.termdebug_wide = 1
+	G.markdown_folding = 1
 end
 
 ------------------------------------------------------------------------
@@ -52,16 +53,20 @@ end
 
 function settings.vimwiki()
     local l = {}
-    l.path = '$HOME/Documents/vimWiki'
+    l.path = "$HOME/Documents/vimWiki"
     l.syntax = "markdown"
     l.ext = ".md"
     l.auto_tags = 1
+    l.auto_toc = 1
     l.auto_diary_index = 1
     l.auto_generate_tags = 1
     l.autowriteall = 1
-    G.vimwiki_filetypes = {"markdown"}
     G.vimwiki_list = {l}
     G.vimwiki_markdown_link_ext = 1
+	G.vimwiki_global_ext = 0
+	G.vimwiki_auto_chdir = 1
+	G.vimwiki_folding = "expr"
+	G.vimwiki_auto_header = 1
 end
 ------------------------------------------------------------------------
 --                              Snippets                              --
@@ -235,6 +240,12 @@ function settings.completion()
     else
         G.completion_enable_snippet = "vim-vsnip"
     end
+
+    -- if Op("filetype") == "tex" then
+    --     G.aerial = {
+    --         filter_kind = false
+    --     }
+    -- end
     u.create_augroup(
         {
             {"FileType", "supercollider,text,conf", 'lua require"completion".on_attach()'},
@@ -251,6 +262,7 @@ end
 function settings.lsp_settings()
     -- autopairs
     local npairs = require("nvim-autopairs")
+    -- local aerial = require "aerial"
     npairs.setup()
 
     local Rule = require("nvim-autopairs.rule")
@@ -285,6 +297,7 @@ function settings.lsp_settings()
         Lsp_status.on_attach(client)
         local rc = client.resolved_capabilities
         vim.fn["vsnip#get_complete_items"](vim.fn["bufnr"]())
+        -- aerial.on_attach(client)
 
         if rc.document_highlight then
             Cmd("hi LspReferenceRead cterm=bold ctermbg=red guibg=#98971a")
@@ -429,7 +442,7 @@ end
 function settings.lsp_lintFormat()
     Lsp.diagnosticls.setup {
         cmd = {"diagnostic-languageserver", "--stdio"},
-        filetypes = {"markdown", "tex", "text"},
+        filetypes = {"markdown", "tex", "text", "vimwiki"},
         handlers = {
             ["textDocument/publishDiagnostics"] = vim.lsp.with(
                 vim.lsp.diagnostic.on_publish_diagnostics,
@@ -518,10 +531,10 @@ function settings.lsp_lintFormat()
             },
             formatters = {},
             filetypes = {
-                markdown = {"mdidote", "write-good"},
-                vimwiki = {"write-good", "mdidote"},
+                markdown =  "mdidote",
+                vimwiki =  "mdidote",
                 tex = "textidote",
-                text = "languagetool"
+                text = {"languagetool", "write-good"}
             },
             formatFiletypes = {}
         }
@@ -539,7 +552,7 @@ function settings.lsp_lintFormat()
     local yamllint = {lintCommand = "yamllint -f parsable -", lintStdin = true}
     local shfmt = {formatCommand = "shfmt -ci -s -bn", formatStdin = true}
     local rustywind = {formatCommand = "rustywind --stdin", formatStdin = true}
-    local prettier = {formatCommand = "prettier --stdin-filepath ${INPUT}", formatStdin = true}
+    local prettier = {formatCommand = "prettier --stdin --stdin-filepath ${INPUT}", formatStdin = true}
     local isort = {formatCommand = "isort --stdout --profile black -", formatStdin = true}
     local black = {formatCommand = "black --fast -", formatStdin = true}
     local mypy = {
@@ -585,8 +598,8 @@ function settings.lsp_lintFormat()
         lua = {luaformat},
         make = {checkmake},
         rust = {rustywind},
-        vimwiki = {markdownlint},
-        markdown = {markdownlint},
+        vimwiki = {markdownlint, prettier},
+        markdown = {markdownlint, prettier},
         sh = {shellcheck, shfmt},
         zsh = {shellcheck, shfmt},
         python = {flake8, isort, black, mypy}
