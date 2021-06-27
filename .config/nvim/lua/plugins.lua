@@ -46,27 +46,16 @@ return packer.startup(
 
         use "vimwiki/vimwiki"
 
-        -- use "stevearc/aerial.nvim"
-
         use {"m-pilia/vim-ccls", ft = "cpp"}
 
         use {"yegappan/taglist", cmd = "TlistToggle"}
 
-        use {"SirVer/ultisnips", ft = {"supercollider"}}
+        use {"SirVer/ultisnips", ft = "supercollider"}
 
-        use {"neovim/nvim-lspconfig", requires = {"nvim-lua/lsp-status.nvim"}}
+        use {"neovim/nvim-lspconfig", requires = "nvim-lua/lsp-status.nvim"}
 
         -- StatusLine
-        use {"tjdevries/express_line.nvim", requires = {"kyazdani42/nvim-web-devicons", opt = true}}
-
-        -- Coautoring
-        use {
-            "jbyuki/instant.nvim",
-            config = function()
-                G.instant_username = "Ranjith"
-            end,
-            opt = true
-        }
+        use {"tjdevries/express_line.nvim", requires = "kyazdani42/nvim-web-devicons"}
 
         -- Java Lsp
         use {
@@ -75,6 +64,15 @@ return packer.startup(
             config = function()
                 require("settings").jdtls()
             end
+        }
+
+        -- Coautoring
+        use {
+            "jbyuki/instant.nvim",
+            config = function()
+                G.instant_username = "Ranjith"
+            end,
+            opt = true
         }
 
         -- Git Signs
@@ -86,40 +84,26 @@ return packer.startup(
             opt = true
         }
 
-        -- vimTex
-        use {
-            "lervag/vimtex",
-            ft = {"tex", "bib"},
-            config = function()
-                G.vimtex_viewer_method = "zathura"
-                G.tex_conceal = "abdmg"
-                G.vimtex_compiler_latexmk = {
-                    options = {
-                        "-shell-escape"
-                    }
-                }
-                G.vimtex_compiler_latexmk_engines = {
-                    _ = "-xelatex"
-                }
-            end
-        }
-
-        -- WhichKey
-        use {
-            "folke/which-key.nvim",
-            config = function()
-                require("which-key").setup {layout = {width = {max = 80}, {spacing = 10}}}
-            end
-        }
-
         -- Markdown preview
         use {
             "iamcco/markdown-preview.nvim",
             run = function()
                 fn["mkdp#util#install"]()
             end,
-            ft = {"vimwiki"},
-            cmd = "MarkdownPreview"
+            ft = {"vimwiki", "markdown"}
+        }
+
+        -- WhichKey
+        use {
+            "folke/which-key.nvim",
+            config = function()
+                require("which-key").setup {
+                    layout = {
+                        width = {max = 80},
+                        {spacing = 10}
+                    }
+                }
+            end
         }
 
         -- completion and snippets
@@ -128,8 +112,7 @@ return packer.startup(
             requires = {
                 "windwp/nvim-autopairs",
                 "hrsh7th/vim-vsnip",
-                {"hrsh7th/vim-vsnip-integ"},
-                opt = true
+                "hrsh7th/vim-vsnip-integ"
             }
         }
 
@@ -165,6 +148,7 @@ return packer.startup(
             end
         }
 
+        -- vim Calendar
         use {
             "itchyny/calendar.vim",
             cmd = "Calendar",
@@ -185,6 +169,24 @@ return packer.startup(
                 cmd = {"TSPlaygroundToggle", "TSHighlightCapturesUnderCursor"}
             },
             {"nvim-treesitter/nvim-treesitter-refactor", ft = "supercollider"}
+        }
+
+        -- vimTex
+        use {
+            "lervag/vimtex",
+            ft = {"tex", "bib"},
+            config = function()
+                G.vimtex_viewer_method = "zathura"
+                G.tex_conceal = "abdmg"
+                G.vimtex_compiler_latexmk = {
+                    options = {
+                        "-shell-escape"
+                    }
+                }
+                G.vimtex_compiler_latexmk_engines = {
+                    _ = "-xelatex"
+                }
+            end
         }
 
         -- SuperCollider

@@ -5,6 +5,7 @@ lua require ('settings').settings()
 lua require ('mappings').general()
 lua require ('mappings').autoComplete()
 lua require 'statusline'
+let g:cenv = $CWORK
 lua require 'compiler'
 source ~/.cache/calendar.vim/credentials.vim
 
@@ -95,7 +96,7 @@ nnoremap <leader>fr :FloatermNew ranger<CR>
 augroup GenericFiles
 	au FileType * lua require'mappings'.nvim_lsp()
 	au FileType gitcommit lua require'mappings'.git_commit()
-	au FileType text,tex,vimwiki.markdown call WordProcessor()
+	au FileType text,tex,vimwiki call WordProcessor()
 	au FileType html nmap <F4> : exec 'silent !qutebrowser % &'
 	au FileType cpp,c,lua,python,javascript,java,toml,yaml,conf,json,supercollider,bib set foldexpr=nvim_treesitter#foldexpr()
 	au FileType vimwiki,markdown setlocal tabstop=2

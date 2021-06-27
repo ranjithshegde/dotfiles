@@ -44,7 +44,7 @@ function settings.options()
     o.clipboard = "unnamed,unnamedplus"
     o.shortmess = o.shortmess .. "c"
     G.termdebug_wide = 1
-	G.markdown_folding = 1
+    G.markdown_folding = 1
 end
 
 ------------------------------------------------------------------------
@@ -56,17 +56,14 @@ function settings.vimwiki()
     l.path = "$HOME/Documents/vimWiki"
     l.syntax = "markdown"
     l.ext = ".md"
-    l.auto_tags = 1
-    l.auto_toc = 1
-    l.auto_diary_index = 1
-    l.auto_generate_tags = 1
+    l.auto_toc = 0
+    -- l.auto_diary_index = 1
     l.autowriteall = 1
     G.vimwiki_list = {l}
     G.vimwiki_markdown_link_ext = 1
-	G.vimwiki_global_ext = 0
-	G.vimwiki_auto_chdir = 1
-	G.vimwiki_folding = "expr"
-	G.vimwiki_auto_header = 1
+    G.vimwiki_global_ext = 0
+    G.vimwiki_auto_chdir = 1
+    G.vimwiki_folding = "expr"
 end
 ------------------------------------------------------------------------
 --                              Snippets                              --
@@ -262,14 +259,10 @@ end
 function settings.lsp_settings()
     -- autopairs
     local npairs = require("nvim-autopairs")
-    -- local aerial = require "aerial"
     npairs.setup()
 
     local Rule = require("nvim-autopairs.rule")
     npairs.add_rules({Rule("|", "|", "supercollider")})
-
-    -- OnEnter = function() return require("nvim-autopairs").check_break_line_char() end
-    -- vim.api.nvim_set_keymap("i", "<CR>", "v:lua.OnEnter()", {expr = true})
 
     require("icons").init()
     Lsp = require "lspconfig"
@@ -278,6 +271,7 @@ function settings.lsp_settings()
     Lsp_status = require("lsp-status")
     Lsp_status.register_progress()
 
+    local buffCmd = "* <buffer>"
     local codeLens = {
         {
             "CursorHold, CursorHoldI, InsertLeave",
@@ -285,25 +279,29 @@ function settings.lsp_settings()
             [[lua vim.lsp.codelens.refresh()]]
         }
     }
-
     local docHigh = {
         {"CursorHold", "<buffer>", [[lua vim.lsp.buf.document_highlight()]]},
         {"CursorMoved", "<buffer>", [[lua vim.lsp.buf.clear_references()]]},
         {"CursorMovedI", "<buffer>", [[lua vim.lsp.buf.clear_references()]]}
     }
 
+	-- Set diagnostics to local list automatically
+    u.create_augroup(
+        {{"User LspDiagnosticsChanged", "lua vim.lsp.diagnostic.set_loclist({open_loclist = false})"}},
+        "LspLocList"
+    )
+
     All_attach = function(client, bufnr)
         require "completion".on_attach(client)
         Lsp_status.on_attach(client)
         local rc = client.resolved_capabilities
         vim.fn["vsnip#get_complete_items"](vim.fn["bufnr"]())
-        -- aerial.on_attach(client)
 
         if rc.document_highlight then
             Cmd("hi LspReferenceRead cterm=bold ctermbg=red guibg=#98971a")
             Cmd("hi LspReferenceText cterm=bold ctermbg=red guibg=grey")
             Cmd("hi LspReferenceWrite cterm=bold ctermbg=red guibg= #fbf1c7")
-            u.create_bufgroup(docHigh, "bufgroup")
+            u.create_cmdGroup(docHigh, buffCmd, "bufgroup")
         end
 
         if rc.document_formatting then
@@ -320,7 +318,7 @@ function settings.lsp_settings()
         end
 
         if client.resolved_capabilities.code_lens then
-            u.create_bufgroup(codeLens, "lensGroup")
+            u.create_cmdGroup(codeLens, buffCmd, "lensGroup")
         end
     end
 
@@ -342,7 +340,7 @@ function settings.lsp_settings()
         rc.hover = false
         rc.completion = false
         rc.code_action = false
-        u.create_bufgroup(codeLens, "lensGroup")
+        u.create_cmdGroup(codeLens, buffCmd, "lensGroup")
     end
 
     EfmInit = function(client)
@@ -403,13 +401,6 @@ function settings.langServers()
                 "--all-scopes-completion",
                 "--completion-style=detailed",
                 "--cross-file-rename"
-            },
-            commands = {
-                CHover = {
-                    function()
-                        u.clang_hover()
-                    end
-                }
             }
         },
         sumneko_lua = {
@@ -531,8 +522,8 @@ function settings.lsp_lintFormat()
             },
             formatters = {},
             filetypes = {
-                markdown =  "mdidote",
-                vimwiki =  "mdidote",
+                markdown = "mdidote",
+                vimwiki = "mdidote",
                 tex = "textidote",
                 text = {"languagetool", "write-good"}
             },

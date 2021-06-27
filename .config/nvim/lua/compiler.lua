@@ -1,27 +1,30 @@
-local u = require('utils')
+local u = require("utils")
 
 local Compiler = {}
 
 -- Set C environment based on functions
 function Compiler.set_ctype()
     if Compiler.has_Cmake() then
-        require('mappings').cmake()
-        require('mappings').clang()
-		G.makeFile = "CMakeLists.txt"
+        require("mappings").cmake()
+        require("mappings").clang()
+        G.makeFile = "CMakeLists.txt"
+        G.debugBin = "build/" .. vim.fn.fnamemodify(vim.fn.getcwd(), ":t")
     elseif Compiler.has_makefile() then
-        require('mappings').makeC()
-        require('mappings').clang()
-		G.makeFile = "Makefile"
+        require("mappings").makeC()
+        require("mappings").clang()
+        G.makeFile = "Makefile"
+        G.debugBin = "bin/" .. vim.fn.fnamemodify(vim.fn.getcwd(), ":t") .. "_debug"
     elseif Compiler.has_pio_file() then
         Exec("set makeprg=pio\\ run")
-        require('settings').smbc()
-        require('mappings').smbc()
-        require('mappings').clang()
-		G.makeFile = "platformio.ini"
+        require("settings").smbc()
+        require("mappings").smbc()
+        require("mappings").clang()
+        G.makeFile = "platformio.ini"
     else
         Exec("set makeprg=g++")
-        require('mappings').ctests()
-        require('mappings').clang()
+        require("mappings").ctests()
+        require("mappings").clang()
+		G.debugBin = "%<"
     end
 end
 
@@ -59,14 +62,18 @@ function Compiler.has_Cmake()
 end
 
 -- set default make to Dispatch Make
-function Compiler.make(cmd) Exec("Make " .. cmd) end
+function Compiler.make(cmd)
+    Exec("Make " .. cmd)
+end
 
 -- set default terminal to Dispatch
-function Compiler.terminal(cmd) Exec("Dispatch " .. cmd) end
+function Compiler.terminal(cmd)
+    Exec("Dispatch " .. cmd)
+end
 
 -- open Makefile
 function Compiler.makefile(file)
-	Exec("tabnew " .. file)
+    Exec("tabnew " .. file)
 end
 
 -- set alternate terminal to native terminal
@@ -77,27 +84,39 @@ end
 
 -- Cmake generate
 function Compiler.cmake_gen()
-    Compiler.terminal("mkdir build; cmake -DCMAKE_BUILD_TYPE='Release' " .. G.extra_cmake_flags ..
-                          " -B " .. G.cmake_build_dir .. " -S ." .. ";" .. G.compiledb)
+    Compiler.terminal(
+        "mkdir build; cmake -DCMAKE_BUILD_TYPE='Release' " ..
+            G.extra_cmake_flags .. " -B " .. G.cmake_build_dir .. " -S ." .. ";" .. G.compiledb
+    )
 end
 
 function Compiler.cmake_clean()
-	Compiler.terminal("rm -r " .. G.cmake_build_dir .. ";" .. "rm compile_commands.json")
+    Compiler.terminal("rm -r " .. G.cmake_build_dir .. ";" .. "rm compile_commands.json")
 end
 
 function Compiler.cmake_clean_gen()
-	Compiler.cmake_clean()
-	Compiler.cmake_gen()
+    Compiler.cmake_clean()
+    Compiler.cmake_gen()
+end
+
+function Compiler.termdebug()
+    Exec "packadd termdebug"
+    local cmd = "Termdebug " .. G.debugBin
+    Exec(cmd)
 end
 
 -- Cmake generate debug
 function Compiler.cmake_gen_debug()
-    Compiler.terminal("mkdir build; cmake -DCMAKE_BUILD_TYPE='Debug' " .. G.extra_cmake_flags ..
-                          " -B " .. G.cmake_build_dir .. " -S ." .. ";" .. G.compiledb)
+    Compiler.terminal(
+        "mkdir build; cmake -DCMAKE_BUILD_TYPE='Debug' " ..
+            G.extra_cmake_flags .. " -B " .. G.cmake_build_dir .. " -S ." .. ";" .. G.compiledb
+    )
 end
 
 -- Cmake Build
-function Compiler.cmake_build() Compiler.terminal("cmake --build " .. G.cmake_build_dir) end
+function Compiler.cmake_build()
+    Compiler.terminal("cmake --build " .. G.cmake_build_dir)
+end
 
 -- Cmake Install
 function Compiler.cmake_install()
@@ -110,6 +129,18 @@ function Compiler.cmake_run()
     local bin = vim.fn.fnamemodify(vim.fn.getcwd(), ":t")
     Compiler.terminal("./build/" .. bin)
 end
+
+function Compiler.cpractice()
+    local dir = vim.fn.input("enter directory name: ")
+    -- if vim.fn.empty(vim.fn.glob(path)) > 0 then
+    -- vim.fn.system({"mkdir", "-p", "$CWORK/Practice/" .. dir})
+    -- end
+    vim.fn.execute("!mkdir -p $CWORK/Practice/" .. dir)
+    vim.fn.execute("cd $CWORK/Practice/" .. dir)
+    local file = vim.fn.input("enter file name: ")
+    Exec("e " .. file .. ".cpp")
+end
+vim.cmd("command! Cpractice lua require('compiler').cpractice()")
 
 -----------------------------------------------------------------------
 --                                SMBC  	                          --

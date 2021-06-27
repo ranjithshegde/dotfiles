@@ -68,7 +68,7 @@ function M.nvim_lsp()
         {"n", ",ac", "<cmd>lua vim.lsp.buf.code_action()<CR>"},
         {"v", ",ac", "<cmd>lua vim.lsp.buf.range_code_action()<CR>"},
         {"v", ",ff", "<cmd>lua vim.lsp.buf.range_formatting()<CR>"},
-        {"n", ",ll", "<cmd>lua vim.lsp.diagnostic.set_loclist()<CR>"},
+        -- {"n", ",ll", "<cmd>lua vim.lsp.diagnostic.set_loclist()<CR>"},
         {"n", ",lv", "<cmd>lua require'utils'.virtDiagnostics.toggle()<CR>"},
         {"n", ",wa", "<cmd>lua vim.lsp.buf.add_workspace_folder()<CR>"},
         {"n", ",wr", "<cmd>lua vim.lsp.buf.remove_workspace_folder()<CR>"},
@@ -81,18 +81,17 @@ end
 -- ******************************** vim basic calls ---------------------------------------
 
 function M.edit_config_files()
-    local open_func = "tabnew"
     local opts = {nowait = true, noremap = true, silent = true}
     local maps = {
-        {"n", "<leader>aR", "<cmd>lua require('utils').Restart()<CR>"},
         {"n", "<leader>aP", "<cmd>PackerSync<CR>"},
-        {"n", "<leader>am", ":" .. open_func .. " ~/.config/nvim/lua/mappings.lua<CR>"},
-        {"n", "<leader>al", ":" .. open_func .. " ~/.config/nvim/lua/settings.lua<CR>"},
-        {"n", "<leader>ap", ":" .. open_func .. " ~/.config/nvim/lua/plugins.lua<CR>"},
-        {"n", "<leader>as", ":" .. open_func .. " ~/.config/nvim/lua/statusline.lua<CR>"},
-        {"n", "<leader>ac", ":" .. open_func .. " ~/.config/nvim/lua/compiler.lua<CR>"},
-        {"n", "<leader>au", ":" .. open_func .. " ~/.config/nvim/lua/utils/init.lua<CR>"},
-        {"n", "<leader>ar", ":" .. open_func .. " $MYVIMRC<CR>"}
+        {"n", "<leader>aR", "<cmd>lua require('utils').Restart()<CR>"},
+        {"n", "<leader>am", "<cmd>tabnew ~/.config/nvim/lua/mappings.lua<CR>"},
+        {"n", "<leader>al", "<cmd>tabnew ~/.config/nvim/lua/settings.lua<CR>"},
+        {"n", "<leader>ap", "<cmd>tabnew ~/.config/nvim/lua/plugins.lua<CR>"},
+        {"n", "<leader>as", "<cmd>tabnew ~/.config/nvim/lua/statusline.lua<CR>"},
+        {"n", "<leader>ac", "<cmd>tabnew ~/.config/nvim/lua/compiler.lua<CR>"},
+        {"n", "<leader>au", "<cmd>tabnew ~/.config/nvim/lua/utils/init.lua<CR>"},
+        {"n", "<leader>ar", "<cmd>tabnew $MYVIMRC<CR>"}
     }
 
     u.maps(maps, opts)
@@ -110,10 +109,6 @@ function M.telescope()
     local telE = function(name)
         return string.format(":lua require'telescope'.extensions.%s<cr>", name)
     end
-    -- local follow_links = {
-    -- 	cwd = vim.loop.cwd(),
-    -- 	follow = true,
-    -- }
 
     local opts = {nowait = true, noremap = true, silent = true}
     local maps = {
@@ -305,7 +300,9 @@ function M.makeC()
         -- Compile openFrameworks
         {"n", "<F5>", ":w <CR> :Make -j12 && make RunRelease<CR>"},
         -- run openFrameworks
-        {"n", "<F6>", ":w <CR> :Make RunRelease<CR>"}
+        {"n", "<F6>", ":w <CR> :Make RunRelease<CR>"},
+        -- Dispatch install
+        {"n", "<F7>", 'w <CR> :lua require("compiler").termdebug()<cr>'},
     }
     u.bufmaps(bufmaps, opts)
 end
@@ -320,7 +317,9 @@ function M.ctests()
         -- Compile cpp file
         {"n", "<F5>", ":w <CR> :Make -g % -o %<<CR>"},
         -- Run binary
-        {"n", "<F6>", ":w <CR> :Dispatch ./%<<CR>"}
+        {"n", "<F6>", ":w <CR> :Dispatch ./%<<CR>"},
+        -- Dispatch install
+        {"n", "<F7>", 'w <CR> :lua require("compiler").termdebug()<cr>'},
     }
     u.bufmaps(bufmaps, opts)
 end
@@ -378,7 +377,7 @@ function M.cmake()
         -- Dispatch run
         {"n", "<F6>", 'w <CR> :lua require("compiler").cmake_run()<cr>'},
         -- Dispatch install
-        {"n", "<F7>", 'w <CR> :lua require("compiler").cmake_install()<cr>'},
+        {"n", "<F7>", 'w <CR> :lua require("compiler").termdebug()<cr>'},
     }
     u.bufmaps(bufmaps, opts)
 end

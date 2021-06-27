@@ -45,33 +45,7 @@ function utils.Restart()
     Cmd("doautocmd VimEnter")
 end
 
--- ************** Multi AutoCommands ---------------------------------------------------------
-
-function utils.create_bufgroups(definitions)
-    for group_name, definition in pairs(definitions) do
-        Exec("augroup " .. group_name)
-        Exec("autocmd! * <buffer>")
-        for _, def in ipairs(definition) do
-            local command = table.concat(vim.tbl_flatten {"autocmd", def}, " ")
-            Exec(command)
-        end
-        Exec("augroup END")
-    end
-end
-
-function utils.create_augroups(definitions)
-    for group_name, definition in pairs(definitions) do
-        Exec("augroup " .. group_name)
-        Exec("autocmd!")
-        for _, def in ipairs(definition) do
-            local command = table.concat(vim.tbl_flatten {"autocmd", def}, " ")
-            Exec(command)
-        end
-        Exec("augroup END")
-    end
-end
-
--- ************** Single AutoCommands ---------------------------------------------------------
+-- ************** AutoCommands ---------------------------------------------------------
 
 function utils.create_augroup(autocmds, name)
     Exec("augroup " .. name)
@@ -82,9 +56,9 @@ function utils.create_augroup(autocmds, name)
     Exec("augroup END")
 end
 
-function utils.create_bufgroup(autocmds, name)
+function utils.create_cmdGroup(autocmds, command, name)
     Exec("augroup " .. name)
-    Exec("autocmd! * <buffer>")
+    Exec("autocmd! " .. command)
     for _, autocmd in ipairs(autocmds) do
         Exec("autocmd " .. table.concat(autocmd, " "))
     end
@@ -124,22 +98,7 @@ utils.create_augroup({{"TextYankPost", "*", "silent! lua HighlightOnYank()"}}, "
 
 -- ************** LSP  ---------------------------------------------------------
 
--- Hover for Clangd
-function utils.clang_hover()
-    local name = "clangd"
-    local clients =
-        vim.tbl_filter(
-        function(c)
-            return c.name == name
-        end,
-        vim.lsp.get_active_clients()
-    )
-    local match, client = next(clients)
-    assert(match, "No active client found with same name=" .. name)
-    client.request("textDocument/hover", vim.lsp.util.make_position_params())
-end
-
--- Peek Definition
+-- peek definition
 function utils.preview_location(location, context, before_context)
     -- location may be LocationLink or Location (more useful for the former)
     context = context or 15
@@ -185,6 +144,15 @@ function utils.peek_definition()
     end
 end
 
+-- Toggle virtual diagnostics
+utils.virtDiagnostics = {}
+utils.virtDiagnostics.show = true
+utils.virtDiagnostics.toggle = function()
+    utils.virtDiagnostics.show = not utils.virtDiagnostics.show
+    vim.lsp.diagnostic.display(vim.lsp.diagnostic.get(0, 1), 0, 1, {virtual_text = utils.virtDiagnostics.show})
+end
+
+
 -- ************** Custom completion sources  ---------------------------------------------------------
 
 function utils.getCompletionItems(prefix)
@@ -211,6 +179,8 @@ end
 function utils.exec(cmd)
     Exec(cmd)
 end
+
+-- ************** Co-authoring ---------------------------------------------------------
 
 -- Start Instant server
 function utils.Start()
@@ -253,12 +223,34 @@ function utils.JoinSingle()
     utils.Follow()
 end
 
--- Toggle virtual diagnostics
-utils.virtDiagnostics = {}
-utils.virtDiagnostics.show = true
-utils.virtDiagnostics.toggle = function()
-    utils.virtDiagnostics.show = not utils.virtDiagnostics.show
-    vim.lsp.diagnostic.display(vim.lsp.diagnostic.get(0, 1), 0, 1, {virtual_text = utils.virtDiagnostics.show})
+-- ************** Floating terminal----------------------------------------------------------
+
+function utils.float_terminal(cmd)
+    local buf = vim.api.nvim_create_buf(false, true)
+    local vpad = 4
+    local hpad = 10
+    local win =
+        vim.api.nvim_open_win(
+        buf,
+        true,
+        {
+            relative = "editor",
+            width = vim.o.columns - hpad * 2,
+            height = vim.o.lines - vpad * 2,
+            row = vpad,
+            col = hpad,
+            style = "minimal",
+            border = {"╭", "─", "╮", "│", "╯", "─", "╰", "│"}
+        }
+    )
+    vim.fn.termopen(cmd)
+    local autocmd = {
+        "autocmd! TermClose <buffer> lua",
+        string.format("vim.api.nvim_win_close(%d, {force = true});", win),
+        string.format("vim.api.nvim_buf_delete(%d, {force = true});", buf)
+    }
+    Cmd(table.concat(autocmd, " "))
+    Cmd([[startinsert]])
 end
 
 return utils
