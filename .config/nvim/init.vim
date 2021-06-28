@@ -1,11 +1,9 @@
 "**************Neovim basics -------------------------------------------------------------
-" source ~/.config/nvim/lua/plugins.lua
 lua require ('plugins')
 lua require ('settings').settings()
 lua require ('mappings').general()
 lua require ('mappings').autoComplete()
 lua require 'statusline'
-let g:cenv = $CWORK
 lua require 'compiler'
 source ~/.cache/calendar.vim/credentials.vim
 
@@ -76,28 +74,12 @@ augroup GitRepos
 	au BufEnter * call GitRepo()
 augroup end
 
-function! NoBack()
-	hi Normal guibg=none ctermbg=none
-	hi LineNr guibg=none ctermbg=none
-	hi Folded guibg=none ctermbg=none
-	hi NonText guibg=none ctermbg=none
-	hi SpecialKey guibg=none ctermbg=none
-	hi VertSplit guibg=none ctermbg=none
-	hi SignColumn guibg=none ctermbg=none
-	hi EndOfBuffer guibg=none ctermbg=none
-endfunction
-com! Traback call NoBack()
-
 "************** FileTypes & AutoCompiles-----------------------------------------------
-
-"Open new floating terminal
-nnoremap <leader>fr :FloatermNew ranger<CR>
 
 augroup GenericFiles
 	au FileType * lua require'mappings'.nvim_lsp()
 	au FileType gitcommit lua require'mappings'.git_commit()
 	au FileType text,tex,vimwiki call WordProcessor()
-	au FileType html nmap <F4> : exec 'silent !qutebrowser % &'
 	au FileType cpp,c,lua,python,javascript,java,toml,yaml,conf,json,supercollider,bib set foldexpr=nvim_treesitter#foldexpr()
 	au FileType vimwiki,markdown setlocal tabstop=2
 	au FileType tex set foldexpr=vimtex#fold#level(v:lnum)
@@ -105,10 +87,18 @@ augroup end
 
 augroup MakeDispatch
 	au FileType java let b:dispatch = 'javac %'
+	au FileType java let g:repl = 'javac'
 	au FileType lua let b:dispatch = 'lua %'
+	au FileType lua let g:repl = 'lua'
 	au FileType python let b:dispatch = 'python %'
+	au FileType python let g:repl = 'ipython'
 	au FileType javascript let b:dispatch = 'node %'
+	au FileType javascript let g:repl = 'node'
 	au FileType java,lua,python,javascript nn <F5> <cmd>w<CR><cmd>Dispatch<CR>
+	au FileType java,lua,python,javascript nn <F10> <cmd>lua require('utils').toggleTerm(vim.g.repl, "repl", 0)<CR>
+	au FileType java,lua,python,javascript tnoremap <F10> <esc><cmd>lua require('utils').toggleTerm(vim.g.repl, "repl", 0)<CR>
+	au FileType html nn <F5> : exec 'silent !qutebrowser % &'
+	au FileType markdown,vimwiki nn <F5> <cmd>MarkdownPreview<CR>
 augroup END
 
 augroup TexRemap
@@ -145,3 +135,13 @@ function! CamelCase()
 	imap <silent> <S-Right> <C-o><Plug>CamelCaseMotion_w
 endfunction
 com! Cam call CamelCase()
+
+"************************ Terminal management -------------------------------------------------
+augroup termInsert
+	autocmd!
+	autocmd BufWinEnter,WinEnter term://* startinsert
+	" autocmd TermOpen * startinsert
+	autocmd TermEnter * startinsert
+	autocmd BufLeave term://* stopinsert
+	autocmd TermClose term://*  call nvim_input('<CR>')
+augroup END

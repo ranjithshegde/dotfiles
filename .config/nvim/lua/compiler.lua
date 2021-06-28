@@ -132,9 +132,6 @@ end
 
 function Compiler.cpractice()
     local dir = vim.fn.input("enter directory name: ")
-    -- if vim.fn.empty(vim.fn.glob(path)) > 0 then
-    -- vim.fn.system({"mkdir", "-p", "$CWORK/Practice/" .. dir})
-    -- end
     vim.fn.execute("!mkdir -p $CWORK/Practice/" .. dir)
     vim.fn.execute("cd $CWORK/Practice/" .. dir)
     local file = vim.fn.input("enter file name: ")

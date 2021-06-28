@@ -7,7 +7,6 @@ Exec = Api.nvim_command
 Op = Api.nvim_get_option
 Fn = Api.nvim_call_function
 Cmd = vim.cmd
-
 local browser = "qutebrowser"
 
 -- **************Neovim options ---------------------------------------------------------
@@ -152,18 +151,18 @@ utils.virtDiagnostics.toggle = function()
     vim.lsp.diagnostic.display(vim.lsp.diagnostic.get(0, 1), 0, 1, {virtual_text = utils.virtDiagnostics.show})
 end
 
-
 -- ************** Custom completion sources  ---------------------------------------------------------
 
 function utils.getCompletionItems(prefix)
-    vim.api.nvim_call_function("vimtex#complete#omnifunc", {1, ""})
-    local items = vim.api.nvim_call_function("vimtex#complete#omnifunc", {0, prefix})
+    Api.nvim_call_function("vimtex#complete#omnifunc", {1, ""})
+    local items
+    Api.nvim_call_function("vimtex#complete#omnifunc", {0, prefix})
     return items
 end
 
 utils.complete_item = {item = utils.getCompletionItems}
 
--- ************** Open with browser ---------------------------------------------------------
+-- ******************************** Terminal ---------------------------------------------------------
 
 -- set silent exec option
 function utils.silent_shell(cmd)
@@ -175,9 +174,29 @@ function utils.open_in_browser(url)
     utils.silent_shell(browser .. " " .. url)
 end
 
--- set execute
-function utils.exec(cmd)
-    Exec(cmd)
+-- Toggleable terminal
+function utils.toggleTerm(cmd, name, spl)
+    local split = vim.fn.bufwinnr(name)
+    local buffer = vim.fn.bufexists(name)
+    if split > 0 then
+        Exec(split .. " wincmd c")
+    elseif buffer > 0 then
+        if spl > 0 then
+            Exec "belowright vnew"
+        else
+            Exec "belowright new"
+        end
+        Exec("buffer " .. name)
+    else
+        if spl > 0 then
+            Exec "belowright vnew"
+        else
+            Exec "belowright new"
+        end
+        vim.fn.termopen(cmd)
+        Cmd("startinsert")
+        Exec("f " .. name)
+    end
 end
 
 -- ************** Co-authoring ---------------------------------------------------------
@@ -186,32 +205,32 @@ end
 function utils.Start()
     local id = vim.fn.input("Enter extension: ")
     Exec "PackerLoad instant.nvim"
-    utils.exec("InstantStartServer 192.168.178." .. id .. " 8080")
+    Exec("InstantStartServer 192.168.178." .. id .. " 8080")
 end
 
 -- Start Single session
 function utils.Session()
     local id = vim.fn.input("Enter extension: ")
-    utils.exec("InstantStartSession 192.168.178." .. id .. " 8080")
+    Exec("InstantStartSession 192.168.178." .. id .. " 8080")
 end
 
 -- Start Single buffer
 function utils.Single()
     local id = vim.fn.input("Enter extension: ")
-    utils.exec("InstantStartSingle 192.168.178." .. id .. " 8080")
+    Exec("InstantStartSingle 192.168.178." .. id .. " 8080")
 end
 
 -- Follow a user
 function utils.Follow()
     local name = vim.fn.input("User to follow: ")
-    utils.exec("InstantFollow " .. name)
+    Exec("InstantFollow " .. name)
 end
 
 -- Join Single session
 function utils.JoinSession()
     Exec "PackerLoad instant.nvim"
     local id = vim.fn.input("Enter extension: ")
-    utils.exec("InstantJoinSession 192.168.178." .. id .. " 8080")
+    Exec("InstantJoinSession 192.168.178." .. id .. " 8080")
     utils.Follow()
 end
 
@@ -219,38 +238,8 @@ end
 function utils.JoinSingle()
     Exec "PackerLoad instant.nvim"
     local id = vim.fn.input("Enter extension: ")
-    utils.exec("InstantJoinSingle 192.168.178." .. id .. " 8080")
+    Exec("InstantJoinSingle 192.168.178." .. id .. " 8080")
     utils.Follow()
-end
-
--- ************** Floating terminal----------------------------------------------------------
-
-function utils.float_terminal(cmd)
-    local buf = vim.api.nvim_create_buf(false, true)
-    local vpad = 4
-    local hpad = 10
-    local win =
-        vim.api.nvim_open_win(
-        buf,
-        true,
-        {
-            relative = "editor",
-            width = vim.o.columns - hpad * 2,
-            height = vim.o.lines - vpad * 2,
-            row = vpad,
-            col = hpad,
-            style = "minimal",
-            border = {"╭", "─", "╮", "│", "╯", "─", "╰", "│"}
-        }
-    )
-    vim.fn.termopen(cmd)
-    local autocmd = {
-        "autocmd! TermClose <buffer> lua",
-        string.format("vim.api.nvim_win_close(%d, {force = true});", win),
-        string.format("vim.api.nvim_buf_delete(%d, {force = true});", buf)
-    }
-    Cmd(table.concat(autocmd, " "))
-    Cmd([[startinsert]])
 end
 
 return utils

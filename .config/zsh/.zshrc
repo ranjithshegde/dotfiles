@@ -49,7 +49,9 @@ alias wget --hsts-file="$XDG_CACHE_HOME/wget-hsts"
 alias config='/usr/bin/git --git-dir=/home/ranjith/Software/Workspaces/Repos/dotfiles --work-tree=/home/ranjith'
 alias cvim='GIT_DIR=/home/ranjith/Software/Workspaces/Repos/dotfiles GIT_WORK_TREE=$HOME vim'
 
-VISUAL=nvim; export VISUAL EDITOR=nvim; export EDITOR
+VISUAL=editor; 
+export VISUAL
+export EDITOR=editor
 
 setopt correct
 # Colours for Less pager-----------------------------------------------------------------
@@ -120,7 +122,7 @@ source $ZPLUG_HOME/repos/agura-lex/find-the-command/usr/share/doc/find-the-comma
 
 source /usr/share/fzf/key-bindings.zsh
 source /usr/share/fzf/completion.zsh
-source $ZDOTDIR/zvi
+# source $ZDOTDIR/zvi
 
 # export FZF_COMPLETION_TRIGGER=''
 # bindkey '^J' fzf-completion

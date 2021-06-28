@@ -46,6 +46,8 @@ return packer.startup(
 
         use "vimwiki/vimwiki"
 
+        use {"kristijanhusak/orgmode.nvim", ft = "org"}
+
         use {"m-pilia/vim-ccls", ft = "cpp"}
 
         use {"yegappan/taglist", cmd = "TlistToggle"}
@@ -135,17 +137,6 @@ return packer.startup(
                 -- 'nvim-telescope/telescope-symbols.nvim',
                 "nvim-telescope/telescope-project.nvim"
             }
-        }
-
-        -- Floating terminal
-        use {
-            "voldikss/vim-floaterm",
-            config = function()
-                G.floaterm_autoinsert = 1
-                G.floaterm_autoclose = 1
-                G.floaterm_keymap_new = "<F10>"
-                G.floaterm_keymap_toggle = "<F9>"
-            end
         }
 
         -- vim Calendar

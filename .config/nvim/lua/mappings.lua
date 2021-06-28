@@ -30,10 +30,12 @@ function M.general()
         -- Indent
         {"v", "<", "<gv"},
         {"v", ">", ">gv"},
-        -- Escape in terminal mode
+        -- Terminal
         {"t", "<Esc>", "<C-\\><C-n>"},
         {"n", "<leader>ht", ":sp term://zsh<cr>"},
         {"n", "<leader>t", ":vspl term://zsh<cr>"},
+        {"n", "<F9>", "<cmd>lua require('utils').toggleTerm('zsh','shell',1)<cr>"},
+        {"t", "<F9>", "<esc><cmd>lua require('utils').toggleTerm('zsh','shell',1)<cr>"},
         -- Treesitter basics
         {"n", ";K", ":TSHighlightCapturesUnderCursor<cr>"},
         {"n", ";P", ":TSPlaygroundToggle<cr>"},
