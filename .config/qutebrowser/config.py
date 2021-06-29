@@ -26,6 +26,7 @@ config.set("content.cookies.accept", "all", "chrome-devtools://*")
 
 config.set("content.cookies.accept", "all", "devtools://*")
 
+c.content.prefers_reduced_motion = True
 
 # default_editor = ["st -e nvim", "{file}"]
 

@@ -24,7 +24,7 @@ function Compiler.set_ctype()
         Exec("set makeprg=g++")
         require("mappings").ctests()
         require("mappings").clang()
-		G.debugBin = "%<"
+        G.debugBin = "%<"
     end
 end
 
@@ -220,7 +220,8 @@ end
 -- print serial monitor
 function Compiler.monitor()
     local cmd = "pio device monitor"
-    Compiler.newTerm(cmd)
+    -- Compiler.newTerm(cmd)
+    u.toggleTerm(cmd, "pio", 0)
 end
 
 -- Clean directory

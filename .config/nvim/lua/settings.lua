@@ -19,7 +19,6 @@ end
 ------------------------------------------------------------------------
 function settings.options()
     Cmd "set nohlsearch"
-    -- Cmd "colo zephyr"
     Cmd "colo lvim"
     -- o.background="light"
     -- Cmd "colo vscode"
@@ -57,7 +56,6 @@ function settings.vimwiki()
     l.syntax = "markdown"
     l.ext = ".md"
     l.auto_toc = 0
-    -- l.auto_diary_index = 1
     l.autowriteall = 1
     G.vimwiki_list = {l}
     G.vimwiki_markdown_link_ext = 1
@@ -238,11 +236,6 @@ function settings.completion()
         G.completion_enable_snippet = "vim-vsnip"
     end
 
-    -- if Op("filetype") == "tex" then
-    --     G.aerial = {
-    --         filter_kind = false
-    --     }
-    -- end
     u.create_augroup(
         {
             {"FileType", "supercollider,text,conf", 'lua require"completion".on_attach()'},
@@ -285,7 +278,7 @@ function settings.lsp_settings()
         {"CursorMovedI", "<buffer>", [[lua vim.lsp.buf.clear_references()]]}
     }
 
-	-- Set diagnostics to local list automatically
+    -- Set diagnostics to local list automatically
     u.create_augroup(
         {{"User LspDiagnosticsChanged", "lua vim.lsp.diagnostic.set_loclist({open_loclist = false})"}},
         "LspLocList"
@@ -531,13 +524,11 @@ function settings.lsp_lintFormat()
         }
     }
 
+    -- local rootDir = vim.loop.cwd
     local rootDir = function()
         return vim.fn.getcwd() or Lsp.util.root_pattern(".git/")
     end
     local rootMarker = {vim.fn.getcwd() or {".git/"}}
-
-    -- local rootDir = vim.loop.cwd
-    -- local rootMarker = {".git/"}
 
     local checkmake = {lintCommand = "checkmake", lintStdin = true}
     local yamllint = {lintCommand = "yamllint -f parsable -", lintStdin = true}

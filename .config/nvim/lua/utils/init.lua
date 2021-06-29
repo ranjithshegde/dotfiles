@@ -176,17 +176,18 @@ end
 
 -- Toggleable terminal
 function utils.toggleTerm(cmd, name, spl)
-    local split = vim.fn.bufwinnr(name)
-    local buffer = vim.fn.bufexists(name)
-    if split > 0 then
-        Exec(split .. " wincmd c")
-    elseif buffer > 0 then
+    local win = vim.fn.bufwinnr(name)
+    local buf = vim.fn.bufexists(name)
+    if win > 0 then
+        Exec(win .. " wincmd c")
+    elseif buf > 0 then
         if spl > 0 then
             Exec "belowright vnew"
         else
             Exec "belowright new"
         end
         Exec("buffer " .. name)
+        Cmd "startinsert"
     else
         if spl > 0 then
             Exec "belowright vnew"
