@@ -4,8 +4,7 @@ lua require ('settings').settings()
 lua require ('mappings').general()
 lua require ('mappings').autoComplete()
 lua require 'statusline'
-lua require 'compiler'
-source ~/.cache/calendar.vim/credentials.vim
+" lua require 'compiler'
 
 " Custom tabline
 function! TabLine()
@@ -15,22 +14,9 @@ set tabline=%!TabLine()
 
 " Change local grep
 set grepprg=rg\ --vimgrep 
+
 " Set dictionary
 set dictionary+=$HOME/.local/share/dict/words
-
-"************************ Built in LSP-------------------------------------------------
-
-nnoremap <silent> K :call Show_documentation()<CR>
-" Use keyords, hower functions and vim help-system as available
-function! Show_documentation()
-	if (&ft==#'supercollider')
-		execute &keywordprg . ' ' . expand('<cword>')
-	elseif (index(['vim','help'], &filetype) >= 0)
-		execute 'h '.expand('<cword>')
-	else
-		lua vim.lsp.buf.hover()
-	endif
-endfunction
 
 "************** Word Processor ----------------------------------------------------------------
 func! WordProcessor()
@@ -69,31 +55,34 @@ augroup end
 "************** FileTypes & AutoCompiles-----------------------------------------------
 
 augroup GenericFiles
-	au FileType * lua require'mappings'.nvim_lsp()
-	au FileType gitcommit lua require'mappings'.git_commit()
 	au FileType text,tex,vimwiki call WordProcessor()
-	au FileType cpp,c,lua,python,javascript,java,toml,yaml,conf,json,supercollider,bib set foldexpr=nvim_treesitter#foldexpr()
+	au FileType org setlocal iskeyword+=:,#,+
+	au FileType vim nn <silent>,K <cmd>exe 'h '.expand('<cword>')<CR> |
+				\ set foldexpr=getline(v:lnum)[0]==\"\\t\"
 augroup end 
 
 augroup MakeDispatch
-	au FileType java,lua,python,javascript nn <F5> <cmd>w<CR><cmd>Dispatch<CR>
-	au FileType java,lua,python,javascript nn <F10> <cmd>lua require('utils').toggleTerm(vim.g.repl, "repl", 0)<CR>
-	au FileType java,lua,python,javascript tnoremap <F10> <esc><cmd>lua require('utils').toggleTerm(vim.g.repl, "repl", 0)<CR>
+	au FileType java,lua,python,javascript nn <F5> <cmd>w<CR><cmd>Dispatch<CR> |
+				\ nn <F10> <cmd>lua require('utils').toggleTerm(vim.g.repl, "repl", 0)<CR> |
+				\ tnoremap <F10> <esc><cmd>lua require('utils').toggleTerm(vim.g.repl, "repl", 0)<CR>
 augroup END
 
 augroup TexFiles
 	autocmd!
-	au FileType tex,bib nmap <F3> <plug>(vimtex-clean-full)
-	au FileType tex,bib nmap <F5> <plug>(vimtex-compile)
-	au FileType tex,bib nmap <F6> <plug>(vimtex-view)
-	au FileType tex set foldexpr=vimtex#fold#level(v:lnum)
+	au FileType tex,bib nmap <F3> <plug>(vimtex-clean-full) |
+				\ nmap <F5> <plug>(vimtex-compile) |
+				\ nmap <F6> <plug>(vimtex-view)
+	" au FileType tex set foldexpr=vimtex#fold#level(v:lnum)
 augroup END
 
 "************************ Terminal management -------------------------------------------------
 augroup termInsert
+	let g:gdbBuff = bufwinnr('gdb [-]')
 	autocmd!
 	autocmd BufWinEnter,WinEnter term://* startinsert
 	autocmd TermEnter * startinsert
-	autocmd BufLeave term://* stopinsert
+	if g:gdbBuff ==# 0
+		autocmd BufLeave term://* stopinsert
+	endif
 	autocmd TermClose *  call nvim_input('<CR>')
 augroup END

@@ -3,16 +3,12 @@ local u = require("utils")
 -- -------------------------- Defs **********************************************************************
 local fn = vim.fn
 local camel = fn.stdpath("data") .. "/site/pack/plugins/opt/CamelCaseMotion"
-local zephyr = fn.stdpath("data") .. "/site/pack/plugins/start/zephyr-nvim"
 local install_path = fn.stdpath("data") .. "/site/pack/packer/start/packer.nvim"
 
 -- Plugin autocommand
 u.create_augroup(
     {
         {"BufWritePost, BufLeave", "plugins.lua", "PackerCompile"},
-        {"BufReadPost", "*.conf", "setl ft=conf "},
-        {"BufNewFile, BufReadPost", "*.vs,*.fs", "set ft=glsl"},
-        {"FileType", "glsl", "packadd vim-glsl"}
     },
     "PluginLoad"
 )
@@ -23,11 +19,6 @@ u.create_augroup(
 -- CamelCaseMotion
 if fn.empty(fn.glob(camel)) > 0 then
     fn.system({"git", "clone", "https://github.com/bkad/CamelCaseMotion.git", camel})
-end
-
--- Colorscheme zypher
-if fn.empty(fn.glob(zephyr)) > 0 then
-    fn.system({"git", "clone", "https://github.com/glepnir/zephyr-nvim.git", zephyr})
 end
 
 -- selfmanage packer
@@ -44,9 +35,7 @@ return packer.startup(
     function(use)
         use "wbthomason/packer.nvim"
 
-        use "vimwiki/vimwiki"
-
-        use {"kristijanhusak/orgmode.nvim", ft = "org"}
+        use {"vimwiki/vimwiki", branch = "dev"}
 
         use {"m-pilia/vim-ccls", ft = "cpp"}
 
@@ -77,6 +66,15 @@ return packer.startup(
             opt = true
         }
 
+        -- SuperCollider
+        use {
+            "davidgranstrom/scnvim",
+            ft = "supercollider",
+            run = function()
+                fn["scnvim#install"]()
+            end
+        }
+
         -- Git Signs
         use {
             "lewis6991/gitsigns.nvim",
@@ -95,6 +93,16 @@ return packer.startup(
             ft = {"vimwiki", "markdown"}
         }
 
+        -- vim Orgmode
+        use {
+            "kristijanhusak/orgmode.nvim",
+            -- event = {"BufReadPre", "BufEnter *.org"},
+            -- keys = {"<leader>oa"},
+            config = function()
+                require("orgmode").setup {}
+            end
+        }
+
         -- WhichKey
         use {
             "folke/which-key.nvim",
@@ -110,11 +118,15 @@ return packer.startup(
 
         -- completion and snippets
         use {
-            "ranjithshegde/completion-nvim",
-            requires = {
-                "windwp/nvim-autopairs",
-                "hrsh7th/vim-vsnip",
-                "hrsh7th/vim-vsnip-integ"
+            "nvim-lua/completion-nvim",
+            "windwp/nvim-autopairs",
+            "hrsh7th/vim-vsnip",
+            {
+                "hrsh7th/vim-vsnip-integ",
+                opt = true,
+                requires = {
+                    "rafamadriz/friendly-snippets"
+                }
             }
         }
 
@@ -125,18 +137,7 @@ return packer.startup(
             "tpope/vim-surround",
             "tpope/vim-unimpaired",
             {"tpope/vim-dispatch", cmd = {"Make", "Dispatch"}},
-            {"tpope/vim-fugitive", cmd = {"G", "Git"}}
-        }
-
-        -- Telescope
-        use {
-            "nvim-telescope/telescope.nvim",
-            requires = {
-                "nvim-lua/popup.nvim",
-                "nvim-lua/plenary.nvim",
-                -- 'nvim-telescope/telescope-symbols.nvim',
-                "nvim-telescope/telescope-project.nvim"
-            }
+            {"tpope/vim-fugitive", cmd = {"G", "Git", "Gclog"}}
         }
 
         -- vim Calendar
@@ -146,7 +147,23 @@ return packer.startup(
             config = function()
                 G.calendar_google_calendar = 1
                 G.calendar_google_task = 1
+                vim.cmd("source ~/.cache/calendar.vim/credentials.vim")
             end
+        }
+
+        -- Telescope
+        use {
+            "nvim-telescope/telescope.nvim",
+            config = function()
+                require("telescope").setup {}
+                require "telescope".load_extension("project")
+            end,
+            requires = {
+                "nvim-lua/popup.nvim",
+                "nvim-lua/plenary.nvim",
+                -- 'nvim-telescope/telescope-symbols.nvim',
+                "nvim-telescope/telescope-project.nvim"
+            }
         }
 
         -- TreeSitter
@@ -180,21 +197,6 @@ return packer.startup(
             end
         }
 
-        -- SuperCollider
-        use {
-            "davidgranstrom/scnvim",
-            ft = "supercollider",
-            run = function()
-                fn["scnvim#install"]()
-            end,
-            config = function()
-                -- G.scnvim_snippet_format = 'snippets.nvim'
-                -- G.scnvim_scdoc = 1
-                Cmd 'autocmd FileType supercollider lua require "mappings".scnvim()'
-                Cmd "autocmd FileType supercollider setlocal wrap"
-            end
-        }
-
         -- Colorizer
         use {
             "norcalli/nvim-colorizer.lua",
@@ -214,7 +216,7 @@ return packer.startup(
         -- Indents and chars
         use {
             "lukas-reineke/indent-blankline.nvim",
-            branch = "lua",
+            -- branch = "lua",
             config = function()
                 G.indent_blankline_char = "┊"
                 G.indent_blankline_char_highlight = "LineNr"

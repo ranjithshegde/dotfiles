@@ -19,7 +19,7 @@ function M.general()
         --line movement
         {"x", "K", ":move '<-2<CR>gv-gv"},
         {"x", "J", ":move '>+1<CR>gv-gv"},
-		{"n", "gm", ":call cursor(0, virtcol('$')/2 )<CR>"},
+        {"n", "gm", ":call cursor(0, virtcol('$')/2 )<CR>"},
         -- quickfix
         {"n", "-", ":copen<CR>"},
         {"n", "+", ":lopen<CR>"},
@@ -42,16 +42,25 @@ function M.general()
         {"n", "<leader>fm", "gg=G<C-o>zz"}
     }
     u.maps(maps, opts)
+
+    --Conditional changes
+    if Op("filetype") ~= "vimwiki" and Op("filetype") ~= "org" then
+        local cmaps = {
+            {"n", "<Tab>", "za"},
+            {"n", "<S-Tab>", "zA"}
+        }
+    u.maps(cmaps, opts)
+    end
 end
 
 -- ******************************** language server ---------------------------------------
 
 function M.nvim_lsp()
     local opts = {noremap = true, silent = true}
-    -- local pop_opts = {popup_opts = {border = "double"}}
 
     local bufmaps = {
         {"n", "<F1>", "<cmd>TlistToggle<CR>"},
+        {"n", "K", "<cmd>lua vim.lsp.buf.hover()<CR>"},
         {"n", ",D", "<cmd>lua vim.lsp.buf.declaration()<CR>"},
         {"n", ",d", "<cmd>lua vim.lsp.buf.definition()<CR>"},
         {"n", ",i", "<cmd>lua vim.lsp.buf.implementation()<CR>"},
@@ -64,13 +73,16 @@ function M.nvim_lsp()
         {"n", ",s", '<cmd>lua vim.lsp.buf.signature_help({popup_opts = {border = "rounded"}})<CR>'},
         {"n", "[d", '<cmd>lua vim.lsp.diagnostic.goto_prev({popup_opts = {border = "double"}, focusable = false})<CR>'},
         {"n", "]d", '<cmd>lua vim.lsp.diagnostic.goto_next({popup_opts = {border = "double"}, focusable = false})<CR>'},
-        {"n", ",ld", '<cmd>lua vim.lsp.diagnostic.show_line_diagnostics({popup_opts = {border = "double"}, focusable = false})<CR>'},
+        {
+            "n",
+            ",ld",
+            '<cmd>lua vim.lsp.diagnostic.show_line_diagnostics({popup_opts = {border = "double"}, focusable = false})<CR>'
+        },
         {"n", ",R", "<cmd>lua vim.lsp.buf.rename()<CR>"},
         {"n", ",ff", "<cmd>lua vim.lsp.buf.formatting()<CR>"},
         {"n", ",ac", "<cmd>lua vim.lsp.buf.code_action()<CR>"},
         {"v", ",ac", "<cmd>lua vim.lsp.buf.range_code_action()<CR>"},
         {"v", ",ff", "<cmd>lua vim.lsp.buf.range_formatting()<CR>"},
-        -- {"n", ",ll", "<cmd>lua vim.lsp.diagnostic.set_loclist()<CR>"},
         {"n", ",lv", "<cmd>lua require'utils'.virtDiagnostics.toggle()<CR>"},
         {"n", ",wa", "<cmd>lua vim.lsp.buf.add_workspace_folder()<CR>"},
         {"n", ",wr", "<cmd>lua vim.lsp.buf.remove_workspace_folder()<CR>"},
@@ -185,30 +197,21 @@ function M.git()
     local opts = {nowait = true, noremap = true, silent = false}
     local maps = {
         {"n", "<leader>gg", ":G<cr>"},
-        {"n", "<leader>gc", ":Git commit %<cr>"},
-        {"n", "<leader>ga", ":Git add %<cr>"},
-        {"n", "<leader>gd", ":Git difftool<cr>"},
-        {"n", "<leader>gb", ":Git blame<cr>"},
+        {"n", "<leader>gc", ":G commit<cr>"},
+        {"n", "<leader>gC", ":G commit %<cr>"},
+        {"n", "<leader>ga", ":G add %<cr>"},
+        {"n", "<leader>gd", ":G difftool<cr>"},
+        {"n", "<leader>gb", ":G blame<cr>"},
         {"n", "<leader>gp", ":Gitsigns preview_hunk<cr>"},
         {"n", "<leader>gs", ":Gitsigns stage_hunk<cr>"},
-        {"n", "<leader>gP", ":Git push<cr>"},
-        {"n", "<leader>gf", ":Git fetch<cr>"},
-        {"n", "<leader>gl", ":Gclog<cr>"},
+        {"n", "<leader>gP", ":G push<cr>"},
+        {"n", "<leader>gL", ":Gclog<cr>"},
+        {"n", "<leader>gl", ":G log<cr>"},
         {"n", "]h", ":Gitsigns next_hunk<cr>:Gitsigns preview_hunk<CR>"},
         {"n", "[h", ":Gitsigns prev_hunk<cr>:Gitsigns preview_hunk<CR>"}
     }
 
     u.maps(maps, opts)
-end
-
--- When in a git commit window
-function M.git_commit()
-    local opts = {nowait = true, noremap = true, silent = false}
-    local bufmaps = {
-        {"n", "<C-e>", ":wq<cr>"},
-        {"i", "<C-e>", "<esc>:wp<cr>"}
-    }
-    u.bufmaps(bufmaps, opts)
 end
 
 -- ******************************** Snippets ---------------------------------------
@@ -304,7 +307,7 @@ function M.makeC()
         -- run openFrameworks
         {"n", "<F6>", ":w <CR> :Make RunRelease<CR>"},
         -- Dispatch install
-        {"n", "<F7>", 'w <CR> :lua require("compiler").termdebug()<cr>'},
+        {"n", "<F7>", 'w <CR> :lua require("compiler").termdebug()<cr>'}
     }
     u.bufmaps(bufmaps, opts)
 end
@@ -321,7 +324,7 @@ function M.ctests()
         -- Run binary
         {"n", "<F6>", ":w <CR> :Dispatch ./%<<CR>"},
         -- Dispatch install
-        {"n", "<F7>", 'w <CR> :lua require("compiler").termdebug()<cr>'},
+        {"n", "<F7>", 'w <CR> :lua require("compiler").termdebug()<cr>'}
     }
     u.bufmaps(bufmaps, opts)
 end
@@ -333,6 +336,8 @@ function M.clang()
     local bufmaps = {
         -- Switch source header
         {"n", "<leader>s", ":ClangdSwitchSourceHeader<CR>"},
+        -- open cpp reference
+        {"n", ",K", "<cmd>lua require('compiler').creference(vim.fn.expand('<cword>'))<CR>"},
         -- bases
         {"n", ";b", ":CclsBase<CR>"},
         --   bases of up to 3 levels
@@ -357,8 +362,8 @@ function M.clang()
         {"n", ";t", ":CclsMemberTypeHierarchy -float<CR>"},
         -- variables
         {"n", ";v", ":CclsVars<CR>"},
-		-- open makefile
-		{"n", "<leader>m", "<cmd>lua require('compiler').makefile(vim.g.makeFile)<CR>"}
+        -- open makefile
+        {"n", "<leader>m", "<cmd>lua require('compiler').makefile(vim.g.makeFile)<CR>"}
     }
     u.bufmaps(bufmaps, opts)
 end
@@ -379,7 +384,7 @@ function M.cmake()
         -- Dispatch run
         {"n", "<F6>", 'w <CR> :lua require("compiler").cmake_run()<cr>'},
         -- Dispatch install
-        {"n", "<F7>", 'w <CR> :lua require("compiler").termdebug()<cr>'},
+        {"n", "<F7>", 'w <CR> :lua require("compiler").termdebug()<cr>'}
     }
     u.bufmaps(bufmaps, opts)
 end

@@ -4,10 +4,10 @@ if !exists('s:choice_file_path')
 	let s:choice_file_path = '/tmp/chosenfile'
 endif
 
-function! ranger#OpenRangerIn(path, edit_cmd)
+function! ranger#OpenRangerIn(path, edit_cmd) abort
 	let currentPath = expand(a:path)
 	let rangerCallback = { 'name': 'ranger', 'edit_cmd': a:edit_cmd }
-	function! rangerCallback.on_exit(job_id, code, event)
+	function! rangerCallback.on_exit(job_id, code, event) abort
 		if a:code == 0
 			silent! Bclose!
 		endif

@@ -3,15 +3,14 @@ local u = require("utils")
 local o = vim.o
 
 function settings.settings()
-    settings.vimwiki()
     settings.options()
-    settings.treesitter()
+    settings.vimwiki()
     settings.ultisnips()
+    settings.completion()
+    settings.treesitter()
     settings.lsp_settings()
     settings.langServers()
     settings.lsp_lintFormat()
-    settings.telescope()
-    settings.completion()
 end
 
 ------------------------------------------------------------------------
@@ -19,7 +18,9 @@ end
 ------------------------------------------------------------------------
 function settings.options()
     Cmd "set nohlsearch"
-    Cmd "colo lvim"
+    Cmd "packadd zephyr-nvim"
+    Cmd "colo zephyr"
+    -- o.colorscheme = "zephyr"
     -- o.background="light"
     -- Cmd "colo vscode"
     o.number = true
@@ -37,13 +38,18 @@ function settings.options()
     o.tabstop = 4
     o.conceallevel = 1
     o.foldmethod = "expr"
-    -- o.foldexpr = "nvim_treesitter#foldexpr()"
     o.fillchars = "stlnc:»,vert:║,fold:-"
     o.completeopt = "menuone,noinsert,noselect"
     o.clipboard = "unnamed,unnamedplus"
     o.shortmess = o.shortmess .. "c"
     G.termdebug_wide = 1
     G.markdown_folding = 1
+    if
+        Op("filetype") ~= "vimwiki" and Op("filetype") ~= "markdown" and Op("filetype") ~= "vim"
+            -- Op("filetype") ~= "tex"
+     then
+        o.foldexpr = "nvim_treesitter#foldexpr()"
+    end
 end
 
 ------------------------------------------------------------------------
@@ -55,17 +61,18 @@ function settings.vimwiki()
     l.path = "$HOME/Documents/vimWiki"
     l.syntax = "markdown"
     l.ext = ".md"
-    l.auto_toc = 0
+    l.auto_diary_index = 1
+    l.auto_toc = 1
+    l.auto_generte_links = 1
     l.autowriteall = 1
     G.vimwiki_list = {l}
     G.vimwiki_markdown_link_ext = 1
-    G.vimwiki_global_ext = 0
     G.vimwiki_auto_chdir = 1
     G.vimwiki_folding = "expr"
 end
-------------------------------------------------------------------------
---                              Snippets                              --
-------------------------------------------------------------------------
+--------------------------------------------------------------------------
+----                              Snippets                              --
+--------------------------------------------------------------------------
 
 function settings.ultisnips()
     local snippet_directories = {"UltiSnips", "scnvim-data"}
@@ -214,7 +221,8 @@ end
 ------------------------------------------------------------------------
 
 function settings.completion()
-    require "completion".addCompletionSource("vimtex", u.complete_item)
+    require "completion".addCompletionSource("vimtex", u.vimtexItem)
+    -- require "completion".addCompletionSource("orgmode", u.orgItem)
     G.completion_chain_complete_list = {
         tex = {
             {complete_items = {"lsp", "snippet"}},
@@ -222,13 +230,24 @@ function settings.completion()
             {mode = "<c-p>"},
             {mode = "<c-n>"}
         },
+        supercollider = {
+            {complete_items = {"UltiSnips", "path"}},
+            {mode = "<c-p>"},
+            {mode = "<c-n>"}
+        },
+        org = {
+            {mode = "omni"}
+            -- {mode = "<c-p>"},
+            -- {mode = "<c-n>"}
+        },
         default = {
-            {complete_items = {"UltiSnips", "lsp", "snippet", "path"}},
+            {complete_items = {"lsp", "snippet", "path"}},
             {mode = "<c-p>"},
             {mode = "<c-n>"}
         }
     }
     G.completion_auto_change_source = 0
+    G.completion_disable_filetypes = {"TelescopePrompt"}
 
     if Op("filetype") == "supercollider" then
         G.completion_enable_snippet = "UltiSnips"
@@ -238,8 +257,13 @@ function settings.completion()
 
     u.create_augroup(
         {
-            {"FileType", "supercollider,text,conf", 'lua require"completion".on_attach()'},
-            {"FileType", "tex,bib,supercollider,text,markdown", "let g:completion_auto_change_source=1"}
+            {"FileType", "*", 'lua require"completion".on_attach()'},
+            -- {"FileType", "supercollider,text,conf,org", 'lua require"completion".on_attach()'},
+            {
+                "FileType",
+                "tex,bib,supercollider,text,markdown,vimwiki,conf,org",
+                "let g:completion_auto_change_source=1"
+            }
         },
         "completion_attach"
     )
@@ -285,9 +309,11 @@ function settings.lsp_settings()
     )
 
     All_attach = function(client, bufnr)
-        require "completion".on_attach(client)
+        -- require "completion".on_attach(client)
+        require "mappings".nvim_lsp()
         Lsp_status.on_attach(client)
         local rc = client.resolved_capabilities
+        Cmd "PackerLoad vim-vsnip-integ"
         vim.fn["vsnip#get_complete_items"](vim.fn["bufnr"]())
 
         if rc.document_highlight then
@@ -323,6 +349,7 @@ function settings.lsp_settings()
     -- Capabilities = vim.tbl_extend('keep', Capabilities, Lsp_status.capabilities);
 
     Cinit = function(client)
+        require "mappings".nvim_lsp()
         local rc = client.resolved_capabilities
         rc.document_formatting = false
         rc.document_range_formatting = false
@@ -337,6 +364,7 @@ function settings.lsp_settings()
     end
 
     EfmInit = function(client)
+        require "mappings".nvim_lsp()
         local rc = client.resolved_capabilities
         rc.document_formatting = false
     end
@@ -402,11 +430,12 @@ function settings.langServers()
             settings = {
                 Lua = {
                     runtime = {version = "LuaJIT", path = vim.split(package.path, ";")},
-                    diagnostics = {globals = {"vim"}},
+                    diagnostics = {globals = {"vim","pd"}},
                     workspace = {
                         library = {
                             [vim.fn.expand("$VIMRUNTIME/lua")] = true,
-                            [vim.fn.expand("$VIMRUNTIME/lua/vim/lsp")] = true
+                            [vim.fn.expand("$VIMRUNTIME/lua/vim/lsp")] = true,
+                            [vim.fn.expand("/usr/lib/pd/extra/pdlua")] = true
                         }
                     }
                 }
@@ -433,6 +462,7 @@ function settings.lsp_lintFormat()
                 {virtual_text = false}
             )
         },
+        -- on_attach = All_attach,
         init_options = {
             linters = {
                 ["write-good"] = {
@@ -604,15 +634,6 @@ function settings.lsp_lintFormat()
 end
 
 ------------------------------------------------------------------------
---                         Telescope	                              --
-------------------------------------------------------------------------
-
-function settings.telescope()
-    require("telescope").setup {}
-    require "telescope".load_extension("project")
-end
-
-------------------------------------------------------------------------
 --                         uncalled 	                              --
 ------------------------------------------------------------------------
 
@@ -642,5 +663,14 @@ function settings.smbc()
         vim.cmd("command! " .. commands[index])
     end
 end
+
+-- local parser_config = require "nvim-treesitter.parsers".get_parser_configs()
+-- parser_config.markdown = {
+--     install_info = {
+--         url = "https://github.com/ikatyang/tree-sitter-markdown", -- local path or git repo
+--         files = {"src/parser.c", "src/scanner.cc"}
+--     },
+--     filetype = "md",
+-- }
 
 return settings

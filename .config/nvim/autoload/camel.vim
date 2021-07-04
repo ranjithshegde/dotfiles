@@ -1,5 +1,5 @@
 "************************ CamelCase -------------------------------------------------
-function! camel#CamelCase()
+function! camel#CamelCase() abort
 	packadd CamelCaseMotion
 	map <silent> w <Plug>CamelCaseMotion_w
 	map <silent> b <Plug>CamelCaseMotion_b

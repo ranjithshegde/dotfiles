@@ -41,7 +41,7 @@ alias grep='grep --color=auto'
 alias weather='curl wttr.in/"rotterdam"'
 alias cat=bat
 alias pd='/usr/bin/pdl'
-alias abook='abook --config "$XDG_CONFIG_HOME"/abook/abookrc --datafile "$XDG_DATA_HOME"/abook/addressbook'
+# alias bbook='abook --config "$XDG_CONFIG_HOME"/abook/abookrc --datafile "$XDG_DATA_HOME"/abook/addressbook'
 alias nv-settings='nvidia-settings --config="$XDG_CONFIG_HOME"/nvidia/settings'
 alias yarn="yarn --use-yarnrc $XDG_CONFIG_HOME/yarn/config"
 alias wget --hsts-file="$XDG_CACHE_HOME/wget-hsts"

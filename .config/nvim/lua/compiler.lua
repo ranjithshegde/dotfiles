@@ -137,7 +137,11 @@ function Compiler.cpractice()
     local file = vim.fn.input("enter file name: ")
     Exec("e " .. file .. ".cpp")
 end
-vim.cmd("command! Cpractice lua require('compiler').cpractice()")
+
+function Compiler.creference(cmd)
+	local url = "https://www.cplusplus.com/search.do?q=" .. cmd
+	Exec('silent !qutebrowser "' .. url .. '" &')
+end
 
 -----------------------------------------------------------------------
 --                                SMBC  	                          --

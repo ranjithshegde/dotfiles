@@ -7,7 +7,7 @@ let g:netrw_liststyle = 3
 let g:netrw_altv = 1
 let g:loaded_netrwFileHandlers = 1
 
-function! NetrwMapping()
+function! NetrwMapping() abort
 	nnoremap <buffer> cd  :execute "cd ".b:netrw_curdir<cr>:pwd<cr>
 endfunction
 
@@ -19,7 +19,7 @@ augroup END
 "Netrw Toggle
 let g:NetrwIsOpen=0
 
-function! drawer#ToggleNetrw()
+function! drawer#ToggleNetrw() abort
 	if g:NetrwIsOpen
 		let i = bufnr('$')
 		while (i >= 1)

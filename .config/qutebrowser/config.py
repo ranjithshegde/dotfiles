@@ -118,10 +118,11 @@ c.spellcheck.languages = ["en-US"]
 # Page to open if :open -t/-b/-w is used without URL. Use `about:blank`
 # for a blank page.
 # Type: FuzzyUrl
-c.url.default_page = "https://start.duckduckgo.com/"
+c.url.default_page = "https://search.brave.com/"
 
 c.url.searchengines = {
-    "DEFAULT": "https://duckduckgo.com/?q={}",
+    "DEFAULT": "https://search.brave.com/search?q={}",
+    "ddg": "https://duckduckgo.com/?q={}",
     "aur": "https://aur.archlinux.org/packages/?O=0&K={}",
     "aw": "https://wiki.archlinux.org/?search={}",
     "gl": "https://www.google.com/search?hl=en&q={}",
@@ -296,7 +297,7 @@ c.colors.tabs.pinned.selected.even.bg = "#282c34"
 
 # Page(s) to open at the start.
 # Type: List of FuzzyUrl, or FuzzyUrl
-c.url.start_pages = "https://start.duckduckgo.com"
+c.url.start_pages = "https://search.brave.com"
 
 c.bindings.key_mappings = {
     "<Ctrl+6>": "<Ctrl+^>",
