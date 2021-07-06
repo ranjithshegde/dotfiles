@@ -8,6 +8,7 @@ Op = Api.nvim_get_option
 Fn = Api.nvim_call_function
 Cmd = vim.cmd
 local browser = "qutebrowser"
+G.netrw_browsex_viewer = "xdg-open"
 
 -- **************Neovim options ---------------------------------------------------------
 

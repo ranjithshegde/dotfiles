@@ -101,6 +101,7 @@ end
 
 function Compiler.termdebug()
     Exec "packadd termdebug"
+	require('mappings').debug()
     local cmd = "Termdebug " .. G.debugBin
     Exec(cmd)
 end
@@ -140,7 +141,7 @@ end
 
 function Compiler.creference(cmd)
 	local url = "https://www.cplusplus.com/search.do?q=" .. cmd
-	Exec('silent !qutebrowser "' .. url .. '" &')
+	Exec('!qutebrowser "' .. url .. '" &')
 end
 
 -----------------------------------------------------------------------

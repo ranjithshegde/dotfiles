@@ -8,7 +8,7 @@ local install_path = fn.stdpath("data") .. "/site/pack/packer/start/packer.nvim"
 -- Plugin autocommand
 u.create_augroup(
     {
-        {"BufWritePost, BufLeave", "plugins.lua", "PackerCompile"},
+        {"BufWritePost, BufLeave", "plugins.lua", "PackerCompile"}
     },
     "PluginLoad"
 )
@@ -35,8 +35,6 @@ return packer.startup(
     function(use)
         use "wbthomason/packer.nvim"
 
-        use {"vimwiki/vimwiki", branch = "dev"}
-
         use {"m-pilia/vim-ccls", ft = "cpp"}
 
         use {"yegappan/taglist", cmd = "TlistToggle"}
@@ -47,6 +45,14 @@ return packer.startup(
 
         -- StatusLine
         use {"tjdevries/express_line.nvim", requires = "kyazdani42/nvim-web-devicons"}
+
+        -- vim Orgmode
+        use {
+            "kristijanhusak/orgmode.nvim",
+            config = function()
+                require("orgmode").setup {}
+            end
+        }
 
         -- Java Lsp
         use {
@@ -93,14 +99,12 @@ return packer.startup(
             ft = {"vimwiki", "markdown"}
         }
 
-        -- vim Orgmode
+        -- vimwiki
         use {
-            "kristijanhusak/orgmode.nvim",
-            -- event = {"BufReadPre", "BufEnter *.org"},
-            -- keys = {"<leader>oa"},
-            config = function()
-                require("orgmode").setup {}
-            end
+            "vimwiki/vimwiki",
+            branch = "dev",
+            ft = "vimwiki",
+            keys = {"<leader>ww", "<leader>w<leader>w", "<leader>wi", "<leader>wt"}
         }
 
         -- WhichKey
@@ -136,8 +140,8 @@ return packer.startup(
             "tpope/vim-repeat",
             "tpope/vim-surround",
             "tpope/vim-unimpaired",
-            {"tpope/vim-dispatch", cmd = {"Make", "Dispatch"}},
-            {"tpope/vim-fugitive", cmd = {"G", "Git", "Gclog"}}
+            {"tpope/vim-fugitive", cmd = {"G", "Git", "Gclog"}},
+            {"tpope/vim-dispatch", cmd = {"Make", "Dispatch"}}
         }
 
         -- vim Calendar
@@ -151,21 +155,6 @@ return packer.startup(
             end
         }
 
-        -- Telescope
-        use {
-            "nvim-telescope/telescope.nvim",
-            config = function()
-                require("telescope").setup {}
-                require "telescope".load_extension("project")
-            end,
-            requires = {
-                "nvim-lua/popup.nvim",
-                "nvim-lua/plenary.nvim",
-                -- 'nvim-telescope/telescope-symbols.nvim',
-                "nvim-telescope/telescope-project.nvim"
-            }
-        }
-
         -- TreeSitter
         use {
             {
@@ -177,6 +166,22 @@ return packer.startup(
                 cmd = {"TSPlaygroundToggle", "TSHighlightCapturesUnderCursor"}
             },
             {"nvim-treesitter/nvim-treesitter-refactor", ft = "supercollider"}
+        }
+
+        -- Colorizer
+        use {
+            "norcalli/nvim-colorizer.lua",
+            config = function()
+                require "colorizer".setup {
+                    "*",
+                    html = {mode = "foreground"},
+                    css = {rgb_fn = true},
+                    "javascript",
+                    "sh",
+                    "conf"
+                }
+            end,
+            cmd = {"ColorizerAttachToBuffer", "ColorizerToggle"}
         }
 
         -- vimTex
@@ -197,20 +202,28 @@ return packer.startup(
             end
         }
 
-        -- Colorizer
+        -- Telescope
         use {
-            "norcalli/nvim-colorizer.lua",
+            "nvim-telescope/telescope.nvim",
             config = function()
-                require "colorizer".setup {
-                    "*",
-                    html = {mode = "foreground"},
-                    css = {rgb_fn = true},
-                    "javascript",
-                    "sh",
-                    "conf"
+                require("telescope").setup {
+                    extensions = {
+                        project = {
+                            base_dirs = {
+                                {"~/Software/Workspaces/", max_depth = 3},
+                                {"~/Documents/ofWorkspace/", max_depth = 3}
+                            }
+                        }
+                    }
                 }
+                require "telescope".load_extension("project")
             end,
-            cmd = {"ColorizerAttachToBuffer", "ColorizerToggle"}
+            requires = {
+                "nvim-lua/popup.nvim",
+                "nvim-lua/plenary.nvim",
+                -- 'nvim-telescope/telescope-symbols.nvim',
+                "nvim-telescope/telescope-project.nvim"
+            }
         }
 
         -- Indents and chars

@@ -11,14 +11,15 @@ function! NetrwMapping() abort
 	nnoremap <buffer> cd  :execute "cd ".b:netrw_curdir<cr>:pwd<cr>
 endfunction
 
+" Quit vim is netrw is the only buffer open
 augroup ProjectDrawer
 	autocmd!
 	autocmd WinEnter * if winnr('$') == 1 && getbufvar(winbufnr(winnr()), "&filetype") == "netrw" |q|endif
 	autocmd filetype netrw call NetrwMapping()
 augroup END
+
 "Netrw Toggle
 let g:NetrwIsOpen=0
-
 function! drawer#ToggleNetrw() abort
 	if g:NetrwIsOpen
 		let i = bufnr('$')

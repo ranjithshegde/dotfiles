@@ -49,7 +49,8 @@ alias wget --hsts-file="$XDG_CACHE_HOME/wget-hsts"
 alias config='/usr/bin/git --git-dir=/home/ranjith/Software/Workspaces/Repos/dotfiles --work-tree=/home/ranjith'
 alias cvim='GIT_DIR=/home/ranjith/Software/Workspaces/Repos/dotfiles GIT_WORK_TREE=$HOME vim'
 
-VISUAL=editor; 
+VISUAL=editor
+# VISUAL='nvr -s --nostart --remote-tab-wait +"set bufhidden=delete"'
 export VISUAL
 export EDITOR=editor
 
@@ -127,18 +128,6 @@ source /usr/share/fzf/completion.zsh
 # export FZF_COMPLETION_TRIGGER=''
 # bindkey '^J' fzf-completion
 # bindkey '^K' $fzf_default_completion
-
-
-
-# # Install plugins if there are plugins that have not been installed
-# if ! zplug check --verbose; then
-#     printf "Install? [y/N]: "
-#     if read -q; then
-#         echo; zplug install
-#     fi
-# fi
-
-
 
 # # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 # [[ ! -f ~/.config/zsh/p10k.zsh ]] || source ~/.config/zsh/.p10k.zsh

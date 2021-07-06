@@ -4,7 +4,6 @@ lua require ('settings').settings()
 lua require ('mappings').general()
 lua require ('mappings').autoComplete()
 lua require 'statusline'
-" lua require 'compiler'
 
 " Custom tabline
 function! TabLine()
@@ -77,12 +76,13 @@ augroup END
 
 "************************ Terminal management -------------------------------------------------
 augroup termInsert
-	let g:gdbBuff = bufwinnr('gdb [-]')
+	" let g:gdbBuff = bufwinnr('gdb [-]')
+	" let g:replBuff = bufwinnr('repl [-]')
 	autocmd!
 	autocmd BufWinEnter,WinEnter term://* startinsert
 	autocmd TermEnter * startinsert
-	if g:gdbBuff ==# 0
-		autocmd BufLeave term://* stopinsert
-	endif
-	autocmd TermClose *  call nvim_input('<CR>')
+	" if g:gdbBuff ==# 0 && g:replBuff ==# 0
+		" autocmd BufLeave term://* stopinsert
+	" endif
+	autocmd TermClose * call nvim_input('<CR>')
 augroup END

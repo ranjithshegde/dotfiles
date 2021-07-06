@@ -18,9 +18,9 @@ end
 ------------------------------------------------------------------------
 function settings.options()
     Cmd "set nohlsearch"
-    Cmd "packadd zephyr-nvim"
-    Cmd "colo zephyr"
-    -- o.colorscheme = "zephyr"
+    -- Cmd "packadd vscode.nvim"
+    -- Cmd "packadd zephyr-nvim"
+    Cmd "colo lvim"
     -- o.background="light"
     -- Cmd "colo vscode"
     o.number = true
@@ -44,10 +44,7 @@ function settings.options()
     o.shortmess = o.shortmess .. "c"
     G.termdebug_wide = 1
     G.markdown_folding = 1
-    if
-        Op("filetype") ~= "vimwiki" and Op("filetype") ~= "markdown" and Op("filetype") ~= "vim"
-            -- Op("filetype") ~= "tex"
-     then
+    if Op("filetype") ~= "vimwiki" and Op("filetype") ~= "markdown" and Op("filetype") ~= "vim" then
         o.foldexpr = "nvim_treesitter#foldexpr()"
     end
 end
@@ -430,7 +427,7 @@ function settings.langServers()
             settings = {
                 Lua = {
                     runtime = {version = "LuaJIT", path = vim.split(package.path, ";")},
-                    diagnostics = {globals = {"vim","pd"}},
+                    diagnostics = {globals = {"vim", "pd"}},
                     workspace = {
                         library = {
                             [vim.fn.expand("$VIMRUNTIME/lua")] = true,

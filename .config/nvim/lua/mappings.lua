@@ -16,6 +16,10 @@ function M.general()
         {"n", "<C-K>", "<C-W><C-K>"},
         {"n", "<C-L>", "<C-W><C-L>"},
         {"n", "<C-H>", "<C-W><C-H>"},
+        -- {"t", "<C-J>", "<esc><C-W><C-J>"},
+        -- {"t", "<C-K>", "<esc><C-W><C-K>"},
+        -- {"t", "<C-L>", "<esc><C-W><C-L>"},
+        -- {"t", "<C-H>", "<esc><C-W><C-H>"},
         --line movement
         {"x", "K", ":move '<-2<CR>gv-gv"},
         {"x", "J", ":move '>+1<CR>gv-gv"},
@@ -49,7 +53,7 @@ function M.general()
             {"n", "<Tab>", "za"},
             {"n", "<S-Tab>", "zA"}
         }
-    u.maps(cmaps, opts)
+        u.maps(cmaps, opts)
     end
 end
 
@@ -406,6 +410,40 @@ function M.coauthor()
         {"n", "<leader>iJ", "<cmd>lua require('utils').JoinSingle()<CR>"},
         -- Follow user
         {"n", "<leader>if", "<cmd>lua require('utils').Follow()<CR>"}
+    }
+    u.maps(maps, opts)
+end
+
+-- ******************************** debug ---------------------------------------
+function M.debug()
+    local opts = {nowait = true, noremap = true, silent = true}
+    local bufmaps = {
+        -- Run
+        {"n", "<leader>dr", "<cmd>Run<CR>"},
+        -- Breakpoint
+        {"n", "<leader>db", "<cmd>Break<CR>"},
+        -- Clear breakpoint
+        {"n", "<leader>dc", "<cmd>Clear<CR>"},
+        -- Step into
+        {"n", "<leader>ds", "<cmd>Step<CR>"},
+        -- Step over
+        {"n", "<leader>do", "<cmd>Over<CR>"},
+        -- Finish
+        {"n", "<leader>df", "<cmd>Finish<cr>"},
+        -- Stop debug
+        {"n", "<leader>de", "<cmd>Stop<cr>"}
+    }
+    u.bufmaps(bufmaps, opts)
+
+    local maps = {
+        -- Focus asm
+        {"n", "<leader>da", "<cmd>Asm<cr>"},
+        -- Focus program
+        {"n", "<leader>dp", "<cmd>Program<cr>"},
+        -- Focus Gdb
+        {"n", "<leader>dg", "<cmd>Gdb<cr>"},
+        -- Focus codebuffer
+        {"n", "<leader>dv", "<cmd>Source<cr>"}
     }
     u.maps(maps, opts)
 end
