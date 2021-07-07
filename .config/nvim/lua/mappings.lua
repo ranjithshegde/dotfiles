@@ -4,7 +4,7 @@ local u = require("utils")
 -- ******************************** General functions ---------------------------------------
 
 function M.general()
-    M.edit_config_files()
+    M.configFiles()
     M.git()
     M.telescope()
     M.coauthor()
@@ -16,10 +16,6 @@ function M.general()
         {"n", "<C-K>", "<C-W><C-K>"},
         {"n", "<C-L>", "<C-W><C-L>"},
         {"n", "<C-H>", "<C-W><C-H>"},
-        -- {"t", "<C-J>", "<esc><C-W><C-J>"},
-        -- {"t", "<C-K>", "<esc><C-W><C-K>"},
-        -- {"t", "<C-L>", "<esc><C-W><C-L>"},
-        -- {"t", "<C-H>", "<esc><C-W><C-H>"},
         --line movement
         {"x", "K", ":move '<-2<CR>gv-gv"},
         {"x", "J", ":move '>+1<CR>gv-gv"},
@@ -75,13 +71,9 @@ function M.nvim_lsp()
         {"n", ",cg", "<cmd>lua vim.lsp.codelens.get()<CR>"},
         {"n", ",pd", "<cmd>lua require'utils'.peek_definition()<CR>"},
         {"n", ",s", '<cmd>lua vim.lsp.buf.signature_help({popup_opts = {border = "rounded"}})<CR>'},
+        {"n", ",ld", '<cmd>lua vim.lsp.diagnostic.show_line_diagnostics({popup_opts = {border = "double"})<CR>'},
         {"n", "[d", '<cmd>lua vim.lsp.diagnostic.goto_prev({popup_opts = {border = "double"}, focusable = false})<CR>'},
         {"n", "]d", '<cmd>lua vim.lsp.diagnostic.goto_next({popup_opts = {border = "double"}, focusable = false})<CR>'},
-        {
-            "n",
-            ",ld",
-            '<cmd>lua vim.lsp.diagnostic.show_line_diagnostics({popup_opts = {border = "double"}, focusable = false})<CR>'
-        },
         {"n", ",R", "<cmd>lua vim.lsp.buf.rename()<CR>"},
         {"n", ",ff", "<cmd>lua vim.lsp.buf.formatting()<CR>"},
         {"n", ",ac", "<cmd>lua vim.lsp.buf.code_action()<CR>"},
@@ -98,7 +90,7 @@ end
 
 -- ******************************** vim basic calls ---------------------------------------
 
-function M.edit_config_files()
+function M.configFiles()
     local opts = {nowait = true, noremap = true, silent = true}
     local maps = {
         {"n", "<leader>aP", "<cmd>PackerSync<CR>"},
@@ -180,16 +172,18 @@ function M.telescope()
         {"n", "<space>gf", tele("git_files")},
         --  Serach HOME
         {"n", "<space>hf", telF("find_files({cwd='~'})")},
-        --  Serach dotfiles
-        {"n", "<space>df", telF("find_files({cwd='~/.config/'})")},
-        -- Search plugins
-        {"n", "<space>vf", telF("find_files({cwd='~/.local/share/nvim/'})")},
         -- Custom workfolder
         {"n", "<space>K", telF('live_grep({cwd = vim.fn.input("cwd: ")})')},
         -- Workspace symbol under cursor
         {"n", "<space>k", telF("lsp_workspace_symbols({query = vim.fn.expand('<cword>')})")},
+        --  Serach dotfiles
+        {"n", "<space>df", telF("find_files({cwd='~/.config/', prompt_title = 'Dotfiles'})")},
+        -- Search plugins
+        {"n", "<space>vf", telF("find_files({cwd='~/.local/share/nvim/', prompt_title = 'Plugin files'})")},
         -- find-files ofProjects
-        {"n", "<space>of", telF("find_files({cwd ='~/Documents/ofWorkspace/',follow = true,})")}
+        {"n", "<space>of", telF("find_files({cwd ='~/Documents/ofWorkspace/',prompt_title = 'oF Workspace files'})")},
+        -- livegrep ofWorkspace
+        {"n", "<space>og", telF("live_grep({cwd ='~/Documents/ofWorkspace/',prompt_title = 'oF Workspace grep'})")}
     }
     u.maps(maps, opts)
 end
@@ -260,7 +254,6 @@ function M.scnvim()
         --Start WFSCollider
         {"n", "<F4>", ':call scnvim#sclang#send_silent("WFSLib.startup")<CR>'},
         -- Echo args
-        -- {'n', ';a', ':call scnvim#util#args_popup_toggle()<cr>'},
         {"n", ";a", ":call scnvim#util#echo_args()<cr>"},
         -- Regenerate Ctags
         {"n", "<leader>rt", ":SCNvimTags<cr>"},

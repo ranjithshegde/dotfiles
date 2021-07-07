@@ -2,56 +2,54 @@ local u = require("utils")
 
 local Compiler = {}
 
+------------------------------------------------------------------------
+--                                Env Setup	                          --
+------------------------------------------------------------------------
+
 -- Set C environment based on functions
 function Compiler.set_ctype()
     if Compiler.has_Cmake() then
         require("mappings").cmake()
-        require("mappings").clang()
         G.makeFile = "CMakeLists.txt"
         G.debugBin = "build/" .. vim.fn.fnamemodify(vim.fn.getcwd(), ":t")
     elseif Compiler.has_makefile() then
         require("mappings").makeC()
-        require("mappings").clang()
         G.makeFile = "Makefile"
         G.debugBin = "bin/" .. vim.fn.fnamemodify(vim.fn.getcwd(), ":t") .. "_debug"
     elseif Compiler.has_pio_file() then
         Exec("set makeprg=pio\\ run")
         require("settings").smbc()
         require("mappings").smbc()
-        require("mappings").clang()
         G.makeFile = "platformio.ini"
     else
         Exec("set makeprg=g++")
         require("mappings").ctests()
-        require("mappings").clang()
         G.debugBin = "%<"
     end
 end
 
+-- basic setup for small test files
+function Compiler.cpractice()
+    local dir = vim.fn.input("enter directory name: ")
+    vim.fn.execute("!mkdir -p $CWORK/Practice/" .. dir)
+    vim.fn.execute("cd $CWORK/Practice/" .. dir)
+    local file = vim.fn.input("enter file name: ")
+    Exec("e " .. file .. ".cpp")
+end
+
 ------------------------------------------------------------------------
---                                CMake 	                          --
+--                                Cpp Setup	                          --
 ------------------------------------------------------------------------
 
--- Variables
-G.extra_cmake_flags = "-DCMAKE_EXPORT_COMPILE_COMMANDS=ON"
-G.cmake_build_dir = "build"
-G.compiledb = "ln -s build/compile_commands.json ."
+-- Open Cplusplus.com for symbol
+function Compiler.creference(cmd)
+    local url = "https://www.cplusplus.com/search.do?q=" .. cmd
+    Exec('!qutebrowser "' .. url .. '" &')
+end
 
 -- check if project has a Makefile
 function Compiler.has_makefile()
     local name = "Makefile"
-    local f = io.open(name, "r")
-    if f ~= nil then
-        io.close(f)
-        return true
-    else
-        return false
-    end
-end
-
--- check if project has a CMakefile
-function Compiler.has_Cmake()
-    local name = "CMakeLists.txt"
     local f = io.open(name, "r")
     if f ~= nil then
         io.close(f)
@@ -66,6 +64,12 @@ function Compiler.make(cmd)
     Exec("Make " .. cmd)
 end
 
+-- set alternate terminal to native terminal
+function Compiler.newTerm(cmd, opencmd)
+    Exec(opencmd or "new")
+    Exec("terminal " .. cmd)
+end
+
 -- set default terminal to Dispatch
 function Compiler.terminal(cmd)
     Exec("Dispatch " .. cmd)
@@ -76,10 +80,33 @@ function Compiler.makefile(file)
     Exec("tabnew " .. file)
 end
 
--- set alternate terminal to native terminal
-function Compiler.newTerm(cmd, opencmd)
-    Exec(opencmd or "new")
-    Exec("terminal " .. cmd)
+-- Launch debuger
+function Compiler.termdebug()
+    Exec "packadd termdebug"
+    require("mappings").debug()
+    local cmd = "Termdebug " .. G.debugBin
+    Exec(cmd)
+end
+
+------------------------------------------------------------------------
+--                                CMake 	                          --
+------------------------------------------------------------------------
+
+-- Variables
+G.extra_cmake_flags = "-DCMAKE_EXPORT_COMPILE_COMMANDS=ON"
+G.cmake_build_dir = "build"
+G.compiledb = "ln -s build/compile_commands.json ."
+
+-- check if project has a CMakefile
+function Compiler.has_Cmake()
+    local name = "CMakeLists.txt"
+    local f = io.open(name, "r")
+    if f ~= nil then
+        io.close(f)
+        return true
+    else
+        return false
+    end
 end
 
 -- Cmake generate
@@ -90,22 +117,6 @@ function Compiler.cmake_gen()
     )
 end
 
-function Compiler.cmake_clean()
-    Compiler.terminal("rm -r " .. G.cmake_build_dir .. ";" .. "rm compile_commands.json")
-end
-
-function Compiler.cmake_clean_gen()
-    Compiler.cmake_clean()
-    Compiler.cmake_gen()
-end
-
-function Compiler.termdebug()
-    Exec "packadd termdebug"
-	require('mappings').debug()
-    local cmd = "Termdebug " .. G.debugBin
-    Exec(cmd)
-end
-
 -- Cmake generate debug
 function Compiler.cmake_gen_debug()
     Compiler.terminal(
@@ -114,9 +125,21 @@ function Compiler.cmake_gen_debug()
     )
 end
 
--- Cmake Build
-function Compiler.cmake_build()
-    Compiler.terminal("cmake --build " .. G.cmake_build_dir)
+-- Clean amd remove build dir
+function Compiler.cmake_clean()
+    Compiler.terminal("rm -r " .. G.cmake_build_dir .. ";" .. "rm compile_commands.json")
+end
+
+-- Clean and rebuild Release
+function Compiler.cmake_clean_gen()
+    Compiler.cmake_clean()
+    Compiler.cmake_gen()
+end
+
+-- Clean and rebuild debug
+function Compiler.cmake_clean_gen_debug()
+    Compiler.cmake_clean()
+    Compiler.cmake_gen()
 end
 
 -- Cmake Install
@@ -124,24 +147,11 @@ function Compiler.cmake_install()
     Compiler.newTerm("cmake --build " .. G.cmake_build_dir .. " --config Release --target install")
 end
 
--- local bin = Api.nvim_call_function('fnamemodify', {'.', ":p:h:t"})
-
+-- Run the binary
 function Compiler.cmake_run()
+    -- local bin = Api.nvim_call_function('fnamemodify', {'.', ":p:h:t"})
     local bin = vim.fn.fnamemodify(vim.fn.getcwd(), ":t")
     Compiler.terminal("./build/" .. bin)
-end
-
-function Compiler.cpractice()
-    local dir = vim.fn.input("enter directory name: ")
-    vim.fn.execute("!mkdir -p $CWORK/Practice/" .. dir)
-    vim.fn.execute("cd $CWORK/Practice/" .. dir)
-    local file = vim.fn.input("enter file name: ")
-    Exec("e " .. file .. ".cpp")
-end
-
-function Compiler.creference(cmd)
-	local url = "https://www.cplusplus.com/search.do?q=" .. cmd
-	Exec('!qutebrowser "' .. url .. '" &')
 end
 
 -----------------------------------------------------------------------
@@ -150,7 +160,6 @@ end
 
 function Compiler.compiletags()
     local create_tags_cmd = "-t compiledb"
-    -- local create_tags_cmd = "pio run -t compiledb"
     local controllers = Compiler.pio_env()
     Compiler.make(create_tags_cmd)
     -- Just choose the first controller in environment list
@@ -225,7 +234,6 @@ end
 -- print serial monitor
 function Compiler.monitor()
     local cmd = "pio device monitor"
-    -- Compiler.newTerm(cmd)
     u.toggleTerm(cmd, "pio", 0)
 end
 

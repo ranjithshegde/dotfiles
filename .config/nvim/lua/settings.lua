@@ -11,6 +11,7 @@ function settings.settings()
     settings.lsp_settings()
     settings.langServers()
     settings.lsp_lintFormat()
+    settings.telescope()
 end
 
 ------------------------------------------------------------------------
@@ -18,11 +19,12 @@ end
 ------------------------------------------------------------------------
 function settings.options()
     Cmd "set nohlsearch"
-    -- Cmd "packadd vscode.nvim"
     -- Cmd "packadd zephyr-nvim"
     Cmd "colo lvim"
-    -- o.background="light"
-    -- Cmd "colo vscode"
+    --[[   Cmd "packadd vscode.nvim"
+	G.vscode_style = "light"
+	Cmd "colo vscode"
+	]]
     o.number = true
     o.relativenumber = true
     o.cursorline = true
@@ -85,7 +87,7 @@ end
 
 function settings.treesitter()
     require "nvim-treesitter.configs".setup {
-        highlight = {enable = true, languagetree = true, additional_vim_regex_highlighting = true},
+        highlight = {enable = true},
         indent = {enable = true, disable = {"python"}},
         autopairs = {enable = true},
         incremental_selection = {
@@ -104,8 +106,8 @@ function settings.treesitter()
                 keymaps = {
                     ["af"] = "@function.outer",
                     ["if"] = "@function.inner",
-                    ["aC"] = "@class.outer",
-                    ["iC"] = "@class.inner",
+                    ["ao"] = "@class.outer",
+                    ["io"] = "@class.inner",
                     ["ac"] = "@conditional.outer",
                     ["ic"] = "@conditional.inner",
                     ["ae"] = "@block.outer",
@@ -115,8 +117,8 @@ function settings.treesitter()
                     ["is"] = "@statement.inner",
                     ["as"] = "@statement.outer",
                     ["ad"] = "@comment.outer",
-                    ["am"] = "@call.outer",
-                    ["im"] = "@call.inner",
+                    ["aC"] = "@call.outer",
+                    ["iC"] = "@call.inner",
                     ["iF"] = {
                         supercollider = "(function_definition) @function",
                         cpp = "(function_definition) @function",
@@ -136,7 +138,6 @@ function settings.treesitter()
                 },
                 goto_next_end = {
                     ["]N"] = "@function.outer",
-                    -- ["]="] = "@class.outer",
                     ["]I"] = "@function.inner"
                 },
                 goto_previous_start = {
@@ -148,7 +149,6 @@ function settings.treesitter()
                 },
                 goto_previous_end = {
                     ["[N"] = "@function.outer",
-                    -- ["[="] = "@class.outer",
                     ["[I"] = "@function.inner"
                 }
             },
@@ -157,22 +157,32 @@ function settings.treesitter()
                 swap_next = {
                     [";ss"] = "@statement.outer",
                     [";sp"] = "@parameter.inner",
+                    [";sP"] = "@parameter.outer",
                     [";sF"] = "@function.inner",
                     [";sf"] = "@function.outer",
                     [";sc"] = "@conditional.outer",
+                    [";sC"] = "@conditional.inner",
                     [";sl"] = "@loop.outer",
+                    [";sL"] = "@loop.inner",
                     [";so"] = "@comment.outer",
-                    [";sa"] = "@call.outer"
+                    [";sO"] = "@comment.inner",
+                    [";sa"] = "@call.outer",
+                    [";sA"] = "@call.inner"
                 },
                 swap_previous = {
                     [";Ss"] = "@statement.outer",
                     [";Sp"] = "@parameter.inner",
+                    [";SP"] = "@parameter.outer",
                     [";SF"] = "@function.inner",
                     [";Sf"] = "@function.outer",
                     [";Sc"] = "@conditional.outer",
+                    [";SC"] = "@conditional.inner",
                     [";Sl"] = "@loop.outer",
+                    [";SL"] = "@loop.inner",
                     [";So"] = "@comment.outer",
-                    [";Sa"] = "@call.outer"
+                    [";SO"] = "@comment.inner",
+                    [";Sa"] = "@call.outer",
+                    [";SA"] = "@call.inner"
                 }
             },
             lsp_interop = {
@@ -180,7 +190,7 @@ function settings.treesitter()
                 peek_definition_code = {[";pf"] = "@function.outer", [";pF"] = "@class.outer"}
             }
         },
-        playground = {enable = true, disable = {}, updatetime = 25, persist_queries = false},
+        playground = {enable = true, updatetime = 25, persist_queries = false},
         query_linter = {
             enable = true,
             use_virtual_text = true,
@@ -219,7 +229,6 @@ end
 
 function settings.completion()
     require "completion".addCompletionSource("vimtex", u.vimtexItem)
-    -- require "completion".addCompletionSource("orgmode", u.orgItem)
     G.completion_chain_complete_list = {
         tex = {
             {complete_items = {"lsp", "snippet"}},
@@ -234,8 +243,6 @@ function settings.completion()
         },
         org = {
             {mode = "omni"}
-            -- {mode = "<c-p>"},
-            -- {mode = "<c-n>"}
         },
         default = {
             {complete_items = {"lsp", "snippet", "path"}},
@@ -255,7 +262,6 @@ function settings.completion()
     u.create_augroup(
         {
             {"FileType", "*", 'lua require"completion".on_attach()'},
-            -- {"FileType", "supercollider,text,conf,org", 'lua require"completion".on_attach()'},
             {
                 "FileType",
                 "tex,bib,supercollider,text,markdown,vimwiki,conf,org",
@@ -286,13 +292,6 @@ function settings.lsp_settings()
     Lsp_status.register_progress()
 
     local buffCmd = "* <buffer>"
-    local codeLens = {
-        {
-            "CursorHold, CursorHoldI, InsertLeave",
-            "<buffer>",
-            [[lua vim.lsp.codelens.refresh()]]
-        }
-    }
     local docHigh = {
         {"CursorHold", "<buffer>", [[lua vim.lsp.buf.document_highlight()]]},
         {"CursorMoved", "<buffer>", [[lua vim.lsp.buf.clear_references()]]},
@@ -306,7 +305,6 @@ function settings.lsp_settings()
     )
 
     All_attach = function(client, bufnr)
-        -- require "completion".on_attach(client)
         require "mappings".nvim_lsp()
         Lsp_status.on_attach(client)
         local rc = client.resolved_capabilities
@@ -325,25 +323,20 @@ function settings.lsp_settings()
                 {
                     {
                         "BufWritePre",
-                        "*.js,*.jsx,*.hpp,*.sh",
+                        "*.js,*.jsx,*.hpp,*.sh,*.lua",
                         "lua vim.lsp.buf.formatting_sync(nil, 1000)"
                     }
                 },
                 "lsp_auto_format"
             )
         end
-
-        if client.resolved_capabilities.code_lens then
-            u.create_cmdGroup(codeLens, buffCmd, "lensGroup")
-        end
     end
 
     Capabilities = vim.lsp.protocol.make_client_capabilities()
     Capabilities.textDocument.completion.completionItem.snippetSupport = true
-    Capabilities.textDocument.completion.completionItem.resolveSupport = {
-        properties = {"documentation", "detail", "additionalTextEdits"}
-    }
-    -- Capabilities = vim.tbl_extend('keep', Capabilities, Lsp_status.capabilities);
+    -- Capabilities.textDocument.completion.completionItem.resolveSupport = {
+    -- properties = {"documentation", "detail", "additionalTextEdits"}
+    -- }
 
     Cinit = function(client)
         require "mappings".nvim_lsp()
@@ -357,7 +350,6 @@ function settings.lsp_settings()
         rc.hover = false
         rc.completion = false
         rc.code_action = false
-        u.create_cmdGroup(codeLens, buffCmd, "lensGroup")
     end
 
     EfmInit = function(client)
@@ -566,7 +558,6 @@ function settings.lsp_lintFormat()
     local black = {formatCommand = "black --fast -", formatStdin = true}
     local mypy = {
         lintCommand = "mypy --show-column-numbers",
-        -- lintCommand = "mypy --show-column-numbers --config-file=~/.config/mypy/config",
         lintFormats = {"%f:%l:%c: %trror: %m", "%f:%l:%c: %tarning: %m", "%f:%l:%c: %tote: %m"},
         lintSource = "mypy"
     }
@@ -588,8 +579,6 @@ function settings.lsp_lintFormat()
         lintFormats = {"%f:%l %m", "%f:%l:%c %m", "%f: %l: %m"}
     }
     local luaformat = {
-        -- formatCommand = "lua-format -i ${--tab-width:tabSize} ${--indent-width:tabSize} --spaces-inside-table-braces --single-quote-to-double-quote",
-        -- formatCommand = "lua-format -i --keep-simple-function-one-line --break-after-operator --no-keep-simple-control-block-one-line --column-limit=100",
         formatCommand = "luafmt ${-i:tabWidth} --stdin",
         formatStdin = true
     }
@@ -631,6 +620,34 @@ function settings.lsp_lintFormat()
 end
 
 ------------------------------------------------------------------------
+--                       Telescope 									  --
+------------------------------------------------------------------------
+
+function settings.telescope()
+    require("telescope").setup {
+        pickers = {find_files = {follow = true}},
+        defaults = {
+            vimgrep_arguments = {
+                "rg",
+                "--color=never",
+                "--no-heading",
+                "--with-filename",
+                "--line-number",
+                "--column",
+                "--smart-case",
+                "-L"
+            }
+        },
+        extensions = {
+            project = {
+                base_dirs = {{"~/Software/Workspaces/", max_depth = 3}, {"~/Documents/ofWorkspace/", max_depth = 3}}
+            }
+        }
+    }
+    require "telescope".load_extension("project")
+end
+
+------------------------------------------------------------------------
 --                         uncalled 	                              --
 ------------------------------------------------------------------------
 
@@ -660,14 +677,5 @@ function settings.smbc()
         vim.cmd("command! " .. commands[index])
     end
 end
-
--- local parser_config = require "nvim-treesitter.parsers".get_parser_configs()
--- parser_config.markdown = {
---     install_info = {
---         url = "https://github.com/ikatyang/tree-sitter-markdown", -- local path or git repo
---         files = {"src/parser.c", "src/scanner.cc"}
---     },
---     filetype = "md",
--- }
 
 return settings

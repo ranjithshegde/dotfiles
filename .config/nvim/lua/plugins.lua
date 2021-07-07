@@ -49,6 +49,7 @@ return packer.startup(
         -- vim Orgmode
         use {
             "kristijanhusak/orgmode.nvim",
+            ft = "org",
             config = function()
                 require("orgmode").setup {}
             end
@@ -87,7 +88,9 @@ return packer.startup(
             config = function()
                 require("gitsigns").setup()
             end,
-            opt = true
+            cond = function()
+                return require("lspconfig").util.root_pattern(".git/")
+            end
         }
 
         -- Markdown preview
@@ -136,12 +139,12 @@ return packer.startup(
 
         -- Tim pope
         use {
-            "tpope/vim-commentary",
             "tpope/vim-repeat",
             "tpope/vim-surround",
+            "tpope/vim-commentary",
             "tpope/vim-unimpaired",
-            {"tpope/vim-fugitive", cmd = {"G", "Git", "Gclog"}},
-            {"tpope/vim-dispatch", cmd = {"Make", "Dispatch"}}
+            {"tpope/vim-dispatch", cmd = {"Make", "Dispatch"}},
+            {"tpope/vim-fugitive", cmd = {"G", "Git", "Gclog"}}
         }
 
         -- vim Calendar
@@ -149,10 +152,21 @@ return packer.startup(
             "itchyny/calendar.vim",
             cmd = "Calendar",
             config = function()
-                G.calendar_google_calendar = 1
                 G.calendar_google_task = 1
+                G.calendar_google_calendar = 1
                 vim.cmd("source ~/.cache/calendar.vim/credentials.vim")
             end
+        }
+
+        -- Telescope
+        use {
+            "nvim-telescope/telescope.nvim",
+            requires = {
+                "nvim-lua/popup.nvim",
+                "nvim-lua/plenary.nvim",
+                -- 'nvim-telescope/telescope-symbols.nvim',
+                "nvim-telescope/telescope-project.nvim"
+            }
         }
 
         -- TreeSitter
@@ -161,11 +175,11 @@ return packer.startup(
                 "nvim-treesitter/nvim-treesitter",
                 requires = {"p00f/nvim-ts-rainbow", "nvim-treesitter/nvim-treesitter-textobjects"}
             },
+            {"nvim-treesitter/nvim-treesitter-refactor", ft = "supercollider"},
             {
                 "nvim-treesitter/playground",
                 cmd = {"TSPlaygroundToggle", "TSHighlightCapturesUnderCursor"}
-            },
-            {"nvim-treesitter/nvim-treesitter-refactor", ft = "supercollider"}
+            }
         }
 
         -- Colorizer
@@ -202,38 +216,12 @@ return packer.startup(
             end
         }
 
-        -- Telescope
-        use {
-            "nvim-telescope/telescope.nvim",
-            config = function()
-                require("telescope").setup {
-                    extensions = {
-                        project = {
-                            base_dirs = {
-                                {"~/Software/Workspaces/", max_depth = 3},
-                                {"~/Documents/ofWorkspace/", max_depth = 3}
-                            }
-                        }
-                    }
-                }
-                require "telescope".load_extension("project")
-            end,
-            requires = {
-                "nvim-lua/popup.nvim",
-                "nvim-lua/plenary.nvim",
-                -- 'nvim-telescope/telescope-symbols.nvim',
-                "nvim-telescope/telescope-project.nvim"
-            }
-        }
-
         -- Indents and chars
         use {
             "lukas-reineke/indent-blankline.nvim",
-            -- branch = "lua",
             config = function()
                 G.indent_blankline_char = "┊"
                 G.indent_blankline_char_highlight = "LineNr"
-                -- G.indent_blankline_space_char = "."
                 G.indent_blankline_use_treesitter = true
                 G.indent_blankline_show_current_context = true
                 G.indent_blankline_buftype_exclude = {"terminal", "nofile"}

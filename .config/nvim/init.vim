@@ -17,7 +17,8 @@ set grepprg=rg\ --vimgrep
 " Set dictionary
 set dictionary+=$HOME/.local/share/dict/words
 
-"************** Word Processor ----------------------------------------------------------------
+"************** Functions ----------------------------------------------------
+" Word Processor 
 func! WordProcessor()
 	setlocal noexpandtab
 	setlocal wrap 
@@ -34,22 +35,11 @@ func! WordProcessor()
 endfu
 com! Gram call WordProcessor()
 
-"************** Functions ----------------------------------------------------
+" Custom sudo
 func! SuWrite()
 	w !sudo tee %
 endfu
 com! Su call SuWrite()
-
-function! GitRepo() 
-	silent! !git rev-parse --is-inside-work-tree
-	if v:shell_error == 0
-		PackerLoad gitsigns.nvim
-	endif
-endfunction
-
-augroup GitRepos
-	au BufEnter * call GitRepo()
-augroup end
 
 "************** FileTypes & AutoCompiles-----------------------------------------------
 
@@ -71,18 +61,12 @@ augroup TexFiles
 	au FileType tex,bib nmap <F3> <plug>(vimtex-clean-full) |
 				\ nmap <F5> <plug>(vimtex-compile) |
 				\ nmap <F6> <plug>(vimtex-view)
-	" au FileType tex set foldexpr=vimtex#fold#level(v:lnum)
 augroup END
 
 "************************ Terminal management -------------------------------------------------
 augroup termInsert
-	" let g:gdbBuff = bufwinnr('gdb [-]')
-	" let g:replBuff = bufwinnr('repl [-]')
 	autocmd!
 	autocmd BufWinEnter,WinEnter term://* startinsert
 	autocmd TermEnter * startinsert
-	" if g:gdbBuff ==# 0 && g:replBuff ==# 0
-		" autocmd BufLeave term://* stopinsert
-	" endif
 	autocmd TermClose * call nvim_input('<CR>')
 augroup END
