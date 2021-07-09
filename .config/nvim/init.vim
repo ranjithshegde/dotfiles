@@ -3,11 +3,11 @@ lua require ('plugins')
 lua require ('settings').settings()
 lua require ('mappings').general()
 lua require ('mappings').autoComplete()
-lua require 'statusline'
+lua require ('statusline').el()
 
 " Custom tabline
 function! TabLine()
-	return luaeval("require'statusline'.init()")
+	return luaeval("require'statusline'.tabs()")
 endfunction
 set tabline=%!TabLine()
 

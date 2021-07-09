@@ -64,15 +64,15 @@ function Compiler.make(cmd)
     Exec("Make " .. cmd)
 end
 
+-- set default terminal to Dispatch
+function Compiler.terminal(cmd)
+    Exec("Dispatch " .. cmd)
+end
+
 -- set alternate terminal to native terminal
 function Compiler.newTerm(cmd, opencmd)
     Exec(opencmd or "new")
     Exec("terminal " .. cmd)
-end
-
--- set default terminal to Dispatch
-function Compiler.terminal(cmd)
-    Exec("Dispatch " .. cmd)
 end
 
 -- open Makefile
@@ -142,16 +142,16 @@ function Compiler.cmake_clean_gen_debug()
     Compiler.cmake_gen()
 end
 
--- Cmake Install
-function Compiler.cmake_install()
-    Compiler.newTerm("cmake --build " .. G.cmake_build_dir .. " --config Release --target install")
-end
-
 -- Run the binary
 function Compiler.cmake_run()
     -- local bin = Api.nvim_call_function('fnamemodify', {'.', ":p:h:t"})
     local bin = vim.fn.fnamemodify(vim.fn.getcwd(), ":t")
     Compiler.terminal("./build/" .. bin)
+end
+
+-- Cmake Install
+function Compiler.cmake_install()
+    Compiler.newTerm("cmake --build " .. G.cmake_build_dir .. " --config Release --target install")
 end
 
 -----------------------------------------------------------------------

@@ -1,6 +1,6 @@
 local settings = {}
 local u = require("utils")
-local o = vim.o
+local o = vim.opt
 
 function settings.settings()
     settings.options()
@@ -18,34 +18,40 @@ end
 --                              Vim basics                            --
 ------------------------------------------------------------------------
 function settings.options()
-    Cmd "set nohlsearch"
     -- Cmd "packadd zephyr-nvim"
+    -- Cmd "packadd vscode.nvim"
+    -- G.vscode_style = "light"
+    -- Cmd "colo vscode"
     Cmd "colo lvim"
-    --[[   Cmd "packadd vscode.nvim"
-	G.vscode_style = "light"
-	Cmd "colo vscode"
-	]]
+    local tab = 4
     o.number = true
+    o.expandtab = true
     o.relativenumber = true
+    o.hlsearch = false
     o.cursorline = true
-    o.timeoutlen = 500
-    o.signcolumn = "yes"
     o.hidden = true
     o.splitright = true
     o.splitbelow = true
     o.termguicolors = true
-    o.updatetime = 300
-    o.scrolloff = 10
-    o.shiftwidth = 0
-    o.tabstop = 4
+    o.shiftwidth = tab
+    o.tabstop = tab
+    o.softtabstop = tab
     o.conceallevel = 1
+    o.scrolloff = 10
+    o.updatetime = 300
+    o.timeoutlen = 500
+    o.signcolumn = "yes"
     o.foldmethod = "expr"
     o.fillchars = "stlnc:»,vert:║,fold:-"
+    -- o.listchars = "tab:<->,eol:↲,space:→"
     o.completeopt = "menuone,noinsert,noselect"
-    o.clipboard = "unnamed,unnamedplus"
-    o.shortmess = o.shortmess .. "c"
+    o.clipboard:append("unnamedplus")
+    o.shortmess:append("c")
     G.termdebug_wide = 1
     G.markdown_folding = 1
+    G.loaded_ruby_provider = 0
+    G.loaded_perl_provider = 0
+    G.loaded_python_provider = 0
     if Op("filetype") ~= "vimwiki" and Op("filetype") ~= "markdown" and Op("filetype") ~= "vim" then
         o.foldexpr = "nvim_treesitter#foldexpr()"
     end
@@ -69,6 +75,7 @@ function settings.vimwiki()
     G.vimwiki_auto_chdir = 1
     G.vimwiki_folding = "expr"
 end
+
 --------------------------------------------------------------------------
 ----                              Snippets                              --
 --------------------------------------------------------------------------
@@ -114,7 +121,6 @@ function settings.treesitter()
                     ["ie"] = "@block.inner",
                     ["al"] = "@loop.outer",
                     ["il"] = "@loop.inner",
-                    ["is"] = "@statement.inner",
                     ["as"] = "@statement.outer",
                     ["ad"] = "@comment.outer",
                     ["aC"] = "@call.outer",
@@ -165,7 +171,6 @@ function settings.treesitter()
                     [";sl"] = "@loop.outer",
                     [";sL"] = "@loop.inner",
                     [";so"] = "@comment.outer",
-                    [";sO"] = "@comment.inner",
                     [";sa"] = "@call.outer",
                     [";sA"] = "@call.inner"
                 },
@@ -180,14 +185,14 @@ function settings.treesitter()
                     [";Sl"] = "@loop.outer",
                     [";SL"] = "@loop.inner",
                     [";So"] = "@comment.outer",
-                    [";SO"] = "@comment.inner",
                     [";Sa"] = "@call.outer",
                     [";SA"] = "@call.inner"
                 }
             },
             lsp_interop = {
+                border = "double",
                 enable = true,
-                peek_definition_code = {[";pf"] = "@function.outer", [";pF"] = "@class.outer"}
+                peek_definition_code = {[";pf"] = "@function.outer", [";pc"] = "@class.outer"}
             }
         },
         playground = {enable = true, updatetime = 25, persist_queries = false},
@@ -251,6 +256,7 @@ function settings.completion()
         }
     }
     G.completion_auto_change_source = 0
+    G.completion_popup_border = "double"
     G.completion_disable_filetypes = {"TelescopePrompt"}
 
     if Op("filetype") == "supercollider" then
@@ -323,7 +329,8 @@ function settings.lsp_settings()
                 {
                     {
                         "BufWritePre",
-                        "*.js,*.jsx,*.hpp,*.sh,*.lua",
+                        "*.js,*.jsx,*.hpp,*.sh",
+                        -- "*.js,*.jsx,*.hpp,*.sh,*.lua",
                         "lua vim.lsp.buf.formatting_sync(nil, 1000)"
                     }
                 },
@@ -334,9 +341,6 @@ function settings.lsp_settings()
 
     Capabilities = vim.lsp.protocol.make_client_capabilities()
     Capabilities.textDocument.completion.completionItem.snippetSupport = true
-    -- Capabilities.textDocument.completion.completionItem.resolveSupport = {
-    -- properties = {"documentation", "detail", "additionalTextEdits"}
-    -- }
 
     Cinit = function(client)
         require "mappings".nvim_lsp()
@@ -359,7 +363,7 @@ function settings.lsp_settings()
     end
 
     -- borders for floating windows
-    vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, {border = "rounded"})
+    vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, {border = "double"})
     vim.lsp.handlers["textDocument/signatureHelp"] = vim.lsp.with(vim.lsp.handlers.signature_help, {border = "rounded"})
 end
 
@@ -636,7 +640,10 @@ function settings.telescope()
                 "--column",
                 "--smart-case",
                 "-L"
-            }
+            },
+            prompt_prefix = "❯ ",
+            selection_caret = "❯ ",
+            -- layout_strategy = "horizontal"
         },
         extensions = {
             project = {

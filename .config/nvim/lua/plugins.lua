@@ -35,6 +35,8 @@ return packer.startup(
     function(use)
         use "wbthomason/packer.nvim"
 
+        -- use "felipec/notmuch-vim"
+
         use {"m-pilia/vim-ccls", ft = "cpp"}
 
         use {"yegappan/taglist", cmd = "TlistToggle"}
@@ -125,7 +127,8 @@ return packer.startup(
 
         -- completion and snippets
         use {
-            "nvim-lua/completion-nvim",
+            -- "nvim-lua/completion-nvim",
+            {"ranjithshegde/completion-nvim", branch = "floating_opts"},
             "windwp/nvim-autopairs",
             "hrsh7th/vim-vsnip",
             {
@@ -160,7 +163,8 @@ return packer.startup(
 
         -- Telescope
         use {
-            "nvim-telescope/telescope.nvim",
+            "ranjithshegde/telescope.nvim",
+            branch = "change_dir",
             requires = {
                 "nvim-lua/popup.nvim",
                 "nvim-lua/plenary.nvim",
@@ -225,7 +229,7 @@ return packer.startup(
                 G.indent_blankline_use_treesitter = true
                 G.indent_blankline_show_current_context = true
                 G.indent_blankline_buftype_exclude = {"terminal", "nofile"}
-                G.indent_blankline_filetype_exclude = {"help", "packer"}
+                G.indent_blankline_filetype_exclude = {"help", "packer", "taglist"}
                 G.indent_blankline_context_patterns = {
                     "class",
                     "return",

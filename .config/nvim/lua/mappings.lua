@@ -69,7 +69,6 @@ function M.nvim_lsp()
         {"n", ",cr", "<cmd>lua vim.lsp.codelens.run()<CR>"},
         {"n", ",cR", "<cmd>lua vim.lsp.codelens.refresh()<CR>"},
         {"n", ",cg", "<cmd>lua vim.lsp.codelens.get()<CR>"},
-        {"n", ",pd", "<cmd>lua require'utils'.peek_definition()<CR>"},
         {"n", ",s", '<cmd>lua vim.lsp.buf.signature_help({popup_opts = {border = "rounded"}})<CR>'},
         {"n", ",ld", '<cmd>lua vim.lsp.diagnostic.show_line_diagnostics({popup_opts = {border = "double"})<CR>'},
         {"n", "[d", '<cmd>lua vim.lsp.diagnostic.goto_prev({popup_opts = {border = "double"}, focusable = false})<CR>'},

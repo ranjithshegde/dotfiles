@@ -5,5 +5,5 @@ nordvpn disconnect
 
 sudo systemctl stop nordvpnd.service
 
-sudo systemctl stop nordvpnd.socket
+# sudo systemctl stop nordvpnd.socket
 

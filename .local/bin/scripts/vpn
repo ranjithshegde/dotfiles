@@ -2,9 +2,9 @@
 
 # choice = $(echo -e "please enter a country" | dmenu -i)
 
-sudo systemctl start nordvpnd.socket
+# sudo systemctl start nordvpnd.socket
 
-sleep 1
+# sleep 1
 
 sudo systemctl start nordvpnd.service
 
