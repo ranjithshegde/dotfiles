@@ -69,8 +69,8 @@ function M.nvim_lsp()
         {"n", ",cr", "<cmd>lua vim.lsp.codelens.run()<CR>"},
         {"n", ",cR", "<cmd>lua vim.lsp.codelens.refresh()<CR>"},
         {"n", ",cg", "<cmd>lua vim.lsp.codelens.get()<CR>"},
-        {"n", ",s", '<cmd>lua vim.lsp.buf.signature_help({popup_opts = {border = "rounded"}})<CR>'},
-        {"n", ",ld", '<cmd>lua vim.lsp.diagnostic.show_line_diagnostics({popup_opts = {border = "double"})<CR>'},
+        {"n", ",s", '<cmd>lua vim.lsp.buf.signature_help({popup_opts = {border = "double"}})<CR>'},
+        {"n", ",ld", '<cmd>lua vim.lsp.diagnostic.show_line_diagnostics({popup_opts = {border = "double"}})<CR>'},
         {"n", "[d", '<cmd>lua vim.lsp.diagnostic.goto_prev({popup_opts = {border = "double"}, focusable = false})<CR>'},
         {"n", "]d", '<cmd>lua vim.lsp.diagnostic.goto_next({popup_opts = {border = "double"}, focusable = false})<CR>'},
         {"n", ",R", "<cmd>lua vim.lsp.buf.rename()<CR>"},
@@ -438,6 +438,22 @@ function M.debug()
         {"n", "<leader>dv", "<cmd>Source<cr>"}
     }
     u.maps(maps, opts)
+end
+
+-- ******************************** Latex ---------------------------------------
+function M.tex()
+    local opts = {nowait = true, noremap = true, silent = true}
+    local bufmaps = {
+        -- Word Count
+        {"n", "<F3>", "<cmd>TexWordCount<CR>"},
+        -- Clean dir
+        {"n", "<F4>", "<cmd>Make -C<CR>"},
+        -- Compile document
+        {"n", "<F5>", "<cmd>TexlabBuild<CR>"},
+        -- Launch pdf
+        {"n", "<F6>", "<cmd>TexlabForward<CR>"},
+    }
+    u.bufmaps(bufmaps, opts)
 end
 
 return M

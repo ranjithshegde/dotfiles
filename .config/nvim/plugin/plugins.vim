@@ -3,6 +3,7 @@ com! Cam call camel#CamelCase()
 com! LspCapabilities lua require('utils').lspcapabilities()
 com! Cpractice lua require('compiler').cpractice()
 " com -nargs=* -complete=shellcmd TTerm lua require('utils').toggleTerm(<f-args>, 1)
+com! TexWordCount lua require('utils').TexWordCount()
 
 nn <silent> <leader>e :call drawer#ToggleNetrw()<CR>
 

@@ -171,15 +171,6 @@ function utils.lspcapabilities()
     vim.lsp.util.close_preview_autocmd({"BufHidden", "BufLeave"}, win_id)
 end
 
--- ************** Custom completion sources  ---------------------------------------------------------
-
-function utils.texComplete(prefix)
-    Api.nvim_call_function("vimtex#complete#omnifunc", {1, ""})
-    local items = Api.nvim_call_function("vimtex#complete#omnifunc", {0, prefix})
-    return items
-end
-utils.vimtexItem = {item = utils.texComplete}
-
 -- ******************************** Terminal ---------------------------------------------------------
 
 -- set silent exec option
@@ -219,6 +210,12 @@ function utils.toggleTerm(cmd, name, spl)
 end
 
 -- ************** Co-authoring ---------------------------------------------------------
+
+-- Count tex words
+function utils.TexWordCount()
+    local count = Api.nvim_exec([[silent !texcount -inc -sum -1 %]], true)
+    print(count)
+end
 
 -- Start Instant server
 function utils.Start()

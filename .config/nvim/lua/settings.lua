@@ -18,24 +18,21 @@ end
 --                              Vim basics                            --
 ------------------------------------------------------------------------
 function settings.options()
-    -- Cmd "packadd zephyr-nvim"
-    -- Cmd "packadd vscode.nvim"
-    -- G.vscode_style = "light"
-    -- Cmd "colo vscode"
-    Cmd "colo lvim"
+    Cmd "colo tokyonight"
     local tab = 4
-    o.number = true
-    o.expandtab = true
-    o.relativenumber = true
-    o.hlsearch = false
     o.cursorline = true
+    o.expandtab = true
     o.hidden = true
-    o.splitright = true
+    o.number = true
+    o.relativenumber = true
+    o.shiftround = true
     o.splitbelow = true
+    o.splitright = true
     o.termguicolors = true
+    o.hlsearch = false
     o.shiftwidth = tab
-    o.tabstop = tab
     o.softtabstop = tab
+    o.tabstop = tab
     o.conceallevel = 1
     o.scrolloff = 10
     o.updatetime = 300
@@ -52,6 +49,19 @@ function settings.options()
     G.loaded_ruby_provider = 0
     G.loaded_perl_provider = 0
     G.loaded_python_provider = 0
+    G.tokyonight_style = "night"
+    G.tex_conceal = "abdmgs"
+    --     - "a" -- Dont format pasted code
+    --     - "t" -- Respect linter prgs
+    --     + "c" -- In general, I like it when comments respect textwidth
+    --     + "q" -- Allow formatting comments w/ gq
+    --     - "o" -- O and o, don't continue comments
+    --     + "r" -- But do continue when pressing enter.
+    --     + "n" -- Indent past the formatlistpat, not underneath it.
+    --     + "j" -- Auto-remove comments if possible.
+    --     + "2" -- Indent according to 2nd line
+    o.formatoptions = o.formatoptions - "ato"
+    o.formatoptions = o.formatoptions + "cqrnj2"
     if Op("filetype") ~= "vimwiki" and Op("filetype") ~= "markdown" and Op("filetype") ~= "vim" then
         o.foldexpr = "nvim_treesitter#foldexpr()"
     end
@@ -94,7 +104,10 @@ end
 
 function settings.treesitter()
     require "nvim-treesitter.configs".setup {
-        highlight = {enable = true},
+        highlight = {
+            enable = true,
+            additional_vim_regex_highlighting = true
+        },
         indent = {enable = true, disable = {"python"}},
         autopairs = {enable = true},
         incremental_selection = {
@@ -109,10 +122,11 @@ function settings.treesitter()
         textobjects = {
             select = {
                 enable = true,
-                disable = {"latex"},
+                -- disable = {"latex"},
                 keymaps = {
                     ["af"] = "@function.outer",
                     ["if"] = "@function.inner",
+                    ["aF"] = "@frame.outer",
                     ["ao"] = "@class.outer",
                     ["io"] = "@class.inner",
                     ["ac"] = "@conditional.outer",
@@ -233,14 +247,7 @@ end
 ------------------------------------------------------------------------
 
 function settings.completion()
-    require "completion".addCompletionSource("vimtex", u.vimtexItem)
     G.completion_chain_complete_list = {
-        tex = {
-            {complete_items = {"lsp", "snippet"}},
-            {complete_items = {"vimtex", "snippet"}},
-            {mode = "<c-p>"},
-            {mode = "<c-n>"}
-        },
         supercollider = {
             {complete_items = {"UltiSnips", "path"}},
             {mode = "<c-p>"},
@@ -380,17 +387,37 @@ function settings.langServers()
         cmake = {on_attach = All_attach, capabilities = Capabilities},
         vimls = {on_attach = All_attach, capabilities = Capabilities},
         tsserver = {on_attach = All_attach, capabilities = Capabilities},
-        pyright = {
-            on_attach = All_attach,
-            capabilities = Capabilities,
-            root_dir = function()
-                return vim.loop.cwd()
-            end
-        },
+        jedi_language_server = {on_attach = All_attach, capabilities = Capabilities},
         texlab = {
             on_attach = All_attach,
             capabilities = Capabilities,
-            settings = {texlab = {chktex = {onOpenAndSave = true}}}
+            settings = {
+                texlab = {
+                    build = {
+                        args = {
+                            "-xelatex",
+                            "-verbose",
+                            "-file-line-error",
+                            "-synctex=1",
+                            "-interaction=nonstopmode",
+                            "-shell-escape",
+                            "%f"
+                        },
+                        executable = "latexmk",
+                        forwardSearchAfter = true
+                    },
+                    lint = {onSave = true, onChange = true},
+                    chktex = {onOpenAndSave = true},
+                    forwardSearch = {
+                        args = {
+                            "--synctex-forward",
+                            "%l:1:%f",
+                            "%p"
+                        },
+                        executable = "zathura"
+                    }
+                }
+            }
         },
         ccls = {
             on_init = Cinit,
@@ -415,23 +442,6 @@ function settings.langServers()
                 "--all-scopes-completion",
                 "--completion-style=detailed",
                 "--cross-file-rename"
-            }
-        },
-        sumneko_lua = {
-            on_attach = All_attach,
-            cmd = {"lua-language-server", "-E", "lua-language-server" .. "/main.lua"},
-            settings = {
-                Lua = {
-                    runtime = {version = "LuaJIT", path = vim.split(package.path, ";")},
-                    diagnostics = {globals = {"vim", "pd"}},
-                    workspace = {
-                        library = {
-                            [vim.fn.expand("$VIMRUNTIME/lua")] = true,
-                            [vim.fn.expand("$VIMRUNTIME/lua/vim/lsp")] = true,
-                            [vim.fn.expand("/usr/lib/pd/extra/pdlua")] = true
-                        }
-                    }
-                }
             }
         }
     }
@@ -642,12 +652,11 @@ function settings.telescope()
                 "-L"
             },
             prompt_prefix = "❯ ",
-            selection_caret = "❯ ",
-            -- layout_strategy = "horizontal"
+            selection_caret = "❯ "
         },
         extensions = {
             project = {
-                base_dirs = {{"~/Software/Workspaces/", max_depth = 3}, {"~/Documents/ofWorkspace/", max_depth = 3}}
+                base_dirs = {{"~/Software/Workspaces/", max_depth = 4}, {"~/Documents/ofWorkspace/", max_depth = 3}}
             }
         }
     }
@@ -657,6 +666,31 @@ end
 ------------------------------------------------------------------------
 --                         uncalled 	                              --
 ------------------------------------------------------------------------
+
+function settings.luadev()
+    local luadev =
+        require("lua-dev").setup(
+        {
+            lspconfig = {
+                on_attach = All_attach,
+                capabilities = Capabilities,
+                cmd = {"lua-language-server", "-E", "lua-language-server" .. "/main.lua"},
+                settings = {
+                    Lua = {
+                        runtime = {version = "LuaJIT", path = vim.split(package.path, ";")},
+                        diagnostics = {globals = {"vim", "pd"}},
+                        workspace = {
+                            library = {
+                                [vim.fn.expand("/usr/lib/pd/extra/pdlua")] = true
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    )
+    Lsp.sumneko_lua.setup(luadev)
+end
 
 function settings.jdtls()
     require("jdtls").start_or_attach(

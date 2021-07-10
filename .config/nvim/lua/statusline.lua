@@ -145,7 +145,6 @@ statusline.el = function()
                     sections.collapse_builtin({" ", builtin.modified_flag}),
                     separators.right,
                     -- builtin.quickfix,
-                    -- builtin.preview,
                     builtin.line_with_width(3),
                     ":",
                     builtin.column_with_width(2),

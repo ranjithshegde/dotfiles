@@ -56,13 +56,6 @@ augroup MakeDispatch
 				\ tnoremap <F10> <esc><cmd>lua require('utils').toggleTerm(vim.g.repl, "repl", 0)<CR>
 augroup END
 
-augroup TexFiles
-	autocmd!
-	au FileType tex,bib nmap <F3> <plug>(vimtex-clean-full) |
-				\ nmap <F5> <plug>(vimtex-compile) |
-				\ nmap <F6> <plug>(vimtex-view)
-augroup END
-
 "************************ Terminal management -------------------------------------------------
 augroup termInsert
 	autocmd!

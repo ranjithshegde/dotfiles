@@ -35,15 +35,13 @@ return packer.startup(
     function(use)
         use "wbthomason/packer.nvim"
 
-        -- use "felipec/notmuch-vim"
+        use "folke/tokyonight.nvim"
 
         use {"m-pilia/vim-ccls", ft = "cpp"}
 
         use {"yegappan/taglist", cmd = "TlistToggle"}
 
         use {"SirVer/ultisnips", ft = "supercollider"}
-
-        use {"neovim/nvim-lspconfig", requires = "nvim-lua/lsp-status.nvim"}
 
         -- StatusLine
         use {"tjdevries/express_line.nvim", requires = "kyazdani42/nvim-web-devicons"}
@@ -125,10 +123,22 @@ return packer.startup(
             end
         }
 
+        --Lsp config and companions
+        use {
+            {"neovim/nvim-lspconfig", requires = "nvim-lua/lsp-status.nvim"},
+            {
+                "folke/lua-dev.nvim",
+                ft = "lua",
+                config = function()
+                    require("settings").luadev()
+                end
+            }
+        }
+
         -- completion and snippets
         use {
             -- "nvim-lua/completion-nvim",
-            {"ranjithshegde/completion-nvim", branch = "floating_opts"},
+            {"ranjithshegde/completion-nvim", branch = "signature_hl_active"},
             "windwp/nvim-autopairs",
             "hrsh7th/vim-vsnip",
             {
@@ -200,24 +210,6 @@ return packer.startup(
                 }
             end,
             cmd = {"ColorizerAttachToBuffer", "ColorizerToggle"}
-        }
-
-        -- vimTex
-        use {
-            "lervag/vimtex",
-            ft = {"tex", "bib"},
-            config = function()
-                G.vimtex_viewer_method = "zathura"
-                G.tex_conceal = "abdmg"
-                G.vimtex_compiler_latexmk = {
-                    options = {
-                        "-shell-escape"
-                    }
-                }
-                G.vimtex_compiler_latexmk_engines = {
-                    _ = "-xelatex"
-                }
-            end
         }
 
         -- Indents and chars
