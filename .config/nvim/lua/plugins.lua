@@ -41,8 +41,6 @@ return packer.startup(
 
         use {"yegappan/taglist", cmd = "TlistToggle"}
 
-        use {"SirVer/ultisnips", ft = "supercollider"}
-
         -- StatusLine
         use {"tjdevries/express_line.nvim", requires = "kyazdani42/nvim-web-devicons"}
 
@@ -82,15 +80,23 @@ return packer.startup(
             end
         }
 
+        -- Ultisnips for Scnvim
+        use {
+            "SirVer/ultisnips",
+            ft = "supercollider",
+            setup = function()
+                require("settings").ultisnips()
+            end
+        }
+
         -- Git Signs
         use {
             "lewis6991/gitsigns.nvim",
             config = function()
                 require("gitsigns").setup()
+                -- print("gitssigns gitsgns")
             end,
-            cond = function()
-                return require("lspconfig").util.root_pattern(".git/")
-            end
+            opt = true
         }
 
         -- Markdown preview
@@ -125,7 +131,10 @@ return packer.startup(
 
         --Lsp config and companions
         use {
-            {"neovim/nvim-lspconfig", requires = "nvim-lua/lsp-status.nvim"},
+            {
+                "neovim/nvim-lspconfig",
+                requires = "nvim-lua/lsp-status.nvim"
+            },
             {
                 "folke/lua-dev.nvim",
                 ft = "lua",
@@ -153,9 +162,9 @@ return packer.startup(
         -- Tim pope
         use {
             "tpope/vim-repeat",
-            "tpope/vim-surround",
-            "tpope/vim-commentary",
             "tpope/vim-unimpaired",
+            "tpope/vim-surround",
+            {"tpope/vim-commentary", keys = "gc"},
             {"tpope/vim-dispatch", cmd = {"Make", "Dispatch"}},
             {"tpope/vim-fugitive", cmd = {"G", "Git", "Gclog"}}
         }

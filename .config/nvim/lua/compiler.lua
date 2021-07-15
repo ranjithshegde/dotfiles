@@ -6,7 +6,7 @@ local Compiler = {}
 --                                Env Setup	                          --
 ------------------------------------------------------------------------
 
--- Set C environment based on functions
+-- Set C environment based on type [with makefile, microcontroller, cmake project or plain c]
 function Compiler.set_ctype()
     if Compiler.has_Cmake() then
         require("mappings").cmake()
@@ -18,7 +18,7 @@ function Compiler.set_ctype()
         G.debugBin = "bin/" .. vim.fn.fnamemodify(vim.fn.getcwd(), ":t") .. "_debug"
     elseif Compiler.has_pio_file() then
         Exec("set makeprg=pio\\ run")
-        require("settings").smbc()
+        -- require("settings").smbc()
         require("mappings").smbc()
         G.makeFile = "platformio.ini"
     else

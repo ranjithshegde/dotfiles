@@ -108,6 +108,7 @@ statusline.el = function()
             local branch = extensions.git_branch(window, buffer)
             vim.cmd(string.format("hi ElGitBranch guibg=%s guifg=%s", Colors.bg, Colors.yellow))
             if branch then
+                vim.fn.execute("PackerLoad gitsigns.nvim")
                 return " " .. extensions.git_icon() .. " " .. branch
             end
         end
@@ -213,21 +214,26 @@ function statusline.tabs()
     for _, val in ipairs(tab_list) do
         local file_name = getTabLabel(val)
         if val == current_tab then
-            tabline = tabline .. " %#TabLineSelSeparator#" .. left_separator
-            tabline = tabline .. "%#TabLineSel# " .. file_name
-            tabline = tabline .. " %#TabLineSelSeparator#" .. right_separator
+            -- tabline = tabline .. " %#TabLineSelSeparator#" .. left_separator
+            tabline = tabline .. " %#StatusLine#" .. left_separator
+            tabline = tabline .. "%#StatusLine# " .. file_name
+            tabline = tabline .. " %#StatusLine#" .. right_separator
         else
-            tabline = tabline .. " %#TabLineSeparator#" .. left_separator
-            tabline = tabline .. "%#TabLine# " .. file_name
-            tabline = tabline .. " %#TabLineSeparator#" .. right_separator
+            -- tabline = tabline .. " %#TabLine#" .. left_separator
+            tabline = tabline .. " %#StatusLineNC#" .. left_separator
+            -- tabline = tabline .. "%#TabLineSeparator# " .. file_name
+            tabline = tabline .. "%#StatusLineNC# " .. file_name
+            tabline = tabline .. " %#StatusLineNC#" .. right_separator
         end
     end
     tabline = tabline .. "%="
     -- Component: Working Directory
     tabline =
         tabline ..
-        "%#TabLineSelSeparator#" ..
-            left_separator .. "%#TablineSel# " .. workDir() .. "%#TabLineSelSeparator#" .. right_separator
+        -- "%#TabLineSelSeparator#" ..
+        "%#StatusLine#" ..
+            -- left_separator .. "%#TablineSel# " .. workDir() .. "%#TabLineSelSeparator#" .. right_separator
+            left_separator .. "%#StatusLine# " .. workDir() .. "%#StatusLine#" .. right_separator
     tabline = tabline .. space
 
     return tabline

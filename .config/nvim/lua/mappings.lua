@@ -21,9 +21,8 @@ function M.general()
         {"x", "J", ":move '>+1<CR>gv-gv"},
         {"n", "gm", ":call cursor(0, virtcol('$')/2 )<CR>"},
         -- quickfix
-        {"n", "-", ":copen<CR>"},
-        {"n", "+", ":lopen<CR>"},
-        {"n", "_", ":pclose | cclose | lclose<CR>"},
+        {"n", "-", ":lua require('utils.qf').toggle_qf('q')<CR>"},
+        {"n", "_", ":lua require('utils.qf').toggle_qf('l')<CR>"},
         -- visual cut for replase
         {"v", "<leader>p", '"_dP'},
         {"s", "<leader>p", '"_dP'},
@@ -70,9 +69,13 @@ function M.nvim_lsp()
         {"n", ",cR", "<cmd>lua vim.lsp.codelens.refresh()<CR>"},
         {"n", ",cg", "<cmd>lua vim.lsp.codelens.get()<CR>"},
         {"n", ",s", '<cmd>lua vim.lsp.buf.signature_help({popup_opts = {border = "double"}})<CR>'},
-        {"n", ",ld", '<cmd>lua vim.lsp.diagnostic.show_line_diagnostics({popup_opts = {border = "double"}})<CR>'},
-        {"n", "[d", '<cmd>lua vim.lsp.diagnostic.goto_prev({popup_opts = {border = "double"}, focusable = false})<CR>'},
-        {"n", "]d", '<cmd>lua vim.lsp.diagnostic.goto_next({popup_opts = {border = "double"}, focusable = false})<CR>'},
+        {
+            "n",
+            ",ld",
+            '<cmd>lua vim.lsp.diagnostic.show_line_diagnostics({focusable = false, popup_opts = {border = "double"}})<CR>'
+        },
+        {"n", "[d", '<cmd>lua vim.lsp.diagnostic.goto_prev({focusable = false, popup_opts = {border = "double"}} )<CR>'},
+        {"n", "]d", '<cmd>lua vim.lsp.diagnostic.goto_next({focusable = false, popup_opts = {border = "double"}})<CR>'},
         {"n", ",R", "<cmd>lua vim.lsp.buf.rename()<CR>"},
         {"n", ",ff", "<cmd>lua vim.lsp.buf.formatting()<CR>"},
         {"n", ",ac", "<cmd>lua vim.lsp.buf.code_action()<CR>"},
@@ -228,6 +231,17 @@ function M.autoComplete()
     Cmd("xmap  s  <Plug>(vsnip-select-text)")
     Cmd("nmap  S  <Plug>(vsnip-cut-text)")
     Cmd("xmap  S  <Plug>(vsnip-cut-text)")
+
+    -- local opts = {noremap = true, silent = true}
+    -- local maps = {
+    --     {"i", "<C-l>", '<cmd>lua return require"snippets".expand_or_advance(1)<CR>'},
+    --     {"i", "<C-h>", '<cmd>lua return require"snippets".advance_snippet(-1)<CR>'},
+    --     {"n", "<C-l>", '<cmd>lua return require"snippets".expand_or_advance(1)<CR>'},
+    --     {"n", "<C-h>", '<cmd>lua return require"snippets".advance_snippet(-1)<CR>'},
+    --     {"s", "<C-l>", '<cmd>lua return require"snippets".expand_or_advance(1)<CR>'},
+    --     {"s", "<C-h>", '<cmd>lua return require"snippets".advance_snippet(-1)<CR>'}
+    -- }
+    -- u.maps(maps, opts)
 end
 
 -- ******************************** SuperCollider ---------------------------------------
@@ -268,25 +282,32 @@ function M.smbc()
     local opts = {nowait = true, noremap = true, silent = true}
     local bufmaps = {
         -- Show documentation
-        {"n", "<F2>", ":ArduinoRef<CR>"},
+        {"n", "<F2>", ":lua require('compiler').arduinoref()<CR>"},
+        -- {"n", "<F2>", ":ArduinoRef<CR>"},
         -- Print arduino board
-        {"n", "<F3>", ":PioEnv<CR>"},
+        -- {"n", "<F3>", ":PioEnv<CR>"},
+        {"n", "<F3>", ":lua require('compiler').print_env()<CR>"},
         -- Clean directory
-        {"n", "<F4>", ":PioClean<CR>"},
+        -- {"n", "<F4>", ":PioClean<CR>"},
+        {"n", "<F4>", ":lua require('compiler').print_clean()<CR>"},
         -- Build arduino project
         {"n", "<F5>", ":w <CR>:Make<CR>"},
         -- Upload arduino project
         {"n", "<F6>", ":w <CR>:Make --target upload<CR>"},
         -- Print arduino board
-        {"n", "<F7>", ":PioCheck<CR>"},
+        {"n", "<F7>", ":lua require('compiler').pio_check()<CR>"},
         -- Monitor arduino output
-        {"n", "<F8>", ":PioMonitor<CR>"},
+        -- {"n", "<F8>", ":PioMonitor<CR>"},
+        {"n", "<F8>", ":lua require('compiler').monitor()<CR>"},
         -- Compile tags & link it
-        {"n", "<leader>rt", ":PioCompiledb<CR>"},
+        -- {"n", "<leader>rt", ":PioCompiledb<CR>"},
+        {"n", "<leader>rt", ":lua require('compiler').compiletags()<CR>"},
         -- Show teensy pins image
-        {"n", "<leader>rp", ":TeensyPinout<CR>"},
+        -- {"n", "<leader>rp", ":TeensyPinout<CR>"},
+        {"n", "<leader>rp", ":lua require('compiler').teensypins()<CR>"},
         -- Show teensy specs image
-        {"n", "<leader>rs", ":TeensySpecs<CR>"}
+        -- {"n", "<leader>rs", ":TeensySpecs<CR>"}
+        {"n", "<leader>rs", ":lua require('compiler').teensyspecs()<CR>"}
     }
     u.bufmaps(bufmaps, opts)
 end
@@ -451,7 +472,7 @@ function M.tex()
         -- Compile document
         {"n", "<F5>", "<cmd>TexlabBuild<CR>"},
         -- Launch pdf
-        {"n", "<F6>", "<cmd>TexlabForward<CR>"},
+        {"n", "<F6>", "<cmd>TexlabForward<CR>"}
     }
     u.bufmaps(bufmaps, opts)
 end

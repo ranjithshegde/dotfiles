@@ -1,7 +1,2 @@
-augroup glsl
-	autocmd!
-	autocmd BufEnter,BufWinEnter,BufNewFile,BufRead *.fs set filetype=glsl
-	autocmd BufEnter,BufWinEnter,BufNewFile,BufRead *.vs set filetype=glsl
-augroup END
-
-packadd vim-glsl
+au BufNewFile,BufRead *.glsl,*.vs,*.fs set filetype=glsl
+au CompleteDone *.glsl,*.vs,*.fs pclose
