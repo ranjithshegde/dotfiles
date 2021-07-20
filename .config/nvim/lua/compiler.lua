@@ -1,4 +1,4 @@
-local u = require("utils")
+local u = require "utils"
 
 local Compiler = {}
 
@@ -17,12 +17,12 @@ function Compiler.set_ctype()
         G.makeFile = "Makefile"
         G.debugBin = "bin/" .. vim.fn.fnamemodify(vim.fn.getcwd(), ":t") .. "_debug"
     elseif Compiler.has_pio_file() then
-        Exec("set makeprg=pio\\ run")
+        Exec "set makeprg=pio\\ run"
         -- require("settings").smbc()
         require("mappings").smbc()
         G.makeFile = "platformio.ini"
     else
-        Exec("set makeprg=g++")
+        Exec "set makeprg=g++"
         require("mappings").ctests()
         G.debugBin = "%<"
     end
@@ -30,10 +30,10 @@ end
 
 -- basic setup for small test files
 function Compiler.cpractice()
-    local dir = vim.fn.input("enter directory name: ")
+    local dir = vim.fn.input "enter directory name: "
     vim.fn.execute("!mkdir -p $CWORK/Practice/" .. dir)
     vim.fn.execute("cd $CWORK/Practice/" .. dir)
-    local file = vim.fn.input("enter file name: ")
+    local file = vim.fn.input "enter file name: "
     Exec("e " .. file .. ".cpp")
 end
 
@@ -112,16 +112,26 @@ end
 -- Cmake generate
 function Compiler.cmake_gen()
     Compiler.terminal(
-        "mkdir build; cmake -DCMAKE_BUILD_TYPE='Release' " ..
-            G.extra_cmake_flags .. " -B " .. G.cmake_build_dir .. " -S ." .. ";" .. G.compiledb
+        "mkdir build; cmake -DCMAKE_BUILD_TYPE='Release' "
+            .. G.extra_cmake_flags
+            .. " -B "
+            .. G.cmake_build_dir
+            .. " -S ."
+            .. ";"
+            .. G.compiledb
     )
 end
 
 -- Cmake generate debug
 function Compiler.cmake_gen_debug()
     Compiler.terminal(
-        "mkdir build; cmake -DCMAKE_BUILD_TYPE='Debug' " ..
-            G.extra_cmake_flags .. " -B " .. G.cmake_build_dir .. " -S ." .. ";" .. G.compiledb
+        "mkdir build; cmake -DCMAKE_BUILD_TYPE='Debug' "
+            .. G.extra_cmake_flags
+            .. " -B "
+            .. G.cmake_build_dir
+            .. " -S ."
+            .. ";"
+            .. G.compiledb
     )
 end
 
@@ -205,7 +215,7 @@ function Compiler.pio_env()
     local result = {}
     -- Check for platformio.ini file in root
     if Compiler.has_pio_file() then
-        local lines = Compiler.lines_from("platformio.ini")
+        local lines = Compiler.lines_from "platformio.ini"
         for i = 1, #lines do
             local search = lines[i]:match(search_pattern)
             if search ~= nil then
@@ -225,7 +235,7 @@ end
 -- print the board being compiled for
 function Compiler.print_env()
     local env = Compiler.pio_env()
-    print("Controllers defined in this platformio project:")
+    print "Controllers defined in this platformio project:"
     for name = 1, #env do
         print(env[name])
     end

@@ -6,26 +6,21 @@ local statusline = {}
 statusline.el = function()
     require("el").reset_windows()
 
-    local builtin = require("el.builtin")
-    local extensions = require("el.extensions")
-    local sections = require("el.sections")
-    local subscribe = require("el.subscribe")
-    local lsp_statusline = require("el.plugins.lsp_status")
-    local separators = {left = "  ", right = "  "}
+    local builtin = require "el.builtin"
+    local extensions = require "el.extensions"
+    local sections = require "el.sections"
+    local subscribe = require "el.subscribe"
+    local lsp_statusline = require "el.plugins.lsp_status"
+    local separators = { left = "  ", right = "  " }
 
     --*********************************** File Icon ---------------------------------
-    local file_icon =
-        subscribe.buf_autocmd(
-        "el_file_icon",
-        "BufRead",
-        function(_, bufnr)
-            local icon = extensions.file_icon(_, bufnr)
-            if icon then
-                return icon .. " "
-            end
-            return ""
+    local file_icon = subscribe.buf_autocmd("el_file_icon", "BufRead", function(_, bufnr)
+        local icon = extensions.file_icon(_, bufnr)
+        if icon then
+            return icon .. " "
         end
-    )
+        return ""
+    end)
 
     --*********************************** Vim Mode ---------------------------------
     local mode = function()
@@ -35,7 +30,7 @@ statusline.el = function()
             c = "  ⌨ ",
             v = "  ✄ ",
             [""] = "  ✄ ",
-            t = "zsh  ▧ "
+            t = "zsh  ▧ ",
         }
 
         local mode_color = {
@@ -44,7 +39,7 @@ statusline.el = function()
             c = Colors.yellow,
             v = Colors.cyan,
             [""] = Colors.cyan,
-            t = Colors.purple
+            t = Colors.purple,
         }
         -- Text for mode
         local current_mode = alias[vim.fn.mode()]
@@ -58,8 +53,8 @@ statusline.el = function()
 
     --*********************************** Scroll position ---------------------------------
     local scroll = function()
-        local current_line = vim.fn.line(".")
-        local total_lines = vim.fn.line("$")
+        local current_line = vim.fn.line "."
+        local total_lines = vim.fn.line "$"
         local chars = {
             "_",
             "▁",
@@ -69,7 +64,7 @@ statusline.el = function()
             "▅",
             "▆",
             "▇",
-            "█"
+            "█",
         }
         local index = 1
 
@@ -91,7 +86,7 @@ statusline.el = function()
     --*********************************** SuperCollider ---------------------------------
 
     local scnvim = function()
-        if Op("filetype") == "supercollider" then
+        if Op "filetype" == "supercollider" then
             -- local tspos = Api.nvim_exec([[echo nvim_treesitter#statusline(20)]], true)
             local scstatus = "📡" .. Fn("scnvim#statusline#server_status", {})
             vim.cmd(string.format("hi ScStatus guibg=%s guifg=%s", Colors.blue, Colors.bg))
@@ -100,63 +95,51 @@ statusline.el = function()
     end
 
     --*********************************** Git branch ---------------------------------
-    local git_branch =
-        subscribe.buf_autocmd(
-        "el_git_branch",
-        "BufEnter",
-        function(window, buffer)
-            local branch = extensions.git_branch(window, buffer)
-            vim.cmd(string.format("hi ElGitBranch guibg=%s guifg=%s", Colors.bg, Colors.yellow))
-            if branch then
-                vim.fn.execute("PackerLoad gitsigns.nvim")
-                return " " .. extensions.git_icon() .. " " .. branch
-            end
+    local git_branch = subscribe.buf_autocmd("el_git_branch", "BufEnter", function(window, buffer)
+        local branch = extensions.git_branch(window, buffer)
+        vim.cmd(string.format("hi ElGitBranch guibg=%s guifg=%s", Colors.bg, Colors.yellow))
+        if branch then
+            vim.fn.execute "PackerLoad gitsigns.nvim"
+            return " " .. extensions.git_icon() .. " " .. branch
         end
-    )
+    end)
 
     --*********************************** Git sign changes ---------------------------------
-    local git_changes =
-        subscribe.buf_autocmd(
-        "el_git_changes",
-        "BufWritePost",
-        function(window, buffer)
-            vim.cmd(string.format("hi ElGitDiff guibg=%s guifg=%s", Colors.bg, Colors.blue))
-            return extensions.git_changes(window, buffer)
-        end
-    )
+    local git_changes = subscribe.buf_autocmd("el_git_changes", "BufWritePost", function(window, buffer)
+        vim.cmd(string.format("hi ElGitDiff guibg=%s guifg=%s", Colors.bg, Colors.blue))
+        return extensions.git_changes(window, buffer)
+    end)
 
     --*********************************** Status config ---------------------------------
-    require("el").setup(
-        {
-            generator = function(_, _)
-                return {
-                    sections.highlight("ElViMode", mode),
-                    sections.highlight("ElGitBranch", git_branch),
-                    separators.left,
-                    sections.highlight("ElGitDiff", git_changes),
-                    separators.left,
-                    sections.split,
-                    sections.highlight("Diag", lsp_statusline.segment),
-                    sections.split,
-                    sections.highlight("ScStatus", scnvim),
-                    lsp_statusline.server_progress,
-                    sections.split,
-                    sections.highlight("DevIconH", file_icon),
-                    sections.highlight("Filename", builtin.tail_file),
-                    sections.collapse_builtin({" ", builtin.modified_flag}),
-                    separators.right,
-                    -- builtin.quickfix,
-                    builtin.line_with_width(3),
-                    ":",
-                    builtin.column_with_width(2),
-                    separators.left,
-                    sections.highlight("ElGitBranch", builtin.percentage_through_file),
-                    sections.highlight("ElScroll", scroll),
-                    sections.collapse_builtin({builtin.help_list, builtin.readonly_list})
-                }
-            end
-        }
-    )
+    require("el").setup {
+        generator = function(_, _)
+            return {
+                sections.highlight("ElViMode", mode),
+                sections.highlight("ElGitBranch", git_branch),
+                separators.left,
+                sections.highlight("ElGitDiff", git_changes),
+                separators.left,
+                sections.split,
+                sections.highlight("Diag", lsp_statusline.segment),
+                sections.split,
+                sections.highlight("ScStatus", scnvim),
+                lsp_statusline.server_progress,
+                sections.split,
+                sections.highlight("DevIconH", file_icon),
+                sections.highlight("Filename", builtin.tail_file),
+                sections.collapse_builtin { " ", builtin.modified_flag },
+                separators.right,
+                -- builtin.quickfix,
+                builtin.line_with_width(3),
+                ":",
+                builtin.column_with_width(2),
+                separators.left,
+                sections.highlight("ElGitBranch", builtin.percentage_through_file),
+                sections.highlight("ElScroll", scroll),
+                sections.collapse_builtin { builtin.help_list, builtin.readonly_list },
+            }
+        end,
+    }
 end
 
 ------------------------------------------------------------------------
@@ -181,15 +164,15 @@ function statusline.tabs()
         local current_buf = Api.nvim_win_get_buf(current_win)
         local file_name = Api.nvim_buf_get_name(current_buf)
         if string.find(file_name, "term://") ~= nil then
-            return " " .. Api.nvim_call_function("fnamemodify", {file_name, ":p:t"})
+            return " " .. Api.nvim_call_function("fnamemodify", { file_name, ":p:t" })
         end
-        file_name = Api.nvim_call_function("fnamemodify", {file_name, ":p:t"})
+        file_name = Api.nvim_call_function("fnamemodify", { file_name, ":p:t" })
         if file_name == "" then
             return "No Name"
         end
 
         local ext = vim.fn.fnamemodify(file_name, ":e")
-        local icon = require "nvim-web-devicons".get_icon(file_name, ext)
+        local icon = require("nvim-web-devicons").get_icon(file_name, ext)
         if icon ~= nil then
             return icon .. space .. file_name
         end
@@ -199,11 +182,11 @@ function statusline.tabs()
     -- *********************************** Highlight groups ---------------------------------
     -- Set tabline colours
     local set_colours = function()
-        Cmd(string.format("hi TabLineSel guibg=%s guifg=%s", Colors.bg, Colors.white))
-        Cmd(string.format("hi TabLineSelSeparator guibg=%s guifg=%s", Colors.bg, Colors.white))
-        Cmd(string.format("hi TabLine guibg=None guifg=%s", Colors.purple))
-        Cmd(string.format("hi TabLineSeparator guibg=None guifg=%s", Colors.purple))
-        Exec("hi TabLineFill guibg=None gui=None")
+        Exec(string.format("hi TabLineSel guibg=%s guifg=%s", Colors.bg, Colors.white))
+        Exec(string.format("hi TabLineSelSeparator guibg=%s guifg=%s", Colors.bg, Colors.white))
+        Exec(string.format("hi TabLine guibg=None guifg=%s", Colors.purple))
+        Exec(string.format("hi TabLineSeparator guibg=None guifg=%s", Colors.purple))
+        Exec "hi TabLineFill guibg=None gui=None"
     end
 
     --*********************************** Tabline module ---------------------------------
@@ -227,6 +210,7 @@ function statusline.tabs()
         end
     end
     tabline = tabline .. "%="
+    -- stylua: ignore start
     -- Component: Working Directory
     tabline =
         tabline ..
@@ -235,7 +219,7 @@ function statusline.tabs()
             -- left_separator .. "%#TablineSel# " .. workDir() .. "%#TabLineSelSeparator#" .. right_separator
             left_separator .. "%#StatusLine# " .. workDir() .. "%#StatusLine#" .. right_separator
     tabline = tabline .. space
-
+    -- stylua: ignore end
     return tabline
 end
 return statusline

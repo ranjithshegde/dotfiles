@@ -20,7 +20,7 @@ function utils.UnloadAllModules()
         "^plugins$",
         "^settings$",
         "^statusline$",
-        "^utils$"
+        "^utils$",
     }
     for k, _ in pairs(package.loaded) do
         for _, v in ipairs(unload_modules) do
@@ -34,26 +34,26 @@ end
 
 -- Reload Vim configuration
 function utils.Reload()
-    Cmd("LspStop")
+    Exec "LspStop"
     utils.UnloadAllModules()
-    Cmd("source $MYVIMRC")
+    Exec "source $MYVIMRC"
 end
 
 -- Restart Vim without having to close and run again
 function utils.Restart()
     utils.Reload()
-    Cmd("doautocmd VimEnter")
+    Exec "doautocmd VimEnter"
 end
 
 -- ************** AutoCommands ---------------------------------------------------------
 
 function utils.create_augroup(autocmds, name)
     Exec("augroup " .. name)
-    Exec("autocmd!")
+    Exec "autocmd!"
     for _, autocmd in ipairs(autocmds) do
         Exec("autocmd " .. table.concat(autocmd, " "))
     end
-    Exec("augroup END")
+    Exec "augroup END"
 end
 
 function utils.create_cmdGroup(autocmds, command, name)
@@ -62,7 +62,7 @@ function utils.create_cmdGroup(autocmds, command, name)
     for _, autocmd in ipairs(autocmds) do
         Exec("autocmd " .. table.concat(autocmd, " "))
     end
-    Exec("augroup END")
+    Exec "augroup END"
 end
 
 -- ************** Mappings ---------------------------------------------------------
@@ -91,10 +91,10 @@ end
 -- ************** vim settings  ---------------------------------------------------------
 
 function _G.HighlightOnYank()
-    vim.highlight.on_yank {higroup = "IncSearch", timeout = 200}
+    vim.highlight.on_yank { higroup = "IncSearch", timeout = 200 }
 end
 
-utils.create_augroup({{"TextYankPost", "*", "silent! lua HighlightOnYank()"}}, "YankHighlight")
+utils.create_augroup({ { "TextYankPost", "*", "silent! lua HighlightOnYank()" } }, "YankHighlight")
 
 -- ************** LSP  ---------------------------------------------------------
 -- Toggle virtual diagnostics
@@ -102,7 +102,7 @@ utils.virtDiagnostics = {}
 utils.virtDiagnostics.show = true
 utils.virtDiagnostics.toggle = function()
     utils.virtDiagnostics.show = not utils.virtDiagnostics.show
-    vim.lsp.diagnostic.display(vim.lsp.diagnostic.get(0, 1), 0, 1, {virtual_text = utils.virtDiagnostics.show})
+    vim.lsp.diagnostic.display(vim.lsp.diagnostic.get(0, 1), 0, 1, { virtual_text = utils.virtDiagnostics.show })
 end
 
 -- Display capabilities of LSP
@@ -138,28 +138,27 @@ function utils.lspcapabilities()
             "implementation",
             "rename",
             "signature_help",
-            "type_definition"
+            "type_definition",
         }
-        return vim.tbl_filter(
-            function(key)
-                -- keep only the capabilities that are interesting & available
-                return vim.tbl_contains(display_keys, key) and resolved_capabilities[key] == true
-            end,
-            vim.tbl_keys(resolved_capabilities)
-        )
+        return vim.tbl_filter(function(key)
+            -- keep only the capabilities that are interesting & available
+            return vim.tbl_contains(display_keys, key) and resolved_capabilities[key] == true
+        end, vim.tbl_keys(
+            resolved_capabilities
+        ))
     end
 
     local function make_client_info(client)
         return {
             "Client: " .. client.name .. " (id " .. tostring(client.id) .. ")",
             "resolved: \t" .. table.concat(available_capabilities(client.resolved_capabilities or {}), ", "),
-            "raw: \t" .. table.concat(vim.tbl_keys(client.server_capabilities or {}), ", ")
+            "raw: \t" .. table.concat(vim.tbl_keys(client.server_capabilities or {}), ", "),
         }
     end
 
     for _, client in ipairs(buf_clients) do
         vim.list_extend(buf_lines, make_client_info(client))
-        vim.list_extend(buf_lines, {""})
+        vim.list_extend(buf_lines, { "" })
     end
 
     vim.api.nvim_buf_set_lines(bufnr, 0, -1, true, buf_lines)
@@ -167,8 +166,8 @@ function utils.lspcapabilities()
     vim.api.nvim_buf_set_option(bufnr, "filetype", "lspcapabilities")
     local configs_pattern = [[\%(]] .. table.concat(buf_client_names, [[\|]]) .. [[\)]]
     vim.cmd([[syntax match Title /\%(Client\):.*\zs]] .. configs_pattern .. "/")
-    vim.api.nvim_buf_set_keymap(bufnr, "n", "<esc>", "<cmd>bd<CR>", {noremap = true})
-    vim.lsp.util.close_preview_autocmd({"BufHidden", "BufLeave"}, win_id)
+    vim.api.nvim_buf_set_keymap(bufnr, "n", "<esc>", "<cmd>bd<CR>", { noremap = true })
+    vim.lsp.util.close_preview_autocmd({ "BufHidden", "BufLeave" }, win_id)
 end
 
 -- ******************************** Terminal ---------------------------------------------------------
@@ -196,7 +195,7 @@ function utils.toggleTerm(cmd, name, spl)
             Exec "belowright new"
         end
         Exec("buffer " .. name)
-        Cmd "startinsert"
+        Exec "startinsert"
     else
         if spl > 0 then
             Exec "belowright vnew"
@@ -204,7 +203,7 @@ function utils.toggleTerm(cmd, name, spl)
             Exec "belowright new"
         end
         vim.fn.termopen(cmd)
-        Cmd("startinsert")
+        Exec "startinsert"
         Exec("f " .. name)
     end
 end
@@ -219,33 +218,33 @@ end
 
 -- Start Instant server
 function utils.Start()
-    local id = vim.fn.input("Enter extension: ")
+    local id = vim.fn.input "Enter extension: "
     Exec "PackerLoad instant.nvim"
     Exec("InstantStartServer 192.168.178." .. id .. " 8080")
 end
 
 -- Start Single session
 function utils.Session()
-    local id = vim.fn.input("Enter extension: ")
+    local id = vim.fn.input "Enter extension: "
     Exec("InstantStartSession 192.168.178." .. id .. " 8080")
 end
 
 -- Start Single buffer
 function utils.Single()
-    local id = vim.fn.input("Enter extension: ")
+    local id = vim.fn.input "Enter extension: "
     Exec("InstantStartSingle 192.168.178." .. id .. " 8080")
 end
 
 -- Follow a user
 function utils.Follow()
-    local name = vim.fn.input("User to follow: ")
+    local name = vim.fn.input "User to follow: "
     Exec("InstantFollow " .. name)
 end
 
 -- Join Single session
 function utils.JoinSession()
     Exec "PackerLoad instant.nvim"
-    local id = vim.fn.input("Enter extension: ")
+    local id = vim.fn.input "Enter extension: "
     Exec("InstantJoinSession 192.168.178." .. id .. " 8080")
     utils.Follow()
 end
@@ -253,7 +252,7 @@ end
 -- Join Single buffer
 function utils.JoinSingle()
     Exec "PackerLoad instant.nvim"
-    local id = vim.fn.input("Enter extension: ")
+    local id = vim.fn.input "Enter extension: "
     Exec("InstantJoinSingle 192.168.178." .. id .. " 8080")
     utils.Follow()
 end
