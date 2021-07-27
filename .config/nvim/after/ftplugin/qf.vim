@@ -1,5 +1,5 @@
-nnoremap <silent><buffer>dd :call utils#qf_delete(bufnr())<CR>
-vnoremap <silent><buffer>d  :call utils#qf_delete(bufnr())<CR>
+nn <silent><buffer>dd :call util#qf_delete(bufnr())<CR>
+vn <silent><buffer>d  :call util#qf_delete(bufnr())<CR>
 
-nnoremap <buffer> H :colder<CR>
-nnoremap <buffer> L :cnewer<CR>
+nn <buffer> H :colder<CR>
+nn <buffer> L :cnewer<CR>

@@ -257,4 +257,21 @@ function utils.JoinSingle()
     utils.Follow()
 end
 
+-- G.netrwIsOpen = 0
+-- function utils.toggleNetrw()
+--     if G.netrwIsOpen ~= 0 then
+--         local i = vim.fn.bufnr "$"
+--         while i >= 1 do
+--             if vim.fn.getbufvar(i, Op "filetype") ~= "netrw" then
+--                 utils.silent_shell("bwipeout " .. i)
+--             end
+--             i = i - 1
+--         end
+--         G.netrwIsOpen = 0
+--     else
+--         G.netrwIsOpen = 1
+--         utils.silent_shell "Lexplore"
+--     end
+-- end
+
 return utils

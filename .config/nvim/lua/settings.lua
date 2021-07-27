@@ -63,7 +63,6 @@ function settings.options()
         j = true, -- Auto-remove comments if possible.
         ["2"] = true, -- Indent according to 2nd line
     }
-    -- if Op "filetype" ~= "vimwiki" and Op "filetype" ~= "markdown" then
     if Op "filetype" ~= "vimwiki" and Op "filetype" ~= "markdown" and Op "filetype" ~= "vim" then
         o.foldexpr = "nvim_treesitter#foldexpr()"
     end
@@ -245,6 +244,8 @@ function settings.completion()
         },
         org = {
             { mode = "omni" },
+            { mode = "<c-p>" },
+            { mode = "<c-n>" },
         },
         glsl = {
             { mode = "user" },
@@ -264,7 +265,6 @@ function settings.completion()
     if Op "filetype" == "supercollider" then
         G.completion_enable_snippet = "UltiSnips"
     else
-        -- G.completion_enable_snippet = "snippets.nvim"
         G.completion_enable_snippet = "vim-vsnip"
     end
 

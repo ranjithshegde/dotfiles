@@ -11,7 +11,7 @@ u.create_augroup({
 
 -- selfmanage packer
 if fn.empty(fn.glob(install_path)) > 0 then
-fn.system { "git", "clone", "https://github.com/wbthomason/packer.nvim", install_path }
+    fn.system { "git", "clone", "https://github.com/wbthomason/packer.nvim", install_path }
 end
 
 --------------------------------------------------------------------------------------------------------
@@ -19,11 +19,13 @@ end
 --------------------------------------------------------------------------------------------------------
 
 return packer.startup(function(use)
-    use  "wbthomason/packer.nvim"
+    use "wbthomason/packer.nvim"
 
     -- use "folke/tokyonight.nvim"
 
     -- use "lvim-tech/lvim-colorscheme"
+
+    use { "petrbroz/vim-glsl", ft = "glsl" }
 
     use { "m-pilia/vim-ccls", ft = "cpp" }
 
