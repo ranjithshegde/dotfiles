@@ -1,55 +1,52 @@
-local u = require "utils"
-
 -- -------------------------- Defs **********************************************************************
+local u = require "utils"
 local fn = vim.fn
-local camel = fn.stdpath "data" .. "/site/pack/plugins/opt/CamelCaseMotion"
 local install_path = fn.stdpath "data" .. "/site/pack/packer/start/packer.nvim"
+local packer = require "packer"
 
 -- Plugin autocommand
 u.create_augroup({
     { "BufWritePost, BufLeave", "plugins.lua", "PackerCompile" },
 }, "PluginLoad")
 
---------------------------------------------------------------------------------------------------------
---				Custom Plugins 							      --
---------------------------------------------------------------------------------------------------------
--- CamelCaseMotion
-if fn.empty(fn.glob(camel)) > 0 then
-    fn.system { "git", "clone", "https://github.com/bkad/CamelCaseMotion.git", camel }
-end
-
 -- selfmanage packer
 if fn.empty(fn.glob(install_path)) > 0 then
-    fn.system { "git", "clone", "https://github.com/wbthomason/packer.nvim", install_path }
+fn.system { "git", "clone", "https://github.com/wbthomason/packer.nvim", install_path }
 end
 
 --------------------------------------------------------------------------------------------------------
---				Main Plugins 							      --
+--				 Plugins                                            							      --
 --------------------------------------------------------------------------------------------------------
-local packer = require "packer"
 
 return packer.startup(function(use)
-    use "wbthomason/packer.nvim"
+    use  "wbthomason/packer.nvim"
 
-    use "folke/tokyonight.nvim"
+    -- use "folke/tokyonight.nvim"
 
-    use { "tweekmonster/startuptime.vim", cmd = "StartupTime" }
+    -- use "lvim-tech/lvim-colorscheme"
 
     use { "m-pilia/vim-ccls", ft = "cpp" }
 
     use { "yegappan/taglist", cmd = "TlistToggle" }
 
-    -- StatusLine
-    use { "tjdevries/express_line.nvim", requires = "kyazdani42/nvim-web-devicons" }
+    use { "bkad/CamelCaseMotion", opt = true }
 
-    -- vim Orgmode
+    use { "tweekmonster/startuptime.vim", cmd = "StartupTime" }
+
+    -- vimwiki
     use {
-        "kristijanhusak/orgmode.nvim",
-        ft = "org",
+        "vimwiki/vimwiki",
+        branch = "dev",
+        ft = "vimwiki",
+        keys = { "<leader>ww", "<leader>w<leader>w", "<leader>wi", "<leader>wt" },
+    }
+
+    -- StatusLine
+    use {
+        "tjdevries/express_line.nvim",
+        requires = "kyazdani42/nvim-web-devicons",
         config = function()
-            require("orgmode").setup {
-                org_highlight_latex_and_related = "entities",
-            }
+            require("statusline").el()
         end,
     }
 
@@ -94,7 +91,6 @@ return packer.startup(function(use)
         "lewis6991/gitsigns.nvim",
         config = function()
             require("gitsigns").setup { keymaps = {} }
-            -- print("gitssigns gitsgns")
         end,
         opt = true,
     }
@@ -108,12 +104,36 @@ return packer.startup(function(use)
         ft = { "vimwiki", "markdown" },
     }
 
-    -- vimwiki
+    -- Tim pope
     use {
-        "vimwiki/vimwiki",
-        branch = "dev",
-        ft = "vimwiki",
-        keys = { "<leader>ww", "<leader>w<leader>w", "<leader>wi", "<leader>wt" },
+        "tpope/vim-repeat",
+        "tpope/vim-surround",
+        { "tpope/vim-unimpaired", keys = { "[", "]" } },
+        { "tpope/vim-commentary", keys = "gc" },
+        { "tpope/vim-dispatch", cmd = { "Make", "Dispatch" } },
+        { "tpope/vim-fugitive", cmd = { "G", "Git", "Gclog" } },
+    }
+
+    -- vim Calendar
+    -- use {
+    --     "itchyny/calendar.vim",
+    --     cmd = "Calendar",
+    --     config = function()
+    --         G.calendar_google_task = 1
+    --         G.calendar_google_calendar = 1
+    --         vim.cmd "source ~/.cache/calendar.vim/credentials.vim"
+    --     end,
+    -- }
+
+    -- vim Orgmode
+    use {
+        "kristijanhusak/orgmode.nvim",
+        ft = "org",
+        config = function()
+            require("orgmode").setup {
+                org_highlight_latex_and_related = "entities",
+            }
+        end,
     }
 
     -- WhichKey
@@ -127,6 +147,19 @@ return packer.startup(function(use)
                 },
             }
         end,
+    }
+
+    -- TreeSitter
+    use {
+        {
+            "nvim-treesitter/nvim-treesitter",
+            requires = { "p00f/nvim-ts-rainbow", "nvim-treesitter/nvim-treesitter-textobjects" },
+        },
+        { "nvim-treesitter/nvim-treesitter-refactor", ft = "supercollider" },
+        {
+            "nvim-treesitter/playground",
+            cmd = { "TSPlaygroundToggle", "TSHighlightCapturesUnderCursor" },
+        },
     }
 
     --Lsp config and companions
@@ -159,52 +192,6 @@ return packer.startup(function(use)
         },
     }
 
-    -- Tim pope
-    use {
-        "tpope/vim-repeat",
-        "tpope/vim-surround",
-        { "tpope/vim-unimpaired", keys = { "[", "]" } },
-        { "tpope/vim-commentary", keys = "gc" },
-        { "tpope/vim-dispatch", cmd = { "Make", "Dispatch" } },
-        { "tpope/vim-fugitive", cmd = { "G", "Git", "Gclog" } },
-    }
-
-    -- vim Calendar
-    use {
-        "itchyny/calendar.vim",
-        cmd = "Calendar",
-        config = function()
-            G.calendar_google_task = 1
-            G.calendar_google_calendar = 1
-            vim.cmd "source ~/.cache/calendar.vim/credentials.vim"
-        end,
-    }
-
-    -- Telescope
-    use {
-        "nvim-telescope/telescope.nvim",
-        -- branch = "change_dir",
-        requires = {
-            "nvim-lua/popup.nvim",
-            "nvim-lua/plenary.nvim",
-            -- 'nvim-telescope/telescope-symbols.nvim',
-            "nvim-telescope/telescope-project.nvim",
-        },
-    }
-
-    -- TreeSitter
-    use {
-        {
-            "nvim-treesitter/nvim-treesitter",
-            requires = { "p00f/nvim-ts-rainbow", "nvim-treesitter/nvim-treesitter-textobjects" },
-        },
-        { "nvim-treesitter/nvim-treesitter-refactor", ft = "supercollider" },
-        {
-            "nvim-treesitter/playground",
-            cmd = { "TSPlaygroundToggle", "TSHighlightCapturesUnderCursor" },
-        },
-    }
-
     -- Colorizer
     use {
         "norcalli/nvim-colorizer.lua",
@@ -219,6 +206,33 @@ return packer.startup(function(use)
             }
         end,
         cmd = { "ColorizerAttachToBuffer", "ColorizerToggle" },
+    }
+
+    -- Telescope
+    use {
+        {
+            "nvim-telescope/telescope.nvim",
+            requires = {
+                "nvim-lua/popup.nvim",
+                "nvim-lua/plenary.nvim",
+                -- 'nvim-telescope/telescope-symbols.nvim',
+            },
+        },
+        {
+            "nvim-telescope/telescope-project.nvim",
+            config = function()
+                require("telescope").setup {
+                    extensions = {
+                        project = {
+                            base_dirs = {
+                                { "~/Software/Workspaces/", max_depth = 5 },
+                                { "~/Documents/ofWorkspace/", max_depth = 4 },
+                            },
+                        },
+                    },
+                }
+            end,
+        },
     }
 
     -- Indents and chars

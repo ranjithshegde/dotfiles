@@ -37,6 +37,13 @@ function Compiler.cpractice()
     Exec("e " .. file .. ".cpp")
 end
 
+function Compiler.cproject()
+    local dir = vim.fn.input "enter directory name: "
+    vim.fn.execute("!mkdir -p $CWORK/" .. dir)
+    vim.fn.execute("cd $CWORK/" .. dir)
+    vim.fn.termopen "projectCreate -g"
+end
+
 ------------------------------------------------------------------------
 --                                Cpp Setup	                          --
 ------------------------------------------------------------------------

@@ -17,6 +17,7 @@ end
 --                              Vim basics                            --
 ------------------------------------------------------------------------
 function settings.options()
+    Exec "packadd tokyonight.nvim"
     Exec "colo tokyonight"
     local tab = 4
     o.cursorline = true
@@ -38,6 +39,7 @@ function settings.options()
     o.timeoutlen = 500
     o.signcolumn = "yes"
     o.foldmethod = "expr"
+    o.spelloptions = "camel"
     o.fillchars = "stlnc:»,vert:║,fold:-"
     -- o.listchars = "tab:<->,eol:↲,space:→"
     o.completeopt = "menuone,noinsert,noselect"
@@ -48,24 +50,20 @@ function settings.options()
     G.loaded_ruby_provider = 0
     G.loaded_perl_provider = 0
     G.loaded_python_provider = 0
-    G.tokyonight_style = "night"
     G.tex_conceal = "abdmgs"
-    -- G.tokyonight_style = "day"
-
-    -- stylua: ignore start
-    o.formatoptions = o.formatoptions
-        - "a" -- Dont format pasted code
-        - "t" -- Respect linter prgs
-        - "o" -- O and o, don't continue comments
-        - "r" -- But do continue when pressing enter.
-        + "c" -- In general, I like it when comments respect textwidth
-        + "q" -- Allow formatting comments w/ gq
-        + "n" -- Indent past the formatlistpat, not underneath it.
-        + "j" -- Auto-remove comments if possible.
-        + "2" -- Indent according to 2nd line
-    -- stylua: ignore end
-    -- o.formatoptions = o.formatoptions - "rato"
-    -- o.formatoptions = o.formatoptions + "cqnj2"
+    -- G.tokyonight_style = "night"
+    o.formatoptions = {
+        a = false, -- Dont format pasted code
+        t = false, -- Delegate to linter prgs/LSP
+        o = false, -- O and o don't continue comments
+        r = false, -- Return does not continue comments
+        c = true, -- comments respect textwidth
+        q = true, -- Allow formatting comments w/ gq
+        n = true, -- Recognize numbered lists
+        j = true, -- Auto-remove comments if possible.
+        ["2"] = true, -- Indent according to 2nd line
+    }
+    -- if Op "filetype" ~= "vimwiki" and Op "filetype" ~= "markdown" then
     if Op "filetype" ~= "vimwiki" and Op "filetype" ~= "markdown" and Op "filetype" ~= "vim" then
         o.foldexpr = "nvim_treesitter#foldexpr()"
     end
@@ -99,7 +97,6 @@ function settings.treesitter()
         highlight = {
             enable = true,
             additional_vim_regex_highlighting = { "latex", "markdown" },
-            -- additional_vim_regex_highlighting = true
         },
         indent = { enable = true, disable = { "python" } },
         autopairs = { enable = true },
@@ -280,7 +277,8 @@ function settings.completion()
         },
     }, "completion_attach")
 
-    -- require "snippets".set_ux(require "snippets.inserters.highlighter")
+    -- require("snippets").use_suggested_mappings()
+    -- require("snippets").set_ux(require "snippets.inserters.extmarks")
 end
 
 ------------------------------------------------------------------------
@@ -311,7 +309,7 @@ function settings.lsp_settings()
 
     -- Set diagnostics to local list automatically
     u.create_augroup(
-        { { "User LspDiagnosticsChanged", "lua vim.lsp.diagnostic.set_loclist({open_loclist = false})" } },
+        { { "User LspDiagnosticsChanged", "lua vim.lsp.diagnostic.set_loclist({open = false})" } },
         "LspLocList"
     )
 
@@ -333,8 +331,7 @@ function settings.lsp_settings()
             u.create_augroup({
                 {
                     "BufWritePre",
-                    "*.js,*.jsx,*.hpp,*.sh",
-                    -- "*.js,*.jsx,*.hpp,*.sh,*.lua",
+                    "*.js,*.jsx,*.hpp,*.h,*.sh,*.lua,*.cpp,*.json,*.py",
                     "lua vim.lsp.buf.formatting_sync(nil, 1000)",
                 },
             }, "lsp_auto_format")
@@ -358,10 +355,20 @@ function settings.lsp_settings()
         rc.code_action = false
     end
 
-    EfmInit = function(client)
+    EfmAttach = function(client)
         require("mappings").nvim_lsp()
         local rc = client.resolved_capabilities
         rc.document_formatting = false
+        Lsp_status.on_attach(client)
+        Exec "PackerLoad vim-vsnip-integ"
+        vim.fn["vsnip#get_complete_items"](vim.fn["bufnr"]())
+
+        if rc.document_highlight then
+            Exec "hi LspReferenceRead cterm=bold ctermbg=red guibg=#98971a"
+            Exec "hi LspReferenceText cterm=bold ctermbg=red guibg=grey"
+            Exec "hi LspReferenceWrite cterm=bold ctermbg=red guibg= #fbf1c7"
+            u.create_cmdGroup(docHigh, buffExec, "bufgroup")
+        end
     end
 
     -- borders for floating windows
@@ -380,7 +387,7 @@ function settings.langServers()
     local configs = {
         cssls = { on_attach = All_attach },
         yamlls = { on_attach = All_attach },
-        jsonls = { on_attach = All_attach },
+        jsonls = { on_attach = EfmAttach },
         bashls = { on_attach = All_attach, filetypes = { "sh", "zsh" } },
         cmake = { on_attach = All_attach, capabilities = Capabilities },
         vimls = { on_attach = All_attach, capabilities = Capabilities },
@@ -464,7 +471,7 @@ function settings.lsp_lintFormat()
                 { virtual_text = false }
             ),
         },
-        -- on_attach = All_attach,
+        on_attach = EfmAttach,
         init_options = {
             linters = {
                 ["write-good"] = {
@@ -597,8 +604,10 @@ function settings.lsp_lintFormat()
     }
     local stylua = { formatCommand = "stylua --search-parent-directories -", formatStdin = true }
     local vint = {
-        lintCommand = "vint --enable-neovim",
+        lintCommand = "vint -f '{file_path}:{line_number}:{column_number}: {severity}: {description} (see: {reference})' --enable-neovim",
+        -- lintCommand = "vint --enable-neovim",
         lintStdin = false,
+        -- lintFormats = { "%f:%l:%c: %trror: %m", "%f:%l:%c: %tarning: %m" },
         lintFormats = { "%f:%l:%c: %m" },
     }
 
@@ -652,17 +661,10 @@ function settings.telescope()
             prompt_prefix = "❯ ",
             selection_caret = "❯ ",
         },
-        -- file_ignore_patterns = {"*.mp4", ".pdf", ".wav", ".mkv"},
-        extensions = {
-            project = {
-                base_dirs = { { "~/Software/Workspaces/", max_depth = 5 }, { "~/Documents/ofWorkspace/", max_depth = 4 } },
-            },
-        },
     }
-    require("telescope").load_extension "project"
 end
 
-------------------------------------------------------------------------
+-----------------------------------------------------------------------
 --                       Sumneko lua development 	                  --
 ------------------------------------------------------------------------
 

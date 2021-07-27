@@ -228,15 +228,15 @@ function M.autoComplete()
 	Exec("nmap  S  <Plug>(vsnip-cut-text)")
 	Exec("xmap  S  <Plug>(vsnip-cut-text)")
 
-	-- local opts = {noremap = true, silent = true}
-	-- local maps = {
-	--     {"i", "<C-l>", '<cmd>lua return require"snippets".expand_or_advance(1)<CR>'},
-	--     {"i", "<C-h>", '<cmd>lua return require"snippets".advance_snippet(-1)<CR>'},
-	--     {"n", "<C-l>", '<cmd>lua return require"snippets".expand_or_advance(1)<CR>'},
-	--     {"n", "<C-h>", '<cmd>lua return require"snippets".advance_snippet(-1)<CR>'},
-	--     {"s", "<C-l>", '<cmd>lua return require"snippets".expand_or_advance(1)<CR>'},
-	--     {"s", "<C-h>", '<cmd>lua return require"snippets".advance_snippet(-1)<CR>'}
-	-- }
+	local opts = {noremap = true, silent = true}
+	local maps = {
+	    {"i", "<C-l>", '<cmd>lua return require"snippets".expand_or_advance(1)<CR>'},
+	    {"i", "<C-h>", '<cmd>lua return require"snippets".advance_snippet(-1)<CR>'},
+	    {"x", "<C-l>", '<cmd>lua return require"snippets".expand_or_advance(1)<CR>'},
+	    {"x", "<C-h>", '<cmd>lua return require"snippets".advance_snippet(-1)<CR>'},
+	    {"s", "<C-l>", '<cmd>lua return require"snippets".expand_or_advance(1)<CR>'},
+	    {"s", "<C-h>", '<cmd>lua return require"snippets".advance_snippet(-1)<CR>'}
+	}
 	-- u.maps(maps, opts)
 end
 

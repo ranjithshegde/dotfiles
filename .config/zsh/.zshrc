@@ -123,6 +123,7 @@ source $ZPLUG_HOME/repos/agura-lex/find-the-command/usr/share/doc/find-the-comma
 
 source /usr/share/fzf/key-bindings.zsh
 source /usr/share/fzf/completion.zsh
+# source "/usr/lib/emsdk/emsdk_env.sh"
 # source $ZDOTDIR/zvi
 
 # export FZF_COMPLETION_TRIGGER=''
