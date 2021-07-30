@@ -10,6 +10,21 @@ Cmd = vim.cmd
 local browser = "qutebrowser"
 G.netrw_browsex_viewer = "xdg-open"
 
+Colors = {
+    bg = "#32302f",
+    bg2 = "#008080",
+    bg3 = "#d79921",
+    white = "#fbf1c7",
+    yellow = "#d79921",
+    cyan = "#008080",
+    grey = "#928374",
+    green = "#98971a",
+    purple = "#b16286",
+    orange = "#d65d0e",
+    blue = "#458588",
+    red = "#cc241d",
+}
+
 -- **************Neovim options ---------------------------------------------------------
 
 function utils.UnloadAllModules()
@@ -256,22 +271,5 @@ function utils.JoinSingle()
     Exec("InstantJoinSingle 192.168.178." .. id .. " 8080")
     utils.Follow()
 end
-
--- G.netrwIsOpen = 0
--- function utils.toggleNetrw()
---     if G.netrwIsOpen ~= 0 then
---         local i = vim.fn.bufnr "$"
---         while i >= 1 do
---             if vim.fn.getbufvar(i, Op "filetype") ~= "netrw" then
---                 utils.silent_shell("bwipeout " .. i)
---             end
---             i = i - 1
---         end
---         G.netrwIsOpen = 0
---     else
---         G.netrwIsOpen = 1
---         utils.silent_shell "Lexplore"
---     end
--- end
 
 return utils

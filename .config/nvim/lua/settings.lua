@@ -66,6 +66,29 @@ function settings.options()
     if Op "filetype" ~= "vimwiki" and Op "filetype" ~= "markdown" and Op "filetype" ~= "vim" then
         o.foldexpr = "nvim_treesitter#foldexpr()"
     end
+
+    local disabled_built_ins = {
+        "gzip",
+        "zip",
+        "zipPlugin",
+        "tar",
+        "fzf",
+        "shada",
+        "tarPlugin",
+        "getscript",
+        "getscriptPlugin",
+        "vimball",
+        "vimballPlugin",
+        "2html_plugin",
+        "logipat",
+        "rrhelper",
+        "spellfile_plugin",
+        "matchit",
+    }
+
+    for _, plugin in pairs(disabled_built_ins) do
+        vim.g["loaded_" .. plugin] = 1
+    end
 end
 
 ------------------------------------------------------------------------
@@ -275,10 +298,8 @@ function settings.completion()
             "tex,bib,supercollider,text,markdown,vimwiki,conf,org",
             "let g:completion_auto_change_source=1",
         },
+        { "FileType", "text,markdown,vimwiki", "CompletionToggle" },
     }, "completion_attach")
-
-    -- require("snippets").use_suggested_mappings()
-    -- require("snippets").set_ux(require "snippets.inserters.extmarks")
 end
 
 ------------------------------------------------------------------------
@@ -286,20 +307,14 @@ end
 ------------------------------------------------------------------------
 
 function settings.lsp_settings()
-    -- autopairs
-    local npairs = require "nvim-autopairs"
-    npairs.setup()
-
-    local Rule = require "nvim-autopairs.rule"
-    npairs.add_rules { Rule("|", "|", "supercollider") }
-
-    require("icons").init()
     Lsp = require "lspconfig"
 
     -- Status bar for LSP
     Lsp_status = require "lsp-status"
     Lsp_status.register_progress()
+    require("icons").init()
 
+    -- u.create_augroup({ { "InsertEnter", "lua require('icons').init()" } }, "LspKind")
     local buffExec = "* <buffer>"
     local docHigh = {
         { "CursorHold", "<buffer>", [[lua vim.lsp.buf.document_highlight()]] },
@@ -332,7 +347,7 @@ function settings.lsp_settings()
                 {
                     "BufWritePre",
                     "*.js,*.jsx,*.hpp,*.h,*.sh,*.lua,*.cpp,*.json,*.py",
-                    "lua vim.lsp.buf.formatting_sync(nil, 1000)",
+                    "lua vim.lsp.buf.formatting_sync(nil, 500)",
                 },
             }, "lsp_auto_format")
         end
@@ -710,25 +725,5 @@ function settings.ultisnips()
     Var("UltiSnipsJumpBackwardTrigger", "<c-tab>")
     Var("UltiSnipsSnippetDirectories", snippet_directories)
 end
-
-------------------------------------------------------------------------
---                       Micrcontroller commajds                      --
-------------------------------------------------------------------------
-
--- function settings.smbc()
---     local commands = {
---         "PioCompiledb lua require('compiler').compiletags()",
---         "PioMonitor lua require('compiler').monitor()",
---         "PioCheck lua require('compiler').pio_check()",
---         "PioEnv lua require('compiler').print_env()",
---         "PioClean lua require('compiler').pio_clean()",
---         "TeensyPinout lua require('compiler').teensypins()",
---         "TeensySpecs lua require('compiler').teensyspecs()",
---         "ArduinoRef lua require('compiler').arduinoref()"
---     }
---     for index = 1, #commands do
---         vim.cmd("command! " .. commands[index])
---     end
--- end
 
 return settings

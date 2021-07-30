@@ -23,8 +23,6 @@ return packer.startup(function(use)
 
     -- use "folke/tokyonight.nvim"
 
-    -- use "lvim-tech/lvim-colorscheme"
-
     use { "petrbroz/vim-glsl", ft = "glsl" }
 
     use { "m-pilia/vim-ccls", ft = "cpp" }
@@ -32,8 +30,6 @@ return packer.startup(function(use)
     use { "yegappan/taglist", cmd = "TlistToggle" }
 
     use { "bkad/CamelCaseMotion", opt = true }
-
-    use { "tweekmonster/startuptime.vim", cmd = "StartupTime" }
 
     -- vimwiki
     use {
@@ -43,6 +39,17 @@ return packer.startup(function(use)
         keys = { "<leader>ww", "<leader>w<leader>w", "<leader>wi", "<leader>wt" },
     }
 
+    -- new Commentary
+
+    use {
+        "winston0410/commented.nvim",
+        config = function()
+            require("commented").setup {
+                keybindings = { n = "gc", v = "gc", nl = "gcc" },
+            }
+        end,
+        keys = { "gc", { "v", "gc" } },
+    }
     -- StatusLine
     use {
         "tjdevries/express_line.nvim",
@@ -111,21 +118,10 @@ return packer.startup(function(use)
         "tpope/vim-repeat",
         "tpope/vim-surround",
         { "tpope/vim-unimpaired", keys = { "[", "]" } },
-        { "tpope/vim-commentary", keys = "gc" },
+        -- { "tpope/vim-commentary", keys = { "gc", { "v", "gc" } } },
         { "tpope/vim-dispatch", cmd = { "Make", "Dispatch" } },
         { "tpope/vim-fugitive", cmd = { "G", "Git", "Gclog" } },
     }
-
-    -- vim Calendar
-    -- use {
-    --     "itchyny/calendar.vim",
-    --     cmd = "Calendar",
-    --     config = function()
-    --         G.calendar_google_task = 1
-    --         G.calendar_google_calendar = 1
-    --         vim.cmd "source ~/.cache/calendar.vim/credentials.vim"
-    --     end,
-    -- }
 
     -- vim Orgmode
     use {
@@ -183,7 +179,6 @@ return packer.startup(function(use)
     use {
         -- "nvim-lua/completion-nvim",
         { "ranjithshegde/completion-nvim", branch = "signature_hl_active" },
-        "windwp/nvim-autopairs",
         "hrsh7th/vim-vsnip",
         {
             "hrsh7th/vim-vsnip-integ",
@@ -191,6 +186,16 @@ return packer.startup(function(use)
             requires = {
                 "rafamadriz/friendly-snippets",
             },
+        },
+        {
+            "windwp/nvim-autopairs",
+            event = "InsertEnter",
+            config = function()
+                local npairs = require "nvim-autopairs"
+                local Rule = require "nvim-autopairs.rule"
+                npairs.setup()
+                npairs.add_rules { Rule("|", "|", "supercollider") }
+            end,
         },
     }
 

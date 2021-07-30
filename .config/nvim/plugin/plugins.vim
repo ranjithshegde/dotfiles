@@ -2,10 +2,7 @@
 com! Cam call util#CamelCase()
 com! LspCapabilities lua require('utils').lspcapabilities()
 com! Cpractice lua require('compiler').cpractice()
-" com -nargs=* -complete=shellcmd TTerm lua require('utils').toggleTerm(<f-args>, 1)
 com! TexWordCount lua require('utils').TexWordCount()
-
-nn <silent> <leader>e :call util#ToggleNetrw()<CR>
 
 nn <silent><leader>rv <cmd>vnew %<CR><cmd>call util#OpenRangerIn("%:p:h", "vs ")<CR>
 nn <silent><leader>rV <cmd>vnew %<CR><cmd>call util#OpenRangerIn(".", "vs ")<CR>
