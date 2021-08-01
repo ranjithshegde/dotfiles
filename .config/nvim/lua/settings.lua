@@ -63,10 +63,12 @@ function settings.options()
         j = true, -- Auto-remove comments if possible.
         ["2"] = true, -- Indent according to 2nd line
     }
+    -- Folds for filetype
     if Op "filetype" ~= "vimwiki" and Op "filetype" ~= "markdown" and Op "filetype" ~= "vim" then
         o.foldexpr = "nvim_treesitter#foldexpr()"
     end
 
+    -- ************** Disable builtin plugins ---------------------------------------------------------
     local disabled_built_ins = {
         "gzip",
         "zip",
@@ -85,10 +87,15 @@ function settings.options()
         "spellfile_plugin",
         "matchit",
     }
-
     for _, plugin in pairs(disabled_built_ins) do
         vim.g["loaded_" .. plugin] = 1
     end
+
+    -- ************** HighlightOnYank ---------------------------------------------------------
+    function _G.HighlightOnYank()
+        vim.highlight.on_yank { higroup = "IncSearch", timeout = 200 }
+    end
+    u.create_augroup({ { "TextYankPost", "*", "silent! lua HighlightOnYank()" } }, "YankHighlight")
 end
 
 ------------------------------------------------------------------------
@@ -480,12 +487,12 @@ function settings.lsp_lintFormat()
     Lsp.diagnosticls.setup {
         cmd = { "diagnostic-languageserver", "--stdio" },
         filetypes = { "markdown", "tex", "text", "vimwiki" },
-        handlers = {
-            ["textDocument/publishDiagnostics"] = vim.lsp.with(
-                vim.lsp.diagnostic.on_publish_diagnostics,
-                { virtual_text = false }
-            ),
-        },
+        -- handlers = {
+        -- ["textDocument/publishDiagnostics"] = vim.lsp.with(
+        -- vim.lsp.diagnostic.on_publish_diagnostics,
+        -- { virtual_text = false }
+        -- ),
+        -- },
         on_attach = EfmAttach,
         init_options = {
             linters = {
@@ -644,12 +651,12 @@ function settings.lsp_lintFormat()
         filetypes = vim.tbl_keys(languages),
         root_dir = rootDir,
         on_attach = All_attach,
-        handlers = {
-            ["textDocument/publishDiagnostics"] = vim.lsp.with(
-                vim.lsp.diagnostic.on_publish_diagnostics,
-                { virtual_text = false }
-            ),
-        },
+        -- handlers = {
+        -- ["textDocument/publishDiagnostics"] = vim.lsp.with(
+        -- vim.lsp.diagnostic.on_publish_diagnostics,
+        -- { virtual_text = false }
+        -- ),
+        -- },
         init_options = { documentFormatting = true, codeAction = true },
         settings = { rootMarkers = rootMarker, languages = languages },
     }

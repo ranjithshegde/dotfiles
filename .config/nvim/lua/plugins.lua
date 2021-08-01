@@ -50,6 +50,7 @@ return packer.startup(function(use)
         end,
         keys = { "gc", { "v", "gc" } },
     }
+
     -- StatusLine
     use {
         "tjdevries/express_line.nvim",
@@ -231,10 +232,10 @@ return packer.startup(function(use)
                 require("telescope").setup {
                     extensions = {
                         project = {
-                            base_dirs = {
-                                { "~/Software/Workspaces/", max_depth = 5 },
-                                { "~/Documents/ofWorkspace/", max_depth = 4 },
-                            },
+                            -- base_dirs = {
+                            -- { "~/Software/Workspaces/", max_depth = 5 },
+                            -- { "~/Documents/ofWorkspace/", max_depth = 4 },
+                            -- },
                         },
                     },
                 }

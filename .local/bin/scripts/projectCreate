@@ -163,6 +163,16 @@ function py_init() {
 
 }
 
+
+p5init(){
+	mkdir $project_name || exit
+    cd $project_name
+    cp $HOME/Software/Workspaces/js/p5/{p5-test.js,p5.js,p5.min.js,p5.pre-min.js} .
+    cp -r $HOME/Software/Workspaces/js/p5/empty-example src/
+    cp -r $HOME/Software/Workspaces/js/p5/addons .
+    (echo '{}') >tsconfig.json
+}
+
 case $lang in
 	py)
 		py_init
@@ -172,5 +182,8 @@ case $lang in
 		;;
 	gradle)
 		gradle_init
+		;;
+	p5)
+		p5init
 		;;
 esac

@@ -1,5 +1,8 @@
 local utils = {}
 
+------------------------------------------------------------------------
+--                              Global config variables               --
+------------------------------------------------------------------------
 Api = vim.api
 G = vim.g
 Var = Api.nvim_set_var
@@ -25,7 +28,9 @@ Colors = {
     red = "#cc241d",
 }
 
--- **************Neovim options ---------------------------------------------------------
+------------------------------------------------------------------------
+--                              Vim options                           --
+------------------------------------------------------------------------
 
 function utils.UnloadAllModules()
     -- Lua patterns for the modules to unload
@@ -60,7 +65,9 @@ function utils.Restart()
     Exec "doautocmd VimEnter"
 end
 
--- ************** AutoCommands ---------------------------------------------------------
+------------------------------------------------------------------------
+--                              AutoCommands                          --
+------------------------------------------------------------------------
 
 function utils.create_augroup(autocmds, name)
     Exec("augroup " .. name)
@@ -80,7 +87,9 @@ function utils.create_cmdGroup(autocmds, command, name)
     Exec "augroup END"
 end
 
--- ************** Mappings ---------------------------------------------------------
+------------------------------------------------------------------------
+--                              Mappings                              --
+------------------------------------------------------------------------
 
 function utils.bufmaps(mapdict, opts)
     for m = 1, #mapdict do
@@ -103,21 +112,33 @@ function utils.maps(mapdict, opts)
     end
 end
 
--- ************** vim settings  ---------------------------------------------------------
+------------------------------------------------------------------------
+--                              LSP                                   --
+------------------------------------------------------------------------
 
-function _G.HighlightOnYank()
-    vim.highlight.on_yank { higroup = "IncSearch", timeout = 200 }
+-- Toggle virtual diagnostics
+utils.toggleVirt = {}
+utils.toggleVirt.show = true
+utils.toggleSigns = {}
+utils.toggleSigns.show = true
+utils.toggleVirt.toggle = function(id)
+    utils.toggleVirt.show = not utils.toggleVirt.show
+    vim.lsp.diagnostic.display(
+        vim.lsp.diagnostic.get(0, id),
+        0,
+        id,
+        { virtual_text = utils.toggleVirt.show, signs = utils.toggleSigns.show }
+    )
 end
 
-utils.create_augroup({ { "TextYankPost", "*", "silent! lua HighlightOnYank()" } }, "YankHighlight")
-
--- ************** LSP  ---------------------------------------------------------
--- Toggle virtual diagnostics
-utils.virtDiagnostics = {}
-utils.virtDiagnostics.show = true
-utils.virtDiagnostics.toggle = function()
-    utils.virtDiagnostics.show = not utils.virtDiagnostics.show
-    vim.lsp.diagnostic.display(vim.lsp.diagnostic.get(0, 1), 0, 1, { virtual_text = utils.virtDiagnostics.show })
+utils.toggleSigns.toggle = function(id)
+    utils.toggleSigns.show = not utils.toggleSigns.show
+    vim.lsp.diagnostic.display(
+        vim.lsp.diagnostic.get(0, id),
+        0,
+        id,
+        { virtual_text = utils.toggleVirt.show, signs = utils.toggleSigns.show }
+    )
 end
 
 -- Display capabilities of LSP
@@ -185,7 +206,9 @@ function utils.lspcapabilities()
     vim.lsp.util.close_preview_autocmd({ "BufHidden", "BufLeave" }, win_id)
 end
 
--- ******************************** Terminal ---------------------------------------------------------
+------------------------------------------------------------------------
+--                              Terminal                              --
+------------------------------------------------------------------------
 
 -- set silent exec option
 function utils.silent_shell(cmd)
@@ -223,7 +246,9 @@ function utils.toggleTerm(cmd, name, spl)
     end
 end
 
--- ************** Co-authoring ---------------------------------------------------------
+------------------------------------------------------------------------
+--                              Co-authoring                          --
+------------------------------------------------------------------------
 
 -- Count tex words
 function utils.TexWordCount()
