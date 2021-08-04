@@ -220,6 +220,7 @@ function statusline.tabs()
             left_separator .. "%#StatusLine# " .. workDir() .. "%#StatusLine#" .. right_separator
     tabline = tabline .. space
     -- stylua: ignore end
+    G.fooTabs = tabline
     return tabline
 end
 return statusline

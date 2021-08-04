@@ -1,1 +1,1 @@
-nn <F5> : exec 'silent !qutebrowser % &'
+nn <F5> : exec 'silent !qutebrowser % &'<CR>

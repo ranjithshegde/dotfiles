@@ -12,11 +12,8 @@ function! TabLine()
 endfunction
 set tabline=%!TabLine()
 
-" Change local grep
-set grepprg=rg\ --vimgrep 
-
 " Set dictionary
-set dictionary+=$HOME/.local/share/dict/words
+set dictionary+=$XDG_DATA_HOME/dict/words
 
 "************** FileTypes & AutoCompiles-----------------------------------------------
 
@@ -54,5 +51,4 @@ augroup ProjectDrawer
     autocmd WinEnter * if winnr('$') == 1 && getbufvar(winbufnr(winnr()), "&filetype") == "netrw" |q|endif
     autocmd filetype netrw nn <buffer> cd :execute "cd ".b:netrw_curdir<cr>:pwd<cr>
 augroup END
-
 nn <leader>e <cmd>Lexplore<CR>

@@ -10,13 +10,14 @@ function settings.settings()
     settings.lsp_settings()
     settings.langServers()
     settings.lsp_lintFormat()
-    settings.telescope()
+    -- settings.telescope()
 end
 
 ------------------------------------------------------------------------
 --                              Vim basics                            --
 ------------------------------------------------------------------------
 function settings.options()
+    -- G.tokyonight_style = "night"
     Exec "packadd tokyonight.nvim"
     Exec "colo tokyonight"
     local tab = 4
@@ -40,6 +41,7 @@ function settings.options()
     o.signcolumn = "yes"
     o.foldmethod = "expr"
     o.spelloptions = "camel"
+    o.grepprg = "rg --vimgrep"
     o.fillchars = "stlnc:»,vert:║,fold:-"
     -- o.listchars = "tab:<->,eol:↲,space:→"
     o.completeopt = "menuone,noinsert,noselect"
@@ -51,7 +53,6 @@ function settings.options()
     G.loaded_perl_provider = 0
     G.loaded_python_provider = 0
     G.tex_conceal = "abdmgs"
-    -- G.tokyonight_style = "night"
     o.formatoptions = {
         a = false, -- Dont format pasted code
         t = false, -- Delegate to linter prgs/LSP
@@ -411,6 +412,7 @@ function settings.langServers()
         yamlls = { on_attach = All_attach },
         jsonls = { on_attach = EfmAttach },
         bashls = { on_attach = All_attach, filetypes = { "sh", "zsh" } },
+        html = { on_attach = All_attach, capabilities = Capabilities },
         cmake = { on_attach = All_attach, capabilities = Capabilities },
         vimls = { on_attach = All_attach, capabilities = Capabilities },
         tsserver = { on_attach = All_attach, capabilities = Capabilities },
@@ -684,6 +686,8 @@ function settings.telescope()
             selection_caret = "❯ ",
         },
     }
+    Cmd "PackerLoad telescope-project.nvim"
+    -- require("telescope").load_extension "project"
 end
 
 -----------------------------------------------------------------------

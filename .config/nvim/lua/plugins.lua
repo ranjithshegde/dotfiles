@@ -179,7 +179,7 @@ return packer.startup(function(use)
     -- completion and snippets
     use {
         -- "nvim-lua/completion-nvim",
-        { "ranjithshegde/completion-nvim", branch = "signature_hl_active" },
+        { "ranjithshegde/completion-nvim", branch = "hl_signature_active" },
         "hrsh7th/vim-vsnip",
         {
             "hrsh7th/vim-vsnip-integ",
@@ -220,6 +220,10 @@ return packer.startup(function(use)
     use {
         {
             "nvim-telescope/telescope.nvim",
+            module_pattern = "telescope.*",
+            config = function()
+                require("settings").telescope()
+            end,
             requires = {
                 "nvim-lua/popup.nvim",
                 "nvim-lua/plenary.nvim",
@@ -228,14 +232,15 @@ return packer.startup(function(use)
         },
         {
             "nvim-telescope/telescope-project.nvim",
+            opt = true,
             config = function()
                 require("telescope").setup {
                     extensions = {
                         project = {
-                            -- base_dirs = {
-                            -- { "~/Software/Workspaces/", max_depth = 5 },
-                            -- { "~/Documents/ofWorkspace/", max_depth = 4 },
-                            -- },
+                            base_dirs = {
+                                { "~/Software/Workspaces/", max_depth = 5 },
+                                { "~/Documents/ofWorkspace/", max_depth = 4 },
+                            },
                         },
                     },
                 }
