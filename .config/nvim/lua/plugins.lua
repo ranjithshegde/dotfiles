@@ -39,18 +39,6 @@ return packer.startup(function(use)
         keys = { "<leader>ww", "<leader>w<leader>w", "<leader>wi", "<leader>wt" },
     }
 
-    -- new Commentary
-
-    use {
-        "winston0410/commented.nvim",
-        config = function()
-            require("commented").setup {
-                keybindings = { n = "gc", v = "gc", nl = "gcc" },
-            }
-        end,
-        keys = { "gc", { "v", "gc" } },
-    }
-
     -- StatusLine
     use {
         "tjdevries/express_line.nvim",
@@ -116,13 +104,24 @@ return packer.startup(function(use)
 
     -- Tim pope
     use {
-        "tpope/vim-repeat",
-        "tpope/vim-surround",
+        -- "tpope/vim-repeat",
+        { "tpope/vim-surround", event = "BufRead" },
         { "tpope/vim-unimpaired", keys = { "[", "]" } },
-        -- { "tpope/vim-commentary", keys = { "gc", { "v", "gc" } } },
+        { "tpope/vim-commentary", keys = { "gc", { "v", "gc" } } },
         { "tpope/vim-dispatch", cmd = { "Make", "Dispatch" } },
         { "tpope/vim-fugitive", cmd = { "G", "Git", "Gclog" } },
     }
+
+    -- new Commentary
+    -- use {
+    -- "winston0410/commented.nvim",
+    -- config = function()
+    -- require("commented").setup {
+    -- keybindings = { n = "gc", v = "gc", nl = "gcc" },
+    -- }
+    -- end,
+    -- keys = { "gc", { "v", "gc" } },
+    -- }
 
     -- vim Orgmode
     use {
@@ -138,6 +137,7 @@ return packer.startup(function(use)
     -- WhichKey
     use {
         "folke/which-key.nvim",
+        -- event = "VimEnter",
         config = function()
             require("which-key").setup {
                 layout = {
@@ -176,6 +176,22 @@ return packer.startup(function(use)
         },
     }
 
+    -- Colorizer
+    use {
+        "norcalli/nvim-colorizer.lua",
+        config = function()
+            require("colorizer").setup {
+                "*",
+                html = { mode = "foreground" },
+                css = { rgb_fn = true },
+                "javascript",
+                "sh",
+                "conf",
+            }
+        end,
+        cmd = { "ColorizerAttachToBuffer", "ColorizerToggle" },
+    }
+
     -- completion and snippets
     use {
         -- "nvim-lua/completion-nvim",
@@ -198,22 +214,6 @@ return packer.startup(function(use)
                 npairs.add_rules { Rule("|", "|", "supercollider") }
             end,
         },
-    }
-
-    -- Colorizer
-    use {
-        "norcalli/nvim-colorizer.lua",
-        config = function()
-            require("colorizer").setup {
-                "*",
-                html = { mode = "foreground" },
-                css = { rgb_fn = true },
-                "javascript",
-                "sh",
-                "conf",
-            }
-        end,
-        cmd = { "ColorizerAttachToBuffer", "ColorizerToggle" },
     }
 
     -- Telescope
@@ -251,6 +251,7 @@ return packer.startup(function(use)
     -- Indents and chars
     use {
         "lukas-reineke/indent-blankline.nvim",
+        event = "BufReadPre",
         config = function()
             G.indent_blankline_char = "┊"
             G.indent_blankline_char_highlight = "LineNr"

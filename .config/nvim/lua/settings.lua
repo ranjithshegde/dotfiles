@@ -10,14 +10,13 @@ function settings.settings()
     settings.lsp_settings()
     settings.langServers()
     settings.lsp_lintFormat()
-    -- settings.telescope()
 end
 
 ------------------------------------------------------------------------
 --                              Vim basics                            --
 ------------------------------------------------------------------------
 function settings.options()
-    -- G.tokyonight_style = "night"
+    -- G.tokyonight_style = "light"
     Exec "packadd tokyonight.nvim"
     Exec "colo tokyonight"
     local tab = 4
@@ -45,6 +44,7 @@ function settings.options()
     o.fillchars = "stlnc:»,vert:║,fold:-"
     -- o.listchars = "tab:<->,eol:↲,space:→"
     o.completeopt = "menuone,noinsert,noselect"
+    o.dictionary = os.getenv "XDG_DATA_HOME" .. "/dict/words"
     o.clipboard:append "unnamedplus"
     o.shortmess:append "c"
     G.termdebug_wide = 1
@@ -88,6 +88,7 @@ function settings.options()
         "spellfile_plugin",
         "matchit",
     }
+
     for _, plugin in pairs(disabled_built_ins) do
         vim.g["loaded_" .. plugin] = 1
     end
@@ -111,6 +112,7 @@ function settings.vimwiki()
     l.auto_diary_index = 1
     l.auto_toc = 1
     l.auto_generte_links = 1
+    l.nested_syntaxes = { cpp = "cpp" }
     l.autowriteall = 1
     G.vimwiki_list = { l }
     G.vimwiki_markdown_link_ext = 1
@@ -267,6 +269,7 @@ end
 ------------------------------------------------------------------------
 
 function settings.completion()
+    require("mappings").autoComplete()
     G.completion_chain_complete_list = {
         supercollider = {
             { complete_items = { "UltiSnips", "path" } },
@@ -322,7 +325,6 @@ function settings.lsp_settings()
     Lsp_status.register_progress()
     require("icons").init()
 
-    -- u.create_augroup({ { "InsertEnter", "lua require('icons').init()" } }, "LspKind")
     local buffExec = "* <buffer>"
     local docHigh = {
         { "CursorHold", "<buffer>", [[lua vim.lsp.buf.document_highlight()]] },
@@ -354,7 +356,7 @@ function settings.lsp_settings()
             u.create_augroup({
                 {
                     "BufWritePre",
-                    "*.js,*.jsx,*.hpp,*.h,*.sh,*.lua,*.cpp,*.json,*.py",
+                    "*.js,*.hpp,*.h,*.sh,*.lua,*.cpp,*.json,*.py,*.yaml,*.toml",
                     "lua vim.lsp.buf.formatting_sync(nil, 500)",
                 },
             }, "lsp_auto_format")
@@ -489,12 +491,6 @@ function settings.lsp_lintFormat()
     Lsp.diagnosticls.setup {
         cmd = { "diagnostic-languageserver", "--stdio" },
         filetypes = { "markdown", "tex", "text", "vimwiki" },
-        -- handlers = {
-        -- ["textDocument/publishDiagnostics"] = vim.lsp.with(
-        -- vim.lsp.diagnostic.on_publish_diagnostics,
-        -- { virtual_text = false }
-        -- ),
-        -- },
         on_attach = EfmAttach,
         init_options = {
             linters = {
@@ -622,14 +618,9 @@ function settings.lsp_lintFormat()
         lintStdin = true,
         lintFormats = { "%f:%l %m", "%f:%l:%c %m", "%f: %l: %m" },
     }
-    local luaformat = {
-        formatCommand = "luafmt ${-i:tabWidth} --stdin",
-        formatStdin = true,
-    }
     local stylua = { formatCommand = "stylua --search-parent-directories -", formatStdin = true }
     local vint = {
         lintCommand = "vint -f '{file_path}:{line_number}:{column_number}: {severity}: {description} (see: {reference})' --enable-neovim",
-        -- lintCommand = "vint --enable-neovim",
         lintStdin = false,
         -- lintFormats = { "%f:%l:%c: %trror: %m", "%f:%l:%c: %tarning: %m" },
         lintFormats = { "%f:%l:%c: %m" },
@@ -653,12 +644,6 @@ function settings.lsp_lintFormat()
         filetypes = vim.tbl_keys(languages),
         root_dir = rootDir,
         on_attach = All_attach,
-        -- handlers = {
-        -- ["textDocument/publishDiagnostics"] = vim.lsp.with(
-        -- vim.lsp.diagnostic.on_publish_diagnostics,
-        -- { virtual_text = false }
-        -- ),
-        -- },
         init_options = { documentFormatting = true, codeAction = true },
         settings = { rootMarkers = rootMarker, languages = languages },
     }
@@ -720,7 +705,8 @@ function settings.jdtls()
     require("jdtls").start_or_attach {
         on_attach = All_attach,
         capabilities = Capabilities,
-        cmd = { "jdlsp" },
+        cmd = { "jdtls" },
+        -- cmd = { "jdlsp" },
     }
     require("jdtls.setup").add_commands()
 end

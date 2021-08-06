@@ -98,17 +98,17 @@ end
 function M.configFiles()
     -- local opts = { nowait = true, noremap = true, silent = true }
     -- local maps = {
-    -- { "n", "<leader>aP", "<cmd>PackerSync<CR>" },
-    -- { "n", "<leader>aR", "<cmd>lua require('utils').Restart()<CR>" },
-    -- { "n", "<leader>am", "<cmd>tabnew ~/.config/nvim/lua/mappings.lua<CR>" },
-    -- { "n", "<leader>al", "<cmd>tabnew ~/.config/nvim/lua/settings.lua<CR>" },
-    -- { "n", "<leader>ap", "<cmd>tabnew ~/.config/nvim/lua/plugins.lua<CR>" },
-    -- { "n", "<leader>as", "<cmd>tabnew ~/.config/nvim/lua/statusline.lua<CR>" },
-    -- { "n", "<leader>ac", "<cmd>tabnew ~/.config/nvim/lua/compiler.lua<CR>" },
-    -- { "n", "<leader>au", "<cmd>tabnew ~/.config/nvim/lua/utils/init.lua<CR>" },
-    -- { "n", "<leader>aa", "<cmd>tabnew ~/.config/nvim/autoload/util.vim<CR>" },
-    -- { "n", "<leader>af", "<cmd>tabnew ~/.config/nvim/plugin/plugins.vim<CR>" },
-    -- { "n", "<leader>ar", "<cmd>tabnew $MYVIMRC<CR>" },
+    --     { "n", "<leader>aP", "<cmd>PackerSync<CR>" },
+    --     { "n", "<leader>aR", "<cmd>lua require('utils').Restart()<CR>" },
+    --     { "n", "<leader>am", "<cmd>tabnew ~/.config/nvim/lua/mappings.lua<CR>" },
+    --     { "n", "<leader>al", "<cmd>tabnew ~/.config/nvim/lua/settings.lua<CR>" },
+    --     { "n", "<leader>ap", "<cmd>tabnew ~/.config/nvim/lua/plugins.lua<CR>" },
+    --     { "n", "<leader>as", "<cmd>tabnew ~/.config/nvim/lua/statusline.lua<CR>" },
+    --     { "n", "<leader>ac", "<cmd>tabnew ~/.config/nvim/lua/compiler.lua<CR>" },
+    --     { "n", "<leader>au", "<cmd>tabnew ~/.config/nvim/lua/utils/init.lua<CR>" },
+    --     { "n", "<leader>aa", "<cmd>tabnew ~/.config/nvim/autoload/util.vim<CR>" },
+    --     { "n", "<leader>af", "<cmd>tabnew ~/.config/nvim/plugin/plugins.vim<CR>" },
+    --     { "n", "<leader>ar", "<cmd>tabnew $MYVIMRC<CR>" },
     -- }
 
     -- u.maps(maps, opts)

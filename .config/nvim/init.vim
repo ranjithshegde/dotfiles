@@ -2,7 +2,6 @@
 lua require ('plugins')
 lua require ('settings').settings()
 lua require ('mappings').general()
-lua require ('mappings').autoComplete()
 
 " hi LspSignatureActiveParameter guifg=#2E3440 guibg=#F2AF5C
 
@@ -11,9 +10,6 @@ function! TabLine()
     return luaeval("require'statusline'.tabs()")
 endfunction
 set tabline=%!TabLine()
-
-" Set dictionary
-set dictionary+=$XDG_DATA_HOME/dict/words
 
 "************** FileTypes & AutoCompiles-----------------------------------------------
 
