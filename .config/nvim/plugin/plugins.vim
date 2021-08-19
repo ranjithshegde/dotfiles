@@ -15,5 +15,3 @@ nn <silent><leader>rV <cmd>vnew %<CR><cmd>call util#OpenRangerIn(".", "vs ")<CR>
 "open ranger in new tab
 nn <silent><leader>rt <cmd>tabnew %<CR><cmd>call util#OpenRangerIn("%:p:h", "tab drop ")<CR>
 nn <silent><leader>rT <cmd>tabnew %<CR><cmd>call util#OpenRangerIn(".", "tab drop ")<CR>
-
-

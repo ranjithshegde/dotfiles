@@ -13,7 +13,7 @@ set tabline=%!TabLine()
 
 "************** FileTypes & AutoCompiles-----------------------------------------------
 
-augroup GenericFiles
+augroup commonFtRules
     au FileType text,tex,vimwiki call util#WordProcessor()
     au FileType org setlocal iskeyword+=:,#,+
     au FileType vim nn <silent>,K <cmd>exe 'h '.expand('<cword>')<CR> |
@@ -27,7 +27,7 @@ augroup MakeDispatch
 augroup END
 
 "************************ Terminal management -------------------------------------------------
-augroup termInsert
+augroup terminalInserModes
     autocmd!
     autocmd BufWinEnter,WinEnter term://* startinsert
     autocmd TermEnter * startinsert

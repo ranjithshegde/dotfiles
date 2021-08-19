@@ -112,17 +112,6 @@ return packer.startup(function(use)
         { "tpope/vim-fugitive", cmd = { "G", "Git", "Gclog" } },
     }
 
-    -- new Commentary
-    -- use {
-    -- "winston0410/commented.nvim",
-    -- config = function()
-    -- require("commented").setup {
-    -- keybindings = { n = "gc", v = "gc", nl = "gcc" },
-    -- }
-    -- end,
-    -- keys = { "gc", { "v", "gc" } },
-    -- }
-
     -- vim Orgmode
     use {
         "kristijanhusak/orgmode.nvim",
@@ -137,7 +126,6 @@ return packer.startup(function(use)
     -- WhichKey
     use {
         "folke/which-key.nvim",
-        -- event = "VimEnter",
         config = function()
             require("which-key").setup {
                 layout = {
@@ -183,9 +171,9 @@ return packer.startup(function(use)
             require("colorizer").setup {
                 "*",
                 html = { mode = "foreground" },
-                css = { rgb_fn = true },
+                css = { rgb_fn = true, css_fn = true },
                 "javascript",
-                "sh",
+                -- "sh",
                 "conf",
             }
         end,
@@ -221,6 +209,7 @@ return packer.startup(function(use)
         {
             "nvim-telescope/telescope.nvim",
             module_pattern = "telescope.*",
+            cmd = "Telescope",
             config = function()
                 require("settings").telescope()
             end,

@@ -156,7 +156,7 @@ end
 -- Clean and rebuild debug
 function Compiler.cmake_clean_gen_debug()
     Compiler.cmake_clean()
-    Compiler.cmake_gen()
+    Compiler.cmake_gen_debug()
 end
 
 -- Run the binary
