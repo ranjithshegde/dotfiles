@@ -210,17 +210,14 @@ function statusline.tabs()
         end
     end
     tabline = tabline .. "%="
-    -- stylua: ignore start
-    -- Component: Working Directory
-    tabline =
-        tabline ..
-        -- "%#TabLineSelSeparator#" ..
-        "%#StatusLine#" ..
-            -- left_separator .. "%#TablineSel# " .. workDir() .. "%#TabLineSelSeparator#" .. right_separator
-            left_separator .. "%#StatusLine# " .. workDir() .. "%#StatusLine#" .. right_separator
+    tabline = tabline
+        .. "%#StatusLine#"
+        .. left_separator
+        .. "%#StatusLine# "
+        .. workDir()
+        .. "%#StatusLine#"
+        .. right_separator
     tabline = tabline .. space
-    -- stylua: ignore end
-    G.fooTabs = tabline
     return tabline
 end
 return statusline

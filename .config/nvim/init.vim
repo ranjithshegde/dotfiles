@@ -1,4 +1,5 @@
 "**************Neovim basics -------------------------------------------------------------
+lua require('impatient')
 lua require ('plugins')
 lua require ('settings').settings()
 lua require ('mappings').general()

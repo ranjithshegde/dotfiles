@@ -4,7 +4,7 @@ com! Cam call util#CamelCase()
 com! Gram call util#WordProcessor()
 com! Cpractice lua require('compiler').cpractice()
 com! TexWordCount lua require('utils').TexWordCount()
-com! LspCapabilities lua require('utils').lspcapabilities()
+" com! LspCapabilities lua require('utils').lspcapabilities()
 
 "open ranger over current buffer
 nn <silent><leader>rr <cmd>call util#OpenRangerIn("%:p:h", "e ")<CR>

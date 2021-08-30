@@ -11,7 +11,6 @@ function M.general()
 
     local opts = { nowait = true, noremap = true, silent = false }
     local maps = {
-        { "n", "Y", "y$" },
         { "n", "n", "nzzzv" },
         { "n", "N", "Nzzzv" },
         { "n", "J", "mzJ`z" },

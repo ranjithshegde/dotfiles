@@ -31,6 +31,8 @@ return packer.startup(function(use)
 
     use { "bkad/CamelCaseMotion", opt = true }
 
+    use { "lewis6991/impatient.nvim", rocks = "mpack" }
+
     -- vimwiki
     use {
         "vimwiki/vimwiki",
@@ -141,6 +143,7 @@ return packer.startup(function(use)
         {
             "nvim-treesitter/nvim-treesitter",
             requires = { "p00f/nvim-ts-rainbow", "nvim-treesitter/nvim-treesitter-textobjects" },
+            run = ":TSUpdate",
         },
         { "nvim-treesitter/nvim-treesitter-refactor", ft = "supercollider" },
         {
@@ -240,7 +243,7 @@ return packer.startup(function(use)
     -- Indents and chars
     use {
         "lukas-reineke/indent-blankline.nvim",
-        event = "BufReadPre",
+        -- event = "BufReadPre",
         config = function()
             G.indent_blankline_char = "┊"
             G.indent_blankline_char_highlight = "LineNr"
