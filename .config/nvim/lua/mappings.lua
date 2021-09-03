@@ -329,7 +329,7 @@ function M.makeC()
         { "n", "<F5>", ":w <CR> :Make -j12 && make RunRelease<CR>" },
         -- run openFrameworks
         { "n", "<F6>", ":w <CR> :Make RunRelease<CR>" },
-        -- Dispatch install
+        -- Call gdb (termdebug)
         { "n", "<F7>", 'w <CR> :lua require("compiler").termdebug()<cr>' },
     }
     u.bufmaps(bufmaps, opts)
@@ -348,6 +348,22 @@ function M.ctests()
         { "n", "<F6>", ":w <CR> :Dispatch ./%<<CR>" },
         -- Dispatch install
         { "n", "<F7>", 'w <CR> :lua require("compiler").termdebug()<cr>' },
+    }
+    u.bufmaps(bufmaps, opts)
+end
+
+-- PureData C Externals
+function M.pdc()
+    local opts = { nowait = true, noremap = true, silent = true }
+    local bufmaps = {
+        -- Compile c file, avoid preprocessor errors
+        -- { "n", "<F4>", ":w <CR> :Dispatch gcc % -lm -o %<<CR> :Dispatch ./%<<CR>" },
+        -- Compile cpp file
+        { "n", "<F5>", ":w <CR> :Make<CR>" },
+        -- Copy binary
+        { "n", "<F6>", ":w <CR>lua require('compiler').pdBuild()<CR>" },
+        -- Dispatch install
+        -- { "n", "<F7>", 'w <CR> :lua require("compiler").termdebug()<cr>' },
     }
     u.bufmaps(bufmaps, opts)
 end

@@ -69,7 +69,35 @@ function gradle_init() {
 	[ "$git_init" == "true" ] && git init $project_name
 }
 
-function cpp_init() {
+pdCBuild() {
+	mkdir "$project_name" || exit
+	(
+		echo 'lib.name = '"$project_name"'lib'
+		echo ''
+		echo 'class.sources = '"$project_name"'.c'
+		echo ''
+		echo 'include ~/.local/include/Makefile.pdlibbuilder'
+	) >"$project_name"/Makefile
+
+	touch "$project_name"/"$project_name".c
+
+	(
+		echo '#include "m_pd.h"'
+	) >$project_name/"$project_name".c
+
+	(
+		echo 'compile_commands.json'
+		echo '.clangd/*'
+		echo '.clang-format'
+	) >"$project_name"/.gitignore
+
+	clang-format -style=webkit -dump-config >"$project_name"/.clang-format
+
+	cd "$project_name" || exit
+	compiledb -n make
+}
+
+cpp_init() {
 
 	# [[ -z $exe_name ]] && printf "Enter executable Name : " && read exe_name
 
@@ -143,7 +171,7 @@ function cpp_init() {
 
 }
 
-function py_init() {
+py_init() {
 
 	mkdir $project_name || exit
 	_project_name=$(echo $project_name | sed -e 's/-/_/g')
@@ -163,14 +191,13 @@ function py_init() {
 
 }
 
-
-p5init(){
+p5init() {
 	mkdir $project_name || exit
-    cd $project_name
-    cp $HOME/Software/Workspaces/js/p5/{p5-test.js,p5.js,p5.min.js,p5.pre-min.js} .
-    cp -r $HOME/Software/Workspaces/js/p5/empty-example src/
-    cp -r $HOME/Software/Workspaces/js/p5/addons .
-    (echo '{}') >tsconfig.json
+	cd $project_name
+	cp $HOME/Software/Workspaces/js/p5/{p5-test.js,p5.js,p5.min.js,p5.pre-min.js} .
+	cp -r $HOME/Software/Workspaces/js/p5/empty-example src/
+	cp -r $HOME/Software/Workspaces/js/p5/addons .
+	(echo '{}') >tsconfig.json
 }
 
 case $lang in
@@ -185,5 +212,8 @@ case $lang in
 		;;
 	p5)
 		p5init
+		;;
+	pd)
+		pdCBuild
 		;;
 esac

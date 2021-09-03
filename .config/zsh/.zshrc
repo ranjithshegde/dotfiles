@@ -70,12 +70,12 @@ export LESS_TERMCAP_us=$'\e[1;4;31m'
 # Ranger change directory on exit-------------------------------------------------------
 
 ranger-cd() {
-temp_file="$(mktemp -t "ranger_cd.XXXXXXXXXX")"
-ranger --choosedir="$temp_file" -- "${@:-$PWD}"
-if chosen_dir="$(cat -- "$temp_file")" && [ -n "$chosen_dir" ] && [ "$chosen_dir" != "$PWD" ]; then
-	cd -- "$chosen_dir"
-fi
-rm -f -- "$temp_file"
+    temp_file="$(mktemp -t "ranger_cd.XXXXXXXXXX")"
+    ranger --choosedir="$temp_file" -- "${@:-$PWD}"
+    if chosen_dir="$(cat -- "$temp_file")" && [ -n "$chosen_dir" ] && [ "$chosen_dir" != "$PWD" ]; then
+        cd -- "$chosen_dir"
+    fi
+    rm -f -- "$temp_file"
 }
 
 hcd() {
@@ -107,15 +107,15 @@ zplug "zsh-users/zsh-syntax-highlighting"
 
 zplug "agura-lex/find-the-command"
 
+zplug romkatv/powerlevel10k, as:theme, depth:1
+
+zplug "wfxr/forgit"
+
+# zplug "marlonrichert/zsh-autocomplete"
+
 # zplug "mafredri/zsh-async", from:"github", use:"async.zsh"
 
 # zplug "Tarrasch/zsh-bd"
-
-zplug romkatv/powerlevel10k, as:theme, depth:1
-
-zplug 'wfxr/forgit'
-
-# zplug "marlonrichert/zsh-autocomplete"
 
 zplug load 
 

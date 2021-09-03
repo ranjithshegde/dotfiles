@@ -118,6 +118,7 @@ return packer.startup(function(use)
     use {
         "kristijanhusak/orgmode.nvim",
         ft = "org",
+        keys = { "<leader>oa" },
         config = function()
             require("orgmode").setup {
                 org_highlight_latex_and_related = "entities",

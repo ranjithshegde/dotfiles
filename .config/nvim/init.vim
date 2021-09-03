@@ -22,7 +22,8 @@ augroup commonFtRules
 augroup end 
 
 augroup MakeDispatch
-    au FileType java,lua,python,javascript nn <F5> <cmd>w<CR><cmd>Dispatch<CR> |
+    au!
+    au FileType java,lua,python,javascript nn<buffer><F5> <cmd>w<CR><cmd>Dispatch<CR> |
                 \ nn <F10> <cmd>lua require('utils').toggleTerm(vim.g.repl, "repl", 0)<CR> |
                 \ tno <F10> <esc><cmd>lua require('utils').toggleTerm(vim.g.repl, "repl", 0)<CR>
 augroup END

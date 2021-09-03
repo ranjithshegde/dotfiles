@@ -28,6 +28,16 @@ function Compiler.set_ctype()
     end
 end
 
+function Compiler.set_type()
+    if Compiler.has_pd() then
+        require("mappings").cpd()
+    else
+        Exec "set makeprg=g++"
+        require("mappings").ctests()
+        G.debugBin = "%<"
+    end
+end
+
 -- basic setup for small test files
 function Compiler.cpractice()
     local dir = vim.fn.input "enter directory name: "
@@ -66,6 +76,16 @@ function Compiler.has_makefile()
     end
 end
 
+function Compiler.has_pd()
+    local name = "Makefile.pdlibbuilder"
+    local f = io.open(name, "r")
+    if f ~= nil then
+        io.close(f)
+        return true
+    else
+        return false
+    end
+end
 -- set default make to Dispatch Make
 function Compiler.make(cmd)
     Exec("Make " .. cmd)
@@ -93,6 +113,12 @@ function Compiler.termdebug()
     require("mappings").debug()
     local cmd = "Termdebug " .. G.debugBin
     Exec(cmd)
+end
+
+function Compiler.pdBuild()
+    local bin = vim.fn.fnamemodify(vim.fn.getcwd(), ":t")
+    local dest = "~/.local/lib/pd/extra/"
+    Compiler.terminal("\\cp " .. bin .. ".pd_linux " .. dest)
 end
 
 ------------------------------------------------------------------------
