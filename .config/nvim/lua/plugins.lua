@@ -117,6 +117,7 @@ return packer.startup(function(use)
     -- vim Orgmode
     use {
         "kristijanhusak/orgmode.nvim",
+        branch = "tree-sitter",
         ft = "org",
         keys = { "<leader>oa" },
         config = function()
@@ -244,7 +245,7 @@ return packer.startup(function(use)
     -- Indents and chars
     use {
         "lukas-reineke/indent-blankline.nvim",
-        -- event = "BufReadPre",
+        event = "BufReadPre",
         config = function()
             G.indent_blankline_char = "┊"
             G.indent_blankline_char_highlight = "LineNr"

@@ -29,10 +29,10 @@ function Compiler.set_ctype()
 end
 
 function Compiler.set_type()
-    if Compiler.has_pd() then
-        require("mappings").cpd()
+    if Compiler.has_makefile() then
+        require("mappings").pdc()
     else
-        Exec "set makeprg=g++"
+        Exec "set makeprg=gcc"
         require("mappings").ctests()
         G.debugBin = "%<"
     end

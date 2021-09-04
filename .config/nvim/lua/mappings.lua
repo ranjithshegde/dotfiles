@@ -359,9 +359,9 @@ function M.pdc()
         -- Compile c file, avoid preprocessor errors
         -- { "n", "<F4>", ":w <CR> :Dispatch gcc % -lm -o %<<CR> :Dispatch ./%<<CR>" },
         -- Compile cpp file
-        { "n", "<F5>", ":w <CR> :Make<CR>" },
+        { "n", "<F5>", ":w<CR>:Make<CR>" },
         -- Copy binary
-        { "n", "<F6>", ":w <CR>lua require('compiler').pdBuild()<CR>" },
+        { "n", "<F6>", ":w<CR><cmd>lua require('compiler').pdBuild()<CR>" },
         -- Dispatch install
         -- { "n", "<F7>", 'w <CR> :lua require("compiler").termdebug()<cr>' },
     }
