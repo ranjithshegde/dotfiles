@@ -21,17 +21,17 @@ end
 return packer.startup(function(use)
     use "wbthomason/packer.nvim"
 
-    -- use "folke/tokyonight.nvim"
+    use "lewis6991/impatient.nvim"
 
-    use { "petrbroz/vim-glsl", ft = "glsl" }
+    -- use "folke/tokyonight.nvim"
 
     use { "m-pilia/vim-ccls", ft = "cpp" }
 
-    use { "yegappan/taglist", cmd = "TlistToggle" }
+    use { "petrbroz/vim-glsl", ft = "glsl" }
 
     use { "bkad/CamelCaseMotion", opt = true }
 
-    use { "lewis6991/impatient.nvim", rocks = "mpack" }
+    use { "yegappan/taglist", cmd = "TlistToggle" }
 
     -- vimwiki
     use {
@@ -119,9 +119,9 @@ return packer.startup(function(use)
         "kristijanhusak/orgmode.nvim",
         branch = "tree-sitter",
         ft = "org",
-        keys = { "<leader>oa" },
         config = function()
             require("orgmode").setup {
+                org_agenda_files = "~/Documents/Orgs/*",
                 org_highlight_latex_and_related = "entities",
             }
         end,

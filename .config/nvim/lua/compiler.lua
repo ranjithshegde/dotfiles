@@ -58,7 +58,7 @@ end
 --                                Cpp Setup	                          --
 ------------------------------------------------------------------------
 
--- Open Cplusplus.com for symbol
+-- Search Cplusplus.com for symbol
 function Compiler.creference(cmd)
     local url = "https://www.cplusplus.com/search.do?q=" .. cmd
     Exec('!qutebrowser "' .. url .. '" &')

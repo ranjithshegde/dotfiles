@@ -153,7 +153,6 @@ function settings.treesitter()
         textobjects = {
             select = {
                 enable = true,
-                -- disable = {"latex"},
                 keymaps = {
                     ["af"] = "@function.outer",
                     ["if"] = "@function.inner",
@@ -691,10 +690,11 @@ function settings.telescope()
             },
             prompt_prefix = "❯ ",
             selection_caret = "❯ ",
+            file_ignore_patterns = { "%.MOV", "%.mp4", "%.wav", "%.mkv", "%.gif", "%.mp3" },
         },
     }
     Cmd "PackerLoad telescope-project.nvim"
-    -- require("telescope").load_extension "project"
+    -- require("telescope").load_extension "projects"
 end
 
 -----------------------------------------------------------------------

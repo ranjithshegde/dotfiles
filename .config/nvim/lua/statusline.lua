@@ -94,6 +94,30 @@ statusline.el = function()
         end
     end
 
+    local scContext = function()
+        if Op "filetype" == "supercollider" then
+            local f = require("nvim-treesitter").statusline {
+                indicator_size = 100,
+                type_patterns = {
+                    "class",
+                    "function",
+                    "method",
+                    "interface",
+                    "type_spec",
+                    "table",
+                    "if_statement",
+                    "for_statement",
+                },
+            }
+            local context = string.format("%s", f) -- convert to string, it may be a empty ts node
+
+            if context == "vim.NIL" then
+                return " "
+            end
+            return " " .. context
+        end
+    end
+
     --*********************************** Git branch ---------------------------------
     local git_branch = subscribe.buf_autocmd("el_git_branch", "BufEnter", function(window, buffer)
         local branch = extensions.git_branch(window, buffer)
@@ -123,6 +147,7 @@ statusline.el = function()
                 sections.highlight("Diag", lsp_statusline.segment),
                 sections.split,
                 sections.highlight("ScStatus", scnvim),
+                -- sections.highlight("ScStatus", scContext),
                 lsp_statusline.server_progress,
                 sections.split,
                 sections.highlight("DevIconH", file_icon),

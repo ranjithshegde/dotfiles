@@ -1,2 +1,1 @@
-nn<buffer><F5> <cmd>exec 'silent !qutebrowser % &'<CR>
 nn<buffer><F6> <cmd>Dispatch browser-sync start --server --files "*.js,*.html,*.css"<CR>

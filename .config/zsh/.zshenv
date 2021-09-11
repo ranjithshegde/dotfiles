@@ -46,3 +46,4 @@ export PYTHONHISTFILE=/dev/null
 export EM_CONFIG="$XDG_CONFIG_HOME"/emscripten/config 
 export EM_CACHE="$XDG_CACHE_HOME"/emscripten/cache 
 export EM_PORTS="$XDG_DATA_HOME"/emscripten/cache
+export TIMEWARRIORDB="$XDG_DATA_HOME"/timewarrior
