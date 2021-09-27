@@ -5,6 +5,7 @@ com! Gram call util#WordProcessor()
 com! Cpractice lua require('compiler').cpractice()
 com! TexWordCount lua require('utils').TexWordCount()
 com! Agenda lua require('utils').agenda()
+com! ClearBack call util#transparency()
 " com! LspCapabilities lua require('utils').lspcapabilities()
 
 "open ranger over current buffer

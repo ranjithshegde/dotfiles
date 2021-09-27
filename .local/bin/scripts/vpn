@@ -6,7 +6,7 @@
 
 # sleep 1
 
-sudo systemctl start nordvpnd.service
+sudo systemctl start nordvpnd
 
 sleep 1
 # nordvpn connect ${choice}

@@ -9,7 +9,7 @@ function M.general()
     M.telescope()
     M.coauthor()
 
-    local opts = { nowait = true, noremap = true, silent = false }
+    local opts = { nowait = true, noremap = true, silent = true }
     local maps = {
         { "n", "n", "nzzzv" },
         { "n", "N", "Nzzzv" },
@@ -72,9 +72,9 @@ function M.nvim_lsp()
         { "n", ",cR", "<cmd>lua vim.lsp.codelens.refresh()<CR>" },
         { "n", ",cg", "<cmd>lua vim.lsp.codelens.get()<CR>" },
         { "n", ",s", '<cmd>lua vim.lsp.buf.signature_help({popup_opts = {border = "double"}})<CR>' },
-        { "n", ",ld", '<cmd>lua vim.lsp.diagnostic.show_line_diagnostics({popup_opts = {border = "double"}})<CR>' },
-        { "n", "[d", '<cmd>lua vim.lsp.diagnostic.goto_prev({focusable = false, popup_opts = {border = "double"}} )<CR>' },
-        { "n", "]d", '<cmd>lua vim.lsp.diagnostic.goto_next({focusable = false, popup_opts = {border = "double"}})<CR>' },
+        { "n", ",ld", '<cmd>lua vim.diagnostic.show_line_diagnostics({popup_opts = {border = "double"}})<CR>' },
+        { "n", "[d", '<cmd>lua vim.diagnostic.goto_prev({focusable = false, popup_opts = {border = "double"}} )<CR>' },
+        { "n", "]d", '<cmd>lua vim.diagnostic.goto_next({focusable = false, popup_opts = {border = "double"}})<CR>' },
         { "n", ",R", "<cmd>lua vim.lsp.buf.rename()<CR>" },
         { "n", ",ff", "<cmd>lua vim.lsp.buf.formatting()<CR>" },
         { "n", ",ac", "<cmd>lua vim.lsp.buf.code_action()<CR>" },
@@ -208,6 +208,8 @@ function M.telescope()
         { "n", "<space>vf", telF "find_files({cwd='~/.local/share/nvim/', prompt_title = 'Plugin files'})" },
         -- find-files ofProjects
         { "n", "<space>of", telF "find_files({cwd ='~/Documents/ofWorkspace/',prompt_title = 'oF Workspace files'})" },
+        -- find-files ofProjects
+        { "n", "<space>oo", telF "find_files({cwd ='~/Documents/Orgs/',prompt_title = 'Org Files'})" },
         -- livegrep ofWorkspace
         { "n", "<space>og", telF "live_grep({cwd ='~/Documents/ofWorkspace/',prompt_title = 'oF Workspace grep'})" },
     }

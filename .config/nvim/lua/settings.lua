@@ -1,6 +1,7 @@
 local settings = {}
 local u = require "utils"
 local o = vim.opt
+require("impatient").enable_profile()
 
 function settings.settings()
     settings.options()
@@ -37,6 +38,7 @@ function settings.options()
     o.scrolloff = 10
     o.updatetime = 300
     o.timeoutlen = 500
+    o.foldminlines = 1
     o.signcolumn = "yes"
     o.foldmethod = "expr"
     o.spelloptions = "camel"
@@ -139,7 +141,7 @@ function settings.treesitter()
             enable = true,
             additional_vim_regex_highlighting = { "latex", "markdown", "org" },
         },
-        indent = { enable = true, disable = { "python" } },
+        indent = { enable = true, disable = { "python", "org" } },
         autopairs = { enable = true },
         incremental_selection = {
             enable = true,
@@ -286,6 +288,7 @@ function settings.completion()
         },
         org = {
             { mode = "omni" },
+            { complete_items = { "snippet" } },
             { mode = "<c-p>" },
             { mode = "<c-n>" },
         },
@@ -314,7 +317,7 @@ function settings.completion()
         { "FileType", "*", 'lua require"completion".on_attach()' },
         {
             "FileType",
-            "tex,bib,supercollider,text,markdown,vimwiki,conf,org",
+            "tex,bib,supercollider,glsl,text,markdown,vimwiki,conf,org",
             "let g:completion_auto_change_source=1",
         },
         { "FileType", "text,markdown,vimwiki", "CompletionToggle" },
@@ -342,7 +345,7 @@ function settings.lsp_settings()
 
     -- Set diagnostics to local list automatically
     u.create_augroup(
-        { { "User LspDiagnosticsChanged", "lua vim.lsp.diagnostic.set_loclist({open = false})" } },
+        { { "User LspDiagnosticsChanged", "lua vim.diagnostic.setloclist({open = false})" } },
         "LspLocList"
     )
 

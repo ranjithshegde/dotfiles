@@ -1,6 +1,7 @@
 "**************Neovim basics -------------------------------------------------------------
 lua require('impatient')
 lua require ('plugins')
+lua require('packer_compiled')
 lua require ('settings').settings()
 lua require ('mappings').general()
 
@@ -15,8 +16,8 @@ set tabline=%!TabLine()
 augroup commonFtRules
     au FileType text,tex,vimwiki call util#WordProcessor()
     au FileType org setlocal iskeyword+=:,#,+
-    au FileType vim nn <silent>,K <cmd>exe 'h '.expand('<cword>')<CR> |
-                \ set foldexpr=getline(v:lnum)[0]==\"\\t\"
+    au FileType vim nn <silent>,K <cmd>exe 'h '.expand('<cword>')<CR>
+    " \ set foldexpr=getline(v:lnum)[0]==\"\\t\"
 augroup end 
 
 augroup MakeDispatch

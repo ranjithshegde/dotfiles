@@ -86,3 +86,16 @@ function! util#qf_delete(bufnr) range
     " restore current line
     call setpos('.', [a:bufnr, a:firstline, 1, 0])
 endfunction
+
+
+"***************************** Transparent background -------------------------
+function! util#transparency() abort
+    hi Normal guibg=none ctermbg=none
+    hi LineNr guibg=none ctermbg=none
+    hi Folded guibg=none ctermbg=none
+    hi NonText guibg=none ctermbg=none
+    hi SpecialKey guibg=none ctermbg=none
+    hi VertSplit guibg=none ctermbg=none
+    hi SignColumn guibg=none ctermbg=none
+    hi EndOfBuffer guibg=none ctermbg=none
+endfunction

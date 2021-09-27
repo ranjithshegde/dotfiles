@@ -123,20 +123,20 @@ utils.toggleSigns = {}
 utils.toggleSigns.show = true
 utils.toggleVirt.toggle = function(id)
     utils.toggleVirt.show = not utils.toggleVirt.show
-    vim.lsp.diagnostic.display(
-        vim.lsp.diagnostic.get(0, id),
+    vim.diagnostic.show(
+        vim.lsp.diagnostic.get_namespace(id),
         0,
-        id,
+        {},
         { virtual_text = utils.toggleVirt.show, signs = utils.toggleSigns.show }
     )
 end
 
 utils.toggleSigns.toggle = function(id)
     utils.toggleSigns.show = not utils.toggleSigns.show
-    vim.lsp.diagnostic.display(
-        vim.lsp.diagnostic.get(0, id),
+    vim.diagnostic.show(
+        vim.lsp.diagnostic.get_namespace(id),
         0,
-        id,
+        {},
         { virtual_text = utils.toggleVirt.show, signs = utils.toggleSigns.show }
     )
 end
