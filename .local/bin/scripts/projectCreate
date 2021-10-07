@@ -97,16 +97,51 @@ pdCBuild() {
 	compiledb -n make
 }
 
-cpp_init() {
+electronics() {
 
-	# [[ -z $exe_name ]] && printf "Enter executable Name : " && read exe_name
+	[[ -z $board_name ]] && printf "Enter board Name : " && read board_name
+
+	mkdir "$project_name" && cd "$project_name"
+
+	pio project init --board "$board_name"
+
+	(
+		echo '#include<Arduino.h>'
+		echo ''
+		echo 'void setup()'
+		echo '{'
+		echo '}'
+		echo ''
+		echo 'void loop()'
+		echo '{'
+		echo '}'
+
+	) >src/main.cpp
+
+	clang-format -style=webkit -dump-config >.clang-format
+
+	pio run -t compiledb
+
+	ln -s .pio/build/"$board_name"/compile_commands.json .
+
+	(
+		echo 'build/*'
+		echo 'compile_commands.json'
+		echo '.clangd/*'
+		echo '.clang-format'
+	) >.gitignore
+
+	[ "$git_init" == "true" ] && git init || exit
+}
+
+cpp_init() {
 
 	mkdir $project_name || exit
 
 	mkdir $project_name/src
 	mkdir $project_name/include
 	mkdir $project_name/build
-	# touch $project_name/src/main.cpp
+
 	(
 		echo '#include<iostream>'
 		echo ''
@@ -168,7 +203,6 @@ cpp_init() {
 	[ "$git_init" == "true" ] && git init $project_name
 
 	cd $project_name && ./autoBuild project
-
 }
 
 py_init() {
@@ -215,5 +249,8 @@ case $lang in
 		;;
 	pd)
 		pdCBuild
+		;;
+	smbc)
+		electronics
 		;;
 esac

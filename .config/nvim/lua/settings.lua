@@ -89,6 +89,10 @@ function settings.options()
         "rrhelper",
         "spellfile_plugin",
         "matchit",
+        "netrw",
+        "netrwPlugin",
+        "netrwSettings",
+        "netrwFileHandlers",
     }
 
     for _, plugin in pairs(disabled_built_ins) do
@@ -288,7 +292,6 @@ function settings.completion()
         },
         org = {
             { mode = "omni" },
-            { complete_items = { "snippet" } },
             { mode = "<c-p>" },
             { mode = "<c-n>" },
         },

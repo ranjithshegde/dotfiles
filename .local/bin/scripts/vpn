@@ -10,4 +10,4 @@ sudo systemctl start nordvpnd
 
 sleep 1
 # nordvpn connect ${choice}
-nordvpn connect Netherlands
+nordvpn connect

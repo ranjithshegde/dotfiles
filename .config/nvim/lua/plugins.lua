@@ -51,6 +51,15 @@ return packer.startup {
             end,
         }
 
+        -- dim inactive
+        use {
+            "folke/twilight.nvim",
+            config = function()
+                require("twilight").setup {}
+            end,
+            cmd = { "TwilightEnable", "Twilight" },
+        }
+
         -- Java Lsp
         use {
             "mfussenegger/nvim-jdtls",
@@ -107,12 +116,20 @@ return packer.startup {
 
         -- Tim pope
         use {
-            -- "tpope/vim-repeat",
             { "tpope/vim-surround", event = "BufRead" },
             { "tpope/vim-unimpaired", keys = { "[", "]" } },
             { "tpope/vim-commentary", keys = { "gc", { "v", "gc" } } },
             { "tpope/vim-dispatch", cmd = { "Make", "Dispatch" } },
             { "tpope/vim-fugitive", cmd = { "G", "Git", "Gclog" } },
+        }
+
+        -- Nvim Tree
+        use {
+            "kyazdani42/nvim-tree.lua",
+            cmd = "NvimTreeToggle",
+            config = function()
+                require("nvim-tree").setup {}
+            end,
         }
 
         -- vim Orgmode
@@ -233,8 +250,8 @@ return packer.startup {
                         extensions = {
                             project = {
                                 base_dirs = {
-                                    { "~/Software/Workspaces/", max_depth = 5 },
-                                    { "~/Documents/ofWorkspace/", max_depth = 4 },
+                                    { "~/Software/Workspaces/", max_depth = 6 },
+                                    { "~/Documents/ofWorkspace/", max_depth = 6 },
                                 },
                             },
                         },

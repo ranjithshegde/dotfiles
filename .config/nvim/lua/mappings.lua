@@ -38,6 +38,7 @@ function M.general()
         { "n", "<leader>t", ":vspl term://zsh<cr>" },
         { "n", "<F9>", "<cmd>lua require('utils').toggleTerm('zsh','shell',1)<cr>" },
         { "t", "<F9>", "<esc><cmd>lua require('utils').toggleTerm('zsh','shell',1)<cr>" },
+        { "n", "<leader>e", "<cmd>NvimTreeToggle<CR>" },
         -- Treesitter basics
         { "n", ";K", ":TSHighlightCapturesUnderCursor<cr>" },
         { "n", ";P", ":TSPlaygroundToggle<cr>" },
@@ -331,6 +332,23 @@ function M.makeC()
         { "n", "<F5>", ":w <CR> :Make -j12 && make RunRelease<CR>" },
         -- run openFrameworks
         { "n", "<F6>", ":w <CR> :Make RunRelease<CR>" },
+        -- Call gdb (termdebug)
+        { "n", "<F7>", 'w <CR> :lua require("compiler").termdebug()<cr>' },
+    }
+    u.bufmaps(bufmaps, opts)
+end
+
+-- ******************************** Openframeworks Android ---------------------------------------
+
+function M.makeGradle()
+    local opts = { nowait = true, noremap = true, silent = true }
+    local bufmaps = {
+        -- Compile Debug openFrameworks
+        -- { "n", "<F4>", ":w <CR> :Make Debug -j12<CR>" },
+        -- Compile openFrameworks
+        { "n", "<F5>", ":w <CR> :Make<CR>" },
+        -- run openFrameworks
+        { "n", "<F6>", ":w <CR> :Dispatch make RunRelease<CR>" },
         -- Call gdb (termdebug)
         { "n", "<F7>", 'w <CR> :lua require("compiler").termdebug()<cr>' },
     }

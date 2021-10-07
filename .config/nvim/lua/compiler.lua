@@ -21,6 +21,11 @@ function Compiler.set_ctype()
         -- require("settings").smbc()
         require("mappings").smbc()
         G.makeFile = "platformio.ini"
+    elseif Compiler.has_gradle() then
+        require("mappings").makeGradle()
+        G.makeFile = "build.gradle"
+        Exec "set makeprg=./gradlew"
+        -- G.debugBin = "bin/" .. vim.fn.fnamemodify(vim.fn.getcwd(), ":t") .. "_debug"
     else
         Exec "set makeprg=g++"
         require("mappings").ctests()
@@ -67,6 +72,18 @@ end
 -- check if project has a Makefile
 function Compiler.has_makefile()
     local name = "Makefile"
+    local f = io.open(name, "r")
+    if f ~= nil then
+        io.close(f)
+        return true
+    else
+        return false
+    end
+end
+
+-- Check of its ofAndroid project
+function Compiler.has_gradle()
+    local name = "build.gradle"
     local f = io.open(name, "r")
     if f ~= nil then
         io.close(f)
