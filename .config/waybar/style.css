@@ -1,0 +1,247 @@
+* {
+    padding-bottom: 0px;
+    border: none;
+    border-radius: 19;
+    font-family: "Mononoki Nerd Font";
+    font-size: 14px;
+    min-height: 0;
+}
+
+window#waybar {
+    background: #222;
+    color: rgba(255, 255, 255, 1);
+
+}
+
+window#waybar.hidden {
+    opacity: 0.2;
+}
+
+
+window#waybar.termite {
+    background-color: #3F3F3F;
+}
+
+window#waybar.chromium {
+    background-color: #000000;
+    border: none;
+}
+
+
+#workspaces {
+    margin-left: 3px;
+}
+
+#workspaces button {
+    margin-right: 3px;
+    /* margin-top: 3px; */
+    padding-bottom: 3px;
+    padding-right: 1px;
+    padding-left: 1px;
+    /* background: #238470; */
+    color: white;
+    transition-duration: 0;
+    font-weight: bold;
+    border-radius: 10px;
+}
+
+
+/* #workspaces button:hover { */
+/*     background: rgba(0, 0, 0, 0.2); */
+/*     box-shadow: inherit; */
+/*     border-bottom: 3px solid #ffffff; */
+/* } */
+
+#workspaces button.focused {
+    /* background-color: #000000; */
+    color: white;
+    font-weight: bold;
+    transition-duration: 0;
+}
+
+#workspaces button.persistent {
+    background: #464853;
+    font-weight: normal;
+    transition-duration: 0;
+}
+
+#mode {
+    /* background-color: #000000; */
+    margin-top: 3px;
+    margin-left: 3px;
+    color: white;
+    margin-left: 0px;
+    margin-right: 3px;
+    padding-left: 6px;
+    padding-right: 6px;
+    font-weight: bold;
+    border-radius: 10px;
+}
+
+#custom-powermenu {
+    /* background: #ee4934; */
+    margin-top: 3px;
+    margin-left: 3px;
+    color: white;
+    margin-left: 0px;
+    margin-right: 3px;
+    padding-left: 5px;
+    padding-right: 5px;
+    font-family: "Mononoki Nerd Font";
+    border-radius: 10px;
+}
+
+#tray {
+    /* background: #464853; */
+    margin-top: 3px;
+    margin-left: 3px;
+    color: white;
+    margin-left: 10px;
+    margin-right: 10px;
+    padding-top: 1px;
+    padding-left: 4px;
+    padding-right: 4px;
+    font-family: Ubuntu;
+    border-radius: 10px;
+}
+
+#cpu {
+    /* background: #464853; */
+    margin-top: 3px;
+    margin-left: 3px;
+    color: #ffb52a;
+    margin-left: 10px;
+    margin-right: 10px;
+    padding-left: 4px;
+    padding-right: 4px;
+    font-family: "Mononoki Nerd Font";
+    border-radius: 10px;
+}
+
+#custom-weather {
+    /* background: #464853; */
+    margin-top: 3px;
+    margin-left: 3px;
+    color: white;
+    margin-left: 10px;
+    margin-right: 10px;
+    padding-left: 4px;
+    padding-right: 4px;
+    font-family: "Mononoki Nerd Font";
+    border-radius: 10px;
+}
+
+
+
+#clock {
+    /* background: #000000; */
+    margin-top: 3px;
+    margin-left: 3px;
+    color: #dfdfdf;
+    margin-left: 0px;
+    margin-right: 0px;
+    padding-left: 6px;
+    padding-right: 6px;
+    font-weight: bold;
+    border-radius: 10px;
+}
+
+#network {
+    /* background: #000000; */
+    margin-top: 3px;
+    margin-left: 3px;
+    color: #74b741;
+    margin-left: 10px;
+    margin-right: 10px;
+    padding-left: 6px;
+    padding-right: 6px;
+    font-weight: bold;
+    font-family: "Mononoki Nerd Font";
+    border-radius: 10px ;
+}
+
+#temperature {
+    /* background: #000000; */
+    margin-top: 3px;
+    margin-left: 3px;
+    color: #fee11a;
+    margin-left: 10px;
+    margin-right: 10px;
+    padding-left: 6px;
+    padding-right: 6px;
+    font-weight: bold;
+    font-family: "Mononoki Nerd Font";
+    border-radius: 10px ;
+}
+
+
+#temperature.critical {
+    background-color: #eb4d4b;
+}
+
+
+#backlight {
+    /* background: #000000; */
+    margin-top: 3px;
+    margin-left: 3px;
+    color: white;
+    margin-left: 10px;
+    margin-right: 10px;
+    padding-left: 6px;
+    padding-right: 6px;
+    font-weight: bold;
+    font-family: "Mononoki Nerd Font";
+    border-radius: 10px ;
+}
+
+
+#custom-menu {
+    /* background: #000000; */
+    margin-top: 3px;
+    margin-left: 3px;
+    color: red;
+    margin-left: 3px;
+    margin-right: 0px;
+    padding-left: 6px;
+    padding-right: 6px;
+    font-weight: bold;
+    font-family: "Mononoki Nerd Font";
+    border-radius: 10px;
+}
+
+#battery {
+    /* background: #000000; */
+    margin-top: 3px;
+    margin-left: 3px;
+    color: #ffb52a;
+    margin-left: 0px;
+    margin-right: 8px;
+    padding-left: 6px;
+    padding-right: 6px;
+    font-weight: bold;
+    font-family: "Mononoki Nerd Font";
+    border-radius: 10px;
+}
+
+#battery.charging {
+    padding-right: 4px;
+}
+
+
+@keyframes blink {
+    to {
+        background-color: #ffffff;
+        color: #000000;
+    }
+}
+
+#battery.critical:not(.charging) {
+    background-color: #f53c3c;
+    color: #ffffff;
+    animation-name: blink;
+    animation-duration: 0.5s;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+    animation-direction: alternate;
+}
+

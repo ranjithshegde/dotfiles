@@ -193,23 +193,25 @@ return packer.startup {
 
         -- completion and snippets
         use {
-            "hrsh7th/nvim-cmp",
-            "hrsh7th/cmp-nvim-lsp",
+            -- "hrsh7th/nvim-cmp",
+            -- "hrsh7th/cmp-nvim-lsp",
+            -- "hrsh7th/vim-vsnip",
+            -- {
+            --     "hrsh7th/cmp-vsnip",
+            --     opt = true,
+            --     requires = {
+            --         "rafamadriz/friendly-snippets",
+            --     },
+            -- },
+            { "ranjithshegde/completion-nvim", branch = "trialNewApi" },
             "hrsh7th/vim-vsnip",
             {
-                "hrsh7th/cmp-vsnip",
+                "hrsh7th/vim-vsnip-integ",
                 opt = true,
                 requires = {
                     "rafamadriz/friendly-snippets",
                 },
             },
-            -- { "ranjithshegde/completion-nvim", branch = "hl_signature_active" },
-            -- {
-            -- "hrsh7th/vim-vsnip-integ",
-            -- opt = true,
-            -- requires = {
-            -- "rafamadriz/friendly-snippets",
-            -- },
             {
                 "windwp/nvim-autopairs",
                 event = "InsertEnter",

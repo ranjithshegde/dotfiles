@@ -6,8 +6,8 @@ require("impatient").enable_profile()
 function settings.settings()
     settings.options()
     settings.vimwiki()
-    settings.cmp()
-    -- settings.completion()
+    -- settings.cmp()
+    settings.completion()
     settings.treesitter()
     settings.lsp_settings()
     settings.langServers()
@@ -283,96 +283,98 @@ end
 --                             Completion                             --
 ------------------------------------------------------------------------
 
-function settings.scnvim()
-    require("cmp").setup.buffer {
-        snippet = {
-            expand = function(args)
-                vim.fn["UltiSnips#Anon"](args.body)
-            end,
-        },
-        sources = { { name = "ultisnips" } },
-    }
-end
+-- function settings.scnvim()
+--     require("cmp").setup.buffer {
+--         snippet = {
+--             expand = function(args)
+--                 vim.fn["UltiSnips#Anon"](args.body)
+--             end,
+--         },
+--         sources = { { name = "ultisnips" } },
+--     }
+-- end
 
-function settings.cmp()
-    require("mappings").autoComplete()
-    local cmp = require "cmp"
-    cmp.setup {
-        snippet = {
-            expand = function(args)
-                vim.fn["vsnip#anonymous"](args.body)
-            end,
-        },
-        mapping = {
-            ["<C-p>"] = cmp.mapping.select_prev_item(),
-            ["<C-n>"] = cmp.mapping.select_next_item(),
-            ["<C-d>"] = cmp.mapping.scroll_docs(-4),
-            ["<C-f>"] = cmp.mapping.scroll_docs(4),
-            ["<C-o>"] = cmp.mapping.complete(),
-            ["<C-e>"] = cmp.mapping.close(),
-            ["<CR>"] = cmp.mapping.confirm {
-                behavior = cmp.ConfirmBehavior.Replace,
-                select = true,
-            },
-        },
-        sources = {
-            { name = "nvim_lsp" },
-            { name = "vsnip" },
-            { name = "orgmode" },
-        },
-    }
-    Exec "au FileType supercollider lua require('settings').scnvim()"
-end
-
--- function settings.completion()
+-- function settings.cmp()
 --     require("mappings").autoComplete()
---     G.completion_chain_complete_list = {
---         supercollider = {
---             { complete_items = { "UltiSnips", "path" } },
---             { mode = "<c-p>" },
---             { mode = "<c-n>" },
+--     local cmp = require "cmp"
+--     cmp.setup {
+--         snippet = {
+--             expand = function(args)
+--                 vim.fn["vsnip#anonymous"](args.body)
+--             end,
 --         },
---         org = {
---             { mode = "omni" },
---             { mode = "<c-p>" },
---             { mode = "<c-n>" },
+--         mapping = {
+--             ["<C-p>"] = cmp.mapping.select_prev_item(),
+--             ["<C-n>"] = cmp.mapping.select_next_item(),
+--             ["<C-d>"] = cmp.mapping.scroll_docs(-4),
+--             ["<C-f>"] = cmp.mapping.scroll_docs(4),
+--             ["<C-o>"] = cmp.mapping.complete(),
+--             ["<C-e>"] = cmp.mapping.close(),
+--             ["<CR>"] = cmp.mapping.confirm {
+--                 behavior = cmp.ConfirmBehavior.Replace,
+--                 select = true,
+--             },
 --         },
---         glsl = {
---             { mode = "user" },
---             { mode = "<c-p>" },
---             { mode = "<c-n>" },
---         },
---         default = {
---             { complete_items = { "lsp", "snippet", "path" } },
---             { mode = "<c-p>" },
---             { mode = "<c-n>" },
+--         sources = {
+--             { name = "nvim_lsp" },
+--             { name = "vsnip" },
+--             { name = "orgmode" },
 --         },
 --     }
---     G.completion_auto_change_source = 0
---     G.completion_popup_border = "double"
---     G.completion_disable_filetypes = { "TelescopePrompt" }
-
---     if Op "filetype" == "supercollider" then
---         G.completion_enable_snippet = "UltiSnips"
---     else
---         G.completion_enable_snippet = "vim-vsnip"
---     end
-
---     u.create_augroup({
---         { "FileType", "*", 'lua require"completion".on_attach()' },
---         {
---             "FileType",
---             "tex,bib,supercollider,glsl,text,markdown,vimwiki,conf,org",
---             "let g:completion_auto_change_source=1",
---         },
---         {
---             "FileType",
---             "cpp,c,hpp,lua,python,java,javascript,typescript",
---             "let g:completion_auto_change_source=0",
---         },
---         { "FileType", "text,markdown,vimwiki", "CompletionToggle" },
---     }, "completion_attach")
+--     Exec "au FileType supercollider lua require('settings').scnvim()"
 -- end
+
+function settings.completion()
+    require("mappings").autoComplete()
+    G.completion_chain_complete_list = {
+        supercollider = {
+            { complete_items = { "UltiSnips", "path" } },
+            { mode = "<c-p>" },
+            { mode = "<c-n>" },
+        },
+        org = {
+            { complete_items = { "snippet", "vsnip" } },
+            { mode = "omni" },
+            { mode = "<c-p>" },
+            { mode = "<c-n>" },
+        },
+        glsl = {
+            { complete_items = { "snippet", "vsnip" } },
+            { mode = "user" },
+            { mode = "<c-p>" },
+            { mode = "<c-n>" },
+        },
+        default = {
+            { complete_items = { "lsp", "snippet", "path" } },
+            { mode = "<c-p>" },
+            { mode = "<c-n>" },
+        },
+    }
+    G.completion_auto_change_source = 0
+    G.completion_popup_border = "double"
+    G.completion_disable_filetypes = { "TelescopePrompt" }
+
+    if Op "filetype" == "supercollider" then
+        G.completion_enable_snippet = "UltiSnips"
+    else
+        G.completion_enable_snippet = "vim-vsnip"
+    end
+
+    u.create_augroup({
+        { "FileType", "*", 'lua require"completion".on_attach()' },
+        {
+            "FileType",
+            "tex,bib,supercollider,glsl,text,markdown,vimwiki,conf,org",
+            "let g:completion_auto_change_source=1",
+        },
+        {
+            "FileType",
+            "cpp,c,hpp,lua,python,java,javascript,typescript",
+            "let g:completion_auto_change_source=0",
+        },
+        { "FileType", "text,markdown,vimwiki", "CompletionToggle" },
+    }, "completion_attach")
+end
 
 ------------------------------------------------------------------------
 --                             Lsp settings                           --
@@ -403,9 +405,9 @@ function settings.lsp_settings()
         require("mappings").nvim_lsp()
         Lsp_status.on_attach(client)
         local rc = client.resolved_capabilities
-        Exec "PackerLoad cmp-vsnip"
-        -- Exec "PackerLoad vim-vsnip-integ"
-        -- vim.fn["vsnip#get_complete_items"](vim.fn["bufnr"]())
+        -- Exec "PackerLoad cmp-vsnip"
+        Exec "PackerLoad vim-vsnip-integ"
+        vim.fn["vsnip#get_complete_items"](vim.fn["bufnr"]())
 
         if rc.document_highlight then
             Exec "hi LspReferenceRead cterm=bold ctermbg=red guibg=#98971a"
@@ -426,8 +428,8 @@ function settings.lsp_settings()
     end
 
     Capabilities = vim.lsp.protocol.make_client_capabilities()
-    -- Capabilities.textDocument.completion.completionItem.snippetSupport = true
-    Capabilities = require("cmp_nvim_lsp").update_capabilities(Capabilities)
+    Capabilities.textDocument.completion.completionItem.snippetSupport = true
+    -- Capabilities = require("cmp_nvim_lsp").update_capabilities(Capabilities)
 
     Cinit = function(client)
         require("mappings").nvim_lsp()
@@ -448,9 +450,9 @@ function settings.lsp_settings()
         local rc = client.resolved_capabilities
         rc.document_formatting = false
         Lsp_status.on_attach(client)
-        Exec "PackerLoad cmp-vsnip"
-        -- Exec "PackerLoad vim-vsnip-integ"
-        -- vim.fn["vsnip#get_complete_items"](vim.fn["bufnr"]())
+        -- Exec "PackerLoad cmp-vsnip"
+        Exec "PackerLoad vim-vsnip-integ"
+        vim.fn["vsnip#get_complete_items"](vim.fn["bufnr"]())
 
         if rc.document_highlight then
             Exec "hi LspReferenceRead cterm=bold ctermbg=red guibg=#98971a"
@@ -659,6 +661,7 @@ function settings.lsp_lintFormat()
     local rootMarker = { vim.fn.getcwd() or { ".git/" } }
 
     local checkmake = { lintCommand = "checkmake", lintStdin = true }
+    local glslang = { lintCommand = "glslangValidator --stdin -S %:e", lintStdin = true }
     local yamllint = { lintCommand = "yamllint -f parsable -", lintStdin = true }
     local shfmt = { formatCommand = "shfmt -ci -s -bn", formatStdin = true }
     local rustywind = { formatCommand = "rustywind --stdin", formatStdin = true }
@@ -703,6 +706,7 @@ function settings.lsp_lintFormat()
         css = { prettier },
         toml = { prettier },
         lua = { stylua },
+        glsl = { glslang },
         make = { checkmake },
         rust = { rustywind },
         vimwiki = { markdownlint, prettier },
@@ -750,7 +754,6 @@ function settings.telescope()
         },
     }
     Cmd "PackerLoad telescope-project.nvim"
-    -- require("telescope").load_extension "projects"
 end
 
 -----------------------------------------------------------------------
@@ -799,7 +802,7 @@ function settings.ultisnips()
     Var("UltiSnipsJumpForwardTrigger", "<tab>")
     Var("UltiSnipsJumpBackwardTrigger", "<c-tab>")
     Var("UltiSnipsSnippetDirectories", snippet_directories)
-    Exec "PackerLoad cmp-nvim-ultisnips"
+    -- Exec "PackerLoad cmp-nvim-ultisnips"
 end
 
 return settings
