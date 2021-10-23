@@ -87,10 +87,6 @@ return packer.startup {
                     require("settings").ultisnips()
                 end,
             },
-            {
-                "quangnguyen30192/cmp-nvim-ultisnips",
-                opt = true,
-            },
         }
 
         -- Git Signs
@@ -193,16 +189,6 @@ return packer.startup {
 
         -- completion and snippets
         use {
-            -- "hrsh7th/nvim-cmp",
-            -- "hrsh7th/cmp-nvim-lsp",
-            -- "hrsh7th/vim-vsnip",
-            -- {
-            --     "hrsh7th/cmp-vsnip",
-            --     opt = true,
-            --     requires = {
-            --         "rafamadriz/friendly-snippets",
-            --     },
-            -- },
             { "ranjithshegde/completion-nvim", branch = "trialNewApi" },
             "hrsh7th/vim-vsnip",
             {

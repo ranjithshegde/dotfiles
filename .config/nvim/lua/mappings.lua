@@ -19,8 +19,6 @@ function M.general()
         { "n", "<C-K>", "<C-W><C-K>" },
         { "n", "<C-L>", "<C-W><C-L>" },
         { "n", "<C-H>", "<C-W><C-H>" },
-        -- { "i", "<C-J>", "<C-X><C-N>" },
-        -- { "i", "<C-K>", "<C-X><C-P>" },
         --line movement
         { "x", "K", ":move '<-2<CR>gv-gv" },
         { "x", "J", ":move '>+1<CR>gv-gv" },
