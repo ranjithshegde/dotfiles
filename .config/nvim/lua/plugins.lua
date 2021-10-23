@@ -80,13 +80,11 @@ return packer.startup {
 
         -- Ultisnips for Scnvim
         use {
-            {
-                "SirVer/ultisnips",
-                ft = "supercollider",
-                setup = function()
-                    require("settings").ultisnips()
-                end,
-            },
+            "SirVer/ultisnips",
+            ft = "supercollider",
+            setup = function()
+                require("settings").ultisnips()
+            end,
         }
 
         -- Git Signs
