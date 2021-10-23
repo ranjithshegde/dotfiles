@@ -51,15 +51,6 @@ return packer.startup {
             end,
         }
 
-        -- dim inactive
-        use {
-            "folke/twilight.nvim",
-            config = function()
-                require("twilight").setup {}
-            end,
-            cmd = { "TwilightEnable", "Twilight" },
-        }
-
         -- Java Lsp
         use {
             "mfussenegger/nvim-jdtls",
@@ -89,11 +80,17 @@ return packer.startup {
 
         -- Ultisnips for Scnvim
         use {
-            "SirVer/ultisnips",
-            ft = "supercollider",
-            setup = function()
-                require("settings").ultisnips()
-            end,
+            {
+                "SirVer/ultisnips",
+                ft = "supercollider",
+                setup = function()
+                    require("settings").ultisnips()
+                end,
+            },
+            {
+                "quangnguyen30192/cmp-nvim-ultisnips",
+                opt = true,
+            },
         }
 
         -- Git Signs
@@ -121,15 +118,6 @@ return packer.startup {
             { "tpope/vim-commentary", keys = { "gc", { "v", "gc" } } },
             { "tpope/vim-dispatch", cmd = { "Make", "Dispatch" } },
             { "tpope/vim-fugitive", cmd = { "G", "Git", "Gclog" } },
-        }
-
-        -- Nvim Tree
-        use {
-            "kyazdani42/nvim-tree.lua",
-            cmd = "NvimTreeToggle",
-            config = function()
-                require("nvim-tree").setup {}
-            end,
         }
 
         -- vim Orgmode
@@ -205,16 +193,23 @@ return packer.startup {
 
         -- completion and snippets
         use {
-            -- "nvim-lua/completion-nvim",
-            { "ranjithshegde/completion-nvim", branch = "hl_signature_active" },
+            "hrsh7th/nvim-cmp",
+            "hrsh7th/cmp-nvim-lsp",
             "hrsh7th/vim-vsnip",
             {
-                "hrsh7th/vim-vsnip-integ",
+                "hrsh7th/cmp-vsnip",
                 opt = true,
                 requires = {
                     "rafamadriz/friendly-snippets",
                 },
             },
+            -- { "ranjithshegde/completion-nvim", branch = "hl_signature_active" },
+            -- {
+            -- "hrsh7th/vim-vsnip-integ",
+            -- opt = true,
+            -- requires = {
+            -- "rafamadriz/friendly-snippets",
+            -- },
             {
                 "windwp/nvim-autopairs",
                 event = "InsertEnter",
@@ -250,8 +245,8 @@ return packer.startup {
                         extensions = {
                             project = {
                                 base_dirs = {
-                                    { "~/Software/Workspaces/", max_depth = 6 },
-                                    { "~/Documents/ofWorkspace/", max_depth = 6 },
+                                    { "~/Software/Workspaces", max_depth = 5 },
+                                    { "~/Documents/ofWorkspace", max_depth = 5 },
                                 },
                             },
                         },
@@ -263,7 +258,7 @@ return packer.startup {
         -- Indents and chars
         use {
             "lukas-reineke/indent-blankline.nvim",
-            event = "BufReadPre",
+            -- event = "BufReadPre",
             config = function()
                 G.indent_blankline_char = "┊"
                 G.indent_blankline_char_highlight = "LineNr"

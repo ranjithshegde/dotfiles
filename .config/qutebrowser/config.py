@@ -313,7 +313,10 @@ c.bindings.key_mappings = {
 # Bindings for normal mode
 config.bind(",M", "hint links spawn vlc {hint-url}")
 config.bind(",m", "spawn vlc {url}")
-config.bind(",z", "hint links spawn st -e youtube-dl {hint-url}")
+config.bind(
+    ",z",
+    "hint links spawn st -e youtube-dl  --external-downloader aria2c --external-downloader-args '-c -j 3 -x 3 -s 3 -k 1M' {hint-url}",
+)
 config.bind("xb", "config-cycle statusbar.show always never")
 config.bind("xt", "config-cycle tabs.show always never")
 config.bind(",p", "spawn --userscript /usr/share/qutebrowser/userscripts/password_fill")

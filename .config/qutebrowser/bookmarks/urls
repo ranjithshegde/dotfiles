@@ -5,9 +5,6 @@ https://thevinylfactory.com/features/the-pioneering-women-of-electronic-music-an
 https://philtgun.me/2017/02/04/leap-synth/ LEAP Synthesizer in Pure Data
 https://thevaluable.dev/vim-search-find-replace/ Vim Search, Find and Replace: a Detailed Guide
 https://forum.openframeworks.cc/t/audio-programming-basics/34392/3 Audio programming basics - beginners - openFrameworks
-http://ofdsp.blogspot.com/2011/07/installing-fftw3-with-xcode-and.html OpenFrameworks + DSP: Installing FFTW3 with xcode and OpenFrameworks
-https://martinopilia.com/posts/2019/01/30/command-line-tools.html Useful command line tools
-https://awesomeopensource.com/project/cuinjune/Ofelia Ofelia
 https://castel.dev/post/lecture-notes-1/ How I'm able to take notes in mathematics lectures using LaTeX and Vim | Gilles Castel
 https://gitlab.com/famiu/dot-nvim/-/tree/master/lua/config/lsp lua/config/lsp · master · Famiu Haque / dot-nvim · GitLab
 https://forum.pdpatchrepo.info/topic/13134/things-i-wish-i-had-known-when-i-started-pd/27 "Things I wish I had known when I started Pd" | PURE DATA forum~
@@ -24,13 +21,15 @@ https://nikhiletc.wordpress.com/2015/12/16/improvisation-and-the-aesthetic-of-ca
 https://www.raag-hindustani.com/Improvisation.html Improvisation in Indian Classical Music - Raag Hindustani
 http://blog.ezyang.com/2010/03/vim-textwidth/ How to use Vim’s textwidth like a pro : ezyang’s blog
 http://www.yolinux.com/TUTORIALS/LinuxTutorialAdvanced_vi.html VI and VIM editor: Tutorial and advanced features
-https://scsynth.org/t/accessing-pbind-key-in-if-statement/2069 Accessing Pbind Key in If Statement - Questions - scsynth
 http://www.ottobib.com/works-cited/aec18a56c0 Bibliography and Works Cited Generator for MLA, APA, Wikipedia and Bibtex - OttoBib.com
 https://www.soundonsound.com/techniques/line-arrays-explained Line Arrays Explained
 https://medium.com/@chasinglogic/the-definitive-guide-to-password-store-c337a8f023a1 The Definitive Guide to password-store | by Mathew Robinson | Medium
 https://rafaelleru.github.io/blog/quickfix-autocomands/ Toggle vim QuickFix list, the right way - Rafael Leyva Ruiz
-https://github.com/neovim/neovim neovim/neovim: Vim-fork focused on extensibility and usability
 https://www.runnersworld.com/beginner/a20846512/im-overweight-and-i-want-to-run-a-half-where-do-i-start/ I'm Overweight and I Want to Run a Half. Where Do I Start? | Runner's World
 https://fellrnr.com/wiki/Galloway Jeff Galloway's Marathon: You Can Do It! - Fellrnr.com, Running tips
 https://fellrnr.com/wiki/Higdon Hal Higdon's Ultimate Training Guide - Fellrnr.com, Running tips
 https://github.com/pure-data/externals-howto pure-data/externals-howto: How-To write externals for Pd
+https://encreative.blogspot.com/2019/06/opengl-buffers-in-openframeworks.html Creating particles with compute shaders in openFrameworks
+https://learnopengl.com/Advanced-OpenGL/Geometry-Shader LearnOpenGL - Geometry Shader
+https://forum.openframeworks.cc/t/in-the-visualization-of-fft-using-glsl-rewrite-from-glsl-120-to-150/29326 In the visualization of fft using glsl, rewrite from glsl 120 to 150 - beginners - openFrameworks
+https://www.youtube.com/playlist?list=PLW3Zl3wyJwWOpdhYedlD-yCB7WQoHf-My Math for Game Developers - YouTube

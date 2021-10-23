@@ -96,10 +96,13 @@ gpg-connect-agent updatestartuptty /bye >/dev/null
 
 source $ZPLUG_HOME/init.zsh
 
+zplug 'zplug/zplug', hook-build:'zplug --self-manage'
 
 zplug "zsh-users/zsh-completions"
 
 zplug "MichaelAquilina/zsh-you-should-use"
+
+zplug "zsh-users/zsh-history-substring-search"
 
 zplug "zsh-users/zsh-autosuggestions"
 
@@ -111,6 +114,8 @@ zplug romkatv/powerlevel10k, as:theme, depth:1
 
 zplug "wfxr/forgit"
 
+zplug "clvv/fasd"
+
 # zplug "marlonrichert/zsh-autocomplete"
 
 # zplug "mafredri/zsh-async", from:"github", use:"async.zsh"
@@ -121,9 +126,22 @@ zplug load
 
 
 source $ZPLUG_HOME/repos/agura-lex/find-the-command/usr/share/doc/find-the-command/ftc.zsh
+source $ZPLUG_HOME/repos/zsh-users/zsh-history-substring-search/zsh-history-substring-search.zsh
 
 source /usr/share/fzf/key-bindings.zsh
 source /usr/share/fzf/completion.zsh
+
+eval "`pip completion --zsh`"
+
+fasd_cache="$XDG_CACHE_HOME/fasd-init-bash"
+if [ "$(command -v fasd)" -nt "$fasd_cache" -o ! -s "$fasd_cache" ]; then
+  fasd --init posix-alias zsh-hook zsh-ccomp zsh-ccomp-install >| "$fasd_cache"
+fi
+source "$fasd_cache"
+unset fasd_cache
+
+bindkey '^[[A' history-substring-search-up
+bindkey '^[[B' history-substring-search-down
 # source "/usr/lib/emsdk/emsdk_env.sh"
 # source $ZDOTDIR/zvi
 

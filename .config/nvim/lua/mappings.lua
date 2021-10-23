@@ -19,6 +19,8 @@ function M.general()
         { "n", "<C-K>", "<C-W><C-K>" },
         { "n", "<C-L>", "<C-W><C-L>" },
         { "n", "<C-H>", "<C-W><C-H>" },
+        { "i", "<C-J>", "<C-X><C-N>" },
+        { "i", "<C-K>", "<C-X><C-P>" },
         --line movement
         { "x", "K", ":move '<-2<CR>gv-gv" },
         { "x", "J", ":move '>+1<CR>gv-gv" },
@@ -38,7 +40,7 @@ function M.general()
         { "n", "<leader>t", ":vspl term://zsh<cr>" },
         { "n", "<F9>", "<cmd>lua require('utils').toggleTerm('zsh','shell',1)<cr>" },
         { "t", "<F9>", "<esc><cmd>lua require('utils').toggleTerm('zsh','shell',1)<cr>" },
-        { "n", "<leader>e", "<cmd>NvimTreeToggle<CR>" },
+        -- { "n", "<leader>e", "<cmd>NvimTreeToggle<CR>" },
         -- Treesitter basics
         { "n", ";K", ":TSHighlightCapturesUnderCursor<cr>" },
         { "n", ";P", ":TSPlaygroundToggle<cr>" },
@@ -244,8 +246,8 @@ end
 -- ******************************** Snippets ---------------------------------------
 function M.autoComplete()
     -- change completion mode
-    Exec "imap <c-j> <Plug>(completion_next_source)"
-    Exec "imap <c-k> <Plug>(completion_prev_source)"
+    -- Exec "imap <c-j> <Plug>(completion_next_source)"
+    -- Exec "imap <c-k> <Plug>(completion_prev_source)"
     --vsnip commapds
     --expand
     Exec 'imap <expr> <C-h> vsnip#expandable() ? "<Plug>(vsnip-expand)"  : "<C-h>"'
