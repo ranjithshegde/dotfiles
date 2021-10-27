@@ -397,6 +397,8 @@ function M.clang()
         { "n", "<leader>s", ":ClangdSwitchSourceHeader<CR>" },
         -- open cpp reference
         { "n", ",K", "<cmd>lua require('compiler').creference(vim.fn.expand('<cword>'))<CR>" },
+        -- open Gl reference
+        { "n", ",gl", "<cmd>lua require('compiler').glRef(vim.fn.expand('<cword>'))<CR>" },
         -- bases
         { "n", ";b", ":CclsBase<CR>" },
         --   bases of up to 3 levels

@@ -69,6 +69,10 @@ function Compiler.creference(cmd)
     Exec('!qutebrowser "' .. url .. '" &')
 end
 
+function Compiler.glRef(cmd)
+    local url = "https://docs.gl/gl4/" .. cmd
+    Exec('!qutebrowser "' .. url .. '" &')
+end
 -- check if project has a Makefile
 function Compiler.has_makefile()
     local name = "Makefile"
