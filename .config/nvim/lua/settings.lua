@@ -287,13 +287,13 @@ function settings.completion()
             { mode = "<c-n>" },
         },
         org = {
-            { complete_items = { "snippet", "vsnip" } },
+            { complete_items = { "snippet" } },
             { mode = "omni" },
             { mode = "<c-p>" },
             { mode = "<c-n>" },
         },
         glsl = {
-            { complete_items = { "snippet", "vsnip" } },
+            { complete_items = { "snippet" } },
             { mode = "user" },
             { mode = "<c-p>" },
             { mode = "<c-n>" },
@@ -435,7 +435,7 @@ function settings.langServers()
         cmake = { on_attach = All_attach, capabilities = Capabilities },
         vimls = { on_attach = All_attach, capabilities = Capabilities },
         tsserver = { on_attach = All_attach, capabilities = Capabilities },
-        jedi_language_server = { on_attach = All_attach, capabilities = Capabilities },
+        pyright = { on_attach = All_attach, capabilities = Capabilities },
         texlab = {
             on_attach = All_attach,
             capabilities = Capabilities,

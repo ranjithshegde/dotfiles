@@ -114,7 +114,7 @@ zplug romkatv/powerlevel10k, as:theme, depth:1
 
 zplug "wfxr/forgit"
 
-zplug "clvv/fasd"
+# zplug "whjvenyl/fasd"
 
 # zplug "marlonrichert/zsh-autocomplete"
 
@@ -133,12 +133,12 @@ source /usr/share/fzf/completion.zsh
 
 eval "`pip completion --zsh`"
 
-fasd_cache="$XDG_CACHE_HOME/fasd-init-bash"
-if [ "$(command -v fasd)" -nt "$fasd_cache" -o ! -s "$fasd_cache" ]; then
-  fasd --init posix-alias zsh-hook zsh-ccomp zsh-ccomp-install >| "$fasd_cache"
-fi
-source "$fasd_cache"
-unset fasd_cache
+# fasd_cache="$XDG_CACHE_HOME/fasd-init-bash"
+# if [ "$(command -v fasd)" -nt "$fasd_cache" -o ! -s "$fasd_cache" ]; then
+#   fasd --init posix-alias zsh-hook zsh-ccomp zsh-ccomp-install >| "$fasd_cache"
+# fi
+# source "$fasd_cache"
+# unset fasd_cache
 
 bindkey '^[[A' history-substring-search-up
 bindkey '^[[B' history-substring-search-down
