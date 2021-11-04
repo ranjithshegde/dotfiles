@@ -244,7 +244,6 @@ return packer.startup {
         -- Indents and chars
         use {
             "lukas-reineke/indent-blankline.nvim",
-            -- event = "BufReadPre",
             config = function()
                 G.indent_blankline_char = "┊"
                 G.indent_blankline_char_highlight = "LineNr"

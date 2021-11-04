@@ -73,7 +73,7 @@ function M.nvim_lsp()
         { "n", ",cR", "<cmd>lua vim.lsp.codelens.refresh()<CR>" },
         { "n", ",cg", "<cmd>lua vim.lsp.codelens.get()<CR>" },
         { "n", ",s", '<cmd>lua vim.lsp.buf.signature_help({popup_opts = {border = "double"}})<CR>' },
-        { "n", ",ld", '<cmd>lua vim.diagnostic.show_line_diagnostics({popup_opts = {border = "double"}})<CR>' },
+        { "n", ",ld", "<cmd>lua vim.diagnostic.open_float()<CR>" },
         { "n", "[d", '<cmd>lua vim.diagnostic.goto_prev({focusable = false, popup_opts = {border = "double"}} )<CR>' },
         { "n", "]d", '<cmd>lua vim.diagnostic.goto_next({focusable = false, popup_opts = {border = "double"}})<CR>' },
         { "n", ",R", "<cmd>lua vim.lsp.buf.rename()<CR>" },
