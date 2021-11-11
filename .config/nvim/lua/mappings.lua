@@ -74,7 +74,11 @@ function M.nvim_lsp()
         { "n", ",cg", "<cmd>lua vim.lsp.codelens.get()<CR>" },
         { "n", ",s", '<cmd>lua vim.lsp.buf.signature_help({popup_opts = {border = "double"}})<CR>' },
         { "n", ",ld", "<cmd>lua vim.diagnostic.open_float()<CR>" },
-        { "n", "[d", '<cmd>lua vim.diagnostic.goto_prev({focusable = false, popup_opts = {border = "double"}} )<CR>' },
+        {
+            "n",
+            "[d",
+            '<cmd>lua vim.diagnostic.goto_prev({focusable = false, popup_opts = {border = "double"}} )<CR>',
+        },
         { "n", "]d", '<cmd>lua vim.diagnostic.goto_next({focusable = false, popup_opts = {border = "double"}})<CR>' },
         { "n", ",R", "<cmd>lua vim.lsp.buf.rename()<CR>" },
         { "n", ",ff", "<cmd>lua vim.lsp.buf.formatting()<CR>" },
@@ -208,7 +212,11 @@ function M.telescope()
         -- Search plugins
         { "n", "<space>vf", telF "find_files({cwd='~/.local/share/nvim/', prompt_title = 'Plugin files'})" },
         -- find-files ofProjects
-        { "n", "<space>of", telF "find_files({cwd ='~/Documents/ofWorkspace/',prompt_title = 'oF Workspace files'})" },
+        {
+            "n",
+            "<space>of",
+            telF "find_files({cwd ='~/Documents/ofWorkspace/',prompt_title = 'oF Workspace files'})",
+        },
         -- find-files ofProjects
         { "n", "<space>oo", telF "find_files({cwd ='~/Documents/Orgs/',prompt_title = 'Org Files'})" },
         -- livegrep ofWorkspace
@@ -294,15 +302,13 @@ end
 
 -- ******************************** Arduino ---------------------------------------
 
-function M.smbc()
+function M.micro()
     local opts = { nowait = true, noremap = true, silent = true }
     local bufmaps = {
-        -- Show documentation
-        { "n", "<F2>", ":lua require('compiler').arduinoref()<CR>" },
+        -- Clean directory
+        { "n", "<F2>", ":lua require('compiler').pio_clean()<CR>" },
         -- Print arduino board
         { "n", "<F3>", ":lua require('compiler').print_env()<CR>" },
-        -- Clean directory
-        { "n", "<F4>", ":lua require('compiler').print_clean()<CR>" },
         -- Build arduino project
         { "n", "<F5>", ":w <CR>:Make<CR>" },
         -- Upload arduino project
@@ -317,8 +323,15 @@ function M.smbc()
         { "n", "<leader>rp", ":lua require('compiler').teensypins()<CR>" },
         -- Show teensy specs image
         { "n", "<leader>rs", ":lua require('compiler').teensyspecs()<CR>" },
+        -- Show arduino documentation
+        { "n", ",ar", "<cmd>lua require('compiler').ardRef(vim.fn.expand('<cword>'))<CR>" },
     }
     u.bufmaps(bufmaps, opts)
+    -- Monitor arduino output
+    local maps = {
+        { "t", "<F8>", "<esc><cmd>lua require('compiler').monitor()<CR>" },
+    }
+    u.maps(maps, opts)
 end
 
 -- ******************************** cpp -openFrameworks ---------------------------------------

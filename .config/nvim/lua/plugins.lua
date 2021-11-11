@@ -117,7 +117,6 @@ return packer.startup {
         -- vim Orgmode
         use {
             "kristijanhusak/orgmode.nvim",
-            branch = "tree-sitter",
             ft = "org",
             config = function()
                 require("orgmode").setup {

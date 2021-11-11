@@ -18,8 +18,7 @@ function Compiler.set_ctype()
         G.debugBin = "bin/" .. vim.fn.fnamemodify(vim.fn.getcwd(), ":t") .. "_debug"
     elseif Compiler.has_pio_file() then
         Exec "set makeprg=pio\\ run"
-        -- require("settings").smbc()
-        require("mappings").smbc()
+        require("mappings").micro()
         G.makeFile = "platformio.ini"
     elseif Compiler.has_gradle() then
         require("mappings").makeGradle()
@@ -219,7 +218,7 @@ function Compiler.cmake_install()
 end
 
 -----------------------------------------------------------------------
---                                SMBC  	                          --
+--                    MicroControllers  	                          --
 ------------------------------------------------------------------------
 
 function Compiler.compiletags()
@@ -305,6 +304,7 @@ end
 function Compiler.pio_clean()
     local cmd = "pio -t clean"
     Compiler.terminal(cmd)
+    Compiler.compiletags()
 end
 
 -- check directory
@@ -326,6 +326,11 @@ end
 function Compiler.arduinoref()
     local url = "https://www.arduino.cc/reference/en/"
     u.open_in_browser(url)
+end
+
+function Compiler.ardRef(cmd)
+    local url = "https://search.arduino.cc/search?tab=reference&q=" .. cmd
+    Exec('!qutebrowser "' .. url .. '" &')
 end
 
 return Compiler

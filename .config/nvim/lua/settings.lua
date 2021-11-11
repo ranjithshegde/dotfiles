@@ -306,7 +306,7 @@ function settings.completion()
     }
     G.completion_auto_change_source = 0
     G.completion_popup_border = "double"
-    G.completion_disable_filetypes = { "TelescopePrompt" }
+    G.completion_disable_filetypes = { "TelescopePrompt", "text", "markdown", "vimwiki" }
 
     if Op "filetype" == "supercollider" then
         G.completion_enable_snippet = "UltiSnips"
@@ -318,7 +318,7 @@ function settings.completion()
         { "FileType", "*", 'lua require"completion".on_attach()' },
         {
             "FileType",
-            "supercollider,glsl,conf,org",
+            "supercollider,glsl,conf,org,cmake",
             "let g:completion_auto_change_source=1",
         },
         {
@@ -326,7 +326,6 @@ function settings.completion()
             "cpp,c,hpp,lua,python,java,javascript,typescript",
             "let g:completion_auto_change_source=0",
         },
-        { "FileType", "text,markdown,vimwiki", "CompletionToggle" },
     }, "completion_attach")
 end
 
@@ -660,8 +659,10 @@ function settings.lsp_lintFormat()
         glsl = { glslang },
         make = { checkmake },
         rust = { rustywind },
-        vimwiki = { markdownlint, prettier },
-        markdown = { markdownlint, prettier },
+        -- vimwiki = { markdownlint, prettier },
+        -- markdown = { markdownlint, prettier },
+        vimwiki = { prettier },
+        markdown = { prettier },
         sh = { shellcheck, shfmt },
         zsh = { shellcheck, shfmt },
         python = { flake8, isort, black, mypy },

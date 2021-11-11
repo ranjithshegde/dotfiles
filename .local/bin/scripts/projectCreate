@@ -250,7 +250,7 @@ case $lang in
 	pd)
 		pdCBuild
 		;;
-	smbc)
+	mirco)
 		electronics
 		;;
 esac
