@@ -200,10 +200,12 @@ return packer.startup {
             {
                 "hrsh7th/vim-vsnip-integ",
                 opt = true,
-                requires = {
-                    "rafamadriz/friendly-snippets",
-                },
             },
+            {
+                "rafamadriz/friendly-snippets",
+                event = "InsertEnter",
+            },
+
             {
                 "windwp/nvim-autopairs",
                 event = "InsertEnter",
