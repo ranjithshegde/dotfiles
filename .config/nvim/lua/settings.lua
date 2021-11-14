@@ -614,7 +614,6 @@ function settings.lsp_lintFormat()
     local glslang = { lintCommand = "glslangValidator --stdin -S %:e", lintStdin = true }
     local yamllint = { lintCommand = "yamllint -f parsable -", lintStdin = true }
     local shfmt = { formatCommand = "shfmt -ci -s -bn", formatStdin = true }
-    local rustywind = { formatCommand = "rustywind --stdin", formatStdin = true }
     local prettier = { formatCommand = "prettier --stdin --stdin-filepath ${INPUT}", formatStdin = true }
     local isort = { formatCommand = "isort --stdout --profile black -", formatStdin = true }
     local black = { formatCommand = "black --fast -", formatStdin = true }
@@ -658,9 +657,6 @@ function settings.lsp_lintFormat()
         lua = { stylua },
         glsl = { glslang },
         make = { checkmake },
-        rust = { rustywind },
-        -- vimwiki = { markdownlint, prettier },
-        -- markdown = { markdownlint, prettier },
         vimwiki = { prettier },
         markdown = { prettier },
         sh = { shellcheck, shfmt },
@@ -739,7 +735,6 @@ function settings.jdtls()
         on_attach = All_attach,
         capabilities = Capabilities,
         cmd = { "jdtls" },
-        -- cmd = { "jdlsp" },
     }
     require("jdtls.setup").add_commands()
 end

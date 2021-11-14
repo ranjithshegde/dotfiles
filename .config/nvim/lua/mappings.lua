@@ -8,6 +8,7 @@ function M.general()
     M.git()
     M.telescope()
     M.coauthor()
+    M.diagnostic()
 
     local opts = { nowait = true, noremap = true, silent = true }
     local maps = {
@@ -73,18 +74,11 @@ function M.nvim_lsp()
         { "n", ",cR", "<cmd>lua vim.lsp.codelens.refresh()<CR>" },
         { "n", ",cg", "<cmd>lua vim.lsp.codelens.get()<CR>" },
         { "n", ",s", '<cmd>lua vim.lsp.buf.signature_help({popup_opts = {border = "double"}})<CR>' },
-        { "n", ",ld", "<cmd>lua vim.diagnostic.open_float()<CR>" },
-        {
-            "n",
-            "[d",
-            '<cmd>lua vim.diagnostic.goto_prev({focusable = false, popup_opts = {border = "double"}} )<CR>',
-        },
-        { "n", "]d", '<cmd>lua vim.diagnostic.goto_next({focusable = false, popup_opts = {border = "double"}})<CR>' },
         { "n", ",R", "<cmd>lua vim.lsp.buf.rename()<CR>" },
-        { "n", ",ff", "<cmd>lua vim.lsp.buf.formatting()<CR>" },
-        { "n", ",ac", "<cmd>lua vim.lsp.buf.code_action()<CR>" },
-        { "v", ",ac", "<cmd>lua vim.lsp.buf.range_code_action()<CR>" },
-        { "v", ",ff", "<cmd>lua vim.lsp.buf.range_formatting()<CR>" },
+        { "n", ",f", "<cmd>lua vim.lsp.buf.formatting()<CR>" },
+        { "n", ",a", "<cmd>lua vim.lsp.buf.code_action()<CR>" },
+        { "v", ",a", "<cmd>lua vim.lsp.buf.range_code_action()<CR>" },
+        { "v", ",f", "<cmd>lua vim.lsp.buf.range_formatting()<CR>" },
         { "n", ",lv1", "<cmd>lua require'utils'.toggleVirt.toggle(1)<CR>" },
         { "n", ",lv2", "<cmd>lua require'utils'.toggleVirt.toggle(2)<CR>" },
         { "n", ",ls1", "<cmd>lua require'utils'.toggleSigns.toggle(1)<CR>" },
@@ -95,6 +89,16 @@ function M.nvim_lsp()
     }
 
     u.bufmaps(bufmaps, opts)
+end
+
+function M.diagnostic()
+    local opts = { noremap = true, silent = true }
+    local maps = {
+        { "n", ",ld", "<cmd>lua vim.diagnostic.open_float()<CR>" },
+        { "n", "[d", '<cmd>lua vim.diagnostic.goto_prev{float = {border = "double"}}<CR>' },
+        { "n", "]d", '<cmd>lua vim.diagnostic.goto_next{float = {border = "double"}}<CR>' },
+    }
+    u.maps(maps, opts)
 end
 
 -- ******************************** vim basic calls ---------------------------------------

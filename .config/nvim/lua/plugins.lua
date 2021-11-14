@@ -116,14 +116,23 @@ return packer.startup {
 
         -- vim Orgmode
         use {
-            "kristijanhusak/orgmode.nvim",
-            ft = "org",
-            config = function()
-                require("orgmode").setup {
-                    org_agenda_files = "~/Documents/Orgs/*",
-                    org_highlight_latex_and_related = "entities",
-                }
-            end,
+            {
+                "kristijanhusak/orgmode.nvim",
+                ft = "org",
+                config = function()
+                    require("orgmode").setup {
+                        org_agenda_files = "~/Documents/Orgs/*",
+                        org_highlight_latex_and_related = "entities",
+                    }
+                end,
+            },
+            {
+                "akinsho/org-bullets.nvim",
+                ft = "org",
+                config = function()
+                    require("org-bullets").setup {}
+                end,
+            },
         }
 
         -- WhichKey
