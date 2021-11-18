@@ -146,10 +146,10 @@ function settings.treesitter()
         incremental_selection = {
             enable = true,
             keymaps = {
-                init_selection = ";nn",
-                node_incremental = ";rn",
-                scope_incremental = ";rc",
-                node_decremental = ";rm",
+                init_selection = ";gn",
+                node_incremental = ";gi",
+                scope_incremental = ";gs",
+                node_decremental = ";gr",
             },
         },
         textobjects = {

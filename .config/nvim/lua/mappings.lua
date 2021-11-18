@@ -214,6 +214,10 @@ function M.treesitter()
                 a = "call outer",
                 A = "call inner",
             },
+            g = {
+                name = "incremental selection",
+                n = "Start selection at node",
+            },
         },
         -- Motions
         ["]"] = {
@@ -236,6 +240,18 @@ function M.treesitter()
         ["<Up>"] = "Move to previous outer code block start",
         ["<Left>"] = "Move to previous inner code block start",
     }
+    wk.register({
+        [";"] = {
+            name = "Syntax tree",
+            g = {
+                name = "incremental selection",
+                -- n = "Start selection at node",
+                i = "Increment nodes",
+                s = "Increment Scope",
+                r = "Decrememnt nodes",
+            },
+        },
+    }, { mode = "v" })
 end
 
 -- ******************************** Telescope ---------------------------------------
