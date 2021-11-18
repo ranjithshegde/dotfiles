@@ -11,6 +11,7 @@ function M.general()
     M.coauthor()
     M.diagnostic()
     M.ranger()
+    M.treesitter()
 
     local opts = { nowait = true, noremap = true, silent = true }
     local maps = {
@@ -51,13 +52,6 @@ function M.general()
         ["<C-K>"] = { "<C-W><C-K>", "Move to up buffer" },
         ["<C-L>"] = { "<C-W><C-L>", "Move to left buffer" },
         ["<C-H>"] = { "<C-W><C-H>", "Move to right buffer" },
-        -- treesitter
-        [";"] = {
-            name = "Syntax tree functions",
-            K = { "<cmd>TSHighlightCapturesUnderCursor<cr>", "Show treesitter node" },
-            P = { "<cmd>TSPlaygroundToggle<cr>", "Toggle playground" },
-            f = { "gg=G<C-o>zz", "indent" },
-        },
         -- Terminals
         ["<leader>t"] = {
             name = "Launch terminal in split",
@@ -73,12 +67,12 @@ function M.ranger()
     wk.register {
         ["<leader>r"] = {
             name = "Ranger file manager",
-            r = { "from current file" },
-            R = { "from current directory" },
-            v = { "in a split from current file" },
-            V = { "in a split from current directory" },
-            t = { "in a new tab from current file" },
-            T = { "in a new tab from current directory" },
+            r = "from current file",
+            R = "from current directory",
+            v = "in a split from current file",
+            V = "in a split from current directory",
+            t = "in a new tab from current file",
+            T = "in a new tab from current directory",
         },
     }
 end
@@ -161,6 +155,86 @@ function M.configFiles()
                 R = { "<cmd>lua require('utils').Restart()<CR>", "Reload Vim" },
             },
         },
+    }
+end
+
+-- ******************************** Treesitter ---------------------------------------
+
+function M.treesitter()
+    wk.register {
+        [";"] = {
+            name = "Syntax tree functions",
+            -- Plugins
+            K = { "<cmd>TSHighlightCapturesUnderCursor<cr>", "Show treesitter node" },
+            P = { "<cmd>TSPlaygroundToggle<cr>", "Toggle playground" },
+            --Refactor
+            d = "Jump to node definition",
+            f = { "gg=G<C-o>zz", "indent" },
+            l = {
+                name = "List functions/symbols",
+                l = "local",
+                g = "Global",
+            },
+            r = "rename",
+            ["*"] = "jump to node's next usage",
+            ["#"] = "jump to node's previous usage",
+            -- TextObjects
+            p = {
+                name = "Peek function defintion",
+                f = "for function",
+                c = "for class",
+            },
+            s = {
+                name = "Swap forwards",
+                s = "statement",
+                o = "comment",
+                p = "Paramater outer",
+                P = "Parameter inner",
+                f = "function outer",
+                F = "function inner",
+                c = "conditional outer",
+                C = "conditional inner",
+                l = "loop outer",
+                L = "loop inner",
+                a = "call outer",
+                A = "call inner",
+            },
+            S = {
+                name = "Swap backwards",
+                s = "statement",
+                o = "comment",
+                p = "Paramater outer",
+                P = "Parameter inner",
+                f = "function outer",
+                F = "function inner",
+                c = "conditional outer",
+                C = "conditional inner",
+                l = "loop outer",
+                L = "loop inner",
+                a = "call outer",
+                A = "call inner",
+            },
+        },
+        -- Motions
+        ["]"] = {
+            n = "Move to next outer function start",
+            i = "Move to next inner function start",
+            ["="] = "Move to next outer class start",
+            N = "Move to next function outer end",
+            I = "Move to next function inner end",
+        },
+        ["<Down>"] = "Move to next outer code block start",
+        ["<Right>"] = "Move to next inner code block start",
+        ["["] = {
+            n = "Move to previous outer function start",
+            i = "Move to previous inner function start",
+            ["="] = "Move to previous outer class start",
+            N = "Move to previous function outer end",
+            I = "Move to previous function inner end",
+        },
+
+        ["<Up>"] = "Move to previous outer code block start",
+        ["<Left>"] = "Move to previous inner code block start",
     }
 end
 
@@ -285,34 +359,24 @@ end
 
 -- ******************************** SuperCollider ---------------------------------------
 function M.scnvim()
-    local opts = { nowait = true, noremap = true, silent = true }
-
     Exec "nmap <buffer> <F5> <Plug>(scnvim-send-block)"
     Exec "nmap <buffer>,S <Plug>(scnvim-show-signature)"
     Exec "imap <buffer> <F5> <esc><Plug>(scnvim-send-block)"
     Exec "vmap <buffer> <F5> <Plug>(scnvim-send-selection)"
     Exec "nmap <buffer> <F6> <Plug>(scnvim-send-line)"
     Exec "imap <buffer> <F6> <esc><Plug>(scnvim-send-line)"
-    -- Buffer local mappings:
+
     local bufmaps = {
-        -- Start language
-        { "n", "<F1>", ":SCNvimStart<cr>" },
-        -- SCNvimStatusLine
-        { "n", "<F2>", ":SCNvimStatusLine<cr>" },
-        -- Recompile
-        { "n", "<leader>sk", ":SCNvimRecompile<cr>" },
-        -- Start scsynth
-        { "n", "<F3>", ':call scnvim#sclang#send_silent("Server.local.boot")<CR>' },
-        --Start WFSCollider
-        { "n", "<F4>", ':call scnvim#sclang#send_silent("WFSLib.startup")<CR>' },
-        -- Echo args
-        { "n", ";a", ":call scnvim#util#echo_args()<cr>" },
-        -- Regenerate Ctags
-        { "n", "<leader>rt", ":SCNvimTags<cr>" },
-        -- Edit startup file
-        { "n", "<leader>es", ":tabnew ~/.config/SuperCollider/startup.scd<cr>" },
+        ["<F1>"] = { "<cmd>SCNvimStart<cr>", "Launch Sclang" },
+        ["<F2>"] = { "<cmd>SCNvimStatusLine<cr>", "Display server status" },
+        ["<F3>"] = { '<cmd>call scnvim#sclang#send_silent("Server.local.boot")<CR>', "Boot local server" },
+        ["<F4>"] = { '<cmd>call scnvim#sclang#send_silent("WFSLib.startup")<CR>', "Boot WFS server" },
+        [";a"] = { "<cmd>call scnvim#util#echo_args()<cr>", "Echo arguments in commandline" },
+        ["<leader>sk"] = { "<cmd>SCNvimRecompile<cr>", "Recompile SC class library" },
+        ["<leader>rt"] = { "<cmd>SCNvimTags<cr>", "Regenerate tags" },
+        ["<leader>es"] = { "<cmd>tabnew ~/.config/SuperCollider/startup.scd<cr>", "open startup file" },
     }
-    u.bufmaps(bufmaps, opts)
+    wk.register(bufmaps, { buffer = 0 })
 end
 
 -- ******************************** Arduino ---------------------------------------
@@ -360,51 +424,38 @@ end
 -- ******************************** Openframeworks Android ---------------------------------------
 
 function M.makeGradle()
-    local opts = { nowait = true, noremap = true, silent = true }
-    local bufmaps = {
-        -- Compile Debug openFrameworks
-        -- { "n", "<F4>", ":w <CR> :Make Debug -j12<CR>" },
-        -- Compile openFrameworks
-        { "n", "<F5>", ":w <CR> :Make<CR>" },
-        -- run openFrameworks
-        { "n", "<F6>", ":w <CR> :Dispatch make RunRelease<CR>" },
-        -- Call gdb (termdebug)
-        { "n", "<F7>", 'w <CR> :lua require("compiler").termdebug()<cr>' },
-    }
-    u.bufmaps(bufmaps, opts)
+    -- local bufmaps = {
+    --     -- Compile Debug openFrameworks
+    --     -- { "n", "<F4>", ":w <CR> :Make Debug -j12<CR>" },
+    --     -- Compile openFrameworks
+    --     { "n", "<F5>", ":w <CR> :Make<CR>" },
+    --     -- run openFrameworks
+    --     { "n", "<F6>", ":w <CR> :Dispatch make RunRelease<CR>" },
+    --     -- Call gdb (termdebug)
+    --     { "n", "<F7>", 'w <CR> :lua require("compiler").termdebug()<cr>' },
+    -- }
 end
 
 -- ********************************  Simple C mappings ---------------------------------------
 
 function M.ctests()
-    local opts = { nowait = true, noremap = true, silent = true }
     local bufmaps = {
-        -- Compile c file, avoid preprocessor errors
-        { "n", "<F4>", ":w <CR> :Dispatch gcc % -lm -o %<<CR> :Dispatch ./%<<CR>" },
-        -- Compile cpp file
-        { "n", "<F5>", ":w <CR> :Make -g % -o %<<CR>" },
-        -- Run binary
-        { "n", "<F6>", ":w <CR> :Dispatch ./%<<CR>" },
-        -- Dispatch install
-        { "n", "<F7>", 'w <CR> :lua require("compiler").termdebug()<cr>' },
+        ["<F3>"] = { "<cmd>w <CR> <cmd>Dispatch gcc % -lm -o %<<CR> <cmd>Dispatch ./%<<CR>", "Use gcc" },
+        ["<F4>"] = { "<cmd>w <CR> <cmd>lua require('compiler').with_flags()<cr>", "Make with defined flags" },
+        ["<F5>"] = { "<cmd>w <CR> <cmd>Make -g % -o %<<CR>", "Make" },
+        ["<F6>"] = { "<cmd>w <CR> <cmd>Dispatch ./%<<CR>", "Run binary" },
+        ["<F7>"] = { '<cmd>w <CR> <cmd>lua require("compiler").termdebug()<cr>', "Launch debugger" },
     }
-    u.bufmaps(bufmaps, opts)
+    wk.register(bufmaps, { buffer = 0 })
 end
 
 -- PureData C Externals
 function M.pdc()
-    local opts = { nowait = true, noremap = true, silent = true }
     local bufmaps = {
-        -- Compile c file, avoid preprocessor errors
-        -- { "n", "<F4>", ":w <CR> :Dispatch gcc % -lm -o %<<CR> :Dispatch ./%<<CR>" },
-        -- Compile cpp file
-        { "n", "<F5>", ":w<CR>:Make<CR>" },
-        -- Copy binary
-        { "n", "<F6>", ":w<CR><cmd>lua require('compiler').pdBuild()<CR>" },
-        -- Dispatch install
-        -- { "n", "<F7>", 'w <CR> :lua require("compiler").termdebug()<cr>' },
+        ["<F5>"] = { "<cmd>w<CR><cmd>Make<CR>", "Build Pd external" },
+        ["<F6>"] = { "<cmd>w<CR><cmd>lua require('compiler').pdBuild()<CR>", "Copy external to PD directory" },
     }
-    u.bufmaps(bufmaps, opts)
+    wk.register(bufmaps, { buffer = 0 })
 end
 
 -- ******************************** General Clang mappings ---------------------------------------

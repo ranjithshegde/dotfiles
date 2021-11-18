@@ -254,8 +254,8 @@ function settings.treesitter()
                 enable = true,
                 keymaps = {
                     goto_definition = ";d",
-                    list_definitions = ";D",
-                    list_definitions_toc = ";O",
+                    list_definitions = ";lg",
+                    list_definitions_toc = ";ll",
                     goto_next_usage = ";*",
                     goto_previous_usage = ";#",
                 },

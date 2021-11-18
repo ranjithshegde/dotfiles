@@ -141,6 +141,10 @@ function Compiler.pdBuild()
     Compiler.terminal("\\cp " .. bin .. ".pd_linux " .. dest)
 end
 
+function Compiler.with_flags()
+    local flags = vim.fn.input "Enter compiler flags: "
+    Compiler.make("-o %<" .. flags .. "%")
+end
 ------------------------------------------------------------------------
 --                                CMake 	                          --
 ------------------------------------------------------------------------
