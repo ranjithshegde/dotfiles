@@ -1,5 +1,6 @@
 local M = {}
 local u = require "utils"
+local wk = require "which-key"
 
 -- ******************************** General functions ---------------------------------------
 
@@ -9,24 +10,13 @@ function M.general()
     M.telescope()
     M.coauthor()
     M.diagnostic()
+    M.ranger()
 
     local opts = { nowait = true, noremap = true, silent = true }
     local maps = {
-        { "n", "n", "nzzzv" },
-        { "n", "N", "Nzzzv" },
-        { "n", "J", "mzJ`z" },
-        -- Window movement
-        { "n", "<C-J>", "<C-W><C-J>" },
-        { "n", "<C-K>", "<C-W><C-K>" },
-        { "n", "<C-L>", "<C-W><C-L>" },
-        { "n", "<C-H>", "<C-W><C-H>" },
         --line movement
         { "x", "K", ":move '<-2<CR>gv-gv" },
         { "x", "J", ":move '>+1<CR>gv-gv" },
-        { "n", "gm", ":call cursor(0, virtcol('$')/2 )<CR>" },
-        -- quickfix
-        { "n", "-", ":lua require('utils.qf').toggle_qf('q')<CR>" },
-        { "n", "_", ":lua require('utils.qf').toggle_qf('l')<CR>" },
         -- visual cut for replase
         { "v", "<leader>p", '"_dP' },
         { "s", "<leader>p", '"_dP' },
@@ -35,93 +25,125 @@ function M.general()
         { "v", ">", ">gv" },
         -- Terminal
         { "t", "<Esc>", "<C-\\><C-n>" },
-        { "n", "<leader>ht", ":sp term://zsh<cr>" },
-        { "n", "<leader>t", ":vspl term://zsh<cr>" },
-        { "n", "<F9>", "<cmd>lua require('utils').toggleTerm('zsh','shell',1)<cr>" },
         { "t", "<F9>", "<esc><cmd>lua require('utils').toggleTerm('zsh','shell',1)<cr>" },
-        -- { "n", "<leader>e", "<cmd>NvimTreeToggle<CR>" },
-        -- Treesitter basics
-        { "n", ";K", ":TSHighlightCapturesUnderCursor<cr>" },
-        { "n", ";P", ":TSPlaygroundToggle<cr>" },
-        { "n", "<leader>fm", "gg=G<C-o>zz" },
     }
     u.maps(maps, opts)
 
     --Conditional changes
     if Op "filetype" ~= "vimwiki" and Op "filetype" ~= "org" then
-        local cmaps = {
-            { "n", "<Tab>", "za" },
-            { "n", "<S-Tab>", "zA" },
+        wk.register {
+            ["<Tab>"] = { "za", "Toggle fold current" },
+            ["<S-Tab>"] = { "zA", "Toggle fold All" },
         }
-        u.maps(cmaps, opts)
     end
+
+    wk.register {
+        -- open folds when searching
+        n = { "nzzzv", "jump to next search result" },
+        N = { "Nzzzv", "jump to previous search result" },
+        J = { "mzJ`z", "Adjoin next line" },
+        gm = { "<cmd>call cursor(0, virtcol('$')/2 )<CR>", "Move cursor to middle of the line" },
+        --Quickfix
+        ["-"] = { "<cmd>lua require('utils.qf').toggle_qf('q')<CR>", "Toggle quickfix" },
+        ["_"] = { "<cmd>lua require('utils.qf').toggle_qf('l')<CR>", "Toggle loclist" },
+        -- Window movement
+        ["<C-J>"] = { "<C-W><C-J>", "Move to down buffer" },
+        ["<C-K>"] = { "<C-W><C-K>", "Move to up buffer" },
+        ["<C-L>"] = { "<C-W><C-L>", "Move to left buffer" },
+        ["<C-H>"] = { "<C-W><C-H>", "Move to right buffer" },
+        -- treesitter
+        [";"] = {
+            name = "Syntax tree functions",
+            K = { "<cmd>TSHighlightCapturesUnderCursor<cr>", "Show treesitter node" },
+            P = { "<cmd>TSPlaygroundToggle<cr>", "Toggle playground" },
+            f = { "gg=G<C-o>zz", "indent" },
+        },
+        -- Terminals
+        ["<leader>t"] = {
+            name = "Launch terminal in split",
+            h = { "<cmd>sp term://zsh<cr>", "Horizontal" },
+            v = { "<cmd>vspl term://zsh<cr>", "Vertical" },
+            t = { "<cmd>tabnew term://zsh<cr>", "New tab" },
+        },
+        ["<F9>"] = { "<cmd>lua require('utils').toggleTerm('zsh','shell',1)<cr>", "Toggle zsh terminal" },
+    }
+end
+
+function M.ranger()
+    wk.register {
+        ["<leader>r"] = {
+            name = "Ranger file manager",
+            r = { "from current file" },
+            R = { "from current directory" },
+            v = { "in a split from current file" },
+            V = { "in a split from current directory" },
+            t = { "in a new tab from current file" },
+            T = { "in a new tab from current directory" },
+        },
+    }
 end
 
 -- ******************************** language server ---------------------------------------
 
 function M.nvim_lsp()
-    local opts = { noremap = true, silent = true }
-
-    local bufmaps = {
-        { "n", "<F1>", "<cmd>TlistToggle<CR>" },
-        { "n", "K", "<cmd>lua vim.lsp.buf.hover()<CR>" },
-        { "n", ",D", "<cmd>lua vim.lsp.buf.declaration()<CR>" },
-        { "n", ",d", "<cmd>lua vim.lsp.buf.definition()<CR>" },
-        { "n", ",i", "<cmd>lua vim.lsp.buf.implementation()<CR>" },
-        { "n", ",t", "<cmd>lua vim.lsp.buf.type_definition()<CR>" },
-        { "n", ",cc", "<cmd>lua vim.lsp.codelens.display()<CR>" },
-        { "n", ",cr", "<cmd>lua vim.lsp.codelens.run()<CR>" },
-        { "n", ",cR", "<cmd>lua vim.lsp.codelens.refresh()<CR>" },
-        { "n", ",cg", "<cmd>lua vim.lsp.codelens.get()<CR>" },
-        { "n", ",s", '<cmd>lua vim.lsp.buf.signature_help({popup_opts = {border = "double"}})<CR>' },
-        { "n", ",R", "<cmd>lua vim.lsp.buf.rename()<CR>" },
-        { "n", ",f", "<cmd>lua vim.lsp.buf.formatting()<CR>" },
-        { "n", ",a", "<cmd>lua vim.lsp.buf.code_action()<CR>" },
-        { "v", ",a", "<cmd>lua vim.lsp.buf.range_code_action()<CR>" },
-        { "v", ",f", "<cmd>lua vim.lsp.buf.range_formatting()<CR>" },
-        { "n", ",lv1", "<cmd>lua require'utils'.toggleVirt.toggle(1)<CR>" },
-        { "n", ",lv2", "<cmd>lua require'utils'.toggleVirt.toggle(2)<CR>" },
-        { "n", ",ls1", "<cmd>lua require'utils'.toggleSigns.toggle(1)<CR>" },
-        { "n", ",ls2", "<cmd>lua require'utils'.toggleSigns.toggle(2)<CR>" },
-        { "n", ",wa", "<cmd>lua vim.lsp.buf.add_workspace_folder()<CR>" },
-        { "n", ",wr", "<cmd>lua vim.lsp.buf.remove_workspace_folder()<CR>" },
-        { "n", ",wl", "<cmd>lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))<CR>" },
+    local lspmap = {
+        K = { "<cmd>lua vim.lsp.buf.hover()<CR>", "Hover" },
+        [","] = {
+            name = "Lsp functions",
+            D = { "<cmd>lua vim.lsp.buf.declaration()<CR>", "Jump to Declaration" },
+            d = { "<cmd>lua vim.lsp.buf.definition()<CR>", "Jump to Definition" },
+            i = { "<cmd>lua vim.lsp.buf.implementation()<CR>", "Jump to Implementation" },
+            r = { "<cmd>lua vim.lsp.buf.references()<CR>", "References" },
+            t = { "<cmd>lua vim.lsp.buf.type_definition()<CR>", "Jump to Type definition" },
+            s = { '<cmd>lua vim.lsp.buf.signature_help({popup_opts = {border = "double"}})<CR>' },
+            R = { "<cmd>lua vim.lsp.buf.rename()<CR>", "Rename symbol" },
+            f = { "<cmd>lua vim.lsp.buf.formatting()<CR>", "Format buffer" },
+            a = { "<cmd>lua vim.lsp.buf.code_action()<CR>", "Code actions for buffer" },
+            c = {
+                name = "Codelens",
+                c = { "<cmd>lua vim.lsp.codelens.display()<CR>", "Display" },
+                r = { "<cmd>lua vim.lsp.codelens.run()<CR>", "Run" },
+                R = { "<cmd>lua vim.lsp.codelens.refresh()<CR>", "Refresh" },
+                g = { "<cmd>lua vim.lsp.codelens.get()<CR>", "Fetch" },
+            },
+            l = {
+                name = "Toggle diagnostics",
+                v = { "<cmd>lua require'utils'.toggleVirt.toggle({lsp = vim.fn.input('cwd: ')})<CR>", "Virtual text" },
+                -- v2 = { "<cmd>lua require'utils'.toggleVirt.toggle(2)<CR>", "Virtual text for lsp 2" },
+                s = { "<cmd>lua require'utils'.toggleSigns.toggle({lsp = vim.fn.input('cwd: ')})<CR>", "Sings" },
+                -- s2 = { "<cmd>lua require'utils'.toggleSigns.toggle(2)<CR>", "Sings for lsp 2" },
+            },
+            w = {
+                name = "Workspace",
+                a = { "<cmd>lua vim.lsp.buf.add_workspace_folder()<CR>", "Add workspace folder" },
+                r = { "<cmd>lua vim.lsp.buf.remove_workspace_folder()<CR>", "Remove workspace folder" },
+                l = { "<cmd>vim.lsp.buf.list_workspace_folders()<CR>", "List workspace folder" },
+            },
+        },
     }
+    wk.register(lspmap, { buffer = 0 })
 
-    u.bufmaps(bufmaps, opts)
+    local vmap = {
+        [","] = {
+            name = "Lsp visual mode",
+            a = { "<cmd>lua vim.lsp.buf.range_code_action()<CR>", "Code actions for range" },
+            f = { "<cmd>lua vim.lsp.buf.range_formatting()<CR>", "Format range" },
+        },
+    }
+    wk.register(vmap, { mode = "v", buffer = 0 })
 end
 
 function M.diagnostic()
-    local opts = { noremap = true, silent = true }
-    local maps = {
-        { "n", ",ld", "<cmd>lua vim.diagnostic.open_float()<CR>" },
-        { "n", "[d", '<cmd>lua vim.diagnostic.goto_prev{float = {border = "double"}}<CR>' },
-        { "n", "]d", '<cmd>lua vim.diagnostic.goto_next{float = {border = "double"}}<CR>' },
+    wk.register {
+        [",ld"] = { "<cmd>lua vim.diagnostic.open_float()<CR>", "Show line diagnostics" },
+        ["[d"] = { '<cmd>lua vim.diagnostic.goto_prev{float = {border = "double"}}<CR>', "Show previous diagnostics" },
+        ["]d"] = { '<cmd>lua vim.diagnostic.goto_next{float = {border = "double"}}<CR>', "Show next diagnostics" },
     }
-    u.maps(maps, opts)
 end
 
 -- ******************************** vim basic calls ---------------------------------------
 
 function M.configFiles()
-    -- local opts = { nowait = true, noremap = true, silent = true }
-    -- local maps = {
-    --     { "n", "<leader>aP", "<cmd>PackerSync<CR>" },
-    --     { "n", "<leader>aR", "<cmd>lua require('utils').Restart()<CR>" },
-    --     { "n", "<leader>am", "<cmd>tabnew ~/.config/nvim/lua/mappings.lua<CR>" },
-    --     { "n", "<leader>al", "<cmd>tabnew ~/.config/nvim/lua/settings.lua<CR>" },
-    --     { "n", "<leader>ap", "<cmd>tabnew ~/.config/nvim/lua/plugins.lua<CR>" },
-    --     { "n", "<leader>as", "<cmd>tabnew ~/.config/nvim/lua/statusline.lua<CR>" },
-    --     { "n", "<leader>ac", "<cmd>tabnew ~/.config/nvim/lua/compiler.lua<CR>" },
-    --     { "n", "<leader>au", "<cmd>tabnew ~/.config/nvim/lua/utils/init.lua<CR>" },
-    --     { "n", "<leader>aa", "<cmd>tabnew ~/.config/nvim/autoload/util.vim<CR>" },
-    --     { "n", "<leader>af", "<cmd>tabnew ~/.config/nvim/plugin/plugins.vim<CR>" },
-    --     { "n", "<leader>ar", "<cmd>tabnew $MYVIMRC<CR>" },
-    -- }
-
-    -- u.maps(maps, opts)
-
-    local wk = require "which-key"
     wk.register {
         ["<leader>"] = {
             a = {
@@ -146,87 +168,73 @@ end
 
 function M.telescope()
     local tele = function(name)
-        return string.format(":lua require('telescope.builtin').%s()<cr>", name)
+        return string.format("<cmd>lua require('telescope.builtin').%s()<cr>", name)
     end
     local telF = function(name)
-        return string.format(":lua require('telescope.builtin').%s<cr>", name)
+        return string.format("<cmd>lua require('telescope.builtin').%s<cr>", name)
     end
     local telE = function(name)
-        return string.format(":lua require'telescope'.extensions.%s<cr>", name)
+        return string.format("<cmd>lua require'telescope'.extensions.%s<cr>", name)
     end
 
-    local opts = { nowait = true, noremap = true, silent = true }
-    local maps = {
-        -- Switch buffers
-        { "n", "<space>b", tele "buffers" },
-        -- Fuzzy find files in cwd
-        { "n", "<space>f", tele "find_files" },
-        -- Oldfiles
-        { "n", "<space>rf", tele "oldfiles" },
-        -- Help tags
-        { "n", "<space>ht", tele "help_tags" },
-        -- registers list
-        { "n", '<space>"', tele "registers" },
-        -- File explorer
-        { "n", "<space>e", tele "file_browser" },
-        -- commands explorer
-        { "n", "<space>c", tele "commands" },
-        -- commands history
-        { "n", "<space>C", tele "command_history" },
-        -- Unicode
-        { "n", "<space>m", tele "symbols" },
-        -- openFrameworks and other projects
-        { "n", "<space>p", telE "project.project{display_type = 'full'}" },
-        -- Ctags
-        { "n", "<space>T", tele "tags" },
-        -- TS symbols
-        { "n", "<space>t", tele "treesitter" },
-        -- References under cursor
-        { "n", ",r", tele "lsp_references" },
-        -- document symbol
-        { "n", "<space>s", tele "lsp_document_symbols" },
-        -- document symbol
-        { "n", "<space>S", tele "lsp_dynamic_workspace_symbols" },
-        -- Document diagnostics
-        { "n", "<space>dd", tele "lsp_document_diagnostics" },
-        -- Workspace diagnostics
-        { "n", "<space>D", tele "lsp_workspace_diagnostics" },
-        -- Quickfix list
-        { "n", "<space>q", tele "quickfix" },
-        -- Location list
-        { "n", "<space>l", tele "loclist" },
-        -- live grep
-        { "n", "<space>G", tele "live_grep" },
-        -- git branches
-        { "n", "<space>gb", tele "git_branches" },
-        -- git commits
-        { "n", "<space>gc", tele "git_commits" },
-        -- git status
-        { "n", "<space>gs", tele "git_status" },
-        -- git files
-        { "n", "<space>gf", tele "git_files" },
-        --  Serach HOME
-        { "n", "<space>hf", telF "find_files({cwd='~'})" },
-        -- Custom workfolder
-        { "n", "<space>K", telF 'live_grep({cwd = vim.fn.input("cwd: ")})' },
-        -- Workspace symbol under cursor
-        { "n", "<space>k", telF "lsp_workspace_symbols({query = vim.fn.expand('<cword>')})" },
-        --  Serach dotfiles
-        { "n", "<space>df", telF "find_files({cwd='~/.config/', prompt_title = 'Dotfiles'})" },
-        -- Search plugins
-        { "n", "<space>vf", telF "find_files({cwd='~/.local/share/nvim/', prompt_title = 'Plugin files'})" },
-        -- find-files ofProjects
-        {
-            "n",
-            "<space>of",
-            telF "find_files({cwd ='~/Documents/ofWorkspace/',prompt_title = 'oF Workspace files'})",
+    wk.register {
+        ["<Space>"] = {
+            name = "Telescope",
+            b = { tele "buffers", "Buffers" },
+            ["'"] = { tele "registers", "Registers" },
+            e = { tele "file_browser", "File browser" },
+            c = { tele "commands", "Vim commands" },
+            C = { tele "command_history", "Command history" },
+            m = { tele "symbols", "Unicode characters" },
+            T = { tele "tags", "Lsp Ctags" },
+            t = { tele "treesitter", "TreeSitter nodes in buffer" },
+            s = { tele "lsp_document_symbols", "Lsp symbols in buffer" },
+            r = { tele "lsp_references", "Lsp References" },
+            S = { tele "lsp_dynamic_workspace_symbols", "Grep lsp workspace symbols" },
+            k = { telF "lsp_workspace_symbols({query = vim.fn.expand('<cword>')})", "Search lsp workspace symbol" },
+            d = {
+                name = "lsp diagnostics",
+                b = { tele "lsp_document_diagnostics", "buffer diagnostics" },
+                w = { tele "lsp_workspace_diagnostics", "Workspace diagnostics" },
+            },
+            q = { tele "quickfix", "Quickfix list" },
+            l = { tele "loclist", "local quickfix list" },
+            g = {
+                name = "Live grep in",
+                o = {
+                    telF "live_grep({cwd ='~/Documents/ofWorkspace/',prompt_title = 'oF Workspace grep'})",
+                    "ofWorkspace",
+                },
+                b = { tele "live_grep", "current buffer" },
+            },
+            f = {
+                name = "find files in",
+                f = { tele "find_files", "Current directory" },
+                h = { telF "find_files({cwd='~'})", "Home directory" },
+                d = { telF "find_files({cwd='~/.config/', prompt_title = 'Dotfiles'})", "Dotfiles" },
+                v = {
+                    telF "find_files({cwd='~/.local/share/nvim/', prompt_title = 'Plugin files'})",
+                    "Vim plugin Directory",
+                },
+                r = { tele "oldfiles", "Vim recent files" },
+                t = { tele "help_tags", "Help tags" },
+                o = {
+                    telF "find_files({cwd ='~/Documents/ofWorkspace/',prompt_title = 'oF Workspace files'})",
+                    "OfWorkspace",
+                },
+            },
+            G = {
+                name = "git commands",
+                b = { tele "git_branches", "Branches" },
+                c = { tele "git_commits", "Commit history" },
+                s = { tele "git_status", "Status" },
+                f = { tele "git_files", "Tracked files" },
+            },
+            p = { telE "project.project{display_type = 'full'}", "Projects" },
+            K = { telF 'live_grep({cwd = vim.fn.input("cwd: ")})', "Live grep in directory" },
+            o = { telF "find_files({cwd ='~/Documents/Orgs/',prompt_title = 'Org Files'})", "Org files" },
         },
-        -- find-files ofProjects
-        { "n", "<space>oo", telF "find_files({cwd ='~/Documents/Orgs/',prompt_title = 'Org Files'})" },
-        -- livegrep ofWorkspace
-        { "n", "<space>og", telF "live_grep({cwd ='~/Documents/ofWorkspace/',prompt_title = 'oF Workspace grep'})" },
     }
-    u.maps(maps, opts)
 end
 
 -- ******************************** Git ---------------------------------------
@@ -234,23 +242,26 @@ end
 -- fugitive mappings
 function M.git()
     local opts = { nowait = true, noremap = true, silent = false }
-    local maps = {
-        { "n", "<leader>gg", ":G<cr>" },
-        { "n", "<leader>gc", ":G commit<cr>" },
-        { "n", "<leader>gC", ":G commit %<cr>" },
-        { "n", "<leader>ga", ":G add %<cr>" },
-        { "n", "<leader>gd", ":G difftool<cr>" },
-        { "n", "<leader>gb", ":G blame<cr>" },
-        { "n", "<leader>gp", ":Gitsigns preview_hunk<cr>" },
-        { "n", "<leader>gs", ":Gitsigns stage_hunk<cr>" },
-        { "n", "<leader>gP", ":G push<cr>" },
-        { "n", "<leader>gL", ":Gclog<cr>" },
-        { "n", "<leader>gl", ":G log<cr>" },
-        { "n", "]h", ":Gitsigns next_hunk<cr>:Gitsigns preview_hunk<CR>" },
-        { "n", "[h", ":Gitsigns prev_hunk<cr>:Gitsigns preview_hunk<CR>" },
-    }
-
+    local maps = {}
     u.maps(maps, opts)
+    wk.register {
+        ["<leader>g"] = {
+            name = "git functions",
+            g = { "<cmd>G<cr>", "Git window" },
+            c = { "<cmd>G commit<cr>", "commit changes" },
+            C = { "<cmd>G commit %<cr>", "commit current buffer" },
+            a = { "<cmd>G add %<cr>", "add current buffer" },
+            d = { "<cmd>G difftool<cr>", "launch difftool" },
+            b = { "<cmd>G blame<cr>", "toggle blame" },
+            p = { "<cmd>Gitsigns preview_hunk<cr>", "preview hunk under cursor" },
+            s = { "<cmd>Gitsigns stage_hunk<cr>", "stage hunk under cursor" },
+            P = { "<cmd>G push<cr>", "push commits" },
+            l = { "<cmd>G log<cr>", "commit history" },
+            L = { "<cmd>Gclog<cr>", "commit CLog" },
+        },
+        ["]h"] = { "<cmd>Gitsigns next_hunk<cr>:Gitsigns preview_hunk<CR>", "Preview previous hunk" },
+        ["[h"] = { "<cmd>Gitsigns prev_hunk<cr>:Gitsigns preview_hunk<CR>", "Preview next hunk" },
+    }
 end
 
 -- ******************************** Snippets ---------------------------------------
@@ -266,10 +277,10 @@ function M.autoComplete()
     Exec 'imap <expr> <C-l> vsnip#available(1) ? "<Plug>(vsnip-expand-or-jump)" : "<C-l>"'
     Exec 'smap <expr> <C-l> vsnip#available(1) ? "<Plug>(vsnip-expand-or-jump)" : "<C-l>"'
     --Plugs
-    Exec "nmap  s  <Plug>(vsnip-select-text)"
-    Exec "xmap  s  <Plug>(vsnip-select-text)"
-    Exec "nmap  S  <Plug>(vsnip-cut-text)"
-    Exec "xmap  S  <Plug>(vsnip-cut-text)"
+    -- Exec "nmap  s  <Plug>(vsnip-select-text)"
+    -- Exec "xmap  s  <Plug>(vsnip-select-text)"
+    -- Exec "nmap  S  <Plug>(vsnip-cut-text)"
+    -- Exec "xmap  S  <Plug>(vsnip-cut-text)"
 end
 
 -- ******************************** SuperCollider ---------------------------------------
@@ -307,52 +318,43 @@ end
 -- ******************************** Arduino ---------------------------------------
 
 function M.micro()
-    local opts = { nowait = true, noremap = true, silent = true }
-    local bufmaps = {
-        -- Clean directory
-        { "n", "<F2>", ":lua require('compiler').pio_clean()<CR>" },
-        -- Print arduino board
-        { "n", "<F3>", ":lua require('compiler').print_env()<CR>" },
-        -- Build arduino project
-        { "n", "<F5>", ":w <CR>:Make<CR>" },
-        -- Upload arduino project
-        { "n", "<F6>", ":w <CR>:Make --target upload<CR>" },
-        -- Print arduino board
-        { "n", "<F7>", ":lua require('compiler').pio_check()<CR>" },
-        -- Monitor arduino output
-        { "n", "<F8>", ":lua require('compiler').monitor()<CR>" },
-        -- Compile tags & link it
-        { "n", "<leader>rt", ":lua require('compiler').compiletags()<CR>" },
-        -- Show teensy pins image
-        { "n", "<leader>rp", ":lua require('compiler').teensypins()<CR>" },
-        -- Show teensy specs image
-        { "n", "<leader>rs", ":lua require('compiler').teensyspecs()<CR>" },
-        -- Show arduino documentation
-        { "n", ",ar", "<cmd>lua require('compiler').ardRef(vim.fn.expand('<cword>'))<CR>" },
-    }
-    u.bufmaps(bufmaps, opts)
-    -- Monitor arduino output
     local maps = {
-        { "t", "<F8>", "<esc><cmd>lua require('compiler').monitor()<CR>" },
+        ["<F8>"] = { "<esc><cmd>lua require('compiler').monitor()<CR>", "Serial monitor toggle" },
     }
-    u.maps(maps, opts)
+    wk.register(maps, { mode = "t" })
+
+    local mkeys = {
+        ["<F2>"] = { "<cmd>lua require('compiler').pio_clean()<CR>", "Regenerate tags" },
+        ["<F5>"] = { "<cmd>w <CR>:Make<CR>", "Build" },
+        ["<F6>"] = { "<cmd>w <CR>:Make --target upload<CR>", "Upload" },
+        ["<F7>"] = { "<cmd>lua require('compiler').pio_check()<CR>", "Verify code" },
+        ["<F8>"] = { "<cmd>lua require('compiler').monitor()<CR>", "Serial monitor toggle" },
+        ["<leader>"] = {
+            r = {
+                name = "Online specs",
+            },
+        },
+        [","] = {
+            k = {
+                a = { "<cmd>lua require('compiler').ardRef(vim.fn.expand('<cword>'))<CR>", "Arduino" },
+                t = { "<cmd>lua require('compiler').teensypins()<CR>", "teensy pins" },
+                T = { "<cmd>lua require('compiler').teensyspecs()<CR>", "teensy specs" },
+            },
+        },
+    }
+    wk.register(mkeys, { buffer = 0 })
 end
 
 -- ******************************** cpp -openFrameworks ---------------------------------------
 
 function M.makeC()
-    local opts = { nowait = true, noremap = true, silent = true }
     local bufmaps = {
-        -- Compile Debug openFrameworks
-        { "n", "<F4>", ":w <CR> :Make Debug -j12<CR>" },
-        -- Compile openFrameworks
-        { "n", "<F5>", ":w <CR> :Make -j12 && make RunRelease<CR>" },
-        -- run openFrameworks
-        { "n", "<F6>", ":w <CR> :Make RunRelease<CR>" },
-        -- Call gdb (termdebug)
-        { "n", "<F7>", 'w <CR> :lua require("compiler").termdebug()<cr>' },
+        ["<F4>"] = { "<cmd>w <CR> <cmd>Make Debug -j12<CR>", "Compile Debug" },
+        ["<F5>"] = { "<cmd>w <CR> <cmd>Make -j12 && make RunRelease<CR>", "Compile Release" },
+        ["<F6>"] = { "<cmd>w <CR> <cmd>Make RunRelease<CR>", "Run Release" },
+        ["<F7>"] = { '<cmd>w <CR> <cmd>lua require("compiler").termdebug()<cr>', "Launch Debugger" },
     }
-    u.bufmaps(bufmaps, opts)
+    wk.register(bufmaps, { buffer = 0 })
 end
 
 -- ******************************** Openframeworks Android ---------------------------------------
@@ -407,135 +409,113 @@ end
 
 -- ******************************** General Clang mappings ---------------------------------------
 function M.clang()
-    local opts = { nowait = true, noremap = true, silent = true }
-
-    local bufmaps = {
-        -- Switch source header
-        { "n", "<leader>s", ":ClangdSwitchSourceHeader<CR>" },
-        -- open cpp reference
-        { "n", ",K", "<cmd>lua require('compiler').creference(vim.fn.expand('<cword>'))<CR>" },
-        -- open Gl reference
-        { "n", ",gl", "<cmd>lua require('compiler').glRef(vim.fn.expand('<cword>'))<CR>" },
-        -- bases
-        { "n", ";b", ":CclsBase<CR>" },
-        --   bases of up to 3 levels
-        { "n", ";B", ":CclsBaseHierarchy -float<CR>" },
-        --   derived
-        { "n", ";hd", ":CclsDerived<CR>" },
-        --   derived of up to 3 levels
-        { "n", ";hD", ":CclsDerivedHierarchy -float<CR>" },
-        -- caller
-        { "n", ";c", ":CclsCallers<CR>" },
-        -- caller Hierarchy
-        { "n", ";hc", ":CclsCallHierarchy -float<CR>" },
-        -- callee
-        { "n", ";C", ":CclsCallees<CR>" },
-        -- callee Hierarchy
-        { "n", ";hC", ":CclsCalleeHierarchy -float<CR>" },
-        -- Members
-        { "n", ";m", ":CclsMemberHierarchy -float<CR>" },
-        -- memberFunction
-        { "n", ";f", ":CclsMemberFunctionHierarchy -float<CR>" },
-        -- memberTypes
-        { "n", ";t", ":CclsMemberTypeHierarchy -float<CR>" },
-        -- variables
-        { "n", ";v", ":CclsVars<CR>" },
-        -- open makefile
-        { "n", "<leader>m", "<cmd>lua require('compiler').makefile(vim.g.makeFile)<CR>" },
+    local wmaps = {
+        [";"] = {
+            b = { "<cmd>CclsBase<CR>", "Base function" },
+            c = { "<cmd>CclsCallers<CR>", "Callers" },
+            C = { "<cmd>CclsCallees<CR>", "Callees" },
+            d = { "<cmd>CclsDerived<CR>", "Derived functions" },
+            m = { "<cmd>CclsMemberHierarchy -float<CR>", "Member variables" },
+            f = { "<cmd>CclsMemberFunctionHierarchy -float<CR>", "Member functions" },
+            t = { "<cmd>CclsMemberTypeHierarchy -float<CR>", "Member classes" },
+            v = { "<cmd>CclsVars<CR>", "Variables in function" },
+            h = {
+                name = "heirarchy",
+                b = { "<cmd>CclsBaseHierarchy -float<CR>", "Base function" },
+                c = { "<cmd>CclsCallHierarchy -float<CR>", "Caller" },
+                C = { "<cmd>CclsCalleeHierarchy -float<CR>", "Callee" },
+                D = { "<cmd>CclsDerivedHierarchy -float<CR>", "Derived functions" },
+            },
+        },
+        [","] = {
+            k = {
+                name = "Online help",
+                c = { "<cmd>lua require('compiler').creference(vim.fn.expand('<cword>'))<CR>", "C++ std reference" },
+                g = { "<cmd>lua require('compiler').glRef(vim.fn.expand('<cword>'))<CR>", "OpenGL reference" },
+            },
+        },
+        ["<leader>"] = {
+            s = { "<cmd>ClangdSwitchSourceHeader<cr>", "Switch to Header/Source" },
+            m = { "<cmd>lua require('compiler').makefile(vim.g.makeFile)<CR>", "Open Makefile" },
+        },
     }
-    u.bufmaps(bufmaps, opts)
+    wk.register(wmaps, { buffer = 0 })
 end
 
 -- ******************************** CMake ---------------------------------------
 
 function M.cmake()
-    local opts = { nowait = true, noremap = true, silent = false }
     local bufmaps = {
-        -- Clean build
-        { "n", "<F2>", ':w <CR> :lua require("compiler").cmake_clean()<CR>' },
-        -- Build debug
-        { "n", "<F3>", ':w <CR> :lua require("compiler").cmake_gen_debug()<CR>' },
-        -- Build Cmake
-        { "n", "<F4>", ':w <CR> :lua require("compiler").cmake_gen()<CR>' },
-        -- run Make
-        { "n", "<F5>", ":w <CR> :Make -j12 -C build<CR>" },
-        -- Dispatch run
-        { "n", "<F6>", 'w <CR> :lua require("compiler").cmake_run()<cr>' },
-        -- Dispatch install
-        { "n", "<F7>", 'w <CR> :lua require("compiler").termdebug()<cr>' },
+        ["<F2>"] = { '<cmd>w <CR> <cmd>lua require("compiler").cmake_clean()<CR>', "Clean cmake" },
+        ["<F3>"] = { '<cmd>w <CR> <cmd>lua require("compiler").cmake_gen_debug()<CR>', "Generate Cmake Debug" },
+        ["<F4>"] = { '<cmd>w <CR> <cmd>lua require("compiler").cmake_gen()<CR>', "Generate Cmake Release" },
+        ["<F5>"] = { "<cmd>w <CR> <cmd>Make -j12 -C build<CR>", "Make" },
+        ["<F6>"] = { '<cmd>w <CR> <cmd>lua require("compiler").cmake_run()<cr>', "Launch binary" },
+        ["<F7>"] = { '<cmd>w <CR> <cmd>lua require("compiler").termdebug()<cr>', "Run Debugger" },
     }
-    u.bufmaps(bufmaps, opts)
+    wk.register(bufmaps, { buffer = 0 })
 end
 
 -- ******************************** CoAuthor ---------------------------------------
 
 function M.coauthor()
-    local opts = { nowait = true, noremap = true, silent = false }
-    local maps = {
-        -- Start server
-        { "n", "<leader>ii", "<cmd>lua require('utils').Start()<CR>" },
-        -- Start session
-        { "n", "<leader>is", "<cmd>lua require('utils').Session()<CR>" },
-        -- Start buffer
-        { "n", "<leader>ib", "<cmd>lua require('utils').Single()<CR>" },
-        -- Join session
-        { "n", "<leader>ij", "<cmd>lua require('utils').JoinSession()<CR>" },
-        -- Join buffer
-        { "n", "<leader>iJ", "<cmd>lua require('utils').JoinSingle()<CR>" },
-        -- Follow user
-        { "n", "<leader>if", "<cmd>lua require('utils').Follow()<CR>" },
+    wk.register {
+        ["<leader>"] = {
+            i = {
+                name = "Co-Authoring",
+                i = { "<cmd>lua require('utils').Start()<CR>", "Start server" },
+                s = { "<cmd>lua require('utils').Session()<CR>", "Launch session" },
+                b = { "<cmd>lua require('utils').Single()<CR>", "Launch current buffer" },
+                j = { "<cmd>lua require('utils').JoinSession()<CR>", "Join session" },
+                J = { "<cmd>lua require('utils').JoinSingle()<CR>", "Join single buffer" },
+                f = { "<cmd>lua require('utils').Follow()<CR>", "follow user" },
+            },
+        },
     }
-    u.maps(maps, opts)
 end
 
 -- ******************************** debug ---------------------------------------
 function M.debug()
-    local opts = { nowait = true, noremap = true, silent = true }
-    local bufmaps = {
-        -- Run
-        { "n", "<leader>dr", "<cmd>Run<CR>" },
-        -- Breakpoint
-        { "n", "<leader>db", "<cmd>Break<CR>" },
-        -- Clear breakpoint
-        { "n", "<leader>dc", "<cmd>Clear<CR>" },
-        -- Step into
-        { "n", "<leader>ds", "<cmd>Step<CR>" },
-        -- Step over
-        { "n", "<leader>do", "<cmd>Over<CR>" },
-        -- Finish
-        { "n", "<leader>df", "<cmd>Finish<cr>" },
-        -- Stop debug
-        { "n", "<leader>de", "<cmd>Stop<cr>" },
+    local bufmap = {
+        ["<leader>"] = {
+            d = {
+                name = "debug",
+                r = { "Run" },
+                b = { "set breakpoint" },
+                C = { "clear breakpoints" },
+                c = { "continue to next breakpoint" },
+                s = { "step into" },
+                o = { "step over" },
+                f = { "Finish" },
+                e = { "Stop process" },
+            },
+        },
     }
-    u.bufmaps(bufmaps, opts)
+    wk.register(bufmap, { buffer = 0 })
 
     local maps = {
-        -- Focus asm
-        { "n", "<leader>da", "<cmd>Asm<cr>" },
-        -- Focus program
-        { "n", "<leader>dp", "<cmd>Program<cr>" },
-        -- Focus Gdb
-        { "n", "<leader>dg", "<cmd>Gdb<cr>" },
-        -- Focus codebuffer
-        { "n", "<leader>dv", "<cmd>Source<cr>" },
+        ["<leader>"] = {
+            d = {
+                a = { "<esc><cmd>Asm<cr>", "Switch to assembly buffer" },
+                p = { "<esc><cmd>Program<cr>", "Switch to terminal window" },
+                g = { "<esc><cmd>Gdb<cr>", "Switch to GDB buffer" },
+                v = { "<esc><cmd>Source<cr>", "Switch to vim buffer" },
+            },
+        },
     }
-    u.maps(maps, opts)
+    wk.register(maps)
+    wk.register(maps, { mode = "t" })
 end
 
 -- ******************************** Latex ---------------------------------------
 function M.tex()
-    local opts = { nowait = true, noremap = true, silent = true }
     local bufmaps = {
-        -- Word Count
-        { "n", "<F3>", "<cmd>TexWordCount<CR>" },
-        -- Clean dir
-        { "n", "<F4>", "<cmd>Make -C<CR>" },
-        -- Compile document
-        { "n", "<F5>", "<cmd>TexlabBuild<CR>" },
-        -- Launch pdf
-        { "n", "<F6>", "<cmd>TexlabForward<CR>" },
+        ["<F3>"] = { "<cmd>TexWordCount<CR>", "Word count" },
+        ["<F4>"] = { "<cmd>Make -C<CR>", "Clean tex files" },
+        ["<F5>"] = { "<cmd>TexlabBuild<CR>", "Compile tex document" },
+        ["<F6>"] = { "<cmd>TexlabForward<CR>", "Launch zathura" },
     }
-    u.bufmaps(bufmaps, opts)
+    wk.register(bufmaps, { buffer = 0 })
 end
 
 return M

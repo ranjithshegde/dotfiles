@@ -302,7 +302,7 @@ end
 
 -- Clean directory
 function Compiler.pio_clean()
-    local cmd = "pio -t clean"
+    local cmd = "pio run -t clean"
     Compiler.terminal(cmd)
     Compiler.compiletags()
 end
