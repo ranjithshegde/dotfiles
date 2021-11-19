@@ -39,7 +39,7 @@ return packer.startup {
             "vimwiki/vimwiki",
             branch = "dev",
             ft = "vimwiki",
-            keys = { "<leader>ww", "<leader>w<leader>w", "<leader>wi", "<leader>wt" },
+            keys = { "<leader>ww", "<leader>w<leader>w", "<leader>wi", "<leader>wt", "<leader>wn" },
         }
 
         -- StatusLine

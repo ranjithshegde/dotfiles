@@ -59,7 +59,31 @@ function M.general()
             v = { "<cmd>vspl term://zsh<cr>", "Vertical" },
             t = { "<cmd>tabnew term://zsh<cr>", "New tab" },
         },
+        ["<leader>e"] = "File drawer toggle",
         ["<F9>"] = { "<cmd>lua require('utils').toggleTerm('zsh','shell',1)<cr>", "Toggle zsh terminal" },
+        ["<F10>"] = "Toggle repl for available filetypes",
+    }
+
+    -- vimWiki
+    wk.register {
+        ["<leader>w"] = {
+            name = "vimWiki",
+            w = "Index",
+            d = "Delete file",
+            r = "Rename file",
+            n = "New file",
+            i = "Diary index",
+            t = "Index in a new tab",
+            c = "Add color to header/link",
+            ["<leader>"] = {
+                name = "Diary entries",
+                w = "Today",
+                t = "Today in new tab",
+                i = "Reindex",
+                y = "Yesterday",
+                m = "Tomorrow",
+            },
+        },
     }
 end
 
@@ -111,7 +135,10 @@ function M.nvim_lsp()
                 name = "Workspace",
                 a = { "<cmd>lua vim.lsp.buf.add_workspace_folder()<CR>", "Add workspace folder" },
                 r = { "<cmd>lua vim.lsp.buf.remove_workspace_folder()<CR>", "Remove workspace folder" },
-                l = { "<cmd>vim.lsp.buf.list_workspace_folders()<CR>", "List workspace folder" },
+                l = {
+                    "<cmd>lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))<CR>",
+                    "List workspace folder",
+                },
             },
         },
     }

@@ -17,7 +17,6 @@ end
 --                              Vim basics                            --
 ------------------------------------------------------------------------
 function settings.options()
-    -- G.tokyonight_style = "light"
     Exec "packadd tokyonight.nvim"
     Exec "colo tokyonight"
     local tab = 4
