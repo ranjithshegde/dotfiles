@@ -722,6 +722,7 @@ function settings.luadev()
         },
     }
     luadev.settings.Lua.workspace.library["/usr/lib/pd/extra/pdlua"] = true
+    luadev.settings.Lua.workspace.library[vim.fn.expand "~/.config/nvim"] = true
     Lsp.sumneko_lua.setup(luadev)
 end
 

@@ -6,34 +6,22 @@ PN=$(echo -e '' | dmenu -p "Project name: ")
 
 mkdir -p $PG_OF_PATH/${DR} && cd $PG_OF_PATH/${DR}
 
-sleep 1
-
 projectGenerator -a"${AD}" ${PN} && cd ${PN}
-
-# sleep 1
 
 git init
 
-# sleep 1
-
-ctags -R .
-
-# sleep 2
-
 compiledb -n make
 
-# sleep 2
+ctags -R -c++-kinds=+p --fields=+iaS --extras+q .
 
 clang-format -style=webkit -dump-config >.clang-format
 
-echo .cache >.gitignore
-
-echo .ccls >>.gitignore
-
-echo obj/ >>.gitignore
-
-echo tags >>.gitignore
-
-echo compile_commands.json >>.gitignore
+{
+	echo .cache
+	echo tags
+	echo .ccls
+	echo obj/
+	echo compile_commands.json
+} >>.gitignore
 
 st -e nvim src/ofApp.h

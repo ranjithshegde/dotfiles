@@ -12,10 +12,12 @@ function Compiler.set_ctype()
         require("mappings").cmake()
         G.makeFile = "CMakeLists.txt"
         G.debugBin = "build/" .. vim.fn.fnamemodify(vim.fn.getcwd(), ":t")
+        G.cfiles = "src/* include/*"
     elseif Compiler.has_makefile() then
         require("mappings").makeC()
         G.makeFile = "Makefile"
         G.debugBin = "bin/" .. vim.fn.fnamemodify(vim.fn.getcwd(), ":t") .. "_debug"
+        G.cfiles = "src/*"
     elseif Compiler.has_pio_file() then
         Exec "set makeprg=pio\\ run"
         require("mappings").micro()
@@ -29,6 +31,7 @@ function Compiler.set_ctype()
         Exec "set makeprg=g++"
         require("mappings").ctests()
         G.debugBin = "%<"
+        G.cfiles = "%"
     end
 end
 
@@ -133,6 +136,11 @@ function Compiler.termdebug()
     require("mappings").debug()
     local cmd = "Termdebug " .. G.debugBin
     Exec(cmd)
+end
+
+function Compiler.ctags(files)
+    local cmd = "ctagInc"
+    Compiler.terminal(cmd .. " " .. files)
 end
 
 function Compiler.pdBuild()

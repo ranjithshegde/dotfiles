@@ -531,6 +531,7 @@ function M.clang()
         ["<leader>"] = {
             s = { "<cmd>ClangdSwitchSourceHeader<cr>", "Switch to Header/Source" },
             m = { "<cmd>lua require('compiler').makefile(vim.g.makeFile)<CR>", "Open Makefile" },
+            c = { "<cmd>lua require('compiler').ctags(vim.g.cfiles)<CR>", "generate Ctags with includes" },
         },
     }
     wk.register(wmaps, { buffer = 0 })
@@ -574,14 +575,14 @@ function M.debug()
         ["<leader>"] = {
             d = {
                 name = "debug",
-                r = { "Run" },
-                b = { "set breakpoint" },
-                C = { "clear breakpoints" },
-                c = { "continue to next breakpoint" },
-                s = { "step into" },
-                o = { "step over" },
-                f = { "Finish" },
-                e = { "Stop process" },
+                r = { "<cmd>Run<CR>", "Run" },
+                b = { "<cmd>Break<CR>", "set breakpoint" },
+                C = { "<cmd>Clear<CR>", "clear breakpoints" },
+                c = { "<cmd>Continue<CR>", "continue to next breakpoint" },
+                s = { "<cmd>Step<CR>", "step into" },
+                o = { "<cmd>Over<CR>", "step over" },
+                f = { "<cmd>Finish<CR>", "Finish" },
+                e = { "<cmd>Stop<CR>", "Stop process" },
             },
         },
     }
