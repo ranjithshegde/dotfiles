@@ -17,7 +17,6 @@ end
 --                              Vim basics                            --
 ------------------------------------------------------------------------
 function settings.options()
-    Exec "packadd tokyonight.nvim"
     Exec "colo tokyonight"
     local tab = 4
     o.cursorline = true
@@ -54,6 +53,7 @@ function settings.options()
     G.loaded_perl_provider = 0
     G.loaded_python_provider = 0
     G.tex_conceal = "abdmgs"
+    G.symbols_outline = { auto_preview = false }
     o.formatoptions = {
         a = false, -- Dont format pasted code
         t = false, -- Delegate to linter prgs/LSP
@@ -334,10 +334,6 @@ end
 
 function settings.lsp_settings()
     Lsp = require "lspconfig"
-
-    -- Status bar for LSP
-    Lsp_status = require "lsp-status"
-    Lsp_status.register_progress()
     require("icons").init()
 
     local buffExec = "* <buffer>"
@@ -355,10 +351,13 @@ function settings.lsp_settings()
 
     All_attach = function(client, bufnr)
         require("mappings").nvim_lsp()
-        Lsp_status.on_attach(client)
-        local rc = client.resolved_capabilities
+        Exec "PackerLoad lsp-status.nvim"
         Exec "PackerLoad vim-vsnip-integ"
         vim.fn["vsnip#get_complete_items"](vim.fn["bufnr"]())
+        local lsp_status = require "lsp-status"
+        lsp_status.register_progress()
+        lsp_status.on_attach(client)
+        local rc = client.resolved_capabilities
 
         if rc.document_highlight then
             Exec "hi LspReferenceRead cterm=bold ctermbg=red guibg=#98971a"
@@ -397,11 +396,14 @@ function settings.lsp_settings()
 
     EfmAttach = function(client)
         require("mappings").nvim_lsp()
-        local rc = client.resolved_capabilities
-        rc.document_formatting = false
-        Lsp_status.on_attach(client)
+        Exec "PackerLoad lsp-status.nvim"
         Exec "PackerLoad vim-vsnip-integ"
         vim.fn["vsnip#get_complete_items"](vim.fn["bufnr"]())
+        local lsp_status = require "lsp-status"
+        lsp_status.register_progress()
+        lsp_status.on_attach(client)
+        local rc = client.resolved_capabilities
+        rc.document_formatting = false
 
         if rc.document_highlight then
             Exec "hi LspReferenceRead cterm=bold ctermbg=red guibg=#98971a"
@@ -478,7 +480,7 @@ function settings.langServers()
             init_options = { cache = { directory = "/tmp/ccls" } },
         },
         clangd = {
-            handlers = Lsp_status.extensions.clangd.setup(),
+            handlers = require("lsp-status").extensions.clangd.setup(),
             on_attach = All_attach,
             capabilities = Capabilities,
             cmd = {
@@ -528,19 +530,19 @@ function settings.lsp_lintFormat()
                         { line = 2, column = 3, message = 1 },
                     },
                 },
-                languagetool = {
-                    command = "languagetool",
-                    debounce = 200,
-                    args = { "--languagemodel", "/usr/share/Ngram", "%file" },
-                    offsetLine = 0,
-                    offsetColumn = 0,
-                    sourceName = "languagetool",
-                    formatLines = 2,
-                    formatPattern = {
-                        "^\\d+?\\.\\)\\s+Line\\s+(\\d+),\\s+column\\s+(\\d+),\\s+([^\\n]+)\nMessage:\\s+(.*)$",
-                        { line = 1, column = 2, message = { 4, 3 } },
-                    },
-                },
+                -- languagetool = {
+                --     command = "languagetool",
+                --     debounce = 200,
+                --     args = { "--languagemodel", "/usr/share/Ngram", "%file" },
+                --     offsetLine = 0,
+                --     offsetColumn = 0,
+                --     sourceName = "languagetool",
+                --     formatLines = 2,
+                --     formatPattern = {
+                --         "^\\d+?\\.\\)\\s+Line\\s+(\\d+),\\s+column\\s+(\\d+),\\s+([^\\n]+)\nMessage:\\s+(.*)$",
+                --         { line = 1, column = 2, message = { 4, 3 } },
+                --     },
+                -- },
                 textidote = {
                     command = "textidote",
                     debounce = 500,
@@ -598,7 +600,8 @@ function settings.lsp_lintFormat()
                 markdown = "mdidote",
                 vimwiki = "mdidote",
                 tex = "textidote",
-                text = { "languagetool", "write-good" },
+                -- text = { "languagetool", "write-good" },
+                text = "write-good",
             },
             formatFiletypes = {},
         },

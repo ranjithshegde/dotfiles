@@ -52,6 +52,9 @@ function M.general()
         ["<C-K>"] = { "<C-W><C-K>", "Move to up buffer" },
         ["<C-L>"] = { "<C-W><C-L>", "Move to left buffer" },
         ["<C-H>"] = { "<C-W><C-H>", "Move to right buffer" },
+        --Misc
+        zG = { "Add word to LanguageTool dictionary" },
+        ["<leader>e"] = "File drawer toggle",
         -- Terminals
         ["<leader>t"] = {
             name = "Launch terminal in split",
@@ -59,7 +62,6 @@ function M.general()
             v = { "<cmd>vspl term://zsh<cr>", "Vertical" },
             t = { "<cmd>tabnew term://zsh<cr>", "New tab" },
         },
-        ["<leader>e"] = "File drawer toggle",
         ["<F9>"] = { "<cmd>lua require('utils').toggleTerm('zsh','shell',1)<cr>", "Toggle zsh terminal" },
         ["<F10>"] = "Toggle repl for available filetypes",
     }
@@ -152,6 +154,7 @@ function M.nvim_lsp()
         },
     }
     wk.register(vmap, { mode = "v", buffer = 0 })
+    wk.register { ["<F1>"] = { "<cmd>SymbolsOutline<CR>", "Symbol Outline Tree" } }
 end
 
 function M.diagnostic()
@@ -338,6 +341,10 @@ function M.telescope()
                 o = {
                     telF "find_files({cwd ='~/Documents/ofWorkspace/',prompt_title = 'oF Workspace files'})",
                     "OfWorkspace",
+                },
+                s = {
+                    telF "find_files({cwd ='~/Documents/Supercollider/',prompt_title = 'SuperCollider Directory'})",
+                    "SuperCollider files",
                 },
             },
             G = {

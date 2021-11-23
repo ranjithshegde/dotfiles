@@ -24,7 +24,7 @@ return packer.startup {
 
         use "lewis6991/impatient.nvim"
 
-        -- use "folke/tokyonight.nvim"
+        use "folke/tokyonight.nvim"
 
         use { "m-pilia/vim-ccls", ft = "cpp" }
 
@@ -32,7 +32,9 @@ return packer.startup {
 
         use { "bkad/CamelCaseMotion", opt = true }
 
-        use { "yegappan/taglist", cmd = "TlistToggle" }
+        -- use { "yegappan/taglist", cmd = "TlistToggle" }
+
+        use { "simrat39/symbols-outline.nvim", cmd = "SymbolsOutline" }
 
         -- vimwiki
         use {
@@ -114,27 +116,6 @@ return packer.startup {
             { "tpope/vim-fugitive", cmd = { "G", "Git", "Gclog" } },
         }
 
-        -- vim Orgmode
-        use {
-            {
-                "kristijanhusak/orgmode.nvim",
-                ft = "org",
-                config = function()
-                    require("orgmode").setup {
-                        org_agenda_files = "~/Documents/Orgs/*",
-                        org_highlight_latex_and_related = "entities",
-                    }
-                end,
-            },
-            {
-                "akinsho/org-bullets.nvim",
-                ft = "org",
-                config = function()
-                    require("org-bullets").setup {}
-                end,
-            },
-        }
-
         -- WhichKey
         use {
             "folke/which-key.nvim",
@@ -164,10 +145,8 @@ return packer.startup {
 
         --Lsp config and companions
         use {
-            {
-                "neovim/nvim-lspconfig",
-                requires = "nvim-lua/lsp-status.nvim",
-            },
+            "neovim/nvim-lspconfig",
+            { "nvim-lua/lsp-status.nvim", opt = true },
             {
                 "folke/lua-dev.nvim",
                 ft = "lua",
@@ -186,11 +165,31 @@ return packer.startup {
                     html = { mode = "foreground" },
                     css = { rgb_fn = true, css_fn = true },
                     "javascript",
-                    -- "sh",
                     "conf",
                 }
             end,
             cmd = { "ColorizerAttachToBuffer", "ColorizerToggle" },
+        }
+
+        -- vim Orgmode
+        use {
+            {
+                "kristijanhusak/orgmode.nvim",
+                ft = "org",
+                config = function()
+                    require("orgmode").setup {
+                        org_agenda_files = "~/Documents/Orgs/*",
+                        org_highlight_latex_and_related = "entities",
+                    }
+                end,
+            },
+            {
+                "akinsho/org-bullets.nvim",
+                ft = "org",
+                config = function()
+                    require("org-bullets").setup {}
+                end,
+            },
         }
 
         -- completion and snippets

@@ -117,29 +117,30 @@ end
 ------------------------------------------------------------------------
 
 -- Toggle virtual diagnostics
-utils.toggleVirt = {}
-utils.toggleVirt.show = true
-utils.toggleSigns = {}
-utils.toggleSigns.show = true
-utils.toggleVirt.toggle = function(id)
-    utils.toggleVirt.show = not utils.toggleVirt.show
-    vim.diagnostic.show(
-        vim.lsp.diagnostic.get_namespace(id),
-        0,
-        {},
-        { virtual_text = utils.toggleVirt.show, signs = utils.toggleSigns.show }
-    )
-end
+-- utils.toggleVirt = {}
+-- utils.toggleVirt.show = true
+-- utils.toggleSigns = {}
+-- utils.toggleSigns.show = true
+-- utils.toggleVirt.toggle = function(id)
+--     utils.toggleVirt.show = not utils.toggleVirt.show
+--     vim.diagnostic.set(
+--         vim.lsp.diagnostic.get_namespace(id),
+--         -- 1,
+--         0,
+--         {},
+--         { virtual_text = utils.toggleVirt.show, signs = utils.toggleSigns.show }
+--     )
+-- end
 
-utils.toggleSigns.toggle = function(id)
-    utils.toggleSigns.show = not utils.toggleSigns.show
-    vim.diagnostic.show(
-        vim.lsp.diagnostic.get_namespace(id),
-        0,
-        {},
-        { virtual_text = utils.toggleVirt.show, signs = utils.toggleSigns.show }
-    )
-end
+-- utils.toggleSigns.toggle = function(id)
+--     utils.toggleSigns.show = not utils.toggleSigns.show
+--     vim.diagnostic.show(
+--         vim.lsp.diagnostic.get_namespace(id),
+--         0,
+--         {},
+--         { virtual_text = utils.toggleVirt.show, signs = utils.toggleSigns.show }
+--     )
+-- end
 
 ------------------------------------------------------------------------
 --                              Terminal                              --
