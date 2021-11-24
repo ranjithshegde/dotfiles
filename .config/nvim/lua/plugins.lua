@@ -32,9 +32,7 @@ return packer.startup {
 
         use { "bkad/CamelCaseMotion", opt = true }
 
-        -- use { "yegappan/taglist", cmd = "TlistToggle" }
-
-        use { "simrat39/symbols-outline.nvim", cmd = "SymbolsOutline" }
+        use { "yegappan/taglist", cmd = "TlistToggle" }
 
         -- vimwiki
         use {

@@ -35,7 +35,7 @@ function settings.options()
     o.conceallevel = 1
     o.scrolloff = 10
     o.updatetime = 300
-    o.timeoutlen = 500
+    o.timeoutlen = 50
     o.foldminlines = 1
     o.signcolumn = "yes"
     o.foldmethod = "expr"
@@ -53,7 +53,6 @@ function settings.options()
     G.loaded_perl_provider = 0
     G.loaded_python_provider = 0
     G.tex_conceal = "abdmgs"
-    G.symbols_outline = { auto_preview = false }
     o.formatoptions = {
         a = false, -- Dont format pasted code
         t = false, -- Delegate to linter prgs/LSP
@@ -138,7 +137,7 @@ function settings.treesitter()
     require("nvim-treesitter.configs").setup {
         highlight = {
             enable = true,
-            additional_vim_regex_highlighting = { "latex", "markdown", "org" },
+            additional_vim_regex_highlighting = { "latex", "org" },
         },
         indent = { enable = true, disable = { "python", "org" } },
         autopairs = { enable = true },
@@ -426,6 +425,9 @@ end
 ------------------------------------------------------------------------
 
 function settings.langServers()
+    local dict = "/usr/share/words.txt"
+    local dictList = u.concat_fileLines(dict)
+
     local configs = {
         yamlls = { on_attach = All_attach },
         jsonls = { on_attach = EfmAttach },
@@ -436,6 +438,21 @@ function settings.langServers()
         vimls = { on_attach = All_attach, capabilities = Capabilities },
         tsserver = { on_attach = All_attach, capabilities = Capabilities },
         pyright = { on_attach = All_attach, capabilities = Capabilities },
+        ltex = {
+            on_attach = All_attach,
+            capabilities = Capabilities,
+            settings = {
+                ltex = {
+                    -- language = "en",
+                    additionalRules = {
+                        enablePickyRules = true,
+                        motherTongue = "en",
+                        languageModel = "/usr/share/Ngrams/",
+                    },
+                    dictionary = { ["en-US"] = dictList },
+                },
+            },
+        },
         texlab = {
             on_attach = All_attach,
             capabilities = Capabilities,
@@ -480,7 +497,7 @@ function settings.langServers()
             init_options = { cache = { directory = "/tmp/ccls" } },
         },
         clangd = {
-            handlers = require("lsp-status").extensions.clangd.setup(),
+            -- handlers = require("lsp-status").extensions.clangd.setup(),
             on_attach = All_attach,
             capabilities = Capabilities,
             cmd = {
@@ -505,108 +522,6 @@ end
 ------------------------------------------------------------------------
 
 function settings.lsp_lintFormat()
-    Lsp.diagnosticls.setup {
-        cmd = { "diagnostic-languageserver", "--stdio" },
-        filetypes = { "markdown", "tex", "text", "vimwiki" },
-        handlers = {
-            ["textDocument/publishDiagnostics"] = vim.lsp.with(
-                vim.lsp.diagnostic.on_publish_diagnostics,
-                { virtual_text = false }
-            ),
-        },
-        on_attach = EfmAttach,
-        init_options = {
-            linters = {
-                ["write-good"] = {
-                    command = "write-good",
-                    debounce = 100,
-                    args = { "--text=%text" },
-                    offsetLine = 0,
-                    offsetColumn = 1,
-                    sourceName = "write-good",
-                    formatLines = 1,
-                    formatPattern = {
-                        "(.*)\\s+on\\s+line\\s+(\\d+)\\s+at\\s+column\\s+(\\d+)\\s*$",
-                        { line = 2, column = 3, message = 1 },
-                    },
-                },
-                -- languagetool = {
-                --     command = "languagetool",
-                --     debounce = 200,
-                --     args = { "--languagemodel", "/usr/share/Ngram", "%file" },
-                --     offsetLine = 0,
-                --     offsetColumn = 0,
-                --     sourceName = "languagetool",
-                --     formatLines = 2,
-                --     formatPattern = {
-                --         "^\\d+?\\.\\)\\s+Line\\s+(\\d+),\\s+column\\s+(\\d+),\\s+([^\\n]+)\nMessage:\\s+(.*)$",
-                --         { line = 1, column = 2, message = { 4, 3 } },
-                --     },
-                -- },
-                textidote = {
-                    command = "textidote",
-                    debounce = 500,
-                    args = {
-                        "--type",
-                        "tex",
-                        "--read-all",
-                        "--check",
-                        "en",
-                        "--languagemodel",
-                        "/usr/share/Ngram",
-                        "--dict",
-                        "/usr/share/words.txt",
-                        "--output",
-                        "singleline",
-                        "--no-color",
-                    },
-                    offsetLine = 0,
-                    offsetColumn = 0,
-                    sourceName = "textidote",
-                    formatLines = 1,
-                    formatPattern = {
-                        '\\(L(\\d+)C(\\d+)-L(\\d+)C(\\d+)\\):(.+)".+"$',
-                        { line = 1, column = 2, endLine = 3, endColumn = 4, message = 5 },
-                    },
-                },
-                mdidote = {
-                    command = "textidote",
-                    debounce = 500,
-                    args = {
-                        "--type",
-                        "md",
-                        "--check",
-                        "en",
-                        "--languagemodel",
-                        "/usr/share/Ngram",
-                        "--dict",
-                        "/usr/share/words.txt",
-                        "--output",
-                        "singleline",
-                        "--no-color",
-                    },
-                    offsetLine = 0,
-                    offsetColumn = 0,
-                    sourceName = "textidote",
-                    formatLines = 1,
-                    formatPattern = {
-                        '\\(L(\\d+)C(\\d+)-L(\\d+)C(\\d+)\\):(.+)".+"$',
-                        { line = 1, column = 2, endLine = 3, endColumn = 4, message = 5 },
-                    },
-                },
-            },
-            formatters = {},
-            filetypes = {
-                markdown = "mdidote",
-                vimwiki = "mdidote",
-                tex = "textidote",
-                -- text = { "languagetool", "write-good" },
-                text = "write-good",
-            },
-            formatFiletypes = {},
-        },
-    }
-
     local rootDir = function()
         return vim.fn.getcwd() or Lsp.util.root_pattern ".git/"
     end
@@ -659,8 +574,8 @@ function settings.lsp_lintFormat()
         lua = { stylua },
         glsl = { glslang },
         make = { checkmake },
-        vimwiki = { prettier },
-        markdown = { prettier },
+        vimwiki = { markdownlint },
+        markdown = { markdownlint },
         sh = { shellcheck, shfmt },
         zsh = { shellcheck, shfmt },
         python = { flake8, isort, black, mypy },

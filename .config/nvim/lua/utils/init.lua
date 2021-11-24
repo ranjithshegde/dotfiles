@@ -142,6 +142,14 @@ end
 --     )
 -- end
 
+utils.concat_fileLines = function(files)
+    local dict = {}
+    for line in io.lines(files) do
+        table.insert(dict, line)
+    end
+    return dict
+end
+
 ------------------------------------------------------------------------
 --                              Terminal                              --
 ------------------------------------------------------------------------

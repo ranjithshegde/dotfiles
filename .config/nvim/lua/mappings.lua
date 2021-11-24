@@ -154,7 +154,7 @@ function M.nvim_lsp()
         },
     }
     wk.register(vmap, { mode = "v", buffer = 0 })
-    wk.register { ["<F1>"] = { "<cmd>SymbolsOutline<CR>", "Symbol Outline Tree" } }
+    wk.register { ["<F1>"] = { "<cmd>TlistToggle<CR>", "Toggle Taglist" } }
 end
 
 function M.diagnostic()
