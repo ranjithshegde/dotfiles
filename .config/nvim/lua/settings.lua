@@ -35,7 +35,7 @@ function settings.options()
     o.conceallevel = 1
     o.scrolloff = 10
     o.updatetime = 300
-    o.timeoutlen = 50
+    o.timeoutlen = 100
     o.foldminlines = 1
     o.signcolumn = "yes"
     o.foldmethod = "expr"
@@ -425,9 +425,6 @@ end
 ------------------------------------------------------------------------
 
 function settings.langServers()
-    local dict = "/usr/share/words.txt"
-    local dictList = u.concat_fileLines(dict)
-
     local configs = {
         yamlls = { on_attach = All_attach },
         jsonls = { on_attach = EfmAttach },
@@ -449,7 +446,7 @@ function settings.langServers()
                         motherTongue = "en",
                         languageModel = "/usr/share/Ngrams/",
                     },
-                    dictionary = { ["en-US"] = dictList },
+                    dictionary = { ["en-US"] = u.concat_fileLines "/usr/share/words.txt" },
                 },
             },
         },

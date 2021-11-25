@@ -30,14 +30,6 @@ function M.general()
     }
     u.maps(maps, opts)
 
-    --Conditional changes
-    if Op "filetype" ~= "vimwiki" and Op "filetype" ~= "org" then
-        wk.register {
-            ["<Tab>"] = { "za", "Toggle fold current" },
-            ["<S-Tab>"] = { "zA", "Toggle fold All" },
-        }
-    end
-
     wk.register {
         -- open folds when searching
         n = { "nzzzv", "jump to next search result" },
@@ -52,8 +44,6 @@ function M.general()
         ["<C-K>"] = { "<C-W><C-K>", "Move to up buffer" },
         ["<C-L>"] = { "<C-W><C-L>", "Move to left buffer" },
         ["<C-H>"] = { "<C-W><C-H>", "Move to right buffer" },
-        --Misc
-        zG = { "Add word to LanguageTool dictionary" },
         ["<leader>e"] = "File drawer toggle",
         -- Terminals
         ["<leader>t"] = {
@@ -87,8 +77,17 @@ function M.general()
             },
         },
     }
+
+    --Conditional changes
+    if Op "filetype" ~= "vimwiki" and Op "filetype" ~= "org" then
+        wk.register {
+            ["<Tab>"] = { "za", "Toggle fold current" },
+            ["<S-Tab>"] = { "zA", "Toggle fold All" },
+        }
+    end
 end
 
+-- ******************************** Utilities ---------------------------------------
 function M.ranger()
     wk.register {
         ["<leader>r"] = {
@@ -100,6 +99,16 @@ function M.ranger()
             t = "in a new tab from current file",
             T = "in a new tab from current directory",
         },
+    }
+end
+
+function M.wordProcessor()
+    wk.register {
+        zG = {
+            '<cmd>call writefile([expand("<cword>")], "/usr/share/words.txt", "a")<CR>',
+            "Add word to LanguageTool dictionary",
+        },
+        ["<leader><Space>"] = { '<cmd>g/^/pu ="\n"<CR>', "Double space entire file" },
     }
 end
 

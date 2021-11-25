@@ -6,7 +6,7 @@ com! Cpractice lua require('compiler').cpractice()
 com! TexWordCount lua require('utils').TexWordCount()
 com! Agenda lua require('utils').agenda()
 com! ClearBack call util#transparency()
-" com! LspCapabilities lua require('utils').lspcapabilities()
+com! LspCapabilities lua require('utils').lsp_capabilities()
 
 "open ranger over current buffer
 nn <silent><leader>rr <cmd>call util#OpenRangerIn("%:p:h", "e ")<CR>

@@ -31,9 +31,7 @@ func! util#WordProcessor() abort
     set complete+=k
     set thesaurus+=$HOME/.config/nvim/thesaurus/mthesaur.txt
 
-    "add double spacing
-    nn <leader><Space> :g/^/pu =\"\n\"<CR>
-    nn zG <cmd>call writefile([expand("<cword>")], "/usr/share/words.txt", "a")<CR>
+    lua require('mappings').wordProcessor()
 endfu
 
 "************** custom Sudo ----------------------------------------------------
