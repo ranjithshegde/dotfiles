@@ -137,9 +137,9 @@ function M.nvim_lsp()
             },
             l = {
                 name = "Toggle diagnostics",
-                v = { "<cmd>lua require'utils'.toggleVirt.toggle({lsp = vim.fn.input('cwd: ')})<CR>", "Virtual text" },
+                -- v = { "<cmd>lua require'utils'.toggleVirt.toggle({lsp = vim.fn.input('cwd: ')})<CR>", "Virtual text" },
                 -- v2 = { "<cmd>lua require'utils'.toggleVirt.toggle(2)<CR>", "Virtual text for lsp 2" },
-                s = { "<cmd>lua require'utils'.toggleSigns.toggle({lsp = vim.fn.input('cwd: ')})<CR>", "Sings" },
+                -- s = { "<cmd>lua require'utils'.toggleSigns.toggle({lsp = vim.fn.input('cwd: ')})<CR>", "Sings" },
                 -- s2 = { "<cmd>lua require'utils'.toggleSigns.toggle(2)<CR>", "Sings for lsp 2" },
             },
             w = {

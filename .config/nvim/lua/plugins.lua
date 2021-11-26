@@ -172,7 +172,7 @@ return packer.startup {
         -- vim Orgmode
         use {
             {
-                "kristijanhusak/orgmode.nvim",
+                "nvim-orgmode/orgmode",
                 ft = "org",
                 config = function()
                     require("orgmode").setup {

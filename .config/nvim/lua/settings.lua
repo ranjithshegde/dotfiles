@@ -343,10 +343,7 @@ function settings.lsp_settings()
     }
 
     -- Set diagnostics to local list automatically
-    u.create_augroup(
-        { { "User LspDiagnosticsChanged", "lua vim.diagnostic.setloclist({open = false})" } },
-        "LspLocList"
-    )
+    u.create_augroup({ { "DiagnosticChanged", "*", "lua vim.diagnostic.setloclist({open = false})" } }, "LspLocList")
 
     All_attach = function(client, bufnr)
         require("mappings").nvim_lsp()
@@ -362,7 +359,7 @@ function settings.lsp_settings()
             Exec "hi LspReferenceRead cterm=bold ctermbg=red guibg=#98971a"
             Exec "hi LspReferenceText cterm=bold ctermbg=red guibg=grey"
             Exec "hi LspReferenceWrite cterm=bold ctermbg=red guibg= #fbf1c7"
-            u.create_cmdGroup(docHigh, buffExec, "bufgroup")
+            u.create_cmdGroup(docHigh, buffExec, "lsp_highlightSymbol")
         end
 
         if rc.document_formatting then
