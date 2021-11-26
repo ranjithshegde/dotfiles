@@ -7,6 +7,8 @@ com! TexWordCount lua require('utils').TexWordCount()
 com! Agenda lua require('utils').agenda()
 com! ClearBack call util#transparency()
 com! LspCapabilities lua require('utils').lsp_capabilities()
+com! ToggleVirtual lua require('utils.diagnostics').toggle_virtual_text()
+com! ToggleSigns lua require('utils.diagnostics').toggle_signs()
 
 "open ranger over current buffer
 nn <silent><leader>rr <cmd>call util#OpenRangerIn("%:p:h", "e ")<CR>

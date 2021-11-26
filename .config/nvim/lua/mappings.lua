@@ -137,10 +137,8 @@ function M.nvim_lsp()
             },
             l = {
                 name = "Toggle diagnostics",
-                -- v = { "<cmd>lua require'utils'.toggleVirt.toggle({lsp = vim.fn.input('cwd: ')})<CR>", "Virtual text" },
-                -- v2 = { "<cmd>lua require'utils'.toggleVirt.toggle(2)<CR>", "Virtual text for lsp 2" },
-                -- s = { "<cmd>lua require'utils'.toggleSigns.toggle({lsp = vim.fn.input('cwd: ')})<CR>", "Sings" },
-                -- s2 = { "<cmd>lua require'utils'.toggleSigns.toggle(2)<CR>", "Sings for lsp 2" },
+                v = { "<cmd>lua require'utils.diagnostics'.toggle_virtual_text()<CR>", "Virtual text" },
+                s = { "<cmd>lua require'utils.diagnostics'.toggle_signs()<CR>", "Sings" },
             },
             w = {
                 name = "Workspace",
@@ -187,6 +185,7 @@ function M.configFiles()
                 s = { "<cmd>tabnew ~/.config/nvim/lua/statusline.lua<CR>", "Statusline and Tabline" },
                 c = { "<cmd>tabnew ~/.config/nvim/lua/compiler.lua<CR>", "Cpp Workstation" },
                 u = { "<cmd>tabnew ~/.config/nvim/lua/utils/init.lua<CR>", "Utilities in lua" },
+                d = { "<cmd>tabnew ~/.config/nvim/lua/utils/diagnostics.lua<CR>", "Utilities in lua" },
                 a = { "<cmd>tabnew ~/.config/nvim/autoload/util.vim<CR>", "Utilities in autoload" },
                 f = { "<cmd>tabnew ~/.config/nvim/plugin/plugins.vim<CR>", "Functions in vim" },
                 r = { "<cmd>tabnew $MYVIMRC<CR>", "VimRC" },
