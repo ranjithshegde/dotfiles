@@ -493,7 +493,6 @@ function settings.langServers()
             single_file_support = true,
         },
         clangd = {
-            -- handlers = require("lsp-status").extensions.clangd.setup(),
             on_attach = All_attach,
             capabilities = Capabilities,
             cmd = {
