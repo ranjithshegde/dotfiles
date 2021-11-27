@@ -183,7 +183,7 @@ function M.configFiles()
                 m = { "<cmd>tabnew ~/.config/nvim/lua/mappings.lua<CR>", "Keymaps" },
                 l = { "<cmd>tabnew ~/.config/nvim/lua/settings.lua<CR>", "Lua settings" },
                 s = { "<cmd>tabnew ~/.config/nvim/lua/statusline.lua<CR>", "Statusline and Tabline" },
-                c = { "<cmd>tabnew ~/.config/nvim/lua/compiler.lua<CR>", "Cpp Workstation" },
+                c = { "<cmd>tabnew ~/.config/nvim/lua/utils/compiler.lua<CR>", "Cpp Workstation" },
                 u = { "<cmd>tabnew ~/.config/nvim/lua/utils/init.lua<CR>", "Utilities in lua" },
                 d = { "<cmd>tabnew ~/.config/nvim/lua/utils/diagnostics.lua<CR>", "Utilities in lua" },
                 a = { "<cmd>tabnew ~/.config/nvim/autoload/util.vim<CR>", "Utilities in autoload" },
@@ -441,16 +441,16 @@ end
 
 function M.micro()
     local maps = {
-        ["<F8>"] = { "<esc><cmd>lua require('compiler').monitor()<CR>", "Serial monitor toggle" },
+        ["<F8>"] = { "<esc><cmd>lua require('utils.compiler').monitor()<CR>", "Serial monitor toggle" },
     }
     wk.register(maps, { mode = "t" })
 
     local mkeys = {
-        ["<F2>"] = { "<cmd>lua require('compiler').pio_clean()<CR>", "Regenerate tags" },
+        ["<F2>"] = { "<cmd>lua require('utils.compiler').pio_clean()<CR>", "Regenerate tags" },
         ["<F5>"] = { "<cmd>w <CR>:Make<CR>", "Build" },
         ["<F6>"] = { "<cmd>w <CR>:Make --target upload<CR>", "Upload" },
-        ["<F7>"] = { "<cmd>lua require('compiler').pio_check()<CR>", "Verify code" },
-        ["<F8>"] = { "<cmd>lua require('compiler').monitor()<CR>", "Serial monitor toggle" },
+        ["<F7>"] = { "<cmd>lua require('utils.compiler').pio_check()<CR>", "Verify code" },
+        ["<F8>"] = { "<cmd>lua require('utils.compiler').monitor()<CR>", "Serial monitor toggle" },
         ["<leader>"] = {
             r = {
                 name = "Online specs",
@@ -458,9 +458,9 @@ function M.micro()
         },
         [","] = {
             k = {
-                a = { "<cmd>lua require('compiler').ardRef(vim.fn.expand('<cword>'))<CR>", "Arduino" },
-                t = { "<cmd>lua require('compiler').teensypins()<CR>", "teensy pins" },
-                T = { "<cmd>lua require('compiler').teensyspecs()<CR>", "teensy specs" },
+                a = { "<cmd>lua require('utils.compiler').ardRef(vim.fn.expand('<cword>'))<CR>", "Arduino" },
+                t = { "<cmd>lua require('utils.compiler').teensypins()<CR>", "teensy pins" },
+                T = { "<cmd>lua require('utils.compiler').teensyspecs()<CR>", "teensy specs" },
             },
         },
     }
@@ -474,7 +474,7 @@ function M.makeC()
         ["<F4>"] = { "<cmd>w <CR> <cmd>Make Debug -j12<CR>", "Compile Debug" },
         ["<F5>"] = { "<cmd>w <CR> <cmd>Make -j12 && make RunRelease<CR>", "Compile Release" },
         ["<F6>"] = { "<cmd>w <CR> <cmd>Make RunRelease<CR>", "Run Release" },
-        ["<F7>"] = { '<cmd>w <CR> <cmd>lua require("compiler").termdebug()<cr>', "Launch Debugger" },
+        ["<F7>"] = { '<cmd>w <CR> <cmd>lua require("utils.compiler").termdebug()<cr>', "Launch Debugger" },
     }
     wk.register(bufmaps, { buffer = 0 })
 end
@@ -490,7 +490,7 @@ function M.makeGradle()
     --     -- run openFrameworks
     --     { "n", "<F6>", ":w <CR> :Dispatch make RunRelease<CR>" },
     --     -- Call gdb (termdebug)
-    --     { "n", "<F7>", 'w <CR> :lua require("compiler").termdebug()<cr>' },
+    --     { "n", "<F7>", 'w <CR> :lua require("utils.compiler").termdebug()<cr>' },
     -- }
 end
 
@@ -499,10 +499,10 @@ end
 function M.ctests()
     local bufmaps = {
         ["<F3>"] = { "<cmd>w <CR> <cmd>Dispatch gcc % -lm -o %<<CR> <cmd>Dispatch ./%<<CR>", "Use gcc" },
-        ["<F4>"] = { "<cmd>w <CR> <cmd>lua require('compiler').with_flags()<cr>", "Make with defined flags" },
+        ["<F4>"] = { "<cmd>w <CR> <cmd>lua require('utils.compiler').with_flags()<cr>", "Make with defined flags" },
         ["<F5>"] = { "<cmd>w <CR> <cmd>Make -g % -o %<<CR>", "Make" },
         ["<F6>"] = { "<cmd>w <CR> <cmd>Dispatch ./%<<CR>", "Run binary" },
-        ["<F7>"] = { '<cmd>w <CR> <cmd>lua require("compiler").termdebug()<cr>', "Launch debugger" },
+        ["<F7>"] = { '<cmd>w <CR> <cmd>lua require("utils.compiler").termdebug()<cr>', "Launch debugger" },
     }
     wk.register(bufmaps, { buffer = 0 })
 end
@@ -511,7 +511,7 @@ end
 function M.pdc()
     local bufmaps = {
         ["<F5>"] = { "<cmd>w<CR><cmd>Make<CR>", "Build Pd external" },
-        ["<F6>"] = { "<cmd>w<CR><cmd>lua require('compiler').pdBuild()<CR>", "Copy external to PD directory" },
+        ["<F6>"] = { "<cmd>w<CR><cmd>lua require('utils.compiler').pdBuild()<CR>", "Copy external to PD directory" },
     }
     wk.register(bufmaps, { buffer = 0 })
 end
@@ -539,14 +539,17 @@ function M.clang()
         [","] = {
             k = {
                 name = "Online help",
-                c = { "<cmd>lua require('compiler').creference(vim.fn.expand('<cword>'))<CR>", "C++ std reference" },
-                g = { "<cmd>lua require('compiler').glRef(vim.fn.expand('<cword>'))<CR>", "OpenGL reference" },
+                c = {
+                    "<cmd>lua require('utils.compiler').creference(vim.fn.expand('<cword>'))<CR>",
+                    "C++ std reference",
+                },
+                g = { "<cmd>lua require('utils.compiler').glRef(vim.fn.expand('<cword>'))<CR>", "OpenGL reference" },
             },
         },
         ["<leader>"] = {
-            s = { "<cmd>ClangdSwitchSourceHeader<cr>", "Switch to Header/Source" },
-            m = { "<cmd>lua require('compiler').makefile(vim.g.makeFile)<CR>", "Open Makefile" },
-            c = { "<cmd>lua require('compiler').ctags(vim.g.cfiles)<CR>", "generate Ctags with includes" },
+            s = { "<cmd>ClangdSwitch<cr>", "Switch to Header/Source" },
+            m = { "<cmd>lua require('utils.compiler').makefile(vim.g.makeFile)<CR>", "Open Makefile" },
+            c = { "<cmd>lua require('utils.compiler').ctags(vim.g.cfiles)<CR>", "generate Ctags with includes" },
         },
     }
     wk.register(wmaps, { buffer = 0 })
@@ -556,12 +559,12 @@ end
 
 function M.cmake()
     local bufmaps = {
-        ["<F2>"] = { '<cmd>w <CR> <cmd>lua require("compiler").cmake_clean()<CR>', "Clean cmake" },
-        ["<F3>"] = { '<cmd>w <CR> <cmd>lua require("compiler").cmake_gen_debug()<CR>', "Generate Cmake Debug" },
-        ["<F4>"] = { '<cmd>w <CR> <cmd>lua require("compiler").cmake_gen()<CR>', "Generate Cmake Release" },
+        ["<F2>"] = { '<cmd>w <CR> <cmd>lua require("utils.compiler").cmake_clean()<CR>', "Clean cmake" },
+        ["<F3>"] = { '<cmd>w <CR> <cmd>lua require("utils.compiler").cmake_gen_debug()<CR>', "Generate Cmake Debug" },
+        ["<F4>"] = { '<cmd>w <CR> <cmd>lua require("utils.compiler").cmake_gen()<CR>', "Generate Cmake Release" },
         ["<F5>"] = { "<cmd>w <CR> <cmd>Make -j12 -C build<CR>", "Make" },
-        ["<F6>"] = { '<cmd>w <CR> <cmd>lua require("compiler").cmake_run()<cr>', "Launch binary" },
-        ["<F7>"] = { '<cmd>w <CR> <cmd>lua require("compiler").termdebug()<cr>', "Run Debugger" },
+        ["<F6>"] = { '<cmd>w <CR> <cmd>lua require("utils.compiler").cmake_run()<cr>', "Launch binary" },
+        ["<F7>"] = { '<cmd>w <CR> <cmd>lua require("utils.compiler").termdebug()<cr>', "Run Debugger" },
     }
     wk.register(bufmaps, { buffer = 0 })
 end
@@ -622,8 +625,8 @@ function M.tex()
     local bufmaps = {
         ["<F3>"] = { "<cmd>TexWordCount<CR>", "Word count" },
         ["<F4>"] = { "<cmd>Make -C<CR>", "Clean tex files" },
-        ["<F5>"] = { "<cmd>TexlabBuild<CR>", "Compile tex document" },
-        ["<F6>"] = { "<cmd>TexlabForward<CR>", "Launch zathura" },
+        ["<F5>"] = { "<cmd>TexbBuild<CR>", "Compile tex document" },
+        ["<F6>"] = { "<cmd>TexForward<CR>", "Launch zathura" },
     }
     wk.register(bufmaps, { buffer = 0 })
 end

@@ -137,7 +137,7 @@ function settings.treesitter()
     require("nvim-treesitter.configs").setup {
         highlight = {
             enable = true,
-            additional_vim_regex_highlighting = { "latex", "org" },
+            additional_vim_regex_highlighting = { "latex", "org", "markdown" },
         },
         indent = { enable = true, disable = { "python", "org" } },
         autopairs = { enable = true },
@@ -333,7 +333,7 @@ end
 
 function settings.lsp_settings()
     Lsp = require "lspconfig"
-    require("icons").init()
+    require("utils.icons").init()
 
     local buffExec = "* <buffer>"
     local docHigh = {
@@ -341,7 +341,6 @@ function settings.lsp_settings()
         { "CursorMoved", "<buffer>", [[lua vim.lsp.buf.clear_references()]] },
         { "CursorMovedI", "<buffer>", [[lua vim.lsp.buf.clear_references()]] },
     }
-
     -- Set diagnostics to local list automatically
     u.create_augroup({ { "DiagnosticChanged", "*", "lua vim.diagnostic.setloclist({open = false})" } }, "LspLocList")
 
@@ -354,6 +353,7 @@ function settings.lsp_settings()
         lsp_status.register_progress()
         lsp_status.on_attach(client)
         local rc = client.resolved_capabilities
+        require("utils.diagnostics").init { underline = false, update_in_insert = false }
 
         if rc.document_highlight then
             Exec "hi LspReferenceRead cterm=bold ctermbg=red guibg=#98971a"
@@ -400,6 +400,7 @@ function settings.lsp_settings()
         lsp_status.on_attach(client)
         local rc = client.resolved_capabilities
         rc.document_formatting = false
+        require("utils.diagnostics").init { underline = false, update_in_insert = false }
 
         if rc.document_highlight then
             Exec "hi LspReferenceRead cterm=bold ctermbg=red guibg=#98971a"
@@ -422,6 +423,7 @@ end
 ------------------------------------------------------------------------
 
 function settings.langServers()
+    local dict = os.getenv "XDG_CONFIG_HOME" .. "/nvim/spell/en.utf-8.add"
     local configs = {
         yamlls = { on_attach = All_attach },
         jsonls = { on_attach = EfmAttach },
@@ -437,13 +439,12 @@ function settings.langServers()
             capabilities = Capabilities,
             settings = {
                 ltex = {
-                    -- language = "en",
                     additionalRules = {
                         enablePickyRules = true,
                         motherTongue = "en",
                         languageModel = "/usr/share/Ngrams/",
                     },
-                    dictionary = { ["en-US"] = u.concat_fileLines "/usr/share/words.txt" },
+                    dictionary = { ["en-US"] = u.concat_fileLines(dict) },
                 },
             },
         },
@@ -489,6 +490,7 @@ function settings.langServers()
                 end,
             },
             init_options = { cache = { directory = "/tmp/ccls" } },
+            single_file_support = true,
         },
         clangd = {
             -- handlers = require("lsp-status").extensions.clangd.setup(),
@@ -554,7 +556,6 @@ function settings.lsp_lintFormat()
     local vint = {
         lintCommand = "vint -f '{file_path}:{line_number}:{column_number}: {severity}: {description} (see: {reference})' --enable-neovim",
         lintStdin = false,
-        -- lintFormats = { "%f:%l:%c: %trror: %m", "%f:%l:%c: %tarning: %m" },
         lintFormats = { "%f:%l:%c: %m" },
     }
 

@@ -169,6 +169,24 @@ return packer.startup {
             cmd = { "ColorizerAttachToBuffer", "ColorizerToggle" },
         }
 
+        -- completion and snippets
+        use {
+            { "ranjithshegde/completion-nvim", branch = "trialNewApi" },
+            "hrsh7th/vim-vsnip",
+            { "hrsh7th/vim-vsnip-integ", opt = true },
+            { "rafamadriz/friendly-snippets", event = "InsertEnter" },
+            {
+                "windwp/nvim-autopairs",
+                event = "InsertEnter",
+                config = function()
+                    local npairs = require "nvim-autopairs"
+                    local Rule = require "nvim-autopairs.rule"
+                    npairs.setup()
+                    npairs.add_rules { Rule("|", "|", "supercollider") }
+                end,
+            },
+        }
+
         -- vim Orgmode
         use {
             {
@@ -186,31 +204,6 @@ return packer.startup {
                 ft = "org",
                 config = function()
                     require("org-bullets").setup {}
-                end,
-            },
-        }
-
-        -- completion and snippets
-        use {
-            { "ranjithshegde/completion-nvim", branch = "trialNewApi" },
-            "hrsh7th/vim-vsnip",
-            {
-                "hrsh7th/vim-vsnip-integ",
-                opt = true,
-            },
-            {
-                "rafamadriz/friendly-snippets",
-                event = "InsertEnter",
-            },
-
-            {
-                "windwp/nvim-autopairs",
-                event = "InsertEnter",
-                config = function()
-                    local npairs = require "nvim-autopairs"
-                    local Rule = require "nvim-autopairs.rule"
-                    npairs.setup()
-                    npairs.add_rules { Rule("|", "|", "supercollider") }
                 end,
             },
         }
