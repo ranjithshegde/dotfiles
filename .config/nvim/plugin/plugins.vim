@@ -9,10 +9,6 @@ com! ClearBack call util#transparency()
 com! LspCapabilities lua require('utils').lsp_capabilities()
 com! ToggleVirtual lua require('utils.diagnostics').toggle_virtual_text()
 com! ToggleSigns lua require('utils.diagnostics').toggle_signs()
-com! ClangdSwitch lua require('utils.langServers').switchSourceHeader(0)
-com! TexBuild lua require('utils.langServers').texlab_buf_build(0)
-com! TexForward lua require('utils.langServers').texlab_buf_search(0)
-com! TexWordCount lua require('utils.langServers').TexWordCount()
 
 "open ranger over current buffer
 nn <silent><leader>rr <cmd>call util#OpenRangerIn("%:p:h", "e ")<CR>

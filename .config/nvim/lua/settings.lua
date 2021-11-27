@@ -449,6 +449,23 @@ function settings.langServers()
             },
         },
         texlab = {
+            commands = {
+                TexBuild = {
+                    function()
+                        require("utils.langServers").texlab_buf_build(0)
+                    end,
+                },
+                TexForward = {
+                    function()
+                        require("utils.langServers").texlab_buf_search(0)
+                    end,
+                },
+                TexWordCount = {
+                    function()
+                        require("utils.langServers").TexWordCount()
+                    end,
+                },
+            },
             on_attach = All_attach,
             capabilities = Capabilities,
             settings = {
@@ -493,6 +510,13 @@ function settings.langServers()
             single_file_support = true,
         },
         clangd = {
+            commands = {
+                ClangdSwitch = {
+                    function()
+                        require("utils.langServers").switchSourceHeader(0)
+                    end,
+                },
+            },
             on_attach = All_attach,
             capabilities = Capabilities,
             cmd = {
@@ -576,12 +600,6 @@ function settings.lsp_lintFormat()
     }
     Lsp.efm.setup {
         filetypes = vim.tbl_keys(languages),
-        handlers = {
-            ["textDocument/publishDiagnostics"] = vim.lsp.with(
-                vim.lsp.diagnostic.on_publish_diagnostics,
-                { virtual_text = false }
-            ),
-        },
         root_dir = rootDir,
         on_attach = All_attach,
         init_options = { documentFormatting = true, codeAction = true },
