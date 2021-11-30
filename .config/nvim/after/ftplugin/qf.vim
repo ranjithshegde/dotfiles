@@ -1,5 +1,12 @@
-nn <silent><buffer>dd :call util#qf_delete(bufnr())<CR>
-vn <silent><buffer>d  :call util#qf_delete(bufnr())<CR>
+lua << EOF
+require("which-key").register({
+    dd = { "<cmd>call util#qf_delete(bufnr())<CR>", "Delete quickfix item" },
+    H = { "<cmd>colder<CR>", "Jump to previous list" },
+    L = { "<cmd>cnewer<CR>", "Jump to Next list" },
+}, { buffer = 0 })
 
-nn <buffer> H :colder<CR>
-nn <buffer> L :cnewer<CR>
+require("which-key").register(
+    { d = { "<cmd>call util#qf_delete(bufnr()<CR>", "Delete quickfix item" } },
+    { mode = "v", buffer = 0 }
+)
+EOF

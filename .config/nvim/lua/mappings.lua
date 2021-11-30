@@ -122,7 +122,7 @@ function M.nvim_lsp()
             D = { "<cmd>lua vim.lsp.buf.declaration()<CR>", "Jump to Declaration" },
             d = { "<cmd>lua vim.lsp.buf.definition()<CR>", "Jump to Definition" },
             i = { "<cmd>lua vim.lsp.buf.implementation()<CR>", "Jump to Implementation" },
-            r = { "<cmd>lua vim.lsp.buf.references()<CR>", "References" },
+            r = { "<cmd>lua vim.lsp.buf.references({includeDeclaration = false})<CR>", "References" },
             t = { "<cmd>lua vim.lsp.buf.type_definition()<CR>", "Jump to Type definition" },
             s = { '<cmd>lua vim.lsp.buf.signature_help({popup_opts = {border = "double"}})<CR>' },
             R = { "<cmd>lua vim.lsp.buf.rename()<CR>", "Rename symbol" },
@@ -336,6 +336,7 @@ function M.telescope()
                 },
                 b = { tele "live_grep", "current buffer" },
             },
+            F = { tele "find_files", "Current directory" },
             f = {
                 name = "find files in",
                 f = { tele "find_files", "Current directory" },
@@ -548,7 +549,7 @@ function M.clang()
             },
         },
         ["<leader>"] = {
-            s = { "<cmd>ClangdSwitch<cr>", "Switch to Header/Source" },
+            s = { "<cmd>ClangdSwitchSourceHeader<cr>", "Switch to Header/Source" },
             m = { "<cmd>lua require('utils.compiler').makefile(vim.g.makeFile)<CR>", "Open Makefile" },
             c = { "<cmd>lua require('utils.compiler').ctags(vim.g.cfiles)<CR>", "generate Ctags with includes" },
         },
@@ -626,8 +627,8 @@ function M.tex()
     local bufmaps = {
         ["<F3>"] = { "<cmd>TexWordCount<CR>", "Word count" },
         ["<F4>"] = { "<cmd>Make -C<CR>", "Clean tex files" },
-        ["<F5>"] = { "<cmd>TexbBuild<CR>", "Compile tex document" },
-        ["<F6>"] = { "<cmd>TexForward<CR>", "Launch zathura" },
+        ["<F5>"] = { "<cmd>TexlabBuild<CR>", "Compile tex document" },
+        ["<F6>"] = { "<cmd>TexlabForward<CR>", "Launch zathura" },
     }
     wk.register(bufmaps, { buffer = 0 })
 end

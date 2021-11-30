@@ -6,7 +6,7 @@ com! Cpractice lua require('compiler').cpractice()
 com! Agenda lua require('utils').agenda()
 com! ClearBack call util#transparency()
 
-com! LspCapabilities lua require('utils').lsp_capabilities()
+com! LspCapabilities lua require('utils.langServers').lsp_capabilities()
 com! ToggleVirtual lua require('utils.diagnostics').toggle_virtual_text()
 com! ToggleSigns lua require('utils.diagnostics').toggle_signs()
 

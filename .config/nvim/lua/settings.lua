@@ -449,23 +449,6 @@ function settings.langServers()
             },
         },
         texlab = {
-            commands = {
-                TexBuild = {
-                    function()
-                        require("utils.langServers").texlab_buf_build(0)
-                    end,
-                },
-                TexForward = {
-                    function()
-                        require("utils.langServers").texlab_buf_search(0)
-                    end,
-                },
-                TexWordCount = {
-                    function()
-                        require("utils.langServers").TexWordCount()
-                    end,
-                },
-            },
             on_attach = All_attach,
             capabilities = Capabilities,
             settings = {
@@ -510,13 +493,6 @@ function settings.langServers()
             single_file_support = true,
         },
         clangd = {
-            commands = {
-                ClangdSwitch = {
-                    function()
-                        require("utils.langServers").switchSourceHeader(0)
-                    end,
-                },
-            },
             on_attach = All_attach,
             capabilities = Capabilities,
             cmd = {
@@ -547,7 +523,6 @@ function settings.lsp_lintFormat()
     local rootMarker = { vim.fn.getcwd() or { ".git/" } }
 
     local checkmake = { lintCommand = "checkmake", lintStdin = true }
-    local glslang = { lintCommand = "glslangValidator --stdin -S %:e", lintStdin = true }
     local yamllint = { lintCommand = "yamllint -f parsable -", lintStdin = true }
     local shfmt = { formatCommand = "shfmt -ci -s -bn", formatStdin = true }
     local prettier = { formatCommand = "prettier --stdin --stdin-filepath ${INPUT}", formatStdin = true }
@@ -571,7 +546,7 @@ function settings.lsp_lintFormat()
         lintFormats = { "%f:%l:%c: %trror: %m", "%f:%l:%c: %tarning: %m", "%f:%l:%c: %tote: %m" },
     }
     local markdownlint = {
-        lintCommand = "markdownlint -s -c",
+        lintCommand = "markdownlint -s",
         lintStdin = true,
         lintFormats = { "%f:%l %m", "%f:%l:%c %m", "%f: %l: %m" },
     }
@@ -590,7 +565,6 @@ function settings.lsp_lintFormat()
         css = { prettier },
         toml = { prettier },
         lua = { stylua },
-        glsl = { glslang },
         make = { checkmake },
         vimwiki = { markdownlint },
         markdown = { markdownlint },
