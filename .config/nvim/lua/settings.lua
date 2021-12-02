@@ -428,6 +428,7 @@ function settings.langServers()
         yamlls = { on_attach = All_attach },
         jsonls = { on_attach = EfmAttach },
         cssls = { on_attach = All_attach, capabilities = Capabilities },
+        openclls = { on_attach = All_attach, capabilities = Capabilities },
         bashls = { on_attach = All_attach, filetypes = { "sh", "zsh" } },
         html = { on_attach = All_attach, capabilities = Capabilities },
         cmake = { on_attach = All_attach, capabilities = Capabilities },
@@ -556,6 +557,15 @@ function settings.lsp_lintFormat()
         lintStdin = false,
         lintFormats = { "%f:%l:%c: %m" },
     }
+    local clcc = {
+        lintCommand = "clcc",
+        lintStdin = true,
+        lintFormats = {
+            "%e:%l:%c: error: %m,%-z%p^[ ~]%#",
+            "%w:%l:%c: warning: %m,%-z%p^[ ~]%#",
+            "%i:%l:%c: note: %m,%-z%p^[ ~]%#",
+        },
+    }
 
     local languages = {
         vim = { vint },
@@ -571,6 +581,7 @@ function settings.lsp_lintFormat()
         sh = { shellcheck, shfmt },
         zsh = { shellcheck, shfmt },
         python = { flake8, isort, black, mypy },
+        opencl = { clcc },
     }
     Lsp.efm.setup {
         filetypes = vim.tbl_keys(languages),

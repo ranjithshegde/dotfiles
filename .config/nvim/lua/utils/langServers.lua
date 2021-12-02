@@ -13,7 +13,7 @@ langSettings.lsp_capabilities = function()
     local buf_lines = {}
 
     local buf_client_names = {}
-    for _, client in ipairs(buf_clients) do
+    for _, client in pairs(buf_clients) do
         table.insert(buf_client_names, client.name)
     end
 

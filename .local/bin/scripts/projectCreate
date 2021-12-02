@@ -1,6 +1,6 @@
 #!/bin/sh
 
-function help() {
+help() {
 	echo "usage: projectCreate -l lang "
 	echo "optional : -g intialise a git repo inside project folder"
 	echo "         : -h show this help message"
@@ -35,7 +35,7 @@ done
 [[ -z $lang ]] && printf "Enter Language Name : " && read lang
 [[ -z $project_name ]] && printf "Enter project Name : " && read project_name
 
-function gradle_init() {
+gradle_init() {
 
 	[[ -z $class_name ]] && printf "Enter class Name : " && read class_name
 
@@ -83,7 +83,7 @@ pdCBuild() {
 
 	(
 		echo '#include "m_pd.h"'
-	) >$project_name/"$project_name".c
+	) >"$project_name"/"$project_name".c
 
 	(
 		echo 'compile_commands.json'
@@ -136,11 +136,10 @@ electronics() {
 
 cpp_init() {
 
-	mkdir $project_name || exit
-
-	mkdir $project_name/src
-	mkdir $project_name/include
-	mkdir $project_name/build
+	mkdir "$project_name"
+	mkdir "$project_name"/src
+	mkdir "$project_name"/include
+	mkdir "$project_name"/build
 
 	(
 		echo '#include<iostream>'
@@ -149,7 +148,7 @@ cpp_init() {
 		echo '{'
 		echo 'return 0;'
 		echo '}'
-	) >$project_name/src/main.cpp
+	) >"$project_name"/src/main.cpp
 
 	(
 		echo "cmake_minimum_required(VERSION 3.2.0)"
@@ -163,11 +162,11 @@ cpp_init() {
 		echo "target_include_directories($project_name PUBLIC \${CMAKE_CURRENT_SOURCE_DIR}/include)"
 		echo ""
 		echo "install(TARGETS $project_name DESTINATION /usr/local/bin)"
-	) >$project_name/CMakeLists.txt
+	) >"$project_name"/CMakeLists.txt
 
 	(
 		echo "#!/bin/sh"
-		echo 'if [[ -z $1 ]]; then'
+		echo "if [[ -z $1 ]]; then"
 		echo 'mkdir -p build'
 		echo 'cd build'
 		echo 'cmake ..'
@@ -188,21 +187,21 @@ cpp_init() {
 		echo 'cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=1 ..'
 		echo 'cp compile_commands.json ..'
 		echo 'fi'
-	) >$project_name/autoBuild
+	) >"$project_name"/autoBuild
 
-	chmod u+x $project_name/autoBuild
-	clang-format -style=webkit -dump-config >$project_name/.clang-format
+	chmod u+x "$project_name"/autoBuild
+	clang-format -style=webkit -dump-config >"$project_name"/.clang-format
 
 	(
 		echo 'build/*'
 		echo 'compile_commands.json'
 		echo '.clangd/*'
 		echo '.clang-format'
-	) >$project_name/.gitignore
+	) >"$project_name"/.gitignore
 
-	[ "$git_init" == "true" ] && git init $project_name
+	[ "$git_init" == "true" ] && git init "$project_name"
 
-	cd $project_name && ./autoBuild project
+	cd "$project_name" && ./autoBuild project
 }
 
 py_init() {

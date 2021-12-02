@@ -124,7 +124,7 @@ function M.nvim_lsp()
             i = { "<cmd>lua vim.lsp.buf.implementation()<CR>", "Jump to Implementation" },
             r = { "<cmd>lua vim.lsp.buf.references({includeDeclaration = false})<CR>", "References" },
             t = { "<cmd>lua vim.lsp.buf.type_definition()<CR>", "Jump to Type definition" },
-            s = { '<cmd>lua vim.lsp.buf.signature_help({popup_opts = {border = "double"}})<CR>' },
+            s = { '<cmd>lua vim.lsp.buf.signature_help({popup_opts = {border = "double"}})<CR>', "Show signature" },
             R = { "<cmd>lua vim.lsp.buf.rename()<CR>", "Rename symbol" },
             f = { "<cmd>lua vim.lsp.buf.formatting()<CR>", "Format buffer" },
             a = { "<cmd>lua vim.lsp.buf.code_action()<CR>", "Code actions for buffer" },
@@ -139,6 +139,7 @@ function M.nvim_lsp()
                 name = "Toggle diagnostics",
                 v = { "<cmd>lua require'utils.diagnostics'.toggle_virtual_text()<CR>", "Virtual text" },
                 s = { "<cmd>lua require'utils.diagnostics'.toggle_signs()<CR>", "Sings" },
+                u = { "<cmd>lua require'utils.diagnostics'.toggle_underline()<CR>", "Underline" },
             },
             w = {
                 name = "Workspace",
@@ -342,6 +343,7 @@ function M.telescope()
                 f = { tele "find_files", "Current directory" },
                 h = { telF "find_files({cwd='~'})", "Home directory" },
                 d = { telF "find_files({cwd='~/.config/', prompt_title = 'Dotfiles'})", "Dotfiles" },
+                c = { telF "find_files({cwd='~/.local/bin/', prompt_title = 'Binaries'})", "Binaries" },
                 v = {
                     telF "find_files({cwd='~/.local/share/nvim/', prompt_title = 'Plugin files'})",
                     "Vim plugin Directory",
