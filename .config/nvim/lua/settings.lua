@@ -335,7 +335,7 @@ end
 
 function settings.lsp_settings()
     Lsp = require "lspconfig"
-    require("utils.icons").init()
+    require("utils.langServers").kind()
 
     local buffExec = "* <buffer>"
     local docHigh = {

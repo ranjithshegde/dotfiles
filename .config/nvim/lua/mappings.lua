@@ -409,11 +409,11 @@ function M.telescope()
                 h = { telF "find_files({cwd='~'})", "Home directory" },
                 d = { telF "find_files({cwd='~/.config/', prompt_title = 'Dotfiles'})", "Dotfiles" },
                 r = { tele "oldfiles", "Vim recent files" },
-                t = { tele "help_tags", "Help tags" },
+                t = { tele "help_tags", "vim help files" },
                 c = { cd_browser("C++ Practice files/dirs", "$CWORK/Practice"), "Open C practice" },
                 b = {
                     telF "find_files({cwd='~/.local/bin/', prompt_title = 'Scripts and binaries in local'})",
-                    "Binaries",
+                    "scripts & binaries",
                 },
                 v = {
                     telF "find_files({cwd='~/.local/share/nvim/', prompt_title = 'Plugin files'})",
