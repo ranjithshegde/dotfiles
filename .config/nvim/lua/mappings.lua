@@ -36,6 +36,7 @@ function M.general()
         N = { "Nzzzv", "jump to previous search result" },
         J = { "mzJ`z", "Adjoin next line" },
         gm = { "<cmd>call cursor(0, virtcol('$')/2 )<CR>", "Move cursor to middle of the line" },
+        -- gf = { "<cmd>e <cfile><CR>", "open file under cursor" },
         --Quickfix
         ["-"] = { "<cmd>lua require('utils.qf').toggle_qf('q')<CR>", "Toggle quickfix" },
         ["_"] = { "<cmd>lua require('utils.qf').toggle_qf('l')<CR>", "Toggle loclist" },
@@ -307,6 +308,70 @@ function M.telescope()
         return string.format("<cmd>lua require'telescope'.extensions.%s<cr>", name)
     end
 
+    local cd_browser = function(prompt, cwd)
+        return function()
+            require("telescope.builtin").file_browser {
+                prompt_title = prompt,
+                cwd = cwd,
+                attach_mappings = function(prompt_bufnr, map)
+                    local change_dir =
+                        -- vim.api.nvim_buf_call(bufnr, function(window) end)
+                        function()
+                            local wd = require("telescope.actions.state").get_selected_entry().value
+                            require("telescope.actions.set").select(prompt_bufnr, "default")
+                            if wd:sub(-1, -1) == require("plenary.path").path.sep then
+                                vim.fn.execute("tcd " .. wd)
+                            end
+                        end
+                    map("n", "<CR>", function()
+                        change_dir()
+                    end)
+                    map("i", "<CR>", function()
+                        change_dir()
+                    end)
+                    return true
+                end,
+            }
+        end
+    end
+
+    local cd_files = function(prompt, cwd)
+        return function()
+            require("telescope.builtin").find_files {
+                prompt_title = prompt,
+                cwd = cwd,
+                attach_mappings = function(prompt_bufnr, map)
+                    local change_dir = function(window)
+                        local wd = require("telescope.actions.state").get_selected_entry().value
+                        require("telescope.actions.set").select(prompt_bufnr, window)
+                        vim.fn.execute("tcd " .. cwd)
+                        local dir = vim.fn.fnamemodify(wd, ":p:h")
+                        vim.fn.execute("tcd " .. dir)
+                    end
+                    map("n", "<CR>", function()
+                        change_dir "default"
+                    end)
+                    map("i", "<CR>", function()
+                        change_dir "default"
+                    end)
+                    map("n", "<C-v>", function()
+                        change_dir "vertical"
+                    end)
+                    map("i", "<C-v>", function()
+                        change_dir "vertical"
+                    end)
+                    map("n", "<C-t>", function()
+                        change_dir "tab"
+                    end)
+                    map("i", "<C-t>", function()
+                        change_dir "tab"
+                    end)
+                    return true
+                end,
+            }
+        end
+    end
+
     wk.register {
         ["<Space>"] = {
             name = "Telescope",
@@ -343,21 +408,22 @@ function M.telescope()
                 f = { tele "find_files", "Current directory" },
                 h = { telF "find_files({cwd='~'})", "Home directory" },
                 d = { telF "find_files({cwd='~/.config/', prompt_title = 'Dotfiles'})", "Dotfiles" },
-                c = { telF "find_files({cwd='~/.local/bin/', prompt_title = 'Binaries'})", "Binaries" },
+                r = { tele "oldfiles", "Vim recent files" },
+                t = { tele "help_tags", "Help tags" },
+                c = { cd_browser("C++ Practice files/dirs", "$CWORK/Practice"), "Open C practice" },
+                b = {
+                    telF "find_files({cwd='~/.local/bin/', prompt_title = 'Scripts and binaries in local'})",
+                    "Binaries",
+                },
                 v = {
                     telF "find_files({cwd='~/.local/share/nvim/', prompt_title = 'Plugin files'})",
                     "Vim plugin Directory",
                 },
-                r = { tele "oldfiles", "Vim recent files" },
-                t = { tele "help_tags", "Help tags" },
                 o = {
                     telF "find_files({cwd ='~/Documents/ofWorkspace/',prompt_title = 'oF Workspace files'})",
                     "OfWorkspace",
                 },
-                s = {
-                    telF "find_files({cwd ='~/Documents/Supercollider/',prompt_title = 'SuperCollider Directory'})",
-                    "SuperCollider files",
-                },
+                s = { cd_files("SuperCollider Directory", "~/Documents/Supercollider/"), "SuperCollider files" },
             },
             G = {
                 name = "git commands",
@@ -368,7 +434,7 @@ function M.telescope()
             },
             p = { telE "project.project{display_type = 'full'}", "Projects" },
             K = { telF 'live_grep({cwd = vim.fn.input("cwd: ")})', "Live grep in directory" },
-            o = { telF "find_files({cwd ='~/Documents/Orgs/',prompt_title = 'Org Files'})", "Org files" },
+            o = { cd_files("Org files", "~/Documents/Orgs"), "Org files" },
         },
     }
 end

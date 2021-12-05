@@ -1,6 +1,7 @@
 local settings = {}
 local u = require "utils"
 local o = vim.opt
+local bo = vim.bo
 require("impatient").enable_profile()
 
 function settings.settings()
@@ -40,6 +41,7 @@ function settings.options()
     o.signcolumn = "yes"
     o.foldmethod = "expr"
     o.spelloptions = "camel"
+    o.inccommand = "split"
     o.grepprg = "rg --vimgrep"
     o.fillchars = "stlnc:»,vert:║,fold:."
     -- o.listchars = "tab:<->,eol:↲,space:→"
@@ -354,6 +356,7 @@ function settings.lsp_settings()
         lsp_status.on_attach(client)
         local rc = client.resolved_capabilities
         require("utils.diagnostics").init { underline = false, update_in_insert = false }
+        bo.formatexpr = "v:lua.vim.lsp.formatexpr()"
 
         if rc.document_highlight then
             Exec "hi LspReferenceRead cterm=bold ctermbg=red guibg=#98971a"
@@ -491,7 +494,6 @@ function settings.langServers()
                 end,
             },
             init_options = { cache = { directory = "/tmp/ccls" } },
-            single_file_support = true,
         },
         clangd = {
             on_attach = All_attach,
@@ -628,11 +630,6 @@ function settings.luadev()
         lspconfig = {
             on_attach = All_attach,
             capabilities = Capabilities,
-            cmd = {
-                "lua-language-server",
-                "-E",
-                "lua-language-server" .. "/main.lua",
-            },
             settings = { Lua = { diagnostics = { globals = { "vim", "pd" } } } },
         },
     }

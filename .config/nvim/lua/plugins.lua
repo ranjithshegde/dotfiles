@@ -105,11 +105,18 @@ return packer.startup {
             ft = { "vimwiki", "markdown" },
         }
 
+        use {
+            "numToStr/Comment.nvim",
+            keys = { "gc", "gb", { "v", "gc" }, { "v", "gb" } },
+            config = function()
+                require("Comment").setup()
+            end,
+        }
+
         -- Tim pope
         use {
             { "tpope/vim-surround", event = "BufRead" },
             { "tpope/vim-unimpaired", keys = { "[", "]" } },
-            { "tpope/vim-commentary", keys = { "gc", { "v", "gc" } } },
             { "tpope/vim-dispatch", cmd = { "Make", "Dispatch" } },
             { "tpope/vim-fugitive", cmd = { "G", "Git", "Gclog" } },
         }
@@ -233,6 +240,7 @@ return packer.startup {
                                 base_dirs = {
                                     { "~/Software/Workspaces", max_depth = 5 },
                                     { "~/Documents/ofWorkspace", max_depth = 5 },
+                                    { "~/Documents/LaTeX", max_depth = 3 },
                                 },
                             },
                         },
