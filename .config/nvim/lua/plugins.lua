@@ -109,7 +109,7 @@ return packer.startup {
             "numToStr/Comment.nvim",
             keys = { "gc", "gb", { "v", "gc" }, { "v", "gb" } },
             config = function()
-                require("Comment").setup()
+                require("Comment").setup { ignore = "^$" }
             end,
         }
 

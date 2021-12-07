@@ -28,7 +28,7 @@ Debugger.adapters = function()
     }
     dap.adapters.cppdbg = {
         type = "executable",
-        command = "/usr/local/bin/cpptools/extension/debugAdapters/bin/OpenDebugAD7",
+        command = os.getenv "XDG_DATA_HOME" .. "/debug-adapters/cpptools/extension/debugAdapters/bin/OpenDebugAD7",
     }
     dap.adapters.python = {
         type = "executable",
@@ -38,7 +38,7 @@ Debugger.adapters = function()
     dap.adapters.node2 = {
         type = "executable",
         command = "node",
-        args = { os.getenv "XDG_DATA_HOME" .. "/vscode-node-debug2/out/src/nodeDebug.js" },
+        args = { os.getenv "XDG_DATA_HOME" .. "/debug-adapters/node-debug2/out/src/nodeDebug.js" },
     }
 end
 
