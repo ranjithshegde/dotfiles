@@ -30,6 +30,7 @@ function Compiler.set_ctype()
         Exec "set makeprg=g++"
         require("mappings").ctests()
         G.debugBin = "%<"
+        -- G.debugBin = vim.fn.fnamemodify("%", ":p")
         G.cfiles = "%"
     end
 end
@@ -131,10 +132,12 @@ end
 
 -- Launch debuger
 function Compiler.termdebug()
-    Exec "packadd termdebug"
+    require("debugger").init()
     require("mappings").debug()
-    local cmd = "Termdebug " .. G.debugBin
-    Exec(cmd)
+    Exec "lua require('dap').continue()"
+    -- Exec "packadd termdebug"
+    -- local cmd = "Termdebug " .. G.debugBin
+    -- Exec(cmd)
 end
 
 function Compiler.ctags(files)

@@ -36,7 +36,7 @@ function M.general()
         N = { "Nzzzv", "jump to previous search result" },
         J = { "mzJ`z", "Adjoin next line" },
         gm = { "<cmd>call cursor(0, virtcol('$')/2 )<CR>", "Move cursor to middle of the line" },
-        -- gf = { "<cmd>e <cfile><CR>", "open file under cursor" },
+        gf = { "<cmd>e <cfile><CR>", "open file under cursor" },
         --Quickfix
         ["-"] = { "<cmd>lua require('utils.qf').toggle_qf('q')<CR>", "Toggle quickfix" },
         ["_"] = { "<cmd>lua require('utils.qf').toggle_qf('l')<CR>", "Toggle loclist" },
@@ -184,10 +184,11 @@ function M.configFiles()
                 p = { "<cmd>tabnew ~/.config/nvim/lua/plugins.lua<CR>", "Packer config" },
                 m = { "<cmd>tabnew ~/.config/nvim/lua/mappings.lua<CR>", "Keymaps" },
                 o = { "<cmd>tabnew ~/.config/nvim/lua/settings.lua<CR>", "Options and settings" },
+                d = { "<cmd>tabnew ~/.config/nvim/lua/debugger.lua<CR>", "Debug adapter protocol" },
                 s = { "<cmd>tabnew ~/.config/nvim/lua/statusline.lua<CR>", "Statusline and Tabline" },
                 c = { "<cmd>tabnew ~/.config/nvim/lua/utils/compiler.lua<CR>", "Cpp Workstation" },
                 u = { "<cmd>tabnew ~/.config/nvim/lua/utils/init.lua<CR>", "Utilities in lua" },
-                d = { "<cmd>tabnew ~/.config/nvim/lua/utils/diagnostics.lua<CR>", "Diagnostic extensions" },
+                e = { "<cmd>tabnew ~/.config/nvim/lua/utils/diagnostics.lua<CR>", "Diagnostic extensions" },
                 l = { "<cmd>tabnew ~/.config/nvim/lua/utils/langServers.lua<CR>", "Langauge Server extensions" },
                 a = { "<cmd>tabnew ~/.config/nvim/autoload/util.vim<CR>", "Utilities in autoload" },
                 f = { "<cmd>tabnew ~/.config/nvim/plugin/plugins.vim<CR>", "Functions in vim" },
@@ -551,18 +552,7 @@ end
 
 -- ******************************** Openframeworks Android ---------------------------------------
 
-function M.makeGradle()
-    -- local bufmaps = {
-    --     -- Compile Debug openFrameworks
-    --     -- { "n", "<F4>", ":w <CR> :Make Debug -j12<CR>" },
-    --     -- Compile openFrameworks
-    --     { "n", "<F5>", ":w <CR> :Make<CR>" },
-    --     -- run openFrameworks
-    --     { "n", "<F6>", ":w <CR> :Dispatch make RunRelease<CR>" },
-    --     -- Call gdb (termdebug)
-    --     { "n", "<F7>", 'w <CR> :lua require("utils.compiler").termdebug()<cr>' },
-    -- }
-end
+function M.makeGradle() end
 
 -- ********************************  Simple C mappings ---------------------------------------
 
@@ -659,35 +649,72 @@ end
 
 -- ******************************** debug ---------------------------------------
 function M.debug()
-    local bufmap = {
+    -- local bufmap = {
+    --     ["<leader>"] = {
+    --         d = {
+    --             name = "debug",
+    --             r = { "<cmd>Run<CR>", "Run" },
+    --             b = { "<cmd>Break<CR>", "set breakpoint" },
+    --             C = { "<cmd>Clear<CR>", "clear breakpoints" },
+    --             c = { "<cmd>Continue<CR>", "continue to next breakpoint" },
+    --             s = { "<cmd>Step<CR>", "step into" },
+    --             o = { "<cmd>Over<CR>", "step over" },
+    --             f = { "<cmd>Finish<CR>", "Finish" },
+    --             e = { "<cmd>Stop<CR>", "Stop process" },
+    --         },
+    --     },
+    -- }
+    -- wk.register(bufmap, { buffer = 0 })
+
+    -- local maps = {
+    --     ["<leader>"] = {
+    --         d = {
+    --             a = { "<esc><cmd>Asm<cr>", "Switch to assembly buffer" },
+    --             p = { "<esc><cmd>Program<cr>", "Switch to terminal window" },
+    --             g = { "<esc><cmd>Gdb<cr>", "Switch to GDB buffer" },
+    --             v = { "<esc><cmd>Source<cr>", "Switch to vim buffer" },
+    --         },
+    --     },
+    -- }
+    -- wk.register(maps)
+    -- wk.register(maps, { mode = "t" })
+
+    wk.register({
         ["<leader>"] = {
             d = {
                 name = "debug",
-                r = { "<cmd>Run<CR>", "Run" },
-                b = { "<cmd>Break<CR>", "set breakpoint" },
-                C = { "<cmd>Clear<CR>", "clear breakpoints" },
-                c = { "<cmd>Continue<CR>", "continue to next breakpoint" },
-                s = { "<cmd>Step<CR>", "step into" },
-                o = { "<cmd>Over<CR>", "step over" },
-                f = { "<cmd>Finish<CR>", "Finish" },
-                e = { "<cmd>Stop<CR>", "Stop process" },
+                b = { "<cmd>lua require('dap').toggle_breakpoint()<CR>", "set breakpoint" },
+                E = { "<cmd>lua require('debugger').exp()<CR>", "Expressions" },
+                e = { "<cmd>lua require('dapui').float_element()<CR>", "Floating features" },
+                f = { "<cmd>lua require('dapui').float_element('scopes', {enter = true})<CR>", "Floating Scopes" },
+                k = { "<cmd>lua require('dapui').eval()<CR>", "Evaluate Hover" },
+                F = { "<cmd>lua require('dapui').float_element('stacks', {enter = true})<CR>", "Floating Stacks" },
+                K = { "<cmd>lua require('dap.ui.widgets').hover()<CR>", "Hover" },
+                ["?"] = { "<cmd>lua require('debugger').frames()<CR>", "Frames" },
+                ["/"] = { "<cmd>lua require('debugger').scopes()<CR>", "Scopes" },
             },
         },
+    }, { buffer = 0 })
+    wk.register {
+        ["<leader>d"] = {
+            name = "debug",
+            ["."] = { "<cmd>lua require('dap').close()<CR>", "End" },
+            u = { "<cmd>lua require('dapui').toggle()<CR>", "Finish" },
+            c = { "<cmd>lua require('dap').continue()<CR>", "continue to next breakpoint" },
+            n = { "<cmd>lua require('dap').step_into()<CR>", "step into" },
+            s = { "<cmd>lua require('dap').step_over()<CR>", "step over" },
+            S = { "<cmd>lua require('dap').step_out()<CR>", "step Out" },
+        },
+        ["<F10>"] = { "<cmd>lua require('dap').repl.toggle({},'split')<CR>", "Repl Toggle" },
     }
-    wk.register(bufmap, { buffer = 0 })
-
-    local maps = {
+    wk.register({
         ["<leader>"] = {
             d = {
-                a = { "<esc><cmd>Asm<cr>", "Switch to assembly buffer" },
-                p = { "<esc><cmd>Program<cr>", "Switch to terminal window" },
-                g = { "<esc><cmd>Gdb<cr>", "Switch to GDB buffer" },
-                v = { "<esc><cmd>Source<cr>", "Switch to vim buffer" },
+                e = { "<cmd>lua require('dapui').eval()<CR>", "Evaluate" },
+                f = { "<cmd>lua require('dapui').float_element()<CR>", "Floating elements" },
             },
         },
-    }
-    wk.register(maps)
-    wk.register(maps, { mode = "t" })
+    }, { mode = "v", buffer = 0 })
 end
 
 -- ******************************** Latex ---------------------------------------

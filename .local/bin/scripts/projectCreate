@@ -166,7 +166,7 @@ cpp_init() {
 
 	(
 		echo "#!/bin/sh"
-		echo "if [[ -z $1 ]]; then"
+		echo 'if [[ -z $1 ]]; then'
 		echo 'mkdir -p build'
 		echo 'cd build'
 		echo 'cmake ..'

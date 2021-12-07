@@ -215,6 +215,26 @@ return packer.startup {
             },
         }
 
+        -- Debugger adapter protocol
+        use {
+            {
+                "mfussenegger/nvim-dap",
+                config = function()
+                    require("debugger").setup()
+                end,
+                opt = true,
+            },
+            {
+                "rcarriga/nvim-dap-ui",
+                config = function()
+                    require("dapui").setup {
+                        sidebar = { size = 100 },
+                    }
+                end,
+                opt = true,
+            },
+        }
+
         -- Telescope
         use {
             {
