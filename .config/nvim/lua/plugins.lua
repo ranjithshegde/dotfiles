@@ -228,7 +228,7 @@ return packer.startup {
                 "rcarriga/nvim-dap-ui",
                 config = function()
                     require("dapui").setup {
-                        sidebar = { size = 100 },
+                        sidebar = { size = 80 },
                     }
                 end,
                 opt = true,

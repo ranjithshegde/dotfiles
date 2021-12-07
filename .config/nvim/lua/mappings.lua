@@ -118,6 +118,7 @@ end
 function M.nvim_lsp()
     local lspmap = {
         K = { "<cmd>lua vim.lsp.buf.hover()<CR>", "Hover" },
+        ["<F7>"] = { "<cmd>lua require('debugger').init()<CR>", "Initialize Debugger adapter" },
         [","] = {
             name = "Lsp functions",
             D = { "<cmd>lua vim.lsp.buf.declaration()<CR>", "Jump to Declaration" },
@@ -518,9 +519,9 @@ function M.micro()
 
     local mkeys = {
         ["<F2>"] = { "<cmd>lua require('utils.compiler').pio_clean()<CR>", "Regenerate tags" },
+        ["<F3>"] = { "<cmd>lua require('utils.compiler').pio_check()<CR>", "Verify code" },
         ["<F5>"] = { "<cmd>w <CR>:Make<CR>", "Build" },
         ["<F6>"] = { "<cmd>w <CR>:Make --target upload<CR>", "Upload" },
-        ["<F7>"] = { "<cmd>lua require('utils.compiler').pio_check()<CR>", "Verify code" },
         ["<F8>"] = { "<cmd>lua require('utils.compiler').monitor()<CR>", "Serial monitor toggle" },
         ["<leader>"] = {
             r = {
@@ -545,7 +546,6 @@ function M.makeC()
         ["<F4>"] = { "<cmd>w <CR> <cmd>Make Debug -j12<CR>", "Compile Debug" },
         ["<F5>"] = { "<cmd>w <CR> <cmd>Make -j12 && make RunRelease<CR>", "Compile Release" },
         ["<F6>"] = { "<cmd>w <CR> <cmd>Make RunRelease<CR>", "Run Release" },
-        ["<F7>"] = { '<cmd>w <CR> <cmd>lua require("utils.compiler").termdebug()<cr>', "Launch Debugger" },
     }
     wk.register(bufmaps, { buffer = 0 })
 end
@@ -562,7 +562,6 @@ function M.ctests()
         ["<F4>"] = { "<cmd>w <CR> <cmd>lua require('utils.compiler').with_flags()<cr>", "Make with defined flags" },
         ["<F5>"] = { "<cmd>w <CR> <cmd>Make -g % -o %<<CR>", "Make" },
         ["<F6>"] = { "<cmd>w <CR> <cmd>Dispatch ./%<<CR>", "Run binary" },
-        ["<F7>"] = { '<cmd>w <CR> <cmd>lua require("utils.compiler").termdebug()<cr>', "Launch debugger" },
     }
     wk.register(bufmaps, { buffer = 0 })
 end
@@ -624,7 +623,6 @@ function M.cmake()
         ["<F4>"] = { '<cmd>w <CR> <cmd>lua require("utils.compiler").cmake_gen()<CR>', "Generate Cmake Release" },
         ["<F5>"] = { "<cmd>w <CR> <cmd>Make -j12 -C build<CR>", "Make" },
         ["<F6>"] = { '<cmd>w <CR> <cmd>lua require("utils.compiler").cmake_run()<cr>', "Launch binary" },
-        ["<F7>"] = { '<cmd>w <CR> <cmd>lua require("utils.compiler").termdebug()<cr>', "Run Debugger" },
     }
     wk.register(bufmaps, { buffer = 0 })
 end
@@ -649,49 +647,16 @@ end
 
 -- ******************************** debug ---------------------------------------
 function M.debug()
-    -- local bufmap = {
-    --     ["<leader>"] = {
-    --         d = {
-    --             name = "debug",
-    --             r = { "<cmd>Run<CR>", "Run" },
-    --             b = { "<cmd>Break<CR>", "set breakpoint" },
-    --             C = { "<cmd>Clear<CR>", "clear breakpoints" },
-    --             c = { "<cmd>Continue<CR>", "continue to next breakpoint" },
-    --             s = { "<cmd>Step<CR>", "step into" },
-    --             o = { "<cmd>Over<CR>", "step over" },
-    --             f = { "<cmd>Finish<CR>", "Finish" },
-    --             e = { "<cmd>Stop<CR>", "Stop process" },
-    --         },
-    --     },
-    -- }
-    -- wk.register(bufmap, { buffer = 0 })
-
-    -- local maps = {
-    --     ["<leader>"] = {
-    --         d = {
-    --             a = { "<esc><cmd>Asm<cr>", "Switch to assembly buffer" },
-    --             p = { "<esc><cmd>Program<cr>", "Switch to terminal window" },
-    --             g = { "<esc><cmd>Gdb<cr>", "Switch to GDB buffer" },
-    --             v = { "<esc><cmd>Source<cr>", "Switch to vim buffer" },
-    --         },
-    --     },
-    -- }
-    -- wk.register(maps)
-    -- wk.register(maps, { mode = "t" })
-
     wk.register({
         ["<leader>"] = {
             d = {
                 name = "debug",
                 b = { "<cmd>lua require('dap').toggle_breakpoint()<CR>", "set breakpoint" },
-                E = { "<cmd>lua require('debugger').exp()<CR>", "Expressions" },
-                e = { "<cmd>lua require('dapui').float_element()<CR>", "Floating features" },
+                o = { "<cmd>lua require('dapui').float_element()<CR>", "Open floating features" },
                 f = { "<cmd>lua require('dapui').float_element('scopes', {enter = true})<CR>", "Floating Scopes" },
-                k = { "<cmd>lua require('dapui').eval()<CR>", "Evaluate Hover" },
+                e = { "<cmd>lua require('dapui').eval()<CR>", "Evaluate Hover" },
+                E = { "<cmd>lua require('debugger').exp()<CR>", "Expressions" },
                 F = { "<cmd>lua require('dapui').float_element('stacks', {enter = true})<CR>", "Floating Stacks" },
-                K = { "<cmd>lua require('dap.ui.widgets').hover()<CR>", "Hover" },
-                ["?"] = { "<cmd>lua require('debugger').frames()<CR>", "Frames" },
-                ["/"] = { "<cmd>lua require('debugger').scopes()<CR>", "Scopes" },
             },
         },
     }, { buffer = 0 })
@@ -699,19 +664,22 @@ function M.debug()
         ["<leader>d"] = {
             name = "debug",
             ["."] = { "<cmd>lua require('dap').close()<CR>", "End" },
-            u = { "<cmd>lua require('dapui').toggle()<CR>", "Finish" },
+            ["?"] = { "<cmd>lua require('debugger').frames()<CR>", "Frames" },
+            ["/"] = { "<cmd>lua require('debugger').scopes()<CR>", "Scopes" },
+            u = { "<cmd>lua require('dapui').toggle()<CR>", "Toggle all UI" },
             c = { "<cmd>lua require('dap').continue()<CR>", "continue to next breakpoint" },
             n = { "<cmd>lua require('dap').step_into()<CR>", "step into" },
             s = { "<cmd>lua require('dap').step_over()<CR>", "step over" },
             S = { "<cmd>lua require('dap').step_out()<CR>", "step Out" },
         },
-        ["<F10>"] = { "<cmd>lua require('dap').repl.toggle({},'split')<CR>", "Repl Toggle" },
+        ["<F10>"] = { "<cmd>lua require('dap').repl.toggle({height = 10},'split')<CR>", "Repl Toggle" },
     }
     wk.register({
         ["<leader>"] = {
             d = {
                 e = { "<cmd>lua require('dapui').eval()<CR>", "Evaluate" },
-                f = { "<cmd>lua require('dapui').float_element()<CR>", "Floating elements" },
+                o = { "<cmd>lua require('dapui').float_element()<CR>", "Open floating elements" },
+                E = { "<cmd>lua require('debugger').exp()<CR>", "Expressions" },
             },
         },
     }, { mode = "v", buffer = 0 })
