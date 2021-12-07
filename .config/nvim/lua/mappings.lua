@@ -652,11 +652,16 @@ function M.debug()
             d = {
                 name = "debug",
                 b = { "<cmd>lua require('dap').toggle_breakpoint()<CR>", "set breakpoint" },
+                x = { "<cmd>lua require('dap').set_exception_breakpoints()<CR>", "set breakpoint" },
                 o = { "<cmd>lua require('dapui').float_element()<CR>", "Open floating features" },
                 f = { "<cmd>lua require('dapui').float_element('scopes', {enter = true})<CR>", "Floating Scopes" },
                 e = { "<cmd>lua require('dapui').eval()<CR>", "Evaluate Hover" },
                 E = { "<cmd>lua require('debugger').exp()<CR>", "Expressions" },
                 F = { "<cmd>lua require('dapui').float_element('stacks', {enter = true})<CR>", "Floating Stacks" },
+                B = {
+                    "<cmd>lua require'dap'.toggle_breakpoint(vim.fn.input('Breakpoint condition: '))<CR>",
+                    "set breakpoint",
+                },
             },
         },
     }, { buffer = 0 })

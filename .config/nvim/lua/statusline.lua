@@ -112,9 +112,9 @@ statusline.el = function()
             local context = string.format("%s", f) -- convert to string, it may be a empty ts node
 
             if context == "vim.NIL" then
-                return " "
+                return "   "
             end
-            return " " .. context
+            return "  " .. context
         end
     end
 
@@ -147,7 +147,7 @@ statusline.el = function()
                 sections.highlight("Diag", lsp_statusline.segment),
                 sections.split,
                 sections.highlight("ScStatus", scnvim),
-                -- sections.highlight("ScStatus", scContext),
+                sections.highlight("ScStatus", scContext),
                 lsp_statusline.server_progress,
                 sections.split,
                 sections.highlight("DevIconH", file_icon),

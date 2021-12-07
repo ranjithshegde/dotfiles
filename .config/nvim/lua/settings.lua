@@ -346,7 +346,7 @@ function settings.lsp_settings()
     -- Set diagnostics to local list automatically
     u.create_augroup({ { "DiagnosticChanged", "*", "lua vim.diagnostic.setloclist({open = false})" } }, "LspLocList")
 
-    All_attach = function(client, bufnr)
+    Attach_props = function(client)
         require("mappings").nvim_lsp()
         Exec "PackerLoad lsp-status.nvim"
         Exec "PackerLoad vim-vsnip-integ"
@@ -354,10 +354,8 @@ function settings.lsp_settings()
         local lsp_status = require "lsp-status"
         lsp_status.register_progress()
         lsp_status.on_attach(client)
-        local rc = client.resolved_capabilities
         require("utils.diagnostics").init { underline = false, update_in_insert = false }
-        bo.formatexpr = "v:lua.vim.lsp.formatexpr()"
-
+        local rc = client.resolved_capabilities
         if rc.document_highlight then
             Exec "hi LspReferenceRead cterm=bold ctermbg=red guibg=#98971a"
             Exec "hi LspReferenceText cterm=bold ctermbg=red guibg=grey"
@@ -374,6 +372,11 @@ function settings.lsp_settings()
                 },
             }, "lsp_auto_format")
         end
+    end
+
+    All_attach = function(client, bufnr)
+        Attach_props(client)
+        bo.formatexpr = "v:lua.vim.lsp.formatexpr()"
     end
 
     Capabilities = vim.lsp.protocol.make_client_capabilities()
@@ -393,24 +396,10 @@ function settings.lsp_settings()
         rc.code_action = false
     end
 
-    EfmAttach = function(client)
-        require("mappings").nvim_lsp()
-        Exec "PackerLoad lsp-status.nvim"
-        Exec "PackerLoad vim-vsnip-integ"
-        vim.fn["vsnip#get_complete_items"](vim.fn["bufnr"]())
-        local lsp_status = require "lsp-status"
-        lsp_status.register_progress()
-        lsp_status.on_attach(client)
+    EfmAttach = function(client, bufnr)
+        Attach_props(client)
         local rc = client.resolved_capabilities
         rc.document_formatting = false
-        require("utils.diagnostics").init { underline = false, update_in_insert = false }
-
-        if rc.document_highlight then
-            Exec "hi LspReferenceRead cterm=bold ctermbg=red guibg=#98971a"
-            Exec "hi LspReferenceText cterm=bold ctermbg=red guibg=grey"
-            Exec "hi LspReferenceWrite cterm=bold ctermbg=red guibg= #fbf1c7"
-            u.create_cmdGroup(docHigh, buffExec, "bufgroup")
-        end
     end
 
     -- borders for floating windows
@@ -643,12 +632,26 @@ end
 ------------------------------------------------------------------------
 
 function settings.jdtls()
+    require("debugger").init()
+    local home = os.getenv "XDG_DATA_HOME"
+    local debug_path =
+        "debug-adapters/java-debug/com.microsoft.java.debug.plugin/target/com.microsoft.java.debug.plugin-*.jar"
+
     require("jdtls").start_or_attach {
-        on_attach = All_attach,
+        on_attach = function(client, bufnr)
+            Attach_props(client)
+            bo.formatexpr = "v:lua.vim.lsp.formatexpr()"
+            require("jdtls.setup").add_commands()
+            require("jdtls").setup_dap { hotcodereplace = "auto" }
+        end,
         capabilities = Capabilities,
         cmd = { "jdtls" },
+        init_options = {
+            bundles = {
+                vim.fn.glob(home .. debug_path),
+            },
+        },
     }
-    require("jdtls.setup").add_commands()
 end
 
 --------------------------------------------------------------------------
