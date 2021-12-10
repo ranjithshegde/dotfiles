@@ -4,44 +4,69 @@
 
 # Cleaning from HOME
 
-export PG_OF_PATH="$HOME"/Documents/ofWorkspace/
-export NMBGIT="$XDG_DATA_HOME"/notmuch/nmbug
-export NOTMUCH_CONFIG="$XDG_CONFIG_HOME"/notmuch/notmuchrc
-export ZPLUG_HOME=/home/ranjith/.local/share/zsh/zplug
-export ZPLUG_BIN=/home/ranjith/.local/share/bin
+# CONFIG & PATHS
 export CARGO_HOME="$XDG_DATA_HOME"/cargo
-export IPYTHONDIR="$XDG_CONFIG_HOME"/jupyter
-export _JAVA_OPTIONS=-Djava.util.prefs.userRoot="$XDG_CONFIG_HOME"/java
-export PASSWORD_STORE_DIR="$HOME"/.local/share/pass
-export RUSTUP_HOME="$XDG_DATA_HOME"/rustup
-export TERMINFO="$XDG_DATA_HOME"/terminfo
-export GTK_RC_FILES="$XDG_CONFIG_HOME"/gtk-1.0/gtkrc
-export NODE_REPL_HISTORY="$XDG_DATA_HOME"/node_repl_history
-export GNUPGHOME="$HOME"/.local/share/gnupg
-export NPM_CONFIG_USERCONFIG=$XDG_CONFIG_HOME/npm/npmrc
-export PYLINTHOME="$XDG_CACHE_HOME"/pylint
-export GTK2_RC_FILES="$XDG_CONFIG_HOME"/gtk-2.0/gtkrc
-export WGETRC="$XDG_CONFIG_HOME/wgetrc"
-export WINEPREFIX="$XDG_DATA_HOME"/wineprefixes/default
-export GOPATH="$XDG_DATA_HOME"/go
+export CUDA_CACHE_PATH="$XDG_CACHE_HOME"/nv
+export EM_CACHE="$XDG_CACHE_HOME"/emscripten/cache 
+export EM_CONFIG="$XDG_CONFIG_HOME"/emscripten/config 
+export EM_PORTS="$XDG_DATA_HOME"/emscripten/cache
+export GDBHISTFILE="$XDG_DATA_HOME"/gdb/history
 export GEM_HOME="$XDG_DATA_HOME"/gem 
 export GEM_SPEC_CACHE="$XDG_CACHE_HOME"/gem
-export GDBHISTFILE="$XDG_DATA_HOME"/gdb/history
-export PYTHONHISTFILE="$XDG_DATA_HOME"/python_history
-export __EGL_VENDOR_LIBRARY_FILENAMES="/usr/share/glvnd/egl_vendor.d/50_mesa.json"
-export PLATFORMIO_GLOBALLIB_DIR="$XDG_DATA_HOME"/platformio
-export PLATFORMIO_CORE_DIR="$XDG_DATA_HOME"/platformio
-export PLATFORMIO_PLATFORMS_DIR="$XDG_DATA_HOME"/platformio/platforms
-export PLATFORMIO_PACKAGES_DIR="$XDG_DATA_HOME"/platformio/packages
-export PLATFORMIO_CACHE_DIR="$XDG_CACHE_HOME"/platformio
+export GNUPGHOME="$HOME"/.local/share/gnupg
+export GOPATH="$XDG_DATA_HOME"/go
 export GRADLE_USER_HOME="$XDG_DATA_HOME"/gradle
-export SSB_HOME="$XDG_DATA_HOME"/zoom
-export CUDA_CACHE_PATH="$XDG_CACHE_HOME"/nv
-export MYPY_CACHE_DIR="$XDG_CACHE_HOME"/mypy
-export CWORK="$HOME"/Software/Workspaces/Cpp
+export GTK2_RC_FILES="$XDG_CONFIG_HOME"/gtk-2.0/gtkrc
+export IPYTHONDIR="$XDG_CONFIG_HOME"/jupyter
 export LESSHISTFILE="$XDG_CACHE_HOME"/less/history
-export PYTHONHISTFILE=/dev/null
-export EM_CONFIG="$XDG_CONFIG_HOME"/emscripten/config 
-export EM_CACHE="$XDG_CACHE_HOME"/emscripten/cache 
-export EM_PORTS="$XDG_DATA_HOME"/emscripten/cache
+export MYPY_CACHE_DIR="$XDG_CACHE_HOME"/mypy
+export NMBGIT="$XDG_DATA_HOME"/notmuch/nmbug
+export NODE_REPL_HISTORY="$XDG_DATA_HOME"/node_repl_history
+export NOTMUCH_CONFIG="$XDG_CONFIG_HOME"/notmuch/notmuchrc
+export NPM_CONFIG_USERCONFIG="$XDG_CONFIG_HOME"/npm/npmrc
+export PASSWORD_STORE_DIR="$HOME"/.local/share/pass
+export PLATFORMIO_CACHE_DIR="$XDG_CACHE_HOME"/platformio
+export PLATFORMIO_CORE_DIR="$XDG_DATA_HOME"/platformio
+export PLATFORMIO_GLOBALLIB_DIR="$XDG_DATA_HOME"/platformio
+export PLATFORMIO_PACKAGES_DIR="$XDG_DATA_HOME"/platformio/packages
+export PLATFORMIO_PLATFORMS_DIR="$XDG_DATA_HOME"/platformio/platforms
+export PYLINTHOME="$XDG_CACHE_HOME"/pylint
+export PYTHONHISTFILE="$XDG_DATA_HOME"/python_history
+# export PYTHONHISTFILE=/dev/null
+export RUSTUP_HOME="$XDG_DATA_HOME"/rustup
+export SSB_HOME="$XDG_DATA_HOME"/zoom
+export TERMINFO="$XDG_DATA_HOME"/terminfo
 export TIMEWARRIORDB="$XDG_DATA_HOME"/timewarrior
+export WGETRC="$XDG_CONFIG_HOME/wgetrc"
+export WINEPREFIX="$XDG_DATA_HOME"/wineprefixes/default
+export ZPLUG_BIN=/home/ranjith/.local/share/bin
+export ZPLUG_HOME=/home/ranjith/.local/share/zsh/zplug
+export _JAVA_OPTIONS=-Djava.util.prefs.userRoot="$XDG_CONFIG_HOME"/java
+export __EGL_VENDOR_LIBRARY_FILENAMES="/usr/share/glvnd/egl_vendor.d/50_mesa.json"
+
+# CUSTOM PATH ENVS
+export PG_OF_PATH="$HOME"/Documents/ofWorkspace/
+export CWORK="$HOME"/Software/Workspaces/Cpp
+
+# Addition to path...
+appendpath () {
+    case ":$PATH:" in
+        *:"$1":*)
+            ;;
+        *)
+            PATH="${PATH:+$PATH:}$1"
+    esac
+}
+
+appendpath '/home/ranjith/.local/bin'
+appendpath '/home/ranjith/.local/share/cargo/bin'
+appendpath '/home/ranjith/.local/bin/scripts'
+appendpath '/home/ranjith/.local/share/npm/bin'
+appendpath '/home/ranjith/.local/share/go/bin'
+appendpath '/home/ranjith/.local/share/gem/bin'
+appendpath '/home/ranjith/.local/share/ltex-ls/bin'
+appendpath '/home/ranjith/.local/share/gem/ruby/3.0.0/bin'
+# appendpath '/usr/lib/emsdk/upstream/bin/'
+# appendpath '/usr/lib/emsdk/node/12.18.1_64bit/bin'
+unset -f appendpath
+export PATH

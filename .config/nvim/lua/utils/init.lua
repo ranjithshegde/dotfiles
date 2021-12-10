@@ -41,6 +41,7 @@ function utils.UnloadAllModules()
         "^settings$",
         "^statusline$",
         "^utils$",
+        "^debugger$",
     }
     for k, _ in pairs(package.loaded) do
         for _, v in ipairs(unload_modules) do

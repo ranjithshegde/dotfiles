@@ -354,7 +354,7 @@ function settings.lsp_settings()
         local lsp_status = require "lsp-status"
         lsp_status.register_progress()
         lsp_status.on_attach(client)
-        require("utils.diagnostics").init { underline = false, update_in_insert = false }
+        require("utils.diagnostics").attach({ all = false, underline = false, update_in_insert = false }, client)
         local rc = client.resolved_capabilities
         if rc.document_highlight then
             Exec "hi LspReferenceRead cterm=bold ctermbg=red guibg=#98971a"
@@ -635,17 +635,17 @@ function settings.jdtls()
     require("debugger").init()
     local home = os.getenv "XDG_DATA_HOME"
     local debug_path =
-        "debug-adapters/java-debug/com.microsoft.java.debug.plugin/target/com.microsoft.java.debug.plugin-*.jar"
+        "/debug-adapters/java-debug/com.microsoft.java.debug.plugin/target/com.microsoft.java.debug.plugin-*.jar"
 
     require("jdtls").start_or_attach {
+        cmd = { "jdtls" },
         on_attach = function(client, bufnr)
             Attach_props(client)
             bo.formatexpr = "v:lua.vim.lsp.formatexpr()"
-            require("jdtls.setup").add_commands()
             require("jdtls").setup_dap { hotcodereplace = "auto" }
+            require("jdtls.setup").add_commands()
         end,
         capabilities = Capabilities,
-        cmd = { "jdtls" },
         init_options = {
             bundles = {
                 vim.fn.glob(home .. debug_path),

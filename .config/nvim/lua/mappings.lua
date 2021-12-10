@@ -655,7 +655,7 @@ function M.debug()
                 x = { "<cmd>lua require('dap').set_exception_breakpoints()<CR>", "set breakpoint" },
                 o = { "<cmd>lua require('dapui').float_element()<CR>", "Open floating features" },
                 f = { "<cmd>lua require('dapui').float_element('scopes', {enter = true})<CR>", "Floating Scopes" },
-                e = { "<cmd>lua require('dapui').eval()<CR>", "Evaluate Hover" },
+                e = { "<cmd>lua require('dapui').eval()<CR><cmd>lua require('dapui').eval()<CR>", "Evaluate Hover" },
                 E = { "<cmd>lua require('debugger').exp()<CR>", "Expressions" },
                 F = { "<cmd>lua require('dapui').float_element('stacks', {enter = true})<CR>", "Floating Stacks" },
                 B = {
@@ -673,8 +673,8 @@ function M.debug()
             ["/"] = { "<cmd>lua require('debugger').scopes()<CR>", "Scopes" },
             u = { "<cmd>lua require('dapui').toggle()<CR>", "Toggle all UI" },
             c = { "<cmd>lua require('dap').continue()<CR>", "continue to next breakpoint" },
-            n = { "<cmd>lua require('dap').step_into()<CR>", "step into" },
-            s = { "<cmd>lua require('dap').step_over()<CR>", "step over" },
+            n = { "<cmd>lua require('dap').step_over()<CR>", "step over" },
+            s = { "<cmd>lua require('dap').step_into()<CR>", "step into" },
             S = { "<cmd>lua require('dap').step_out()<CR>", "step Out" },
         },
         ["<F10>"] = { "<cmd>lua require('dap').repl.toggle({height = 10},'split')<CR>", "Repl Toggle" },
@@ -682,7 +682,7 @@ function M.debug()
     wk.register({
         ["<leader>"] = {
             d = {
-                e = { "<cmd>lua require('dapui').eval()<CR>", "Evaluate" },
+                e = { "<cmd>lua require('dapui').eval()<CR><cmd>lua require('dapui').eval()<CR>", "Evaluate" },
                 o = { "<cmd>lua require('dapui').float_element()<CR>", "Open floating elements" },
                 E = { "<cmd>lua require('debugger').exp()<CR>", "Expressions" },
             },

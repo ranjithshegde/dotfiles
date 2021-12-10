@@ -267,6 +267,10 @@ return packer.startup {
                     }
                 end,
             },
+            {
+                "nvim-telescope/telescope-dap.nvim",
+                opt = true,
+            },
         }
 
         -- Indents and chars
