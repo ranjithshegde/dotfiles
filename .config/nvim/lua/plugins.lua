@@ -76,14 +76,9 @@ return packer.startup {
             run = function()
                 fn["scnvim#install"]()
             end,
-        }
-
-        -- Ultisnips for Scnvim
-        use {
-            "SirVer/ultisnips",
-            ft = "supercollider",
-            setup = function()
-                require("settings").ultisnips()
+            config = function()
+                G.scnvim_snippet_format = "luasnip"
+                require("luasnip").snippets.supercollider = require("scnvim/utils").get_snippets()
             end,
         }
 
@@ -178,10 +173,15 @@ return packer.startup {
 
         -- completion and snippets
         use {
-            { "ranjithshegde/completion-nvim", branch = "trialNewApi" },
-            "hrsh7th/vim-vsnip",
-            { "hrsh7th/vim-vsnip-integ", opt = true },
-            { "rafamadriz/friendly-snippets", event = "InsertEnter" },
+            { "ranjithshegde/completion-nvim", branch = "luasnip" },
+            "L3MON4D3/LuaSnip",
+            {
+                "rafamadriz/friendly-snippets",
+                event = "InsertEnter",
+                config = function()
+                    require("luasnip.loaders.from_vscode").load()
+                end,
+            },
             {
                 "windwp/nvim-autopairs",
                 event = "InsertEnter",

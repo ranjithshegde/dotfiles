@@ -46,6 +46,7 @@ function M.general()
         ["<C-L>"] = { "<C-W><C-L>", "Move to left buffer" },
         ["<C-H>"] = { "<C-W><C-H>", "Move to right buffer" },
         ["<leader>e"] = "File drawer toggle",
+        -- ["<leader>f"] = { "gg=Gzz<C-o>", "Indent or format with TreeSitter" },
         -- Terminals
         ["<leader>t"] = {
             name = "Launch terminal in split",
@@ -473,18 +474,14 @@ function M.autoComplete()
     -- change completion mode
     Exec "imap <c-j> <Plug>(completion_next_source)"
     Exec "imap <c-k> <Plug>(completion_prev_source)"
-    --vsnip commapds
-    --expand
-    Exec 'imap <expr> <C-h> vsnip#expandable() ? "<Plug>(vsnip-expand)"  : "<C-h>"'
-    Exec 'smap <expr> <C-h> vsnip#expandable() ? "<Plug>(vsnip-expand)"  : "<C-h>"'
-    --expand or jump
-    Exec 'imap <expr> <C-l> vsnip#available(1) ? "<Plug>(vsnip-expand-or-jump)" : "<C-l>"'
-    Exec 'smap <expr> <C-l> vsnip#available(1) ? "<Plug>(vsnip-expand-or-jump)" : "<C-l>"'
-    --Plugs
-    -- Exec "nmap  s  <Plug>(vsnip-select-text)"
-    -- Exec "xmap  s  <Plug>(vsnip-select-text)"
-    -- Exec "nmap  S  <Plug>(vsnip-cut-text)"
-    -- Exec "xmap  S  <Plug>(vsnip-cut-text)"
+    local maps = {
+        ["<C-l>"] = { "<cmd>lua require('luasnip').jump(1)<cr>", "jump to next placeholder" },
+        ["<C-h>"] = { "<cmd>lua require('luasnip').jump(-1)<cr>", "jump to next placeholder" },
+        -- ["<C-n>"] = { "luasnip#choice_active() ? '<Plug>luasnip-next-choice' : ''", "Choose next snippet" },
+        -- ["<C-p>"] = { "luasnip#choice_active() ? '<Plug>luasnip-prev-choice' : ''", "Choose next snippet" },
+    }
+    wk.register(maps, { mode = "i" })
+    wk.register(maps, { mode = "s" })
 end
 
 -- ******************************** SuperCollider ---------------------------------------

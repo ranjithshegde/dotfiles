@@ -11,7 +11,7 @@ com! ToggleVirtual lua require('utils.diagnostics').toggle_virtual_text(vim.fn.i
 com! ToggleSigns lua require('utils.diagnostics').toggle_signs(vim.fn.input("Input server: "))
 com! ToggleUnderline lua require('utils.diagnostics').toggle_underline(vim.fn.input("Input server: "))
 com! ToggleAllDiagnostics lua require('utils.diagnostics').toggle_all_diagnostics(vim.fn.input("Input server: "))
-com! DiableDiagnostics lua require('utils.diagnostics').turn_off_diagnostics(vim.fn.input("Input server: "))
+com! DisableDiagnostics lua require('utils.diagnostics').turn_off_diagnostics(vim.fn.input("Input server: "))
 com! EnableDiagnostics lua require('utils.diagnostics').turn_on_diagnostics(vim.fn.input("Input server: "))
 com! DefaultDiagnostics lua require('utils.diagnostics').turn_on_diagnostics_default(vim.fn.input("Input server: "))
 

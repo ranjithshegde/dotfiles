@@ -282,7 +282,8 @@ function settings.completion()
     require("mappings").autoComplete()
     G.completion_chain_complete_list = {
         supercollider = {
-            { complete_items = { "UltiSnips", "path" } },
+            -- { complete_items = { "UltiSnips", "path" } },
+            { complete_items = { "snippet", "path" } },
             { mode = "<c-p>" },
             { mode = "<c-n>" },
         },
@@ -307,12 +308,8 @@ function settings.completion()
     G.completion_auto_change_source = 0
     G.completion_popup_border = "double"
     G.completion_disable_filetypes = { "TelescopePrompt", "text", "markdown", "vimwiki" }
-
-    if Op "filetype" == "supercollider" then
-        G.completion_enable_snippet = "UltiSnips"
-    else
-        G.completion_enable_snippet = "vim-vsnip"
-    end
+    require("luasnip.loaders.from_vscode").load()
+    G.completion_enable_snippet = "luasnip"
 
     u.create_augroup({
         { "FileType", "*", 'lua require"completion".on_attach()' },
@@ -349,8 +346,6 @@ function settings.lsp_settings()
     Attach_props = function(client)
         require("mappings").nvim_lsp()
         Exec "PackerLoad lsp-status.nvim"
-        Exec "PackerLoad vim-vsnip-integ"
-        vim.fn["vsnip#get_complete_items"](vim.fn["bufnr"]())
         local lsp_status = require "lsp-status"
         lsp_status.register_progress()
         lsp_status.on_attach(client)
@@ -381,6 +376,7 @@ function settings.lsp_settings()
 
     Capabilities = vim.lsp.protocol.make_client_capabilities()
     Capabilities.textDocument.completion.completionItem.snippetSupport = true
+    Capabilities.offsetEncoding = { "utf-16" }
 
     Cinit = function(client)
         require("mappings").nvim_lsp()
