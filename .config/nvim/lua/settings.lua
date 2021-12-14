@@ -650,16 +650,4 @@ function settings.jdtls()
     }
 end
 
---------------------------------------------------------------------------
-----                              Snippets                              --
---------------------------------------------------------------------------
-
-function settings.ultisnips()
-    local snippet_directories = { "UltiSnips", "scnvim-data" }
-    Var("UltiSnipsExpandTrigger", "<tab>")
-    Var("UltiSnipsJumpForwardTrigger", "<tab>")
-    Var("UltiSnipsJumpBackwardTrigger", "<c-tab>")
-    Var("UltiSnipsSnippetDirectories", snippet_directories)
-end
-
 return settings

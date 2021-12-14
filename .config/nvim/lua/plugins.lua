@@ -34,6 +34,14 @@ return packer.startup {
 
         use { "yegappan/taglist", cmd = "TlistToggle" }
 
+        -- Tim pope
+        use {
+            { "tpope/vim-surround", event = "BufRead" },
+            { "tpope/vim-unimpaired", keys = { "[", "]" } },
+            { "tpope/vim-dispatch", cmd = { "Make", "Dispatch" } },
+            { "tpope/vim-fugitive", cmd = { "G", "Git", "Gclog" } },
+        }
+
         -- vimwiki
         use {
             "vimwiki/vimwiki",
@@ -51,15 +59,6 @@ return packer.startup {
             end,
         }
 
-        -- Java Lsp
-        use {
-            "mfussenegger/nvim-jdtls",
-            ft = "java",
-            config = function()
-                require("settings").jdtls()
-            end,
-        }
-
         -- Coautoring
         use {
             "jbyuki/instant.nvim",
@@ -67,19 +66,6 @@ return packer.startup {
                 G.instant_username = "Ranjith"
             end,
             opt = true,
-        }
-
-        -- SuperCollider
-        use {
-            "davidgranstrom/scnvim",
-            ft = "supercollider",
-            run = function()
-                fn["scnvim#install"]()
-            end,
-            config = function()
-                G.scnvim_snippet_format = "luasnip"
-                require("luasnip").snippets.supercollider = require("scnvim/utils").get_snippets()
-            end,
         }
 
         -- Git Signs
@@ -100,6 +86,7 @@ return packer.startup {
             ft = { "vimwiki", "markdown" },
         }
 
+        -- Comment with TreeSitter
         use {
             "numToStr/Comment.nvim",
             keys = { "gc", "gb", { "v", "gc" }, { "v", "gb" } },
@@ -108,12 +95,17 @@ return packer.startup {
             end,
         }
 
-        -- Tim pope
+        -- SuperCollider
         use {
-            { "tpope/vim-surround", event = "BufRead" },
-            { "tpope/vim-unimpaired", keys = { "[", "]" } },
-            { "tpope/vim-dispatch", cmd = { "Make", "Dispatch" } },
-            { "tpope/vim-fugitive", cmd = { "G", "Git", "Gclog" } },
+            "davidgranstrom/scnvim",
+            ft = "supercollider",
+            run = function()
+                fn["scnvim#install"]()
+            end,
+            config = function()
+                G.scnvim_snippet_format = "luasnip"
+                require("luasnip").snippets.supercollider = require("scnvim/utils").get_snippets()
+            end,
         }
 
         -- WhichKey
@@ -143,19 +135,6 @@ return packer.startup {
             },
         }
 
-        --Lsp config and companions
-        use {
-            "neovim/nvim-lspconfig",
-            { "nvim-lua/lsp-status.nvim", opt = true },
-            {
-                "folke/lua-dev.nvim",
-                ft = "lua",
-                config = function()
-                    require("settings").luadev()
-                end,
-            },
-        }
-
         -- Colorizer
         use {
             "norcalli/nvim-colorizer.lua",
@@ -171,26 +150,43 @@ return packer.startup {
             cmd = { "ColorizerAttachToBuffer", "ColorizerToggle" },
         }
 
-        -- completion and snippets
+        --Lsp config and companions
         use {
-            { "ranjithshegde/completion-nvim", branch = "luasnip" },
-            "L3MON4D3/LuaSnip",
+            "neovim/nvim-lspconfig",
+            { "nvim-lua/lsp-status.nvim", opt = true },
             {
-                "rafamadriz/friendly-snippets",
-                event = "InsertEnter",
+                "folke/lua-dev.nvim",
+                ft = "lua",
                 config = function()
-                    require("luasnip.loaders.from_vscode").load()
+                    require("settings").luadev()
                 end,
             },
             {
-                "windwp/nvim-autopairs",
-                event = "InsertEnter",
+                "mfussenegger/nvim-jdtls",
+                ft = "java",
                 config = function()
-                    local npairs = require "nvim-autopairs"
-                    local Rule = require "nvim-autopairs.rule"
-                    npairs.setup()
-                    npairs.add_rules { Rule("|", "|", "supercollider") }
+                    require("settings").jdtls()
                 end,
+            },
+        }
+
+        -- Debugger adapter protocol
+        use {
+            {
+                "mfussenegger/nvim-dap",
+                config = function()
+                    require("debugger").setup()
+                end,
+                opt = true,
+            },
+            {
+                "rcarriga/nvim-dap-ui",
+                config = function()
+                    require("dapui").setup {
+                        sidebar = { size = 80 },
+                    }
+                end,
+                opt = true,
             },
         }
 
@@ -215,23 +211,26 @@ return packer.startup {
             },
         }
 
-        -- Debugger adapter protocol
+        -- completion and snippets
         use {
+            { "ranjithshegde/completion-nvim", branch = "luasnip" },
+            "L3MON4D3/LuaSnip",
             {
-                "mfussenegger/nvim-dap",
+                "rafamadriz/friendly-snippets",
+                event = "InsertEnter",
                 config = function()
-                    require("debugger").setup()
+                    require("luasnip.loaders.from_vscode").load()
                 end,
-                opt = true,
             },
             {
-                "rcarriga/nvim-dap-ui",
+                "windwp/nvim-autopairs",
+                event = "InsertEnter",
                 config = function()
-                    require("dapui").setup {
-                        sidebar = { size = 80 },
-                    }
+                    local npairs = require "nvim-autopairs"
+                    local Rule = require "nvim-autopairs.rule"
+                    npairs.setup()
+                    npairs.add_rules { Rule("|", "|", "supercollider") }
                 end,
-                opt = true,
             },
         }
 

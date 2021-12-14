@@ -136,6 +136,8 @@ electronics() {
 
 cpp_init() {
 
+	[[ -z $lib_name ]] && printf "Enter Package Name : " && read lib_name
+
 	mkdir "$project_name"
 	mkdir "$project_name"/src
 	mkdir "$project_name"/include
@@ -154,13 +156,29 @@ cpp_init() {
 		echo "cmake_minimum_required(VERSION 3.2.0)"
 		echo ""
 		echo "project($project_name)"
+		echo ""
+		if [[ -n $lib_name ]]; then
+			echo "find_package($lib_name REQUIRED)"
+			echo ""
+		fi
 		echo 'file(GLOB_RECURSE SOURCES'
 		echo 'src/*.cpp'
 		echo ')'
 		echo ""
 		echo "add_executable($project_name \${SOURCES})"
-		echo "target_include_directories($project_name PUBLIC \${CMAKE_CURRENT_SOURCE_DIR}/include)"
 		echo ""
+		echo "target_include_directories("
+		echo "$project_name PUBLIC"
+		echo '${CMAKE_CURRENT_SOURCE_DIR}/include'
+		echo ")"
+		echo ""
+		if [[ -n $lib_name ]]; then
+			echo "target_link_libraries("
+			echo "$project_name PUBLIC"
+			echo "\${${lib_name}_LIBRARY}"
+			echo ")"
+			echo ""
+		fi
 		echo "install(TARGETS $project_name DESTINATION /usr/local/bin)"
 	) >"$project_name"/CMakeLists.txt
 

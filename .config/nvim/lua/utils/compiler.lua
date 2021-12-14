@@ -40,7 +40,7 @@ function Compiler.set_type()
     else
         Exec "set makeprg=gcc"
         require("mappings").ctests()
-        G.debugBin = "%<"
+        G.debugBin = vim.fn.expand "%<"
     end
 end
 

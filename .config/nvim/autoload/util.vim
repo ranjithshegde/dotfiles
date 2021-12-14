@@ -30,7 +30,6 @@ func! util#WordProcessor() abort
     setlocal spell spelllang=en_us
     set complete+=k
     set thesaurus+=$HOME/.config/nvim/thesaurus/mthesaur.txt
-
     lua require('mappings').wordProcessor()
 endfu
 
