@@ -139,7 +139,7 @@ function settings.treesitter()
     require("nvim-treesitter.configs").setup {
         highlight = {
             enable = true,
-            additional_vim_regex_highlighting = { "latex", "org", "markdown" },
+            additional_vim_regex_highlighting = { "latex", "org" },
         },
         indent = { enable = true, disable = { "python", "org" } },
         autopairs = { enable = true },
@@ -308,7 +308,7 @@ function settings.completion()
     G.completion_auto_change_source = 0
     G.completion_popup_border = "double"
     G.completion_disable_filetypes = { "TelescopePrompt", "text", "markdown", "vimwiki" }
-    require("luasnip.loaders.from_vscode").load()
+    require("luasnip.loaders.from_vscode").lazy_load()
     G.completion_enable_snippet = "luasnip"
 
     u.create_augroup({
@@ -345,10 +345,12 @@ function settings.lsp_settings()
 
     Attach_props = function(client)
         require("mappings").nvim_lsp()
+
         Exec "PackerLoad lsp-status.nvim"
         local lsp_status = require "lsp-status"
         lsp_status.register_progress()
         lsp_status.on_attach(client)
+
         require("utils.diagnostics").attach({ all = false, underline = false, update_in_insert = false }, client)
         local rc = client.resolved_capabilities
         if rc.document_highlight then
@@ -423,6 +425,33 @@ function settings.langServers()
         vimls = { on_attach = All_attach, capabilities = Capabilities },
         tsserver = { on_attach = All_attach, capabilities = Capabilities },
         pyright = { on_attach = All_attach, capabilities = Capabilities },
+        ccls = {
+            on_init = Cinit,
+            handlers = {
+                ["textDocument/publishDiagnostics"] = function(...)
+                    return nil
+                end,
+                ["textDocument/signatureHelp"] = function(...)
+                    return nil
+                end,
+            },
+            init_options = { cache = { directory = "/tmp/ccls" } },
+            single_file_support = true,
+            root_dir = Lsp.util.root_pattern("compile_commands.json", "compile_flags.txt", ".git"),
+        },
+        clangd = {
+            on_attach = All_attach,
+            capabilities = Capabilities,
+            cmd = {
+                "clangd",
+                "--clang-tidy",
+                "--background-index",
+                "--all-scopes-completion",
+                "--header-insertion=iwyu",
+                "--completion-style=detailed",
+                "--cross-file-rename",
+            },
+        },
         ltex = {
             on_attach = All_attach,
             capabilities = Capabilities,
@@ -466,31 +495,6 @@ function settings.langServers()
                         executable = "zathura",
                     },
                 },
-            },
-        },
-        ccls = {
-            on_init = Cinit,
-            handlers = {
-                ["textDocument/publishDiagnostics"] = function(...)
-                    return nil
-                end,
-                ["textDocument/signatureHelp"] = function(...)
-                    return nil
-                end,
-            },
-            init_options = { cache = { directory = "/tmp/ccls" } },
-        },
-        clangd = {
-            on_attach = All_attach,
-            capabilities = Capabilities,
-            cmd = {
-                "clangd",
-                "--clang-tidy",
-                "--background-index",
-                "--all-scopes-completion",
-                "--header-insertion=iwyu",
-                "--completion-style=detailed",
-                "--cross-file-rename",
             },
         },
     }

@@ -213,7 +213,7 @@ return packer.startup {
 
         -- completion and snippets
         use {
-            { "ranjithshegde/completion-nvim", branch = "luasnip" },
+            "ranjithshegde/completion-nvim",
             "L3MON4D3/LuaSnip",
             {
                 "rafamadriz/friendly-snippets",

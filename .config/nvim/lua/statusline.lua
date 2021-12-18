@@ -87,7 +87,6 @@ statusline.el = function()
 
     local scnvim = function()
         if Op "filetype" == "supercollider" then
-            -- local tspos = Api.nvim_exec([[echo nvim_treesitter#statusline(20)]], true)
             local scstatus = "📡" .. Fn("scnvim#statusline#server_status", {})
             vim.cmd(string.format("hi ScStatus guibg=%s guifg=%s", Colors.blue, Colors.bg))
             return scstatus
@@ -109,7 +108,7 @@ statusline.el = function()
                     "for_statement",
                 },
             }
-            local context = string.format("%s", f) -- convert to string, it may be a empty ts node
+            local context = string.format("%s", f)
 
             if context == "vim.NIL" then
                 return "   "
