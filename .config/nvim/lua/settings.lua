@@ -54,6 +54,8 @@ function settings.options()
     G.loaded_ruby_provider = 0
     G.loaded_perl_provider = 0
     G.loaded_python_provider = 0
+    G.do_filetype_lua = 1
+    G.did_load_filetypes = 0
     G.tex_conceal = "abdmgs"
     o.formatoptions = {
         a = false, -- Dont format pasted code
@@ -282,13 +284,16 @@ function settings.completion()
     require("mappings").autoComplete()
     G.completion_chain_complete_list = {
         supercollider = {
-            -- { complete_items = { "UltiSnips", "path" } },
             { complete_items = { "snippet", "path" } },
             { mode = "<c-p>" },
             { mode = "<c-n>" },
         },
+        opencl = {
+            { mode = "<c-p>" },
+            { mode = "<c-n>" },
+        },
         org = {
-            { complete_items = { "snippet" } },
+            { complete_items = { "snippet", "path" } },
             { mode = "omni" },
             { mode = "<c-p>" },
             { mode = "<c-n>" },
@@ -373,7 +378,7 @@ function settings.lsp_settings()
 
     All_attach = function(client, bufnr)
         Attach_props(client)
-        bo.formatexpr = "v:lua.vim.lsp.formatexpr()"
+        -- bo.formatexpr = "v:lua.vim.lsp.formatexpr()"
     end
 
     Capabilities = vim.lsp.protocol.make_client_capabilities()
@@ -435,7 +440,7 @@ function settings.langServers()
                     return nil
                 end,
             },
-            init_options = { cache = { directory = "/tmp/ccls" } },
+            -- init_options = { cache = { directory = "/tmp/ccls" } },
             single_file_support = true,
             root_dir = Lsp.util.root_pattern("compile_commands.json", "compile_flags.txt", ".git"),
         },
@@ -453,6 +458,7 @@ function settings.langServers()
             },
         },
         ltex = {
+            filetypes = { "bib", "markdown", "org", "tex" },
             on_attach = All_attach,
             capabilities = Capabilities,
             settings = {
@@ -622,8 +628,10 @@ function settings.luadev()
             settings = { Lua = { diagnostics = { globals = { "vim", "pd" } } } },
         },
     }
-    luadev.settings.Lua.workspace.library["/usr/lib/pd/extra/pdlua"] = true
-    luadev.settings.Lua.workspace.library[vim.fn.expand "~/.config/nvim"] = true
+    -- luadev.settings.Lua.workspace.library["/usr/lib/pd/extra/pdlua"] = true
+    -- luadev.settings.Lua.workspace.library[vim.fn.expand "~/.config/nvim/"] = true
+    table.insert(luadev.settings.Lua.workspace.library, vim.fn.expand "~/.config/nvim/")
+    table.insert(luadev.settings.Lua.workspace.library, "/usr/lib/pd/extra/pdlua")
     Lsp.sumneko_lua.setup(luadev)
 end
 

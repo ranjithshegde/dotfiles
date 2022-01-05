@@ -42,7 +42,6 @@ export WINEPREFIX="$XDG_DATA_HOME"/wineprefixes/default
 export ZPLUG_BIN=/home/ranjith/.local/share/bin
 export ZPLUG_HOME=/home/ranjith/.local/share/zsh/zplug
 export _JAVA_OPTIONS=-Djava.util.prefs.userRoot="$XDG_CONFIG_HOME"/java
-export __EGL_VENDOR_LIBRARY_FILENAMES="/usr/share/glvnd/egl_vendor.d/50_mesa.json"
 
 # CUSTOM PATH ENVS
 export PG_OF_PATH="$HOME"/Documents/ofWorkspace/

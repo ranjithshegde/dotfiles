@@ -1,8 +1,0 @@
-#!/bin/sh
-
-[ "$(pamixer --get-mute)" = "true" ] && printf "🔇 muted\\n" && exit
-
-volu=$(pamixer --get-volume)
-
-printf "🔉: %s%s\n" "$volu" "%"
-

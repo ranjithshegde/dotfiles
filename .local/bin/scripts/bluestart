@@ -1,10 +1,7 @@
 #!/usr/bin/zsh
 
 modprobe bluetooth
-sleep 1
 modprobe btusb
-sleep 1
 systemctl start bluetooth
-sleep 1
 rfkill unblock all
 

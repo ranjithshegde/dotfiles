@@ -46,7 +46,6 @@ function M.general()
         ["<C-L>"] = { "<C-W><C-L>", "Move to left buffer" },
         ["<C-H>"] = { "<C-W><C-H>", "Move to right buffer" },
         ["<leader>e"] = "File drawer toggle",
-        -- ["<leader>f"] = { "gg=Gzz<C-o>", "Indent or format with TreeSitter" },
         -- Terminals
         ["<leader>t"] = {
             name = "Launch terminal in split",
@@ -289,7 +288,6 @@ function M.treesitter()
             name = "Syntax tree",
             g = {
                 name = "incremental selection",
-                -- n = "Start selection at node",
                 i = "Increment nodes",
                 s = "Increment Scope",
                 r = "Decrememnt nodes",
@@ -388,6 +386,7 @@ function M.telescope()
             t = { tele "treesitter", "TreeSitter nodes in buffer" },
             s = { tele "lsp_document_symbols", "Lsp symbols in buffer" },
             r = { tele "lsp_references", "Lsp References" },
+            z = { tele "current_buffer_fuzzy_find", "Fuzzy find in buffer" },
             S = { tele "lsp_dynamic_workspace_symbols", "Grep lsp workspace symbols" },
             k = { telF "lsp_workspace_symbols({query = vim.fn.expand('<cword>')})", "Search lsp workspace symbol" },
             d = {
@@ -414,6 +413,7 @@ function M.telescope()
                 r = { tele "oldfiles", "Vim recent files" },
                 t = { tele "help_tags", "vim help files" },
                 c = { cd_browser("C++ Practice files/dirs", "$CWORK/Practice"), "Open C practice" },
+                C = { cd_files("C++ Practice files/dirs", "$CWORK/Practice"), "Open C practice" },
                 b = {
                     telF "find_files({cwd='~/.local/bin/', prompt_title = 'Scripts and binaries in local'})",
                     "scripts & binaries",
@@ -443,8 +443,6 @@ function M.telescope()
 end
 
 -- ******************************** Git ---------------------------------------
-
--- fugitive mappings
 function M.git()
     local opts = { nowait = true, noremap = true, silent = false }
     local maps = {}
@@ -476,9 +474,7 @@ function M.autoComplete()
     Exec "imap <c-k> <Plug>(completion_prev_source)"
     local maps = {
         ["<C-l>"] = { "<cmd>lua require('luasnip').jump(1)<cr>", "jump to next placeholder" },
-        ["<C-h>"] = { "<cmd>lua require('luasnip').jump(-1)<cr>", "jump to next placeholder" },
-        -- ["<C-n>"] = { "luasnip#choice_active() ? '<Plug>luasnip-next-choice' : ''", "Choose next snippet" },
-        -- ["<C-p>"] = { "luasnip#choice_active() ? '<Plug>luasnip-prev-choice' : ''", "Choose next snippet" },
+        ["<C-h>"] = { "<cmd>lua require('luasnip').jump(-1)<cr>", "jump to prev placeholder" },
     }
     wk.register(maps, { mode = "i" })
     wk.register(maps, { mode = "s" })
@@ -499,9 +495,7 @@ function M.scnvim()
         ["<F3>"] = { '<cmd>call scnvim#sclang#send_silent("Server.local.boot")<CR>', "Boot local server" },
         ["<F4>"] = { '<cmd>call scnvim#sclang#send_silent("WFSLib.startup")<CR>', "Boot WFS server" },
         [";a"] = { "<cmd>call scnvim#util#echo_args()<cr>", "Echo arguments in commandline" },
-        ["<leader>sk"] = { "<cmd>SCNvimRecompile<cr>", "Recompile SC class library" },
-        ["<leader>rt"] = { "<cmd>SCNvimTags<cr>", "Regenerate tags" },
-        ["<leader>es"] = { "<cmd>tabnew ~/.config/SuperCollider/startup.scd<cr>", "open startup file" },
+        ["<leader>s"] = { "<cmd>tabnew ~/.config/SuperCollider/startup.scd<cr>", "open startup file" },
     }
     wk.register(bufmaps, { buffer = 0 })
 end
