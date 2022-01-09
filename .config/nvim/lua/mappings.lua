@@ -390,9 +390,9 @@ function M.telescope()
             S = { tele "lsp_dynamic_workspace_symbols", "Grep lsp workspace symbols" },
             k = { telF "lsp_workspace_symbols({query = vim.fn.expand('<cword>')})", "Search lsp workspace symbol" },
             d = {
-                name = "lsp diagnostics",
-                b = { tele "lsp_document_diagnostics", "buffer diagnostics" },
-                w = { tele "lsp_workspace_diagnostics", "Workspace diagnostics" },
+                name = "diagnostics",
+                b = { tele "diagnostics", "buffer diagnostics" },
+                w = { tele "diagnostics", "Workspace diagnostics" },
             },
             q = { tele "quickfix", "Quickfix list" },
             l = { tele "loclist", "local quickfix list" },

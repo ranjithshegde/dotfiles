@@ -7,7 +7,6 @@ require("impatient").enable_profile()
 function settings.settings()
     settings.options()
     settings.vimwiki()
-    settings.completion()
     settings.treesitter()
     settings.lsp_settings()
     settings.langServers()
@@ -133,11 +132,13 @@ function settings.treesitter()
     parser_config.org = {
         install_info = {
             url = "https://github.com/milisims/tree-sitter-org",
-            revision = "main",
+            revision = "f110024d539e676f25b72b7c80b0fd43c34264ef",
+            -- revision = "main",
             files = { "src/parser.c", "src/scanner.cc" },
         },
         filetype = "org",
     }
+    parser_config.c.used_by = "opencl"
     require("nvim-treesitter.configs").setup {
         highlight = {
             enable = true,
@@ -288,10 +289,6 @@ function settings.completion()
             { mode = "<c-p>" },
             { mode = "<c-n>" },
         },
-        opencl = {
-            { mode = "<c-p>" },
-            { mode = "<c-n>" },
-        },
         org = {
             { complete_items = { "snippet", "path" } },
             { mode = "omni" },
@@ -423,7 +420,7 @@ function settings.langServers()
         yamlls = { on_attach = All_attach },
         jsonls = { on_attach = EfmAttach },
         cssls = { on_attach = All_attach, capabilities = Capabilities },
-        openclls = { on_attach = All_attach, capabilities = Capabilities },
+        -- openclls = { on_attach = All_attach, capabilities = Capabilities },
         bashls = { on_attach = All_attach, filetypes = { "sh", "zsh" } },
         html = { on_attach = All_attach, capabilities = Capabilities },
         cmake = { on_attach = All_attach, capabilities = Capabilities },
@@ -447,6 +444,7 @@ function settings.langServers()
         clangd = {
             on_attach = All_attach,
             capabilities = Capabilities,
+            filetypes = { "c", "cpp", "opencl" },
             cmd = {
                 "clangd",
                 "--clang-tidy",
@@ -454,6 +452,8 @@ function settings.langServers()
                 "--all-scopes-completion",
                 "--header-insertion=iwyu",
                 "--completion-style=detailed",
+                "--suggest-missing-includes",
+                "--fallback-style=webkit",
                 "--cross-file-rename",
             },
         },
@@ -578,7 +578,7 @@ function settings.lsp_lintFormat()
         sh = { shellcheck, shfmt },
         zsh = { shellcheck, shfmt },
         python = { flake8, isort, black, mypy },
-        opencl = { clcc },
+        -- opencl = { clcc },
     }
     Lsp.efm.setup {
         filetypes = vim.tbl_keys(languages),
@@ -660,6 +660,36 @@ function settings.jdtls()
             },
         },
     }
+end
+
+------------------------------------------------------------------------
+--                       Custom Folds            	                  --
+------------------------------------------------------------------------
+
+function settings.folds()
+    require("pretty-fold").setup {
+        -- keep_indentation = false,
+        fill_char = "━",
+        sections = {
+            left = {
+                "━ ",
+                function()
+                    return string.rep("*", vim.v.foldlevel)
+                end,
+                " ━┫",
+                "content",
+                "┣",
+            },
+            right = {
+                "┫ ",
+                "number_of_folded_lines",
+                ": ",
+                "percentage",
+                " ┣━━",
+            },
+        },
+    }
+    require("pretty-fold.preview").setup_keybinding "l"
 end
 
 return settings

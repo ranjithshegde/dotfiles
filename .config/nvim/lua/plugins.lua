@@ -50,6 +50,15 @@ return packer.startup {
             keys = { "<leader>ww", "<leader>w<leader>w", "<leader>wi", "<leader>wt", "<leader>wn" },
         }
 
+        -- Fold text
+        use {
+            "anuvyklack/pretty-fold.nvim",
+            event = "BufEnter",
+            config = function()
+                require("settings").folds()
+            end,
+        }
+
         -- StatusLine
         use {
             "tjdevries/express_line.nvim",
@@ -213,8 +222,13 @@ return packer.startup {
 
         -- completion and snippets
         use {
-            "ranjithshegde/completion-nvim",
             "L3MON4D3/LuaSnip",
+            {
+                "ranjithshegde/completion-nvim",
+                config = function()
+                    require("settings").completion()
+                end,
+            },
             {
                 "rafamadriz/friendly-snippets",
                 event = "InsertEnter",

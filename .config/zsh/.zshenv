@@ -42,6 +42,8 @@ export WINEPREFIX="$XDG_DATA_HOME"/wineprefixes/default
 export ZPLUG_BIN=/home/ranjith/.local/share/bin
 export ZPLUG_HOME=/home/ranjith/.local/share/zsh/zplug
 export _JAVA_OPTIONS=-Djava.util.prefs.userRoot="$XDG_CONFIG_HOME"/java
+export OPENCV_OPENCL_DEVICE=NVIDIA:GPU:0
+
 
 # CUSTOM PATH ENVS
 export PG_OF_PATH="$HOME"/Documents/ofWorkspace/
