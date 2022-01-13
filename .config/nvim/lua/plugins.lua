@@ -34,6 +34,8 @@ return packer.startup {
 
         use { "yegappan/taglist", cmd = "TlistToggle" }
 
+        use { "preservim/tagbar", cmd = "TagbarToggle" }
+
         -- Tim pope
         use {
             { "tpope/vim-surround", event = "BufRead" },
@@ -53,7 +55,7 @@ return packer.startup {
         -- Fold text
         use {
             "anuvyklack/pretty-fold.nvim",
-            event = "BufEnter",
+            event = "BufReadPost",
             config = function()
                 require("settings").folds()
             end,
@@ -130,13 +132,27 @@ return packer.startup {
             end,
         }
 
+        -- quick visual range jumps
+        use {
+            "ggandor/lightspeed.nvim",
+            event = "BufReadPost",
+            config = function()
+                require("lightspeed").setup {}
+                vim.cmd "silent! unmap f"
+                vim.cmd "silent! unmap F"
+                vim.cmd "silent! unmap t"
+                vim.cmd "silent! unmap T"
+            end,
+        }
+
         -- TreeSitter
         use {
             {
                 "nvim-treesitter/nvim-treesitter",
-                requires = { "p00f/nvim-ts-rainbow", "nvim-treesitter/nvim-treesitter-textobjects" },
+                requires = "p00f/nvim-ts-rainbow",
                 run = ":TSUpdate",
             },
+            { "nvim-treesitter/nvim-treesitter-textobjects", event = "BufReadPost" },
             { "nvim-treesitter/nvim-treesitter-refactor", ft = "supercollider" },
             {
                 "nvim-treesitter/playground",
@@ -263,6 +279,7 @@ return packer.startup {
                     -- 'nvim-telescope/telescope-symbols.nvim',
                 },
             },
+            { "nvim-telescope/telescope-file-browser.nvim", opt = true },
             {
                 "nvim-telescope/telescope-project.nvim",
                 opt = true,

@@ -17,11 +17,14 @@ ctags -R -c++-kinds=+p --fields=+iaS --extras+q .
 clang-format -style=webkit -dump-config >.clang-format
 
 {
-	echo .cache
+	echo .cache/
 	echo tags
-	echo .ccls
+	echo .ccls-cache/
+    echo .clang-format
 	echo obj/
+	echo bin/
 	echo compile_commands.json
+    echo *.qbs
 } >>.gitignore
 
 st -e nvim src/ofApp.h

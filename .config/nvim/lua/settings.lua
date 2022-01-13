@@ -17,7 +17,7 @@ end
 --                              Vim basics                            --
 ------------------------------------------------------------------------
 function settings.options()
-    Exec "colo tokyonight"
+    vim.cmd "colo tokyonight"
     local tab = 4
     o.cursorline = true
     o.expandtab = true
@@ -56,17 +56,6 @@ function settings.options()
     G.do_filetype_lua = 1
     G.did_load_filetypes = 0
     G.tex_conceal = "abdmgs"
-    o.formatoptions = {
-        a = false, -- Dont format pasted code
-        t = false, -- Delegate to linter prgs/LSP
-        o = false, -- O and o don't continue comments
-        r = false, -- Return does not continue comments
-        c = true, -- comments respect textwidth
-        q = true, -- Allow formatting comments w/ gq
-        n = true, -- Recognize numbered lists
-        j = true, -- Auto-remove comments if possible.
-        ["2"] = true, -- Indent according to 2nd line
-    }
     -- Folds for filetype
     if Op "filetype" ~= "vimwiki" and Op "filetype" ~= "markdown" and Op "filetype" ~= "vim" then
         o.foldexpr = "nvim_treesitter#foldexpr()"
@@ -348,9 +337,13 @@ function settings.lsp_settings()
     Attach_props = function(client)
         require("mappings").nvim_lsp()
 
-        Exec "PackerLoad lsp-status.nvim"
+        vim.cmd "PackerLoad lsp-status.nvim"
         local lsp_status = require "lsp-status"
-        lsp_status.register_progress()
+
+        if client.name ~= "ltex" and client.name ~= "efm" then
+            lsp_status.register_progress()
+        end
+
         lsp_status.on_attach(client)
 
         require("utils.diagnostics").attach({ all = false, underline = false, update_in_insert = false }, client)
@@ -375,12 +368,14 @@ function settings.lsp_settings()
 
     All_attach = function(client, bufnr)
         Attach_props(client)
-        -- bo.formatexpr = "v:lua.vim.lsp.formatexpr()"
+        if Op "filetype" ~= "vimwiki" then
+            bo.formatexpr = "v:lua.vim.lsp.formatexpr()"
+        end
     end
 
     Capabilities = vim.lsp.protocol.make_client_capabilities()
     Capabilities.textDocument.completion.completionItem.snippetSupport = true
-    Capabilities.offsetEncoding = { "utf-16" }
+    -- Capabilities.offsetEncoding = { "utf-16" }
 
     Cinit = function(client)
         require("mappings").nvim_lsp()
@@ -420,7 +415,6 @@ function settings.langServers()
         yamlls = { on_attach = All_attach },
         jsonls = { on_attach = EfmAttach },
         cssls = { on_attach = All_attach, capabilities = Capabilities },
-        -- openclls = { on_attach = All_attach, capabilities = Capabilities },
         bashls = { on_attach = All_attach, filetypes = { "sh", "zsh" } },
         html = { on_attach = All_attach, capabilities = Capabilities },
         cmake = { on_attach = All_attach, capabilities = Capabilities },
@@ -455,6 +449,7 @@ function settings.langServers()
                 "--suggest-missing-includes",
                 "--fallback-style=webkit",
                 "--cross-file-rename",
+                "--offset-encoding=utf-32",
             },
         },
         ltex = {
@@ -595,7 +590,44 @@ end
 
 function settings.telescope()
     require("telescope").setup {
-        pickers = { find_files = { follow = true } },
+        pickers = {
+            find_files = { follow = true },
+            buffers = {
+                sort_mru = true,
+                sort_lastused = true,
+                mappings = {
+                    i = {
+                        ["<C-x>"] = function(prompt_bufnr)
+                            local current_picker = require("telescope.actions.state").get_current_picker(prompt_bufnr)
+                            local selected_bufnr = require("telescope.actions.state").get_selected_entry().bufnr
+
+                            local replacement_buffers = {}
+                            for entry in current_picker.manager:iter() do
+                                if entry.bufnr < selected_bufnr then
+                                    table.insert(replacement_buffers, 1, entry.bufnr)
+                                end
+                            end
+
+                            current_picker:delete_selection(function(selection)
+                                local bufnr = selection.bufnr
+                                local winids = vim.fn.win_findbuf(bufnr)
+                                local tabwins = vim.api.nvim_tabpage_list_wins(0)
+                                for _, winid in ipairs(winids) do
+                                    if vim.tbl_contains(tabwins, winid) then
+                                        local new_buf = vim.F.if_nil(
+                                            table.remove(replacement_buffers),
+                                            vim.api.nvim_create_buf(false, true)
+                                        )
+                                        vim.api.nvim_win_set_buf(winid, new_buf)
+                                    end
+                                end
+                                vim.api.nvim_buf_delete(bufnr, { force = true })
+                            end)
+                        end,
+                    },
+                },
+            },
+        },
         defaults = {
             vimgrep_arguments = {
                 "rg",
@@ -612,7 +644,8 @@ function settings.telescope()
             file_ignore_patterns = { "%.MOV", "%.mov", "%.mp4", "%.wav", "%.mkv", "%.gif", "%.mp3" },
         },
     }
-    Cmd "PackerLoad telescope-project.nvim"
+    vim.cmd "PackerLoad telescope-project.nvim"
+    vim.cmd "PackerLoad telescope-file-browser.nvim"
 end
 
 -----------------------------------------------------------------------
@@ -628,8 +661,6 @@ function settings.luadev()
             settings = { Lua = { diagnostics = { globals = { "vim", "pd" } } } },
         },
     }
-    -- luadev.settings.Lua.workspace.library["/usr/lib/pd/extra/pdlua"] = true
-    -- luadev.settings.Lua.workspace.library[vim.fn.expand "~/.config/nvim/"] = true
     table.insert(luadev.settings.Lua.workspace.library, vim.fn.expand "~/.config/nvim/")
     table.insert(luadev.settings.Lua.workspace.library, "/usr/lib/pd/extra/pdlua")
     Lsp.sumneko_lua.setup(luadev)
@@ -668,7 +699,15 @@ end
 
 function settings.folds()
     require("pretty-fold").setup {
-        -- keep_indentation = false,
+        matchup_patterns = {
+            { "{", "}" },
+            { "%(", ")" }, -- % to escape lua pattern char
+            { "%[", "]" }, -- % to escape lua pattern char
+            { "if%s", "end" },
+            { "do%s", "end" },
+            { "for%s", "end" },
+            { "function%s", "end" },
+        },
         fill_char = "━",
         sections = {
             left = {
@@ -678,7 +717,9 @@ function settings.folds()
                 end,
                 " ━┫",
                 "content",
-                "┣",
+                "     ",
+                "number_of_folded_lines",
+                " ┣",
             },
             right = {
                 "┫ ",

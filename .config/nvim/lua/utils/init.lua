@@ -9,7 +9,6 @@ Var = Api.nvim_set_var
 Exec = Api.nvim_command
 Op = Api.nvim_get_option
 Fn = Api.nvim_call_function
-Cmd = vim.cmd
 local browser = "qutebrowser"
 G.netrw_browsex_viewer = "xdg-open"
 
@@ -167,7 +166,7 @@ end
 
 -- Access agenda from outside orgfile
 function utils.agenda()
-    Exec "PackerLoad orgmode.nvim"
+    Exec "PackerLoad orgmode"
     require("orgmode").action "agenda.prompt"
 end
 

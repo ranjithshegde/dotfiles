@@ -311,19 +311,20 @@ function M.telescope()
 
     local cd_browser = function(prompt, cwd)
         return function()
-            require("telescope.builtin").file_browser {
+            require("telescope").extensions.file_browser.file_browser {
                 prompt_title = prompt,
                 cwd = cwd,
                 attach_mappings = function(prompt_bufnr, map)
-                    local change_dir =
-                        -- vim.api.nvim_buf_call(bufnr, function(window) end)
-                        function()
-                            local wd = require("telescope.actions.state").get_selected_entry().value
-                            require("telescope.actions.set").select(prompt_bufnr, "default")
-                            if wd:sub(-1, -1) == require("plenary.path").path.sep then
-                                vim.fn.execute("tcd " .. wd)
-                            end
+                    local change_dir = function()
+                        local wd = require("telescope.actions.state").get_selected_entry().value
+                        require("telescope.actions.set").select(prompt_bufnr, "default")
+                        if require("plenary.path"):new(wd):is_dir() then
+                            vim.fn.execute("tcd " .. wd)
+                        else
+                            local dir = vim.fn.fnamemodify(wd, ":p:h")
+                            vim.fn.execute("tcd " .. dir)
                         end
+                    end
                     map("n", "<CR>", function()
                         change_dir()
                     end)
@@ -377,32 +378,54 @@ function M.telescope()
         ["<Space>"] = {
             name = "Telescope",
             b = { tele "buffers", "Buffers" },
-            ["'"] = { tele "registers", "Registers" },
-            e = { tele "file_browser", "File browser" },
             c = { tele "commands", "Vim commands" },
             C = { tele "command_history", "Command history" },
-            m = { tele "symbols", "Unicode characters" },
-            T = { tele "tags", "Lsp Ctags" },
-            t = { tele "treesitter", "TreeSitter nodes in buffer" },
-            s = { tele "lsp_document_symbols", "Lsp symbols in buffer" },
-            r = { tele "lsp_references", "Lsp References" },
-            z = { tele "current_buffer_fuzzy_find", "Fuzzy find in buffer" },
-            S = { tele "lsp_dynamic_workspace_symbols", "Grep lsp workspace symbols" },
+            e = { telE "file_browser.file_browser()", "File browser" },
             k = { telF "lsp_workspace_symbols({query = vim.fn.expand('<cword>')})", "Search lsp workspace symbol" },
+            l = { tele "loclist", "local quickfix list" },
+            m = { tele "symbols", "Unicode characters" },
+            o = { cd_files("Org files", "~/Documents/Orgs"), "Org files" },
+            p = { telE "project.project{display_type = 'full'}", "Projects" },
+            q = { tele "quickfix", "Quickfix list" },
+            r = { tele "lsp_references", "Lsp References" },
+            s = { tele "lsp_document_symbols", "Lsp symbols in buffer" },
+            S = { tele "lsp_dynamic_workspace_symbols", "Grep lsp workspace symbols" },
+            t = { tele "tagstack", "Lsp Ctags" },
+            T = { tele "treesitter", "TreeSitter nodes in buffer" },
+            z = { tele "current_buffer_fuzzy_find", "Fuzzy find in buffer" },
+            ["'"] = { tele "marks", "Marks" },
+            ['"'] = { tele "registers", "Registers" },
+            ["/"] = { tele "grep_string", "Live grep in directory" },
+            ["]"] = { tele "tags", "Lsp Ctags" },
+            ["<Space>"] = { tele "builtin", "Builtin Searchers" },
             d = {
                 name = "diagnostics",
                 b = { tele "diagnostics", "buffer diagnostics" },
                 w = { tele "diagnostics", "Workspace diagnostics" },
             },
-            q = { tele "quickfix", "Quickfix list" },
-            l = { tele "loclist", "local quickfix list" },
+            G = {
+                name = "git commands",
+                b = { tele "git_branches", "Branches" },
+                c = { tele "git_commits", "Commit history" },
+                s = { tele "git_status", "Status" },
+                f = { tele "git_files", "Tracked files" },
+            },
             g = {
                 name = "Live grep in",
+                g = { tele "live_grep", "current directory" },
+                s = {
+                    telF "live_grep({cwd ='~/Documents/SuperCollider/',prompt_title = 'SuperCollider Workspace grep'})",
+                    "grep SuperCollider",
+                },
                 o = {
                     telF "live_grep({cwd ='~/Documents/ofWorkspace/',prompt_title = 'oF Workspace grep'})",
                     "ofWorkspace",
                 },
-                b = { tele "live_grep", "current buffer" },
+                d = {
+                    telF "live_grep({cwd ='~/.config', prompt_title = 'Dotfiles grep'})",
+                    "grep dotfiles",
+                },
+                ["?"] = { telF 'live_grep({cwd = vim.fn.input("cwd: ")})', "Choose directory" },
             },
             F = { tele "find_files", "Current directory" },
             f = {
@@ -427,17 +450,8 @@ function M.telescope()
                     "OfWorkspace",
                 },
                 s = { cd_files("SuperCollider Directory", "~/Documents/Supercollider/"), "SuperCollider files" },
+                ["?"] = { telF 'find_files({cwd = vim.fn.input("cwd: ")})', "Choose directory" },
             },
-            G = {
-                name = "git commands",
-                b = { tele "git_branches", "Branches" },
-                c = { tele "git_commits", "Commit history" },
-                s = { tele "git_status", "Status" },
-                f = { tele "git_files", "Tracked files" },
-            },
-            p = { telE "project.project{display_type = 'full'}", "Projects" },
-            K = { telF 'live_grep({cwd = vim.fn.input("cwd: ")})', "Live grep in directory" },
-            o = { cd_files("Org files", "~/Documents/Orgs"), "Org files" },
         },
     }
 end
@@ -470,8 +484,9 @@ end
 -- ******************************** Snippets ---------------------------------------
 function M.autoComplete()
     -- change completion mode
-    Exec "imap <c-j> <Plug>(completion_next_source)"
-    Exec "imap <c-k> <Plug>(completion_prev_source)"
+    vim.keymap.set("i", "<C-j>", "<Plug>(completion_next_source)")
+    vim.keymap.set("i", "<C-k>", "<Plug>(completion_prev_source)")
+
     local maps = {
         ["<C-l>"] = { "<cmd>lua require('luasnip').jump(1)<cr>", "jump to next placeholder" },
         ["<C-h>"] = { "<cmd>lua require('luasnip').jump(-1)<cr>", "jump to prev placeholder" },
@@ -482,12 +497,12 @@ end
 
 -- ******************************** SuperCollider ---------------------------------------
 function M.scnvim()
-    Exec "nmap <buffer> <F5> <Plug>(scnvim-send-block)"
-    Exec "nmap <buffer>,S <Plug>(scnvim-show-signature)"
-    Exec "imap <buffer> <F5> <esc><Plug>(scnvim-send-block)"
-    Exec "vmap <buffer> <F5> <Plug>(scnvim-send-selection)"
-    Exec "nmap <buffer> <F6> <Plug>(scnvim-send-line)"
-    Exec "imap <buffer> <F6> <esc><Plug>(scnvim-send-line)"
+    vim.keymap.set("n", "<F5>", "<Plug>(scnvim-send-block)", { buffer = true })
+    vim.keymap.set("i", "<F5>", "<esc><Plug>(scnvim-send-block)", { buffer = true })
+    vim.keymap.set("v", "<F5>", "<Plug>(scnvim-send-selection)", { buffer = true })
+    vim.keymap.set("n", "<F6>", "<Plug>(scnvim-send-line)", { buffer = true })
+    vim.keymap.set("i", "<F6>", "<Plug><esc>(scnvim-send-line)", { buffer = true })
+    vim.keymap.set("n", ",s", "<Plug>(scnvim-show-signature)", { buffer = true })
 
     local bufmaps = {
         ["<F1>"] = { "<cmd>SCNvimStart<cr>", "Launch Sclang" },
@@ -542,8 +557,6 @@ function M.makeC()
 end
 
 -- ******************************** Openframeworks Android ---------------------------------------
-
-function M.makeGradle() end
 
 -- ********************************  Simple C mappings ---------------------------------------
 
