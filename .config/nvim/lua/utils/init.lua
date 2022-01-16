@@ -170,6 +170,16 @@ function utils.agenda()
     require("orgmode").action "agenda.prompt"
 end
 
+function utils.thesaurus(cmd)
+    local url = "https://www.thesaurus.com/browse/" .. cmd
+    Exec('!qutebrowser "' .. url .. '"')
+end
+
+function utils.dictionary(cmd)
+    local url = "https://en.wiktionary.org/wiki/" .. cmd
+    Exec('!qutebrowser "' .. url .. '"')
+end
+
 -- Start Instant server
 function utils.Start()
     local id = vim.fn.input "Enter extension: "

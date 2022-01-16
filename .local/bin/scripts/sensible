@@ -3,8 +3,8 @@
 echo powersave > /sys/module/pcie_aspm/parameters/policy & 
 echo 'on' > /sys/bus/usb/devices/1-8/power/control &
 # echo 'powersave' > /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor &
-cpupower frequency-set -g powersave
+# cpupower frequency-set -g powersave
 x86_energy_perf_policy balance-power &
-asusctl profile normal -f normal -t false &
+asusctl profile -P Balanced &
 
 echo "Conservative but sensible savings"

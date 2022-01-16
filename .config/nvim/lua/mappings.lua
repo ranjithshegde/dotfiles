@@ -55,6 +55,7 @@ function M.general()
         },
         ["<F9>"] = { "<cmd>lua require('utils').toggleTerm('zsh','shell',1)<cr>", "Toggle zsh terminal" },
         ["<F10>"] = "Toggle repl for available filetypes",
+        ["<leader><Tab>"] = { "<cmd>SidebarNvimToggle<CR>", "Toggle Symbolsbar" },
     }
 
     -- vimWiki
@@ -104,13 +105,17 @@ function M.ranger()
 end
 
 function M.wordProcessor()
-    wk.register {
+    wk.register({
         zG = {
             '<cmd>call writefile([expand("<cword>")], "/usr/share/words.txt", "a")<CR>',
             "Add word to LanguageTool dictionary",
         },
         ["<leader><Space>"] = { '<cmd>g/^/pu ="\n"<CR>', "Double space entire file" },
-    }
+        [","] = {
+            K = { "<cmd>lua require('utils').dictionary(vim.fn.expand('<cword>'))<CR>", "Lookup Wikitionary" },
+            T = { "<cmd>lua require('utils').thesaurus(vim.fn.expand('<cword>'))<CR>", "Lookup Synonyms" },
+        },
+    }, { nowait = true, noremap = true, silent = true })
 end
 
 -- ******************************** language server ---------------------------------------
@@ -164,7 +169,10 @@ function M.nvim_lsp()
         },
     }
     wk.register(vmap, { mode = "v", buffer = 0 })
-    wk.register { ["<F1>"] = { "<cmd>TlistToggle<CR>", "Toggle Taglist" } }
+    wk.register {
+        ["<F1>"] = { "<cmd>TlistToggle<CR>", "Toggle Taglist" },
+        ["<F11>"] = { "<cmd>SymbolsOutline<CR>", "Toggle Symbolsbar" },
+    }
 end
 
 function M.diagnostic()
@@ -315,21 +323,33 @@ function M.telescope()
                 prompt_title = prompt,
                 cwd = cwd,
                 attach_mappings = function(prompt_bufnr, map)
-                    local change_dir = function()
+                    local change_dir = function(window)
                         local wd = require("telescope.actions.state").get_selected_entry().value
-                        require("telescope.actions.set").select(prompt_bufnr, "default")
-                        if require("plenary.path"):new(wd):is_dir() then
-                            vim.fn.execute("tcd " .. wd)
-                        else
+                        require("telescope.actions.set").select(prompt_bufnr, window)
+                        if not require("plenary.path"):new(wd):is_dir() then
+                            -- vim.fn.execute("tcd " .. wd)
+                            -- else
                             local dir = vim.fn.fnamemodify(wd, ":p:h")
                             vim.fn.execute("tcd " .. dir)
                         end
                     end
                     map("n", "<CR>", function()
-                        change_dir()
+                        change_dir "default"
                     end)
                     map("i", "<CR>", function()
-                        change_dir()
+                        change_dir "default"
+                    end)
+                    map("n", "<C-v>", function()
+                        change_dir "vertical"
+                    end)
+                    map("i", "<C-v>", function()
+                        change_dir "vertical"
+                    end)
+                    map("n", "<C-t>", function()
+                        change_dir "tab"
+                    end)
+                    map("i", "<C-t>", function()
+                        change_dir "tab"
                     end)
                     return true
                 end,
@@ -497,12 +517,12 @@ end
 
 -- ******************************** SuperCollider ---------------------------------------
 function M.scnvim()
-    vim.keymap.set("n", "<F5>", "<Plug>(scnvim-send-block)", { buffer = true })
-    vim.keymap.set("i", "<F5>", "<esc><Plug>(scnvim-send-block)", { buffer = true })
-    vim.keymap.set("v", "<F5>", "<Plug>(scnvim-send-selection)", { buffer = true })
-    vim.keymap.set("n", "<F6>", "<Plug>(scnvim-send-line)", { buffer = true })
-    vim.keymap.set("i", "<F6>", "<Plug><esc>(scnvim-send-line)", { buffer = true })
-    vim.keymap.set("n", ",s", "<Plug>(scnvim-show-signature)", { buffer = true })
+    vim.keymap.set("n", "<F5>", "<Plug>(scnvim-send-block)", { buffer = true, desc = "Evaluate SC code block" })
+    vim.keymap.set("i", "<F5>", "<esc><Plug>(scnvim-send-block)", { buffer = true, desc = "Evaluate SC code block" })
+    vim.keymap.set("v", "<F5>", "<Plug>(scnvim-send-selection)", { buffer = true, desc = "Evaluate SC visual block" })
+    vim.keymap.set("n", "<F6>", "<Plug>(scnvim-send-line)", { buffer = true, desc = "Evaluate SC line" })
+    vim.keymap.set("i", "<F6>", "<Plug><esc>(scnvim-send-line)", { buffer = true, desc = "Evaluate SC line" })
+    vim.keymap.set("n", ",s", "<Plug>(scnvim-show-signature)", { buffer = true, desc = "SC signature help" })
 
     local bufmaps = {
         ["<F1>"] = { "<cmd>SCNvimStart<cr>", "Launch Sclang" },

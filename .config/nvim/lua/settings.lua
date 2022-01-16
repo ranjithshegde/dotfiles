@@ -19,28 +19,25 @@ end
 function settings.options()
     vim.cmd "colo tokyonight"
     local tab = 4
-    o.cursorline = true
-    o.expandtab = true
-    o.hidden = true
     o.number = true
-    o.relativenumber = true
+    o.expandtab = true
+    o.cursorline = true
     o.shiftround = true
     o.splitbelow = true
     o.splitright = true
     o.termguicolors = true
+    o.relativenumber = true
     o.hlsearch = false
+    o.tabstop = tab
     o.shiftwidth = tab
     o.softtabstop = tab
-    o.tabstop = tab
-    o.conceallevel = 1
     o.scrolloff = 10
     o.updatetime = 300
     o.timeoutlen = 100
-    o.foldminlines = 1
-    o.signcolumn = "yes"
+    o.conceallevel = 1
     o.foldmethod = "expr"
-    o.spelloptions = "camel"
     o.inccommand = "split"
+    o.spelloptions = "camel"
     o.grepprg = "rg --vimgrep"
     o.fillchars = "stlnc:»,vert:║,fold:."
     -- o.listchars = "tab:<->,eol:↲,space:→"
@@ -49,13 +46,14 @@ function settings.options()
     o.clipboard:append "unnamedplus"
     o.shortmess:append "c"
     G.termdebug_wide = 1
+    G.do_filetype_lua = 1
     G.markdown_folding = 1
+    G.tex_conceal = "abdmgs"
+    G.did_load_filetypes = 0
     G.loaded_ruby_provider = 0
     G.loaded_perl_provider = 0
     G.loaded_python_provider = 0
-    G.do_filetype_lua = 1
-    G.did_load_filetypes = 0
-    G.tex_conceal = "abdmgs"
+
     -- Folds for filetype
     if Op "filetype" ~= "vimwiki" and Op "filetype" ~= "markdown" and Op "filetype" ~= "vim" then
         o.foldexpr = "nvim_treesitter#foldexpr()"
@@ -79,6 +77,10 @@ function settings.options()
         "rrhelper",
         "spellfile_plugin",
         "matchit",
+        "netrw",
+        "netrwPlugin",
+        "netrwSettings",
+        "netrwFileHandlers",
     }
 
     for _, plugin in pairs(disabled_built_ins) do
@@ -89,7 +91,8 @@ function settings.options()
     function _G.HighlightOnYank()
         vim.highlight.on_yank { higroup = "IncSearch", timeout = 200 }
     end
-    u.create_augroup({ { "TextYankPost", "*", "silent! lua HighlightOnYank()" } }, "YankHighlight")
+    vim.cmd "au TextYankPost * silent! lua HighlightOnYank()"
+    -- u.create_augroup({ { "TextYankPost", "*", "silent! lua HighlightOnYank()" } }, "YankHighlight")
 end
 
 ------------------------------------------------------------------------
@@ -569,7 +572,7 @@ function settings.lsp_lintFormat()
         lua = { stylua },
         make = { checkmake },
         vimwiki = { markdownlint },
-        markdown = { markdownlint },
+        markdown = { prettier },
         sh = { shellcheck, shfmt },
         zsh = { shellcheck, shfmt },
         python = { flake8, isort, black, mypy },
@@ -730,7 +733,41 @@ function settings.folds()
             },
         },
     }
-    require("pretty-fold.preview").setup_keybinding "l"
+    require("pretty-fold.preview").setup {
+        key = "l",
+    }
 end
+
+--[[ function settings.aerial()
+    local bufnr = Api.nvim_get_current_buf()
+    local clients = vim.lsp.get_active_clients()
+    local client
+    for _, value in ipairs(clients) do
+        if value.name ~= "efm" then
+            client = value
+        end
+    end
+    if client then
+        require("aerial").on_attach(client, bufnr)
+    end
+    require("aerial").setup {
+        filter_kind = {
+            "Class",
+            "Constructor",
+            "Enum",
+            -- "Field",
+            "File",
+            "Function",
+            "Interface",
+            "Module",
+            "Method",
+            "Namespace",
+            -- "Property",
+            "Object",
+            "Struct",
+        },
+    }
+end
+]]
 
 return settings

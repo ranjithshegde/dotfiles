@@ -32,10 +32,6 @@ return packer.startup {
 
         use { "bkad/CamelCaseMotion", opt = true }
 
-        use { "yegappan/taglist", cmd = "TlistToggle" }
-
-        use { "preservim/tagbar", cmd = "TagbarToggle" }
-
         -- Tim pope
         use {
             { "tpope/vim-surround", event = "BufRead" },
@@ -132,26 +128,28 @@ return packer.startup {
             end,
         }
 
-        -- quick visual range jumps
+        -- Taglist and sidebars
         use {
-            "ggandor/lightspeed.nvim",
-            event = "BufReadPost",
-            config = function()
-                require("lightspeed").setup {}
-                vim.cmd "silent! unmap f"
-                vim.cmd "silent! unmap F"
-                vim.cmd "silent! unmap t"
-                vim.cmd "silent! unmap T"
-            end,
+            { "yegappan/taglist", cmd = "TlistToggle" },
+            { "simrat39/symbols-outline.nvim", cmd = "SymbolsOutline" },
+            {
+                "sidebar-nvim/sidebar.nvim",
+                -- cmd = "SidebarNvimToggle",
+                config = function()
+                    require("sidebar-nvim").setup {
+                        sections = { "git", "diagnostics", "buffers", "files", "symbols" },
+                    }
+                end,
+            },
         }
 
         -- TreeSitter
         use {
             {
                 "nvim-treesitter/nvim-treesitter",
-                requires = "p00f/nvim-ts-rainbow",
                 run = ":TSUpdate",
             },
+            { "p00f/nvim-ts-rainbow", event = "BufReadPre" },
             { "nvim-treesitter/nvim-treesitter-textobjects", event = "BufReadPost" },
             { "nvim-treesitter/nvim-treesitter-refactor", ft = "supercollider" },
             {
@@ -162,10 +160,11 @@ return packer.startup {
 
         -- Colorizer
         use {
-            "norcalli/nvim-colorizer.lua",
+            "afonsocraposo/nvim-colorizer.lua",
             config = function()
                 require("colorizer").setup {
                     "*",
+                    cpp = { rgb_0x = true },
                     html = { mode = "foreground" },
                     css = { rgb_fn = true, css_fn = true },
                     "javascript",
