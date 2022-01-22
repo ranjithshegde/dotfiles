@@ -53,6 +53,7 @@ function settings.options()
     G.loaded_ruby_provider = 0
     G.loaded_perl_provider = 0
     G.loaded_python_provider = 0
+    G.symbols_outline = { auto_preview = false, width = 40 }
 
     -- Folds for filetype
     if Op "filetype" ~= "vimwiki" and Op "filetype" ~= "markdown" and Op "filetype" ~= "vim" then
@@ -61,21 +62,21 @@ function settings.options()
 
     -- ************** Disable builtin plugins ---------------------------------------------------------
     local disabled_built_ins = {
-        "gzip",
-        "zip",
-        "zipPlugin",
-        "tar",
         "fzf",
-        "shada",
+        "tar",
+        "zip",
+        "gzip",
+        "zipPlugin",
         "tarPlugin",
-        "getscript",
-        "getscriptPlugin",
         "vimball",
         "vimballPlugin",
+        "getscript",
+        "getscriptPlugin",
         "2html_plugin",
         "logipat",
         "rrhelper",
         "spellfile_plugin",
+        "shada",
         "matchit",
         "netrw",
         "netrwPlugin",
@@ -132,6 +133,31 @@ function settings.treesitter()
     }
     parser_config.c.used_by = "opencl"
     require("nvim-treesitter.configs").setup {
+        ensure_installed = {
+            "bash",
+            "bibtex",
+            "cmake",
+            "cpp",
+            "comment",
+            "css",
+            "glsl",
+            "html",
+            "java",
+            "javascript",
+            "json",
+            "latex",
+            "lua",
+            "make",
+            "markdown",
+            "org",
+            "python",
+            "query",
+            "regex",
+            "supercollider",
+            "toml",
+            "vim",
+            "yaml",
+        },
         highlight = {
             enable = true,
             additional_vim_regex_highlighting = { "latex", "org" },
@@ -149,6 +175,7 @@ function settings.treesitter()
         },
         textobjects = {
             select = {
+                -- disable = { "lua", "vim" },
                 enable = true,
                 keymaps = {
                     ["af"] = "@function.outer",
@@ -166,11 +193,6 @@ function settings.treesitter()
                     ["ad"] = "@comment.outer",
                     ["aC"] = "@call.outer",
                     ["iC"] = "@call.inner",
-                    ["iF"] = {
-                        supercollider = "(function_definition) @function",
-                        cpp = "(function_definition) @function",
-                        c = "(function_definition) @function",
-                    },
                 },
             },
             move = {
@@ -231,8 +253,8 @@ function settings.treesitter()
                 },
             },
             lsp_interop = {
-                border = "double",
                 enable = true,
+                border = "double",
                 peek_definition_code = { [";pf"] = "@function.outer", [";pc"] = "@class.outer" },
             },
         },
@@ -542,7 +564,7 @@ function settings.lsp_lintFormat()
         lintFormats = { "%f:%l:%c: %trror: %m", "%f:%l:%c: %tarning: %m", "%f:%l:%c: %tote: %m" },
     }
     local markdownlint = {
-        lintCommand = "markdownlint -s",
+        lintCommand = "markdownlint -f ${INPUT}",
         lintStdin = true,
         lintFormats = { "%f:%l %m", "%f:%l:%c %m", "%f: %l: %m" },
     }
@@ -664,8 +686,8 @@ function settings.luadev()
             settings = { Lua = { diagnostics = { globals = { "vim", "pd" } } } },
         },
     }
-    table.insert(luadev.settings.Lua.workspace.library, vim.fn.expand "~/.config/nvim/")
-    table.insert(luadev.settings.Lua.workspace.library, "/usr/lib/pd/extra/pdlua")
+    luadev.settings.Lua.workspace.library[vim.fn.expand "~/.config/nvim"] = true
+    luadev.settings.Lua.workspace.library["/usr/lib/pd/extra/pdlua"] = true
     Lsp.sumneko_lua.setup(luadev)
 end
 
@@ -737,37 +759,5 @@ function settings.folds()
         key = "l",
     }
 end
-
---[[ function settings.aerial()
-    local bufnr = Api.nvim_get_current_buf()
-    local clients = vim.lsp.get_active_clients()
-    local client
-    for _, value in ipairs(clients) do
-        if value.name ~= "efm" then
-            client = value
-        end
-    end
-    if client then
-        require("aerial").on_attach(client, bufnr)
-    end
-    require("aerial").setup {
-        filter_kind = {
-            "Class",
-            "Constructor",
-            "Enum",
-            -- "Field",
-            "File",
-            "Function",
-            "Interface",
-            "Module",
-            "Method",
-            "Namespace",
-            -- "Property",
-            "Object",
-            "Struct",
-        },
-    }
-end
-]]
 
 return settings

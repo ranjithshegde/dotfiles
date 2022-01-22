@@ -1,29 +1,5 @@
-"************************ CamelCase -------------------------------------------------
-function! util#CamelCase() abort
-    PackerLoad CamelCaseMotion
-    map <silent> w <Plug>CamelCaseMotion_w
-    map <silent> b <Plug>CamelCaseMotion_b
-    map <silent> e <Plug>CamelCaseMotion_e
-    map <silent> ge <Plug>CamelCaseMotion_ge
-    sunmap w
-    sunmap b
-    sunmap e
-    sunmap ge
-
-    omap <silent> iw <Plug>CamelCaseMotion_iw
-    xmap <silent> iw <Plug>CamelCaseMotion_iw
-    omap <silent> ib <Plug>CamelCaseMotion_ib
-    xmap <silent> ib <Plug>CamelCaseMotion_ib
-    omap <silent> ie <Plug>CamelCaseMotion_ie
-    xmap <silent> ie <Plug>CamelCaseMotion_ie
-
-    imap <silent> <S-Left> <C-o><Plug>CamelCaseMotion_b
-    imap <silent> <S-Right> <C-o><Plug>CamelCaseMotion_w
-endfunction
-
 "************** Word Processor ----------------------------------------------------
-" Word Processor 
-func! util#WordProcessor() abort
+function! util#WordProcessor() abort
     setlocal wrap
     setlocal linebreak
     setlocal noexpandtab
@@ -31,15 +7,14 @@ func! util#WordProcessor() abort
     set complete+=k
     set thesaurus+=$HOME/.config/nvim/thesaurus/mthesaur.txt
     lua require('mappings').wordProcessor()
-endfu
+endfunction
 
 "************** custom Sudo ----------------------------------------------------
-func! util#sudoWrite() abort
+function! util#sudoWrite() abort
     w !sudo tee %
-endfu
+endfunction
 
 "************************************ Ranger  --------------------------------------------------
-
 if !exists('s:choice_file_path')
     let s:choice_file_path = '/tmp/chosenfile'
 endif
@@ -69,9 +44,7 @@ function! util#OpenRangerIn(path, edit_cmd) abort
     startinsert
 endfunction
 
-
 "***************************** Better quickfixmanagement-------------------------
-
 function! util#qf_delete(bufnr) range
     " get current qflist
     let l:qfl = getqflist()
@@ -96,3 +69,28 @@ function! util#transparency() abort
     hi SignColumn guibg=none ctermbg=none
     hi EndOfBuffer guibg=none ctermbg=none
 endfunction
+
+
+"************************ CamelCase -------------------------------------------------
+function! util#CamelCase() abort
+    PackerLoad CamelCaseMotion
+    map <silent> w <Plug>CamelCaseMotion_w
+    map <silent> b <Plug>CamelCaseMotion_b
+    map <silent> e <Plug>CamelCaseMotion_e
+    map <silent> ge <Plug>CamelCaseMotion_ge
+    sunmap w
+    sunmap b
+    sunmap e
+    sunmap ge
+
+    omap <silent> iw <Plug>CamelCaseMotion_iw
+    xmap <silent> iw <Plug>CamelCaseMotion_iw
+    omap <silent> ib <Plug>CamelCaseMotion_ib
+    xmap <silent> ib <Plug>CamelCaseMotion_ib
+    omap <silent> ie <Plug>CamelCaseMotion_ie
+    xmap <silent> ie <Plug>CamelCaseMotion_ie
+
+    imap <silent> <S-Left> <C-o><Plug>CamelCaseMotion_b
+    imap <silent> <S-Right> <C-o><Plug>CamelCaseMotion_w
+endfunction
+

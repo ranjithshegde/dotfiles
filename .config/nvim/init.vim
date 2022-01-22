@@ -13,6 +13,12 @@ set tabline=%!TabLine()
 
 "************** FileTypes & AutoCompiles-----------------------------------------------
 
+augroup formatOptions
+    autocmd!
+    autocmd FileType * set formatoptions+=cqnj2
+    autocmd FileType * set formatoptions-=ator
+augroup END
+
 augroup commonFtRules
     au FileType text,tex,vimwiki,org call util#WordProcessor()
     au FileType org setlocal iskeyword+=:,#,+
@@ -33,18 +39,3 @@ augroup terminalInsertModes
     autocmd TermEnter * startinsert
     autocmd TermClose * call nvim_input('<CR>')
 augroup END
-
-"************************* Netrw management--------------------------------------------------
-" let g:netrw_browse_split = 4
-" let g:netrw_winsize = 15
-" let g:netrw_liststyle = 3
-" let g:netrw_altv = 1
-" let g:loaded_netrwFileHandlers = 1
-
-" " Quit vim is netrw is the only buffer open
-" augroup ProjectDrawer
-"     autocmd!
-"     autocmd WinEnter * if winnr('$') == 1 && getbufvar(winbufnr(winnr()), "&filetype") == "netrw" |q|endif
-"     autocmd filetype netrw nn <buffer> cd :execute "cd ".b:netrw_curdir<cr>:pwd<cr>
-" augroup END
-" nn <leader>e <cmd>Lexplore<CR>

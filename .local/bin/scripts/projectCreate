@@ -267,7 +267,7 @@ case $lang in
 	pd)
 		pdCBuild
 		;;
-	mirco)
+	micro)
 		electronics
 		;;
 esac

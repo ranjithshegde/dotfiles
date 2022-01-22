@@ -400,7 +400,8 @@ function M.telescope()
             b = { tele "buffers", "Buffers" },
             c = { tele "commands", "Vim commands" },
             C = { tele "command_history", "Command history" },
-            e = { telE "file_browser.file_browser()", "File browser" },
+            e = { telE "file_browser.file_browser({files=false})", "Folder browser" },
+            E = { telE "file_browser.file_browser()", "File browser" },
             k = { telF "lsp_workspace_symbols({query = vim.fn.expand('<cword>')})", "Search lsp workspace symbol" },
             l = { tele "loclist", "local quickfix list" },
             m = { tele "symbols", "Unicode characters" },
@@ -434,7 +435,7 @@ function M.telescope()
                 name = "Live grep in",
                 g = { tele "live_grep", "current directory" },
                 s = {
-                    telF "live_grep({cwd ='~/Documents/SuperCollider/',prompt_title = 'SuperCollider Workspace grep'})",
+                    telF "live_grep({cwd ='~/Documents/Supercollider/',prompt_title = 'SuperCollider Workspace grep'})",
                     "grep SuperCollider",
                 },
                 o = {
@@ -572,6 +573,7 @@ function M.makeC()
         ["<F4>"] = { "<cmd>w <CR> <cmd>Make Debug -j12<CR>", "Compile Debug" },
         ["<F5>"] = { "<cmd>w <CR> <cmd>Make -j12 && make RunRelease<CR>", "Compile Release" },
         ["<F6>"] = { "<cmd>w <CR> <cmd>Make RunRelease<CR>", "Run Release" },
+        ["<F8>"] = { "<cmd>w <CR> <cmd>Make -j12 && prime-run make RunRelease<CR>", "Compile Release" },
     }
     wk.register(bufmaps, { buffer = 0 })
 end

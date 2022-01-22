@@ -1,18 +1,18 @@
 -- -------------------------- Defs **********************************************************************
 local u = require "utils"
 local fn = vim.fn
-local install_path = fn.stdpath "data" .. "/site/pack/packer/start/packer.nvim"
-local packer = require "packer"
+local packer_path = fn.stdpath "data" .. "/site/pack/packer/start/packer.nvim"
+
+-- selfmanage packer
+if fn.empty(fn.glob(packer_path)) > 0 then
+    fn.system { "git", "clone", "--depth", "1", "https://github.com/wbthomason/packer.nvim", packer_path }
+end
 
 -- Plugin autocommand
+local packer = require "packer"
 u.create_augroup({
     { "BufWritePost, BufLeave", "plugins.lua", "PackerCompile" },
 }, "PluginLoad")
-
--- selfmanage packer
-if fn.empty(fn.glob(install_path)) > 0 then
-    fn.system { "git", "clone", "https://github.com/wbthomason/packer.nvim", install_path }
-end
 
 --------------------------------------------------------------------------------------------------------
 --				 Plugins                                            							      --
@@ -134,10 +134,11 @@ return packer.startup {
             { "simrat39/symbols-outline.nvim", cmd = "SymbolsOutline" },
             {
                 "sidebar-nvim/sidebar.nvim",
-                -- cmd = "SidebarNvimToggle",
+                -- branch = "dev",
+                cmd = "SidebarNvimToggle",
                 config = function()
                     require("sidebar-nvim").setup {
-                        sections = { "git", "diagnostics", "buffers", "files", "symbols" },
+                        sections = { "buffers", "files", "symbols" },
                     }
                 end,
             },
