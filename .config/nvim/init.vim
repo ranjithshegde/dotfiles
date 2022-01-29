@@ -23,7 +23,7 @@ augroup commonFtRules
     au FileType text,tex,vimwiki,org call util#WordProcessor()
     au FileType org setlocal iskeyword+=:,#,+
     au FileType vim nn <silent>,K <cmd>exe 'h '.expand('<cword>')<CR>
-augroup end 
+augroup END 
 
 augroup MakeDispatch
     au!
@@ -31,6 +31,11 @@ augroup MakeDispatch
                 \ nn <F10> <cmd>lua require('utils').toggleTerm(vim.g.repl, "repl", 0)<CR> |
                 \ tno <F10> <esc><cmd>lua require('utils').toggleTerm(vim.g.repl, "repl", 0)<CR>
 augroup END
+
+augroup PluginLoad
+    autocmd!
+    autocmd BufWritePost plugins.lua PackerCompile
+augroup END 
 
 "************************ Terminal management -------------------------------------------------
 augroup terminalInsertModes

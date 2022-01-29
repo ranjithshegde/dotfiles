@@ -8,16 +8,10 @@ if fn.empty(fn.glob(packer_path)) > 0 then
     fn.system { "git", "clone", "--depth", "1", "https://github.com/wbthomason/packer.nvim", packer_path }
 end
 
--- Plugin autocommand
-local packer = require "packer"
-u.create_augroup({
-    { "BufWritePost, BufLeave", "plugins.lua", "PackerCompile" },
-}, "PluginLoad")
-
 --------------------------------------------------------------------------------------------------------
 --				 Plugins                                            							      --
 --------------------------------------------------------------------------------------------------------
-
+local packer = require "packer"
 return packer.startup {
     function(use)
         use "wbthomason/packer.nvim"
@@ -215,6 +209,26 @@ return packer.startup {
             },
         }
 
+        -- Indents and chars
+        use {
+            "lukas-reineke/indent-blankline.nvim",
+            config = function()
+                G.indent_blankline_char = "┊"
+                G.indent_blankline_char_highlight = "LineNr"
+                G.indent_blankline_use_treesitter = true
+                G.indent_blankline_show_current_context = true
+                G.indent_blankline_buftype_exclude = { "terminal", "nofile" }
+                G.indent_blankline_filetype_exclude = { "help", "packer", "taglist" }
+                -- stylua: ignore
+                G.indent_blankline_context_patterns = {
+                    "^if", "^for", "^case", "block", "class", "^table", "return", "^while", "method",
+                    "^public", "^switch", "^object", "inherits", "function", "^private", "arguments", "^protected",
+                    "jsx_element", "jsx_element", "else_clause", "if_statement", "catch_clause", "try_statement",
+                    "operation_type", "access_specifier", "import_statement", "jsx_self_closing_element",
+                }
+            end,
+        }
+
         -- vim Orgmode
         use {
             {
@@ -276,7 +290,6 @@ return packer.startup {
                 requires = {
                     "nvim-lua/popup.nvim",
                     "nvim-lua/plenary.nvim",
-                    -- 'nvim-telescope/telescope-symbols.nvim',
                 },
             },
             { "nvim-telescope/telescope-file-browser.nvim", opt = true },
@@ -301,48 +314,6 @@ return packer.startup {
                 "nvim-telescope/telescope-dap.nvim",
                 opt = true,
             },
-        }
-
-        -- Indents and chars
-        use {
-            "lukas-reineke/indent-blankline.nvim",
-            config = function()
-                G.indent_blankline_char = "┊"
-                G.indent_blankline_char_highlight = "LineNr"
-                G.indent_blankline_use_treesitter = true
-                G.indent_blankline_show_current_context = true
-                G.indent_blankline_buftype_exclude = { "terminal", "nofile" }
-                G.indent_blankline_filetype_exclude = { "help", "packer", "taglist" }
-                G.indent_blankline_context_patterns = {
-                    "class",
-                    "return",
-                    "function",
-                    "method",
-                    "^if",
-                    "^while",
-                    "jsx_element",
-                    "^for",
-                    "inherits",
-                    "access_specifier",
-                    "^object",
-                    "^table",
-                    "block",
-                    "arguments",
-                    "^case",
-                    "^public",
-                    "^private",
-                    "^protected",
-                    "^switch",
-                    "if_statement",
-                    "else_clause",
-                    "jsx_element",
-                    "jsx_self_closing_element",
-                    "try_statement",
-                    "catch_clause",
-                    "import_statement",
-                    "operation_type",
-                }
-            end,
         }
     end,
     config = {

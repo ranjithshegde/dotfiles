@@ -65,6 +65,20 @@ function utils.Restart()
     Exec "doautocmd VimEnter"
 end
 
+function utils.fs()
+    if vim.loop.fs_stat(vim.fn.expand "<cfile>") then
+        vim.cmd "e <cfile>"
+        vim.cmd "lcd %:h:t"
+    else
+        print "Not a file"
+    end
+end
+
+function utils.back()
+    vim.cmd "bprevious"
+    vim.cmd "lcd %:p:h"
+end
+
 ------------------------------------------------------------------------
 --                              AutoCommands                          --
 ------------------------------------------------------------------------

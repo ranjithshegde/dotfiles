@@ -43,6 +43,7 @@ function settings.options()
     -- o.listchars = "tab:<->,eol:↲,space:→"
     o.completeopt = "menuone,noinsert,noselect"
     o.dictionary = os.getenv "XDG_DATA_HOME" .. "/dict/words"
+    o.sessionoptions:append "terminal,tabpages"
     o.clipboard:append "unnamedplus"
     o.shortmess:append "c"
     G.termdebug_wide = 1
@@ -93,7 +94,6 @@ function settings.options()
         vim.highlight.on_yank { higroup = "IncSearch", timeout = 200 }
     end
     vim.cmd "au TextYankPost * silent! lua HighlightOnYank()"
-    -- u.create_augroup({ { "TextYankPost", "*", "silent! lua HighlightOnYank()" } }, "YankHighlight")
 end
 
 ------------------------------------------------------------------------

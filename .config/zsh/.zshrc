@@ -49,6 +49,7 @@ alias wget --hsts-file="$XDG_CACHE_HOME/wget-hsts"
 alias config='/usr/bin/git --git-dir=/home/ranjith/Software/Workspaces/Repos/dotfiles --work-tree=/home/ranjith'
 alias cvim='GIT_DIR=/home/ranjith/Software/Workspaces/Repos/dotfiles GIT_WORK_TREE=$HOME vim'
 alias bs='browser-sync start --server --files "*.js, *.html, *.css"'
+alias paclist="expac --timefmt='%Y-%m-%d %T' '%l\t%n' | sort | tail -n 100"
 
 VISUAL=editor
 # VISUAL='nvr -s --nostart --remote-tab-wait +"set bufhidden=delete"'

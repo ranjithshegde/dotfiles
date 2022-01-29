@@ -33,10 +33,6 @@ Debugger.adapters = function()
         type = "executable",
         command = os.getenv "XDG_DATA_HOME" .. "/debug-adapters/cpptools/extension/debugAdapters/bin/OpenDebugAD7",
     }
-    dap.adapters.prime = {
-        type = "executable",
-        command = "/usr/local/bin/prime-debug",
-    }
     dap.adapters.python = {
         type = "executable",
         command = "python",
@@ -123,12 +119,11 @@ Debugger.configs = function()
         },
         {
             name = "Launch vscode-gdb on Nvidia",
-            -- type = "prime",
             type = "cppdbg",
             request = "launch",
             program = function()
                 if G.debugBin then
-                    return "/usr/bin/prime-run ./" .. G.debugBin
+                    return G.debugBin
                 else
                     return vim.fn.input("Path to executable: ", vim.fn.getcwd() .. "/", "file")
                 end
@@ -139,7 +134,7 @@ Debugger.configs = function()
             stopOnEntry = false,
             showDisplayString = true,
             MIMode = "gdb",
-            miDebuggerPath = "/usr/bin/gdb",
+            miDebuggerPath = "/usr/local/bin/prime-debug",
             setupCommands = {
                 { text = "-enable-pretty-printing", description = "enable pretty printing", ignoreFailures = true },
             },
