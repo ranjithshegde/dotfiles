@@ -40,12 +40,11 @@ function M.general()
         --Quickfix
         ["-"] = { "<cmd>lua require('utils.qf').toggle_qf('q')<CR>", "Toggle quickfix" },
         ["_"] = { "<cmd>lua require('utils.qf').toggle_qf('l')<CR>", "Toggle loclist" },
-        -- Window movement
-        ["<C-J>"] = { "<C-W><C-J>", "Move to down buffer" },
-        ["<C-K>"] = { "<C-W><C-K>", "Move to up buffer" },
-        ["<C-L>"] = { "<C-W><C-L>", "Move to left buffer" },
-        ["<C-H>"] = { "<C-W><C-H>", "Move to right buffer" },
-        ["<leader>e"] = "File drawer toggle",
+        -- -- Window movement
+        -- ["<C-J>"] = { "<C-W><C-J>", "Move to down buffer" },
+        -- ["<C-K>"] = { "<C-W><C-K>", "Move to up buffer" },
+        -- ["<C-L>"] = { "<C-W><C-L>", "Move to left buffer" },
+        -- ["<C-H>"] = { "<C-W><C-H>", "Move to right buffer" },
         -- Terminals
         ["<leader>t"] = {
             name = "Launch terminal in split",

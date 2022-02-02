@@ -15,8 +15,15 @@ set tabline=%!TabLine()
 
 augroup formatOptions
     autocmd!
-    autocmd FileType * set formatoptions+=cqnj2
-    autocmd FileType * set formatoptions-=ator
+    autocmd FileType * set formatoptions+=c |
+                \   set formatoptions+=q |
+                \   set formatoptions+=n |
+                \   set formatoptions+=j |
+                \   set formatoptions+=2 |
+                \   set formatoptions-=a |
+                \   set formatoptions-=t |
+                \   set formatoptions-=o |
+                \   set formatoptions-=r
 augroup END
 
 augroup commonFtRules

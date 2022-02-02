@@ -53,7 +53,7 @@ function settings.options()
     G.did_load_filetypes = 0
     G.loaded_ruby_provider = 0
     G.loaded_perl_provider = 0
-    G.loaded_python_provider = 0
+    -- G.loaded_python_provider = 0
     G.symbols_outline = { auto_preview = false, width = 40 }
 
     -- Folds for filetype
@@ -126,7 +126,6 @@ function settings.treesitter()
         install_info = {
             url = "https://github.com/milisims/tree-sitter-org",
             revision = "f110024d539e676f25b72b7c80b0fd43c34264ef",
-            -- revision = "main",
             files = { "src/parser.c", "src/scanner.cc" },
         },
         filetype = "org",
@@ -162,7 +161,7 @@ function settings.treesitter()
             enable = true,
             additional_vim_regex_highlighting = { "latex", "org" },
         },
-        indent = { enable = true, disable = { "python", "org" } },
+        indent = { enable = true, disable = { "python", "org", "vim" } },
         autopairs = { enable = true },
         incremental_selection = {
             enable = true,

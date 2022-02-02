@@ -2313,13 +2313,13 @@
 #dither-depth=0
 
 # Desaturation strength (float)
-#desat-strength=0.750000
+#desat-strength=0.000000
 
 # Desaturation exponent (float)
-#desat-exponent=1.500000
+#desat-exponent=0.000000
 
 # Desaturation base (float)
-#desat-base=0.180000
+#desat-base=0.000000
 
 # Maximum brightness boost (float)
 #max-boost=0.000000
@@ -4253,7 +4253,7 @@ qt-privacy-ask=0
 #random=0
 
 # Repeat all (boolean)
-#loop=0
+loop=1
 
 # Repeat current item (boolean)
 #repeat=0

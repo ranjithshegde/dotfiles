@@ -66,6 +66,7 @@
         "format-alt": "{time}{icon}",
         "format-icons": [" ", " ", " ", " ", " ", " ", " ", " "],
         "tooltip": false,
+        "on-click": "alacritty -e sudo powertop"
     },
     "clock": {
         "format": "{:%a, %d %b %H:%M}",
