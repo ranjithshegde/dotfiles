@@ -111,26 +111,20 @@ zplug "zsh-users/zsh-syntax-highlighting"
 
 zplug "agura-lex/find-the-command"
 
-zplug romkatv/powerlevel10k, as:theme, depth:1
+zplug 'romkatv/powerlevel10k', as:theme, depth:1
 
 zplug "wfxr/forgit"
-
-# zplug "whjvenyl/fasd"
-
-# zplug "marlonrichert/zsh-autocomplete"
-
-# zplug "mafredri/zsh-async", from:"github", use:"async.zsh"
-
-# zplug "Tarrasch/zsh-bd"
 
 zplug load 
 
 
-source $ZPLUG_HOME/repos/agura-lex/find-the-command/usr/share/doc/find-the-command/ftc.zsh
-source $ZPLUG_HOME/repos/zsh-users/zsh-history-substring-search/zsh-history-substring-search.zsh
+source "$ZPLUG_HOME"/repos/agura-lex/find-the-command/usr/share/doc/find-the-command/ftc.zsh
+source "$ZPLUG_HOME"/repos/zsh-users/zsh-history-substring-search/zsh-history-substring-search.zsh
 
 source /usr/share/fzf/key-bindings.zsh
 source /usr/share/fzf/completion.zsh
+
+# source "$ZDOTDIR"/functions/status.sh
 
 eval "`pip completion --zsh`"
 

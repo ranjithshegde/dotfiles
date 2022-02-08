@@ -29,6 +29,7 @@ statusline.el = function()
             i = "  ✎ ",
             c = "  ⌨ ",
             v = "  ✄ ",
+            V = "  ✄ ",
             [""] = "  ✄ ",
             t = "zsh  ▧ ",
         }
@@ -38,6 +39,7 @@ statusline.el = function()
             i = Colors.orange,
             c = Colors.yellow,
             v = Colors.cyan,
+            V = Colors.cyan,
             [""] = Colors.cyan,
             t = Colors.purple,
         }
@@ -47,7 +49,7 @@ statusline.el = function()
         local current_bg = mode_color[vim.fn.mode()]
         local current_fg = Colors.white
         -- Set color
-        vim.cmd(string.format("hi ElViMode guibg=%s guifg=%s", current_bg, current_fg))
+        Api.nvim_set_hl(0, "ElViMode", { fg = current_fg, bg = current_bg })
         return current_mode
     end
 
@@ -79,7 +81,7 @@ statusline.el = function()
                 index = 1
             end
         end
-        vim.cmd(string.format("hi ElScroll guibg=%s guifg=%s", Colors.yellow, Colors.purple))
+        Api.nvim_set_hl(0, "ElScroll", { fg = Colors.purple, bg = Colors.yellow })
         return chars[index]
     end
 
@@ -88,7 +90,7 @@ statusline.el = function()
     local scnvim = function()
         if Op "filetype" == "supercollider" then
             local scstatus = "📡" .. Fn("scnvim#statusline#server_status", {})
-            vim.cmd(string.format("hi ScStatus guibg=%s guifg=%s", Colors.blue, Colors.bg))
+            Api.nvim_set_hl(0, "ScStatus", { bg = Colors.blue, fg = Colors.bg })
             return scstatus
         end
     end
@@ -120,7 +122,7 @@ statusline.el = function()
     --*********************************** Git branch ---------------------------------
     local git_branch = subscribe.buf_autocmd("el_git_branch", "BufEnter", function(window, buffer)
         local branch = extensions.git_branch(window, buffer)
-        vim.cmd(string.format("hi ElGitBranch guibg=%s guifg=%s", Colors.bg, Colors.yellow))
+        Api.nvim_set_hl(0, "ElGitBranch", { bg = Colors.bg, fg = Colors.yellow })
         if branch then
             vim.fn.execute "PackerLoad gitsigns.nvim"
             return " " .. extensions.git_icon() .. " " .. branch
@@ -129,7 +131,7 @@ statusline.el = function()
 
     --*********************************** Git sign changes ---------------------------------
     local git_changes = subscribe.buf_autocmd("el_git_changes", "BufWritePost", function(window, buffer)
-        vim.cmd(string.format("hi ElGitDiff guibg=%s guifg=%s", Colors.bg, Colors.blue))
+        Api.nvim_set_hl(0, "ElGitDiff", { bg = Colors.bg, fg = Colors.blue })
         return extensions.git_changes(window, buffer)
     end)
 

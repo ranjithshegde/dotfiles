@@ -6,7 +6,6 @@ https://philtgun.me/2017/02/04/leap-synth/ LEAP Synthesizer in Pure Data
 https://thevaluable.dev/vim-search-find-replace/ Vim Search, Find and Replace: a Detailed Guide
 https://forum.openframeworks.cc/t/audio-programming-basics/34392/3 Audio programming basics - beginners - openFrameworks
 https://castel.dev/post/lecture-notes-1/ How I'm able to take notes in mathematics lectures using LaTeX and Vim | Gilles Castel
-https://gitlab.com/famiu/dot-nvim/-/tree/master/lua/config/lsp lua/config/lsp · master · Famiu Haque / dot-nvim · GitLab
 https://forum.pdpatchrepo.info/topic/13134/things-i-wish-i-had-known-when-i-started-pd/27 "Things I wish I had known when I started Pd" | PURE DATA forum~
 https://github.com/noib3/dotfil3s/tree/master/defaults/neovim/after/ftplugin/tex dotfil3s/defaults/neovim/after/ftplugin/tex at master · noib3/dotfil3s
 https://github.com/jeonghopark/SketchSynth-Simple jeonghopark/SketchSynth-Simple
@@ -18,15 +17,11 @@ https://hinduism.stackexchange.com/questions/16182/what-exactly-is-a-leela-%E0%A
 http://www.rangashree.com/bharatanatyam-description.html Description of Bharatanatyam | Dances of India | Rangashree
 https://nikhiletc.wordpress.com/2015/12/16/improvisation-and-the-aesthetic-of-carnatic-music/ Improvisation and the #aesthetic of Carnatic music – Nikhil, etc.
 https://www.raag-hindustani.com/Improvisation.html Improvisation in Indian Classical Music - Raag Hindustani
-http://blog.ezyang.com/2010/03/vim-textwidth/ How to use Vim’s textwidth like a pro : ezyang’s blog
 http://www.yolinux.com/TUTORIALS/LinuxTutorialAdvanced_vi.html VI and VIM editor: Tutorial and advanced features
 http://www.ottobib.com/works-cited/aec18a56c0 Bibliography and Works Cited Generator for MLA, APA, Wikipedia and Bibtex - OttoBib.com
-https://www.soundonsound.com/techniques/line-arrays-explained Line Arrays Explained
 https://medium.com/@chasinglogic/the-definitive-guide-to-password-store-c337a8f023a1 The Definitive Guide to password-store | by Mathew Robinson | Medium
 https://rafaelleru.github.io/blog/quickfix-autocomands/ Toggle vim QuickFix list, the right way - Rafael Leyva Ruiz
 https://www.runnersworld.com/beginner/a20846512/im-overweight-and-i-want-to-run-a-half-where-do-i-start/ I'm Overweight and I Want to Run a Half. Where Do I Start? | Runner's World
-https://fellrnr.com/wiki/Galloway Jeff Galloway's Marathon: You Can Do It! - Fellrnr.com, Running tips
-https://fellrnr.com/wiki/Higdon Hal Higdon's Ultimate Training Guide - Fellrnr.com, Running tips
 https://github.com/pure-data/externals-howto pure-data/externals-howto: How-To write externals for Pd
 https://encreative.blogspot.com/2019/06/opengl-buffers-in-openframeworks.html Creating particles with compute shaders in openFrameworks
 https://learnopengl.com/Advanced-OpenGL/Geometry-Shader LearnOpenGL - Geometry Shader
@@ -37,10 +32,8 @@ http://www.howardism.org/Technical/Emacs/capturing-intro.html Org Capturing Intr
 https://www.edaboard.com/threads/time-reversal-of-a-signal-in-convolution.259423/ Time reversal of a signal in convolution | Forum for Electronics
 https://dsp.stackexchange.com/questions/66193/time-reversal-of-input-signals-in-convolution Time reversal of input signals in convolution - Signal Processing Stack Exchange
 https://forum.openframeworks.cc/t/smooth-camera-path-following-tips/26633 Smooth camera path following tips - advanced - openFrameworks
-https://github.com/jose-elias-alvarez/null-ls.nvim/blob/c69a7dc52a9c316a9e4e80e1aa2455777b5a7855/lua/null-ls/builtins/completion/vsnip.lua null-ls.nvim/vsnip.lua at c69a7dc52a9c316a9e4e80e1aa2455777b5a7855 · jose-elias-alvarez/null-ls.nvim
-https://github.com/neovim/neovim/blob/73b35ef10f95536874bfa147c44f62c4fea08f0f/runtime/lua/vim/lsp/util.lua#L616-L622 neovim/util.lua at 73b35ef10f95536874bfa147c44f62c4fea08f0f · neovim/neovim
-https://github.com/mfussenegger/nvim-lsp-compl/blob/c9576480f7d7575590f785455b50dc1cb803d961/lua/lsp_compl.lua#L324-L366 nvim-lsp-compl/lsp_compl.lua at c9576480f7d7575590f785455b50dc1cb803d961 · mfussenegger/nvim-lsp-compl
 https://zignar.net/2021/05/14/neovim-completion-pluign-building-blocks/ Neovim completion plugin building blocks
 https://gist.github.com/Twinklebear/5393665 OpenCL/OpenGL trying to tweak a texture from a kernel and draw the tweaked one
 https://stackoverflow.com/questions/13891981/opengl-opencl-interop-opencl-rendering-to-texture-trouble c - OpenGL/OpenCL interop, OpenCL rendering to texture trouble - Stack Overflow
 https://community.khronos.org/t/opencl-opengl-2d-texture-interop/2867 OpenCL - OpenGL 2D texture interop - OpenCL - Khronos Forums
+https://forum.openframeworks.cc/t/the-best-way-to-draw-a-filled-hexagons-in-ofpath-or-ofpolyline/24844 The best way to draw a (filled) hexagons in ofPath or ofPolyline - beginners - openFrameworks

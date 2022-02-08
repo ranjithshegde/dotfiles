@@ -18,13 +18,17 @@ clang-format -style=webkit -dump-config >.clang-format
 
 {
 	echo .cache/
-	echo tags
 	echo .ccls-cache/
     echo .clang-format
-	echo obj/
-	echo bin/
+	echo tags
 	echo compile_commands.json
     echo *.qbs
+	echo obj/
+    echo bin/*
+    echo !bin/data
+    echo bin/data/*
+    echo !bin/data/*.vert
+    echo !bin/data/*.frag
 } >>.gitignore
 
 st -e nvim src/ofApp.h

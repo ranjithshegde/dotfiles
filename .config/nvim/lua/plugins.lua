@@ -18,7 +18,11 @@ return packer.startup {
 
         use "lewis6991/impatient.nvim"
 
-        use "folke/tokyonight.nvim"
+        -- use "lewis6991/github_dark.nvim"
+
+        use "lvim-tech/lvim-colorscheme"
+
+        -- use "folke/tokyonight.nvim"
 
         use { "m-pilia/vim-ccls", ft = "cpp" }
 
@@ -125,7 +129,7 @@ return packer.startup {
         -- Taglist and sidebars
         use {
             { "yegappan/taglist", cmd = "TlistToggle" },
-            { "simrat39/symbols-outline.nvim", cmd = "SymbolsOutline" },
+            -- { "simrat39/symbols-outline.nvim", cmd = "SymbolsOutline" },
             {
                 "sidebar-nvim/sidebar.nvim",
                 -- branch = "dev",
@@ -147,10 +151,10 @@ return packer.startup {
             { "p00f/nvim-ts-rainbow", event = "BufReadPre" },
             { "nvim-treesitter/nvim-treesitter-textobjects", event = "BufReadPost" },
             { "nvim-treesitter/nvim-treesitter-refactor", ft = "supercollider" },
-            {
-                "nvim-treesitter/playground",
-                cmd = { "TSPlaygroundToggle", "TSHighlightCapturesUnderCursor" },
-            },
+            -- {
+            --     "nvim-treesitter/playground",
+            --     cmd = { "TSPlaygroundToggle", "TSHighlightCapturesUnderCursor" },
+            -- },
         }
 
         -- Colorizer
@@ -293,6 +297,7 @@ return packer.startup {
                 },
             },
             { "nvim-telescope/telescope-file-browser.nvim", opt = true },
+            { "nvim-telescope/telescope-fzf-native.nvim", opt = true, run = "make" },
             {
                 "nvim-telescope/telescope-project.nvim",
                 opt = true,

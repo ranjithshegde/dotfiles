@@ -17,7 +17,7 @@ end
 --                              Vim basics                            --
 ------------------------------------------------------------------------
 function settings.options()
-    vim.cmd "colo tokyonight"
+    vim.cmd "colo lvim"
     local tab = 4
     o.number = true
     o.expandtab = true
@@ -53,11 +53,11 @@ function settings.options()
     G.did_load_filetypes = 0
     G.loaded_ruby_provider = 0
     G.loaded_perl_provider = 0
-    -- G.loaded_python_provider = 0
     G.symbols_outline = { auto_preview = false, width = 40 }
 
     -- Folds for filetype
-    if Op "filetype" ~= "vimwiki" and Op "filetype" ~= "markdown" and Op "filetype" ~= "vim" then
+    -- if Op "filetype" ~= "vimwiki" and Op "filetype" ~= "markdown" and Op "filetype" ~= "vim" then
+    if Op "filetype" ~= "vimwiki" and Op "filetype" ~= "markdown" then
         o.foldexpr = "nvim_treesitter#foldexpr()"
     end
 
@@ -130,7 +130,8 @@ function settings.treesitter()
         },
         filetype = "org",
     }
-    parser_config.c.used_by = "opencl"
+    local ft_to_parser = require("nvim-treesitter.parsers").filetype_to_parsername
+    ft_to_parser.opencl = "c"
     require("nvim-treesitter.configs").setup {
         ensure_installed = {
             "bash",
@@ -665,11 +666,26 @@ function settings.telescope()
             },
             prompt_prefix = "❯ ",
             selection_caret = "❯ ",
-            file_ignore_patterns = { "%.MOV", "%.mov", "%.mp4", "%.wav", "%.mkv", "%.gif", "%.mp3" },
+            file_ignore_patterns = {
+                "%.MOV",
+                "%.mov",
+                "%.mp4",
+                "%.wav",
+                "%.WAV",
+                "%.mkv",
+                "%.gif",
+                "%.mp3",
+                "%.m4a",
+                "%.au",
+            },
         },
     }
+
+    vim.cmd "PackerLoad telescope-fzf-native.nvim"
+    require("telescope").load_extension "fzf"
     vim.cmd "PackerLoad telescope-project.nvim"
     vim.cmd "PackerLoad telescope-file-browser.nvim"
+    require("telescope").load_extension "file_browser"
 end
 
 -----------------------------------------------------------------------
@@ -723,15 +739,6 @@ end
 
 function settings.folds()
     require("pretty-fold").setup {
-        matchup_patterns = {
-            { "{", "}" },
-            { "%(", ")" }, -- % to escape lua pattern char
-            { "%[", "]" }, -- % to escape lua pattern char
-            { "if%s", "end" },
-            { "do%s", "end" },
-            { "for%s", "end" },
-            { "function%s", "end" },
-        },
         fill_char = "━",
         sections = {
             left = {
@@ -756,6 +763,7 @@ function settings.folds()
     }
     require("pretty-fold.preview").setup {
         key = "l",
+        border = "double",
     }
 end
 
