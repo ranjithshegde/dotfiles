@@ -213,26 +213,6 @@ return packer.startup {
             },
         }
 
-        -- Indents and chars
-        use {
-            "lukas-reineke/indent-blankline.nvim",
-            config = function()
-                G.indent_blankline_char = "┊"
-                G.indent_blankline_char_highlight = "LineNr"
-                G.indent_blankline_use_treesitter = true
-                G.indent_blankline_show_current_context = true
-                G.indent_blankline_buftype_exclude = { "terminal", "nofile" }
-                G.indent_blankline_filetype_exclude = { "help", "packer", "taglist" }
-                -- stylua: ignore
-                G.indent_blankline_context_patterns = {
-                    "^if", "^for", "^case", "block", "class", "^table", "return", "^while", "method",
-                    "^public", "^switch", "^object", "inherits", "function", "^private", "arguments", "^protected",
-                    "jsx_element", "jsx_element", "else_clause", "if_statement", "catch_clause", "try_statement",
-                    "operation_type", "access_specifier", "import_statement", "jsx_self_closing_element",
-                }
-            end,
-        }
-
         -- vim Orgmode
         use {
             {
@@ -242,6 +222,7 @@ return packer.startup {
                     require("orgmode").setup {
                         org_agenda_files = "~/Documents/Orgs/*",
                         org_highlight_latex_and_related = "entities",
+                        emacs_config = { config_path = "$XDG_CONFIG_HOME/emacs/init.el" },
                     }
                 end,
             },
@@ -252,6 +233,30 @@ return packer.startup {
                     require("org-bullets").setup {}
                 end,
             },
+        }
+
+        -- Indents and chars
+        use {
+            "lukas-reineke/indent-blankline.nvim",
+            config = function()
+                G.indent_blankline_char = "┊"
+                require("indent_blankline").setup {
+                    show_current_context = true,
+                    show_end_of_line = true,
+                    use_treesitter = true,
+                }
+                vim.cmd "let g:indent_blankline_filetype_exclude+=['taglist']"
+                -- stylua: ignore
+                local context = {
+                    "^for", "^case", "block", "^table", "return", "^while", "^public", "^switch",
+                    "^object", "inherits", "^private", "^protected", "jsx_element", "jsx_element",
+                    "else_clause", "if_statement", "catch_clause", "try_statement", "operation_type",
+                    "access_specifier", "import_statement", "jsx_self_closing_element",
+                }
+                for _, v in pairs(context) do
+                    vim.cmd("let g:indent_blankline_context_patterns+=['" .. v .. "']")
+                end
+            end,
         }
 
         -- completion and snippets

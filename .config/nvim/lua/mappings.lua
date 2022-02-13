@@ -415,7 +415,7 @@ function M.telescope()
             z = { tele "current_buffer_fuzzy_find", "Fuzzy find in buffer" },
             ["'"] = { tele "marks", "Marks" },
             ['"'] = { tele "registers", "Registers" },
-            ["/"] = { tele "grep_string", "Live grep in directory" },
+            ["/"] = { tele "grep_string", "Grep CWORD in directory" },
             ["]"] = { tele "tags", "Lsp Ctags" },
             ["<Space>"] = { tele "builtin", "Builtin Searchers" },
             d = {
@@ -446,6 +446,17 @@ function M.telescope()
                     "grep dotfiles",
                 },
                 ["?"] = { telF 'live_grep({cwd = vim.fn.input("cwd: ")})', "Choose directory" },
+                w = {
+                    name = "vimWiki",
+                    w = {
+                        telF "live_grep({cwd = '~/Documents/vimWiki', prompt_title = 'wiki directory'})",
+                        "whole wiki",
+                    },
+                    d = {
+                        telF "live_grep({cwd = '~/Documents/vimWiki/diary', prompt_title = 'Diary entires'})",
+                        "Inside diary",
+                    },
+                },
             },
             F = { tele "find_files", "Current directory" },
             f = {
@@ -470,6 +481,7 @@ function M.telescope()
                     "OfWorkspace",
                 },
                 s = { cd_files("SuperCollider Directory", "~/Documents/Supercollider/"), "SuperCollider files" },
+                w = { telF "find_files({cwd = '~/Documents/vimWiki', prompt_title = 'vimWiki'})", "wiki" },
                 ["?"] = { telF 'find_files({cwd = vim.fn.input("cwd: ")})', "Choose directory" },
             },
         },
@@ -507,12 +519,18 @@ function M.autoComplete()
     vim.keymap.set("i", "<C-j>", "<Plug>(completion_next_source)")
     vim.keymap.set("i", "<C-k>", "<Plug>(completion_prev_source)")
 
-    local maps = {
-        ["<C-l>"] = { "<cmd>lua require('luasnip').jump(1)<cr>", "jump to next placeholder" },
-        ["<C-h>"] = { "<cmd>lua require('luasnip').jump(-1)<cr>", "jump to prev placeholder" },
-    }
-    wk.register(maps, { mode = "i" })
-    wk.register(maps, { mode = "s" })
+    local ls = require "luasnip"
+    vim.keymap.set({ "i", "s" }, "<C-l>", function()
+        if ls.expand_or_jumpable() then
+            ls.expand_or_jump()
+        end
+    end, { silent = true, desc = "jump to next placeholder" })
+
+    vim.keymap.set({ "i", "s" }, "<C-h>", function()
+        if ls.jumpable(-1) then
+            ls.jump(-1)
+        end
+    end, { silent = true, desc = "jump to prev placeholder" })
 end
 
 -- ******************************** SuperCollider ---------------------------------------
