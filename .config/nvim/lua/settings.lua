@@ -17,7 +17,7 @@ end
 --                              Vim basics                            --
 ------------------------------------------------------------------------
 function settings.options()
-    vim.cmd "colo lvim"
+    vim.cmd "colo tokyonight"
     local tab = 4
     o.number = true
     o.expandtab = true
@@ -175,7 +175,6 @@ function settings.treesitter()
         },
         textobjects = {
             select = {
-                -- disable = { "lua", "vim" },
                 enable = true,
                 keymaps = {
                     ["af"] = "@function.outer",

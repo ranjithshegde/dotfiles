@@ -20,9 +20,13 @@ return packer.startup {
 
         -- use "lewis6991/github_dark.nvim"
 
-        use "lvim-tech/lvim-colorscheme"
+        -- use "lvim-tech/lvim-colorscheme"
 
-        -- use "folke/tokyonight.nvim"
+        -- use "EdenEast/nightfox.nvim"
+
+        -- use "marko-cerovac/material.nvim"
+
+        use "folke/tokyonight.nvim"
 
         use { "m-pilia/vim-ccls", ft = "cpp" }
 
