@@ -18,15 +18,11 @@ return packer.startup {
 
         use "lewis6991/impatient.nvim"
 
-        -- use "lewis6991/github_dark.nvim"
-
         -- use "lvim-tech/lvim-colorscheme"
 
-        -- use "EdenEast/nightfox.nvim"
+        -- use "folke/tokyonight.nvim"
 
-        -- use "marko-cerovac/material.nvim"
-
-        use "folke/tokyonight.nvim"
+        use "EdenEast/nightfox.nvim"
 
         use { "m-pilia/vim-ccls", ft = "cpp" }
 
@@ -136,7 +132,6 @@ return packer.startup {
             -- { "simrat39/symbols-outline.nvim", cmd = "SymbolsOutline" },
             {
                 "sidebar-nvim/sidebar.nvim",
-                -- branch = "dev",
                 cmd = "SidebarNvimToggle",
                 config = function()
                     require("sidebar-nvim").setup {
@@ -324,10 +319,10 @@ return packer.startup {
                     }
                 end,
             },
-            {
-                "nvim-telescope/telescope-dap.nvim",
-                opt = true,
-            },
+            -- {
+            -- "nvim-telescope/telescope-dap.nvim",
+            -- opt = true,
+            -- },
         }
     end,
     config = {

@@ -14,21 +14,42 @@ function M.general()
     M.treesitter()
 
     local opts = { nowait = true, noremap = true, silent = true }
-    local maps = {
-        --line movement
-        { "x", "K", ":move '<-2<CR>gv-gv" },
-        { "x", "J", ":move '>+1<CR>gv-gv" },
-        -- visual cut for replase
-        { "v", "<leader>p", '"_dP' },
-        { "s", "<leader>p", '"_dP' },
-        -- Indent
-        { "v", "<", "<gv" },
-        { "v", ">", ">gv" },
-        -- Terminal
-        { "t", "<Esc>", "<C-\\><C-n>" },
-        { "t", "<F9>", "<esc><cmd>lua require('utils').toggleTerm('zsh','shell',1)<cr>" },
-    }
-    u.maps(maps, opts)
+    -- local maps = {
+    --line movement
+    vim.keymap.set("x", "K", ":move '<-2<CR>gv-gv", { desc = "Move line up" })
+    vim.keymap.set("x", "J", ":move '>+1<CR>gv-gv", { desc = "Move line down" })
+    -- visual cut for replase
+    vim.keymap.set("v", "<leader>p", '"_dP', opts)
+    vim.keymap.set("s", "<leader>p", '"_dP', opts)
+    -- Indent
+    vim.keymap.set("v", "<", "<gv", opts)
+    vim.keymap.set("v", ">", ">gv", opts)
+    -- Terminal
+    vim.keymap.set("t", "<Esc>", "<C-\\><C-n>")
+    vim.keymap.set(
+        "t",
+        "<F9>",
+        "<esc><cmd>lua require('utils').toggleTerm('zsh','shell',1)<cr>",
+        { desc = "Toggle current/default terminal" }
+    )
+    -- }
+    -- u.maps(maps, opts)
+    vim.keymap.set("i", "<CR>", function()
+        vim.g.completion_confirm_key = ""
+        local npairs = require "nvim-autopairs"
+        if vim.fn.pumvisible() ~= 0 then
+            if vim.fn.complete_info()["selected"] ~= -1 then
+                require("completion").confirmCompletion()
+                return npairs.esc "<c-y>"
+            else
+                vim.api.nvim_select_popupmenu_item(0, false, false, {})
+                require("completion").confirmCompletion()
+                return npairs.esc "<c-n><c-y>"
+            end
+        else
+            return npairs.autopairs_cr()
+        end
+    end, { expr = true })
 
     wk.register {
         -- open folds when searching

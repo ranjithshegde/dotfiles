@@ -21,13 +21,12 @@ augroup formatOptions
                 \   set formatoptions+=j |
                 \   set formatoptions+=2 |
                 \   set formatoptions-=a |
-                \   set formatoptions-=t |
                 \   set formatoptions-=o |
                 \   set formatoptions-=r
 augroup END
 
 augroup commonFtRules
-    au FileType text,tex,vimwiki,org call util#WordProcessor()
+    au FileType text,tex,vimwiki call util#WordProcessor()
     au FileType org setlocal iskeyword+=:,#,+
     au FileType vim nn <silent>,K <cmd>exe 'h '.expand('<cword>')<CR>
 augroup END 

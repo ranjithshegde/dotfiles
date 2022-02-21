@@ -6,6 +6,7 @@ window:
   #dimensions:
     columns: 80
     lines: 0
+# decorations: none
 
 scrolling:
   history: 100000

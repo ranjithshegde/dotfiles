@@ -17,7 +17,7 @@ end
 --                              Vim basics                            --
 ------------------------------------------------------------------------
 function settings.options()
-    vim.cmd "colo tokyonight"
+    vim.cmd "colo nightfox"
     local tab = 4
     o.number = true
     o.expandtab = true
@@ -322,7 +322,7 @@ function settings.completion()
     }
     G.completion_auto_change_source = 0
     G.completion_popup_border = "double"
-    G.completion_disable_filetypes = { "TelescopePrompt", "text", "markdown", "vimwiki" }
+    G.completion_disable_filetypes = { "TelescopePrompt", "markdown", "text", "vimwiki" }
     require("luasnip.loaders.from_vscode").lazy_load()
     G.completion_enable_snippet = "luasnip"
 
@@ -487,7 +487,8 @@ function settings.langServers()
                         motherTongue = "en",
                         languageModel = "/usr/share/Ngrams/",
                     },
-                    dictionary = { ["en-US"] = u.concat_fileLines(dict) },
+                    language = "en-GB",
+                    dictionary = { ["en-GB"] = u.concat_fileLines(dict) },
                 },
             },
         },
@@ -613,6 +614,8 @@ end
 ------------------------------------------------------------------------
 
 function settings.telescope()
+    vim.cmd "PackerLoad telescope-fzf-native.nvim"
+
     require("telescope").setup {
         pickers = {
             find_files = { follow = true },
@@ -680,7 +683,6 @@ function settings.telescope()
         },
     }
 
-    vim.cmd "PackerLoad telescope-fzf-native.nvim"
     require("telescope").load_extension "fzf"
     vim.cmd "PackerLoad telescope-project.nvim"
     vim.cmd "PackerLoad telescope-file-browser.nvim"
@@ -695,7 +697,7 @@ function settings.luadev()
     local luadev = require("lua-dev").setup {
         library = { plugins = { "plenary.nvim", "telescope.nvim", "express_line.nvim", "nvim-lspconfig" } },
         lspconfig = {
-            on_attach = All_attach,
+            on_attach = EfmAttach,
             capabilities = Capabilities,
             settings = { Lua = { diagnostics = { globals = { "vim", "pd" } } } },
         },
