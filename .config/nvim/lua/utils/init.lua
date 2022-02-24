@@ -65,20 +65,6 @@ function utils.Restart()
     Exec "doautocmd VimEnter"
 end
 
-function utils.fs()
-    if vim.loop.fs_stat(vim.fn.expand "<cfile>") then
-        vim.cmd "e <cfile>"
-        vim.cmd "lcd %:h:t"
-    else
-        print "Not a file"
-    end
-end
-
-function utils.back()
-    vim.cmd "bprevious"
-    vim.cmd "lcd %:p:h"
-end
-
 ------------------------------------------------------------------------
 --                              AutoCommands                          --
 ------------------------------------------------------------------------
@@ -99,39 +85,6 @@ function utils.create_cmdGroup(autocmds, command, name)
         Exec("autocmd " .. table.concat(autocmd, " "))
     end
     Exec "augroup END"
-end
-
-------------------------------------------------------------------------
---                              Mappings                              --
-------------------------------------------------------------------------
-
-function utils.bufmaps(mapdict, opts)
-    for m = 1, #mapdict do
-        local mode = mapdict[m][1]
-        local lhs = mapdict[m][2]
-        local rhs = mapdict[m][3]
-        local buffer = 0
-
-        Api.nvim_buf_set_keymap(buffer, mode, lhs, rhs, opts)
-    end
-end
-
-function utils.maps(mapdict, opts)
-    for m = 1, #mapdict do
-        local mode = mapdict[m][1]
-        local lhs = mapdict[m][2]
-        local rhs = mapdict[m][3]
-
-        Api.nvim_set_keymap(mode, lhs, rhs, opts)
-    end
-end
-
-utils.concat_fileLines = function(file)
-    local dictionary = {}
-    for line in io.lines(file) do
-        table.insert(dictionary, line)
-    end
-    return dictionary
 end
 
 ------------------------------------------------------------------------
@@ -172,6 +125,32 @@ function utils.toggleTerm(cmd, name, spl)
         Exec "startinsert"
         Exec("f " .. name)
     end
+end
+
+------------------------------------------------------------------------
+--                          Plugin functions                          --
+------------------------------------------------------------------------
+
+function utils.fs()
+    if vim.loop.fs_stat(vim.fn.expand "<cfile>") then
+        vim.cmd "e <cfile>"
+        vim.cmd "lcd %:h:t"
+    else
+        print "Not a file"
+    end
+end
+
+function utils.back()
+    vim.cmd "bprevious"
+    vim.cmd "lcd %:p:h"
+end
+
+utils.concat_fileLines = function(file)
+    local dictionary = {}
+    for line in io.lines(file) do
+        table.insert(dictionary, line)
+    end
+    return dictionary
 end
 
 ------------------------------------------------------------------------

@@ -18,10 +18,6 @@ return packer.startup {
 
         use "lewis6991/impatient.nvim"
 
-        -- use "lvim-tech/lvim-colorscheme"
-
-        -- use "folke/tokyonight.nvim"
-
         use "EdenEast/nightfox.nvim"
 
         use { "m-pilia/vim-ccls", ft = "cpp" }
@@ -218,6 +214,7 @@ return packer.startup {
                 "nvim-orgmode/orgmode",
                 ft = "org",
                 config = function()
+                    require("orgmode").setup_ts_grammar()
                     require("orgmode").setup {
                         org_agenda_files = "~/Documents/Orgs/*",
                         org_highlight_latex_and_related = "entities",

@@ -11,6 +11,7 @@ function Compiler.set_ctype()
         require("mappings").cmake()
         G.makeFile = "CMakeLists.txt"
         G.debugBin = "build/" .. vim.fn.fnamemodify(vim.fn.getcwd(), ":t")
+        G.cmakeBin = "./build/" .. vim.fn.fnamemodify(vim.fn.getcwd(), ":t")
         G.cfiles = "src/* include/*"
     elseif Compiler.has_makefile() then
         require("mappings").makeC()
@@ -46,11 +47,14 @@ end
 
 -- basic setup for small test files
 function Compiler.cpractice()
-    local dir = vim.fn.input "enter directory name: "
-    vim.fn.execute("!mkdir -p $CWORK/Practice/" .. dir)
-    vim.fn.execute("cd $CWORK/Practice/" .. dir)
-    local file = vim.fn.input "enter file name: "
-    Exec("e " .. file .. ".cpp")
+    vim.cmd "cd $CWORK/Practice"
+    vim.ui.input({ prompt = "enter directory name: ", completion = "file" }, function(input)
+        vim.fn.execute("!mkdir -p " .. input)
+        vim.fn.execute("cd " .. input)
+    end)
+    vim.ui.input({ prompt = "enter file name: ", completion = "file" }, function(input)
+        Exec("e " .. input)
+    end)
 end
 
 function Compiler.cproject()
@@ -150,6 +154,32 @@ function Compiler.with_flags()
     local flags = vim.fn.input "Enter compiler flags: "
     Compiler.make("-g -o %< " .. flags .. " %")
 end
+
+function Compiler.renderOffload(dispatch, cmd, toSave)
+    if toSave then
+        vim.cmd "redraw"
+        vim.cmd "w"
+    end
+    vim.ui.select(
+        { "Integrated graphics", "Dedicated (Nvidia) Graphics" },
+        { prompt = "Run the binary on: " },
+        function(choice)
+            if choice == "Integrated graphics" then
+                if cmd then
+                    vim.cmd(cmd .. " && " .. dispatch)
+                else
+                    Compiler.terminal(dispatch)
+                end
+            else
+                if cmd then
+                    vim.cmd(cmd .. " && prime-run " .. dispatch)
+                else
+                    Compiler.terminal("prime-run " .. dispatch)
+                end
+            end
+        end
+    )
+end
 ------------------------------------------------------------------------
 --                                CMake 	                          --
 ------------------------------------------------------------------------
@@ -216,7 +246,6 @@ end
 
 -- Run the binary
 function Compiler.cmake_run()
-    -- local bin = Api.nvim_call_function('fnamemodify', {'.', ":p:h:t"})
     local bin = vim.fn.fnamemodify(vim.fn.getcwd(), ":t")
     Compiler.terminal("./build/" .. bin)
 end

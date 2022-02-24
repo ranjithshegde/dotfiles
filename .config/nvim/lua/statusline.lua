@@ -124,7 +124,7 @@ statusline.el = function()
         local branch = extensions.git_branch(window, buffer)
         Api.nvim_set_hl(0, "ElGitBranch", { bg = Colors.bg, fg = Colors.yellow })
         if branch then
-            vim.fn.execute "PackerLoad gitsigns.nvim"
+            vim.cmd "PackerLoad gitsigns.nvim"
             return " " .. extensions.git_icon() .. " " .. branch
         end
     end)

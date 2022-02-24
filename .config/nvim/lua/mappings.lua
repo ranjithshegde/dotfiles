@@ -1,6 +1,7 @@
 local M = {}
 local u = require "utils"
 local wk = require "which-key"
+local map = vim.keymap.set
 
 -- ******************************** General functions ---------------------------------------
 
@@ -14,27 +15,25 @@ function M.general()
     M.treesitter()
 
     local opts = { nowait = true, noremap = true, silent = true }
-    -- local maps = {
     --line movement
-    vim.keymap.set("x", "K", ":move '<-2<CR>gv-gv", { desc = "Move line up" })
-    vim.keymap.set("x", "J", ":move '>+1<CR>gv-gv", { desc = "Move line down" })
+    map("x", "K", ":move '<-2<CR>gv-gv", { desc = "Move line up" })
+    map("x", "J", ":move '>+1<CR>gv-gv", { desc = "Move line down" })
     -- visual cut for replase
-    vim.keymap.set("v", "<leader>p", '"_dP', opts)
-    vim.keymap.set("s", "<leader>p", '"_dP', opts)
+    map("v", "<leader>p", '"_dP', opts)
+    map("s", "<leader>p", '"_dP', opts)
     -- Indent
-    vim.keymap.set("v", "<", "<gv", opts)
-    vim.keymap.set("v", ">", ">gv", opts)
+    map("v", "<", "<gv", opts)
+    map("v", ">", ">gv", opts)
     -- Terminal
-    vim.keymap.set("t", "<Esc>", "<C-\\><C-n>")
-    vim.keymap.set(
+    map("t", "<Esc>", "<C-\\><C-n>", opts)
+    map(
         "t",
         "<F9>",
         "<esc><cmd>lua require('utils').toggleTerm('zsh','shell',1)<cr>",
         { desc = "Toggle current/default terminal" }
     )
-    -- }
-    -- u.maps(maps, opts)
-    vim.keymap.set("i", "<CR>", function()
+
+    map("i", "<CR>", function()
         vim.g.completion_confirm_key = ""
         local npairs = require "nvim-autopairs"
         if vim.fn.pumvisible() ~= 0 then
@@ -342,7 +341,7 @@ function M.telescope()
             require("telescope").extensions.file_browser.file_browser {
                 prompt_title = prompt,
                 cwd = cwd,
-                attach_mappings = function(prompt_bufnr, map)
+                attach_mappings = function(prompt_bufnr, maps)
                     local change_dir = function(window)
                         local wd = require("telescope.actions.state").get_selected_entry().value
                         require("telescope.actions.set").select(prompt_bufnr, window)
@@ -353,22 +352,22 @@ function M.telescope()
                             vim.fn.execute("tcd " .. dir)
                         end
                     end
-                    map("n", "<CR>", function()
+                    maps("n", "<CR>", function()
                         change_dir "default"
                     end)
-                    map("i", "<CR>", function()
+                    maps("i", "<CR>", function()
                         change_dir "default"
                     end)
-                    map("n", "<C-v>", function()
+                    maps("n", "<C-v>", function()
                         change_dir "vertical"
                     end)
-                    map("i", "<C-v>", function()
+                    maps("i", "<C-v>", function()
                         change_dir "vertical"
                     end)
-                    map("n", "<C-t>", function()
+                    maps("n", "<C-t>", function()
                         change_dir "tab"
                     end)
-                    map("i", "<C-t>", function()
+                    maps("i", "<C-t>", function()
                         change_dir "tab"
                     end)
                     return true
@@ -382,7 +381,7 @@ function M.telescope()
             require("telescope.builtin").find_files {
                 prompt_title = prompt,
                 cwd = cwd,
-                attach_mappings = function(prompt_bufnr, map)
+                attach_mappings = function(prompt_bufnr, maps)
                     local change_dir = function(window)
                         local wd = require("telescope.actions.state").get_selected_entry().value
                         require("telescope.actions.set").select(prompt_bufnr, window)
@@ -390,22 +389,22 @@ function M.telescope()
                         local dir = vim.fn.fnamemodify(wd, ":p:h")
                         vim.fn.execute("tcd " .. dir)
                     end
-                    map("n", "<CR>", function()
+                    maps("n", "<CR>", function()
                         change_dir "default"
                     end)
-                    map("i", "<CR>", function()
+                    maps("i", "<CR>", function()
                         change_dir "default"
                     end)
-                    map("n", "<C-v>", function()
+                    maps("n", "<C-v>", function()
                         change_dir "vertical"
                     end)
-                    map("i", "<C-v>", function()
+                    maps("i", "<C-v>", function()
                         change_dir "vertical"
                     end)
-                    map("n", "<C-t>", function()
+                    maps("n", "<C-t>", function()
                         change_dir "tab"
                     end)
-                    map("i", "<C-t>", function()
+                    maps("i", "<C-t>", function()
                         change_dir "tab"
                     end)
                     return true
@@ -466,7 +465,10 @@ function M.telescope()
                     telF "live_grep({cwd ='~/.config', prompt_title = 'Dotfiles grep'})",
                     "grep dotfiles",
                 },
-                ["?"] = { telF 'live_grep({cwd = vim.fn.input("cwd: ")})', "Choose directory" },
+                ["?"] = {
+                    telF 'live_grep({cwd = vim.fn.input({prompt = "Enter directory: ", completion = "dir"})})',
+                    "Choose directory",
+                },
                 w = {
                     name = "vimWiki",
                     w = {
@@ -503,7 +505,10 @@ function M.telescope()
                 },
                 s = { cd_files("SuperCollider Directory", "~/Documents/Supercollider/"), "SuperCollider files" },
                 w = { telF "find_files({cwd = '~/Documents/vimWiki', prompt_title = 'vimWiki'})", "wiki" },
-                ["?"] = { telF 'find_files({cwd = vim.fn.input("cwd: ")})', "Choose directory" },
+                ["?"] = {
+                    telF 'find_files({cwd = vim.fn.input({prompt = "Enter directory: ", completion = "dir"})})',
+                    "Choose directory",
+                },
             },
         },
     }
@@ -511,9 +516,6 @@ end
 
 -- ******************************** Git ---------------------------------------
 function M.git()
-    local opts = { nowait = true, noremap = true, silent = false }
-    local maps = {}
-    u.maps(maps, opts)
     wk.register {
         ["<leader>g"] = {
             name = "git functions",
@@ -607,13 +609,14 @@ end
 -- ******************************** cpp -openFrameworks ---------------------------------------
 
 function M.makeC()
-    local bufmaps = {
+    wk.register({
         ["<F4>"] = { "<cmd>w <CR> <cmd>Make Debug -j12<CR>", "Compile Debug" },
-        ["<F5>"] = { "<cmd>w <CR> <cmd>Make -j12 && make RunRelease<CR>", "Compile Release" },
-        ["<F6>"] = { "<cmd>w <CR> <cmd>Make RunRelease<CR>", "Run Release" },
-        ["<F8>"] = { "<cmd>w <CR> <cmd>Make -j12 && prime-run make RunRelease<CR>", "Compile Release" },
-    }
-    wk.register(bufmaps, { buffer = 0 })
+        ["<F5>"] = {
+            '<cmd>lua require("utils.compiler").renderOffload("make RunRelease" , "Make -j12", true)<CR>',
+            "Compile Release",
+        },
+        ["<F6>"] = { '<cmd>lua require("utils.compiler").renderOffload("make RunRelease")<CR>', "Run Release" },
+    }, { buffer = 0 })
 end
 
 -- ******************************** Openframeworks Android ---------------------------------------
@@ -621,27 +624,25 @@ end
 -- ********************************  Simple C mappings ---------------------------------------
 
 function M.ctests()
-    local bufmaps = {
+    wk.register({
         ["<F3>"] = { "<cmd>w <CR> <cmd>Dispatch gcc % -lm -o %<<CR> <cmd>Dispatch ./%<<CR>", "Use gcc" },
         ["<F4>"] = { "<cmd>w <CR> <cmd>lua require('utils.compiler').with_flags()<cr>", "Make with defined flags" },
         ["<F5>"] = { "<cmd>w <CR> <cmd>Make -g % -o %<<CR>", "Make" },
-        ["<F6>"] = { "<cmd>w <CR> <cmd>Dispatch ./%<<CR>", "Run binary" },
-    }
-    wk.register(bufmaps, { buffer = 0 })
+        ["<F6>"] = { '<cmd>lua require("utils.compiler").renderOffload("./%<")<cr>', "Launch binary" },
+    }, { buffer = 0 })
 end
 
 -- PureData C Externals
 function M.pdc()
-    local bufmaps = {
+    wk.register({
         ["<F5>"] = { "<cmd>w<CR><cmd>Make<CR>", "Build Pd external" },
         ["<F6>"] = { "<cmd>w<CR><cmd>lua require('utils.compiler').pdBuild()<CR>", "Copy external to PD directory" },
-    }
-    wk.register(bufmaps, { buffer = 0 })
+    }, { buffer = 0 })
 end
 
 -- ******************************** General Clang mappings ---------------------------------------
 function M.clang()
-    local wmaps = {
+    wk.register({
         [";"] = {
             b = { "<cmd>CclsBase<CR>", "Base function" },
             c = { "<cmd>CclsCallers<CR>", "Callers" },
@@ -674,21 +675,19 @@ function M.clang()
             m = { "<cmd>lua require('utils.compiler').makefile(vim.g.makeFile)<CR>", "Open Makefile" },
             c = { "<cmd>lua require('utils.compiler').ctags(vim.g.cfiles)<CR>", "generate Ctags with includes" },
         },
-    }
-    wk.register(wmaps, { buffer = 0 })
+    }, { buffer = 0 })
 end
 
 -- ******************************** CMake ---------------------------------------
 
 function M.cmake()
-    local bufmaps = {
+    wk.register({
         ["<F2>"] = { '<cmd>w <CR> <cmd>lua require("utils.compiler").cmake_clean()<CR>', "Clean cmake" },
         ["<F3>"] = { '<cmd>w <CR> <cmd>lua require("utils.compiler").cmake_gen_debug()<CR>', "Generate Cmake Debug" },
         ["<F4>"] = { '<cmd>w <CR> <cmd>lua require("utils.compiler").cmake_gen()<CR>', "Generate Cmake Release" },
         ["<F5>"] = { "<cmd>w <CR> <cmd>Make -j12 -C build<CR>", "Make" },
-        ["<F6>"] = { '<cmd>w <CR> <cmd>lua require("utils.compiler").cmake_run()<cr>', "Launch binary" },
-    }
-    wk.register(bufmaps, { buffer = 0 })
+        ["<F6>"] = { '<cmd>lua require("utils.compiler").renderOffload(vim.g.cmakeBin)<cr>', "Launch binary" },
+    }, { buffer = 0 })
 end
 
 -- ******************************** CoAuthor ---------------------------------------
