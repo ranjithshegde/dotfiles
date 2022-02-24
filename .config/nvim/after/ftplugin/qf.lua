@@ -1,10 +1,6 @@
 require("which-key").register({
-    dd = { "<cmd>call util#qf_delete(bufnr())<CR>", "Delete quickfix item" },
+    dd = { "util#qf_delete(bufnr())", "Delete quickfix item", expr = true },
     H = { "<cmd>colder<CR>", "Jump to previous list" },
     L = { "<cmd>cnewer<CR>", "Jump to Next list" },
+    d = { "util#qf_delete(bufnr())", "Delete quickfix item", expr = true, mode = "v" },
 }, { buffer = 0 })
-
-require("which-key").register(
-    { d = { "<cmd>call util#qf_delete(bufnr()<CR>", "Delete quickfix item" } },
-    { mode = "v", buffer = 0 }
-)

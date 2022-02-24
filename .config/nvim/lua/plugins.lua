@@ -74,6 +74,7 @@ return packer.startup {
             "lewis6991/gitsigns.nvim",
             config = function()
                 require("gitsigns").setup { keymaps = {} }
+                require("mappings").git()
             end,
             opt = true,
         }
@@ -124,8 +125,8 @@ return packer.startup {
 
         -- Taglist and sidebars
         use {
-            { "yegappan/taglist", cmd = "TlistToggle" },
-            -- { "simrat39/symbols-outline.nvim", cmd = "SymbolsOutline" },
+            -- { "yegappan/taglist", cmd = "TlistToggle" },
+            { "simrat39/symbols-outline.nvim", cmd = "SymbolsOutline" },
             {
                 "sidebar-nvim/sidebar.nvim",
                 cmd = "SidebarNvimToggle",

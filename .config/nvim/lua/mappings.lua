@@ -1,5 +1,5 @@
 local M = {}
-local u = require "utils"
+require "utils"
 local wk = require "which-key"
 local map = vim.keymap.set
 
@@ -7,7 +7,6 @@ local map = vim.keymap.set
 
 function M.general()
     M.configFiles()
-    M.git()
     M.telescope()
     M.coauthor()
     M.diagnostic()
@@ -33,29 +32,12 @@ function M.general()
         { desc = "Toggle current/default terminal" }
     )
 
-    map("i", "<CR>", function()
-        vim.g.completion_confirm_key = ""
-        local npairs = require "nvim-autopairs"
-        if vim.fn.pumvisible() ~= 0 then
-            if vim.fn.complete_info()["selected"] ~= -1 then
-                require("completion").confirmCompletion()
-                return npairs.esc "<c-y>"
-            else
-                vim.api.nvim_select_popupmenu_item(0, false, false, {})
-                require("completion").confirmCompletion()
-                return npairs.esc "<c-n><c-y>"
-            end
-        else
-            return npairs.autopairs_cr()
-        end
-    end, { expr = true })
-
     wk.register {
         -- open folds when searching
         n = { "nzzzv", "jump to next search result" },
         N = { "Nzzzv", "jump to previous search result" },
         J = { "mzJ`z", "Adjoin next line" },
-        gm = { "<cmd>call cursor(0, virtcol('$')/2 )<CR>", "Move cursor to middle of the line" },
+        gm = { "cursor(0, virtcol('$')/2 )", "Move cursor to middle of the line", expr = true },
         gf = { "<cmd>e <cfile><CR>", "open file under cursor" },
         --Quickfix
         ["-"] = { "<cmd>lua require('utils.qf').toggle_qf('q')<CR>", "Toggle quickfix" },
@@ -126,8 +108,9 @@ end
 function M.wordProcessor()
     wk.register({
         zG = {
-            '<cmd>call writefile([expand("<cword>")], "/usr/share/words.txt", "a")<CR>',
+            'writefile([expand("<cword>")], "/usr/share/words.txt", "a")',
             "Add word to LanguageTool dictionary",
+            expr = true,
         },
         ["<leader><Space>"] = { '<cmd>g/^/pu ="\n"<CR>', "Double space entire file" },
         [","] = {
@@ -140,65 +123,86 @@ end
 -- ******************************** language server ---------------------------------------
 
 function M.nvim_lsp()
-    local lspmap = {
-        K = { "<cmd>lua vim.lsp.buf.hover()<CR>", "Hover" },
-        ["<F7>"] = { "<cmd>lua require('debugger').init()<CR>", "Initialize Debugger adapter" },
+    wk.register({
+        K = { vim.lsp.buf.hover, "Hover" },
+        ["<F7>"] = { require("debugger").init, "Initialize Debugger adapter" },
         [","] = {
             name = "Lsp functions",
-            D = { "<cmd>lua vim.lsp.buf.declaration()<CR>", "Jump to Declaration" },
-            d = { "<cmd>lua vim.lsp.buf.definition()<CR>", "Jump to Definition" },
-            i = { "<cmd>lua vim.lsp.buf.implementation()<CR>", "Jump to Implementation" },
-            r = { "<cmd>lua vim.lsp.buf.references({includeDeclaration = false})<CR>", "References" },
-            t = { "<cmd>lua vim.lsp.buf.type_definition()<CR>", "Jump to Type definition" },
-            s = { '<cmd>lua vim.lsp.buf.signature_help({popup_opts = {border = "double"}})<CR>', "Show signature" },
-            R = { "<cmd>lua vim.lsp.buf.rename()<CR>", "Rename symbol" },
-            f = { "<cmd>lua vim.lsp.buf.formatting()<CR>", "Format buffer" },
-            a = { "<cmd>lua vim.lsp.buf.code_action()<CR>", "Code actions for buffer" },
+            D = { vim.lsp.buf.declaration, "Jump to Declaration" },
+            d = { vim.lsp.buf.definition, "Jump to Definition" },
+            i = { vim.lsp.buf.implementation, "Jump to Implementation" },
+            t = { vim.lsp.buf.type_definition, "Jump to Type definition" },
+            s = { vim.lsp.buf.signature_help, "Show signature" },
+            R = { vim.lsp.buf.rename, "Rename symbol" },
+            f = { vim.lsp.buf.formatting, "Format buffer" },
+            a = { vim.lsp.buf.code_action, "Code actions for buffer" },
+            r = {
+                function()
+                    vim.lsp.buf.references { includeDeclaration = false }
+                end,
+                "References",
+            },
             c = {
                 name = "Codelens",
-                c = { "<cmd>lua vim.lsp.codelens.display()<CR>", "Display" },
-                r = { "<cmd>lua vim.lsp.codelens.run()<CR>", "Run" },
-                R = { "<cmd>lua vim.lsp.codelens.refresh()<CR>", "Refresh" },
-                g = { "<cmd>lua vim.lsp.codelens.get()<CR>", "Fetch" },
+                c = { vim.lsp.codelens.display, "Display" },
+                r = { vim.lsp.codelens.run, "Run" },
+                R = { vim.lsp.codelens.refresh, "Refresh" },
+                g = { vim.lsp.codelens.get, "Fetch" },
             },
             l = {
                 name = "Toggle diagnostics",
-                v = { "<cmd>lua require'utils.diagnostics'.toggle_virtual_text()<CR>", "Virtual text" },
-                s = { "<cmd>lua require'utils.diagnostics'.toggle_signs()<CR>", "Sings" },
-                u = { "<cmd>lua require'utils.diagnostics'.toggle_underline()<CR>", "Underline" },
+                v = { require("utils.diagnostics").toggle_virtual_text, "Virtual text" },
+                s = { require("utils.diagnostics").toggle_signs, "Sings" },
+                u = { require("utils.diagnostics").toggle_underline, "Underline" },
             },
             w = {
                 name = "Workspace",
-                a = { "<cmd>lua vim.lsp.buf.add_workspace_folder()<CR>", "Add workspace folder" },
-                r = { "<cmd>lua vim.lsp.buf.remove_workspace_folder()<CR>", "Remove workspace folder" },
+                a = { vim.lsp.buf.add_workspace_folder, "Add workspace folder" },
+                r = { vim.lsp.buf.remove_workspace_folder, "Remove workspace folder" },
                 l = {
-                    "<cmd>lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))<CR>",
+                    function()
+                        print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
+                    end,
                     "List workspace folder",
                 },
             },
         },
-    }
-    wk.register(lspmap, { buffer = 0 })
+    }, { buffer = 0 })
 
-    local vmap = {
+    wk.register({
         [","] = {
             name = "Lsp visual mode",
-            a = { "<cmd>lua vim.lsp.buf.range_code_action()<CR>", "Code actions for range" },
-            f = { "<cmd>lua vim.lsp.buf.range_formatting()<CR>", "Format range" },
+            a = { vim.lsp.buf.range_code_action, "Code actions for range" },
+            f = { vim.lsp.buf.range_formatting, "Format range" },
         },
-    }
-    wk.register(vmap, { mode = "v", buffer = 0 })
+    }, { mode = "v", buffer = 0 })
+
     wk.register {
-        ["<F1>"] = { "<cmd>TlistToggle<CR>", "Toggle Taglist" },
         ["<F11>"] = { "<cmd>SymbolsOutline<CR>", "Toggle Symbolsbar" },
+        --     ["<F1>"] = { "<cmd>TlistToggle<CR>", "Toggle Taglist" },
     }
 end
 
 function M.diagnostic()
     wk.register {
-        [",ld"] = { "<cmd>lua vim.diagnostic.open_float()<CR>", "Show line diagnostics" },
-        ["[d"] = { '<cmd>lua vim.diagnostic.goto_prev{float = {border = "double"}}<CR>', "Show previous diagnostics" },
-        ["]d"] = { '<cmd>lua vim.diagnostic.goto_next{float = {border = "double"}}<CR>', "Show next diagnostics" },
+        [",ld"] = {
+            function()
+                vim.diagnostic.open_float { border = "double", source = "always" }
+            end,
+            "Show line diagnostics",
+        },
+        ["[d"] = {
+            function()
+                vim.diagnostic.goto_prev { float = { border = "double", source = "always" } }
+            end,
+            "Show previous diagnostics",
+        },
+        ["]d"] = {
+            function()
+                vim.diagnostic.goto_next { float = { border = "double", source = "always" } }
+            end,
+            "Show next diagnostics",
+        },
     }
 end
 
@@ -222,7 +226,7 @@ function M.configFiles()
                 f = { "<cmd>tabnew ~/.config/nvim/plugin/plugins.vim<CR>", "Functions in vim" },
                 r = { "<cmd>tabnew $MYVIMRC<CR>", "VimRC" },
                 P = { "<cmd>PackerSync<CR>", "Update packages" },
-                R = { "<cmd>lua require('utils').Restart()<CR>", "Reload Vim" },
+                R = { require("utils").Restart, "Reload Vim" },
             },
         },
     }
@@ -539,17 +543,17 @@ end
 -- ******************************** Snippets ---------------------------------------
 function M.autoComplete()
     -- change completion mode
-    vim.keymap.set("i", "<C-j>", "<Plug>(completion_next_source)")
-    vim.keymap.set("i", "<C-k>", "<Plug>(completion_prev_source)")
+    map("i", "<C-j>", "<Plug>(completion_next_source)")
+    map("i", "<C-k>", "<Plug>(completion_prev_source)")
 
     local ls = require "luasnip"
-    vim.keymap.set({ "i", "s" }, "<C-l>", function()
+    map({ "i", "s" }, "<C-l>", function()
         if ls.expand_or_jumpable() then
             ls.expand_or_jump()
         end
     end, { silent = true, desc = "jump to next placeholder" })
 
-    vim.keymap.set({ "i", "s" }, "<C-h>", function()
+    map({ "i", "s" }, "<C-h>", function()
         if ls.jumpable(-1) then
             ls.jump(-1)
         end
@@ -558,38 +562,35 @@ end
 
 -- ******************************** SuperCollider ---------------------------------------
 function M.scnvim()
-    vim.keymap.set("n", "<F5>", "<Plug>(scnvim-send-block)", { buffer = true, desc = "Evaluate SC code block" })
-    vim.keymap.set("i", "<F5>", "<esc><Plug>(scnvim-send-block)", { buffer = true, desc = "Evaluate SC code block" })
-    vim.keymap.set("v", "<F5>", "<Plug>(scnvim-send-selection)", { buffer = true, desc = "Evaluate SC visual block" })
-    vim.keymap.set("n", "<F6>", "<Plug>(scnvim-send-line)", { buffer = true, desc = "Evaluate SC line" })
-    vim.keymap.set("i", "<F6>", "<Plug><esc>(scnvim-send-line)", { buffer = true, desc = "Evaluate SC line" })
-    vim.keymap.set("n", ",s", "<Plug>(scnvim-show-signature)", { buffer = true, desc = "SC signature help" })
+    map("n", "<F5>", "<Plug>(scnvim-send-block)", { buffer = true, desc = "Evaluate SC code block" })
+    map("i", "<F5>", "<esc><Plug>(scnvim-send-block)", { buffer = true, desc = "Evaluate SC code block" })
+    map("v", "<F5>", "<Plug>(scnvim-send-selection)", { buffer = true, desc = "Evaluate SC visual block" })
+    map("n", "<F6>", "<Plug>(scnvim-send-line)", { buffer = true, desc = "Evaluate SC line" })
+    map("i", "<F6>", "<Plug><esc>(scnvim-send-line)", { buffer = true, desc = "Evaluate SC line" })
+    map("n", ",s", "<Plug>(scnvim-show-signature)", { buffer = true, desc = "SC signature help" })
 
-    local bufmaps = {
+    wk.register({
         ["<F1>"] = { "<cmd>SCNvimStart<cr>", "Launch Sclang" },
         ["<F2>"] = { "<cmd>SCNvimStatusLine<cr>", "Display server status" },
-        ["<F3>"] = { '<cmd>call scnvim#sclang#send_silent("Server.local.boot")<CR>', "Boot local server" },
-        ["<F4>"] = { '<cmd>call scnvim#sclang#send_silent("WFSLib.startup")<CR>', "Boot WFS server" },
-        [";a"] = { "<cmd>call scnvim#util#echo_args()<cr>", "Echo arguments in commandline" },
+        ["<F3>"] = { 'scnvim#sclang#send_silent("Server.local.boot")', "Boot local server", expr = true },
+        ["<F4>"] = { 'scnvim#sclang#send_silent("WFSLib.startup")', "Boot WFS server", expr = true },
         ["<leader>s"] = { "<cmd>tabnew ~/.config/SuperCollider/startup.scd<cr>", "open startup file" },
-    }
-    wk.register(bufmaps, { buffer = 0 })
+    }, { buffer = 0 })
 end
 
 -- ******************************** Arduino ---------------------------------------
 
 function M.micro()
-    local maps = {
-        ["<F8>"] = { "<esc><cmd>lua require('utils.compiler').monitor()<CR>", "Serial monitor toggle" },
-    }
-    wk.register(maps, { mode = "t" })
-
-    local mkeys = {
-        ["<F2>"] = { "<cmd>lua require('utils.compiler').pio_clean()<CR>", "Regenerate tags" },
-        ["<F3>"] = { "<cmd>lua require('utils.compiler').pio_check()<CR>", "Verify code" },
-        ["<F5>"] = { "<cmd>w <CR>:Make<CR>", "Build" },
-        ["<F6>"] = { "<cmd>w <CR>:Make --target upload<CR>", "Upload" },
-        ["<F8>"] = { "<cmd>lua require('utils.compiler').monitor()<CR>", "Serial monitor toggle" },
+    wk.register(
+        { ["<F8>"] = { "<esc><cmd>lua require('utils.compiler').monitor()<CR>", "Serial monitor toggle" } },
+        { mode = "t" }
+    )
+    wk.register({
+        ["<F2>"] = { require("utils.compiler").pio_clean, "Regenerate tags" },
+        ["<F3>"] = { require("utils.compiler").pio_check, "Verify code" },
+        ["<F5>"] = { "<cmd>w <CR> <cmd>Make<CR>", "Build" },
+        ["<F6>"] = { "<cmd>w <CR> <cmd>Make --target upload<CR>", "Upload" },
+        ["<F8>"] = { require("utils.compiler").monitor, "Serial monitor toggle" },
         ["<leader>"] = {
             r = {
                 name = "Online specs",
@@ -598,12 +599,11 @@ function M.micro()
         [","] = {
             k = {
                 a = { "<cmd>lua require('utils.compiler').ardRef(vim.fn.expand('<cword>'))<CR>", "Arduino" },
-                t = { "<cmd>lua require('utils.compiler').teensypins()<CR>", "teensy pins" },
-                T = { "<cmd>lua require('utils.compiler').teensyspecs()<CR>", "teensy specs" },
+                t = { require("utils.compiler").teensypins, "teensy pins" },
+                T = { require("utils.compiler").teensyspecs, "teensy specs" },
             },
         },
-    }
-    wk.register(mkeys, { buffer = 0 })
+    }, { buffer = 0 })
 end
 
 -- ******************************** cpp -openFrameworks ---------------------------------------
@@ -612,8 +612,10 @@ function M.makeC()
     wk.register({
         ["<F4>"] = { "<cmd>w <CR> <cmd>Make Debug -j12<CR>", "Compile Debug" },
         ["<F5>"] = {
-            '<cmd>lua require("utils.compiler").renderOffload("make RunRelease" , "Make -j12", true)<CR>',
-            "Compile Release",
+            function()
+                require("utils.compiler").renderOffload("make RunRelease", "Make -j12", true)
+            end,
+            "Compile and Run Release",
         },
         ["<F6>"] = { '<cmd>lua require("utils.compiler").renderOffload("make RunRelease")<CR>', "Run Release" },
     }, { buffer = 0 })
@@ -697,12 +699,12 @@ function M.coauthor()
         ["<leader>"] = {
             i = {
                 name = "Co-Authoring",
-                i = { "<cmd>lua require('utils').Start()<CR>", "Start server" },
-                s = { "<cmd>lua require('utils').Session()<CR>", "Launch session" },
-                b = { "<cmd>lua require('utils').Single()<CR>", "Launch current buffer" },
-                j = { "<cmd>lua require('utils').JoinSession()<CR>", "Join session" },
-                J = { "<cmd>lua require('utils').JoinSingle()<CR>", "Join single buffer" },
-                f = { "<cmd>lua require('utils').Follow()<CR>", "follow user" },
+                i = { require("utils").Start, "Start server" },
+                s = { require("utils").Session, "Launch session" },
+                b = { require("utils").Single, "Launch current buffer" },
+                j = { require("utils").JoinSession, "Join session" },
+                J = { require("utils").JoinSingle, "Join single buffer" },
+                f = { require("utils").Follow, "follow user" },
             },
         },
     }
@@ -714,15 +716,17 @@ function M.debug()
         ["<leader>"] = {
             d = {
                 name = "debug",
-                b = { "<cmd>lua require('dap').toggle_breakpoint()<CR>", "set breakpoint" },
-                x = { "<cmd>lua require('dap').set_exception_breakpoints()<CR>", "set breakpoint" },
-                o = { "<cmd>lua require('dapui').float_element()<CR>", "Open floating features" },
+                E = { require("debugger").exp, "Expressions" },
+                b = { require("dap").toggle_breakpoint, "set breakpoint" },
+                x = { require("dap").set_exception_breakpoints, "set breakpoint" },
+                o = { require("dapui").float_element, "Open floating features" },
                 f = { "<cmd>lua require('dapui').float_element('scopes', {enter = true})<CR>", "Floating Scopes" },
                 e = { "<cmd>lua require('dapui').eval()<CR><cmd>lua require('dapui').eval()<CR>", "Evaluate Hover" },
-                E = { "<cmd>lua require('debugger').exp()<CR>", "Expressions" },
                 F = { "<cmd>lua require('dapui').float_element('stacks', {enter = true})<CR>", "Floating Stacks" },
                 B = {
-                    "<cmd>lua require'dap'.toggle_breakpoint(vim.fn.input('Breakpoint condition: '))<CR>",
+                    function()
+                        require("dap").toggle_breakpoint(vim.fn.input "Breakpoint condition: ")
+                    end,
                     "set breakpoint",
                 },
             },
@@ -731,14 +735,14 @@ function M.debug()
     wk.register {
         ["<leader>d"] = {
             name = "debug",
-            ["."] = { "<cmd>lua require('dap').close()<CR>", "End" },
-            ["?"] = { "<cmd>lua require('debugger').frames()<CR>", "Frames" },
-            ["/"] = { "<cmd>lua require('debugger').scopes()<CR>", "Scopes" },
-            u = { "<cmd>lua require('dapui').toggle()<CR>", "Toggle all UI" },
-            c = { "<cmd>lua require('dap').continue()<CR>", "continue to next breakpoint" },
-            n = { "<cmd>lua require('dap').step_over()<CR>", "step over" },
-            s = { "<cmd>lua require('dap').step_into()<CR>", "step into" },
-            S = { "<cmd>lua require('dap').step_out()<CR>", "step Out" },
+            ["."] = { require("dap").close, "End" },
+            ["?"] = { require("debugger").frames, "Frames" },
+            ["/"] = { require("debugger").scopes, "Scopes" },
+            u = { require("dapui").toggle, "Toggle all UI" },
+            c = { require("dap").continue, "continue to next breakpoint" },
+            n = { require("dap").step_over, "step over" },
+            s = { require("dap").step_into, "step into" },
+            S = { require("dap").step_out, "step Out" },
         },
         ["<F10>"] = { "<cmd>lua require('dap').repl.toggle({height = 10},'split')<CR>", "Repl Toggle" },
     }
@@ -746,8 +750,8 @@ function M.debug()
         ["<leader>"] = {
             d = {
                 e = { "<cmd>lua require('dapui').eval()<CR><cmd>lua require('dapui').eval()<CR>", "Evaluate" },
-                o = { "<cmd>lua require('dapui').float_element()<CR>", "Open floating elements" },
-                E = { "<cmd>lua require('debugger').exp()<CR>", "Expressions" },
+                o = { require("dapui").float_element, "Open floating elements" },
+                E = { require("debugger").exp, "Expressions" },
             },
         },
     }, { mode = "v", buffer = 0 })
@@ -755,13 +759,12 @@ end
 
 -- ******************************** Latex ---------------------------------------
 function M.tex()
-    local bufmaps = {
+    wk.register({
         ["<F3>"] = { "<cmd>TexWordCount<CR>", "Word count" },
         ["<F4>"] = { "<cmd>Make -C<CR>", "Clean tex files" },
         ["<F5>"] = { "<cmd>TexlabBuild<CR>", "Compile tex document" },
         ["<F6>"] = { "<cmd>TexlabForward<CR>", "Launch zathura" },
-    }
-    wk.register(bufmaps, { buffer = 0 })
+    }, { buffer = 0 })
 end
 
 return M
