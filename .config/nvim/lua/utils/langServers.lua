@@ -1,6 +1,16 @@
 local langSettings = {}
 local fmt = string.format
 
+langSettings.getClientNames = function()
+    local buf_clients = vim.lsp.buf_get_clients()
+
+    local buf_client_names = {}
+    for _, client in pairs(buf_clients) do
+        table.insert(buf_client_names, client.name)
+    end
+    return buf_client_names
+end
+
 ------------------------------------------------------------------------
 --                              Capabilities                          --
 ------------------------------------------------------------------------
@@ -64,6 +74,7 @@ langSettings.lsp_capabilities = function()
     local configs_pattern = [[\%(]] .. table.concat(buf_client_names, [[\|]]) .. [[\)]]
     vim.cmd([[syntax match Title /\%(Client\):.*\zs]] .. configs_pattern .. "/")
     vim.api.nvim_buf_set_keymap(bufnr, "n", "<esc>", "<cmd>bd<CR>", { noremap = true })
+    vim.api.nvim_buf_set_keymap(bufnr, "n", "q", "<cmd>bd<CR>", { noremap = true })
 end
 
 ------------------------------------------------------------------------

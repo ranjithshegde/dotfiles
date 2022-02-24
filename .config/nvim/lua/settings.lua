@@ -337,7 +337,6 @@ end
 
 function settings.lsp_settings()
     Lsp = require "lspconfig"
-    require("utils.langServers").kind()
 
     local buffExec = "* <buffer>"
     local docHigh = {
@@ -346,10 +345,14 @@ function settings.lsp_settings()
         { "CursorMovedI", "<buffer>", [[lua vim.lsp.buf.clear_references()]] },
     }
     -- Set diagnostics to local list automatically
-    u.create_augroup({ { "DiagnosticChanged", "*", "lua vim.diagnostic.setloclist({open = false})" } }, "LspLocList")
+    u.create_augroup({
+        { "DiagnosticChanged", "*", "lua vim.diagnostic.setloclist({open = false})" },
+        { "DiagnosticChanged", "*", "lua require('utils').commands()" },
+    }, "SetDiagnosticFuncs")
 
     Attach_props = function(client)
         require("mappings").nvim_lsp()
+        require("utils.langServers").kind()
 
         vim.cmd "PackerLoad lsp-status.nvim"
         local lsp_status = require "lsp-status"
@@ -357,10 +360,9 @@ function settings.lsp_settings()
         if client.name ~= "ltex" and client.name ~= "efm" then
             lsp_status.register_progress()
         end
-
         lsp_status.on_attach(client)
-
         require("utils.diagnostics").attach({ all = false, underline = false, update_in_insert = false }, client)
+
         local rc = client.resolved_capabilities
         if rc.document_highlight then
             Exec "hi LspReferenceRead cterm=bold ctermbg=red guibg=#98971a"
@@ -411,6 +413,7 @@ function settings.lsp_settings()
         rc.document_formatting = false
     end
 
+    vim.api.nvim_add_user_command("LspCapabilities", require("utils.langServers").lsp_capabilities, {})
     -- borders for floating windows
     vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, { border = "double" })
     vim.lsp.handlers["textDocument/signatureHelp"] = vim.lsp.with(
@@ -676,7 +679,7 @@ function settings.telescope()
     require("telescope").load_extension "fzf"
     vim.cmd "PackerLoad telescope-project.nvim"
     vim.cmd "PackerLoad telescope-file-browser.nvim"
-    require("telescope").load_extension "file_browser"
+    -- require("telescope").load_extension "file_browser"
 end
 
 -----------------------------------------------------------------------

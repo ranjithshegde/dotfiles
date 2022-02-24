@@ -296,7 +296,6 @@ end
 
 function Diagnostics.tableHasKey(table, key)
     if table[key] ~= nil then
-        -- print(key)
         return true
     end
 end

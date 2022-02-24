@@ -9,8 +9,6 @@ function M.general()
     M.configFiles()
     M.telescope()
     M.coauthor()
-    M.diagnostic()
-    M.ranger()
     M.treesitter()
 
     local opts = { nowait = true, noremap = true, silent = true }
@@ -223,7 +221,7 @@ function M.configFiles()
                 e = { "<cmd>tabnew ~/.config/nvim/lua/utils/diagnostics.lua<CR>", "Diagnostic extensions" },
                 l = { "<cmd>tabnew ~/.config/nvim/lua/utils/langServers.lua<CR>", "Langauge Server extensions" },
                 a = { "<cmd>tabnew ~/.config/nvim/autoload/util.vim<CR>", "Utilities in autoload" },
-                f = { "<cmd>tabnew ~/.config/nvim/plugin/plugins.vim<CR>", "Functions in vim" },
+                f = { "<cmd>tabnew ~/.config/nvim/plugin/plugins.vim<CR>", "User defined commands" },
                 r = { "<cmd>tabnew $MYVIMRC<CR>", "VimRC" },
                 P = { "<cmd>PackerSync<CR>", "Update packages" },
                 R = { require("utils").Restart, "Reload Vim" },

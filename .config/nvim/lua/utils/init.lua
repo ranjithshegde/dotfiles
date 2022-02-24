@@ -154,6 +154,36 @@ utils.concat_fileLines = function(file)
 end
 
 ------------------------------------------------------------------------
+--                          User commands                             --
+------------------------------------------------------------------------
+
+function utils.commands()
+    require("mappings").diagnostic()
+    local cmd = vim.api.nvim_add_user_command
+    cmd("ToggleVirtual", function()
+        require("utils.diagnostics").toggle_virtual_text(vim.fn.input "Input server: ")
+    end, {})
+    cmd("ToggleSigns", function()
+        require("utils.diagnostics").toggle_signs(vim.fn.input "Input server: ")
+    end, {})
+    cmd("ToggleUnderline", function()
+        require("utils.diagnostics").toggle_underline(vim.fn.input "Input server: ")
+    end, {})
+    cmd("ToggleAllDiagnostics", function()
+        require("utils.diagnostics").toggle_all_diagnostics(vim.fn.input "Input server: ")
+    end, {})
+    cmd("DisableDiagnostics", function()
+        require("utils.diagnostics").turn_off_diagnostics(vim.fn.input "Input server: ")
+    end, {})
+    cmd("EnableDiagnostics", function()
+        require("utils.diagnostics").turn_on_diagnostics(vim.fn.input "Input server: ")
+    end, {})
+    cmd("DefaultDiagnostics", function()
+        require("utils.diagnostics").turn_on_diagnostics_default(vim.fn.input "Input server: ")
+    end, {})
+end
+
+------------------------------------------------------------------------
 --                              Co-authoring                          --
 ------------------------------------------------------------------------
 
