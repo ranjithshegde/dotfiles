@@ -1,5 +1,5 @@
 -- -------------------------- Defs **********************************************************************
-local u = require "utils"
+require "utils"
 local fn = vim.fn
 local packer_path = fn.stdpath "data" .. "/site/pack/packer/start/packer.nvim"
 

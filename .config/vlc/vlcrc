@@ -983,11 +983,6 @@
 # Password (string)
 #sout-rtsp-pwd=
 
-[stream_out_chromaprint] # Chromaprint stream output
-
-# Duration of the fingerprinting (integer)
-#duration=90
-
 [bridge] # Bridge stream output
 
 # ID (integer)
@@ -4253,7 +4248,7 @@ qt-privacy-ask=0
 #random=0
 
 # Repeat all (boolean)
-loop=1
+#loop=0
 
 # Repeat current item (boolean)
 #repeat=0

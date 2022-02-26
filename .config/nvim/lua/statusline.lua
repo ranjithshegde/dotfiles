@@ -1,9 +1,9 @@
 ------------------------------------------------------------------------
 --                              statusline                            --
 ------------------------------------------------------------------------
-local statusline = {}
+local Statusline = {}
 
-statusline.el = function()
+Statusline.el = function()
     require("el").reset_windows()
 
     local builtin = require "el.builtin"
@@ -172,17 +172,12 @@ end
 --                              TabLine                               --
 ------------------------------------------------------------------------
 
-function statusline.tabs()
+function Statusline.tabs()
     -- Separators
     local right_separator = " ❯❯ "
     local left_separator = " ❮❮ "
     -- Blank Between Components
     local space = " "
-
-    --*********************************** Working Dir ---------------------------------
-    local workDir = function()
-        return vim.call("expand", "%")
-    end
 
     --*********************************** File label ---------------------------------
     local getTabLabel = function(n)
@@ -190,9 +185,9 @@ function statusline.tabs()
         local current_buf = Api.nvim_win_get_buf(current_win)
         local file_name = Api.nvim_buf_get_name(current_buf)
         if string.find(file_name, "term://") ~= nil then
-            return " " .. Api.nvim_call_function("fnamemodify", { file_name, ":p:t" })
+            return " " .. vim.fn.fnamemodify(file_name, ":p:t")
         end
-        file_name = Api.nvim_call_function("fnamemodify", { file_name, ":p:t" })
+        file_name = vim.fn.fnamemodify(file_name, ":p:t")
         if file_name == "" then
             return "No Name"
         end
@@ -208,11 +203,11 @@ function statusline.tabs()
     -- *********************************** Highlight groups ---------------------------------
     -- Set tabline colours
     local set_colours = function()
-        Exec(string.format("hi TabLineSel guibg=%s guifg=%s", Colors.bg, Colors.white))
-        Exec(string.format("hi TabLineSelSeparator guibg=%s guifg=%s", Colors.bg, Colors.white))
-        Exec(string.format("hi TabLine guibg=None guifg=%s", Colors.purple))
-        Exec(string.format("hi TabLineSeparator guibg=None guifg=%s", Colors.purple))
-        Exec "hi TabLineFill guibg=None gui=None"
+        Api.nvim_set_hl(0, "TabLineSel", { bg = Colors.bg, fg = Colors.white })
+        Api.nvim_set_hl(0, "TabLineSelSeparator", { bg = Colors.bg, fg = Colors.white })
+        Api.nvim_set_hl(0, "TabLine", { fg = Colors.purple })
+        Api.nvim_set_hl(0, "TabLineSeparator", { fg = Colors.purple })
+        Api.nvim_set_hl(0, "TabLineFill", {})
     end
 
     --*********************************** Tabline module ---------------------------------
@@ -223,14 +218,11 @@ function statusline.tabs()
     for _, val in ipairs(tab_list) do
         local file_name = getTabLabel(val)
         if val == current_tab then
-            -- tabline = tabline .. " %#TabLineSelSeparator#" .. left_separator
             tabline = tabline .. " %#StatusLine#" .. left_separator
             tabline = tabline .. "%#StatusLine# " .. file_name
             tabline = tabline .. " %#StatusLine#" .. right_separator
         else
-            -- tabline = tabline .. " %#TabLine#" .. left_separator
             tabline = tabline .. " %#StatusLineNC#" .. left_separator
-            -- tabline = tabline .. "%#TabLineSeparator# " .. file_name
             tabline = tabline .. "%#StatusLineNC# " .. file_name
             tabline = tabline .. " %#StatusLineNC#" .. right_separator
         end
@@ -240,10 +232,10 @@ function statusline.tabs()
         .. "%#StatusLine#"
         .. left_separator
         .. "%#StatusLine# "
-        .. workDir()
+        .. vim.fn.expand "%"
         .. "%#StatusLine#"
         .. right_separator
     tabline = tabline .. space
     return tabline
 end
-return statusline
+return Statusline

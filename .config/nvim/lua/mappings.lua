@@ -93,12 +93,46 @@ function M.ranger()
     wk.register {
         ["<leader>r"] = {
             name = "Ranger file manager",
-            r = "from current file",
-            R = "from current directory",
-            v = "in a split from current file",
-            V = "in a split from current directory",
-            t = "in a new tab from current file",
-            T = "in a new tab from current directory",
+            r = {
+                function()
+                    require("utils").ranger("%:p:h", "e ")
+                end,
+                "from current file",
+            },
+            R = {
+                function()
+                    require("utils").ranger(".", "e ")
+                end,
+                "from current directory",
+            },
+            v = {
+                function()
+                    vim.cmd "vnew"
+                    require("utils").ranger("%:p:h", "vs ")
+                end,
+                "in a split from current file",
+            },
+            V = {
+                function()
+                    vim.cmd "vnew"
+                    require("utils").ranger(".", "vs ")
+                end,
+                "in a split from current directory",
+            },
+            t = {
+                function()
+                    vim.cmd "tabnew"
+                    require("utils").ranger("%:p:h", "tab drop ")
+                end,
+                "in a new tab from current file",
+            },
+            T = {
+                function()
+                    vim.cmd "tabnew"
+                    require("utils").ranger(".", "tab drop ")
+                end,
+                "in a new tab from current directory",
+            },
         },
     }
 end

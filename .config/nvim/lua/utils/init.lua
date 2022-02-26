@@ -96,11 +96,6 @@ function utils.silent_shell(cmd)
     Exec("silent exe '!" .. cmd .. " &'")
 end
 
--- set browser
-function utils.open_in_browser(url)
-    utils.silent_shell(browser .. " " .. url)
-end
-
 -- Toggleable terminal
 function utils.toggleTerm(cmd, name, spl)
     local win = vim.fn.bufwinnr(name)
@@ -127,9 +122,41 @@ function utils.toggleTerm(cmd, name, spl)
     end
 end
 
+-- Use ranger as file picker
+utils.ranger = function(path, edit_cmd)
+    local cpath = "/tmp/chosenfile"
+    local currentPath = vim.fn.expand(path)
+    local rc = {}
+    rc.name = "ranger"
+    rc.edit_cmd = edit_cmd
+    function rc.on_exit(_, code, _)
+        if not code then
+            vim.cmd "silent! Bclose!"
+        end
+        if io.open(cpath, "r") then
+            for f in io.lines(cpath) do
+                vim.fn.execute(edit_cmd .. f)
+            end
+            cpath = nil
+        end
+    end
+    vim.cmd "enew"
+    if vim.fn.isdirectory(currentPath) then
+        vim.fn.termopen("ranger --choosefiles=" .. cpath .. ' "' .. currentPath .. '"', rc)
+    else
+        vim.fn.termopen("ranger --choosefiles=" .. cpath .. ' --selectfile="' .. currentPath .. '"', rc)
+    end
+    vim.cmd "startinsert"
+end
+
 ------------------------------------------------------------------------
 --                          Plugin functions                          --
 ------------------------------------------------------------------------
+
+-- set browser
+function utils.open_in_browser(url)
+    utils.silent_shell(browser .. " " .. url)
+end
 
 function utils.fs()
     if vim.loop.fs_stat(vim.fn.expand "<cfile>") then
@@ -160,27 +187,69 @@ end
 function utils.commands()
     require("mappings").diagnostic()
     local cmd = vim.api.nvim_add_user_command
-    cmd("ToggleVirtual", function()
-        require("utils.diagnostics").toggle_virtual_text(vim.fn.input "Input server: ")
-    end, {})
-    cmd("ToggleSigns", function()
-        require("utils.diagnostics").toggle_signs(vim.fn.input "Input server: ")
-    end, {})
-    cmd("ToggleUnderline", function()
-        require("utils.diagnostics").toggle_underline(vim.fn.input "Input server: ")
-    end, {})
-    cmd("ToggleAllDiagnostics", function()
-        require("utils.diagnostics").toggle_all_diagnostics(vim.fn.input "Input server: ")
-    end, {})
-    cmd("DisableDiagnostics", function()
-        require("utils.diagnostics").turn_off_diagnostics(vim.fn.input "Input server: ")
-    end, {})
-    cmd("EnableDiagnostics", function()
-        require("utils.diagnostics").turn_on_diagnostics(vim.fn.input "Input server: ")
-    end, {})
-    cmd("DefaultDiagnostics", function()
-        require("utils.diagnostics").turn_on_diagnostics_default(vim.fn.input "Input server: ")
-    end, {})
+
+    cmd("ToggleVirtual", function(opts)
+        require("utils.diagnostics").toggle_virtual_text(opts.args)
+    end, {
+        nargs = 1,
+        complete = function()
+            return require("utils.langServers").getClientNames()
+        end,
+    })
+
+    cmd("ToggleSigns", function(opts)
+        require("utils.diagnostics").toggle_signs(opts.args)
+    end, {
+        nargs = 1,
+        complete = function()
+            return require("utils.langServers").getClientNames()
+        end,
+    })
+
+    cmd("ToggleUnderline", function(opts)
+        require("utils.diagnostics").toggle_underline(opts.args)
+    end, {
+        nargs = 1,
+        complete = function()
+            return require("utils.langServers").getClientNames()
+        end,
+    })
+
+    cmd("ToggleAllDiagnostics", function(opts)
+        require("utils.diagnostics").toggle_all_diagnostics(opts.args)
+    end, {
+        nargs = 1,
+        complete = function()
+            return require("utils.langServers").getClientNames()
+        end,
+    })
+
+    cmd("DisableDiagnostics", function(opts)
+        require("utils.diagnostics").turn_off_diagnostics(opts.args)
+    end, {
+        nargs = 1,
+        complete = function()
+            return require("utils.langServers").getClientNames()
+        end,
+    })
+
+    cmd("EnableDiagnostics", function(opts)
+        require("utils.diagnostics").turn_on_diagnostics(opts.args)
+    end, {
+        nargs = 1,
+        complete = function()
+            return require("utils.langServers").getClientNames()
+        end,
+    })
+
+    cmd("DefaultDiagnostics", function(opts)
+        require("utils.diagnostics").turn_on_diagnostics_default(opts.args)
+    end, {
+        nargs = 1,
+        complete = function()
+            return require("utils.langServers").getClientNames()
+        end,
+    })
 end
 
 ------------------------------------------------------------------------
