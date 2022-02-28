@@ -43,6 +43,7 @@ function settings.options()
     -- o.listchars = "tab:<->,eol:↲,space:→"
     o.completeopt = "menuone,noinsert,noselect"
     o.dictionary = os.getenv "XDG_DATA_HOME" .. "/dict/words"
+    o.tabline = [[%!luaeval('require("statusline").tabs()')]]
     o.sessionoptions:append "terminal,tabpages"
     o.clipboard:append "unnamedplus"
     o.shortmess:append "c"
@@ -316,19 +317,27 @@ function settings.completion()
     require("luasnip.loaders.from_vscode").lazy_load()
     G.completion_enable_snippet = "luasnip"
 
-    u.create_augroup({
-        { "FileType", "*", 'lua require"completion".on_attach()' },
-        {
-            "FileType",
-            "supercollider,glsl,conf,org,cmake",
-            "let g:completion_auto_change_source=1",
-        },
-        {
-            "FileType",
-            "cpp,c,hpp,lua,python,java,javascript,typescript",
-            "let g:completion_auto_change_source=0",
-        },
-    }, "completion_attach")
+    AuGroup { name = "CompletionAttach" }
+    AuCmd {
+        group = "CompletionAttach",
+        event = "FileType",
+        pattern = "*",
+        callback = function()
+            require("completion").on_attach()
+        end,
+    }
+    AuCmd {
+        group = "CompletionAttach",
+        event = "FileType",
+        pattern = "supercollider,glsl,conf,org,cmake",
+        command = "let g:completion_auto_change_source = 1",
+    }
+    AuCmd {
+        group = "CompletionAttach",
+        event = "FileType",
+        pattern = "cpp,c,hpp,lua,python,java,javascript,typescript",
+        command = "let g:completion_auto_change_source = 0",
+    }
 end
 
 ------------------------------------------------------------------------
@@ -338,17 +347,16 @@ end
 function settings.lsp_settings()
     Lsp = require "lspconfig"
 
-    local buffExec = "* <buffer>"
-    local docHigh = {
-        { "CursorHold", "<buffer>", [[lua vim.lsp.buf.document_highlight()]] },
-        { "CursorMoved", "<buffer>", [[lua vim.lsp.buf.clear_references()]] },
-        { "CursorMovedI", "<buffer>", [[lua vim.lsp.buf.clear_references()]] },
+    AuGroup { name = "SetDiagnosticFuncs" }
+    AuCmd {
+        group = "SetDiagnosticFuncs",
+        event = "DiagnosticChanged",
+        pattern = "*",
+        callback = function()
+            vim.diagnostic.setloclist { open = false }
+            require("utils").commands()
+        end,
     }
-    -- Set diagnostics to local list automatically
-    u.create_augroup({
-        { "DiagnosticChanged", "*", "lua vim.diagnostic.setloclist({open = false})" },
-        { "DiagnosticChanged", "*", "lua require('utils').commands()" },
-    }, "SetDiagnosticFuncs")
 
     Attach_props = function(client)
         require("mappings").nvim_lsp()
@@ -365,20 +373,34 @@ function settings.lsp_settings()
 
         local rc = client.resolved_capabilities
         if rc.document_highlight then
-            Exec "hi LspReferenceRead cterm=bold ctermbg=red guibg=#98971a"
-            Exec "hi LspReferenceText cterm=bold ctermbg=red guibg=grey"
-            Exec "hi LspReferenceWrite cterm=bold ctermbg=red guibg= #fbf1c7"
-            u.create_cmdGroup(docHigh, buffExec, "lsp_highlightSymbol")
+            Api.nvim_set_hl(0, "LspReferenceRead", { cterm = { bold = true }, ctermbg = "red", bg = Colors.green })
+            Api.nvim_set_hl(0, "LspReferenceText", { cterm = { bold = true }, ctermbg = "red", bg = "grey" })
+            Api.nvim_set_hl(0, "LspReferenceWrite", { cterm = { bold = true }, ctermbg = "red", bg = Colors.white })
+            AuGroup { name = "LspHighlightSymbols" }
+            AuCmd {
+                group = "LspHighlightSymbols",
+                event = "CursorHold",
+                buffer = 0,
+                callback = vim.lsp.buf.document_highlight,
+            }
+            AuCmd {
+                group = "LspHighlightSymbols",
+                event = "CursorMoved, CursorMovedI",
+                buffer = 0,
+                callback = vim.lsp.buf.clear_references,
+            }
         end
 
         if rc.document_formatting then
-            u.create_augroup({
-                {
-                    "BufWritePre",
-                    "*.html,*.css,*.js,*.hpp,*.h,*.sh,*.lua,*.cpp,*.json,*.py,*.yaml,*.toml",
-                    "lua vim.lsp.buf.formatting_sync(nil, 500)",
-                },
-            }, "lsp_auto_format")
+            AuGroup { name = "LspAutoFormat" }
+            AuCmd {
+                group = "LspAutoFormat",
+                event = "BufWrite",
+                pattern = "*.html,*.css,*.js,*.hpp,*.h,*.sh,*.lua,*.cpp,*.json,*.py,*.yaml,*.toml",
+                callback = function()
+                    vim.lsp.buf.formatting_sync(nil, 500)
+                end,
+            }
         end
     end
 

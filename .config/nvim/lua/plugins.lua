@@ -1,5 +1,4 @@
 -- -------------------------- Defs **********************************************************************
-require "utils"
 local fn = vim.fn
 local packer_path = fn.stdpath "data" .. "/site/pack/packer/start/packer.nvim"
 
@@ -125,7 +124,7 @@ return packer.startup {
 
         -- Taglist and sidebars
         use {
-            -- { "yegappan/taglist", cmd = "TlistToggle" },
+            -- { "yegappan/taglist", cmd = "TlistToggle"},
             { "simrat39/symbols-outline.nvim", cmd = "SymbolsOutline" },
             {
                 "sidebar-nvim/sidebar.nvim",

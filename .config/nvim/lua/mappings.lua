@@ -1,5 +1,4 @@
 local M = {}
-require "utils"
 local wk = require "which-key"
 local map = vim.keymap.set
 
@@ -92,7 +91,7 @@ end
 function M.ranger()
     wk.register {
         ["<leader>r"] = {
-            name = "Ranger file manager",
+            name = "Ranger file picker",
             r = {
                 function()
                     require("utils").ranger("%:p:h", "e ")
@@ -255,7 +254,7 @@ function M.configFiles()
                 e = { "<cmd>tabnew ~/.config/nvim/lua/utils/diagnostics.lua<CR>", "Diagnostic extensions" },
                 l = { "<cmd>tabnew ~/.config/nvim/lua/utils/langServers.lua<CR>", "Langauge Server extensions" },
                 a = { "<cmd>tabnew ~/.config/nvim/autoload/util.vim<CR>", "Utilities in autoload" },
-                f = { "<cmd>tabnew ~/.config/nvim/plugin/plugins.vim<CR>", "User defined commands" },
+                f = { "<cmd>tabnew ~/.config/nvim/after/plugin/plugins.vim<CR>", "User defined commands" },
                 r = { "<cmd>tabnew $MYVIMRC<CR>", "VimRC" },
                 P = { "<cmd>PackerSync<CR>", "Update packages" },
                 R = { require("utils").Restart, "Reload Vim" },

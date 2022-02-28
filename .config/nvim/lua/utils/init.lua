@@ -1,33 +1,6 @@
 local utils = {}
 
 ------------------------------------------------------------------------
---                              Global config variables               --
-------------------------------------------------------------------------
-Api = vim.api
-G = vim.g
-Var = Api.nvim_set_var
-Exec = Api.nvim_command
-Op = Api.nvim_get_option
-Fn = Api.nvim_call_function
-local browser = "qutebrowser"
-G.netrw_browsex_viewer = "xdg-open"
-
-Colors = {
-    bg = "#32302f",
-    bg2 = "#008080",
-    bg3 = "#d79921",
-    white = "#fbf1c7",
-    yellow = "#d79921",
-    cyan = "#008080",
-    grey = "#928374",
-    green = "#98971a",
-    purple = "#b16286",
-    orange = "#d65d0e",
-    blue = "#458588",
-    red = "#cc241d",
-}
-
-------------------------------------------------------------------------
 --                              Vim options                           --
 ------------------------------------------------------------------------
 
@@ -63,28 +36,6 @@ end
 function utils.Restart()
     utils.Reload()
     Exec "doautocmd VimEnter"
-end
-
-------------------------------------------------------------------------
---                              AutoCommands                          --
-------------------------------------------------------------------------
-
-function utils.create_augroup(autocmds, name)
-    Exec("augroup " .. name)
-    Exec "autocmd!"
-    for _, autocmd in ipairs(autocmds) do
-        Exec("autocmd " .. table.concat(autocmd, " "))
-    end
-    Exec "augroup END"
-end
-
-function utils.create_cmdGroup(autocmds, command, name)
-    Exec("augroup " .. name)
-    Exec("autocmd! " .. command)
-    for _, autocmd in ipairs(autocmds) do
-        Exec("autocmd " .. table.concat(autocmd, " "))
-    end
-    Exec "augroup END"
 end
 
 ------------------------------------------------------------------------
@@ -154,6 +105,7 @@ end
 ------------------------------------------------------------------------
 
 -- set browser
+local browser = "qutebrowser"
 function utils.open_in_browser(url)
     utils.silent_shell(browser .. " " .. url)
 end

@@ -172,45 +172,45 @@ end
 --                              TabLine                               --
 ------------------------------------------------------------------------
 
+-- Separators
+local right_separator = " ❯❯ "
+local left_separator = " ❮❮ "
+-- Blank Between Components
+local space = " "
+
+--*********************************** File label ---------------------------------
+local getTabLabel = function(n)
+    local current_win = Api.nvim_tabpage_get_win(n)
+    local current_buf = Api.nvim_win_get_buf(current_win)
+    local file_name = Api.nvim_buf_get_name(current_buf)
+    if string.find(file_name, "term://") ~= nil then
+        return " " .. vim.fn.fnamemodify(file_name, ":p:t")
+    end
+    file_name = vim.fn.fnamemodify(file_name, ":p:t")
+    if file_name == "" then
+        return "No Name"
+    end
+
+    local ext = vim.fn.fnamemodify(file_name, ":e")
+    local icon = require("nvim-web-devicons").get_icon(file_name, ext)
+    if icon ~= nil then
+        return icon .. space .. file_name
+    end
+    return file_name
+end
+
+-- *********************************** Highlight groups ---------------------------------
+-- Set tabline colours
+local set_colours = function()
+    Api.nvim_set_hl(0, "TabLineSel", { bg = Colors.bg, fg = Colors.white })
+    Api.nvim_set_hl(0, "TabLineSelSeparator", { bg = Colors.bg, fg = Colors.white })
+    Api.nvim_set_hl(0, "TabLine", { fg = Colors.purple })
+    Api.nvim_set_hl(0, "TabLineSeparator", { fg = Colors.purple })
+    Api.nvim_set_hl(0, "TabLineFill", {})
+end
+
+--*********************************** Tabline module ---------------------------------
 function Statusline.tabs()
-    -- Separators
-    local right_separator = " ❯❯ "
-    local left_separator = " ❮❮ "
-    -- Blank Between Components
-    local space = " "
-
-    --*********************************** File label ---------------------------------
-    local getTabLabel = function(n)
-        local current_win = Api.nvim_tabpage_get_win(n)
-        local current_buf = Api.nvim_win_get_buf(current_win)
-        local file_name = Api.nvim_buf_get_name(current_buf)
-        if string.find(file_name, "term://") ~= nil then
-            return " " .. vim.fn.fnamemodify(file_name, ":p:t")
-        end
-        file_name = vim.fn.fnamemodify(file_name, ":p:t")
-        if file_name == "" then
-            return "No Name"
-        end
-
-        local ext = vim.fn.fnamemodify(file_name, ":e")
-        local icon = require("nvim-web-devicons").get_icon(file_name, ext)
-        if icon ~= nil then
-            return icon .. space .. file_name
-        end
-        return file_name
-    end
-
-    -- *********************************** Highlight groups ---------------------------------
-    -- Set tabline colours
-    local set_colours = function()
-        Api.nvim_set_hl(0, "TabLineSel", { bg = Colors.bg, fg = Colors.white })
-        Api.nvim_set_hl(0, "TabLineSelSeparator", { bg = Colors.bg, fg = Colors.white })
-        Api.nvim_set_hl(0, "TabLine", { fg = Colors.purple })
-        Api.nvim_set_hl(0, "TabLineSeparator", { fg = Colors.purple })
-        Api.nvim_set_hl(0, "TabLineFill", {})
-    end
-
-    --*********************************** Tabline module ---------------------------------
     set_colours()
     local tabline = ""
     local tab_list = Api.nvim_list_tabpages()
