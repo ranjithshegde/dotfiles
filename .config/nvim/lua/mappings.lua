@@ -571,7 +571,7 @@ function M.git()
     }
 end
 
--- ******************************** Snippets ---------------------------------------
+-- ******************************** Autocomplete & Snippets -----------------------------
 function M.autoComplete()
     -- change completion mode
     map("i", "<C-j>", "<Plug>(completion_next_source)")

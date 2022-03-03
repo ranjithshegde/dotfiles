@@ -1,15 +1,15 @@
--- ------------------------------------------------------------------------
--- --                              Global config variables               --
--- ------------------------------------------------------------------------
-Api = vim.api
+--------------------------------------------------------------------------
+----                              Global config variables               --
+--------------------------------------------------------------------------
 G = vim.g
+Api = vim.api
 Var = Api.nvim_set_var
 Exec = Api.nvim_command
 Op = Api.nvim_get_option
 Fn = Api.nvim_call_function
 G.netrw_browsex_viewer = "xdg-open"
-AuGroup = vim.api.nvim_create_augroup
 AuCmd = vim.api.nvim_create_autocmd
+AuGroup = vim.api.nvim_create_augroup
 
 Colors = {
     bg = "#32302f",
@@ -26,7 +26,7 @@ Colors = {
     red = "#cc241d",
 }
 
--- **************Neovim basics -------------------------------------------------------------
+-- **************Neovim basics -----------------------------------------
 require "impatient"
 require "plugins"
 require "packer_compiled"
@@ -37,12 +37,11 @@ require("mappings").general()
 --                              AutoCommands                          --
 ------------------------------------------------------------------------
 
--- ************** FileTypes  -----------------------------------------------
+-- ************** FileTypes  -------------------------------------------
 
-AuGroup { name = "FormatOptions" }
-AuCmd {
+AuGroup("FormatOptions", {})
+AuCmd("FileType", {
     group = "FormatOptions",
-    event = "FileType",
     pattern = "*",
     callback = function()
         vim.opt.formatoptions = vim.opt.formatoptions
@@ -56,51 +55,50 @@ AuCmd {
             + "j" -- Auto-remove comments if possible.
             + "2" -- Indent according to 2nd line
     end,
-}
-AuGroup { name = "CommonFtRules" }
-AuCmd {
+})
+
+AuGroup("CommonFtRules", {})
+AuCmd("FileType", {
     group = "CommonFtRules",
-    event = "FileType",
     pattern = "org",
     callback = function()
         vim.opt_local.iskeyword:append ":,#,+"
     end,
-}
-AuCmd {
+})
+AuCmd("FileType", {
     group = "CommonFtRules",
-    event = "FileType",
     pattern = "vim",
     command = "nn <silent><buffer>,K <cmd>exe 'h '.expand('<cword>')<CR>",
-}
+})
 
-AuGroup { name = "MakeDispatch" }
-AuCmd {
+AuGroup("MakeDispatch", {})
+AuCmd("FileType", {
     group = "MakeDispatch",
-    event = "FileType",
     pattern = "java,lua,python,javascript",
     callback = function()
         vim.keymap.set("n", "<F5>", function()
             vim.cmd "w | redraw"
             vim.cmd "Dispatch"
         end, { buffer = true, desc = "Call native compile Dispatch command" })
+
         vim.keymap.set("n", "<F10>", function()
             require("utils").toggleTerm(vim.g.repl, "repl", 0)
         end, { buffer = true, desc = "Toggle REPL" })
-        vim.keymap.set(
-            "t",
-            "<F10>",
-            "<esc><cmd>lua require('utils').toggleTerm(vim.g.repl, 'repl', 0)<CR>",
-            { desc = "Toggle REPL" }
-        )
+
+        vim.keymap.set("t", "<F10>", function()
+            vim.cmd "stopinsert"
+            require("utils").toggleTerm(vim.g.repl, "repl", 0)
+        end, { desc = "Toggle REPL" })
     end,
-}
+})
 
-AuGroup { name = "PluginLoad" }
-AuCmd { group = "PluginLoad", event = "BufWritePost", pattern = "plugins.lua", command = "PackerCompile" }
+-- Compile packer after writing plugins.lua
+AuGroup("PluginLoad", {})
+AuCmd("BufWritePost", { group = "PluginLoad", pattern = "plugins.lua", command = "PackerCompile" })
 
--- ************************ Terminal management -------------------------------------------------
+-- ************************ Terminal management -------------------------
 
-AuGroup { name = "TermInsertModes" }
-AuCmd { group = "TermInsertModes", event = "BufWinEnter, WinEnter", pattern = "term://*", command = "startinsert" }
-AuCmd { group = "TermInsertModes", event = "TermEnter", pattern = "*", command = "startinsert" }
-AuCmd { group = "TermInsertModes", event = "TermClose", pattern = "*", command = "call nvim_input('<CR>')" }
+AuGroup("TermInsertModes", {})
+AuCmd("BufWinEnter, WinEnter", { group = "TermInsertModes", pattern = "term://*", command = "startinsert" })
+AuCmd("TermEnter", { group = "TermInsertModes", pattern = "*", command = "startinsert" })
+AuCmd("TermClose", { group = "TermInsertModes", pattern = "*", command = "call nvim_input('<CR>')" })

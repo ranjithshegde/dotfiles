@@ -43,8 +43,8 @@ alias cat=bat
 alias pd='/usr/bin/pdl'
 # alias bbook='abook --config "$XDG_CONFIG_HOME"/abook/abookrc --datafile "$XDG_DATA_HOME"/abook/addressbook'
 alias nv-settings='nvidia-settings --config="$XDG_CONFIG_HOME"/nvidia/settings'
-alias yarn="yarn --use-yarnrc $XDG_CONFIG_HOME/yarn/config"
-alias wget --hsts-file="$XDG_CACHE_HOME/wget-hsts"
+alias yarn='yarn --use-yarnrc "$XDG_CONFIG_HOME"/yarn/config'
+alias wget '--hsts-file="$XDG_CACHE_HOME"/wget-hsts'
 
 alias config='/usr/bin/git --git-dir=/home/ranjith/Software/Workspaces/Repos/dotfiles --work-tree=/home/ranjith'
 alias cvim='GIT_DIR=/home/ranjith/Software/Workspaces/Repos/dotfiles GIT_WORK_TREE=$HOME vim'
@@ -126,23 +126,12 @@ source /usr/share/fzf/completion.zsh
 
 # source "$ZDOTDIR"/functions/status.sh
 
-eval "`pip completion --zsh`"
+eval "$(pip completion --zsh)"
 
-# fasd_cache="$XDG_CACHE_HOME/fasd-init-bash"
-# if [ "$(command -v fasd)" -nt "$fasd_cache" -o ! -s "$fasd_cache" ]; then
-#   fasd --init posix-alias zsh-hook zsh-ccomp zsh-ccomp-install >| "$fasd_cache"
-# fi
-# source "$fasd_cache"
-# unset fasd_cache
 
 bindkey '^[[A' history-substring-search-up
 bindkey '^[[B' history-substring-search-down
 # source "/usr/lib/emsdk/emsdk_env.sh"
-# source $ZDOTDIR/zvi
-
-# export FZF_COMPLETION_TRIGGER=''
-# bindkey '^J' fzf-completion
-# bindkey '^K' $fzf_default_completion
 
 # # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 # [[ ! -f ~/.config/zsh/p10k.zsh ]] || source ~/.config/zsh/.p10k.zsh

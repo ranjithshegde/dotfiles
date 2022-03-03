@@ -90,10 +90,12 @@ function settings.options()
     end
 
     -- ************** HighlightOnYank ---------------------------------------------------------
-    function _G.HighlightOnYank()
-        vim.highlight.on_yank { higroup = "IncSearch", timeout = 200 }
-    end
-    vim.cmd "au TextYankPost * silent! lua HighlightOnYank()"
+    AuCmd("TextYankPost", {
+        pattern = "*",
+        callback = function()
+            vim.highlight.on_yank { higroup = "IncSearch", timeout = 200 }
+        end,
+    })
 end
 
 ------------------------------------------------------------------------
@@ -317,27 +319,24 @@ function settings.completion()
     require("luasnip.loaders.from_vscode").lazy_load()
     G.completion_enable_snippet = "luasnip"
 
-    AuGroup { name = "CompletionAttach" }
-    AuCmd {
+    AuGroup("CompletionAttach", {})
+    AuCmd("FileType", {
         group = "CompletionAttach",
-        event = "FileType",
         pattern = "*",
         callback = function()
             require("completion").on_attach()
         end,
-    }
-    AuCmd {
+    })
+    AuCmd("FileType", {
         group = "CompletionAttach",
-        event = "FileType",
         pattern = "supercollider,glsl,conf,org,cmake",
         command = "let g:completion_auto_change_source = 1",
-    }
-    AuCmd {
+    })
+    AuCmd("FileType", {
         group = "CompletionAttach",
-        event = "FileType",
         pattern = "cpp,c,hpp,lua,python,java,javascript,typescript",
         command = "let g:completion_auto_change_source = 0",
-    }
+    })
 end
 
 ------------------------------------------------------------------------
@@ -347,16 +346,15 @@ end
 function settings.lsp_settings()
     Lsp = require "lspconfig"
 
-    AuGroup { name = "SetDiagnosticFuncs" }
-    AuCmd {
+    AuGroup("SetDiagnosticFuncs", {})
+    AuCmd({ "DiagnosticChanged" }, {
         group = "SetDiagnosticFuncs",
-        event = "DiagnosticChanged",
         pattern = "*",
         callback = function()
             vim.diagnostic.setloclist { open = false }
             require("utils").commands()
         end,
-    }
+    })
 
     Attach_props = function(client)
         require("mappings").nvim_lsp()
@@ -376,31 +374,29 @@ function settings.lsp_settings()
             Api.nvim_set_hl(0, "LspReferenceRead", { cterm = { bold = true }, ctermbg = "red", bg = Colors.green })
             Api.nvim_set_hl(0, "LspReferenceText", { cterm = { bold = true }, ctermbg = "red", bg = "grey" })
             Api.nvim_set_hl(0, "LspReferenceWrite", { cterm = { bold = true }, ctermbg = "red", bg = Colors.white })
-            AuGroup { name = "LspHighlightSymbols" }
-            AuCmd {
+
+            AuGroup("LspHighlightSymbols", {})
+            AuCmd("CursorHold", {
                 group = "LspHighlightSymbols",
-                event = "CursorHold",
                 buffer = 0,
                 callback = vim.lsp.buf.document_highlight,
-            }
-            AuCmd {
+            })
+            AuCmd("CursorMoved, CursorMovedI", {
                 group = "LspHighlightSymbols",
-                event = "CursorMoved, CursorMovedI",
                 buffer = 0,
                 callback = vim.lsp.buf.clear_references,
-            }
+            })
         end
 
         if rc.document_formatting then
-            AuGroup { name = "LspAutoFormat" }
-            AuCmd {
+            AuGroup("LspAutoFormat", {})
+            AuCmd("BufWrite", {
                 group = "LspAutoFormat",
-                event = "BufWrite",
                 pattern = "*.html,*.css,*.js,*.hpp,*.h,*.sh,*.lua,*.cpp,*.json,*.py,*.yaml,*.toml",
                 callback = function()
                     vim.lsp.buf.formatting_sync(nil, 500)
                 end,
-            }
+            })
         end
     end
 
@@ -451,15 +447,15 @@ end
 function settings.langServers()
     local dict = os.getenv "XDG_CONFIG_HOME" .. "/nvim/spell/en.utf-8.add"
     local configs = {
-        yamlls = { on_attach = All_attach },
         jsonls = { on_attach = EfmAttach },
-        cssls = { on_attach = All_attach, capabilities = Capabilities },
-        bashls = { on_attach = All_attach, filetypes = { "sh", "zsh" } },
+        yamlls = { on_attach = All_attach },
         html = { on_attach = All_attach, capabilities = Capabilities },
+        cssls = { on_attach = All_attach, capabilities = Capabilities },
         cmake = { on_attach = All_attach, capabilities = Capabilities },
         vimls = { on_attach = All_attach, capabilities = Capabilities },
-        tsserver = { on_attach = All_attach, capabilities = Capabilities },
         pyright = { on_attach = All_attach, capabilities = Capabilities },
+        tsserver = { on_attach = All_attach, capabilities = Capabilities },
+        bashls = { on_attach = All_attach, capabilities = Capabilities, filetypes = { "sh", "zsh" } },
         ccls = {
             on_init = Cinit,
             handlers = {
@@ -589,15 +585,6 @@ function settings.lsp_lintFormat()
         lintStdin = false,
         lintFormats = { "%f:%l:%c: %m" },
     }
-    local clcc = {
-        lintCommand = "clcc",
-        lintStdin = true,
-        lintFormats = {
-            "%e:%l:%c: error: %m,%-z%p^[ ~]%#",
-            "%w:%l:%c: warning: %m,%-z%p^[ ~]%#",
-            "%i:%l:%c: note: %m,%-z%p^[ ~]%#",
-        },
-    }
 
     local languages = {
         vim = { vint },
@@ -613,7 +600,6 @@ function settings.lsp_lintFormat()
         sh = { shellcheck, shfmt },
         zsh = { shellcheck, shfmt },
         python = { flake8, isort, black, mypy },
-        -- opencl = { clcc },
     }
     Lsp.efm.setup {
         filetypes = vim.tbl_keys(languages),
