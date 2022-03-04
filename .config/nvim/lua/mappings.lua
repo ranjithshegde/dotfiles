@@ -22,12 +22,12 @@ function M.general()
     map("v", ">", ">gv", opts)
     -- Terminal
     map("t", "<Esc>", "<C-\\><C-n>", opts)
-    map(
-        "t",
-        "<F9>",
-        "<esc><cmd>lua require('utils').toggleTerm('zsh','shell',1)<cr>",
-        { desc = "Toggle current/default terminal" }
-    )
+    map("t", "<F9>", function()
+        vim.cmd "stopinsert"
+        require("utils").toggleTerm("zsh", "shell", 1)
+    end, {
+        desc = "Toggle current/default terminal",
+    })
 
     wk.register {
         -- open folds when searching
@@ -521,7 +521,6 @@ function M.telescope()
                 name = "find files in",
                 f = { tele "find_files", "Current directory" },
                 h = { telF "find_files({cwd='~'})", "Home directory" },
-                d = { telF "find_files({cwd='~/.config/', prompt_title = 'Dotfiles'})", "Dotfiles" },
                 r = { tele "oldfiles", "Vim recent files" },
                 t = { tele "help_tags", "vim help files" },
                 c = { cd_browser("C++ Practice files/dirs", "$CWORK/Practice"), "Open C practice" },
@@ -529,6 +528,10 @@ function M.telescope()
                 b = {
                     telF "find_files({cwd='~/.local/bin/', prompt_title = 'Scripts and binaries in local'})",
                     "scripts & binaries",
+                },
+                d = {
+                    telF "find_files({cwd='~/.config/', find_command = {'fd', '--hidden'},prompt_title = 'Dotfiles'})",
+                    "Dotfiles",
                 },
                 v = {
                     telF "find_files({cwd='~/.local/share/nvim/', prompt_title = 'Plugin files'})",
