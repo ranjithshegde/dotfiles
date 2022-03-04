@@ -63,4 +63,3 @@ function! util#CamelCase() abort
     imap <silent> <S-Left> <C-o><Plug>CamelCaseMotion_b
     imap <silent> <S-Right> <C-o><Plug>CamelCaseMotion_w
 endfunction
-

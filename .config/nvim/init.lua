@@ -7,9 +7,8 @@ Var = Api.nvim_set_var
 Exec = Api.nvim_command
 Op = Api.nvim_get_option
 Fn = Api.nvim_call_function
-G.netrw_browsex_viewer = "xdg-open"
-AuCmd = vim.api.nvim_create_autocmd
-AuGroup = vim.api.nvim_create_augroup
+AuCmd = Api.nvim_create_autocmd
+AuGroup = Api.nvim_create_augroup
 
 Colors = {
     bg = "#32302f",
@@ -94,7 +93,7 @@ AuCmd("FileType", {
 
 -- Compile packer after writing plugins.lua
 AuGroup("PluginLoad", {})
-AuCmd("BufWritePost", { group = "PluginLoad", pattern = "plugins.lua", command = "PackerCompile" })
+AuCmd("BufWritePost", { group = "PluginLoad", pattern = "plugins.lua", command = "source <afile> | PackerCompile" })
 
 -- ************************ Terminal management -------------------------
 

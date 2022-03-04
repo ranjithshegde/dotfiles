@@ -145,7 +145,7 @@ return packer.startup {
             },
             { "p00f/nvim-ts-rainbow", event = "BufReadPre" },
             { "nvim-treesitter/nvim-treesitter-textobjects", event = "BufReadPost" },
-            { "nvim-treesitter/nvim-treesitter-refactor", ft = "supercollider" },
+            { "nvim-treesitter/nvim-treesitter-refactor", after = "scnvim" },
             -- {
             --     "nvim-treesitter/playground",
             --     cmd = { "TSPlaygroundToggle", "TSHighlightCapturesUnderCursor" },
@@ -204,7 +204,7 @@ return packer.startup {
                         sidebar = { size = 80 },
                     }
                 end,
-                opt = true,
+                after = "nvim-dap",
             },
         }
 
@@ -224,7 +224,7 @@ return packer.startup {
             },
             {
                 "akinsho/org-bullets.nvim",
-                ft = "org",
+                after = "orgmode",
                 config = function()
                     require("org-bullets").setup {}
                 end,
@@ -293,15 +293,15 @@ return packer.startup {
                     require("settings").telescope()
                 end,
                 requires = {
-                    "nvim-lua/popup.nvim",
+                    { "nvim-lua/popup.nvim", opt = true },
                     "nvim-lua/plenary.nvim",
                 },
             },
-            { "nvim-telescope/telescope-file-browser.nvim", opt = true },
-            { "nvim-telescope/telescope-fzf-native.nvim", opt = true, run = "make" },
+            { "nvim-telescope/telescope-file-browser.nvim", after = "telescope.nvim" },
+            { "nvim-telescope/telescope-fzf-native.nvim", after = "telescope.nvim", run = "make" },
             {
                 "nvim-telescope/telescope-project.nvim",
-                opt = true,
+                after = "telescope.nvim",
                 config = function()
                     require("telescope").setup {
                         extensions = {
@@ -323,6 +323,7 @@ return packer.startup {
         }
     end,
     config = {
-        compile_path = vim.fn.stdpath "config" .. "/lua/packer_compiled.lua",
+        compile_path = require("packer.util").join_paths(fn.stdpath "config", "lua", "packer_compiled.lua"),
+        profile = { enable = true, threshold = 1 },
     },
 }

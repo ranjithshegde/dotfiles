@@ -54,6 +54,7 @@ function settings.options()
     G.did_load_filetypes = 0
     G.loaded_ruby_provider = 0
     G.loaded_perl_provider = 0
+    G.netrw_browsex_viewer = "xdg-open"
     G.symbols_outline = { auto_preview = false, width = 40 }
 
     -- Folds for filetype
@@ -615,8 +616,6 @@ end
 ------------------------------------------------------------------------
 
 function settings.telescope()
-    vim.cmd "PackerLoad telescope-fzf-native.nvim"
-
     require("telescope").setup {
         pickers = {
             find_files = { follow = true },
@@ -683,11 +682,7 @@ function settings.telescope()
             },
         },
     }
-
     require("telescope").load_extension "fzf"
-    vim.cmd "PackerLoad telescope-project.nvim"
-    vim.cmd "PackerLoad telescope-file-browser.nvim"
-    -- require("telescope").load_extension "file_browser"
 end
 
 -----------------------------------------------------------------------

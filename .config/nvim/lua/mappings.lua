@@ -715,7 +715,7 @@ end
 
 function M.cmake()
     wk.register({
-        ["<F2>"] = { '<cmd>w <CR> <cmd>lua require("utils.compiler").cmake_clean()<CR>', "Clean cmake" },
+        ["<F2>"] = { require("utils.compiler").cmake_clean, "Clean cmake" },
         ["<F3>"] = { '<cmd>w <CR> <cmd>lua require("utils.compiler").cmake_gen_debug()<CR>', "Generate Cmake Debug" },
         ["<F4>"] = { '<cmd>w <CR> <cmd>lua require("utils.compiler").cmake_gen()<CR>', "Generate Cmake Release" },
         ["<F5>"] = { "<cmd>w <CR> <cmd>Make -j12 -C build<CR>", "Make" },
