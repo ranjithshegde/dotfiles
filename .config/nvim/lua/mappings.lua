@@ -88,6 +88,7 @@ function M.general()
 end
 
 -- ******************************** Utilities ---------------------------------------
+
 function M.ranger()
     wk.register {
         ["<leader>r"] = {
@@ -254,7 +255,7 @@ function M.configFiles()
                 e = { "<cmd>tabnew ~/.config/nvim/lua/utils/diagnostics.lua<CR>", "Diagnostic extensions" },
                 l = { "<cmd>tabnew ~/.config/nvim/lua/utils/langServers.lua<CR>", "Langauge Server extensions" },
                 a = { "<cmd>tabnew ~/.config/nvim/autoload/util.vim<CR>", "Utilities in autoload" },
-                f = { "<cmd>tabnew ~/.config/nvim/after/plugin/plugins.vim<CR>", "User defined commands" },
+                f = { "<cmd>tabnew ~/.config/nvim/after/plugin/plugins.lua<CR>", "User defined commands" },
                 r = { "<cmd>tabnew $MYVIMRC<CR>", "VimRC" },
                 P = { "<cmd>PackerSync<CR>", "Update packages" },
                 R = { require("utils").Restart, "Reload Vim" },
@@ -575,6 +576,7 @@ function M.git()
 end
 
 -- ******************************** Autocomplete & Snippets -----------------------------
+
 function M.autoComplete()
     -- change completion mode
     map("i", "<C-j>", "<Plug>(completion_next_source)")
@@ -655,8 +657,6 @@ function M.makeC()
     }, { buffer = 0 })
 end
 
--- ******************************** Openframeworks Android ---------------------------------------
-
 -- ********************************  Simple C mappings ---------------------------------------
 
 function M.ctests()
@@ -677,6 +677,7 @@ function M.pdc()
 end
 
 -- ******************************** General Clang mappings ---------------------------------------
+
 function M.clang()
     wk.register({
         [";"] = {
@@ -745,6 +746,7 @@ function M.coauthor()
 end
 
 -- ******************************** debug ---------------------------------------
+
 function M.debug()
     wk.register({
         ["<leader>"] = {
@@ -792,6 +794,7 @@ function M.debug()
 end
 
 -- ******************************** Latex ---------------------------------------
+
 function M.tex()
     wk.register({
         ["<F3>"] = { "<cmd>TexWordCount<CR>", "Word count" },

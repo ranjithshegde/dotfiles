@@ -295,7 +295,14 @@ return packer.startup {
                 requires = "nvim-lua/plenary.nvim",
             },
             { "nvim-telescope/telescope-file-browser.nvim", after = "telescope.nvim" },
-            { "nvim-telescope/telescope-fzf-native.nvim", after = "telescope.nvim", run = "make" },
+            {
+                "nvim-telescope/telescope-fzf-native.nvim",
+                after = "telescope.nvim",
+                run = "make",
+                config = function()
+                    require("telescope").load_extension "fzf"
+                end,
+            },
             {
                 "nvim-telescope/telescope-project.nvim",
                 after = "telescope.nvim",

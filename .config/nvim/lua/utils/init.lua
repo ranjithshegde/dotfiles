@@ -39,6 +39,71 @@ function utils.Restart()
 end
 
 ------------------------------------------------------------------------
+--                              AutoCommands                          --
+------------------------------------------------------------------------
+
+utils.autocmd = function()
+    -- ************** FileTypes  -------------------------------------------
+
+    AuGroup("FormatOptions", {})
+    AuCmd("FileType", {
+        group = "FormatOptions",
+        pattern = "*",
+        callback = function()
+            vim.opt.formatoptions = vim.opt.formatoptions
+                - "a" -- Dont format pasted code
+                - "t" -- Delegate to linter prgs/LSP
+                - "o" -- O and o don't continue comments
+                - "r" -- Return does not continue comments
+                + "c" -- comments respect textwidth
+                + "q" -- Allow formatting comments w/ gq
+                + "n" -- Recognize numbered lists
+                + "j" -- Auto-remove comments if possible.
+                + "2" -- Indent according to 2nd line
+        end,
+    })
+
+    AuGroup("CommonFtRules", {})
+    AuCmd("FileType", {
+        group = "CommonFtRules",
+        pattern = "vim",
+        command = "nn <silent><buffer>,K <cmd>exe 'h '.expand('<cword>')<CR>",
+    })
+
+    AuGroup("MakeDispatch", {})
+    AuCmd("FileType", {
+        group = "MakeDispatch",
+        pattern = "java,lua,python,javascript",
+        callback = function()
+            vim.keymap.set("n", "<F5>", function()
+                vim.cmd "w | redraw"
+                vim.cmd "Dispatch"
+            end, { buffer = true, desc = "Call native compile Dispatch command" })
+
+            vim.keymap.set("n", "<F10>", function()
+                require("utils").toggleTerm(vim.g.repl, "repl", 0)
+            end, { buffer = true, desc = "Toggle REPL" })
+
+            vim.keymap.set("t", "<F10>", function()
+                vim.cmd "stopinsert"
+                require("utils").toggleTerm(vim.g.repl, "repl", 0)
+            end, { desc = "Toggle REPL" })
+        end,
+    })
+
+    -- Compile packer after writing plugins.lua
+    AuGroup("PluginLoad", {})
+    AuCmd("BufWritePost", { group = "PluginLoad", pattern = "plugins.lua", command = "source <afile> | PackerCompile" })
+
+    -- ************************ Terminal management -------------------------
+
+    AuGroup("TermInsertModes", {})
+    AuCmd("BufWinEnter, WinEnter", { group = "TermInsertModes", pattern = "term://*", command = "startinsert" })
+    AuCmd("TermEnter", { group = "TermInsertModes", pattern = "*", command = "startinsert" })
+    AuCmd("TermClose", { group = "TermInsertModes", pattern = "*", command = "call nvim_input('<CR>')" })
+end
+
+------------------------------------------------------------------------
 --                              Terminal                              --
 ------------------------------------------------------------------------
 
@@ -138,70 +203,38 @@ end
 
 function utils.commands()
     require("mappings").diagnostic()
-    local cmd = vim.api.nvim_add_user_command
+    local cmd = Api.nvim_add_user_command
+    local complete = function()
+        return require("utils.langServers").getClientNames()
+    end
 
     cmd("ToggleVirtual", function(opts)
         require("utils.diagnostics").toggle_virtual_text(opts.args)
-    end, {
-        nargs = 1,
-        complete = function()
-            return require("utils.langServers").getClientNames()
-        end,
-    })
+    end, { nargs = 1, complete = complete })
 
     cmd("ToggleSigns", function(opts)
         require("utils.diagnostics").toggle_signs(opts.args)
-    end, {
-        nargs = 1,
-        complete = function()
-            return require("utils.langServers").getClientNames()
-        end,
-    })
+    end, { nargs = 1, complete = complete })
 
     cmd("ToggleUnderline", function(opts)
         require("utils.diagnostics").toggle_underline(opts.args)
-    end, {
-        nargs = 1,
-        complete = function()
-            return require("utils.langServers").getClientNames()
-        end,
-    })
+    end, { nargs = 1, complete = complete })
 
     cmd("ToggleAllDiagnostics", function(opts)
         require("utils.diagnostics").toggle_all_diagnostics(opts.args)
-    end, {
-        nargs = 1,
-        complete = function()
-            return require("utils.langServers").getClientNames()
-        end,
-    })
+    end, { nargs = 1, complete = complete })
 
     cmd("DisableDiagnostics", function(opts)
         require("utils.diagnostics").turn_off_diagnostics(opts.args)
-    end, {
-        nargs = 1,
-        complete = function()
-            return require("utils.langServers").getClientNames()
-        end,
-    })
+    end, { nargs = 1, complete = complete })
 
     cmd("EnableDiagnostics", function(opts)
         require("utils.diagnostics").turn_on_diagnostics(opts.args)
-    end, {
-        nargs = 1,
-        complete = function()
-            return require("utils.langServers").getClientNames()
-        end,
-    })
+    end, { nargs = 1, complete = complete })
 
     cmd("DefaultDiagnostics", function(opts)
         require("utils.diagnostics").turn_on_diagnostics_default(opts.args)
-    end, {
-        nargs = 1,
-        complete = function()
-            return require("utils.langServers").getClientNames()
-        end,
-    })
+    end, { nargs = 1, complete = complete })
 end
 
 ------------------------------------------------------------------------
