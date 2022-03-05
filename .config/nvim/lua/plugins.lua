@@ -10,8 +10,7 @@ end
 --------------------------------------------------------------------------------------------------------
 --				 Plugins                                            							      --
 --------------------------------------------------------------------------------------------------------
-local packer = require "packer"
-return packer.startup {
+return require("packer").startup {
     function(use)
         use "wbthomason/packer.nvim"
 

@@ -120,7 +120,7 @@ Statusline.el = function()
     end
 
     --*********************************** Git branch ---------------------------------
-    local git_branch = subscribe.buf_autocmd("el_git_branch", "BufEnter", function(window, buffer)
+    local git_branch = subscribe.buf_autocmd("el_git_branch", "BufReadPre", function(window, buffer)
         local branch = extensions.git_branch(window, buffer)
         Api.nvim_set_hl(0, "ElGitBranch", { bg = Colors.bg, fg = Colors.yellow })
         if branch then

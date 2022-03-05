@@ -1,6 +1,7 @@
 -- ******************* function calls --------------------------------------------
 local cmd = vim.api.nvim_add_user_command
 cmd("Cpractice", require("utils.compiler").cpractice, {})
+cmd("Cproject", require("utils.compiler").cproject, {})
 cmd("WordCount", require("utils.langServers").TexWordCount, {})
 cmd("Agenda", require("utils").agenda, {})
 cmd("ClearBack", "call util#transparency()", {})

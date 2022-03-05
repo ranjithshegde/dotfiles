@@ -1,5 +1,4 @@
 local settings = {}
-local u = require "utils"
 local o = vim.opt
 local bo = vim.bo
 require("impatient").enable_profile()
@@ -399,6 +398,7 @@ function settings.lsp_settings()
                 end,
             })
         end
+        Api.nvim_add_user_command("LspCapabilities", require("utils.langServers").lsp_capabilities, {})
     end
 
     All_attach = function(client, bufnr)
@@ -432,7 +432,6 @@ function settings.lsp_settings()
         rc.document_formatting = false
     end
 
-    vim.api.nvim_add_user_command("LspCapabilities", require("utils.langServers").lsp_capabilities, {})
     -- borders for floating windows
     vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, { border = "double" })
     vim.lsp.handlers["textDocument/signatureHelp"] = vim.lsp.with(
@@ -500,7 +499,7 @@ function settings.langServers()
                         languageModel = "/usr/share/Ngrams/",
                     },
                     language = "en-GB",
-                    dictionary = { ["en-GB"] = u.concat_fileLines(dict) },
+                    dictionary = { ["en-GB"] = require("utils").concat_fileLines(dict) },
                 },
             },
         },
