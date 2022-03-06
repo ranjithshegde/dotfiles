@@ -63,11 +63,20 @@ utils.autocmd = function()
         end,
     })
 
-    AuGroup("CommonFtRules", {})
+    AuGroup("LspSettings", {})
     AuCmd("FileType", {
-        group = "CommonFtRules",
+        group = "LspSettings",
         pattern = "vim",
         command = "nn <silent><buffer>,K <cmd>exe 'h '.expand('<cword>')<CR>",
+    })
+    AuCmd("FileType", {
+        group = "LspSettings",
+        pattern = "*",
+        callback = function()
+            require("settings").lsp_settings()
+            require("settings").langServers()
+            require("settings").lsp_lintFormat()
+        end,
     })
 
     AuGroup("MakeDispatch", {})

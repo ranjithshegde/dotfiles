@@ -7,9 +7,6 @@ function settings.settings()
     settings.options()
     settings.vimwiki()
     settings.treesitter()
-    settings.lsp_settings()
-    settings.langServers()
-    settings.lsp_lintFormat()
 end
 
 ------------------------------------------------------------------------
@@ -689,16 +686,25 @@ end
 ------------------------------------------------------------------------
 
 function settings.luadev()
+    require("settings").lsp_settings()
     local luadev = require("lua-dev").setup {
         library = { plugins = { "plenary.nvim", "telescope.nvim", "express_line.nvim", "nvim-lspconfig" } },
         lspconfig = {
             on_attach = EfmAttach,
             capabilities = Capabilities,
-            settings = { Lua = { diagnostics = { globals = { "vim", "pd" } } } },
+            settings = {
+                Lua = {
+                    diagnostics = { globals = { "vim", "pd" } },
+                    workspace = {
+                        library = {
+                            vim.fn.expand "~/.config/nvim",
+                            "/usr/lib/pd/extra/pdlua",
+                        },
+                    },
+                },
+            },
         },
     }
-    luadev.settings.Lua.workspace.library[vim.fn.expand "~/.config/nvim"] = true
-    luadev.settings.Lua.workspace.library["/usr/lib/pd/extra/pdlua"] = true
     Lsp.sumneko_lua.setup(luadev)
 end
 
@@ -707,6 +713,7 @@ end
 ------------------------------------------------------------------------
 
 function settings.jdtls()
+    require("settings").lsp_settings()
     require("debugger").init()
     local home = os.getenv "XDG_DATA_HOME"
     local debug_path =
