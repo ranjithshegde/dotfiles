@@ -3,7 +3,7 @@ local o = vim.opt
 local bo = vim.bo
 require("impatient").enable_profile()
 
-function settings.settings()
+function settings.general()
     settings.options()
     settings.vimwiki()
     settings.treesitter()

@@ -29,6 +29,6 @@ Colors = {
 require "impatient"
 require "plugins"
 require "packer_compiled"
-require("settings").settings()
+require("settings").general()
 require("mappings").general()
 require("utils").autocmd()
