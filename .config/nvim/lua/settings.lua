@@ -692,19 +692,11 @@ function settings.luadev()
         lspconfig = {
             on_attach = EfmAttach,
             capabilities = Capabilities,
-            settings = {
-                Lua = {
-                    diagnostics = { globals = { "vim", "pd" } },
-                    workspace = {
-                        library = {
-                            vim.fn.expand "~/.config/nvim",
-                            "/usr/lib/pd/extra/pdlua",
-                        },
-                    },
-                },
-            },
+            settings = { Lua = { diagnostics = { globals = { "vim", "pd" } } } },
         },
     }
+    luadev.settings.Lua.workspace.library[vim.fn.expand "~/.config/nvim"] = true
+    luadev.settings.Lua.workspace.library["/usr/lib/pd/extra/pdlua"] = true
     Lsp.sumneko_lua.setup(luadev)
 end
 
