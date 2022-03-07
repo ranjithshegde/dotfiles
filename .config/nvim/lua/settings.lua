@@ -15,6 +15,7 @@ end
 function settings.options()
     vim.cmd "colo nightfox"
     local tab = 4
+    -- o.list = true
     o.number = true
     o.expandtab = true
     o.cursorline = true
@@ -36,7 +37,7 @@ function settings.options()
     o.spelloptions = "camel"
     o.grepprg = "rg --vimgrep"
     o.fillchars = "stlnc:»,vert:║,fold:."
-    o.listchars = "eol:↲"
+    o.listchars:append "eol:↲"
     -- o.listchars = "tab:<->,eol:↲,space:→"
     o.completeopt = "menu,menuone,noinsert,noselect"
     o.dictionary = os.getenv "XDG_DATA_HOME" .. "/dict/words"
@@ -350,6 +351,14 @@ function settings.completion()
                 })[entry.source.name]
                 return vim_item
             end,
+        },
+        window = {
+            completion = {
+                scrollbar = "║",
+            },
+            documentation = {
+                border = "double",
+            },
         },
         experimental = { ghost_text = true },
     }
