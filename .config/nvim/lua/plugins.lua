@@ -18,8 +18,6 @@ return require("packer").startup {
 
         use "EdenEast/nightfox.nvim"
 
-        use { "m-pilia/vim-ccls", ft = "cpp" }
-
         use { "petrbroz/vim-glsl", ft = "glsl" }
 
         use { "bkad/CamelCaseMotion", opt = true }
@@ -167,26 +165,6 @@ return require("packer").startup {
             cmd = { "ColorizerAttachToBuffer", "ColorizerToggle" },
         }
 
-        --Lsp config and companions
-        use {
-            "neovim/nvim-lspconfig",
-            { "nvim-lua/lsp-status.nvim", opt = true },
-            {
-                "folke/lua-dev.nvim",
-                ft = "lua",
-                config = function()
-                    require("settings").luadev()
-                end,
-            },
-            {
-                "mfussenegger/nvim-jdtls",
-                ft = "java",
-                config = function()
-                    require("settings").jdtls()
-                end,
-            },
-        }
-
         -- Debugger adapter protocol
         use {
             {
@@ -253,6 +231,34 @@ return require("packer").startup {
                     vim.cmd("let g:indent_blankline_context_patterns+=['" .. v .. "']")
                 end
             end,
+        }
+
+        --Lsp config and companions
+        use {
+            "neovim/nvim-lspconfig",
+            { "nvim-lua/lsp-status.nvim", opt = true },
+            {
+                "folke/lua-dev.nvim",
+                ft = "lua",
+                config = function()
+                    require("settings").luadev()
+                end,
+            },
+            {
+                "mfussenegger/nvim-jdtls",
+                ft = "java",
+                config = function()
+                    require("settings").jdtls()
+                end,
+            },
+            { "m-pilia/vim-ccls", ft = "cpp" },
+            {
+                "p00f/clangd_extensions.nvim",
+                ft = { "c", "cpp" },
+                config = function()
+                    require("settings").clangd()
+                end,
+            },
         }
 
         -- completion and snippets

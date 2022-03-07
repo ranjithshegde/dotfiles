@@ -7,6 +7,9 @@ function settings.general()
     settings.options()
     settings.vimwiki()
     settings.treesitter()
+    require("settings").lsp_settings()
+    require("settings").langServers()
+    require("settings").lsp_lintFormat()
 end
 
 ------------------------------------------------------------------------
@@ -467,23 +470,6 @@ function settings.langServers()
             single_file_support = true,
             root_dir = Lsp.util.root_pattern("compile_commands.json", "compile_flags.txt", ".git"),
         },
-        clangd = {
-            on_attach = All_attach,
-            capabilities = Capabilities,
-            filetypes = { "c", "cpp", "opencl" },
-            cmd = {
-                "clangd",
-                "--clang-tidy",
-                "--background-index",
-                "--all-scopes-completion",
-                "--header-insertion=iwyu",
-                "--completion-style=detailed",
-                "--suggest-missing-includes",
-                "--fallback-style=webkit",
-                "--cross-file-rename",
-                "--offset-encoding=utf-32",
-            },
-        },
         ltex = {
             filetypes = { "bib", "markdown", "org", "tex" },
             on_attach = All_attach,
@@ -686,7 +672,6 @@ end
 ------------------------------------------------------------------------
 
 function settings.luadev()
-    require("settings").lsp_settings()
     local luadev = require("lua-dev").setup {
         library = { plugins = { "plenary.nvim", "telescope.nvim", "express_line.nvim", "nvim-lspconfig" } },
         lspconfig = {
@@ -705,7 +690,6 @@ end
 ------------------------------------------------------------------------
 
 function settings.jdtls()
-    require("settings").lsp_settings()
     require("debugger").init()
     local home = os.getenv "XDG_DATA_HOME"
     local debug_path =
@@ -723,6 +707,41 @@ function settings.jdtls()
         init_options = {
             bundles = {
                 vim.fn.glob(home .. debug_path),
+            },
+        },
+    }
+end
+
+------------------------------------------------------------------------
+--                       Clangd  Lsp         	                      --
+------------------------------------------------------------------------
+--
+function settings.clangd()
+    require("clangd_extensions").setup {
+        server = {
+            on_attach = All_attach,
+            capabilities = Capabilities,
+            filetypes = { "c", "cpp", "opencl" },
+            cmd = {
+                "clangd",
+                "--clang-tidy",
+                "--background-index",
+                "--all-scopes-completion",
+                "--header-insertion=iwyu",
+                "--completion-style=detailed",
+                "--suggest-missing-includes",
+                "--fallback-style=webkit",
+                "--cross-file-rename",
+                "--offset-encoding=utf-32",
+            },
+        },
+        extensions = {
+            autoSetHints = false,
+            memory_usage = {
+                border = "rounded",
+            },
+            symbol_info = {
+                border = "rounded",
             },
         },
     }
