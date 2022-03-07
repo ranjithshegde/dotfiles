@@ -410,7 +410,7 @@ function settings.lsp_settings()
     Capabilities.textDocument.completion.completionItem.snippetSupport = true
     -- Capabilities.offsetEncoding = { "utf-16" }
 
-    Cinit = function(client)
+    Cinit = function(client, bufnr)
         require("mappings").nvim_lsp()
         local rc = client.resolved_capabilities
         rc.document_formatting = false
@@ -464,7 +464,6 @@ function settings.langServers()
                     return nil
                 end,
             },
-            -- init_options = { cache = { directory = "/tmp/ccls" } },
             single_file_support = true,
             root_dir = Lsp.util.root_pattern("compile_commands.json", "compile_flags.txt", ".git"),
         },
