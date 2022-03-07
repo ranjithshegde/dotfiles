@@ -7,9 +7,6 @@ function settings.general()
     settings.options()
     settings.vimwiki()
     settings.treesitter()
-    require("settings").lsp_settings()
-    require("settings").langServers()
-    require("settings").lsp_lintFormat()
 end
 
 ------------------------------------------------------------------------
