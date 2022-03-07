@@ -7,9 +7,6 @@ function settings.general()
     settings.options()
     settings.vimwiki()
     settings.treesitter()
-    settings.lsp_settings()
-    settings.langServers()
-    settings.lsp_lintFormat()
 end
 
 ------------------------------------------------------------------------
@@ -698,7 +695,6 @@ end
 ------------------------------------------------------------------------
 
 function settings.luadev()
-    -- require("settings").lsp_settings()
     local luadev = require("lua-dev").setup {
         library = { plugins = { "plenary.nvim", "telescope.nvim", "express_line.nvim", "nvim-lspconfig" } },
         lspconfig = {
@@ -717,7 +713,6 @@ end
 ------------------------------------------------------------------------
 
 function settings.jdtls()
-    -- require("settings").lsp_settings()
     require("debugger").init()
     local home = os.getenv "XDG_DATA_HOME"
     local debug_path =

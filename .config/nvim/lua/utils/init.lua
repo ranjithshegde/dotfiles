@@ -69,15 +69,16 @@ utils.autocmd = function()
         pattern = "vim",
         command = "nn <silent><buffer>,K <cmd>exe 'h '.expand('<cword>')<CR>",
     })
-    -- AuCmd("FileType", {
-    --     group = "LspSettings",
-    --     pattern = "*",
-    --     callback = function()
-    --         require("settings").lsp_settings()
-    --         require("settings").langServers()
-    --         require("settings").lsp_lintFormat()
-    --     end,
-    -- })
+    AuCmd("FileType", {
+        group = "LspSettings",
+        pattern = "*",
+        callback = function()
+            require("settings").lsp_settings()
+            require("settings").langServers()
+            require("settings").lsp_lintFormat()
+        end,
+        once = true,
+    })
 
     AuGroup("MakeDispatch", {})
     AuCmd("FileType", {
