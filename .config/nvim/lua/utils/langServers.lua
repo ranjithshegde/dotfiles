@@ -1,5 +1,4 @@
 local langSettings = {}
-local fmt = string.format
 
 langSettings.getClientNames = function()
     local buf_clients = vim.lsp.buf_get_clients()
@@ -91,11 +90,12 @@ end
 --                              CompletionKind                        --
 ------------------------------------------------------------------------
 
-local kind_symbols = {
+langSettings.kind_symbols = {
     Text = "",
     Method = "ƒ",
     Function = "",
     Constructor = "",
+    Field = "",
     Variable = "",
     Class = "",
     Interface = "ﰮ",
@@ -108,62 +108,57 @@ local kind_symbols = {
     Snippet = "﬌",
     Color = "",
     File = "",
+    Reference = "",
     Folder = "",
     EnumMember = "",
     Constant = "",
     Struct = "",
+    Event = "",
+    Operator = "",
+    TypeParameter = "",
 }
 
-local kind_order = {
-    "Text",
-    "Method",
-    "Function",
-    "Constructor",
-    "Field",
-    "Variable",
-    "Class",
-    "Interface",
-    "Module",
-    "Property",
-    "Unit",
-    "Value",
-    "Enum",
-    "Keyword",
-    "Snippet",
-    "Color",
-    "File",
-    "Reference",
-    "Folder",
-    "EnumMember",
-    "Constant",
-    "Struct",
-    "Event",
-    "Operator",
-    "TypeParameter",
+------------------------------------------------------------------------
+--                              Chain completion                      --
+------------------------------------------------------------------------
+
+langSettings.chainIndex = {
+    function()
+        pcall(require("cmp").complete)
+    end,
+    function()
+        require("utils").feedkey("<C-x><C-n>", "n")
+    end,
+    function()
+        require("utils").feedkey("<C-x><C-p>", "n")
+    end,
 }
 
-function langSettings.kind(opts)
-    local with_text = opts == nil or opts["with_text"]
-    local symbol_map = (opts and opts["symbol_map"] and vim.tbl_extend("force", kind_symbols, opts["symbol_map"]))
-        or kind_symbols
-
-    local symbols = {}
-    local len = 25
-    if with_text == true or with_text == nil then
-        for i = 1, len do
-            local name = kind_order[i]
-            local symbol = symbol_map[name]
-            symbol = symbol and (symbol .. " ") or ""
-            symbols[i] = fmt("%s%s", symbol, name)
-        end
-    else
-        for i = 1, len do
-            local name = kind_order[i]
-            symbols[i] = symbol_map[name]
-        end
+langSettings.insertSource = function(source)
+    local newS = function()
+        require("utils").feedkey(source, "n")
     end
+    table.insert(require("utils.langServers").chainIndex, newS)
+end
 
-    require("vim.lsp.protocol").CompletionItemKind = symbols
+langSettings.index = 1
+
+langSettings.next = function()
+    if langSettings.index ~= #langSettings.chainIndex then
+        langSettings.index = langSettings.index + 1
+    else
+        langSettings.index = 1
+    end
+    return langSettings.chainIndex[langSettings.index]()
+end
+
+langSettings.prev = function()
+    if langSettings.index ~= 1 then
+        langSettings.index = langSettings.index - 1
+    else
+        langSettings.index = #langSettings.chainIndex
+    end
+    return langSettings.chainIndex[langSettings.index]()
 end
 
 return langSettings

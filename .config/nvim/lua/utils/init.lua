@@ -206,6 +206,9 @@ utils.concat_fileLines = function(file)
     return dictionary
 end
 
+utils.feedkey = function(key, mode)
+    Api.nvim_feedkeys(Api.nvim_replace_termcodes(key, true, true, true), mode, true)
+end
 ------------------------------------------------------------------------
 --                          User commands                             --
 ------------------------------------------------------------------------

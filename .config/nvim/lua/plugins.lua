@@ -231,37 +231,53 @@ return require("packer").startup {
         }
 
         -- Indents and chars
-        use {
-            "lukas-reineke/indent-blankline.nvim",
-            config = function()
-                G.indent_blankline_char = "┊"
-                require("indent_blankline").setup {
-                    show_current_context = true,
-                    show_end_of_line = true,
-                    use_treesitter = true,
-                    end_of_line = true,
-                }
-                vim.cmd "let g:indent_blankline_filetype_exclude+=['taglist']"
-                -- stylua: ignore
-                local context = {
-                    "^for", "^case", "block", "^table", "return", "^while", "^public", "^switch",
-                    "^object", "inherits", "^private", "^protected", "jsx_element", "jsx_element",
-                    "else_clause", "if_statement", "catch_clause", "try_statement", "operation_type",
-                    "access_specifier", "import_statement", "jsx_self_closing_element",
-                }
-                for _, v in pairs(context) do
-                    vim.cmd("let g:indent_blankline_context_patterns+=['" .. v .. "']")
-                end
-            end,
-        }
+        -- use {
+        --     "lukas-reineke/indent-blankline.nvim",
+        --     config = function()
+        --         G.indent_blankline_char = "┊"
+        --         require("indent_blankline").setup {
+        --             show_current_context = true,
+        --             show_end_of_line = true,
+        --             use_treesitter = true,
+        --         }
+        --         vim.cmd "let g:indent_blankline_filetype_exclude+=['taglist']"
+        --         -- stylua: ignore
+        --         local context = {
+        --             "^for", "^case", "block", "^table", "return", "^while", "^public", "^switch",
+        --             "^object", "inherits", "^private", "^protected", "jsx_element", "jsx_element",
+        --             "else_clause", "if_statement", "catch_clause", "try_statement", "operation_type",
+        --             "access_specifier", "import_statement", "jsx_self_closing_element",
+        --         }
+        --         for _, v in pairs(context) do
+        --             vim.cmd("let g:indent_blankline_context_patterns+=['" .. v .. "']")
+        --         end
+        --     end,
+        -- }
 
         -- completion and snippets
         use {
             "L3MON4D3/LuaSnip",
+            "hrsh7th/cmp-nvim-lsp",
             {
-                "ranjithshegde/completion-nvim",
+                "hrsh7th/nvim-cmp",
+                event = "InsertEnter",
                 config = function()
                     require("settings").completion()
+                end,
+            },
+            {
+                "saadparwaiz1/cmp_luasnip",
+                after = "nvim-cmp",
+                opt = true,
+            },
+
+            {
+                "ray-x/lsp_signature.nvim",
+                event = "InsertEnter",
+                config = function()
+                    require("lsp_signature").setup {
+                        hint_enable = false,
+                    }
                 end,
             },
             {
@@ -279,6 +295,9 @@ return require("packer").startup {
                     local Rule = require "nvim-autopairs.rule"
                     npairs.setup()
                     npairs.add_rules { Rule("|", "|", "supercollider") }
+                    local cmp_autopairs = require "nvim-autopairs.completion.cmp"
+                    local cmp = require "cmp"
+                    cmp.event:on("confirm_done", cmp_autopairs.on_confirm_done { map_char = { tex = "" } })
                 end,
             },
         }

@@ -38,7 +38,7 @@ function settings.options()
     o.fillchars = "stlnc:»,vert:║,fold:."
     o.listchars = "eol:↲"
     -- o.listchars = "tab:<->,eol:↲,space:→"
-    o.completeopt = "menuone,noinsert,noselect"
+    o.completeopt = "menu,menuone,noinsert,noselect"
     o.dictionary = os.getenv "XDG_DATA_HOME" .. "/dict/words"
     o.tabline = [[%!luaeval('require("statusline").tabs()')]]
     o.sessionoptions:append "terminal,tabpages"
@@ -286,55 +286,74 @@ end
 ------------------------------------------------------------------------
 
 function settings.completion()
-    require("mappings").autoComplete()
-    G.completion_chain_complete_list = {
-        supercollider = {
-            { complete_items = { "snippet", "path" } },
-            { mode = "<c-p>" },
-            { mode = "<c-n>" },
-        },
-        org = {
-            { complete_items = { "snippet", "path" } },
-            { mode = "omni" },
-            { mode = "<c-p>" },
-            { mode = "<c-n>" },
-        },
-        glsl = {
-            { complete_items = { "snippet" } },
-            { mode = "user" },
-            { mode = "<c-p>" },
-            { mode = "<c-n>" },
-        },
-        default = {
-            { complete_items = { "lsp", "snippet", "path" } },
-            { mode = "<c-p>" },
-            { mode = "<c-n>" },
-        },
-    }
-    G.completion_auto_change_source = 0
-    G.completion_popup_border = "double"
-    G.completion_disable_filetypes = { "TelescopePrompt", "markdown", "text", "vimwiki" }
-    require("luasnip.loaders.from_vscode").lazy_load()
-    G.completion_enable_snippet = "luasnip"
+    local cmp = require "cmp"
+    local has_words_before = function()
+        local line, col = unpack(Api.nvim_win_get_cursor(0))
+        return col ~= 0 and Api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match "%s" == nil
+    end
+    local luasnip = require "luasnip"
 
-    AuGroup("CompletionAttach", {})
-    AuCmd("FileType", {
-        group = "CompletionAttach",
-        pattern = "*",
-        callback = function()
-            require("completion").on_attach()
-        end,
-    })
-    AuCmd("FileType", {
-        group = "CompletionAttach",
-        pattern = "supercollider,glsl,conf,org,cmake",
-        command = "let g:completion_auto_change_source = 1",
-    })
-    AuCmd("FileType", {
-        group = "CompletionAttach",
-        pattern = "cpp,c,hpp,lua,python,java,javascript,typescript",
-        command = "let g:completion_auto_change_source = 0",
-    })
+    cmp.setup {
+        snippet = {
+            expand = function(args)
+                require("luasnip").lsp_expand(args.body)
+            end,
+        },
+        mapping = {
+            ["<C-p>"] = cmp.mapping.select_prev_item(),
+            ["<C-n>"] = cmp.mapping.select_next_item(),
+            ["<C-b>"] = cmp.mapping.scroll_docs(-4),
+            ["<C-f>"] = cmp.mapping.scroll_docs(4),
+            ["<C-o>"] = cmp.mapping.complete(),
+            ["<C-e>"] = cmp.mapping.close(),
+            ["<CR>"] = cmp.mapping.confirm { select = true },
+            ["<C-k>"] = cmp.mapping(function()
+                require("utils.langServers").next()
+            end, { "i", "s" }),
+            ["<C-j>"] = cmp.mapping(function()
+                require("utils.langServers").prev()
+            end, { "i", "s" }),
+            ["<C-l>"] = cmp.mapping(function(fallback)
+                if luasnip.expand_or_jumpable() then
+                    luasnip.expand_or_jump()
+                elseif has_words_before() then
+                    cmp.complete()
+                else
+                    fallback()
+                end
+            end, { "i", "s" }),
+            ["<C-h>"] = cmp.mapping(function(fallback)
+                if luasnip.jumpable(-1) then
+                    luasnip.jump(-1)
+                else
+                    fallback()
+                end
+            end, { "i", "s" }),
+        },
+        sources = cmp.config.sources({
+            { name = "nvim_lsp" },
+            { name = "luasnip" },
+        }, {
+            { name = "orgmode" },
+        }),
+        formatting = {
+            format = function(entry, vim_item)
+                vim_item.kind = string.format(
+                    "%s %s",
+                    require("utils.langServers").kind_symbols[vim_item.kind],
+                    vim_item.kind
+                )
+                vim_item.menu = ({
+                    nvim_lsp = "[LSP]",
+                    luasnip = "[LuaSnip]",
+                    orgmode = "[Org]",
+                })[entry.source.name]
+                return vim_item
+            end,
+        },
+        experimental = { ghost_text = true },
+    }
+    require("luasnip.loaders.from_vscode").lazy_load()
 end
 
 ------------------------------------------------------------------------
@@ -356,7 +375,6 @@ function settings.lsp_settings()
 
     Attach_props = function(client)
         require("mappings").nvim_lsp()
-        require("utils.langServers").kind()
 
         vim.cmd "PackerLoad lsp-status.nvim"
         local lsp_status = require "lsp-status"
@@ -406,9 +424,7 @@ function settings.lsp_settings()
         end
     end
 
-    Capabilities = vim.lsp.protocol.make_client_capabilities()
-    Capabilities.textDocument.completion.completionItem.snippetSupport = true
-    -- Capabilities.offsetEncoding = { "utf-16" }
+    Capabilities = require("cmp_nvim_lsp").update_capabilities(vim.lsp.protocol.make_client_capabilities())
 
     Cinit = function(client)
         require("mappings").nvim_lsp()
@@ -467,6 +483,7 @@ function settings.langServers()
             -- init_options = { cache = { directory = "/tmp/ccls" } },
             single_file_support = true,
             root_dir = Lsp.util.root_pattern("compile_commands.json", "compile_flags.txt", ".git"),
+            capabilities = Capabilities,
         },
         clangd = {
             on_attach = All_attach,

@@ -39,11 +39,6 @@ function M.general()
         --Quickfix
         ["-"] = { "<cmd>lua require('utils.qf').toggle_qf('q')<CR>", "Toggle quickfix" },
         ["_"] = { "<cmd>lua require('utils.qf').toggle_qf('l')<CR>", "Toggle loclist" },
-        -- -- Window movement
-        -- ["<C-J>"] = { "<C-W><C-J>", "Move to down buffer" },
-        -- ["<C-K>"] = { "<C-W><C-K>", "Move to up buffer" },
-        -- ["<C-L>"] = { "<C-W><C-L>", "Move to left buffer" },
-        -- ["<C-H>"] = { "<C-W><C-H>", "Move to right buffer" },
         -- Terminals
         ["<leader>t"] = {
             name = "Launch terminal in split",
@@ -573,27 +568,6 @@ function M.git()
         ["]h"] = { "<cmd>Gitsigns next_hunk<cr>:Gitsigns preview_hunk<CR>", "Preview previous hunk" },
         ["[h"] = { "<cmd>Gitsigns prev_hunk<cr>:Gitsigns preview_hunk<CR>", "Preview next hunk" },
     }
-end
-
--- ******************************** Autocomplete & Snippets -----------------------------
-
-function M.autoComplete()
-    -- change completion mode
-    map("i", "<C-j>", "<Plug>(completion_next_source)")
-    map("i", "<C-k>", "<Plug>(completion_prev_source)")
-
-    local ls = require "luasnip"
-    map({ "i", "s" }, "<C-l>", function()
-        if ls.expand_or_jumpable() then
-            ls.expand_or_jump()
-        end
-    end, { silent = true, desc = "jump to next placeholder" })
-
-    map({ "i", "s" }, "<C-h>", function()
-        if ls.jumpable(-1) then
-            ls.jump(-1)
-        end
-    end, { silent = true, desc = "jump to prev placeholder" })
 end
 
 -- ******************************** SuperCollider ---------------------------------------
