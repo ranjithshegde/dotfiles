@@ -4,7 +4,7 @@ function! util#WordProcessor() abort
     setlocal linebreak
     setlocal noexpandtab
     setlocal spell spelllang=en_us,en_gb
-    set complete+=k
+    setlocal complete+=k
     set thesaurus+=$HOME/.config/nvim/thesaurus/mthesaur.txt
     lua require('mappings').wordProcessor()
 endfunction

@@ -36,6 +36,7 @@ function settings.options()
     o.spelloptions = "camel"
     o.grepprg = "rg --vimgrep"
     o.fillchars = "stlnc:»,vert:║,fold:."
+    o.listchars = "eol:↲"
     -- o.listchars = "tab:<->,eol:↲,space:→"
     o.completeopt = "menuone,noinsert,noselect"
     o.dictionary = os.getenv "XDG_DATA_HOME" .. "/dict/words"
