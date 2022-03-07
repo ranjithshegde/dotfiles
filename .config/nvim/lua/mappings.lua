@@ -2,7 +2,9 @@ local M = {}
 local wk = require "which-key"
 local map = vim.keymap.set
 
--- ******************************** General functions ---------------------------------------
+------------------------------------------------------------------------
+--                              General functions                     --
+------------------------------------------------------------------------
 
 function M.general()
     M.configFiles()
@@ -39,11 +41,6 @@ function M.general()
         --Quickfix
         ["-"] = { "<cmd>lua require('utils.qf').toggle_qf('q')<CR>", "Toggle quickfix" },
         ["_"] = { "<cmd>lua require('utils.qf').toggle_qf('l')<CR>", "Toggle loclist" },
-        -- -- Window movement
-        -- ["<C-J>"] = { "<C-W><C-J>", "Move to down buffer" },
-        -- ["<C-K>"] = { "<C-W><C-K>", "Move to up buffer" },
-        -- ["<C-L>"] = { "<C-W><C-L>", "Move to left buffer" },
-        -- ["<C-H>"] = { "<C-W><C-H>", "Move to right buffer" },
         -- Terminals
         ["<leader>t"] = {
             name = "Launch terminal in split",
@@ -56,7 +53,17 @@ function M.general()
         ["<leader><Tab>"] = { "<cmd>SidebarNvimToggle<CR>", "Toggle Symbolsbar" },
     }
 
-    -- vimWiki
+    -- **************************** conditional mappings -------------
+
+    if Op "filetype" ~= "vimwiki" and Op "filetype" ~= "org" then
+        wk.register {
+            ["<Tab>"] = { "za", "Toggle fold current" },
+            ["<S-Tab>"] = { "zA", "Toggle fold All" },
+        }
+    end
+
+    -- ******************************** vimWiki-----------------------
+
     wk.register {
         ["<leader>w"] = {
             name = "vimWiki",
@@ -77,17 +84,11 @@ function M.general()
             },
         },
     }
-
-    --Conditional changes
-    if Op "filetype" ~= "vimwiki" and Op "filetype" ~= "org" then
-        wk.register {
-            ["<Tab>"] = { "za", "Toggle fold current" },
-            ["<S-Tab>"] = { "zA", "Toggle fold All" },
-        }
-    end
 end
 
--- ******************************** Utilities ---------------------------------------
+------------------------------------------------------------------------
+--                              Utilities                             --
+------------------------------------------------------------------------
 
 function M.ranger()
     wk.register {
@@ -152,7 +153,9 @@ function M.wordProcessor()
     }, { nowait = true, noremap = true, silent = true })
 end
 
--- ******************************** language server ---------------------------------------
+------------------------------------------------------------------------
+--                              Language servers                      --
+------------------------------------------------------------------------
 
 function M.nvim_lsp()
     wk.register({
@@ -215,6 +218,8 @@ function M.nvim_lsp()
     }
 end
 
+-- ******************************** Diagnostics------------------------
+
 function M.diagnostic()
     wk.register {
         [",ld"] = {
@@ -238,7 +243,9 @@ function M.diagnostic()
     }
 end
 
--- ******************************** vim basic calls ---------------------------------------
+------------------------------------------------------------------------
+--                              Vim config files                      --
+------------------------------------------------------------------------
 
 function M.configFiles()
     wk.register {
@@ -264,7 +271,9 @@ function M.configFiles()
     }
 end
 
--- ******************************** Treesitter ---------------------------------------
+------------------------------------------------------------------------
+--                              Treesitter                            --
+------------------------------------------------------------------------
 
 function M.treesitter()
     wk.register {
@@ -359,7 +368,9 @@ function M.treesitter()
     }, { mode = "v" })
 end
 
--- ******************************** Telescope ---------------------------------------
+------------------------------------------------------------------------
+--                              Telescope                             --
+------------------------------------------------------------------------
 
 function M.telescope()
     local tele = function(name)
@@ -553,7 +564,10 @@ function M.telescope()
     }
 end
 
--- ******************************** Git ---------------------------------------
+------------------------------------------------------------------------
+--                              Git                                   --
+------------------------------------------------------------------------
+
 function M.git()
     wk.register {
         ["<leader>g"] = {
@@ -575,7 +589,9 @@ function M.git()
     }
 end
 
--- ******************************** Autocomplete & Snippets -----------------------------
+------------------------------------------------------------------------
+--                              Completion & Snippets                 --
+------------------------------------------------------------------------
 
 function M.autoComplete()
     -- change completion mode
@@ -596,7 +612,10 @@ function M.autoComplete()
     end, { silent = true, desc = "jump to prev placeholder" })
 end
 
--- ******************************** SuperCollider ---------------------------------------
+------------------------------------------------------------------------
+--                              SuperCollider                         --
+------------------------------------------------------------------------
+
 function M.scnvim()
     map("n", "<F5>", "<Plug>(scnvim-send-block)", { buffer = true, desc = "Evaluate SC code block" })
     map("i", "<F5>", "<esc><Plug>(scnvim-send-block)", { buffer = true, desc = "Evaluate SC code block" })
@@ -614,7 +633,9 @@ function M.scnvim()
     }, { buffer = 0 })
 end
 
--- ******************************** Arduino ---------------------------------------
+------------------------------------------------------------------------
+--                              Arduino                               --
+------------------------------------------------------------------------
 
 function M.micro()
     wk.register(
@@ -642,7 +663,9 @@ function M.micro()
     }, { buffer = 0 })
 end
 
--- ******************************** cpp -openFrameworks ---------------------------------------
+------------------------------------------------------------------------
+--                              OpenFrameworks                        --
+------------------------------------------------------------------------
 
 function M.makeC()
     wk.register({
@@ -657,8 +680,11 @@ function M.makeC()
     }, { buffer = 0 })
 end
 
--- ********************************  Simple C mappings ---------------------------------------
+------------------------------------------------------------------------
+--                              General cpp mappings                  --
+------------------------------------------------------------------------
 
+-- ******************************** C files ----------------------------
 function M.ctests()
     wk.register({
         ["<F3>"] = { "<cmd>w <CR> <cmd>Dispatch gcc % -lm -o %<<CR> <cmd>Dispatch ./%<<CR>", "Use gcc" },
@@ -668,7 +694,7 @@ function M.ctests()
     }, { buffer = 0 })
 end
 
--- PureData C Externals
+-- ******************************** Pd externals ------------------------
 function M.pdc()
     wk.register({
         ["<F5>"] = { "<cmd>w<CR><cmd>Make<CR>", "Build Pd external" },
@@ -676,7 +702,7 @@ function M.pdc()
     }, { buffer = 0 })
 end
 
--- ******************************** General Clang mappings ---------------------------------------
+-- ******************************** Clang Lsp----------------------------
 
 function M.clang()
     wk.register({
@@ -715,7 +741,9 @@ function M.clang()
     }, { buffer = 0 })
 end
 
--- ******************************** CMake ---------------------------------------
+------------------------------------------------------------------------
+--                              Cmake                                 --
+------------------------------------------------------------------------
 
 function M.cmake()
     wk.register({
@@ -727,7 +755,9 @@ function M.cmake()
     }, { buffer = 0 })
 end
 
--- ******************************** CoAuthor ---------------------------------------
+------------------------------------------------------------------------
+--                              Co-Autho                              --
+------------------------------------------------------------------------
 
 function M.coauthor()
     wk.register {
@@ -745,7 +775,9 @@ function M.coauthor()
     }
 end
 
--- ******************************** debug ---------------------------------------
+------------------------------------------------------------------------
+--                              Debug Adapters                        --
+------------------------------------------------------------------------
 
 function M.debug()
     wk.register({
@@ -793,7 +825,9 @@ function M.debug()
     }, { mode = "v", buffer = 0 })
 end
 
--- ******************************** Latex ---------------------------------------
+------------------------------------------------------------------------
+--                              Latex                                 --
+------------------------------------------------------------------------
 
 function M.tex()
     wk.register({
