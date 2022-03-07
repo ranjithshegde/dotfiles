@@ -437,6 +437,7 @@ function settings.lsp_settings()
 
     Cinit = function(client, bufnr)
         require("mappings").nvim_lsp()
+        client.server_capabilities.completionProvider = false
         local rc = client.resolved_capabilities
         rc.document_formatting = false
         rc.document_range_formatting = false
@@ -445,7 +446,6 @@ function settings.lsp_settings()
         rc.workspace_symbol = false
         rc.rename = false
         rc.hover = false
-        rc.completion = false
         rc.code_action = false
     end
 
@@ -491,7 +491,6 @@ function settings.langServers()
             },
             single_file_support = true,
             root_dir = Lsp.util.root_pattern("compile_commands.json", "compile_flags.txt", ".git"),
-            capabilities = Capabilities,
         },
         ltex = {
             filetypes = { "bib", "markdown", "org", "tex" },
@@ -687,7 +686,6 @@ function settings.telescope()
             },
         },
     }
-    -- require("telescope").load_extension "fzf"
 end
 
 -----------------------------------------------------------------------

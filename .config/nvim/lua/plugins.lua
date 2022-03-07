@@ -121,7 +121,6 @@ return require("packer").startup {
 
         -- Taglist and sidebars
         use {
-            -- { "yegappan/taglist", cmd = "TlistToggle"},
             { "simrat39/symbols-outline.nvim", cmd = "SymbolsOutline" },
             {
                 "sidebar-nvim/sidebar.nvim",
@@ -208,37 +207,10 @@ return require("packer").startup {
             },
         }
 
-        --Lsp config and companions
-        use {
-            "neovim/nvim-lspconfig",
-            { "nvim-lua/lsp-status.nvim", opt = true },
-            {
-                "folke/lua-dev.nvim",
-                ft = "lua",
-                config = function()
-                    require("settings").luadev()
-                end,
-            },
-            {
-                "mfussenegger/nvim-jdtls",
-                ft = "java",
-                config = function()
-                    require("settings").jdtls()
-                end,
-            },
-            { "m-pilia/vim-ccls", ft = "cpp" },
-            {
-                "p00f/clangd_extensions.nvim",
-                ft = { "c", "cpp" },
-                config = function()
-                    require("settings").clangd()
-                end,
-            },
-        }
-
         -- Indents and chars
-        --[[ use {
+        use {
             "lukas-reineke/indent-blankline.nvim",
+            cmd = { "IndentBlanklineToggle", "IndentBlanklineEnable" },
             config = function()
                 G.indent_blankline_char = "┊"
                 require("indent_blankline").setup {
@@ -258,7 +230,35 @@ return require("packer").startup {
                     vim.cmd("let g:indent_blankline_context_patterns+=['" .. v .. "']")
                 end
             end,
-        } ]]
+        }
+
+        --Lsp config and companions
+        use {
+            "neovim/nvim-lspconfig",
+            { "nvim-lua/lsp-status.nvim", opt = true },
+            {
+                "folke/lua-dev.nvim",
+                ft = "lua",
+                config = function()
+                    require("settings").luadev()
+                end,
+            },
+            {
+                "mfussenegger/nvim-jdtls",
+                ft = "java",
+                config = function()
+                    require("settings").jdtls()
+                end,
+            },
+            { "m-pilia/vim-ccls", ft = { "c", "cpp" } },
+            {
+                "p00f/clangd_extensions.nvim",
+                ft = { "c", "cpp" },
+                config = function()
+                    require("settings").clangd()
+                end,
+            },
+        }
 
         -- Telescope
         use {
