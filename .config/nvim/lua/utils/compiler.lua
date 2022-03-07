@@ -1,4 +1,3 @@
-local u = require "utils"
 local Compiler = {}
 
 ------------------------------------------------------------------------
@@ -271,7 +270,7 @@ end
 function Compiler.linktags(microcontroller)
     local board = microcontroller or "teensy31"
     local link_cmd = "ln -sf .pio/build/" .. board .. "/compile_commands.json ."
-    u.silent_shell(link_cmd)
+    require("utils").silent_shell(link_cmd)
 end
 
 -- Check if there is a platformio init file in root
@@ -335,7 +334,7 @@ end
 -- print serial monitor
 function Compiler.monitor()
     local cmd = "pio device monitor"
-    u.toggleTerm(cmd, "pio", 0)
+    require("utils").toggleTerm(cmd, "pio", 0)
 end
 
 -- Clean directory
@@ -353,17 +352,17 @@ end
 
 function Compiler.teensypins()
     local url = "https://www.pjrc.com/teensy/pinout.html"
-    u.open_in_browser(url)
+    require("utils").open_in_browser(url)
 end
 
 function Compiler.teensyspecs()
     local url = "https://www.pjrc.com/teensy/techspecs.html"
-    u.open_in_browser(url)
+    require("utils").open_in_browser(url)
 end
 
 function Compiler.arduinoref()
     local url = "https://www.arduino.cc/reference/en/"
-    u.open_in_browser(url)
+    require("utils").open_in_browser(url)
 end
 
 function Compiler.ardRef(cmd)
