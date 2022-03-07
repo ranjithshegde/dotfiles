@@ -251,7 +251,7 @@ return require("packer").startup {
                     require("settings").jdtls()
                 end,
             },
-            { "m-pilia/vim-ccls", ft = "cpp" },
+            { "m-pilia/vim-ccls", ft = { "c", "cpp" } },
             {
                 "p00f/clangd_extensions.nvim",
                 ft = { "c", "cpp" },

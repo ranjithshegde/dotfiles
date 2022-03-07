@@ -17,8 +17,7 @@ function M.general()
     map("x", "K", ":move '<-2<CR>gv-gv", { desc = "Move line up" })
     map("x", "J", ":move '>+1<CR>gv-gv", { desc = "Move line down" })
     -- visual cut for replase
-    map("v", "<leader>p", '"_dP', opts)
-    map("s", "<leader>p", '"_dP', opts)
+    map({ "v", "s" }, "<leader>p", '"_dP', opts)
     -- Indent
     map("v", "<", "<gv", opts)
     map("v", ">", ">gv", opts)
@@ -648,11 +647,6 @@ function M.micro()
         ["<F5>"] = { "<cmd>w <CR> <cmd>Make<CR>", "Build" },
         ["<F6>"] = { "<cmd>w <CR> <cmd>Make --target upload<CR>", "Upload" },
         ["<F8>"] = { require("utils.compiler").monitor, "Serial monitor toggle" },
-        ["<leader>"] = {
-            r = {
-                name = "Online specs",
-            },
-        },
         [","] = {
             k = {
                 a = { "<cmd>lua require('utils.compiler').ardRef(vim.fn.expand('<cword>'))<CR>", "Arduino" },
@@ -720,7 +714,7 @@ function M.clang()
                 b = { "<cmd>CclsBaseHierarchy -float<CR>", "Base function" },
                 c = { "<cmd>CclsCallHierarchy -float<CR>", "Caller" },
                 C = { "<cmd>CclsCalleeHierarchy -float<CR>", "Callee" },
-                D = { "<cmd>CclsDerivedHierarchy -float<CR>", "Derived functions" },
+                d = { "<cmd>CclsDerivedHierarchy -float<CR>", "Derived functions" },
             },
         },
         [","] = {
