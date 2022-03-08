@@ -90,7 +90,6 @@ function settings.options()
 
     -- ************** HighlightOnYank ---------------------------------------------------------
     AuCmd("TextYankPost", {
-        pattern = "*",
         callback = function()
             vim.highlight.on_yank { higroup = "IncSearch", timeout = 200 }
         end,
@@ -375,7 +374,6 @@ function settings.lsp_settings()
     AuGroup("SetDiagnosticFuncs", {})
     AuCmd({ "DiagnosticChanged" }, {
         group = "SetDiagnosticFuncs",
-        pattern = "*",
         callback = function()
             vim.diagnostic.setloclist { open = false }
             require("utils").commands()
