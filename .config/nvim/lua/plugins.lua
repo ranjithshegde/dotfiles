@@ -24,7 +24,7 @@ return require("packer").startup {
 
         -- Tim pope
         use {
-            { "tpope/vim-surround", event = "BufRead" },
+            { "tpope/vim-surround", event = "BufReadPost" },
             { "tpope/vim-unimpaired", keys = { "[", "]" } },
             { "tpope/vim-dispatch", cmd = { "Make", "Dispatch" } },
             { "tpope/vim-fugitive", cmd = { "G", "Git", "Gclog" } },
@@ -101,8 +101,10 @@ return require("packer").startup {
                 fn["scnvim#install"]()
             end,
             config = function()
+                require("mappings").scnvim()
                 G.scnvim_snippet_format = "luasnip"
                 require("luasnip").snippets.supercollider = require("scnvim/utils").get_snippets()
+                vim.opt_local.wrap = true
             end,
         }
 

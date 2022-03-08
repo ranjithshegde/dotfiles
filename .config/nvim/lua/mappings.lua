@@ -607,7 +607,7 @@ function M.scnvim()
     map("n", ",s", "<Plug>(scnvim-show-signature)", { buffer = true, desc = "SC signature help" })
 
     wk.register({
-        ["<F1>"] = { "<cmd>SCNvimStart<cr>", "Launch Sclang" },
+        ["<F1>"] = { require("scnvim").start, "Launch Sclang" },
         ["<F2>"] = { "<cmd>SCNvimStatusLine<cr>", "Display server status" },
         ["<F3>"] = { 'scnvim#sclang#send_silent("Server.local.boot")', "Boot local server", expr = true },
         ["<F4>"] = { 'scnvim#sclang#send_silent("WFSLib.startup")', "Boot WFS server", expr = true },
