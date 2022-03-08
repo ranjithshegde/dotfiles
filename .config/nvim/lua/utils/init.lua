@@ -71,7 +71,9 @@ utils.autocmd = function()
     AuCmd("FileType", {
         group = "LspSettings",
         callback = function()
-            require("settings").lsp_settings()
+            if not package.loaded["settings.lsp_settings"] then
+                require("settings").lsp_settings()
+            end
             require("settings").langServers()
             require("settings").lsp_lintFormat()
         end,

@@ -352,6 +352,9 @@ function settings.lsp_settings()
         end,
     })
 
+    Capabilities = vim.lsp.protocol.make_client_capabilities()
+    Capabilities.textDocument.completion.completionItem.snippetSupport = true
+
     Attach_props = function(client)
         require("mappings").nvim_lsp()
         require("utils.langServers").kind()
@@ -395,6 +398,10 @@ function settings.lsp_settings()
             })
         end
         Api.nvim_add_user_command("LspCapabilities", require("utils.langServers").lsp_capabilities, {})
+        local ok, status = pcall(require, "lsp-status")
+        if ok then
+            Capabilities = vim.tbl_extend("keep", Capabilities, status.capabilities)
+        end
     end
 
     All_attach = function(client, bufnr)
@@ -403,10 +410,6 @@ function settings.lsp_settings()
             bo.formatexpr = "v:lua.vim.lsp.formatexpr()"
         end
     end
-
-    Capabilities = vim.lsp.protocol.make_client_capabilities()
-    Capabilities.textDocument.completion.completionItem.snippetSupport = true
-    -- Capabilities.offsetEncoding = { "utf-16" }
 
     Cinit = function(client, bufnr)
         require("mappings").nvim_lsp()
@@ -666,6 +669,9 @@ end
 ------------------------------------------------------------------------
 
 function settings.luadev()
+    if not package.loaded["settings.lsp_settings"] then
+        require("settings").lsp_settings()
+    end
     local luadev = require("lua-dev").setup {
         library = { plugins = { "plenary.nvim", "telescope.nvim", "express_line.nvim", "nvim-lspconfig" } },
         lspconfig = {
@@ -684,6 +690,9 @@ end
 ------------------------------------------------------------------------
 
 function settings.jdtls()
+    if not package.loaded["settings.lsp_settings"] then
+        require("settings").lsp_settings()
+    end
     require("debugger").init()
     local home = os.getenv "XDG_DATA_HOME"
     local debug_path =
@@ -711,11 +720,18 @@ end
 ------------------------------------------------------------------------
 --
 function settings.clangd()
+    if not package.loaded["settings.lsp_settings"] then
+        require("settings").lsp_settings()
+    end
     require("clangd_extensions").setup {
         server = {
             on_attach = All_attach,
             capabilities = Capabilities,
             filetypes = { "c", "cpp", "opencl" },
+            init_options = {
+                clangdFileStatus = true,
+            },
+            handlers = require("lsp-status").extensions.clangd.setup(),
             cmd = {
                 "clangd",
                 "--clang-tidy",
