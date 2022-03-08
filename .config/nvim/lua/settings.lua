@@ -15,6 +15,7 @@ end
 function settings.options()
     vim.cmd "colo nightfox"
     local tab = 4
+    -- o.list = true
     o.number = true
     o.expandtab = true
     o.cursorline = true
@@ -89,7 +90,6 @@ function settings.options()
 
     -- ************** HighlightOnYank ---------------------------------------------------------
     AuCmd("TextYankPost", {
-        pattern = "*",
         callback = function()
             vim.highlight.on_yank { higroup = "IncSearch", timeout = 200 }
         end,
@@ -320,7 +320,6 @@ function settings.completion()
     AuGroup("CompletionAttach", {})
     AuCmd("FileType", {
         group = "CompletionAttach",
-        pattern = "*",
         callback = function()
             require("completion").on_attach()
         end,
@@ -347,7 +346,6 @@ function settings.lsp_settings()
     AuGroup("SetDiagnosticFuncs", {})
     AuCmd({ "DiagnosticChanged" }, {
         group = "SetDiagnosticFuncs",
-        pattern = "*",
         callback = function()
             vim.diagnostic.setloclist { open = false }
             require("utils").commands()

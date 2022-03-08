@@ -217,7 +217,6 @@ return require("packer").startup {
                     show_current_context = true,
                     show_end_of_line = true,
                     use_treesitter = true,
-                    end_of_line = true,
                 }
                 vim.cmd "let g:indent_blankline_filetype_exclude+=['taglist']"
                 -- stylua: ignore

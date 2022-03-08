@@ -220,22 +220,29 @@ end
 -- ******************************** Diagnostics------------------------
 
 function M.diagnostic()
+    local function fmt(diagnostic)
+        if diagnostic.code then
+            return ("[%s] %s"):format(diagnostic.code, diagnostic.message)
+        end
+        return diagnostic.message
+    end
+    local opts = { border = "double", source = "always", format = fmt }
     wk.register {
         [",ld"] = {
             function()
-                vim.diagnostic.open_float { border = "double", source = "always" }
+                vim.diagnostic.open_float(opts)
             end,
             "Show line diagnostics",
         },
         ["[d"] = {
             function()
-                vim.diagnostic.goto_prev { float = { border = "double", source = "always" } }
+                vim.diagnostic.goto_prev { float = opts }
             end,
             "Show previous diagnostics",
         },
         ["]d"] = {
             function()
-                vim.diagnostic.goto_next { float = { border = "double", source = "always" } }
+                vim.diagnostic.goto_next { float = opts }
             end,
             "Show next diagnostics",
         },

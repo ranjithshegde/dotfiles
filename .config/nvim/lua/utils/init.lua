@@ -48,7 +48,6 @@ utils.autocmd = function()
     AuGroup("FormatOptions", {})
     AuCmd("FileType", {
         group = "FormatOptions",
-        pattern = "*",
         callback = function()
             vim.opt.formatoptions = vim.opt.formatoptions
                 - "a" -- Dont format pasted code
@@ -71,7 +70,6 @@ utils.autocmd = function()
     })
     AuCmd("FileType", {
         group = "LspSettings",
-        pattern = "*",
         callback = function()
             require("settings").lsp_settings()
             require("settings").langServers()
@@ -109,8 +107,8 @@ utils.autocmd = function()
 
     AuGroup("TermInsertModes", {})
     AuCmd("BufWinEnter, WinEnter", { group = "TermInsertModes", pattern = "term://*", command = "startinsert" })
-    AuCmd("TermEnter", { group = "TermInsertModes", pattern = "*", command = "startinsert" })
-    AuCmd("TermClose", { group = "TermInsertModes", pattern = "*", command = "call nvim_input('<CR>')" })
+    AuCmd("TermEnter", { group = "TermInsertModes", command = "startinsert" })
+    AuCmd("TermClose", { group = "TermInsertModes", command = "call nvim_input('<CR>')" })
 end
 
 ------------------------------------------------------------------------
