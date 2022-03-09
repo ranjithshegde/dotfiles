@@ -155,7 +155,6 @@ Statusline.el = function()
                 sections.highlight("Filename", builtin.tail_file),
                 sections.collapse_builtin { " ", builtin.modified_flag },
                 separators.right,
-                -- builtin.quickfix,
                 builtin.line_with_width(3),
                 ":",
                 builtin.column_with_width(2),
