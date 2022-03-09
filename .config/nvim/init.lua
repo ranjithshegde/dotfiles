@@ -2,6 +2,8 @@
 ----                              Global config variables               --
 --------------------------------------------------------------------------
 G = vim.g
+G.do_filetype_lua = 1
+G.did_load_filetypes = 0
 Api = vim.api
 Var = Api.nvim_set_var
 Exec = Api.nvim_command

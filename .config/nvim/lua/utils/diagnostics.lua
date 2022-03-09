@@ -2,7 +2,7 @@ local Diagnostics = {}
 local lsp = vim.lsp
 local util = require "lspconfig.util"
 
-Current_diagnostics = {}
+local current_diagnostics = {}
 
 local TABLE = { "underline", "virtual_text", "signs", "update_in_insert" }
 
@@ -17,10 +17,18 @@ function Diagnostics.attach(user_settings, client)
             update_in_insert = { default = true },
         },
     }
-    if vim.tbl_isempty(Current_diagnostics) then
+    vim.diagnostic.config {
+        virtual_text = {
+            source = "always",
+        },
+        float = {
+            source = "always",
+        },
+    }
+    if vim.tbl_isempty(current_diagnostics) then
         Diagnostics.init(user_settings, client.name, config)
     else
-        if Diagnostics.tableHasKey(Current_diagnostics, client.name) then
+        if Diagnostics.tableHasKey(current_diagnostics, client.name) then
             return
         else
             Diagnostics.init(user_settings, client.name, config)
@@ -37,10 +45,10 @@ function Diagnostics.init(settings, client, config)
         config.settings[setting].value = config.settings[setting].default
     end
     if client_settings["start_on"] ~= nil and not client_settings["start_on"] then
-        Current_diagnostics[client] = config
+        current_diagnostics[client] = config
         Diagnostics.turn_off_diagnostics(client)
     else
-        Current_diagnostics[client] = config
+        current_diagnostics[client] = config
         Diagnostics.configure_diagnostics({}, client)
     end
 end
@@ -51,14 +59,14 @@ end
 
 function Diagnostics.turn_off_diagnostics(client)
     if not client then
-        for id, _ in pairs(Current_diagnostics) do
+        for id, _ in pairs(current_diagnostics) do
             Diagnostics.configure_diagnostics {
                 underline = false,
                 virtual_text = false,
                 signs = false,
                 update_in_insert = false,
             }
-            Current_diagnostics[id].settings.all = false
+            current_diagnostics[id].settings.all = false
         end
     else
         local name = util.get_active_client_by_name(0, client)
@@ -69,7 +77,7 @@ function Diagnostics.turn_off_diagnostics(client)
                 signs = false,
                 update_in_insert = false,
             }, client)
-            Current_diagnostics[client].settings.all = false
+            current_diagnostics[client].settings.all = false
         else
             print(string.format("The language server %s is not active on this buffer", client))
         end
@@ -79,22 +87,22 @@ end
 function Diagnostics.turn_on_diagnostics_default(client)
     local settings = {}
     if not client then
-        for id, _ in pairs(Current_diagnostics) do
+        for id, _ in pairs(current_diagnostics) do
             for _, setting in ipairs(TABLE) do
-                settings[setting] = Current_diagnostics[id].settings[setting].default
+                settings[setting] = current_diagnostics[id].settings[setting].default
             end
             Diagnostics.configure_diagnostics(settings)
-            Current_diagnostics[id].settings.all = true
+            current_diagnostics[id].settings.all = true
         end
         vim.api.nvim_echo({ { "diagnostics for all attached servers are at default" } }, false, {})
     else
         local name = util.get_active_client_by_name(0, client)
         if name then
             for _, setting in ipairs(TABLE) do
-                settings[setting] = Current_diagnostics[client].settings[setting].default
+                settings[setting] = current_diagnostics[client].settings[setting].default
             end
             Diagnostics.configure_diagnostics(settings, client)
-            Current_diagnostics[client].settings.all = true
+            current_diagnostics[client].settings.all = true
             vim.api.nvim_echo({ { string.format("all diagnostics for %s are at default", client) } }, false, {})
         else
             print(string.format("The language server %s is not active on this buffer", client))
@@ -104,14 +112,14 @@ end
 
 function Diagnostics.turn_on_diagnostics(client)
     if not client then
-        for id, _ in pairs(Current_diagnostics) do
+        for id, _ in pairs(current_diagnostics) do
             Diagnostics.configure_diagnostics {
                 underline = true,
                 virtual_text = true,
                 signs = true,
                 update_in_insert = true,
             }
-            Current_diagnostics[id].settings.all = true
+            current_diagnostics[id].settings.all = true
         end
     else
         local name = util.get_active_client_by_name(0, client)
@@ -122,7 +130,7 @@ function Diagnostics.turn_on_diagnostics(client)
                 signs = true,
                 update_in_insert = true,
             }, client)
-            Current_diagnostics[client].settings.all = true
+            current_diagnostics[client].settings.all = true
         else
             print(string.format("The language server %s is not active on this buffer", client))
         end
@@ -131,23 +139,23 @@ end
 
 function Diagnostics.toggle_all_diagnostics(client)
     if not client then
-        for id, _ in pairs(Current_diagnostics) do
-            if Current_diagnostics[id].settings.all then
+        for id, _ in pairs(current_diagnostics) do
+            if current_diagnostics[id].settings.all then
                 Diagnostics.turn_off_diagnostics()
             else
                 Diagnostics.turn_on_diagnostics()
             end
-            Diagnostics.display_status("all diagnostics for attached servers are", Current_diagnostics[id].settings.all)
+            Diagnostics.display_status("all diagnostics for attached servers are", current_diagnostics[id].settings.all)
         end
     else
         local name = util.get_active_client_by_name(0, client)
         if name then
-            if Current_diagnostics[name.id].settings.all then
+            if current_diagnostics[name.id].settings.all then
                 Diagnostics.turn_off_diagnostics(client)
             else
                 Diagnostics.turn_on_diagnostics(client)
             end
-            Diagnostics.display_status("all diagnostics are", Current_diagnostics[client].settings.all, client)
+            Diagnostics.display_status("all diagnostics are", current_diagnostics[client].settings.all, client)
         else
             print(string.format("The language server %s is not active on this buffer", client))
         end
@@ -156,33 +164,33 @@ end
 
 function Diagnostics.toggle_diagnostic(name, client)
     if not client then
-        for id, _ in pairs(Current_diagnostics) do
-            if type(Current_diagnostics[id].settings[name].default) == "boolean" then
-                Current_diagnostics[id].settings[name].value = not Current_diagnostics[id].settings[name].value
-            elseif Current_diagnostics[id].settings[name].value == false then
-                Current_diagnostics[id].settings[name].value = Current_diagnostics[id].settings[name].default
+        for id, _ in pairs(current_diagnostics) do
+            if type(current_diagnostics[id].settings[name].default) == "boolean" then
+                current_diagnostics[id].settings[name].value = not current_diagnostics[id].settings[name].value
+            elseif current_diagnostics[id].settings[name].value == false then
+                current_diagnostics[id].settings[name].value = current_diagnostics[id].settings[name].default
             else
-                Current_diagnostics[id].settings[name].value = false
+                current_diagnostics[id].settings[name].value = false
             end
-            Diagnostics.display_status(name .. " is", Current_diagnostics[id].settings[name].value)
-            Diagnostics.configure_diagnostics { [name] = Current_diagnostics[id].settings[name].value }
-            return Current_diagnostics[id].settings[name].value
+            Diagnostics.display_status(name .. " is", current_diagnostics[id].settings[name].value)
+            Diagnostics.configure_diagnostics { [name] = current_diagnostics[id].settings[name].value }
+            return current_diagnostics[id].settings[name].value
         end
     else
         local cname = util.get_active_client_by_name(0, client)
         if cname then
-            if type(Current_diagnostics[client].settings[name].default) == "boolean" then
-                Current_diagnostics[client].settings[name].value = not Current_diagnostics[client].settings[name].value
-            elseif Current_diagnostics[client].settings[name].value == false then
-                Current_diagnostics[client].settings[name].value = Current_diagnostics[client].settings[name].default
+            if type(current_diagnostics[client].settings[name].default) == "boolean" then
+                current_diagnostics[client].settings[name].value = not current_diagnostics[client].settings[name].value
+            elseif current_diagnostics[client].settings[name].value == false then
+                current_diagnostics[client].settings[name].value = current_diagnostics[client].settings[name].default
             else
-                Current_diagnostics[client].settings[name].value = false
+                current_diagnostics[client].settings[name].value = false
             end
-            Diagnostics.display_status(name .. " is", Current_diagnostics[client].settings[name].value, client)
+            Diagnostics.display_status(name .. " is", current_diagnostics[client].settings[name].value, client)
             Diagnostics.configure_diagnostics({
-                [name] = Current_diagnostics[client].settings[name].value,
+                [name] = current_diagnostics[client].settings[name].value,
             }, client)
-            return Current_diagnostics[client].settings[name].value
+            return current_diagnostics[client].settings[name].value
         else
             print(string.format("The language server %s is not active on this buffer", client))
         end
@@ -224,7 +232,7 @@ end
 function Diagnostics.current_settings(new_settings, client)
     local settings = {}
     for _, setting in pairs(TABLE) do
-        settings[setting] = Current_diagnostics[client].settings[setting].value
+        settings[setting] = current_diagnostics[client].settings[setting].value
     end
     if not vim.tbl_isempty(new_settings) then
         for setting, value in pairs(new_settings) do
@@ -241,7 +249,7 @@ end
 
 function Diagnostics.configure_diagnostics(settings, client)
     if not client then
-        for id, _ in pairs(Current_diagnostics) do
+        for id, _ in pairs(current_diagnostics) do
             local conf = Diagnostics.current_settings(settings, id)
             vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
                 vim.lsp.diagnostic.on_publish_diagnostics,
@@ -289,9 +297,9 @@ end
 
 function Diagnostics.dump(client)
     if not client then
-        print(vim.inspect(Current_diagnostics))
+        print(vim.inspect(current_diagnostics))
     end
-    print(vim.inspect(Current_diagnostics[client]))
+    print(vim.inspect(current_diagnostics[client]))
 end
 
 function Diagnostics.tableHasKey(table, key)
