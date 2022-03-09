@@ -127,10 +127,11 @@ langSettings.chainIndex = {
         pcall(require("cmp").complete)
     end,
     function()
-        require("utils").feedkey("<C-x><C-n>", "n")
+        -- require("utils").feedkey("<C-x><C-n>", "n")
+        require("utils").feedkey("<C-n>", "n")
     end,
     function()
-        require("utils").feedkey("<C-x><C-p>", "n")
+        require("utils").feedkey("<C-p>", "n")
     end,
 }
 
@@ -138,6 +139,7 @@ langSettings.insertSource = function(source)
     local newS = function()
         require("utils").feedkey(source, "n")
     end
+    R "utils.langServers"
     table.insert(require("utils.langServers").chainIndex, newS)
 end
 

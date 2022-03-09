@@ -47,10 +47,8 @@ function settings.options()
     o.clipboard:append "unnamedplus"
     o.shortmess:append "c"
     G.termdebug_wide = 1
-    G.do_filetype_lua = 1
     G.markdown_folding = 1
     G.tex_conceal = "abdmgs"
-    G.did_load_filetypes = 0
     G.loaded_ruby_provider = 0
     G.loaded_perl_provider = 0
     G.netrw_browsex_viewer = "xdg-open"
@@ -301,6 +299,12 @@ function settings.completion()
             end,
         },
         mapping = {
+            ["<C-k>"] = cmp.mapping(function()
+                require("utils.langServers").next()
+            end, { "i", "s" }),
+            ["<C-j>"] = cmp.mapping(function()
+                require("utils.langServers").prev()
+            end, { "i", "s" }),
             ["<C-p>"] = cmp.mapping.select_prev_item(),
             ["<C-n>"] = cmp.mapping.select_next_item(),
             ["<C-b>"] = cmp.mapping.scroll_docs(-4),
@@ -308,12 +312,6 @@ function settings.completion()
             ["<C-o>"] = cmp.mapping.complete(),
             ["<C-e>"] = cmp.mapping.close(),
             ["<CR>"] = cmp.mapping.confirm { select = true },
-            ["<C-k>"] = cmp.mapping(function()
-                require("utils.langServers").next()
-            end, { "i", "s" }),
-            ["<C-j>"] = cmp.mapping(function()
-                require("utils.langServers").prev()
-            end, { "i", "s" }),
             ["<C-l>"] = cmp.mapping(function(fallback)
                 if luasnip.expand_or_jumpable() then
                     luasnip.expand_or_jump()
@@ -748,6 +746,11 @@ function settings.clangd()
     if not package.loaded["settings.lsp_settings"] then
         require("settings").lsp_settings()
     end
+    local ok, status = pcall(require, "lsp-status")
+    local handlers = nil
+    if ok then
+        handlers = status.extensions.clangd.setup()
+    end
     require("clangd_extensions").setup {
         server = {
             on_attach = All_attach,
@@ -756,7 +759,7 @@ function settings.clangd()
             init_options = {
                 clangdFileStatus = true,
             },
-            handlers = require("lsp-status").extensions.clangd.setup(),
+            handlers = handlers,
             cmd = {
                 "clangd",
                 "--clang-tidy",
