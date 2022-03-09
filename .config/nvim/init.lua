@@ -26,9 +26,9 @@ Colors = {
 }
 
 -- **************Neovim basics -----------------------------------------
-require "impatient"
+pcall(require "impatient")
 require "plugins"
-require "packer_compiled"
+pcall(require "packer_compiled")
 require("settings").general()
 require("mappings").general()
 require("utils").autocmd()
