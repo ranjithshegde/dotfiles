@@ -13,7 +13,7 @@ end
 --                              Vim basics                            --
 ------------------------------------------------------------------------
 function settings.options()
-    vim.cmd "colo nightfox"
+    require("nightfox").load()
     local tab = 4
     -- o.list = true
     o.number = true
@@ -379,7 +379,9 @@ function settings.lsp_settings()
         end,
     })
 
-    Capabilities = require("cmp_nvim_lsp").update_capabilities(vim.lsp.protocol.make_client_capabilities())
+    if packer_plugins["cmp-nvim-lsp"] and packer_plugins["cmp-nvim-lsp"].loaded then
+        Capabilities = require("cmp_nvim_lsp").update_capabilities(vim.lsp.protocol.make_client_capabilities())
+    end
 
     Attach_props = function(client)
         require("mappings").nvim_lsp()

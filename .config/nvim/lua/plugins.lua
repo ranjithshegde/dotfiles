@@ -212,7 +212,7 @@ return require("packer").startup {
         -- Indents and chars
         use {
             "lukas-reineke/indent-blankline.nvim",
-            cmd = { "IndentBlanklineToggle", "IndentBlanklineEnable" },
+            event = "BufReadPost",
             config = function()
                 G.indent_blankline_char = "┊"
                 require("indent_blankline").setup {

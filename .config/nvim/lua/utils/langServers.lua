@@ -122,16 +122,41 @@ langSettings.kind_symbols = {
 --                              Chain completion                      --
 ------------------------------------------------------------------------
 
+local chainList = {
+    default = {
+        "nvim_lsp",
+        "luasnip",
+    },
+    filetype = {
+        glsl = {
+            "<C-x><C-u>",
+        },
+    },
+    ins_completion = {
+        "<C-x><C-n>",
+        "<C-x><C-p>",
+    },
+}
+
 langSettings.chainIndex = {
     function()
         pcall(require("cmp").complete)
     end,
     function()
-        -- require("utils").feedkey("<C-x><C-n>", "n")
-        require("utils").feedkey("<C-n>", "n")
+        local ft = Api.nvim_buf_get_option(0, "filetype")
+        if table[ft] then
+            for _, v in pairs(chainList.filetype[ft]) do
+                require("utils").feedkey(v, "n")
+            end
+        else
+            return
+        end
     end,
     function()
-        require("utils").feedkey("<C-p>", "n")
+        require("utils").feedkey("<C-x><C-n>", "n")
+    end,
+    function()
+        require("utils").feedkey("<C-x><C-p>", "n")
     end,
 }
 
