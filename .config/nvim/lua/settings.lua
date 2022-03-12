@@ -13,7 +13,7 @@ end
 --                              Vim basics                            --
 ------------------------------------------------------------------------
 function settings.options()
-    vim.cmd "colo nightfox"
+    require("nightfox").load()
     local tab = 4
     -- o.list = true
     o.number = true

@@ -226,7 +226,7 @@ function M.diagnostic()
         end
         return diagnostic.message
     end
-    local opts = { border = "double", source = "always", format = fmt }
+    local opts = { border = "double", format = fmt }
     wk.register {
         [",ld"] = {
             function()
