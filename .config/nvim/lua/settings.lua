@@ -485,6 +485,7 @@ function settings.langServers()
         bashls = { on_attach = All_attach, capabilities = Capabilities, filetypes = { "sh", "zsh" } },
         ccls = {
             on_init = Cinit,
+            filetypes = { "c", "cpp", "objc", "objcpp", "opencl" },
             handlers = {
                 ["textDocument/publishDiagnostics"] = function(...)
                     return nil

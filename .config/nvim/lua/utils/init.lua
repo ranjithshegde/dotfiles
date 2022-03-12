@@ -15,7 +15,6 @@ function utils.UnloadAllModules()
         "^utils$",
         "^debugger$",
     }
-    -- RELOAD(unload_modules)
     for k, _ in pairs(package.loaded) do
         for _, v in ipairs(unload_modules) do
             if k:match(v) then
@@ -79,6 +78,11 @@ utils.autocmd = function()
             require("settings").lsp_lintFormat()
         end,
         once = true,
+    })
+    AuCmd("FileType", {
+        group = "LspSettings",
+        pattern = "opencl",
+        callback = require("mappings").clang,
     })
 
     AuGroup("MakeDispatch", {})

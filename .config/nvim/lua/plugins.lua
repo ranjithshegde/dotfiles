@@ -110,7 +110,7 @@ return require("packer").startup {
 
         -- WhichKey
         use {
-            "folke/which-key.nvim",
+            "xiyaowong/which-key.nvim",
             config = function()
                 require("which-key").setup {
                     layout = {
@@ -252,10 +252,10 @@ return require("packer").startup {
                     require("settings").jdtls()
                 end,
             },
-            { "m-pilia/vim-ccls", ft = { "c", "cpp" } },
+            { "m-pilia/vim-ccls", ft = { "c", "cpp", "opencl" } },
             {
                 "p00f/clangd_extensions.nvim",
-                ft = { "c", "cpp" },
+                ft = { "c", "cpp", "opencl" },
                 config = function()
                     require("settings").clangd()
                 end,
