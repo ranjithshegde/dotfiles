@@ -38,7 +38,7 @@ function settings.options()
     o.grepprg = "rg --vimgrep --smart-case --hidden"
     o.grepformat = "%f:%l:%c:%m"
     o.fillchars = "stlnc:»,vert:║,fold:."
-    o.listchars = "eol:↲"
+    o.listchars:append "eol:↲"
     -- o.listchars = "tab:<->,eol:↲,space:→"
     o.completeopt = "menuone,noinsert,noselect"
     o.dictionary = os.getenv "XDG_DATA_HOME" .. "/dict/words"
@@ -390,7 +390,7 @@ function settings.lsp_settings()
             AuGroup("LspAutoFormat", {})
             AuCmd("BufWrite", {
                 group = "LspAutoFormat",
-                pattern = "*.html,*.css,*.js,*.hpp,*.h,*.sh,*.lua,*.cpp,*.json,*.py,*.yaml,*.toml",
+                pattern = "*.html,*.css,*.js,*.hpp,*.h,*.sh,*.lua,*.cpp,*.json,*.py,*.yaml,*.toml,*.vs,*.fs,*.gs,*.vert,*.frag,*.geom,*.glsl",
                 callback = function()
                     vim.lsp.buf.formatting_sync(nil, 500)
                 end,
@@ -456,6 +456,7 @@ function settings.langServers()
         bashls = { on_attach = All_attach, capabilities = Capabilities, filetypes = { "sh", "zsh" } },
         ccls = {
             on_init = Cinit,
+            filetypes = { "c", "cpp", "objc", "objcpp", "opencl" },
             handlers = {
                 ["textDocument/publishDiagnostics"] = function(...)
                     return nil
@@ -537,6 +538,7 @@ function settings.lsp_lintFormat()
     local prettier = { formatCommand = "prettier --stdin --stdin-filepath ${INPUT}", formatStdin = true }
     local isort = { formatCommand = "isort --stdout --profile black -", formatStdin = true }
     local black = { formatCommand = "black --fast -", formatStdin = true }
+    local clang_format = { formatCommand = "clang-format -", formatStdin = true }
     local mypy = {
         lintCommand = "mypy --show-column-numbers",
         lintFormats = { "%f:%l:%c: %trror: %m", "%f:%l:%c: %tarning: %m", "%f:%l:%c: %tote: %m" },
@@ -574,6 +576,7 @@ function settings.lsp_lintFormat()
         css = { prettier },
         toml = { prettier },
         lua = { stylua },
+        glsl = { clang_format },
         make = { checkmake },
         vimwiki = { markdownlint },
         markdown = { prettier },

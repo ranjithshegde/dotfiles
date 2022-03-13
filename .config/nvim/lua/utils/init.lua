@@ -79,6 +79,11 @@ utils.autocmd = function()
         end,
         once = true,
     })
+    AuCmd("FileType", {
+        group = "LspSettings",
+        pattern = "opencl",
+        callback = require("mappings").clang,
+    })
 
     AuGroup("MakeDispatch", {})
     AuCmd("FileType", {
@@ -99,6 +104,12 @@ utils.autocmd = function()
                 require("utils").toggleTerm(vim.g.repl, "repl", 0)
             end, { desc = "Toggle REPL" })
         end,
+    })
+
+    AuCmd("BufWritePost", {
+        group = "MakeDispatch",
+        pattern = "*.glsl,*.vert,*.frag,*.geom,*.vs,*.fs,*.gs",
+        command = "Dispatch glslangValidator %",
     })
 
     -- Compile packer after writing plugins.lua

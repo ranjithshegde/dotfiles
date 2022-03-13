@@ -24,7 +24,7 @@ return require("packer").startup {
 
         -- Tim pope
         use {
-            { "tpope/vim-surround", event = "BufRead" },
+            { "tpope/vim-surround", event = "BufReadPost" },
             { "tpope/vim-unimpaired", keys = { "[", "]" } },
             { "tpope/vim-dispatch", cmd = { "Make", "Dispatch" } },
             { "tpope/vim-fugitive", cmd = { "G", "Git", "Gclog" } },
@@ -50,7 +50,7 @@ return require("packer").startup {
         -- StatusLine
         use {
             "tjdevries/express_line.nvim",
-            requires = "kyazdani42/nvim-web-devicons",
+            requires = { "kyazdani42/nvim-web-devicons", "nvim-lua/plenary.nvim" },
             config = function()
                 require("statusline").el()
             end,
@@ -61,16 +61,6 @@ return require("packer").startup {
             "jbyuki/instant.nvim",
             config = function()
                 G.instant_username = "Ranjith"
-            end,
-            opt = true,
-        }
-
-        -- Git Signs
-        use {
-            "lewis6991/gitsigns.nvim",
-            config = function()
-                require("gitsigns").setup { keymaps = {} }
-                require("mappings").git()
             end,
             opt = true,
         }
@@ -93,24 +83,20 @@ return require("packer").startup {
             end,
         }
 
-        -- SuperCollider
+        -- Git Signs
         use {
-            "davidgranstrom/scnvim",
-            ft = "supercollider",
-            run = function()
-                fn["scnvim#install"]()
-            end,
+            "lewis6991/gitsigns.nvim",
+            requires = "nvim-lua/plenary.nvim",
             config = function()
-                require("mappings").scnvim()
-                G.scnvim_snippet_format = "luasnip"
-                require("luasnip").snippets.supercollider = require("scnvim/utils").get_snippets()
-                vim.opt_local.wrap = true
+                require("gitsigns").setup { keymaps = {} }
+                require("mappings").git()
             end,
+            opt = true,
         }
 
         -- WhichKey
         use {
-            "folke/which-key.nvim",
+            "xiyaowong/which-key.nvim",
             config = function()
                 require("which-key").setup {
                     layout = {
@@ -123,7 +109,6 @@ return require("packer").startup {
 
         -- Taglist and sidebars
         use {
-            -- { "yegappan/taglist", cmd = "TlistToggle"},
             { "simrat39/symbols-outline.nvim", cmd = "SymbolsOutline" },
             {
                 "sidebar-nvim/sidebar.nvim",
@@ -149,6 +134,21 @@ return require("packer").startup {
             --     "nvim-treesitter/playground",
             --     cmd = { "TSPlaygroundToggle", "TSHighlightCapturesUnderCursor" },
             -- },
+        }
+
+        -- SuperCollider
+        use {
+            "davidgranstrom/scnvim",
+            ft = "supercollider",
+            run = function()
+                fn["scnvim#install"]()
+            end,
+            config = function()
+                require("mappings").scnvim()
+                G.scnvim_snippet_format = "luasnip"
+                require("luasnip").snippets.supercollider = require("scnvim/utils").get_snippets()
+                vim.opt_local.wrap = true
+            end,
         }
 
         -- Colorizer
@@ -253,10 +253,10 @@ return require("packer").startup {
                     require("settings").jdtls()
                 end,
             },
-            { "m-pilia/vim-ccls", ft = { "c", "cpp" } },
+            { "m-pilia/vim-ccls", ft = { "c", "cpp", "opencl" } },
             {
                 "p00f/clangd_extensions.nvim",
-                ft = { "c", "cpp" },
+                ft = { "c", "cpp", "opencl" },
                 config = function()
                     require("settings").clangd()
                 end,
