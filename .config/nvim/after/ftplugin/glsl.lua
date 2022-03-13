@@ -1,5 +1,4 @@
 vim.bo.commentstring = "//%s"
-vim.cmd "au BufWritePost *.glsl,*.vert,*.frag,*.geom,*.vs,*.fs Dispatch glslangValidator %"
 
 vim.keymap.set("n", "<leader>s", function()
     if vim.fn.expand "%:e" == "vert" then

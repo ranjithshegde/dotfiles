@@ -50,7 +50,7 @@ return require("packer").startup {
         -- StatusLine
         use {
             "tjdevries/express_line.nvim",
-            requires = "kyazdani42/nvim-web-devicons",
+            requires = { "kyazdani42/nvim-web-devicons", "nvim-lua/plenary.nvim" },
             config = function()
                 require("statusline").el()
             end,
@@ -61,16 +61,6 @@ return require("packer").startup {
             "jbyuki/instant.nvim",
             config = function()
                 G.instant_username = "Ranjith"
-            end,
-            opt = true,
-        }
-
-        -- Git Signs
-        use {
-            "lewis6991/gitsigns.nvim",
-            config = function()
-                require("gitsigns").setup { keymaps = {} }
-                require("mappings").git()
             end,
             opt = true,
         }
@@ -93,19 +83,15 @@ return require("packer").startup {
             end,
         }
 
-        -- SuperCollider
+        -- Git Signs
         use {
-            "davidgranstrom/scnvim",
-            ft = "supercollider",
-            run = function()
-                fn["scnvim#install"]()
-            end,
+            "lewis6991/gitsigns.nvim",
+            requires = "nvim-lua/plenary.nvim",
             config = function()
-                require("mappings").scnvim()
-                G.scnvim_snippet_format = "luasnip"
-                require("luasnip").snippets.supercollider = require("scnvim/utils").get_snippets()
-                vim.opt_local.wrap = true
+                require("gitsigns").setup { keymaps = {} }
+                require("mappings").git()
             end,
+            opt = true,
         }
 
         -- WhichKey
@@ -148,6 +134,21 @@ return require("packer").startup {
             --     "nvim-treesitter/playground",
             --     cmd = { "TSPlaygroundToggle", "TSHighlightCapturesUnderCursor" },
             -- },
+        }
+
+        -- SuperCollider
+        use {
+            "davidgranstrom/scnvim",
+            ft = "supercollider",
+            run = function()
+                fn["scnvim#install"]()
+            end,
+            config = function()
+                require("mappings").scnvim()
+                G.scnvim_snippet_format = "luasnip"
+                require("luasnip").snippets.supercollider = require("scnvim/utils").get_snippets()
+                vim.opt_local.wrap = true
+            end,
         }
 
         -- Colorizer

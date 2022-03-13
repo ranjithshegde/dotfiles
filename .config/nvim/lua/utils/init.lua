@@ -106,6 +106,12 @@ utils.autocmd = function()
         end,
     })
 
+    AuCmd("BufWritePost", {
+        group = "MakeDispatch",
+        pattern = "*.glsl,*.vert,*.frag,*.geom,*.vs,*.fs,*.gs",
+        command = "Dispatch glslangValidator %",
+    })
+
     -- Compile packer after writing plugins.lua
     AuGroup("PluginLoad", {})
     AuCmd("BufWritePost", { group = "PluginLoad", pattern = "plugins.lua", command = "source <afile> | PackerCompile" })

@@ -12,7 +12,7 @@ function M.general()
     M.coauthor()
     M.treesitter()
 
-    local opts = { nowait = true, noremap = true, silent = true }
+    local opts = { nowait = true }
     --line movement
     map("x", "K", ":move '<-2<CR>gv-gv", { desc = "Move line up" })
     map("x", "J", ":move '>+1<CR>gv-gv", { desc = "Move line down" })

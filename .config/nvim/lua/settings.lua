@@ -418,7 +418,7 @@ function settings.lsp_settings()
             AuGroup("LspAutoFormat", {})
             AuCmd("BufWrite", {
                 group = "LspAutoFormat",
-                pattern = "*.html,*.css,*.js,*.hpp,*.h,*.sh,*.lua,*.cpp,*.json,*.py,*.yaml,*.toml",
+                pattern = "*.html,*.css,*.js,*.hpp,*.h,*.sh,*.lua,*.cpp,*.json,*.py,*.yaml,*.toml,*.vs,*.fs,*.gs,*.vert,*.frag,*.geom,*.glsl",
                 callback = function()
                     vim.lsp.buf.formatting_sync(nil, 500)
                 end,
@@ -567,6 +567,7 @@ function settings.lsp_lintFormat()
     local prettier = { formatCommand = "prettier --stdin --stdin-filepath ${INPUT}", formatStdin = true }
     local isort = { formatCommand = "isort --stdout --profile black -", formatStdin = true }
     local black = { formatCommand = "black --fast -", formatStdin = true }
+    local clang_format = { formatCommand = "clang-format -", formatStdin = true }
     local mypy = {
         lintCommand = "mypy --show-column-numbers",
         lintFormats = { "%f:%l:%c: %trror: %m", "%f:%l:%c: %tarning: %m", "%f:%l:%c: %tote: %m" },
@@ -604,6 +605,7 @@ function settings.lsp_lintFormat()
         css = { prettier },
         toml = { prettier },
         lua = { stylua },
+        glsl = { clang_format },
         make = { checkmake },
         vimwiki = { markdownlint },
         markdown = { prettier },
