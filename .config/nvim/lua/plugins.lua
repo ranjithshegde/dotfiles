@@ -22,6 +22,8 @@ return require("packer").startup {
 
         use { "bkad/CamelCaseMotion", opt = true }
 
+        use { "dstein64/vim-startuptime", cmd = "StartupTime" }
+
         -- Tim pope
         use {
             { "tpope/vim-surround", event = "BufReadPost" },
@@ -357,6 +359,6 @@ return require("packer").startup {
     end,
     config = {
         compile_path = require("packer.util").join_paths(fn.stdpath "config", "lua", "packer_compiled.lua"),
-        profile = { enable = true, threshold = 1 },
+        profile = { enable = true, threshold = 0 },
     },
 }

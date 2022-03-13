@@ -144,12 +144,10 @@ langSettings.chainIndex = {
     end,
     function()
         local ft = Api.nvim_buf_get_option(0, "filetype")
-        if table[ft] then
+        if chainList.filetype[ft] then
             for _, v in pairs(chainList.filetype[ft]) do
                 require("utils").feedkey(v, "n")
             end
-        else
-            return
         end
     end,
     function()

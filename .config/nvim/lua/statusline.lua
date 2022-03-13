@@ -88,15 +88,15 @@ Statusline.el = function()
     --*********************************** SuperCollider ---------------------------------
 
     local scnvim = function()
-        if Op "filetype" == "supercollider" then
-            local scstatus = "📡" .. Fn("scnvim#statusline#server_status", {})
+        if Api.nvim_buf_get_option(0, "filetype") == "supercollider" then
+            local scstatus = "📡" .. vim.fn["scnvim#statusline#server_status"]()
             Api.nvim_set_hl(0, "ScStatus", { bg = Colors.blue, fg = Colors.bg })
             return scstatus
         end
     end
 
     local scContext = function()
-        if Op "filetype" == "supercollider" then
+        if Api.nvim_buf_get_option(0, "filetype") == "supercollider" then
             local f = require("nvim-treesitter").statusline {
                 indicator_size = 100,
                 type_patterns = {

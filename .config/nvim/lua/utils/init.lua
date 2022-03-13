@@ -43,7 +43,7 @@ end
 ------------------------------------------------------------------------
 
 utils.autocmd = function()
-    -- ************** FileTypes  -------------------------------------------
+    -- ************** FileTypes  ---------------------------------------
 
     AuGroup("FormatOptions", {})
     AuCmd("FileType", {
@@ -85,6 +85,7 @@ utils.autocmd = function()
         callback = require("mappings").clang,
     })
 
+    -- ************** Compilers and REPL  ------------------------------
     AuGroup("MakeDispatch", {})
     AuCmd("FileType", {
         group = "MakeDispatch",
@@ -105,7 +106,6 @@ utils.autocmd = function()
             end, { desc = "Toggle REPL" })
         end,
     })
-
     AuCmd("BufWritePost", {
         group = "MakeDispatch",
         pattern = "*.glsl,*.vert,*.frag,*.geom,*.vs,*.fs,*.gs",
@@ -116,7 +116,7 @@ utils.autocmd = function()
     AuGroup("PluginLoad", {})
     AuCmd("BufWritePost", { group = "PluginLoad", pattern = "plugins.lua", command = "source <afile> | PackerCompile" })
 
-    -- ************************ Terminal management -------------------------
+    -- ************************ Terminal management --------------------
 
     AuGroup("TermInsertModes", {})
     AuCmd("BufWinEnter, WinEnter", { group = "TermInsertModes", pattern = "term://*", command = "startinsert" })

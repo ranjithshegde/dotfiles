@@ -383,12 +383,11 @@ function settings.lsp_settings()
         Capabilities = require("cmp_nvim_lsp").update_capabilities(vim.lsp.protocol.make_client_capabilities())
     end
 
-    Attach_props = function(client)
+    Attach_props = function(client, bufnr)
         require("mappings").nvim_lsp()
 
         vim.cmd "PackerLoad lsp-status.nvim"
         local lsp_status = require "lsp-status"
-
         if client.name ~= "ltex" and client.name ~= "efm" then
             lsp_status.register_progress()
         end
@@ -409,7 +408,7 @@ function settings.lsp_settings()
             })
             AuCmd("CursorMoved, CursorMovedI", {
                 group = "LspHighlightSymbols",
-                buffer = 0,
+                buffer = bufnr,
                 callback = vim.lsp.buf.clear_references,
             })
         end
@@ -425,21 +424,16 @@ function settings.lsp_settings()
             })
         end
         Api.nvim_add_user_command("LspCapabilities", require("utils.langServers").lsp_capabilities, {})
-
-        local ok, status = pcall(require, "lsp-status")
-        if ok then
-            Capabilities = vim.tbl_extend("keep", Capabilities, status.capabilities)
-        end
     end
 
     All_attach = function(client, bufnr)
-        Attach_props(client)
+        Attach_props(client, bufnr)
         if Op "filetype" ~= "vimwiki" then
             bo.formatexpr = "v:lua.vim.lsp.formatexpr()"
         end
     end
 
-    Cinit = function(client, bufnr)
+    Cinit = function(client)
         require("mappings").nvim_lsp()
         client.server_capabilities.completionProvider = false
         local rc = client.resolved_capabilities
@@ -454,9 +448,8 @@ function settings.lsp_settings()
     end
 
     EfmAttach = function(client, bufnr)
-        Attach_props(client)
-        local rc = client.resolved_capabilities
-        rc.document_formatting = false
+        Attach_props(client, bufnr)
+        client.resolved_capabilities.document_formatting = false
     end
 
     -- borders for floating windows
@@ -534,11 +527,7 @@ function settings.langServers()
                     lint = { onSave = true, onChange = true },
                     chktex = { onOpenAndSave = true },
                     forwardSearch = {
-                        args = {
-                            "--synctex-forward",
-                            "%l:1:%f",
-                            "%p",
-                        },
+                        args = { "--synctex-forward", "%l:1:%f", "%p" },
                         executable = "zathura",
                     },
                 },
@@ -721,6 +710,9 @@ end
 ------------------------------------------------------------------------
 
 function settings.jdtls()
+    if not package.loaded["settings.lsp_settings"] then
+        require("settings").lsp_settings()
+    end
     require("debugger").init()
     local home = os.getenv "XDG_DATA_HOME"
     local debug_path =
@@ -729,7 +721,7 @@ function settings.jdtls()
     require("jdtls").start_or_attach {
         cmd = { "jdtls" },
         on_attach = function(client, bufnr)
-            Attach_props(client)
+            Attach_props(client, bufnr)
             bo.formatexpr = "v:lua.vim.lsp.formatexpr()"
             require("jdtls").setup_dap { hotcodereplace = "auto" }
             require("jdtls.setup").add_commands()
@@ -751,20 +743,23 @@ function settings.clangd()
     if not package.loaded["settings.lsp_settings"] then
         require("settings").lsp_settings()
     end
-    local ok, status = pcall(require, "lsp-status")
-    local handlers = nil
-    if ok then
-        handlers = status.extensions.clangd.setup()
-    end
+
+    -- local ccaps, handlers
+    -- local ok, status = pcall(require, "lsp-status")
+    -- if ok then
+    --     ccaps = vim.tbl_extend("keep", Capabilities, status.capabilities)
+    --     handlers = status.extensions.clangd.setup()
+    -- end
     require("clangd_extensions").setup {
         server = {
             on_attach = All_attach,
+            -- capabilities = ccaps,
             capabilities = Capabilities,
             filetypes = { "c", "cpp", "opencl" },
-            init_options = {
-                clangdFileStatus = true,
-            },
-            handlers = handlers,
+            -- init_options = {
+            --     clangdFileStatus = true,
+            -- },
+            -- handlers = handlers,
             cmd = {
                 "clangd",
                 "--clang-tidy",

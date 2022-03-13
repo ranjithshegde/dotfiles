@@ -8,7 +8,6 @@ Api = vim.api
 Var = Api.nvim_set_var
 Exec = Api.nvim_command
 Op = Api.nvim_get_option
-Fn = Api.nvim_call_function
 AuCmd = Api.nvim_create_autocmd
 AuGroup = Api.nvim_create_augroup
 
