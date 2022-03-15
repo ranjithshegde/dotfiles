@@ -28,7 +28,9 @@ function M.general()
     end, {
         desc = "Toggle current/default terminal",
     })
-    map("n", "<leader>ii", require("utils.instant").Start, {desc = "Start Co-authoring Server"})
+    map("n", "<leader>ii", function()
+        require("utils.instant").Start()
+    end, { desc = "Start Co-authoring Server" })
 
     wk.register {
         -- open folds when searching
@@ -269,7 +271,7 @@ function M.configFiles()
                 l = {
                     name = "Lsp",
                     s = { "<cmd>tabnew ~/.config/nvim/lua/lsp/init.lua<CR>", "Functions and Inits" },
-                    l = { "<cmd>tabnew ~/.config/nvim/lua/lsp/Sumneko.lua<CR>", "Sumneko" },
+                    l = { "<cmd>tabnew ~/.config/nvim/lua/lsp/sumneko.lua<CR>", "Sumneko" },
                     j = { "<cmd>tabnew ~/.config/nvim/lua/lsp/jdtls.lua<CR>", "Jdt LS" },
                     c = { "<cmd>tabnew ~/.config/nvim/lua/lsp/clangd.lua<CR>", "Clangd" },
                 },
