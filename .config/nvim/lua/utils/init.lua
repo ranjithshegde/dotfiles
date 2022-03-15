@@ -59,11 +59,11 @@ utils.autocmd = function()
     AuCmd("FileType", {
         group = "LspSettings",
         callback = function()
-            if not package.loaded["settings.lsp_settings"] then
-                require("settings").lsp_settings()
+            if not package.loaded["lsp.settings"] then
+                require("lsp").settings()
             end
-            require("settings").langServers()
-            require("settings").lsp_lintFormat()
+            require("lsp").servers()
+            require("lsp").lintFormat()
         end,
         once = true,
     })
@@ -111,7 +111,6 @@ utils.autocmd = function()
     AuCmd("TermEnter", { group = "TermInsertModes", command = "startinsert" })
     AuCmd("TermClose", { group = "TermInsertModes", command = "call nvim_input('<CR>')" })
 end
-
 ------------------------------------------------------------------------
 --                              Terminal                              --
 ------------------------------------------------------------------------
@@ -209,6 +208,23 @@ end
 utils.feedkey = function(key, mode)
     Api.nvim_feedkeys(Api.nvim_replace_termcodes(key, true, true, true), mode, true)
 end
+
+-- Access agenda from outside orgfile
+function utils.agenda()
+    Exec "PackerLoad orgmode"
+    require("orgmode").action "agenda.prompt"
+end
+
+function utils.thesaurus(cmd)
+    local url = "https://www.thesaurus.com/browse/" .. cmd
+    Exec('!qutebrowser "' .. url .. '"')
+end
+
+function utils.dictionary(cmd)
+    local url = "https://en.wiktionary.org/wiki/" .. cmd
+    Exec('!qutebrowser "' .. url .. '"')
+end
+
 ------------------------------------------------------------------------
 --                          User commands                             --
 ------------------------------------------------------------------------
@@ -247,79 +263,6 @@ function utils.commands()
     cmd("DefaultDiagnostics", function(opts)
         require("utils.diagnostics").turn_on_diagnostics_default(opts.args)
     end, { nargs = 1, complete = complete })
-end
-
-------------------------------------------------------------------------
---                              Co-authoring                          --
-------------------------------------------------------------------------
-
--- Access agenda from outside orgfile
-function utils.agenda()
-    Exec "PackerLoad orgmode"
-    require("orgmode").action "agenda.prompt"
-end
-
-function utils.thesaurus(cmd)
-    local url = "https://www.thesaurus.com/browse/" .. cmd
-    Exec('!qutebrowser "' .. url .. '"')
-end
-
-function utils.dictionary(cmd)
-    local url = "https://en.wiktionary.org/wiki/" .. cmd
-    Exec('!qutebrowser "' .. url .. '"')
-end
-
--- Start Instant server
-function utils.Start()
-    local id = vim.fn.input "Enter extension: "
-    Exec "PackerLoad instant.nvim"
-    Exec("InstantStartServer 192.168.178." .. id .. " 8080")
-end
-
--- Start Single session
-function utils.Session()
-    local id = vim.fn.input "Enter extension: "
-    Exec("InstantStartSession 192.168.178." .. id .. " 8080")
-end
-
--- Start Single buffer
-function utils.Single()
-    local id = vim.fn.input "Enter extension: "
-    Exec("InstantStartSingle 192.168.178." .. id .. " 8080")
-end
-
--- Follow a user
-function utils.Follow()
-    local name = vim.fn.input "User to follow: "
-    Exec("InstantFollow " .. name)
-end
-
--- Join Single session
-function utils.JoinSession()
-    Exec "PackerLoad instant.nvim"
-    local id = vim.fn.input "Enter extension: "
-    Exec("InstantJoinSession 192.168.178." .. id .. " 8080")
-    utils.Follow()
-end
-
--- Join Single buffer
-function utils.JoinSingle()
-    Exec "PackerLoad instant.nvim"
-    local id = vim.fn.input "Enter extension: "
-    Exec("InstantJoinSingle 192.168.178." .. id .. " 8080")
-    utils.Follow()
-end
-
-function utils.wordProcessor()
-    local o = vim.opt_local
-    o.wrap = true
-    o.linebreak = true
-    o.expandtab = false
-    o.spell = true
-    o.spelllang = "en_us,en_gb"
-    o.complete:append "k"
-    o.thesaurus = vim.fn.expand "~/.config/nvim/thesaurus/mthesaur.txt"
-    require("mappings").wordProcessor()
 end
 
 return utils

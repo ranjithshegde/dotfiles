@@ -30,14 +30,6 @@ return require("packer").startup {
             { "tpope/vim-fugitive", cmd = { "G", "Git", "Gclog" } },
         }
 
-        -- vimwiki
-        use {
-            "vimwiki/vimwiki",
-            branch = "dev",
-            ft = "vimwiki",
-            keys = { "<leader>ww", "<leader>w<leader>w", "<leader>wi", "<leader>wt", "<leader>wn" },
-        }
-
         -- Fold text
         use {
             "anuvyklack/pretty-fold.nvim",
@@ -94,6 +86,28 @@ return require("packer").startup {
             opt = true,
         }
 
+        -- TreeSitter
+        use {
+            {
+                "nvim-treesitter/nvim-treesitter",
+                run = ":TSUpdate",
+            },
+            { "p00f/nvim-ts-rainbow", event = "BufReadPre" },
+            { "nvim-treesitter/nvim-treesitter-textobjects", event = "BufReadPost" },
+            { "nvim-treesitter/nvim-treesitter-refactor", after = "scnvim" },
+        }
+
+        -- vimwiki
+        use {
+            "vimwiki/vimwiki",
+            branch = "dev",
+            ft = "vimwiki",
+            keys = { "<leader>ww", "<leader>w<leader>w", "<leader>wi", "<leader>wt", "<leader>wn" },
+            setup = function()
+                require("settings").vimwiki()
+            end,
+        }
+
         -- WhichKey
         use {
             "xiyaowong/which-key.nvim",
@@ -119,21 +133,6 @@ return require("packer").startup {
                     }
                 end,
             },
-        }
-
-        -- TreeSitter
-        use {
-            {
-                "nvim-treesitter/nvim-treesitter",
-                run = ":TSUpdate",
-            },
-            { "p00f/nvim-ts-rainbow", event = "BufReadPre" },
-            { "nvim-treesitter/nvim-treesitter-textobjects", event = "BufReadPost" },
-            { "nvim-treesitter/nvim-treesitter-refactor", after = "scnvim" },
-            -- {
-            --     "nvim-treesitter/playground",
-            --     cmd = { "TSPlaygroundToggle", "TSHighlightCapturesUnderCursor" },
-            -- },
         }
 
         -- SuperCollider
@@ -243,14 +242,14 @@ return require("packer").startup {
                 "folke/lua-dev.nvim",
                 ft = "lua",
                 config = function()
-                    require("settings").luadev()
+                    require("lsp.sumneko").sumneko()
                 end,
             },
             {
                 "mfussenegger/nvim-jdtls",
                 ft = "java",
                 config = function()
-                    require("settings").jdtls()
+                    require("lsp.jdtls").jdtls()
                 end,
             },
             { "m-pilia/vim-ccls", ft = { "c", "cpp", "opencl" } },
@@ -258,7 +257,7 @@ return require("packer").startup {
                 "p00f/clangd_extensions.nvim",
                 ft = { "c", "cpp", "opencl" },
                 config = function()
-                    require("settings").clangd()
+                    require("lsp.clangd").clangd()
                 end,
             },
         }
@@ -269,7 +268,7 @@ return require("packer").startup {
             {
                 "ranjithshegde/completion-nvim",
                 config = function()
-                    require("settings").completion()
+                    require("settings.completion").init()
                 end,
             },
             {
@@ -298,7 +297,7 @@ return require("packer").startup {
                 module_pattern = "telescope.*",
                 cmd = "Telescope",
                 config = function()
-                    require("settings").telescope()
+                    require("settings.telescope").telescope()
                 end,
                 requires = "nvim-lua/plenary.nvim",
             },

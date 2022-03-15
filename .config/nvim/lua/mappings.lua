@@ -9,7 +9,6 @@ local map = vim.keymap.set
 function M.general()
     M.configFiles()
     M.telescope()
-    M.coauthor()
     M.treesitter()
 
     local opts = { nowait = true }
@@ -29,6 +28,7 @@ function M.general()
     end, {
         desc = "Toggle current/default terminal",
     })
+    map("n", "<leader>ii", require("utils.instant").Start, { desc = "Start Co-authoring Server" })
 
     wk.register {
         -- open folds when searching
@@ -259,15 +259,43 @@ function M.configFiles()
                 name = "vimrc files",
                 p = { "<cmd>tabnew ~/.config/nvim/lua/plugins.lua<CR>", "Packer config" },
                 m = { "<cmd>tabnew ~/.config/nvim/lua/mappings.lua<CR>", "Keymaps" },
-                o = { "<cmd>tabnew ~/.config/nvim/lua/settings.lua<CR>", "Options and settings" },
+                o = {
+                    name = "Options",
+                    o = { "<cmd>tabnew ~/.config/nvim/lua/settings/init.lua<CR>", "vim" },
+                    t = { "<cmd>tabnew ~/.config/nvim/lua/settings/telescope.lua<CR>", "Telescope" },
+                    s = { "<cmd>tabnew ~/.config/nvim/lua/settings/treesitter.lua<CR>", "Treesitter" },
+                    c = { "<cmd>tabnew ~/.config/nvim/lua/settings/completion.lua<CR>", "Completion" },
+                },
+                l = {
+                    name = "Lsp",
+                    s = { "<cmd>tabnew ~/.config/nvim/lua/lsp/init.lua<CR>", "Functions and Inits" },
+                    l = { "<cmd>tabnew ~/.config/nvim/lua/lsp/sumneko.lua<CR>", "Sumneko" },
+                    j = { "<cmd>tabnew ~/.config/nvim/lua/lsp/jdtls.lua<CR>", "Jdt LS" },
+                    c = { "<cmd>tabnew ~/.config/nvim/lua/lsp/clangd.lua<CR>", "Clangd" },
+                },
+                u = {
+                    name = "Utilities in lua",
+                    u = { "<cmd>tabnew ~/.config/nvim/lua/utils/init.lua<CR>", "General" },
+                    c = { "<cmd>tabnew ~/.config/nvim/lua/utils/compiler.lua<CR>", "Cpp Workstation" },
+                    d = { "<cmd>tabnew ~/.config/nvim/lua/utils/diagnostics.lua<CR>", "Diagnostic extensions" },
+                    l = { "<cmd>tabnew ~/.config/nvim/lua/utils/langServers.lua<CR>", "Langauge Server extensions" },
+                    q = { "<cmd>tabnew ~/.config/nvim/lua/utils/qf.lua<CR>", "Quickfix and Loclist" },
+                    i = { "<cmd>tabnew ~/.config/nvim/lua/utils/instant.lua<CR>", "Instant - Coauthoring" },
+                },
+                f = {
+                    name = "Filetype Plugins",
+                    c = { "<cmd>tabnew ~/.config/nvim/after/ftplugin/cpp.lua<CR>", "Cpp" },
+                    g = { "<cmd>tabnew ~/.config/nvim/after/ftplugin/glsl.lua<CR>", "Glsl" },
+                    j = { "<cmd>tabnew ~/.config/nvim/after/ftplugin/javascript.lua<CR>", "JavaScript" },
+                    l = { "<cmd>tabnew ~/.config/nvim/after/ftplugin/lua.lua<CR>", "Lua" },
+                    o = { "<cmd>tabnew ~/.config/nvim/after/ftplugin/org.lua<CR>", "Orgmode" },
+                    t = { "<cmd>tabnew ~/.config/nvim/after/ftplugin/tex.lua<CR>", "Latex" },
+                    v = { "<cmd>tabnew ~/.config/nvim/after/ftplugin/vimwiki.lua<CR>", "Vimwiki" },
+                },
                 d = { "<cmd>tabnew ~/.config/nvim/lua/debugger.lua<CR>", "Debug adapter protocol" },
                 s = { "<cmd>tabnew ~/.config/nvim/lua/statusline.lua<CR>", "Statusline and Tabline" },
-                c = { "<cmd>tabnew ~/.config/nvim/lua/utils/compiler.lua<CR>", "Cpp Workstation" },
-                u = { "<cmd>tabnew ~/.config/nvim/lua/utils/init.lua<CR>", "Utilities in lua" },
-                e = { "<cmd>tabnew ~/.config/nvim/lua/utils/diagnostics.lua<CR>", "Diagnostic extensions" },
-                l = { "<cmd>tabnew ~/.config/nvim/lua/utils/langServers.lua<CR>", "Langauge Server extensions" },
                 a = { "<cmd>tabnew ~/.config/nvim/autoload/util.vim<CR>", "Utilities in autoload" },
-                f = { "<cmd>tabnew ~/.config/nvim/after/plugin/plugins.lua<CR>", "User defined commands" },
+                c = { "<cmd>tabnew ~/.config/nvim/after/plugin/plugins.lua<CR>", "User defined commands" },
                 r = { "<cmd>tabnew $MYVIMRC<CR>", "VimRC" },
                 P = { "<cmd>PackerSync<CR>", "Update packages" },
                 R = { require("utils").Restart, "Reload Vim" },
@@ -764,7 +792,6 @@ function M.coauthor()
         ["<leader>"] = {
             i = {
                 name = "Co-Authoring",
-                i = { require("utils").Start, "Start server" },
                 s = { require("utils").Session, "Launch session" },
                 b = { require("utils").Single, "Launch current buffer" },
                 j = { require("utils").JoinSession, "Join session" },

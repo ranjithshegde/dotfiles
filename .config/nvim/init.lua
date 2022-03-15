@@ -31,6 +31,7 @@ Colors = {
 pcall(require, "impatient")
 require "plugins"
 pcall(require, "packer_compiled")
-require("settings").general()
+require("settings").options()
+require("settings.treesitter").init()
 require("mappings").general()
 require("utils").autocmd()
