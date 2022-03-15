@@ -744,22 +744,11 @@ function settings.clangd()
         require("settings").lsp_settings()
     end
 
-    -- local ccaps, handlers
-    -- local ok, status = pcall(require, "lsp-status")
-    -- if ok then
-    --     ccaps = vim.tbl_extend("keep", Capabilities, status.capabilities)
-    --     handlers = status.extensions.clangd.setup()
-    -- end
     require("clangd_extensions").setup {
         server = {
             on_attach = All_attach,
-            -- capabilities = ccaps,
             capabilities = Capabilities,
             filetypes = { "c", "cpp", "opencl" },
-            -- init_options = {
-            --     clangdFileStatus = true,
-            -- },
-            -- handlers = handlers,
             cmd = {
                 "clangd",
                 "--clang-tidy",

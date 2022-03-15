@@ -22,8 +22,6 @@ return require("packer").startup {
 
         use { "bkad/CamelCaseMotion", opt = true }
 
-        use { "dstein64/vim-startuptime", cmd = "StartupTime" }
-
         -- Tim pope
         use {
             { "tpope/vim-surround", event = "BufReadPost" },
@@ -96,6 +94,17 @@ return require("packer").startup {
             opt = true,
         }
 
+        -- TreeSitter
+        use {
+            {
+                "nvim-treesitter/nvim-treesitter",
+                run = ":TSUpdate",
+            },
+            { "p00f/nvim-ts-rainbow", event = "BufReadPre" },
+            { "nvim-treesitter/nvim-treesitter-textobjects", event = "BufReadPost" },
+            { "nvim-treesitter/nvim-treesitter-refactor", after = "scnvim" },
+        }
+
         -- WhichKey
         use {
             "xiyaowong/which-key.nvim",
@@ -121,21 +130,6 @@ return require("packer").startup {
                     }
                 end,
             },
-        }
-
-        -- TreeSitter
-        use {
-            {
-                "nvim-treesitter/nvim-treesitter",
-                run = ":TSUpdate",
-            },
-            { "p00f/nvim-ts-rainbow", event = "BufReadPre" },
-            { "nvim-treesitter/nvim-treesitter-textobjects", event = "BufReadPost" },
-            { "nvim-treesitter/nvim-treesitter-refactor", after = "scnvim" },
-            -- {
-            --     "nvim-treesitter/playground",
-            --     cmd = { "TSPlaygroundToggle", "TSHighlightCapturesUnderCursor" },
-            -- },
         }
 
         -- SuperCollider
