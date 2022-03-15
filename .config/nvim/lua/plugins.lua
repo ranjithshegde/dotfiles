@@ -239,14 +239,14 @@ return require("packer").startup {
                 "folke/lua-dev.nvim",
                 ft = "lua",
                 config = function()
-                    require("settings").luadev()
+                    require("lsp.sumneko").sumneko()
                 end,
             },
             {
                 "mfussenegger/nvim-jdtls",
                 ft = "java",
                 config = function()
-                    require("settings").jdtls()
+                    require("lsp.jdtls").jdtls()
                 end,
             },
             { "m-pilia/vim-ccls", ft = { "c", "cpp", "opencl" } },
@@ -254,7 +254,7 @@ return require("packer").startup {
                 "p00f/clangd_extensions.nvim",
                 ft = { "c", "cpp", "opencl" },
                 config = function()
-                    require("settings").clangd()
+                    require("lsp.clangd").clangd()
                 end,
             },
         }
@@ -266,7 +266,7 @@ return require("packer").startup {
                 module_pattern = "telescope.*",
                 cmd = "Telescope",
                 config = function()
-                    require("settings").telescope()
+                    require("settings.telescope").telescope()
                 end,
                 requires = "nvim-lua/plenary.nvim",
             },
@@ -311,7 +311,7 @@ return require("packer").startup {
                 branch = "dev",
                 event = "InsertEnter",
                 config = function()
-                    require("settings").completion()
+                    require("settings.cmp").init()
                 end,
             },
             {
