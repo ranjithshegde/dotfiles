@@ -266,7 +266,7 @@ function M.configFiles()
                     o = { "<cmd>tabnew ~/.config/nvim/lua/settings/init.lua<CR>", "vim" },
                     t = { "<cmd>tabnew ~/.config/nvim/lua/settings/telescope.lua<CR>", "Telescope" },
                     s = { "<cmd>tabnew ~/.config/nvim/lua/settings/treesitter.lua<CR>", "Treesitter" },
-                    c = { "<cmd>tabnew ~/.config/nvim/lua/settings/cmp.lua<CR>", "Completion" },
+                    c = { "<cmd>tabnew ~/.config/nvim/lua/settings/completion.lua<CR>", "Completion" },
                 },
                 l = {
                     name = "Lsp",
@@ -771,11 +771,11 @@ function M.coauthor()
         ["<leader>"] = {
             i = {
                 name = "Co-Authoring",
-                s = { require("utils").Session, "Launch session" },
-                b = { require("utils").Single, "Launch current buffer" },
-                j = { require("utils").JoinSession, "Join session" },
-                J = { require("utils").JoinSingle, "Join single buffer" },
-                f = { require("utils").Follow, "follow user" },
+                s = { require("utils.instant").Session, "Launch session" },
+                b = { require("utils.instant").Single, "Launch current buffer" },
+                j = { require("utils.instant").JoinSession, "Join session" },
+                J = { require("utils.instant").JoinSingle, "Join single buffer" },
+                f = { require("utils.instant").Follow, "follow user" },
             },
         },
     }

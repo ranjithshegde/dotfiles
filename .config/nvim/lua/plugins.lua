@@ -314,11 +314,16 @@ return require("packer").startup {
                 branch = "dev",
                 event = "InsertEnter",
                 config = function()
-                    require("settings.cmp").init()
+                    require("settings.completion").init()
                 end,
             },
             {
                 "saadparwaiz1/cmp_luasnip",
+                after = "nvim-cmp",
+                opt = true,
+            },
+            {
+                "hrsh7th/cmp-path",
                 after = "nvim-cmp",
                 opt = true,
             },
@@ -347,9 +352,10 @@ return require("packer").startup {
                     local Rule = require "nvim-autopairs.rule"
                     npairs.setup()
                     npairs.add_rules { Rule("|", "|", "supercollider") }
-                    local cmp_autopairs = require "nvim-autopairs.completion.cmp"
-                    local cmp = require "cmp"
-                    cmp.event:on("confirm_done", cmp_autopairs.on_confirm_done { map_char = { tex = "" } })
+                    require("cmp").event:on(
+                        "confirm_done",
+                        require("nvim-autopairs.completion.cmp").on_confirm_done { map_char = { tex = "" } }
+                    )
                 end,
             },
         }

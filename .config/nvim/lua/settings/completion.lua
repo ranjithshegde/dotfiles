@@ -65,6 +65,7 @@ function completion.init()
                 vim_item.menu = ({
                     nvim_lsp = "[LSP]",
                     luasnip = "[LuaSnip]",
+                    path = "[Path]",
                     orgmode = "[Org]",
                 })[entry.source.name]
                 return vim_item

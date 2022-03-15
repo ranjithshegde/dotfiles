@@ -132,7 +132,16 @@ local chainList = {
 
 langSettings.chainIndex = {
     function()
-        pcall(require("cmp").complete)
+        local ok, cmp = pcall(require, "cmp")
+        if ok then
+            cmp.setup.buffer {
+                sources = {
+                    { name = "nvim_lsp" },
+                    { name = "luasnip" },
+                },
+            }
+            cmp.complete()
+        end
     end,
 
     function()
@@ -147,6 +156,18 @@ langSettings.chainIndex = {
             end
         else
             require("utils").feedkey("<C-x><C-n>", "n")
+        end
+    end,
+
+    function()
+        local ok, cmp = pcall(require, "cmp")
+        if ok then
+            cmp.setup.buffer {
+                sources = {
+                    { name = "path" },
+                },
+            }
+            cmp.complete()
         end
     end,
 }
