@@ -269,7 +269,7 @@ function M.configFiles()
                 l = {
                     name = "Lsp",
                     s = { "<cmd>tabnew ~/.config/nvim/lua/lsp/init.lua<CR>", "Functions and Inits" },
-                    l = { "<cmd>tabnew ~/.config/nvim/lua/lsp/telescope.lua<CR>", "Sumneko" },
+                    l = { "<cmd>tabnew ~/.config/nvim/lua/lsp/Sumneko.lua<CR>", "Sumneko" },
                     j = { "<cmd>tabnew ~/.config/nvim/lua/lsp/jdtls.lua<CR>", "Jdt LS" },
                     c = { "<cmd>tabnew ~/.config/nvim/lua/lsp/clangd.lua<CR>", "Clangd" },
                 },
