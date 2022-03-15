@@ -31,7 +31,6 @@ pcall(require, "impatient")
 require "plugins"
 pcall(require, "packer_compiled")
 require("settings").options()
-require("settings").vimwiki()
 require("settings.treesitter").init()
 require("mappings").general()
 require("utils").autocmd()

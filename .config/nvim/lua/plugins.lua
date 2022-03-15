@@ -30,14 +30,6 @@ return require("packer").startup {
             { "tpope/vim-fugitive", cmd = { "G", "Git", "Gclog" } },
         }
 
-        -- vimwiki
-        use {
-            "vimwiki/vimwiki",
-            branch = "dev",
-            ft = "vimwiki",
-            keys = { "<leader>ww", "<leader>w<leader>w", "<leader>wi", "<leader>wt", "<leader>wn" },
-        }
-
         -- Fold text
         use {
             "anuvyklack/pretty-fold.nvim",
@@ -103,6 +95,17 @@ return require("packer").startup {
             { "p00f/nvim-ts-rainbow", event = "BufReadPre" },
             { "nvim-treesitter/nvim-treesitter-textobjects", event = "BufReadPost" },
             { "nvim-treesitter/nvim-treesitter-refactor", after = "scnvim" },
+        }
+
+        -- vimwiki
+        use {
+            "vimwiki/vimwiki",
+            branch = "dev",
+            ft = "vimwiki",
+            keys = { "<leader>ww", "<leader>w<leader>w", "<leader>wi", "<leader>wt", "<leader>wn" },
+            setup = function()
+                require("settings").vimwiki()
+            end,
         }
 
         -- WhichKey

@@ -9,7 +9,6 @@ local map = vim.keymap.set
 function M.general()
     M.configFiles()
     M.telescope()
-    M.coauthor()
     M.treesitter()
 
     local opts = { nowait = true }
@@ -29,6 +28,7 @@ function M.general()
     end, {
         desc = "Toggle current/default terminal",
     })
+    map("n", "<leader>ii", require("utils.instant").Start, {desc = "Start Co-authoring Server"})
 
     wk.register {
         -- open folds when searching
@@ -280,6 +280,7 @@ function M.configFiles()
                     d = { "<cmd>tabnew ~/.config/nvim/lua/utils/diagnostics.lua<CR>", "Diagnostic extensions" },
                     l = { "<cmd>tabnew ~/.config/nvim/lua/utils/langServers.lua<CR>", "Langauge Server extensions" },
                     q = { "<cmd>tabnew ~/.config/nvim/lua/utils/qf.lua<CR>", "Quickfix and Loclist" },
+                    i = { "<cmd>tabnew ~/.config/nvim/lua/utils/instant.lua<CR>", "Instant - Coauthoring" },
                 },
                 f = {
                     name = "Filetype Plugins",
@@ -768,7 +769,6 @@ function M.coauthor()
         ["<leader>"] = {
             i = {
                 name = "Co-Authoring",
-                i = { require("utils").Start, "Start server" },
                 s = { require("utils").Session, "Launch session" },
                 b = { require("utils").Single, "Launch current buffer" },
                 j = { require("utils").JoinSession, "Join session" },
