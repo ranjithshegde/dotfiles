@@ -7,34 +7,22 @@ local utils = {}
 function utils.UnloadAllModules()
     -- Lua patterns for the modules to unload
     local unload_modules = {
-        "^mappings$",
-        "^compiler$",
-        "^plugins$",
-        "^settings$",
-        "^statusline$",
-        "^utils$",
-        "^debugger$",
+        "mappings",
+        "compiler",
+        "plugins",
+        "settings",
+        "statusline",
+        "utils",
+        "debugger",
     }
-    for k, _ in pairs(package.loaded) do
-        for _, v in ipairs(unload_modules) do
-            if k:match(v) then
-                package.loaded[k] = nil
-                break
-            end
-        end
-    end
-end
-
--- Reload Vim configuration
-function utils.Reload()
-    Exec "LspStop"
-    utils.UnloadAllModules()
-    Exec "source $MYVIMRC"
+    RELOAD(unload_modules)
 end
 
 -- Restart Vim without having to close and run again
 function utils.Restart()
-    utils.Reload()
+    Exec "LspStop"
+    utils.UnloadAllModules()
+    Exec "source $MYVIMRC"
     Exec "doautocmd VimEnter"
 end
 
@@ -43,7 +31,7 @@ end
 ------------------------------------------------------------------------
 
 utils.autocmd = function()
-    -- ************** FileTypes  -------------------------------------------
+    -- ************** FileTypes  ---------------------------------------
 
     AuGroup("FormatOptions", {})
     AuCmd("FileType", {
@@ -85,6 +73,7 @@ utils.autocmd = function()
         callback = require("mappings").clang,
     })
 
+    -- ************** Compilers and REPL  ------------------------------
     AuGroup("MakeDispatch", {})
     AuCmd("FileType", {
         group = "MakeDispatch",
@@ -105,7 +94,6 @@ utils.autocmd = function()
             end, { desc = "Toggle REPL" })
         end,
     })
-
     AuCmd("BufWritePost", {
         group = "MakeDispatch",
         pattern = "*.glsl,*.vert,*.frag,*.geom,*.vs,*.fs,*.gs",
@@ -116,7 +104,7 @@ utils.autocmd = function()
     AuGroup("PluginLoad", {})
     AuCmd("BufWritePost", { group = "PluginLoad", pattern = "plugins.lua", command = "source <afile> | PackerCompile" })
 
-    -- ************************ Terminal management -------------------------
+    -- ************************ Terminal management --------------------
 
     AuGroup("TermInsertModes", {})
     AuCmd("BufWinEnter, WinEnter", { group = "TermInsertModes", pattern = "term://*", command = "startinsert" })
@@ -218,6 +206,9 @@ utils.concat_fileLines = function(file)
     return dictionary
 end
 
+utils.feedkey = function(key, mode)
+    Api.nvim_feedkeys(Api.nvim_replace_termcodes(key, true, true, true), mode, true)
+end
 ------------------------------------------------------------------------
 --                          User commands                             --
 ------------------------------------------------------------------------
@@ -317,6 +308,18 @@ function utils.JoinSingle()
     local id = vim.fn.input "Enter extension: "
     Exec("InstantJoinSingle 192.168.178." .. id .. " 8080")
     utils.Follow()
+end
+
+function utils.wordProcessor()
+    local o = vim.opt_local
+    o.wrap = true
+    o.linebreak = true
+    o.expandtab = false
+    o.spell = true
+    o.spelllang = "en_us,en_gb"
+    o.complete:append "k"
+    o.thesaurus = vim.fn.expand "~/.config/nvim/thesaurus/mthesaur.txt"
+    require("mappings").wordProcessor()
 end
 
 return utils

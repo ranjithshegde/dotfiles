@@ -213,7 +213,6 @@ function M.nvim_lsp()
 
     wk.register {
         ["<F11>"] = { "<cmd>SymbolsOutline<CR>", "Toggle Symbolsbar" },
-        --     ["<F1>"] = { "<cmd>TlistToggle<CR>", "Toggle Taglist" },
     }
 end
 
@@ -785,12 +784,9 @@ function M.debug()
         ["<leader>"] = {
             d = {
                 name = "debug",
-                E = { require("debugger").exp, "Expressions" },
                 b = { require("dap").toggle_breakpoint, "set breakpoint" },
                 x = { require("dap").set_exception_breakpoints, "set breakpoint" },
-                o = { require("dapui").float_element, "Open floating features" },
                 f = { "<cmd>lua require('dapui').float_element('scopes', {enter = true})<CR>", "Floating Scopes" },
-                e = { "<cmd>lua require('dapui').eval()<CR><cmd>lua require('dapui').eval()<CR>", "Evaluate Hover" },
                 F = { "<cmd>lua require('dapui').float_element('stacks', {enter = true})<CR>", "Floating Stacks" },
                 B = {
                     function()
@@ -815,15 +811,13 @@ function M.debug()
         },
         ["<F10>"] = { "<cmd>lua require('dap').repl.toggle({height = 10},'split')<CR>", "Repl Toggle" },
     }
-    wk.register({
-        ["<leader>"] = {
-            d = {
-                e = { "<cmd>lua require('dapui').eval()<CR><cmd>lua require('dapui').eval()<CR>", "Evaluate" },
-                o = { require("dapui").float_element, "Open floating elements" },
-                E = { require("debugger").exp, "Expressions" },
-            },
-        },
-    }, { mode = "v", buffer = 0 })
+
+    map({ "n", "v", "s" }, "<leader>de", function()
+        require("dapui").eval()
+        require("dapui").eval()
+    end, { buffer = true, desc = "Evaluate Hover " })
+    map({ "n", "v" }, "<leader>do", require("dapui").float_element, { buffer = true, desc = "Open floating elements" })
+    map({ "n", "v", "s" }, "<leader>dE", require("debugger").exp, { buffer = true, desc = "Expressions" })
 end
 
 ------------------------------------------------------------------------

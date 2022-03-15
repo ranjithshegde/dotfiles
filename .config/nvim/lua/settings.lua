@@ -397,10 +397,6 @@ function settings.lsp_settings()
             })
         end
         Api.nvim_add_user_command("LspCapabilities", require("utils.langServers").lsp_capabilities, {})
-        local ok, status = pcall(require, "lsp-status")
-        if ok then
-            Capabilities = vim.tbl_extend("keep", Capabilities, status.capabilities)
-        end
     end
 
     All_attach = function(client, bufnr)
@@ -725,20 +721,11 @@ function settings.clangd()
     if not package.loaded["settings.lsp_settings"] then
         require("settings").lsp_settings()
     end
-    local ok, status = pcall(require, "lsp-status")
-    local handlers = nil
-    if ok then
-        handlers = status.extensions.clangd.setup()
-    end
     require("clangd_extensions").setup {
         server = {
             on_attach = All_attach,
             capabilities = Capabilities,
             filetypes = { "c", "cpp", "opencl" },
-            init_options = {
-                clangdFileStatus = true,
-            },
-            handlers = handlers,
             cmd = {
                 "clangd",
                 "--clang-tidy",

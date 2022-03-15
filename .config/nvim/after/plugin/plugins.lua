@@ -17,11 +17,17 @@ P = function(v)
     return v
 end
 
-RELOAD = function(...)
-    return require("plenary.reload").reload_module(...)
+RELOAD = function(module)
+    if type(module) == "table" then
+        for _, value in pairs(module) do
+            RELOAD(value)
+        end
+    else
+        return require("plenary.reload").reload_module(module)
+    end
 end
 
-R = function(name)
-    RELOAD(name)
-    return require(name)
-end
+-- R = function(name)
+--     RELOAD(name)
+--     return require(name)
+-- end
