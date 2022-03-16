@@ -29,6 +29,11 @@ P = function(v)
     return v
 end
 
+-- W = function(v)
+--     local f = io.open("package.txt", "w+")
+--     f:write(vim.inspect(v))
+-- end
+
 RELOAD = function(module)
     if type(module) == "table" then
         for _, value in pairs(module) do

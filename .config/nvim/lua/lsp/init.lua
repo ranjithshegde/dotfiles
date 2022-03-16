@@ -4,9 +4,8 @@ local lsp = {}
 --                             Lsp settings                           --
 ------------------------------------------------------------------------
 
-local lspconfig = require("lspconfig")
+local lspconfig = require "lspconfig"
 function lsp.settings()
-
     AuGroup("SetDiagnosticFuncs", {})
     AuCmd({ "DiagnosticChanged" }, {
         group = "SetDiagnosticFuncs",

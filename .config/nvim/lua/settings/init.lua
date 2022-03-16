@@ -4,7 +4,7 @@ local o = vim.opt
 require("impatient").enable_profile()
 
 function settings.options()
-    require("nightfox").load()
+    vim.cmd "colo nightfox"
     local tab = 4
     -- o.list = true
     o.number = true

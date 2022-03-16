@@ -309,23 +309,16 @@ return require("packer").startup {
         use {
             "L3MON4D3/LuaSnip",
             "hrsh7th/cmp-nvim-lsp",
+            { "hrsh7th/cmp-path", after = "nvim-cmp" },
+            { "saadparwaiz1/cmp_luasnip", after = "nvim-cmp" },
             {
                 "hrsh7th/nvim-cmp",
-                branch = "dev",
-                event = "InsertEnter",
+                -- branch = "dev",
+                -- event = "InsertEnter",
+                after = "friendly-snippets",
                 config = function()
                     require("settings.completion").init()
                 end,
-            },
-            {
-                "saadparwaiz1/cmp_luasnip",
-                after = "nvim-cmp",
-                opt = true,
-            },
-            {
-                "hrsh7th/cmp-path",
-                after = "nvim-cmp",
-                opt = true,
             },
             {
                 "ray-x/lsp_signature.nvim",

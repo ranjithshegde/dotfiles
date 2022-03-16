@@ -28,9 +28,6 @@ function M.general()
     end, {
         desc = "Toggle current/default terminal",
     })
-    map("n", "<leader>ii", function()
-        require("utils.instant").Start()
-    end, { desc = "Start Co-authoring Server" })
 
     wk.register {
         -- open folds when searching
@@ -48,6 +45,15 @@ function M.general()
             h = { "<cmd>sp term://zsh<cr>", "Horizontal" },
             v = { "<cmd>vspl term://zsh<cr>", "Vertical" },
             t = { "<cmd>tabnew term://zsh<cr>", "New tab" },
+        },
+        ["<leader>i"] = {
+            name = "Co-authoring",
+            i = {
+                function()
+                    require("utils.instant").Start()
+                end,
+                "Start Co-authoring Server",
+            },
         },
         ["<F9>"] = { "<cmd>lua require('utils').toggleTerm('zsh','shell',1)<cr>", "Toggle zsh terminal" },
         ["<F10>"] = "Toggle repl for available filetypes",
@@ -409,13 +415,9 @@ end
 
 function M.telescope()
     local tele = function(name)
-        return string.format("<cmd>lua require('telescope.builtin').%s()<cr>", name)
-    end
-    local telF = function(name)
-        return string.format("<cmd>lua require('telescope.builtin').%s<cr>", name)
-    end
-    local telE = function(name)
-        return string.format("<cmd>lua require'telescope'.extensions.%s<cr>", name)
+        return function()
+            require("telescope.builtin")[name]()
+        end
     end
 
     local cd_browser = function(prompt, cwd)
@@ -428,8 +430,6 @@ function M.telescope()
                         local wd = require("telescope.actions.state").get_selected_entry().value
                         require("telescope.actions.set").select(prompt_bufnr, window)
                         if not require("plenary.path"):new(wd):is_dir() then
-                            -- vim.fn.execute("tcd " .. wd)
-                            -- else
                             local dir = vim.fn.fnamemodify(wd, ":p:h")
                             vim.fn.execute("tcd " .. dir)
                         end
@@ -501,13 +501,9 @@ function M.telescope()
             b = { tele "buffers", "Buffers" },
             c = { tele "commands", "Vim commands" },
             C = { tele "command_history", "Command history" },
-            e = { telE "file_browser.file_browser({files=false})", "Folder browser" },
-            E = { telE "file_browser.file_browser()", "File browser" },
-            k = { telF "lsp_workspace_symbols({query = vim.fn.expand('<cword>')})", "Search lsp workspace symbol" },
             l = { tele "loclist", "local quickfix list" },
             m = { tele "symbols", "Unicode characters" },
             o = { cd_files("Org files", "~/Documents/Orgs"), "Org files" },
-            p = { telE "project.project{display_type = 'full'}", "Projects" },
             q = { tele "quickfix", "Quickfix list" },
             r = { tele "lsp_references", "Lsp References" },
             s = { tele "lsp_document_symbols", "Lsp symbols in buffer" },
@@ -520,6 +516,30 @@ function M.telescope()
             ["/"] = { tele "grep_string", "Grep CWORD in directory" },
             ["]"] = { tele "tags", "Lsp Ctags" },
             ["<Space>"] = { tele "builtin", "Builtin Searchers" },
+            p = {
+                function()
+                    require("telescope").extensions.project.project { display_type = "full" }
+                end,
+                "Projects",
+            },
+            e = {
+                function()
+                    require("telescope").extensions.file_browser.file_browser { files = false }
+                end,
+                "Folder browser",
+            },
+            E = {
+                function()
+                    require("telescope").extensions.file_browser.file_browser()
+                end,
+                "File browser",
+            },
+            k = {
+                function()
+                    require("telescope.builtin").lsp_workspace_symbols { query = vim.fn.expand "<cword>" }
+                end,
+                "Search lsp workspace symbol",
+            },
             d = {
                 name = "diagnostics",
                 b = { tele "diagnostics", "buffer diagnostics" },
@@ -535,30 +555,56 @@ function M.telescope()
             g = {
                 name = "Live grep in",
                 g = { tele "live_grep", "current directory" },
-                s = {
-                    telF "live_grep({cwd ='~/Documents/Supercollider/',prompt_title = 'SuperCollider Workspace grep'})",
-                    "grep SuperCollider",
-                },
-                o = {
-                    telF "live_grep({cwd ='~/Documents/ofWorkspace/',prompt_title = 'oF Workspace grep'})",
-                    "ofWorkspace",
-                },
                 d = {
-                    telF "live_grep({cwd ='~/.config', prompt_title = 'Dotfiles grep'})",
+                    function()
+                        require("telescope.builtin").live_grep { cwd = "~/.config", prompt_title = "Dotfiles grep" }
+                    end,
                     "grep dotfiles",
                 },
                 ["?"] = {
-                    telF 'live_grep({cwd = vim.fn.input({prompt = "Enter directory: ", completion = "dir"})})',
+                    function()
+                        require("telescope.builtin").live_grep {
+                            cwd = vim.fn.input { prompt = "Enter directory: ", completion = "dir" },
+                        }
+                    end,
                     "Choose directory",
+                },
+                s = {
+                    function()
+                        require("telescope.builtin").live_grep {
+                            cwd = "~/Documents/Supercollider/",
+                            prompt_title = "SuperCollider Workspace grep",
+                        }
+                    end,
+                    "grep SuperCollider",
+                },
+                o = {
+                    function()
+                        require("telescope.builtin").live_grep {
+                            cwd = "~/Documents/ofWorkspace/",
+                            prompt_title = "oF Workspace grep",
+                        }
+                    end,
+                    "ofWorkspace",
                 },
                 w = {
                     name = "vimWiki",
                     w = {
-                        telF "live_grep({cwd = '~/Documents/vimWiki', prompt_title = 'wiki directory'})",
+                        function()
+                            require("telescope.builtin").live_grep {
+                                cwd = "~/Documents/vimWiki",
+                                prompt_title = "wiki directory",
+                            }
+                        end,
                         "whole wiki",
                     },
                     d = {
-                        telF "live_grep({cwd = '~/Documents/vimWiki/diary', prompt_title = 'Diary entires'})",
+                        function()
+                            require("telescope.builtin").live_grep {
+                                cwd = "~/Documents/vimWiki/diary",
+                                prompt_title = "Diary entires",
+                            }
+                        end,
                         "Inside diary",
                     },
                 },
@@ -567,32 +613,70 @@ function M.telescope()
             f = {
                 name = "find files in",
                 f = { tele "find_files", "Current directory" },
-                h = { telF "find_files({cwd='~'})", "Home directory" },
                 r = { tele "oldfiles", "Vim recent files" },
                 t = { tele "help_tags", "vim help files" },
                 c = { cd_browser("C++ Practice files/dirs", "$CWORK/Practice"), "Open C practice" },
                 C = { cd_files("C++ Practice files/dirs", "$CWORK/Practice"), "Open C practice" },
+                s = { cd_files("SuperCollider Directory", "~/Documents/Supercollider/"), "SuperCollider files" },
+                h = {
+                    function()
+                        require("telescope.builtin").find_files { cwd = "~" }
+                    end,
+                    "Home directory",
+                },
+                ["?"] = {
+                    function()
+                        require("telescope.builtin").find_files {
+                            cwd = vim.fn.input { prompt = "Enter directory: ", completion = "dir" },
+                        }
+                    end,
+                    "Choose directory",
+                },
                 b = {
-                    telF "find_files({cwd='~/.local/bin/', prompt_title = 'Scripts and binaries in local'})",
+                    function()
+                        require("telescope.builtin").find_files {
+                            cwd = "~/.local/bin/",
+                            prompt_title = "Scripts and binaries in local",
+                        }
+                    end,
                     "scripts & binaries",
                 },
-                d = {
-                    telF "find_files({cwd='~/.config/', find_command = {'fd', '--hidden'},prompt_title = 'Dotfiles'})",
-                    "Dotfiles",
-                },
                 v = {
-                    telF "find_files({cwd='~/.local/share/nvim/', prompt_title = 'Plugin files'})",
+                    function()
+                        require("telescope.builtin").find_files {
+                            cwd = "~/.local/share/nvim/",
+                            prompt_title = "Plugin files",
+                        }
+                    end,
                     "Vim plugin Directory",
                 },
                 o = {
-                    telF "find_files({cwd ='~/Documents/ofWorkspace/',prompt_title = 'oF Workspace files'})",
+                    function()
+                        require("telescope.builtin").find_files {
+                            cwd = "~/Documents/ofWorkspace/",
+                            prompt_title = "oF Workspace files",
+                        }
+                    end,
                     "OfWorkspace",
                 },
-                s = { cd_files("SuperCollider Directory", "~/Documents/Supercollider/"), "SuperCollider files" },
-                w = { telF "find_files({cwd = '~/Documents/vimWiki', prompt_title = 'vimWiki'})", "wiki" },
-                ["?"] = {
-                    telF 'find_files({cwd = vim.fn.input({prompt = "Enter directory: ", completion = "dir"})})',
-                    "Choose directory",
+                w = {
+                    function()
+                        require("telescope.builtin").find_files {
+                            cwd = "~/Documents/vimWiki",
+                            prompt_title = "vimWiki",
+                        }
+                    end,
+                    "wiki",
+                },
+                d = {
+                    function()
+                        require("telescope.builtin").find_files {
+                            cwd = "~/.config/",
+                            find_command = { "fd", "--hidden" },
+                            prompt_title = "Dotfiles",
+                        }
+                    end,
+                    "Dotfiles",
                 },
             },
         },
@@ -634,7 +718,9 @@ function M.scnvim()
     map("v", "<F5>", "<Plug>(scnvim-send-selection)", { buffer = true, desc = "Evaluate SC visual block" })
     map("n", "<F6>", "<Plug>(scnvim-send-line)", { buffer = true, desc = "Evaluate SC line" })
     map("i", "<F6>", "<Plug><esc>(scnvim-send-line)", { buffer = true, desc = "Evaluate SC line" })
-    map("n", ",s", "<Plug>(scnvim-show-signature)", { buffer = true, desc = "SC signature help" })
+    map("n", ",s", function()
+        require("scnvim.completion.signature").show { border = "rounded" }
+    end, { buffer = true, desc = "SC signature help" })
 
     wk.register({
         ["<F1>"] = { require("scnvim").start, "Launch Sclang" },
@@ -683,7 +769,12 @@ function M.makeC()
             end,
             "Compile and Run Release",
         },
-        ["<F6>"] = { '<cmd>lua require("utils.compiler").renderOffload("make RunRelease")<CR>', "Run Release" },
+        ["<F6>"] = {
+            function()
+                require("utils.compiler").renderOffload "make RunRelease"
+            end,
+            "Run Release",
+        },
     }, { buffer = 0 })
 end
 

@@ -132,7 +132,6 @@ function ts.init()
                 peek_definition_code = { [";pf"] = "@function.outer", [";pc"] = "@class.outer" },
             },
         },
-        playground = { enable = true, updatetime = 25, persist_queries = false },
         query_linter = {
             enable = true,
             use_virtual_text = true,
