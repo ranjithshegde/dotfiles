@@ -15,6 +15,7 @@ function ts.init()
             "cpp",
             "comment",
             "css",
+            "dart",
             "glsl",
             "html",
             "java",
