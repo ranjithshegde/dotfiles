@@ -89,6 +89,11 @@ Debugger.adapters = function()
             end
         end)
     end
+    dap.adapters.dart = {
+        type = "executable",
+        command = "node",
+        args = { os.getenv "XDG_DATA_HOME" .. "/debug-adapters/Dart-Code/out/dist/debug.js", "flutter" },
+    }
 end
 
 Debugger.configs = function()
@@ -217,6 +222,17 @@ Debugger.configs = function()
             name = "Debug (Attach) - Remote",
             hostName = "127.0.0.1",
             port = 5005,
+        },
+    }
+    dap.configurations.dart = {
+        {
+            type = "dart",
+            request = "launch",
+            name = "Launch flutter",
+            dartSdkPath = "/opt/flutter/bin/cache/dart-sdk/",
+            flutterSdkPath = "/opt/flutter/",
+            program = "${workspaceFolder}/lib/main.dart",
+            cwd = "${workspaceFolder}",
         },
     }
 end
