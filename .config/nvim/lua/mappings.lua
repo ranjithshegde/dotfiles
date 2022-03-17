@@ -423,6 +423,12 @@ function M.telescope()
         end
     end
 
+    local telargs = function(name, args)
+        return function()
+            require("telescope.builtin")[name](args)
+        end
+    end
+
     local cd_browser = function(prompt, cwd)
         return function()
             require("telescope").extensions.file_browser.file_browser {
@@ -519,6 +525,12 @@ function M.telescope()
             ["/"] = { tele "grep_string", "Grep CWORD in directory" },
             ["]"] = { tele "tags", "Lsp Ctags" },
             ["<Space>"] = { tele "builtin", "Builtin Searchers" },
+            k = {
+                function()
+                    require("telescope.builtin").lsp_workspace_symbols { query = vim.fn.expand "<cword>" }
+                end,
+                "Search lsp workspace symbol",
+            },
             p = {
                 function()
                     require("telescope").extensions.project.project { display_type = "full" }
@@ -537,12 +549,6 @@ function M.telescope()
                 end,
                 "File browser",
             },
-            k = {
-                function()
-                    require("telescope.builtin").lsp_workspace_symbols { query = vim.fn.expand "<cword>" }
-                end,
-                "Search lsp workspace symbol",
-            },
             d = {
                 name = "diagnostics",
                 b = { tele "diagnostics", "buffer diagnostics" },
@@ -558,10 +564,19 @@ function M.telescope()
             g = {
                 name = "Live grep in",
                 g = { tele "live_grep", "current directory" },
+                s = {
+                    telargs(
+                        "live_grep",
+                        { cwd = "~/Documents/Supercollider/", prompt_title = "SuperCollider Workspace grep" }
+                    ),
+                    "grep SuperCollider",
+                },
+                o = {
+                    telargs("live_grep", { cwd = "~/Documents/ofWorkspace/", prompt_title = "oF Workspace grep" }),
+                    "ofWorkspace",
+                },
                 d = {
-                    function()
-                        require("telescope.builtin").live_grep { cwd = "~/.config", prompt_title = "Dotfiles grep" }
-                    end,
+                    telargs("live_grep", { cwd = "~/.config", prompt_title = "Dotfiles grep" }),
                     "grep dotfiles",
                 },
                 ["?"] = {
@@ -572,42 +587,14 @@ function M.telescope()
                     end,
                     "Choose directory",
                 },
-                s = {
-                    function()
-                        require("telescope.builtin").live_grep {
-                            cwd = "~/Documents/Supercollider/",
-                            prompt_title = "SuperCollider Workspace grep",
-                        }
-                    end,
-                    "grep SuperCollider",
-                },
-                o = {
-                    function()
-                        require("telescope.builtin").live_grep {
-                            cwd = "~/Documents/ofWorkspace/",
-                            prompt_title = "oF Workspace grep",
-                        }
-                    end,
-                    "ofWorkspace",
-                },
                 w = {
                     name = "vimWiki",
                     w = {
-                        function()
-                            require("telescope.builtin").live_grep {
-                                cwd = "~/Documents/vimWiki",
-                                prompt_title = "wiki directory",
-                            }
-                        end,
+                        telargs("live_grep", { cwd = "~/Documents/vimWiki", prompt_title = "wiki directory" }),
                         "whole wiki",
                     },
                     d = {
-                        function()
-                            require("telescope.builtin").live_grep {
-                                cwd = "~/Documents/vimWiki/diary",
-                                prompt_title = "Diary entires",
-                            }
-                        end,
+                        telargs("live_grep", { cwd = "~/Documents/vimWiki/diary", prompt_title = "Diary entires" }),
                         "Inside diary",
                     },
                 },
@@ -616,16 +603,31 @@ function M.telescope()
             f = {
                 name = "find files in",
                 f = { tele "find_files", "Current directory" },
+                h = { telargs("find_files", { cwd = "~" }), "Home directory" },
                 r = { tele "oldfiles", "Vim recent files" },
                 t = { tele "help_tags", "vim help files" },
-                c = { cd_browser("C++ Practice files/dirs", "$CWORK/Practice"), "Open C practice" },
                 C = { cd_files("C++ Practice files/dirs", "$CWORK/Practice"), "Open C practice" },
+                c = { cd_browser("C++ Practice files/dirs", "$CWORK/Practice"), "Open C practice" },
                 s = { cd_files("SuperCollider Directory", "~/Documents/Supercollider/"), "SuperCollider files" },
-                h = {
-                    function()
-                        require("telescope.builtin").find_files { cwd = "~" }
-                    end,
-                    "Home directory",
+                w = { telargs("find_files", { cwd = "~/Documents/vimWiki", prompt_title = "vimWiki" }), "wiki" },
+                b = {
+                    telargs("find_files", { cwd = "~/.local/bin/", prompt_title = "Scripts and binaries in local" }),
+                    "scripts & binaries",
+                },
+                d = {
+                    telargs(
+                        "find_files",
+                        { cwd = "~/.config/", find_command = { "fd", "--hidden" }, prompt_title = "Dotfiles" }
+                    ),
+                    "Dotfiles",
+                },
+                v = {
+                    telargs("find_files", { cwd = "~/.local/share/nvim/", prompt_title = "Plugin files" }),
+                    "Vim plugin Directory",
+                },
+                o = {
+                    telargs("find_files", { cwd = "~/Documents/ofWorkspace/", prompt_title = "oF Workspace files" }),
+                    "OfWorkspace",
                 },
                 ["?"] = {
                     function()
@@ -634,52 +636,6 @@ function M.telescope()
                         }
                     end,
                     "Choose directory",
-                },
-                b = {
-                    function()
-                        require("telescope.builtin").find_files {
-                            cwd = "~/.local/bin/",
-                            prompt_title = "Scripts and binaries in local",
-                        }
-                    end,
-                    "scripts & binaries",
-                },
-                v = {
-                    function()
-                        require("telescope.builtin").find_files {
-                            cwd = "~/.local/share/nvim/",
-                            prompt_title = "Plugin files",
-                        }
-                    end,
-                    "Vim plugin Directory",
-                },
-                o = {
-                    function()
-                        require("telescope.builtin").find_files {
-                            cwd = "~/Documents/ofWorkspace/",
-                            prompt_title = "oF Workspace files",
-                        }
-                    end,
-                    "OfWorkspace",
-                },
-                w = {
-                    function()
-                        require("telescope.builtin").find_files {
-                            cwd = "~/Documents/vimWiki",
-                            prompt_title = "vimWiki",
-                        }
-                    end,
-                    "wiki",
-                },
-                d = {
-                    function()
-                        require("telescope.builtin").find_files {
-                            cwd = "~/.config/",
-                            find_command = { "fd", "--hidden" },
-                            prompt_title = "Dotfiles",
-                        }
-                    end,
-                    "Dotfiles",
                 },
             },
         },
