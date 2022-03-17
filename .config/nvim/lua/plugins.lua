@@ -51,10 +51,10 @@ return require("packer").startup {
         -- Coautoring
         use {
             "jbyuki/instant.nvim",
+            module_pattern = "instant.*",
             config = function()
                 G.instant_username = "Ranjith"
             end,
-            opt = true,
         }
 
         -- Markdown preview

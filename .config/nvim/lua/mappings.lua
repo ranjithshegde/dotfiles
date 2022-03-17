@@ -10,6 +10,7 @@ function M.general()
     M.configFiles()
     M.telescope()
     M.treesitter()
+    M.coauthor()
 
     local opts = { nowait = true }
     --line movement
@@ -45,15 +46,6 @@ function M.general()
             h = { "<cmd>sp term://zsh<cr>", "Horizontal" },
             v = { "<cmd>vspl term://zsh<cr>", "Vertical" },
             t = { "<cmd>tabnew term://zsh<cr>", "New tab" },
-        },
-        ["<leader>i"] = {
-            name = "Co-authoring",
-            i = {
-                function()
-                    require("utils.instant").Start()
-                end,
-                "Start Co-authoring Server",
-            },
         },
         ["<F9>"] = { "<cmd>lua require('utils').toggleTerm('zsh','shell',1)<cr>", "Toggle zsh terminal" },
         ["<F10>"] = "Toggle repl for available filetypes",
@@ -291,7 +283,6 @@ function M.configFiles()
                     d = { open "lua/utils/diagnostics.lua", "Diagnostic extensions" },
                     l = { open "lua/utils/langServers.lua", "Langauge Server extensions" },
                     q = { open "lua/utils/qf.lua", "Quickfix and Loclist" },
-                    i = { open "lua/utils/instant.lua", "Instant - Coauthoring" },
                 },
                 f = {
                     name = "Filetype Plugins",
@@ -821,11 +812,44 @@ function M.coauthor()
         ["<leader>"] = {
             i = {
                 name = "Co-Authoring",
-                s = { require("utils.instant").Session, "Launch session" },
-                b = { require("utils.instant").Single, "Launch current buffer" },
-                j = { require("utils.instant").JoinSession, "Join session" },
-                J = { require("utils.instant").JoinSingle, "Join single buffer" },
-                f = { require("utils.instant").Follow, "follow user" },
+                i = {
+                    function()
+                        require("instant.server").StartServer("192.168." .. vim.fn.input "Enter extension: ", "8080")
+                    end,
+                    "Start Co-authoring Server",
+                },
+                s = {
+                    function()
+                        require("instant").StartServer("192.168." .. vim.fn.input "Enter extension: ", "8080")
+                    end,
+                    "Launch session",
+                },
+                b = {
+                    function()
+                        require("instant").Start("192.168." .. vim.fn.input "Enter extension: ", "8080")
+                    end,
+                    "Launch current buffer",
+                },
+                j = {
+                    function()
+                        require("instant").JoinSession("192.168." .. vim.fn.input "Enter extension: ", "8080")
+                        require("instant").StartFollow(vim.fn.input "User to follow: ")
+                    end,
+                    "Join session",
+                },
+                J = {
+                    function()
+                        require("instant").Join("192.168." .. vim.fn.input "Enter extension: ", "8080")
+                        require("instant").StartFollow(vim.fn.input "User to follow: ")
+                    end,
+                    "Join single buffer",
+                },
+                f = {
+                    function()
+                        require("instant").StartFollow(vim.fn.input "User to follow: ")
+                    end,
+                    "follow user",
+                },
             },
         },
     }
