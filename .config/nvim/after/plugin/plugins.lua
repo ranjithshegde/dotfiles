@@ -1,9 +1,21 @@
 -- ******************* function calls --------------------------------------------
 local cmd = vim.api.nvim_add_user_command
-cmd("Cpractice", require("utils.compiler").cpractice, {})
-cmd("Cproject", require("utils.compiler").cproject, {})
-cmd("WordCount", require("utils.langServers").TexWordCount, {})
-cmd("Agenda", require("utils").agenda, {})
+
+cmd("Cpractice", function()
+    require("utils.compiler").cpractice()
+end, {})
+cmd("Cproject", function()
+    require("utils.compiler").cproject()
+end, {})
+
+cmd("WordCount", function()
+    require("utils.langServers").TexWordCount()
+end, {})
+
+cmd("Agenda", function()
+    require("utils").agenda()
+end, {})
+
 cmd("ClearBack", "call util#transparency()", {})
 cmd("Gram", "call util#WordProcessor()", {})
 cmd("Cam", "call util#CamelCase()", {})
@@ -16,6 +28,11 @@ P = function(v)
     print(vim.inspect(v))
     return v
 end
+
+-- W = function(v)
+--     local f = io.open("package.txt", "w+")
+--     f:write(vim.inspect(v))
+-- end
 
 RELOAD = function(module)
     if type(module) == "table" then

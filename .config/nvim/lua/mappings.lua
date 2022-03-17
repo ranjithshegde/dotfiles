@@ -28,7 +28,6 @@ function M.general()
     end, {
         desc = "Toggle current/default terminal",
     })
-    map("n", "<leader>ii", require("utils.instant").Start, { desc = "Start Co-authoring Server" })
 
     wk.register {
         -- open folds when searching
@@ -46,6 +45,15 @@ function M.general()
             h = { "<cmd>sp term://zsh<cr>", "Horizontal" },
             v = { "<cmd>vspl term://zsh<cr>", "Vertical" },
             t = { "<cmd>tabnew term://zsh<cr>", "New tab" },
+        },
+        ["<leader>i"] = {
+            name = "Co-authoring",
+            i = {
+                function()
+                    require("utils.instant").Start()
+                end,
+                "Start Co-authoring Server",
+            },
         },
         ["<F9>"] = { "<cmd>lua require('utils').toggleTerm('zsh','shell',1)<cr>", "Toggle zsh terminal" },
         ["<F10>"] = "Toggle repl for available filetypes",
@@ -253,51 +261,54 @@ end
 ------------------------------------------------------------------------
 
 function M.configFiles()
+    local open = function(path)
+        return string.format("<cmd>tabnew ~/.config/nvim/%s<CR>", path)
+    end
     wk.register {
         ["<leader>"] = {
             a = {
                 name = "vimrc files",
-                p = { "<cmd>tabnew ~/.config/nvim/lua/plugins.lua<CR>", "Packer config" },
-                m = { "<cmd>tabnew ~/.config/nvim/lua/mappings.lua<CR>", "Keymaps" },
+                p = { open "lua/plugins.lua", "Packer config" },
+                m = { open "lua/mappings.lua", "Keymaps" },
                 o = {
                     name = "Options",
-                    o = { "<cmd>tabnew ~/.config/nvim/lua/settings/init.lua<CR>", "vim" },
-                    t = { "<cmd>tabnew ~/.config/nvim/lua/settings/telescope.lua<CR>", "Telescope" },
-                    s = { "<cmd>tabnew ~/.config/nvim/lua/settings/treesitter.lua<CR>", "Treesitter" },
-                    c = { "<cmd>tabnew ~/.config/nvim/lua/settings/completion.lua<CR>", "Completion" },
+                    o = { open "lua/settings/init.lua", "vim" },
+                    t = { open "lua/settings/telescope.lua", "Telescope" },
+                    s = { open "lua/settings/treesitter.lua", "Treesitter" },
+                    c = { open "lua/settings/completion.lua", "Completion" },
                 },
                 l = {
                     name = "Lsp",
-                    s = { "<cmd>tabnew ~/.config/nvim/lua/lsp/init.lua<CR>", "Functions and Inits" },
-                    l = { "<cmd>tabnew ~/.config/nvim/lua/lsp/sumneko.lua<CR>", "Sumneko" },
-                    j = { "<cmd>tabnew ~/.config/nvim/lua/lsp/jdtls.lua<CR>", "Jdt LS" },
-                    c = { "<cmd>tabnew ~/.config/nvim/lua/lsp/clangd.lua<CR>", "Clangd" },
+                    s = { open "lua/lsp/init.lua", "Functions and Inits" },
+                    l = { open "lua/lsp/sumneko.lua", "Sumneko" },
+                    j = { open "lua/lsp/jdtls.lua", "Jdt LS" },
+                    c = { open "lua/lsp/clangd.lua", "Clangd" },
                 },
                 u = {
                     name = "Utilities in lua",
-                    u = { "<cmd>tabnew ~/.config/nvim/lua/utils/init.lua<CR>", "General" },
-                    c = { "<cmd>tabnew ~/.config/nvim/lua/utils/compiler.lua<CR>", "Cpp Workstation" },
-                    d = { "<cmd>tabnew ~/.config/nvim/lua/utils/diagnostics.lua<CR>", "Diagnostic extensions" },
-                    l = { "<cmd>tabnew ~/.config/nvim/lua/utils/langServers.lua<CR>", "Langauge Server extensions" },
-                    q = { "<cmd>tabnew ~/.config/nvim/lua/utils/qf.lua<CR>", "Quickfix and Loclist" },
-                    i = { "<cmd>tabnew ~/.config/nvim/lua/utils/instant.lua<CR>", "Instant - Coauthoring" },
+                    u = { open "lua/utils/init.lua", "General" },
+                    c = { open "lua/utils/compiler.lua", "Cpp Workstation" },
+                    d = { open "lua/utils/diagnostics.lua", "Diagnostic extensions" },
+                    l = { open "lua/utils/langServers.lua", "Langauge Server extensions" },
+                    q = { open "lua/utils/qf.lua", "Quickfix and Loclist" },
+                    i = { open "lua/utils/instant.lua", "Instant - Coauthoring" },
                 },
                 f = {
                     name = "Filetype Plugins",
-                    c = { "<cmd>tabnew ~/.config/nvim/after/ftplugin/cpp.lua<CR>", "Cpp" },
-                    g = { "<cmd>tabnew ~/.config/nvim/after/ftplugin/glsl.lua<CR>", "Glsl" },
-                    j = { "<cmd>tabnew ~/.config/nvim/after/ftplugin/javascript.lua<CR>", "JavaScript" },
-                    l = { "<cmd>tabnew ~/.config/nvim/after/ftplugin/lua.lua<CR>", "Lua" },
-                    o = { "<cmd>tabnew ~/.config/nvim/after/ftplugin/org.lua<CR>", "Orgmode" },
-                    t = { "<cmd>tabnew ~/.config/nvim/after/ftplugin/tex.lua<CR>", "Latex" },
-                    v = { "<cmd>tabnew ~/.config/nvim/after/ftplugin/vimwiki.lua<CR>", "Vimwiki" },
+                    c = { open "after/ftplugin/cpp.lua", "Cpp" },
+                    g = { open "after/ftplugin/glsl.lua", "Glsl" },
+                    j = { open "after/ftplugin/javascript.lua", "JavaScript" },
+                    l = { open "after/ftplugin/lua.lua", "Lua" },
+                    o = { open "after/ftplugin/org.lua", "Orgmode" },
+                    t = { open "after/ftplugin/tex.lua", "Latex" },
+                    v = { open "after/ftplugin/vimwiki.lua", "Vimwiki" },
                 },
-                d = { "<cmd>tabnew ~/.config/nvim/lua/debugger.lua<CR>", "Debug adapter protocol" },
-                s = { "<cmd>tabnew ~/.config/nvim/lua/statusline.lua<CR>", "Statusline and Tabline" },
-                a = { "<cmd>tabnew ~/.config/nvim/autoload/util.vim<CR>", "Utilities in autoload" },
-                c = { "<cmd>tabnew ~/.config/nvim/after/plugin/plugins.lua<CR>", "User defined commands" },
-                r = { "<cmd>tabnew $MYVIMRC<CR>", "VimRC" },
-                P = { "<cmd>PackerSync<CR>", "Update packages" },
+                d = { open "lua/debugger.lua", "Debug adapter protocol" },
+                s = { open "lua/statusline.lua", "Statusline and Tabline" },
+                a = { open "autoload/util.vim", "Utilities in autoload" },
+                c = { open "after/plugin/plugins.lua", "User defined commands" },
+                r = { open "init.lua", "VimRC" },
+                P = { require("packer").sync, "Update packages" },
                 R = { require("utils").Restart, "Reload Vim" },
             },
         },
@@ -407,13 +418,15 @@ end
 
 function M.telescope()
     local tele = function(name)
-        return string.format("<cmd>lua require('telescope.builtin').%s()<cr>", name)
+        return function()
+            require("telescope.builtin")[name]()
+        end
     end
-    local telF = function(name)
-        return string.format("<cmd>lua require('telescope.builtin').%s<cr>", name)
-    end
-    local telE = function(name)
-        return string.format("<cmd>lua require'telescope'.extensions.%s<cr>", name)
+
+    local telargs = function(name, args)
+        return function()
+            require("telescope.builtin")[name](args)
+        end
     end
 
     local cd_browser = function(prompt, cwd)
@@ -426,8 +439,6 @@ function M.telescope()
                         local wd = require("telescope.actions.state").get_selected_entry().value
                         require("telescope.actions.set").select(prompt_bufnr, window)
                         if not require("plenary.path"):new(wd):is_dir() then
-                            -- vim.fn.execute("tcd " .. wd)
-                            -- else
                             local dir = vim.fn.fnamemodify(wd, ":p:h")
                             vim.fn.execute("tcd " .. dir)
                         end
@@ -499,13 +510,9 @@ function M.telescope()
             b = { tele "buffers", "Buffers" },
             c = { tele "commands", "Vim commands" },
             C = { tele "command_history", "Command history" },
-            e = { telE "file_browser.file_browser({files=false})", "Folder browser" },
-            E = { telE "file_browser.file_browser()", "File browser" },
-            k = { telF "lsp_workspace_symbols({query = vim.fn.expand('<cword>')})", "Search lsp workspace symbol" },
             l = { tele "loclist", "local quickfix list" },
             m = { tele "symbols", "Unicode characters" },
             o = { cd_files("Org files", "~/Documents/Orgs"), "Org files" },
-            p = { telE "project.project{display_type = 'full'}", "Projects" },
             q = { tele "quickfix", "Quickfix list" },
             r = { tele "lsp_references", "Lsp References" },
             s = { tele "lsp_document_symbols", "Lsp symbols in buffer" },
@@ -518,6 +525,30 @@ function M.telescope()
             ["/"] = { tele "grep_string", "Grep CWORD in directory" },
             ["]"] = { tele "tags", "Lsp Ctags" },
             ["<Space>"] = { tele "builtin", "Builtin Searchers" },
+            k = {
+                function()
+                    require("telescope.builtin").lsp_workspace_symbols { query = vim.fn.expand "<cword>" }
+                end,
+                "Search lsp workspace symbol",
+            },
+            p = {
+                function()
+                    require("telescope").extensions.project.project { display_type = "full" }
+                end,
+                "Projects",
+            },
+            e = {
+                function()
+                    require("telescope").extensions.file_browser.file_browser { files = false }
+                end,
+                "Folder browser",
+            },
+            E = {
+                function()
+                    require("telescope").extensions.file_browser.file_browser()
+                end,
+                "File browser",
+            },
             d = {
                 name = "diagnostics",
                 b = { tele "diagnostics", "buffer diagnostics" },
@@ -534,29 +565,36 @@ function M.telescope()
                 name = "Live grep in",
                 g = { tele "live_grep", "current directory" },
                 s = {
-                    telF "live_grep({cwd ='~/Documents/Supercollider/',prompt_title = 'SuperCollider Workspace grep'})",
+                    telargs(
+                        "live_grep",
+                        { cwd = "~/Documents/Supercollider/", prompt_title = "SuperCollider Workspace grep" }
+                    ),
                     "grep SuperCollider",
                 },
                 o = {
-                    telF "live_grep({cwd ='~/Documents/ofWorkspace/',prompt_title = 'oF Workspace grep'})",
+                    telargs("live_grep", { cwd = "~/Documents/ofWorkspace/", prompt_title = "oF Workspace grep" }),
                     "ofWorkspace",
                 },
                 d = {
-                    telF "live_grep({cwd ='~/.config', prompt_title = 'Dotfiles grep'})",
+                    telargs("live_grep", { cwd = "~/.config", prompt_title = "Dotfiles grep" }),
                     "grep dotfiles",
                 },
                 ["?"] = {
-                    telF 'live_grep({cwd = vim.fn.input({prompt = "Enter directory: ", completion = "dir"})})',
+                    function()
+                        require("telescope.builtin").live_grep {
+                            cwd = vim.fn.input { prompt = "Enter directory: ", completion = "dir" },
+                        }
+                    end,
                     "Choose directory",
                 },
                 w = {
                     name = "vimWiki",
                     w = {
-                        telF "live_grep({cwd = '~/Documents/vimWiki', prompt_title = 'wiki directory'})",
+                        telargs("live_grep", { cwd = "~/Documents/vimWiki", prompt_title = "wiki directory" }),
                         "whole wiki",
                     },
                     d = {
-                        telF "live_grep({cwd = '~/Documents/vimWiki/diary', prompt_title = 'Diary entires'})",
+                        telargs("live_grep", { cwd = "~/Documents/vimWiki/diary", prompt_title = "Diary entires" }),
                         "Inside diary",
                     },
                 },
@@ -565,31 +603,38 @@ function M.telescope()
             f = {
                 name = "find files in",
                 f = { tele "find_files", "Current directory" },
-                h = { telF "find_files({cwd='~'})", "Home directory" },
+                h = { telargs("find_files", { cwd = "~" }), "Home directory" },
                 r = { tele "oldfiles", "Vim recent files" },
                 t = { tele "help_tags", "vim help files" },
-                c = { cd_browser("C++ Practice files/dirs", "$CWORK/Practice"), "Open C practice" },
                 C = { cd_files("C++ Practice files/dirs", "$CWORK/Practice"), "Open C practice" },
+                c = { cd_browser("C++ Practice files/dirs", "$CWORK/Practice"), "Open C practice" },
+                s = { cd_files("SuperCollider Directory", "~/Documents/Supercollider/"), "SuperCollider files" },
+                w = { telargs("find_files", { cwd = "~/Documents/vimWiki", prompt_title = "vimWiki" }), "wiki" },
                 b = {
-                    telF "find_files({cwd='~/.local/bin/', prompt_title = 'Scripts and binaries in local'})",
+                    telargs("find_files", { cwd = "~/.local/bin/", prompt_title = "Scripts and binaries in local" }),
                     "scripts & binaries",
                 },
                 d = {
-                    telF "find_files({cwd='~/.config/', find_command = {'fd', '--hidden'},prompt_title = 'Dotfiles'})",
+                    telargs(
+                        "find_files",
+                        { cwd = "~/.config/", find_command = { "fd", "--hidden" }, prompt_title = "Dotfiles" }
+                    ),
                     "Dotfiles",
                 },
                 v = {
-                    telF "find_files({cwd='~/.local/share/nvim/', prompt_title = 'Plugin files'})",
+                    telargs("find_files", { cwd = "~/.local/share/nvim/", prompt_title = "Plugin files" }),
                     "Vim plugin Directory",
                 },
                 o = {
-                    telF "find_files({cwd ='~/Documents/ofWorkspace/',prompt_title = 'oF Workspace files'})",
+                    telargs("find_files", { cwd = "~/Documents/ofWorkspace/", prompt_title = "oF Workspace files" }),
                     "OfWorkspace",
                 },
-                s = { cd_files("SuperCollider Directory", "~/Documents/Supercollider/"), "SuperCollider files" },
-                w = { telF "find_files({cwd = '~/Documents/vimWiki', prompt_title = 'vimWiki'})", "wiki" },
                 ["?"] = {
-                    telF 'find_files({cwd = vim.fn.input({prompt = "Enter directory: ", completion = "dir"})})',
+                    function()
+                        require("telescope.builtin").find_files {
+                            cwd = vim.fn.input { prompt = "Enter directory: ", completion = "dir" },
+                        }
+                    end,
                     "Choose directory",
                 },
             },
@@ -655,7 +700,9 @@ function M.scnvim()
     map("v", "<F5>", "<Plug>(scnvim-send-selection)", { buffer = true, desc = "Evaluate SC visual block" })
     map("n", "<F6>", "<Plug>(scnvim-send-line)", { buffer = true, desc = "Evaluate SC line" })
     map("i", "<F6>", "<Plug><esc>(scnvim-send-line)", { buffer = true, desc = "Evaluate SC line" })
-    map("n", ",s", "<Plug>(scnvim-show-signature)", { buffer = true, desc = "SC signature help" })
+    map("n", ",s", function()
+        require("scnvim.completion.signature").show { border = "rounded" }
+    end, { buffer = true, desc = "SC signature help" })
 
     wk.register({
         ["<F1>"] = { require("scnvim").start, "Launch Sclang" },
@@ -704,7 +751,12 @@ function M.makeC()
             end,
             "Compile and Run Release",
         },
-        ["<F6>"] = { '<cmd>lua require("utils.compiler").renderOffload("make RunRelease")<CR>', "Run Release" },
+        ["<F6>"] = {
+            function()
+                require("utils.compiler").renderOffload "make RunRelease"
+            end,
+            "Run Release",
+        },
     }, { buffer = 0 })
 end
 
@@ -792,11 +844,11 @@ function M.coauthor()
         ["<leader>"] = {
             i = {
                 name = "Co-Authoring",
-                s = { require("utils").Session, "Launch session" },
-                b = { require("utils").Single, "Launch current buffer" },
-                j = { require("utils").JoinSession, "Join session" },
-                J = { require("utils").JoinSingle, "Join single buffer" },
-                f = { require("utils").Follow, "follow user" },
+                s = { require("utils.instant").Session, "Launch session" },
+                b = { require("utils.instant").Single, "Launch current buffer" },
+                j = { require("utils.instant").JoinSession, "Join session" },
+                J = { require("utils.instant").JoinSingle, "Join single buffer" },
+                f = { require("utils.instant").Follow, "follow user" },
             },
         },
     }

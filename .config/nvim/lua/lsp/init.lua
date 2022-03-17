@@ -4,9 +4,8 @@ local lsp = {}
 --                             Lsp settings                           --
 ------------------------------------------------------------------------
 
-local lspconfig = require("lspconfig")
+local lspconfig = require "lspconfig"
 function lsp.settings()
-
     AuGroup("SetDiagnosticFuncs", {})
     AuCmd({ "DiagnosticChanged" }, {
         group = "SetDiagnosticFuncs",
@@ -25,7 +24,6 @@ function lsp.settings()
 
         vim.cmd "PackerLoad lsp-status.nvim"
         local lsp_status = require "lsp-status"
-
         if client.name ~= "ltex" and client.name ~= "efm" then
             lsp_status.register_progress()
         end
@@ -111,6 +109,7 @@ function lsp.servers()
         cssls = { on_attach = All_attach, capabilities = Capabilities },
         cmake = { on_attach = All_attach, capabilities = Capabilities },
         vimls = { on_attach = All_attach, capabilities = Capabilities },
+        dartls = { on_attach = All_attach, capabilities = Capabilities },
         pyright = { on_attach = All_attach, capabilities = Capabilities },
         tsserver = { on_attach = All_attach, capabilities = Capabilities },
         bashls = { on_attach = All_attach, capabilities = Capabilities, filetypes = { "sh", "zsh" } },
