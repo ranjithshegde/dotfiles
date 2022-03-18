@@ -309,7 +309,6 @@ return require("packer").startup {
             {
                 "hrsh7th/nvim-cmp",
                 -- branch = "dev",
-                -- event = "InsertEnter",
                 after = "friendly-snippets",
                 config = function()
                     require("settings.completion").init()
