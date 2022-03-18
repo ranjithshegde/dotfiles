@@ -668,12 +668,14 @@ function M.scnvim()
     map("v", "<F5>", "<Plug>(scnvim-send-selection)", { buffer = true, desc = "Evaluate SC visual block" })
     map("n", "<F6>", "<Plug>(scnvim-send-line)", { buffer = true, desc = "Evaluate SC line" })
     map("i", "<F6>", "<Plug><esc>(scnvim-send-line)", { buffer = true, desc = "Evaluate SC line" })
-    map("n", ",s", function()
-        require("scnvim.completion.signature").show { border = "rounded" }
-    end, { buffer = true, desc = "SC signature help" })
+    -- map("n", ",s", function()
+    --     require("scnvim.completion.signature").show { border = "rounded" }
+    -- end, { buffer = true, desc = "SC signature help" })
+    map("n", ",s", "<Plug>(scnvim-show-signature)", { buffer = true, desc = "SC signature help" })
 
     wk.register({
-        ["<F1>"] = { require("scnvim").start, "Launch Sclang" },
+        -- ["<F1>"] = { require("scnvim").start, "Launch Sclang" },
+        ["<F1>"] = { "<cmd>SCNvimStart<cr>", "Launch scland" },
         ["<F2>"] = { "<cmd>SCNvimStatusLine<cr>", "Display server status" },
         ["<F3>"] = { 'scnvim#sclang#send_silent("Server.local.boot")', "Boot local server", expr = true },
         ["<F4>"] = { 'scnvim#sclang#send_silent("WFSLib.startup")', "Boot WFS server", expr = true },
