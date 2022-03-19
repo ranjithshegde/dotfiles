@@ -30,6 +30,14 @@ return require("packer").startup {
             { "tpope/vim-fugitive", cmd = { "G", "Git", "Gclog" } },
         }
 
+        -- TreeSitter
+        use {
+            { "nvim-treesitter/nvim-treesitter", run = ":TSUpdate" },
+            { "p00f/nvim-ts-rainbow", event = "BufReadPre" },
+            { "nvim-treesitter/nvim-treesitter-textobjects", event = "BufReadPost" },
+            { "nvim-treesitter/nvim-treesitter-refactor", after = "scnvim" },
+        }
+
         -- Fold text
         use {
             "anuvyklack/pretty-fold.nvim",
@@ -51,10 +59,10 @@ return require("packer").startup {
         -- Coautoring
         use {
             "jbyuki/instant.nvim",
+            module_pattern = "instant.*",
             config = function()
                 G.instant_username = "Ranjith"
             end,
-            opt = true,
         }
 
         -- Markdown preview
@@ -84,17 +92,6 @@ return require("packer").startup {
                 require("mappings").git()
             end,
             opt = true,
-        }
-
-        -- TreeSitter
-        use {
-            {
-                "nvim-treesitter/nvim-treesitter",
-                run = ":TSUpdate",
-            },
-            { "p00f/nvim-ts-rainbow", event = "BufReadPre" },
-            { "nvim-treesitter/nvim-treesitter-textobjects", event = "BufReadPost" },
-            { "nvim-treesitter/nvim-treesitter-refactor", after = "scnvim" },
         }
 
         -- vimwiki
@@ -135,21 +132,6 @@ return require("packer").startup {
             },
         }
 
-        -- SuperCollider
-        use {
-            "davidgranstrom/scnvim",
-            ft = "supercollider",
-            run = function()
-                fn["scnvim#install"]()
-            end,
-            config = function()
-                require("mappings").scnvim()
-                G.scnvim_snippet_format = "luasnip"
-                require("luasnip").snippets.supercollider = require("scnvim/utils").get_snippets()
-                vim.opt_local.wrap = true
-            end,
-        }
-
         -- Colorizer
         use {
             "afonsocraposo/nvim-colorizer.lua",
@@ -184,6 +166,27 @@ return require("packer").startup {
                 end,
                 after = "nvim-dap",
             },
+        }
+
+        -- SuperCollider
+        use {
+            "davidgranstrom/scnvim",
+            ft = "supercollider",
+            run = function()
+                fn["scnvim#install"]()
+            end,
+            config = function()
+                G.scnvim_snippet_format = "luasnip"
+                require("luasnip").snippets.supercollider = require("scnvim/utils").get_snippets()
+                AuCmd("FileType", {
+                    group = "LspSettings",
+                    pattern = "supercollider",
+                    callback = function()
+                        vim.opt_local.wrap = true
+                        require("mappings").scnvim()
+                    end,
+                })
+            end,
         }
 
         -- vim Orgmode
@@ -335,6 +338,6 @@ return require("packer").startup {
     end,
     config = {
         compile_path = require("packer.util").join_paths(fn.stdpath "config", "lua", "packer_compiled.lua"),
-        profile = { enable = true, threshold = 1 },
+        profile = { enable = true, threshold = 0 },
     },
 }

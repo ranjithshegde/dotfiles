@@ -10,6 +10,7 @@ function M.general()
     M.configFiles()
     M.telescope()
     M.treesitter()
+    M.coauthor()
 
     local opts = { nowait = true }
     --line movement
@@ -22,12 +23,19 @@ function M.general()
     map("v", ">", ">gv", opts)
     -- Terminal
     map("t", "<Esc>", "<C-\\><C-n>", opts)
-    map("t", "<F9>", function()
+    map({ "n", "t" }, "<F9>", function()
         vim.cmd "stopinsert"
         require("utils").toggleTerm("zsh", "shell", 1)
     end, {
         desc = "Toggle current/default terminal",
     })
+    --Quickfix
+    map("n", "-", function()
+        require("utils.qf").toggle_qf "q"
+    end, { desc = "Toggle quickfix" })
+    map("n", "_", function()
+        require("utils.qf").toggle_qf "l"
+    end, { desc = "Toggle loclist" })
 
     wk.register {
         -- open folds when searching
@@ -36,9 +44,6 @@ function M.general()
         J = { "mzJ`z", "Adjoin next line" },
         gm = { "cursor(0, virtcol('$')/2 )", "Move cursor to middle of the line", expr = true },
         gf = { "<cmd>e <cfile><CR>", "open file under cursor" },
-        --Quickfix
-        ["-"] = { "<cmd>lua require('utils.qf').toggle_qf('q')<CR>", "Toggle quickfix" },
-        ["_"] = { "<cmd>lua require('utils.qf').toggle_qf('l')<CR>", "Toggle loclist" },
         -- Terminals
         ["<leader>t"] = {
             name = "Launch terminal in split",
@@ -46,22 +51,10 @@ function M.general()
             v = { "<cmd>vspl term://zsh<cr>", "Vertical" },
             t = { "<cmd>tabnew term://zsh<cr>", "New tab" },
         },
-        ["<leader>i"] = {
-            name = "Co-authoring",
-            i = {
-                function()
-                    require("utils.instant").Start()
-                end,
-                "Start Co-authoring Server",
-            },
-        },
-        ["<F9>"] = { "<cmd>lua require('utils').toggleTerm('zsh','shell',1)<cr>", "Toggle zsh terminal" },
-        ["<F10>"] = "Toggle repl for available filetypes",
         ["<leader><Tab>"] = { "<cmd>SidebarNvimToggle<CR>", "Toggle Symbolsbar" },
     }
 
     -- **************************** conditional mappings -------------
-
     if Op "filetype" ~= "vimwiki" and Op "filetype" ~= "org" then
         wk.register {
             ["<Tab>"] = { "za", "Toggle fold current" },
@@ -70,7 +63,6 @@ function M.general()
     end
 
     -- ******************************** vimWiki-----------------------
-
     wk.register {
         ["<leader>w"] = {
             name = "vimWiki",
@@ -291,7 +283,6 @@ function M.configFiles()
                     d = { open "lua/utils/diagnostics.lua", "Diagnostic extensions" },
                     l = { open "lua/utils/langServers.lua", "Langauge Server extensions" },
                     q = { open "lua/utils/qf.lua", "Quickfix and Loclist" },
-                    i = { open "lua/utils/instant.lua", "Instant - Coauthoring" },
                 },
                 f = {
                     name = "Filetype Plugins",
@@ -718,19 +709,24 @@ end
 ------------------------------------------------------------------------
 
 function M.micro()
-    wk.register(
-        { ["<F8>"] = { "<esc><cmd>lua require('utils.compiler').monitor()<CR>", "Serial monitor toggle" } },
-        { mode = "t" }
-    )
+    map({ "n", "t" }, "<F8>", function()
+        vim.cmd "stopinsert"
+        require("utils.compiler").monitor()
+    end, { desc = "Serial monitor toggle" })
+
     wk.register({
         ["<F2>"] = { require("utils.compiler").pio_clean, "Regenerate tags" },
         ["<F3>"] = { require("utils.compiler").pio_check, "Verify code" },
         ["<F5>"] = { "<cmd>w <CR> <cmd>Make<CR>", "Build" },
         ["<F6>"] = { "<cmd>w <CR> <cmd>Make --target upload<CR>", "Upload" },
-        ["<F8>"] = { require("utils.compiler").monitor, "Serial monitor toggle" },
         [","] = {
             k = {
-                a = { "<cmd>lua require('utils.compiler').ardRef(vim.fn.expand('<cword>'))<CR>", "Arduino" },
+                a = {
+                    function()
+                        require("utils.compiler").ardRef(vim.fn.expand "<cword>")
+                    end,
+                    "Arduino",
+                },
                 t = { require("utils.compiler").teensypins, "teensy pins" },
                 T = { require("utils.compiler").teensyspecs, "teensy specs" },
             },
@@ -768,9 +764,20 @@ end
 function M.ctests()
     wk.register({
         ["<F3>"] = { "<cmd>w <CR> <cmd>Dispatch gcc % -lm -o %<<CR> <cmd>Dispatch ./%<<CR>", "Use gcc" },
-        ["<F4>"] = { "<cmd>w <CR> <cmd>lua require('utils.compiler').with_flags()<cr>", "Make with defined flags" },
+        ["<F4>"] = {
+            function()
+                vim.cmd "w | redraw"
+                require("utils.compiler").with_flags()
+            end,
+            "Make with defined flags",
+        },
         ["<F5>"] = { "<cmd>w <CR> <cmd>Make -g % -o %<<CR>", "Make" },
-        ["<F6>"] = { '<cmd>lua require("utils.compiler").renderOffload("./%<")<cr>', "Launch binary" },
+        ["<F6>"] = {
+            function()
+                require("utils.compiler").renderOffload "./%<"
+            end,
+            "Launch binary",
+        },
     }, { buffer = 0 })
 end
 
@@ -778,7 +785,13 @@ end
 function M.pdc()
     wk.register({
         ["<F5>"] = { "<cmd>w<CR><cmd>Make<CR>", "Build Pd external" },
-        ["<F6>"] = { "<cmd>w<CR><cmd>lua require('utils.compiler').pdBuild()<CR>", "Copy external to PD directory" },
+        ["<F6>"] = {
+            function()
+                vim.cmd "w | redraw"
+                require("utils.compiler").pdBuild()
+            end,
+            "Copy external to PD directory",
+        },
     }, { buffer = 0 })
 end
 
@@ -807,16 +820,33 @@ function M.clang()
             k = {
                 name = "Online help",
                 c = {
-                    "<cmd>lua require('utils.compiler').creference(vim.fn.expand('<cword>'))<CR>",
+                    function()
+                        require("utils.compiler").creference(vim.fn.expand "<cword>")
+                    end,
                     "C++ std reference",
                 },
-                g = { "<cmd>lua require('utils.compiler').glRef(vim.fn.expand('<cword>'))<CR>", "OpenGL reference" },
+                g = {
+                    function()
+                        require("utils.compiler").glRef(vim.fn.expand "<cword>")
+                    end,
+                    "OpenGL reference",
+                },
             },
         },
         ["<leader>"] = {
             s = { "<cmd>ClangdSwitchSourceHeader<cr>", "Switch to Header/Source" },
-            m = { "<cmd>lua require('utils.compiler').makefile(vim.g.makeFile)<CR>", "Open Makefile" },
-            c = { "<cmd>lua require('utils.compiler').ctags(vim.g.cfiles)<CR>", "generate Ctags with includes" },
+            m = {
+                function()
+                    require("utils.compiler").makefile(vim.g.makeFile)
+                end,
+                "Open Makefile",
+            },
+            c = {
+                function()
+                    require("utils.compiler").ctags(vim.g.cfiles)
+                end,
+                "generate Ctags with includes",
+            },
         },
     }, { buffer = 0 })
 end
@@ -828,10 +858,27 @@ end
 function M.cmake()
     wk.register({
         ["<F2>"] = { require("utils.compiler").cmake_clean, "Clean cmake" },
-        ["<F3>"] = { '<cmd>w <CR> <cmd>lua require("utils.compiler").cmake_gen_debug()<CR>', "Generate Cmake Debug" },
-        ["<F4>"] = { '<cmd>w <CR> <cmd>lua require("utils.compiler").cmake_gen()<CR>', "Generate Cmake Release" },
+        ["<F3>"] = {
+            function()
+                vim.cmd "w | redraw"
+                require("utils.compiler").cmake_gen_debug()
+            end,
+            "Generate Cmake Debug",
+        },
+        ["<F4>"] = {
+            function()
+                vim.cmd "w | redraw"
+                require("utils.compiler").cmake_gen()
+            end,
+            "Generate Cmake Release",
+        },
         ["<F5>"] = { "<cmd>w <CR> <cmd>Make -j12 -C build<CR>", "Make" },
-        ["<F6>"] = { '<cmd>lua require("utils.compiler").renderOffload(vim.g.cmakeBin)<cr>', "Launch binary" },
+        ["<F6>"] = {
+            function()
+                require("utils.compiler").renderOffload(vim.g.cmakeBin)
+            end,
+            "Launch binary",
+        },
     }, { buffer = 0 })
 end
 
@@ -844,11 +891,44 @@ function M.coauthor()
         ["<leader>"] = {
             i = {
                 name = "Co-Authoring",
-                s = { require("utils.instant").Session, "Launch session" },
-                b = { require("utils.instant").Single, "Launch current buffer" },
-                j = { require("utils.instant").JoinSession, "Join session" },
-                J = { require("utils.instant").JoinSingle, "Join single buffer" },
-                f = { require("utils.instant").Follow, "follow user" },
+                i = {
+                    function()
+                        require("instant.server").StartServer("192.168." .. vim.fn.input "Enter extension: ", "8080")
+                    end,
+                    "Start Co-authoring Server",
+                },
+                s = {
+                    function()
+                        require("instant").StartServer("192.168." .. vim.fn.input "Enter extension: ", "8080")
+                    end,
+                    "Launch session",
+                },
+                b = {
+                    function()
+                        require("instant").Start("192.168." .. vim.fn.input "Enter extension: ", "8080")
+                    end,
+                    "Launch current buffer",
+                },
+                j = {
+                    function()
+                        require("instant").JoinSession("192.168." .. vim.fn.input "Enter extension: ", "8080")
+                        require("instant").StartFollow(vim.fn.input "User to follow: ")
+                    end,
+                    "Join session",
+                },
+                J = {
+                    function()
+                        require("instant").Join("192.168." .. vim.fn.input "Enter extension: ", "8080")
+                        require("instant").StartFollow(vim.fn.input "User to follow: ")
+                    end,
+                    "Join single buffer",
+                },
+                f = {
+                    function()
+                        require("instant").StartFollow(vim.fn.input "User to follow: ")
+                    end,
+                    "follow user",
+                },
             },
         },
     }
@@ -865,8 +945,18 @@ function M.debug()
                 name = "debug",
                 b = { require("dap").toggle_breakpoint, "set breakpoint" },
                 x = { require("dap").set_exception_breakpoints, "set breakpoint" },
-                f = { "<cmd>lua require('dapui').float_element('scopes', {enter = true})<CR>", "Floating Scopes" },
-                F = { "<cmd>lua require('dapui').float_element('stacks', {enter = true})<CR>", "Floating Stacks" },
+                f = {
+                    function()
+                        require("dapui").float_element("scopes", { enter = true })
+                    end,
+                    "Floating Scopes",
+                },
+                F = {
+                    function()
+                        require("dapui").float_element("stacks", { enter = true })
+                    end,
+                    "Floating Stacks",
+                },
                 B = {
                     function()
                         require("dap").toggle_breakpoint(vim.fn.input "Breakpoint condition: ")
@@ -888,7 +978,12 @@ function M.debug()
             s = { require("dap").step_into, "step into" },
             S = { require("dap").step_out, "step Out" },
         },
-        ["<F10>"] = { "<cmd>lua require('dap').repl.toggle({height = 10},'split')<CR>", "Repl Toggle" },
+        ["<F10>"] = {
+            function()
+                require("dap").repl.toggle({ height = 10 }, "split")
+            end,
+            "Repl Toggle",
+        },
     }
 
     map({ "n", "v", "s" }, "<leader>de", function()

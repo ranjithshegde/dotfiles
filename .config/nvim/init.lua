@@ -4,6 +4,8 @@
 G = vim.g
 G.do_filetype_lua = 1
 G.did_load_filetypes = 0
+G.did_install_default_menus = 1
+G.did_install_syntax_menu = 1
 Api = vim.api
 Exec = Api.nvim_command
 Op = Api.nvim_get_option
