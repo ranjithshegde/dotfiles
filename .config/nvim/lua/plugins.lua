@@ -118,19 +118,6 @@ return require("packer").startup {
             end,
         }
 
-        -- SuperCollider
-        use {
-            "davidgranstrom/scnvim",
-            ft = "supercollider",
-            run = function()
-                fn["scnvim#install"]()
-            end,
-            config = function()
-                G.scnvim_snippet_format = "luasnip"
-                require("luasnip").snippets.supercollider = require("scnvim/utils").get_snippets()
-            end,
-        }
-
         -- Taglist and sidebars
         use {
             { "simrat39/symbols-outline.nvim", cmd = "SymbolsOutline" },
@@ -179,6 +166,27 @@ return require("packer").startup {
                 end,
                 after = "nvim-dap",
             },
+        }
+
+        -- SuperCollider
+        use {
+            "davidgranstrom/scnvim",
+            ft = "supercollider",
+            run = function()
+                fn["scnvim#install"]()
+            end,
+            config = function()
+                G.scnvim_snippet_format = "luasnip"
+                require("luasnip").snippets.supercollider = require("scnvim/utils").get_snippets()
+                AuCmd("FileType", {
+                    group = "LspSettings",
+                    pattern = "supercollider",
+                    callback = function()
+                        vim.opt_local.wrap = true
+                        require("mappings").scnvim()
+                    end,
+                })
+            end,
         }
 
         -- vim Orgmode

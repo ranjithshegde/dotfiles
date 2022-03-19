@@ -84,11 +84,7 @@ utils.autocmd = function()
                 vim.cmd "Dispatch"
             end, { buffer = true, desc = "Call native compile Dispatch command" })
 
-            vim.keymap.set("n", "<F10>", function()
-                require("utils").toggleTerm(vim.g.repl, "repl", 0)
-            end, { buffer = true, desc = "Toggle REPL" })
-
-            vim.keymap.set("t", "<F10>", function()
+            vim.keymap.set({ "n", "t" }, "<F10>", function()
                 vim.cmd "stopinsert"
                 require("utils").toggleTerm(vim.g.repl, "repl", 0)
             end, { desc = "Toggle REPL" })
