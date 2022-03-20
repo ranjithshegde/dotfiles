@@ -11,8 +11,8 @@ function servers.sumneko()
     local luadev = require("lua-dev").setup {
         library = { plugins = { "plenary.nvim", "telescope.nvim", "express_line.nvim", "nvim-lspconfig" } },
         lspconfig = {
-            on_attach = EfmAttach,
-            capabilities = Capabilities,
+            on_attach = require("lsp").efm,
+            capabilities = require("lsp").capabilities(),
             settings = { Lua = { diagnostics = { globals = { "vim", "pd" } } } },
         },
     }

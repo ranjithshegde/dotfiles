@@ -38,6 +38,8 @@ function M.general()
     end, { desc = "Toggle loclist" })
 
     wk.register {
+        ["<Tab>"] = { "za", "Toggle fold current" },
+        ["<S-Tab>"] = { "zA", "Toggle fold All" },
         -- open folds when searching
         n = { "nzzzv", "jump to next search result" },
         N = { "Nzzzv", "jump to previous search result" },
@@ -53,14 +55,6 @@ function M.general()
         },
         ["<leader><Tab>"] = { "<cmd>SidebarNvimToggle<CR>", "Toggle Symbolsbar" },
     }
-
-    -- **************************** conditional mappings -------------
-    if Op "filetype" ~= "vimwiki" and Op "filetype" ~= "org" then
-        wk.register {
-            ["<Tab>"] = { "za", "Toggle fold current" },
-            ["<S-Tab>"] = { "zA", "Toggle fold All" },
-        }
-    end
 
     -- ******************************** vimWiki-----------------------
     wk.register {
