@@ -16,12 +16,12 @@ function servers.jdtls()
     require("jdtls").start_or_attach {
         cmd = { "jdtls" },
         on_attach = function(client, bufnr)
-            Attach_props(client, bufnr)
+            require("lsp").attach_props(client, bufnr)
             vim.opt_local.formatexpr = "v:lua.vim.lsp.formatexpr()"
             require("jdtls").setup_dap { hotcodereplace = "auto" }
             require("jdtls.setup").add_commands()
         end,
-        capabilities = Capabilities,
+        capabilities = require("lsp").capabilities(),
         init_options = {
             bundles = {
                 vim.fn.glob(home .. debug_path),

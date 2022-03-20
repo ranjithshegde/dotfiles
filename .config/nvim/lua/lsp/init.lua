@@ -15,85 +15,88 @@ function lsp.settings()
         end,
     })
 
-    if packer_plugins["cmp-nvim-lsp"] and packer_plugins["cmp-nvim-lsp"].loaded then
-        Capabilities = require("cmp_nvim_lsp").update_capabilities(vim.lsp.protocol.make_client_capabilities())
-    end
-
-    Attach_props = function(client, bufnr)
-        require("mappings").nvim_lsp()
-
-        vim.cmd "PackerLoad lsp-status.nvim"
-        local lsp_status = require "lsp-status"
-        if client.name ~= "ltex" and client.name ~= "efm" then
-            lsp_status.register_progress()
-        end
-        lsp_status.on_attach(client)
-        require("utils.diagnostics").attach({ all = false, underline = false, update_in_insert = false }, client)
-
-        local rc = client.resolved_capabilities
-        if rc.document_highlight then
-            Api.nvim_set_hl(0, "LspReferenceRead", { cterm = { bold = true }, ctermbg = "red", bg = Colors.green })
-            Api.nvim_set_hl(0, "LspReferenceText", { cterm = { bold = true }, ctermbg = "red", bg = "grey" })
-            Api.nvim_set_hl(0, "LspReferenceWrite", { cterm = { bold = true }, ctermbg = "red", bg = Colors.white })
-
-            AuGroup("LspHighlightSymbols", {})
-            AuCmd("CursorHold", {
-                group = "LspHighlightSymbols",
-                buffer = 0,
-                callback = vim.lsp.buf.document_highlight,
-            })
-            AuCmd("CursorMoved, CursorMovedI", {
-                group = "LspHighlightSymbols",
-                buffer = bufnr,
-                callback = vim.lsp.buf.clear_references,
-            })
-        end
-
-        if rc.document_formatting then
-            AuGroup("LspAutoFormat", {})
-            AuCmd("BufWrite", {
-                group = "LspAutoFormat",
-                pattern = "*.html,*.css,*.js,*.hpp,*.h,*.sh,*.lua,*.cpp,*.json,*.py,*.yaml,*.toml,*.vs,*.fs,*.gs,*.vert,*.frag,*.geom,*.glsl",
-                callback = function()
-                    vim.lsp.buf.formatting_sync(nil, 500)
-                end,
-            })
-        end
-        Api.nvim_add_user_command("LspCapabilities", require("utils.langServers").lsp_capabilities, {})
-    end
-
-    All_attach = function(client, bufnr)
-        Attach_props(client, bufnr)
-        if Op "filetype" ~= "vimwiki" then
-            vim.opt_local.formatexpr = "v:lua.vim.lsp.formatexpr()"
-        end
-    end
-
-    Cinit = function(client)
-        require("mappings").nvim_lsp()
-        client.server_capabilities.completionProvider = false
-        local rc = client.resolved_capabilities
-        rc.document_formatting = false
-        rc.document_range_formatting = false
-        rc.document_highlight = false
-        rc.document_symbol = false
-        rc.workspace_symbol = false
-        rc.rename = false
-        rc.hover = false
-        rc.code_action = false
-    end
-
-    EfmAttach = function(client, bufnr)
-        Attach_props(client, bufnr)
-        client.resolved_capabilities.document_formatting = false
-    end
-
     -- borders for floating windows
     vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, { border = "double" })
     vim.lsp.handlers["textDocument/signatureHelp"] = vim.lsp.with(
         vim.lsp.handlers.signature_help,
         { border = "rounded" }
     )
+end
+
+function lsp.capabilities()
+    local ok, cmp = pcall(require, "cmp_nvim_lsp")
+    if ok then
+        return cmp.update_capabilities(vim.lsp.protocol.make_client_capabilities())
+    end
+end
+
+function lsp.attach_props(client, bufnr)
+    require("mappings").nvim_lsp()
+
+    vim.cmd "PackerLoad lsp-status.nvim"
+    local lsp_status = require "lsp-status"
+    if client.name ~= "ltex" and client.name ~= "efm" then
+        lsp_status.register_progress()
+    end
+    lsp_status.on_attach(client)
+    require("utils.diagnostics").attach({ all = false, underline = false, update_in_insert = false }, client)
+
+    local rc = client.resolved_capabilities
+    if rc.document_highlight then
+        Api.nvim_set_hl(0, "LspReferenceRead", { cterm = { bold = true }, ctermbg = "red", bg = Colors.green })
+        Api.nvim_set_hl(0, "LspReferenceText", { cterm = { bold = true }, ctermbg = "red", bg = "grey" })
+        Api.nvim_set_hl(0, "LspReferenceWrite", { cterm = { bold = true }, ctermbg = "red", bg = Colors.white })
+
+        AuGroup("LspHighlightSymbols", {})
+        AuCmd("CursorHold", {
+            group = "LspHighlightSymbols",
+            buffer = 0,
+            callback = vim.lsp.buf.document_highlight,
+        })
+        AuCmd("CursorMoved, CursorMovedI", {
+            group = "LspHighlightSymbols",
+            buffer = bufnr,
+            callback = vim.lsp.buf.clear_references,
+        })
+    end
+
+    if rc.document_formatting then
+        AuGroup("LspAutoFormat", {})
+        AuCmd("BufWrite", {
+            group = "LspAutoFormat",
+            pattern = "*.html,*.css,*.js,*.hpp,*.h,*.sh,*.lua,*.cpp,*.json,*.py,*.yaml,*.toml,*.vs,*.fs,*.gs,*.vert,*.frag,*.geom,*.glsl",
+            callback = function()
+                vim.lsp.buf.formatting_sync(nil, 500)
+            end,
+        })
+    end
+    Api.nvim_add_user_command("LspCapabilities", require("utils.langServers").lsp_capabilities, {})
+end
+
+function lsp.attach(client, bufnr)
+    lsp.attach_props(client, bufnr)
+    if Op "filetype" ~= "vimwiki" then
+        vim.opt_local.formatexpr = "v:lua.vim.lsp.formatexpr()"
+    end
+end
+
+function lsp.cinit(client)
+    require("mappings").nvim_lsp()
+    client.server_capabilities.completionProvider = false
+    local rc = client.resolved_capabilities
+    rc.document_formatting = false
+    rc.document_range_formatting = false
+    rc.document_highlight = false
+    rc.document_symbol = false
+    rc.workspace_symbol = false
+    rc.rename = false
+    rc.hover = false
+    rc.code_action = false
+end
+
+function lsp.efm(client, bufnr)
+    lsp.attach_props(client, bufnr)
+    client.resolved_capabilities.document_formatting = false
 end
 
 ------------------------------------------------------------------------
@@ -103,18 +106,18 @@ end
 function lsp.servers()
     local dict = os.getenv "XDG_CONFIG_HOME" .. "/nvim/spell/en.utf-8.add"
     local configs = {
-        jsonls = { on_attach = EfmAttach },
-        yamlls = { on_attach = All_attach },
-        html = { on_attach = All_attach, capabilities = Capabilities },
-        cssls = { on_attach = All_attach, capabilities = Capabilities },
-        cmake = { on_attach = All_attach, capabilities = Capabilities },
-        vimls = { on_attach = All_attach, capabilities = Capabilities },
-        dartls = { on_attach = All_attach, capabilities = Capabilities },
-        pyright = { on_attach = All_attach, capabilities = Capabilities },
-        tsserver = { on_attach = All_attach, capabilities = Capabilities },
-        bashls = { on_attach = All_attach, capabilities = Capabilities, filetypes = { "sh", "zsh" } },
+        jsonls = { on_attach = lsp.efm },
+        yamlls = { on_attach = lsp.attach },
+        html = { on_attach = lsp.attach, capabilities = lsp.capabilities() },
+        cssls = { on_attach = lsp.attach, capabilities = lsp.capabilities() },
+        cmake = { on_attach = lsp.attach, capabilities = lsp.capabilities() },
+        vimls = { on_attach = lsp.attach, capabilities = lsp.capabilities() },
+        dartls = { on_attach = lsp.attach, capabilities = lsp.capabilities() },
+        pyright = { on_attach = lsp.attach, capabilities = lsp.capabilities() },
+        tsserver = { on_attach = lsp.attach, capabilities = lsp.capabilities() },
+        bashls = { on_attach = lsp.attach, capabilities = lsp.capabilities(), filetypes = { "sh", "zsh" } },
         ccls = {
-            on_init = Cinit,
+            on_init = lsp.cinit,
             filetypes = { "c", "cpp", "objc", "objcpp", "opencl" },
             handlers = {
                 ["textDocument/publishDiagnostics"] = function(...)
@@ -129,8 +132,8 @@ function lsp.servers()
         },
         ltex = {
             filetypes = { "bib", "markdown", "org", "tex" },
-            on_attach = All_attach,
-            capabilities = Capabilities,
+            on_attach = lsp.attach,
+            capabilities = lsp.capabilities(),
             settings = {
                 ltex = {
                     additionalRules = {
@@ -144,8 +147,8 @@ function lsp.servers()
             },
         },
         texlab = {
-            on_attach = All_attach,
-            capabilities = Capabilities,
+            on_attach = lsp.attach,
+            capabilities = lsp.capabilities(),
             settings = {
                 texlab = {
                     build = {
@@ -242,7 +245,7 @@ function lsp.lintFormat()
     lspconfig.efm.setup {
         filetypes = vim.tbl_keys(languages),
         root_dir = rootDir,
-        on_attach = All_attach,
+        on_attach = lsp.attach,
         init_options = { documentFormatting = true, codeAction = true },
         settings = { rootMarkers = rootMarker, languages = languages },
     }

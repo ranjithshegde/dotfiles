@@ -11,8 +11,8 @@ function servers.clangd()
 
     require("clangd_extensions").setup {
         server = {
-            on_attach = All_attach,
-            capabilities = Capabilities,
+            on_attach = require("lsp").attach,
+            capabilities = require("lsp").capabilities(),
             filetypes = { "c", "cpp", "opencl" },
             cmd = {
                 "clangd",
