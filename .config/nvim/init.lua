@@ -8,7 +8,6 @@ G.did_install_default_menus = 1
 G.did_install_syntax_menu = 1
 Api = vim.api
 Exec = Api.nvim_command
-Op = Api.nvim_get_option
 AuCmd = Api.nvim_create_autocmd
 AuGroup = Api.nvim_create_augroup
 

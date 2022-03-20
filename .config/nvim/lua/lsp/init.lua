@@ -30,7 +30,7 @@ function lsp.capabilities()
     end
 end
 
-function lsp.attach_props(client, bufnr)
+function lsp.attach(client, bufnr)
     require("mappings").nvim_lsp()
 
     vim.cmd "PackerLoad lsp-status.nvim"
@@ -73,13 +73,6 @@ function lsp.attach_props(client, bufnr)
     Api.nvim_add_user_command("LspCapabilities", require("utils.langServers").lsp_capabilities, {})
 end
 
-function lsp.attach(client, bufnr)
-    lsp.attach_props(client, bufnr)
-    if Op "filetype" ~= "vimwiki" then
-        vim.opt_local.formatexpr = "v:lua.vim.lsp.formatexpr()"
-    end
-end
-
 function lsp.cinit(client)
     require("mappings").nvim_lsp()
     client.server_capabilities.completionProvider = false
@@ -95,7 +88,7 @@ function lsp.cinit(client)
 end
 
 function lsp.efm(client, bufnr)
-    lsp.attach_props(client, bufnr)
+    lsp.attach(client, bufnr)
     client.resolved_capabilities.document_formatting = false
 end
 

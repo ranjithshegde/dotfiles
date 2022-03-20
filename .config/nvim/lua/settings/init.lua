@@ -31,6 +31,7 @@ function settings.options()
     o.fillchars = "stlnc:»,vert:║,fold:."
     o.listchars:append "eol:↲"
     -- o.listchars = "tab:<->,eol:↲,space:→"
+    o.foldexpr = "nvim_treesitter#foldexpr()"
     o.completeopt = "menu,menuone,noinsert,noselect"
     o.dictionary = os.getenv "XDG_DATA_HOME" .. "/dict/words"
     o.tabline = [[%!luaeval('require("statusline").tabs()')]]
@@ -44,11 +45,6 @@ function settings.options()
     G.loaded_perl_provider = 0
     G.netrw_browsex_viewer = "xdg-open"
     G.symbols_outline = { auto_preview = false, width = 40 }
-
-    -- Folds for filetype
-    if Op "filetype" ~= "vimwiki" and Op "filetype" ~= "markdown" then
-        o.foldexpr = "nvim_treesitter#foldexpr()"
-    end
 
     -- ************** Disable builtin plugins ---------------------------------------------------------
     local disabled_built_ins = {
