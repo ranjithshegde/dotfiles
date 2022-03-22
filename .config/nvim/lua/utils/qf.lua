@@ -23,7 +23,7 @@ function qf.find_qf(type)
             found = true
         end
         if found then
-            table.insert(win_tbl, {winid = win["winid"], bufnr = win["bufnr"]})
+            table.insert(win_tbl, { winid = win["winid"], bufnr = win["bufnr"] })
         end
     end
     return win_tbl
@@ -36,8 +36,8 @@ function qf.open_qf()
         return vim.tbl_isempty(vim.fn.getqflist())
     end
     if not qf_empty() then
-        vim.cmd("copen")
-        vim.cmd("wincmd J")
+        vim.cmd "copen"
+        vim.cmd "wincmd J"
     else
         print(string.format("%s is empty.", qf_name))
     end
@@ -56,7 +56,7 @@ function qf.open_loclist_all()
             if not qf_empty(win["winnr"]) then
                 -- switch active window before ':lopen'
                 vim.api.nvim_set_current_win(win["winid"])
-                vim.cmd("lopen")
+                vim.cmd "lopen"
             else
                 print(string.format("%s is empty.", qf_name))
             end

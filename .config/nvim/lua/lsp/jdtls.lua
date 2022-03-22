@@ -5,9 +5,6 @@ local servers = {}
 ------------------------------------------------------------------------
 
 function servers.jdtls()
-    if not package.loaded["lsp.settings"] then
-        require("lsp").settings()
-    end
     require("debugger").init()
     local home = os.getenv "XDG_DATA_HOME"
     local debug_path =

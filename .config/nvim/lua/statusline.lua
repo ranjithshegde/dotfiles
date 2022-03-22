@@ -140,12 +140,12 @@ Statusline.el = function()
         generator = function(_, _)
             return {
                 sections.highlight("ElViMode", mode),
-                sections.highlight("ElGitBranch", git_branch),
+                sections.highlight("DiagnosticWarn", git_branch),
                 separators.left,
-                sections.highlight("ElGitDiff", git_changes),
+                sections.highlight("DiagnosticInfo", git_changes),
                 separators.left,
                 sections.split,
-                sections.highlight("Diag", lsp_statusline.segment),
+                lsp_statusline.segment,
                 sections.split,
                 sections.highlight("ScStatus", scnvim),
                 sections.highlight("ScStatus", scContext),
@@ -159,8 +159,8 @@ Statusline.el = function()
                 ":",
                 builtin.column_with_width(2),
                 separators.left,
-                sections.highlight("ElGitBranch", builtin.percentage_through_file),
-                sections.highlight("ElScroll", scroll),
+                sections.highlight("DiagnosticSignWarn", builtin.percentage_through_file),
+                sections.highlight("DiagnosticWarn", scroll),
                 sections.collapse_builtin { builtin.help_list, builtin.readonly_list },
             }
         end,
@@ -172,8 +172,8 @@ end
 ------------------------------------------------------------------------
 
 -- Separators
-local right_separator = " ❯❯ "
-local left_separator = " ❮❮ "
+-- local right_separator = " ❯❯ "
+-- local left_separator = " ❮❮ "
 -- Blank Between Components
 local space = " "
 
@@ -182,58 +182,69 @@ local getTabLabel = function(n)
     local current_win = Api.nvim_tabpage_get_win(n)
     local current_buf = Api.nvim_win_get_buf(current_win)
     local file_name = Api.nvim_buf_get_name(current_buf)
+
     if string.find(file_name, "term://") ~= nil then
-        return " " .. vim.fn.fnamemodify(file_name, ":p:t")
+        return { " " .. vim.fn.fnamemodify(file_name, ":p:t") }
     end
     file_name = vim.fn.fnamemodify(file_name, ":p:t")
     if file_name == "" then
-        return "No Name"
+        return { "Empty buffer" }
     end
 
     local ext = vim.fn.fnamemodify(file_name, ":e")
-    local icon = require("nvim-web-devicons").get_icon(file_name, ext)
-    if icon ~= nil then
-        return icon .. space .. file_name
+    local icon, color = require("nvim-web-devicons").get_icon_color(file_name, ext)
+    if color ~= nil then
+        local table = Api.nvim_get_hl_by_name("TablineSel", true)
+        Api.nvim_set_hl(0, "IconColor", { bg = table["background"], fg = color, cterm = { bold = true } })
     end
-    return file_name
+    if icon ~= nil then
+        return { file_name, icon }
+    else
+        return { file_name }
+    end
 end
 
 -- *********************************** Highlight groups ---------------------------------
 -- Set tabline colours
-local set_colours = function()
-    Api.nvim_set_hl(0, "TabLineSel", { bg = Colors.bg, fg = Colors.white })
-    Api.nvim_set_hl(0, "TabLineSelSeparator", { bg = Colors.bg, fg = Colors.white })
-    Api.nvim_set_hl(0, "TabLine", { fg = Colors.purple })
-    Api.nvim_set_hl(0, "TabLineSeparator", { fg = Colors.purple })
-    Api.nvim_set_hl(0, "TabLineFill", {})
-end
+-- local set_colours = function()
+--     Api.nvim_set_hl(0, "TabLineSelSeparator", { bg = Colors.bg, fg = Colors.white })
+--     Api.nvim_set_hl(0, "TabLineSeparator", { fg = Colors.purple })
+-- end
 
 --*********************************** Tabline module ---------------------------------
 function Statusline.tabs()
-    set_colours()
+    -- set_colours()
     local tabline = ""
     local tab_list = Api.nvim_list_tabpages()
     local current_tab = Api.nvim_get_current_tabpage()
     for _, val in ipairs(tab_list) do
-        local file_name = getTabLabel(val)
+        local name = getTabLabel(val)
         if val == current_tab then
-            tabline = tabline .. " %#StatusLine#" .. left_separator
-            tabline = tabline .. "%#StatusLine# " .. file_name
-            tabline = tabline .. " %#StatusLine#" .. right_separator
+            if name[2] then
+                tabline = tabline .. space .. "%#IconColor#" .. name[2] .. "%#TabLineSel# " .. name[1] .. space
+            else
+                tabline = tabline .. space .. "%#TabLineSel# " .. name[1] .. space
+            end
+            -- tabline = tabline .. " %#TabLineSelSeparator#" .. left_separator
+            -- tabline = tabline .. "%#TabLineSel# " .. file_name
+            -- tabline = tabline .. space .. "%#TabLineSel# " .. file_name .. space
+            -- tabline = tabline .. " %#TabLineSelSeparator#" .. right_separator
         else
-            tabline = tabline .. " %#StatusLineNC#" .. left_separator
-            tabline = tabline .. "%#StatusLineNC# " .. file_name
-            tabline = tabline .. " %#StatusLineNC#" .. right_separator
+            -- tabline = tabline .. " %#TabLineSeparator#" .. left_separator
+            -- tabline = tabline .. "%#TabLine# " .. file_name
+            tabline = tabline .. space .. "%#TabLine# " .. name[1] .. space
+            -- tabline = tabline .. " %#TabLineSeparator#" .. right_separator
         end
     end
-    tabline = tabline .. "%="
+    tabline = tabline .. "%#TabLineFill#" .. "%="
     tabline = tabline
-        .. "%#StatusLine#"
-        .. left_separator
-        .. "%#StatusLine# "
+        -- .. "%#TabLineSelSeparator#"
+        -- .. left_separator
+        .. "%#TabLineSel# "
+        .. "🗀 "
         .. vim.fn.expand "%"
-        .. "%#StatusLine#"
-        .. right_separator
+    -- .. "%#TabLineSelSeparator#"
+    -- .. right_separator
     tabline = tabline .. space
     return tabline
 end

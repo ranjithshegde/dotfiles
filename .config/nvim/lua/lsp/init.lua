@@ -23,6 +23,7 @@ function lsp.settings()
     )
 end
 
+-- **************************** Snippet capabilities--------------------
 function lsp.capabilities()
     local ok, cmp = pcall(require, "cmp_nvim_lsp")
     if ok then
@@ -30,6 +31,7 @@ function lsp.capabilities()
     end
 end
 
+-- **************************** Global attach function------------------
 function lsp.attach(client, bufnr)
     require("mappings").nvim_lsp()
 
@@ -43,9 +45,9 @@ function lsp.attach(client, bufnr)
 
     local rc = client.resolved_capabilities
     if rc.document_highlight then
-        Api.nvim_set_hl(0, "LspReferenceRead", { cterm = { bold = true }, ctermbg = "red", bg = Colors.green })
-        Api.nvim_set_hl(0, "LspReferenceText", { cterm = { bold = true }, ctermbg = "red", bg = "grey" })
-        Api.nvim_set_hl(0, "LspReferenceWrite", { cterm = { bold = true }, ctermbg = "red", bg = Colors.white })
+        -- Api.nvim_set_hl(0, "LspReferenceRead", { cterm = { bold = true }, ctermbg = "red", bg = Colors.cyan })
+        -- Api.nvim_set_hl(0, "LspReferenceText", { cterm = { bold = true }, ctermbg = "red", bg = "grey" })
+        -- Api.nvim_set_hl(0, "LspReferenceWrite", { cterm = { bold = true }, ctermbg = "red", bg = Colors.white })
 
         AuGroup("LspHighlightSymbols", {})
         AuCmd("CursorHold", {
@@ -73,6 +75,7 @@ function lsp.attach(client, bufnr)
     Api.nvim_add_user_command("LspCapabilities", require("utils.langServers").lsp_capabilities, {})
 end
 
+-- **************************** Ccls reduction function-----------------
 function lsp.cinit(client)
     require("mappings").nvim_lsp()
     client.server_capabilities.completionProvider = false
@@ -87,6 +90,7 @@ function lsp.cinit(client)
     rc.code_action = false
 end
 
+-- **************************** Attach without formatting --------------
 function lsp.efm(client, bufnr)
     lsp.attach(client, bufnr)
     client.resolved_capabilities.document_formatting = false
