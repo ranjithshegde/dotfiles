@@ -193,11 +193,9 @@ local getTabLabel = function(n)
 
     local ext = vim.fn.fnamemodify(file_name, ":e")
     local icon, color = require("nvim-web-devicons").get_icon_color(file_name, ext)
-    if color ~= nil then
+    if icon ~= nil then
         local table = Api.nvim_get_hl_by_name("TablineSel", true)
         Api.nvim_set_hl(0, "IconColor", { bg = table["background"], fg = color, cterm = { bold = true } })
-    end
-    if icon ~= nil then
         return { file_name, icon }
     else
         return { file_name }
@@ -221,7 +219,7 @@ function Statusline.tabs()
         local name = getTabLabel(val)
         if val == current_tab then
             if name[2] then
-                tabline = tabline .. space .. "%#IconColor#" .. name[2] .. "%#TabLineSel# " .. name[1] .. space
+                tabline = tabline .. "%#IconColor#" .. space .. name[2] .. "%#TabLineSel# " .. name[1] .. space
             else
                 tabline = tabline .. space .. "%#TabLineSel# " .. name[1] .. space
             end

@@ -13,6 +13,7 @@ function utils.UnloadAllModules()
         "settings",
         "statusline",
         "utils",
+        "lsp",
         "debugger",
     }
     RELOAD(unload_modules)
