@@ -1,7 +1,11 @@
+local Statusline = {}
+
+-- Blank Between Components
+local space = " "
+
 ------------------------------------------------------------------------
 --                              statusline                            --
 ------------------------------------------------------------------------
-local Statusline = {}
 
 Statusline.el = function()
     require("el").reset_windows()
@@ -11,7 +15,6 @@ Statusline.el = function()
     local sections = require "el.sections"
     local subscribe = require "el.subscribe"
     local lsp_statusline = require "el.plugins.lsp_status"
-    local separators = { left = "  ", right = "  " }
 
     --*********************************** File Icon ---------------------------------
     local file_icon = subscribe.buf_autocmd("el_file_icon", "BufRead", function(_, bufnr)
@@ -141,24 +144,22 @@ Statusline.el = function()
             return {
                 sections.highlight("ElViMode", mode),
                 sections.highlight("DiagnosticWarn", git_branch),
-                separators.left,
+                space,
                 sections.highlight("DiagnosticInfo", git_changes),
-                separators.left,
+                space,
                 sections.split,
                 lsp_statusline.segment,
-                sections.split,
                 sections.highlight("ScStatus", scnvim),
                 sections.highlight("ScStatus", scContext),
-                lsp_statusline.server_progress,
                 sections.split,
                 sections.highlight("DevIconH", file_icon),
                 sections.highlight("Filename", builtin.tail_file),
                 sections.collapse_builtin { " ", builtin.modified_flag },
-                separators.right,
+                space,
                 builtin.line_with_width(3),
                 ":",
                 builtin.column_with_width(2),
-                separators.left,
+                space,
                 sections.highlight("DiagnosticSignWarn", builtin.percentage_through_file),
                 sections.highlight("DiagnosticWarn", scroll),
                 sections.collapse_builtin { builtin.help_list, builtin.readonly_list },
@@ -171,47 +172,47 @@ end
 --                              TabLine                               --
 ------------------------------------------------------------------------
 
--- Separators
--- local right_separator = " ❯❯ "
--- local left_separator = " ❮❮ "
--- Blank Between Components
-local space = " "
-
---*********************************** File label ---------------------------------
+--*********************************** File label -----------------------
 local getTabLabel = function(n)
     local current_win = Api.nvim_tabpage_get_win(n)
     local current_buf = Api.nvim_win_get_buf(current_win)
     local file_name = Api.nvim_buf_get_name(current_buf)
 
-    if string.find(file_name, "term://") ~= nil then
-        return { " " .. vim.fn.fnamemodify(file_name, ":p:t") }
-    end
-    file_name = vim.fn.fnamemodify(file_name, ":p:t")
-    if file_name == "" then
+    local tail = vim.fn.fnamemodify(file_name, ":p:t")
+    if tail == "" then
         return { "Empty buffer" }
     end
 
-    local ext = vim.fn.fnamemodify(file_name, ":e")
-    local icon, color = require("nvim-web-devicons").get_icon_color(file_name, ext)
+    local ext = nil
+    if string.find(file_name, "term://") ~= nil then
+        ext = "terminal"
+    else
+        ext = vim.fn.fnamemodify(tail, ":e")
+    end
+
+    local icon, color = require("nvim-web-devicons").get_icon_color(tail, ext)
     if icon ~= nil then
         local table = Api.nvim_get_hl_by_name("TablineSel", true)
         Api.nvim_set_hl(0, "IconColor", { bg = table["background"], fg = color, cterm = { bold = true } })
-        return { file_name, icon }
+        return { tail, icon }
     else
-        return { file_name }
+        return { tail }
     end
 end
 
--- *********************************** Highlight groups ---------------------------------
--- Set tabline colours
--- local set_colours = function()
---     Api.nvim_set_hl(0, "TabLineSelSeparator", { bg = Colors.bg, fg = Colors.white })
---     Api.nvim_set_hl(0, "TabLineSeparator", { fg = Colors.purple })
--- end
+--*********************************** File path ------------------------
+local rootDir = function()
+    local val = vim.fn.expand "%"
+    if string.find(val, "term://") ~= nil then
+        val = " " .. vim.fn.fnamemodify(val, ":p:t")
+    elseif val ~= "" then
+        val = "🗀 " .. val
+    end
+    return val
+end
 
---*********************************** Tabline module ---------------------------------
+--*********************************** Tabline module -------------------
 function Statusline.tabs()
-    -- set_colours()
     local tabline = ""
     local tab_list = Api.nvim_list_tabpages()
     local current_tab = Api.nvim_get_current_tabpage()
@@ -223,27 +224,13 @@ function Statusline.tabs()
             else
                 tabline = tabline .. space .. "%#TabLineSel# " .. name[1] .. space
             end
-            -- tabline = tabline .. " %#TabLineSelSeparator#" .. left_separator
-            -- tabline = tabline .. "%#TabLineSel# " .. file_name
-            -- tabline = tabline .. space .. "%#TabLineSel# " .. file_name .. space
-            -- tabline = tabline .. " %#TabLineSelSeparator#" .. right_separator
         else
-            -- tabline = tabline .. " %#TabLineSeparator#" .. left_separator
-            -- tabline = tabline .. "%#TabLine# " .. file_name
             tabline = tabline .. space .. "%#TabLine# " .. name[1] .. space
-            -- tabline = tabline .. " %#TabLineSeparator#" .. right_separator
         end
     end
     tabline = tabline .. "%#TabLineFill#" .. "%="
-    tabline = tabline
-        -- .. "%#TabLineSelSeparator#"
-        -- .. left_separator
-        .. "%#TabLineSel# "
-        .. "🗀 "
-        .. vim.fn.expand "%"
-    -- .. "%#TabLineSelSeparator#"
-    -- .. right_separator
-    tabline = tabline .. space
+    tabline = tabline .. "%#TabLineSel# " .. rootDir() .. space
     return tabline
 end
+
 return Statusline

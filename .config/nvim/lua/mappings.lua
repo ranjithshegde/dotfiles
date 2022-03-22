@@ -606,8 +606,12 @@ function M.telescope()
                     ),
                     "Dotfiles",
                 },
+                V = { cd_browser("Vim plugins", "~/.local/share/nvim/site/pack/packer/"), "Vim plugin Directory" },
                 v = {
-                    telargs("find_files", { cwd = "~/.local/share/nvim/", prompt_title = "Plugin files" }),
+                    telargs(
+                        "find_files",
+                        { cwd = "~/.local/share/nvim/site/pack/packer", prompt_title = "Plugin files" }
+                    ),
                     "Vim plugin Directory",
                 },
                 o = {
