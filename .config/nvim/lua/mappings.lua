@@ -288,6 +288,11 @@ function M.configFiles()
                     t = { open "after/ftplugin/tex.lua", "Latex" },
                     v = { open "after/ftplugin/vimwiki.lua", "Vimwiki" },
                 },
+                q = {
+                    name = "Treesitter queries",
+                    m = { open "after/queries/markdown/highlights.scm", "Markdown" },
+                    o = { open "after/queries/org/highlights.scm", "Org" },
+                },
                 d = { open "lua/debugger.lua", "Debug adapter protocol" },
                 s = { open "lua/statusline.lua", "Statusline and Tabline" },
                 a = { open "autoload/util.vim", "Utilities in autoload" },

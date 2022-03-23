@@ -163,6 +163,7 @@ function ts.init()
             enable = true,
             extended_mode = true,
         },
+        playground = { enable = true, updatetime = 25, persist_queries = false },
     }
 end
 

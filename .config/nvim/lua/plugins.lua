@@ -36,6 +36,7 @@ return require("packer").startup {
             { "p00f/nvim-ts-rainbow", event = "BufReadPre" },
             { "nvim-treesitter/nvim-treesitter-textobjects", event = "BufReadPost" },
             { "nvim-treesitter/nvim-treesitter-refactor", after = "scnvim" },
+            { "nvim-treesitter/playground", cmd = { "TSPlaygroundToggle", "TSHighlightCapturesUnderCursor" } },
         }
 
         -- Fold text
@@ -358,5 +359,6 @@ return require("packer").startup {
     config = {
         compile_path = require("packer.util").join_paths(fn.stdpath "config", "lua", "packer_compiled.lua"),
         profile = { enable = true, threshold = 0 },
+        autoremove = true,
     },
 }

@@ -221,6 +221,22 @@ function utils.dictionary(cmd)
     Exec('!qutebrowser "' .. url .. '"')
 end
 
+local transparent = false
+function utils.trans()
+    local colo = Api.nvim_exec("colo", true)
+    if colo == "dayfox" or colo == "dawnfox" then
+        print "Error: Transparent background does not work with a light colorscheme!"
+        return
+    end
+    transparent = not transparent
+    require("nightfox").setup {
+        options = {
+            transparent = transparent,
+        },
+    }
+    vim.cmd("colo " .. colo)
+end
+
 ------------------------------------------------------------------------
 --                          User commands                             --
 ------------------------------------------------------------------------
