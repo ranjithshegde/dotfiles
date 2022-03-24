@@ -15,33 +15,15 @@
            (list_marker_plus)
            (list_marker_star)] @text.strong (#set! conceal "•"))))))
 
-; ([
-;   (atx_h1_marker)
-;   (atx_h2_marker)
-;   (atx_h3_marker)
-;   (atx_h4_marker)
-;   (atx_h5_marker)
-;   (atx_h6_marker)
-; ] @_conceal
-; (#set! conceal ""))
-
 ([
   (atx_h1_marker)
-] @text.strong
-(#set! conceal "."))
-
-
-([
   (atx_h2_marker)
-] @text.emphasis
-(#set! conceal "-"))
-
-
-([
   (atx_h3_marker)
+  (atx_h4_marker)
+  (atx_h5_marker)
+  (atx_h6_marker)
 ] @_conceal
-(#set! conceal " "))
-
+(#set! conceal ""))
 
 ([
   (info_string)
