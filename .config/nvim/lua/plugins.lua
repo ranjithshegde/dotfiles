@@ -133,6 +133,20 @@ return require("packer").startup {
             },
         }
 
+        -- vim Orgmode
+        use {
+            "nvim-orgmode/orgmode",
+            ft = "org",
+            config = function()
+                require("orgmode").setup_ts_grammar()
+                require("orgmode").setup {
+                    org_agenda_files = "~/Documents/Orgs/*",
+                    org_highlight_latex_and_related = "entities",
+                    emacs_config = { config_path = "$XDG_CONFIG_HOME/emacs/init.el" },
+                }
+            end,
+        }
+
         -- Colorizer
         use {
             "afonsocraposo/nvim-colorizer.lua",
@@ -188,29 +202,6 @@ return require("packer").startup {
                     end,
                 })
             end,
-        }
-
-        -- vim Orgmode
-        use {
-            {
-                "nvim-orgmode/orgmode",
-                ft = "org",
-                config = function()
-                    require("orgmode").setup_ts_grammar()
-                    require("orgmode").setup {
-                        org_agenda_files = "~/Documents/Orgs/*",
-                        org_highlight_latex_and_related = "entities",
-                        emacs_config = { config_path = "$XDG_CONFIG_HOME/emacs/init.el" },
-                    }
-                end,
-            },
-            {
-                "akinsho/org-bullets.nvim",
-                after = "orgmode",
-                config = function()
-                    require("org-bullets").setup {}
-                end,
-            },
         }
 
         -- Indents and chars
