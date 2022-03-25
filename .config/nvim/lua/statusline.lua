@@ -17,10 +17,12 @@ Statusline.el = function()
     local lsp_statusline = require "el.plugins.lsp_status"
 
     --*********************************** File Icon ---------------------------------
-    local file_icon = subscribe.buf_autocmd("el_file_icon", "BufRead", function(_, bufnr)
-        local icon = extensions.file_icon(_, bufnr)
+    local file_icon = subscribe.buf_autocmd("el_file_icon", "BufRead", function(_, buffer)
+        local icon, color = require("nvim-web-devicons").get_icon_color(buffer.name, buffer.extension)
         if icon then
-            return icon .. " "
+            local table = Api.nvim_get_hl_by_name("Statusline", true)
+            Api.nvim_set_hl(0, "FileIcon", { bg = table["background"], fg = color, cterm = { bold = true } })
+            return icon .. space
         end
         return ""
     end)
@@ -89,16 +91,16 @@ Statusline.el = function()
 
     --*********************************** SuperCollider ---------------------------------
 
-    local scnvim = function()
-        if Api.nvim_buf_get_option(0, "filetype") == "supercollider" then
+    local scnvim = function(_, buffer)
+        if Api.nvim_buf_get_option(buffer.bufnr, "filetype") == "supercollider" then
             local scstatus = "📡" .. vim.fn["scnvim#statusline#server_status"]()
             Api.nvim_set_hl(0, "ScStatus", { bg = Colors.blue, fg = Colors.bg })
             return scstatus
         end
     end
 
-    local scContext = function()
-        if Api.nvim_buf_get_option(0, "filetype") == "supercollider" then
+    local scContext = function(_, buffer)
+        if Api.nvim_buf_get_option(buffer.bufnr, "filetype") == "supercollider" then
             local f = require("nvim-treesitter").statusline {
                 indicator_size = 100,
                 type_patterns = {
@@ -152,7 +154,6 @@ Statusline.el = function()
                 sections.highlight("ElViMode", mode),
                 sections.highlight("DiagnosticWarn", git_branch),
                 space,
-                -- sections.highlight("DiagnosticInfo", extensions.git_changes),
                 git_changes,
                 space,
                 sections.split,
@@ -160,17 +161,26 @@ Statusline.el = function()
                 sections.highlight("ScStatus", scnvim),
                 sections.highlight("ScStatus", scContext),
                 sections.split,
-                sections.highlight("DevIconH", file_icon),
-                sections.highlight("Filename", builtin.tail_file),
-                sections.collapse_builtin { " ", builtin.modified_flag },
-                space,
-                builtin.line_with_width(3),
-                ":",
-                builtin.column_with_width(2),
-                space,
-                sections.highlight("DiagnosticSignWarn", builtin.percentage_through_file),
+                sections.highlight("FileIcon", file_icon),
+                sections.highlight("Statusline", builtin.tail_file),
+                sections.collapse_builtin {
+                    space,
+                    builtin.modified_flag,
+                    space,
+                    space,
+                    builtin.line_number,
+                    ":",
+                    builtin.column_number,
+                    space,
+                },
+                sections.collapse_builtin {
+                    "[ ",
+                    builtin.help_list,
+                    builtin.readonly_list,
+                    " ]",
+                },
+                sections.highlight("DiagnosticWarn", builtin.percentage_through_file),
                 sections.highlight("DiagnosticWarn", scroll),
-                sections.collapse_builtin { builtin.help_list, builtin.readonly_list },
             }
         end,
     }
