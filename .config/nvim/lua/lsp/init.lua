@@ -45,10 +45,6 @@ function lsp.attach(client, bufnr)
 
     local rc = client.resolved_capabilities
     if rc.document_highlight then
-        -- Api.nvim_set_hl(0, "LspReferenceRead", { cterm = { bold = true }, ctermbg = "red", bg = Colors.cyan })
-        -- Api.nvim_set_hl(0, "LspReferenceText", { cterm = { bold = true }, ctermbg = "red", bg = "grey" })
-        -- Api.nvim_set_hl(0, "LspReferenceWrite", { cterm = { bold = true }, ctermbg = "red", bg = Colors.white })
-
         AuGroup("LspHighlightSymbols", {})
         AuCmd("CursorHold", {
             group = "LspHighlightSymbols",
@@ -78,6 +74,10 @@ end
 -- **************************** Ccls reduction function-----------------
 function lsp.cinit(client)
     require("mappings").nvim_lsp()
+    local ok, lsp_status = pcall(require, "lsp-status")
+    if ok then
+        lsp_status.register_progress()
+    end
     client.server_capabilities.completionProvider = false
     local rc = client.resolved_capabilities
     rc.document_formatting = false
