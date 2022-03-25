@@ -36,6 +36,7 @@ return require("packer").startup {
             { "p00f/nvim-ts-rainbow", event = "BufReadPre" },
             { "nvim-treesitter/nvim-treesitter-textobjects", event = "BufReadPost" },
             { "nvim-treesitter/nvim-treesitter-refactor", after = "scnvim" },
+            { "nvim-treesitter/playground", cmd = { "TSPlaygroundToggle", "TSHighlightCapturesUnderCursor" } },
         }
 
         -- Fold text
@@ -132,6 +133,20 @@ return require("packer").startup {
             },
         }
 
+        -- vim Orgmode
+        use {
+            "nvim-orgmode/orgmode",
+            ft = "org",
+            config = function()
+                require("orgmode").setup_ts_grammar()
+                require("orgmode").setup {
+                    org_agenda_files = "~/Documents/Orgs/*",
+                    org_highlight_latex_and_related = "entities",
+                    emacs_config = { config_path = "$XDG_CONFIG_HOME/emacs/init.el" },
+                }
+            end,
+        }
+
         -- Colorizer
         use {
             "afonsocraposo/nvim-colorizer.lua",
@@ -189,29 +204,6 @@ return require("packer").startup {
             end,
         }
 
-        -- vim Orgmode
-        use {
-            {
-                "nvim-orgmode/orgmode",
-                ft = "org",
-                config = function()
-                    require("orgmode").setup_ts_grammar()
-                    require("orgmode").setup {
-                        org_agenda_files = "~/Documents/Orgs/*",
-                        org_highlight_latex_and_related = "entities",
-                        emacs_config = { config_path = "$XDG_CONFIG_HOME/emacs/init.el" },
-                    }
-                end,
-            },
-            {
-                "akinsho/org-bullets.nvim",
-                after = "orgmode",
-                config = function()
-                    require("org-bullets").setup {}
-                end,
-            },
-        }
-
         -- Indents and chars
         use {
             "lukas-reineke/indent-blankline.nvim",
@@ -223,7 +215,6 @@ return require("packer").startup {
                     show_end_of_line = true,
                     use_treesitter = true,
                 }
-                vim.cmd "let g:indent_blankline_filetype_exclude+=['taglist']"
                 -- stylua: ignore
                 local context = {
                     "^for", "^case", "block", "^table", "return", "^while", "^public", "^switch",
@@ -240,7 +231,8 @@ return require("packer").startup {
         --Lsp config and companions
         use {
             "neovim/nvim-lspconfig",
-            { "nvim-lua/lsp-status.nvim", opt = true },
+            -- { "nvim-lua/lsp-status.nvim", opt = true },
+            "nvim-lua/lsp-status.nvim",
             {
                 "folke/lua-dev.nvim",
                 ft = "lua",
@@ -339,5 +331,6 @@ return require("packer").startup {
     config = {
         compile_path = require("packer.util").join_paths(fn.stdpath "config", "lua", "packer_compiled.lua"),
         profile = { enable = true, threshold = 0 },
+        autoremove = true,
     },
 }

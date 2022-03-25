@@ -5,10 +5,6 @@ local servers = {}
 ------------------------------------------------------------------------
 
 function servers.clangd()
-    if not package.loaded["lsp.settings"] then
-        require("lsp").settings()
-    end
-
     require("clangd_extensions").setup {
         server = {
             on_attach = require("lsp").attach,

@@ -4,7 +4,7 @@ local o = vim.opt
 require("impatient").enable_profile()
 
 function settings.options()
-    vim.cmd "colo nightfox"
+    vim.cmd "colo duskfox"
     local tab = 4
     -- o.list = true
     o.number = true
@@ -23,12 +23,23 @@ function settings.options()
     o.updatetime = 300
     o.timeoutlen = 100
     o.conceallevel = 1
+    o.laststatus = 3
     o.foldmethod = "expr"
     o.inccommand = "split"
     o.spelloptions = "camel"
     o.grepprg = "rg --vimgrep --smart-case --hidden"
     o.grepformat = "%f:%l:%c:%m"
-    o.fillchars = "stlnc:»,vert:║,fold:."
+    o.fillchars = {
+        fold = ".",
+        horiz = "━",
+        horizup = "┻",
+        horizdown = "┳",
+        stlnc = "»",
+        vert = "┃",
+        vertleft = "┫",
+        vertright = "┣",
+        verthoriz = "╋",
+    }
     o.listchars:append "eol:↲"
     -- o.listchars = "tab:<->,eol:↲,space:→"
     o.foldexpr = "nvim_treesitter#foldexpr()"

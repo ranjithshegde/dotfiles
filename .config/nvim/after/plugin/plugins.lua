@@ -16,7 +16,11 @@ cmd("Agenda", function()
     require("utils").agenda()
 end, {})
 
-cmd("ClearBack", "call util#transparency()", {})
+cmd("ToggleTransparency", function()
+    require("utils").trans()
+end, {})
+
+-- cmd("ClearBack", "call util#transparency()", {})
 cmd("Gram", "call util#WordProcessor()", {})
 cmd("Cam", "call util#CamelCase()", {})
 cmd("Su", "call util#sudoWrite()", {})

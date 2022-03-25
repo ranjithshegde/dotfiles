@@ -7,6 +7,7 @@ local ts = {}
 function ts.init()
     local ft_to_parser = require("nvim-treesitter.parsers").filetype_to_parsername
     ft_to_parser.opencl = "c"
+    ft_to_parser.vimwiki = "markdown"
     require("nvim-treesitter.configs").setup {
         ensure_installed = {
             "bash",
@@ -25,7 +26,6 @@ function ts.init()
             "lua",
             "make",
             "markdown",
-            "org",
             "python",
             "query",
             "regex",
@@ -33,6 +33,7 @@ function ts.init()
             "toml",
             "vim",
             "yaml",
+            "org",
         },
         highlight = {
             enable = true,
@@ -99,32 +100,32 @@ function ts.init()
             swap = {
                 enable = true,
                 swap_next = {
-                    [";ss"] = "@statement.outer",
-                    [";sp"] = "@parameter.inner",
-                    [";sP"] = "@parameter.outer",
-                    [";sF"] = "@function.inner",
-                    [";sf"] = "@function.outer",
-                    [";sc"] = "@conditional.outer",
-                    [";sC"] = "@conditional.inner",
-                    [";sl"] = "@loop.outer",
-                    [";sL"] = "@loop.inner",
-                    [";so"] = "@comment.outer",
-                    [";sa"] = "@call.outer",
-                    [";sA"] = "@call.inner",
+                    ["cxas"] = "@statement.outer",
+                    ["cxip"] = "@parameter.inner",
+                    ["cxap"] = "@parameter.outer",
+                    ["cxif"] = "@function.inner",
+                    ["cxaf"] = "@function.outer",
+                    ["cxac"] = "@conditional.outer",
+                    ["cxic"] = "@conditional.inner",
+                    ["cxal"] = "@loop.outer",
+                    ["cxil"] = "@loop.inner",
+                    ["cxao"] = "@comment.outer",
+                    ["cxia"] = "@call.outer",
+                    ["cxaa"] = "@call.inner",
                 },
                 swap_previous = {
-                    [";Ss"] = "@statement.outer",
-                    [";Sp"] = "@parameter.inner",
-                    [";SP"] = "@parameter.outer",
-                    [";SF"] = "@function.inner",
-                    [";Sf"] = "@function.outer",
-                    [";Sc"] = "@conditional.outer",
-                    [";SC"] = "@conditional.inner",
-                    [";Sl"] = "@loop.outer",
-                    [";SL"] = "@loop.inner",
-                    [";So"] = "@comment.outer",
-                    [";Sa"] = "@call.outer",
-                    [";SA"] = "@call.inner",
+                    ["cXas"] = "@statement.outer",
+                    ["cXip"] = "@parameter.inner",
+                    ["cXaP"] = "@parameter.outer",
+                    ["cXif"] = "@function.inner",
+                    ["cXaf"] = "@function.outer",
+                    ["cXac"] = "@conditional.outer",
+                    ["cXic"] = "@conditional.inner",
+                    ["cXal"] = "@loop.outer",
+                    ["cXil"] = "@loop.inner",
+                    ["cXao"] = "@comment.outer",
+                    ["cXaa"] = "@call.outer",
+                    ["cXia"] = "@call.inner",
                 },
             },
             lsp_interop = {
@@ -140,7 +141,6 @@ function ts.init()
         },
         refactor = {
             highlight_definitions = { enable = true },
-            highlight_current_scope = { enable = true },
             navigation = {
                 enable = true,
                 keymaps = {
@@ -162,6 +162,7 @@ function ts.init()
             enable = true,
             extended_mode = true,
         },
+        playground = { enable = true, updatetime = 25, persist_queries = false },
     }
 end
 

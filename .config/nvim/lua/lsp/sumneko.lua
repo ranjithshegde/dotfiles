@@ -5,9 +5,6 @@ local servers = {}
 ------------------------------------------------------------------------
 
 function servers.sumneko()
-    if not package.loaded["lsp.settings"] then
-        require("lsp").settings()
-    end
     local luadev = require("lua-dev").setup {
         library = { plugins = { "plenary.nvim", "telescope.nvim", "express_line.nvim", "nvim-lspconfig" } },
         lspconfig = {

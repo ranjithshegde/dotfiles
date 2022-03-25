@@ -1,7 +1,11 @@
+local Statusline = {}
+
+-- Blank Between Components
+local space = " "
+
 ------------------------------------------------------------------------
 --                              statusline                            --
 ------------------------------------------------------------------------
-local Statusline = {}
 
 Statusline.el = function()
     require("el").reset_windows()
@@ -11,13 +15,14 @@ Statusline.el = function()
     local sections = require "el.sections"
     local subscribe = require "el.subscribe"
     local lsp_statusline = require "el.plugins.lsp_status"
-    local separators = { left = "  ", right = "  " }
 
     --*********************************** File Icon ---------------------------------
-    local file_icon = subscribe.buf_autocmd("el_file_icon", "BufRead", function(_, bufnr)
-        local icon = extensions.file_icon(_, bufnr)
+    local file_icon = subscribe.buf_autocmd("el_file_icon", "BufRead", function(_, buffer)
+        local icon, color = require("nvim-web-devicons").get_icon_color(buffer.name, buffer.extension)
         if icon then
-            return icon .. " "
+            local table = Api.nvim_get_hl_by_name("Statusline", true)
+            Api.nvim_set_hl(0, "FileIcon", { bg = table["background"], fg = color, cterm = { bold = true } })
+            return icon .. space
         end
         return ""
     end)
@@ -81,22 +86,21 @@ Statusline.el = function()
                 index = 1
             end
         end
-        Api.nvim_set_hl(0, "ElScroll", { fg = Colors.purple, bg = Colors.yellow })
         return chars[index]
     end
 
     --*********************************** SuperCollider ---------------------------------
 
-    local scnvim = function()
-        if Api.nvim_buf_get_option(0, "filetype") == "supercollider" then
+    local scnvim = function(_, buffer)
+        if Api.nvim_buf_get_option(buffer.bufnr, "filetype") == "supercollider" then
             local scstatus = "📡" .. vim.fn["scnvim#statusline#server_status"]()
             Api.nvim_set_hl(0, "ScStatus", { bg = Colors.blue, fg = Colors.bg })
             return scstatus
         end
     end
 
-    local scContext = function()
-        if Api.nvim_buf_get_option(0, "filetype") == "supercollider" then
+    local scContext = function(_, buffer)
+        if Api.nvim_buf_get_option(buffer.bufnr, "filetype") == "supercollider" then
             local f = require("nvim-treesitter").statusline {
                 indicator_size = 100,
                 type_patterns = {
@@ -121,8 +125,11 @@ Statusline.el = function()
 
     --*********************************** Git branch ---------------------------------
     local git_branch = subscribe.buf_autocmd("el_git_branch", "BufReadPre", function(window, buffer)
+        local ft = Api.nvim_buf_get_option(buffer.bufnr, "filetype")
+        if ft == "TelescopePrompt" then
+            return
+        end
         local branch = extensions.git_branch(window, buffer)
-        Api.nvim_set_hl(0, "ElGitBranch", { bg = Colors.bg, fg = Colors.yellow })
         if branch then
             vim.cmd "PackerLoad gitsigns.nvim"
             return " " .. extensions.git_icon() .. " " .. branch
@@ -131,8 +138,17 @@ Statusline.el = function()
 
     --*********************************** Git sign changes ---------------------------------
     local git_changes = subscribe.buf_autocmd("el_git_changes", "BufWritePost", function(window, buffer)
-        Api.nvim_set_hl(0, "ElGitDiff", { bg = Colors.bg, fg = Colors.blue })
-        return extensions.git_changes(window, buffer)
+        local st = extensions.git_changes(window, buffer)
+        if not st then
+            return
+        end
+        local add = st:match "+%d*"
+        add = add:gsub("+", " ")
+        local change = st:match "~%d*"
+        change = change:gsub("~", " ")
+        local cut = st:match "-%d*"
+        cut = cut:gsub("-", " ")
+        return "%#GitGutterAdd# " .. add .. "%#GitGutterChange# " .. change .. "%#GitGutterDelete# " .. cut .. "%# #"
     end)
 
     --*********************************** Status config ---------------------------------
@@ -140,28 +156,35 @@ Statusline.el = function()
         generator = function(_, _)
             return {
                 sections.highlight("ElViMode", mode),
-                sections.highlight("ElGitBranch", git_branch),
-                separators.left,
-                sections.highlight("ElGitDiff", git_changes),
-                separators.left,
+                sections.highlight("DiagnosticWarn", git_branch),
+                space,
+                git_changes,
+                space,
                 sections.split,
-                sections.highlight("Diag", lsp_statusline.segment),
-                sections.split,
+                lsp_statusline.segment,
                 sections.highlight("ScStatus", scnvim),
                 sections.highlight("ScStatus", scContext),
-                lsp_statusline.server_progress,
                 sections.split,
-                sections.highlight("DevIconH", file_icon),
-                sections.highlight("Filename", builtin.tail_file),
-                sections.collapse_builtin { " ", builtin.modified_flag },
-                separators.right,
-                builtin.line_with_width(3),
-                ":",
-                builtin.column_with_width(2),
-                separators.left,
-                sections.highlight("ElGitBranch", builtin.percentage_through_file),
-                sections.highlight("ElScroll", scroll),
-                sections.collapse_builtin { builtin.help_list, builtin.readonly_list },
+                sections.highlight("FileIcon", file_icon),
+                sections.highlight("Statusline", builtin.tail_file),
+                sections.collapse_builtin {
+                    space,
+                    builtin.modified_flag,
+                    space,
+                    space,
+                    builtin.line_number,
+                    ":",
+                    builtin.column_number,
+                    space,
+                },
+                sections.collapse_builtin {
+                    "[ ",
+                    builtin.help_list,
+                    builtin.readonly_list,
+                    " ]",
+                },
+                sections.highlight("DiagnosticWarn", builtin.percentage_through_file),
+                sections.highlight("DiagnosticWarn", scroll),
             }
         end,
     }
@@ -171,70 +194,65 @@ end
 --                              TabLine                               --
 ------------------------------------------------------------------------
 
--- Separators
-local right_separator = " ❯❯ "
-local left_separator = " ❮❮ "
--- Blank Between Components
-local space = " "
-
---*********************************** File label ---------------------------------
+--*********************************** File label -----------------------
 local getTabLabel = function(n)
     local current_win = Api.nvim_tabpage_get_win(n)
     local current_buf = Api.nvim_win_get_buf(current_win)
     local file_name = Api.nvim_buf_get_name(current_buf)
-    if string.find(file_name, "term://") ~= nil then
-        return " " .. vim.fn.fnamemodify(file_name, ":p:t")
-    end
-    file_name = vim.fn.fnamemodify(file_name, ":p:t")
-    if file_name == "" then
-        return "No Name"
+
+    local tail = vim.fn.fnamemodify(file_name, ":p:t")
+    if tail == "" then
+        return { "Empty buffer" }
     end
 
-    local ext = vim.fn.fnamemodify(file_name, ":e")
-    local icon = require("nvim-web-devicons").get_icon(file_name, ext)
-    if icon ~= nil then
-        return icon .. space .. file_name
+    local ext = nil
+    if string.find(file_name, "term://") ~= nil then
+        ext = "terminal"
+    else
+        ext = vim.fn.fnamemodify(tail, ":e")
     end
-    return file_name
+
+    local icon, color = require("nvim-web-devicons").get_icon_color(tail, ext)
+    if icon ~= nil then
+        local table = Api.nvim_get_hl_by_name("TablineSel", true)
+        Api.nvim_set_hl(0, "IconColor", { bg = table["background"], fg = color, cterm = { bold = true } })
+        return { tail, icon }
+    else
+        return { tail }
+    end
 end
 
--- *********************************** Highlight groups ---------------------------------
--- Set tabline colours
-local set_colours = function()
-    Api.nvim_set_hl(0, "TabLineSel", { bg = Colors.bg, fg = Colors.white })
-    Api.nvim_set_hl(0, "TabLineSelSeparator", { bg = Colors.bg, fg = Colors.white })
-    Api.nvim_set_hl(0, "TabLine", { fg = Colors.purple })
-    Api.nvim_set_hl(0, "TabLineSeparator", { fg = Colors.purple })
-    Api.nvim_set_hl(0, "TabLineFill", {})
+--*********************************** File path ------------------------
+local rootDir = function()
+    local val = vim.fn.expand "%"
+    if string.find(val, "term://") ~= nil then
+        val = " " .. vim.fn.fnamemodify(val, ":p:t")
+    elseif val ~= "" then
+        val = "🗀 " .. val
+    end
+    return val
 end
 
 --*********************************** Tabline module ---------------------------------
 function Statusline.tabs()
-    set_colours()
     local tabline = ""
     local tab_list = Api.nvim_list_tabpages()
     local current_tab = Api.nvim_get_current_tabpage()
     for _, val in ipairs(tab_list) do
-        local file_name = getTabLabel(val)
+        local name = getTabLabel(val)
         if val == current_tab then
-            tabline = tabline .. " %#StatusLine#" .. left_separator
-            tabline = tabline .. "%#StatusLine# " .. file_name
-            tabline = tabline .. " %#StatusLine#" .. right_separator
+            if name[2] then
+                tabline = tabline .. "%#IconColor#" .. space .. name[2] .. "%#TabLineSel# " .. name[1] .. space
+            else
+                tabline = tabline .. space .. "%#TabLineSel# " .. name[1] .. space
+            end
         else
-            tabline = tabline .. " %#StatusLineNC#" .. left_separator
-            tabline = tabline .. "%#StatusLineNC# " .. file_name
-            tabline = tabline .. " %#StatusLineNC#" .. right_separator
+            tabline = tabline .. space .. "%#TabLine# " .. name[1] .. space
         end
     end
-    tabline = tabline .. "%="
-    tabline = tabline
-        .. "%#StatusLine#"
-        .. left_separator
-        .. "%#StatusLine# "
-        .. vim.fn.expand "%"
-        .. "%#StatusLine#"
-        .. right_separator
-    tabline = tabline .. space
+    tabline = tabline .. "%#TabLineFill#" .. "%="
+    tabline = tabline .. "%#TabLineSel# " .. rootDir() .. space
     return tabline
 end
+
 return Statusline

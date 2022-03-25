@@ -37,9 +37,9 @@ function lsp.attach(client, bufnr)
 
     local rc = client.resolved_capabilities
     if rc.document_highlight then
-        Api.nvim_set_hl(0, "LspReferenceRead", { cterm = { bold = true }, ctermbg = "red", bg = Colors.green })
-        Api.nvim_set_hl(0, "LspReferenceText", { cterm = { bold = true }, ctermbg = "red", bg = "grey" })
-        Api.nvim_set_hl(0, "LspReferenceWrite", { cterm = { bold = true }, ctermbg = "red", bg = Colors.white })
+        -- Api.nvim_set_hl(0, "LspReferenceRead", { cterm = { bold = true }, ctermbg = "red", bg = Colors.cyan })
+        -- Api.nvim_set_hl(0, "LspReferenceText", { cterm = { bold = true }, ctermbg = "red", bg = "grey" })
+        -- Api.nvim_set_hl(0, "LspReferenceWrite", { cterm = { bold = true }, ctermbg = "red", bg = Colors.white })
 
         AuGroup("LspHighlightSymbols", {})
         AuCmd("CursorHold", {
@@ -87,6 +87,7 @@ function lsp.cinit(client)
     rc.code_action = false
 end
 
+-- **************************** Attach without formatting --------------
 function lsp.efm(client, bufnr)
     lsp.attach(client, bufnr)
     client.resolved_capabilities.document_formatting = false
