@@ -231,8 +231,7 @@ return require("packer").startup {
         --Lsp config and companions
         use {
             "neovim/nvim-lspconfig",
-            -- { "nvim-lua/lsp-status.nvim", opt = true },
-            "nvim-lua/lsp-status.nvim",
+            { "nvim-lua/lsp-status.nvim", opt = true },
             {
                 "folke/lua-dev.nvim",
                 ft = "lua",

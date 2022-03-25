@@ -14,9 +14,8 @@ Statusline.el = function()
     local extensions = require "el.extensions"
     local sections = require "el.sections"
     local subscribe = require "el.subscribe"
-    local lsp_statusline = require "el.plugins.lsp_status"
 
-    --*********************************** File Icon ---------------------------------
+    --*********************************** File Icon -------------------------
     local file_icon = subscribe.buf_autocmd("el_file_icon", "BufRead", function(_, buffer)
         local icon, color = require("nvim-web-devicons").get_icon_color(buffer.name, buffer.extension)
         if icon then
@@ -27,7 +26,7 @@ Statusline.el = function()
         return ""
     end)
 
-    --*********************************** Vim Mode ---------------------------------
+    --*********************************** Vim Mode --------------------------
     local mode = function()
         local alias = {
             n = "  ☉ ",
@@ -58,7 +57,7 @@ Statusline.el = function()
         return current_mode
     end
 
-    --*********************************** Scroll position ---------------------------------
+    --*********************************** Scroll position -------------------
     local scroll = function()
         local current_line = vim.fn.line "."
         local total_lines = vim.fn.line "$"
@@ -89,7 +88,7 @@ Statusline.el = function()
         return chars[index]
     end
 
-    --*********************************** SuperCollider ---------------------------------
+    --*********************************** SuperCollider ---------------------
 
     local scnvim = function(_, buffer)
         if Api.nvim_buf_get_option(buffer.bufnr, "filetype") == "supercollider" then
@@ -123,8 +122,12 @@ Statusline.el = function()
         end
     end
 
-    --*********************************** Git branch ---------------------------------
+    --*********************************** Git branch ------------------------
     local git_branch = subscribe.buf_autocmd("el_git_branch", "BufReadPre", function(window, buffer)
+        local ft = Api.nvim_buf_get_option(buffer.bufnr, "filetype")
+        if ft == "TelescopePrompt" then
+            return
+        end
         local branch = extensions.git_branch(window, buffer)
         if branch then
             vim.cmd "PackerLoad gitsigns.nvim"
@@ -132,7 +135,7 @@ Statusline.el = function()
         end
     end)
 
-    --*********************************** Git sign changes ---------------------------------
+    --*********************************** Git sign changes ------------------
     local git_changes = subscribe.buf_autocmd("el_git_changes", "BufWritePost", function(window, buffer)
         local st = extensions.git_changes(window, buffer)
         if not st then
@@ -147,7 +150,18 @@ Statusline.el = function()
         return "%#GitGutterAdd# " .. add .. "%#GitGutterChange# " .. change .. "%#GitGutterDelete# " .. cut .. "%# #"
     end)
 
-    --*********************************** Status config ---------------------------------
+    --*********************************** Lsp status  -----------------------
+    local lspstatus = function(_, buffer)
+        local has_lsp_status, lsp_status = pcall(require, "lsp-status")
+        if not buffer.lsp or not has_lsp_status then
+            return ""
+        end
+
+        local ok, result = pcall(lsp_status.status)
+        return ok and result or ""
+    end
+
+    --*********************************** Status config ---------------------
     require("el").setup {
         generator = function(_, _)
             return {
@@ -157,7 +171,7 @@ Statusline.el = function()
                 git_changes,
                 space,
                 sections.split,
-                lsp_statusline.segment,
+                lspstatus,
                 sections.highlight("ScStatus", scnvim),
                 sections.highlight("ScStatus", scContext),
                 sections.split,
