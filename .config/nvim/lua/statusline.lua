@@ -84,7 +84,6 @@ Statusline.el = function()
                 index = 1
             end
         end
-        Api.nvim_set_hl(0, "ElScroll", { fg = Colors.purple, bg = Colors.yellow })
         return chars[index]
     end
 
@@ -125,7 +124,6 @@ Statusline.el = function()
     --*********************************** Git branch ---------------------------------
     local git_branch = subscribe.buf_autocmd("el_git_branch", "BufReadPre", function(window, buffer)
         local branch = extensions.git_branch(window, buffer)
-        Api.nvim_set_hl(0, "ElGitBranch", { bg = Colors.bg, fg = Colors.yellow })
         if branch then
             vim.cmd "PackerLoad gitsigns.nvim"
             return " " .. extensions.git_icon() .. " " .. branch
