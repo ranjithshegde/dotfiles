@@ -26,7 +26,6 @@ function ts.init()
             "lua",
             "make",
             "markdown",
-            "org",
             "python",
             "query",
             "regex",
@@ -34,6 +33,7 @@ function ts.init()
             "toml",
             "vim",
             "yaml",
+            "org",
         },
         highlight = {
             enable = true,

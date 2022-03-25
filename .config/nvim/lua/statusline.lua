@@ -134,8 +134,17 @@ Statusline.el = function()
 
     --*********************************** Git sign changes ---------------------------------
     local git_changes = subscribe.buf_autocmd("el_git_changes", "BufWritePost", function(window, buffer)
-        Api.nvim_set_hl(0, "ElGitDiff", { bg = Colors.bg, fg = Colors.blue })
-        return extensions.git_changes(window, buffer)
+        local st = extensions.git_changes(window, buffer)
+        if not st then
+            return
+        end
+        local add = st:match "+%d*"
+        add = add:gsub("+", " ")
+        local change = st:match "~%d*"
+        change = change:gsub("~", " ")
+        local cut = st:match "-%d*"
+        cut = cut:gsub("-", " ")
+        return "%#GitGutterAdd# " .. add .. "%#GitGutterChange# " .. change .. "%#GitGutterDelete# " .. cut .. "%# #"
     end)
 
     --*********************************** Status config ---------------------------------
@@ -145,7 +154,8 @@ Statusline.el = function()
                 sections.highlight("ElViMode", mode),
                 sections.highlight("DiagnosticWarn", git_branch),
                 space,
-                sections.highlight("DiagnosticInfo", git_changes),
+                -- sections.highlight("DiagnosticInfo", extensions.git_changes),
+                git_changes,
                 space,
                 sections.split,
                 lsp_statusline.segment,

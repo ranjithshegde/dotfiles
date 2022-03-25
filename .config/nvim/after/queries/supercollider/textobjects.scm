@@ -25,6 +25,12 @@ false:(function_block)? @conditional.inner
 (_) @block.inner
 ) @block.outer
 
+; (class
+; ([((function_call)(_))
+; ((method_call)(_))
+; ]) @class.inner
+; ) @class.outer
+
 (line_comment) @comment.outer
 (block_comment) @comment.outer
 
