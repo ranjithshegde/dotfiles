@@ -308,13 +308,12 @@ return require("packer").startup {
 
         -- completion and snippets
         use {
-            "L3MON4D3/LuaSnip",
+            { "L3MON4D3/LuaSnip", commit = "468a3f8435c94af4352c330a7e113a8078b207af" },
             "hrsh7th/cmp-nvim-lsp",
             { "hrsh7th/cmp-path", after = "nvim-cmp" },
-            { "saadparwaiz1/cmp_luasnip", after = "nvim-cmp" },
+            { "saadparwaiz1/cmp_luasnip", after = "nvim-cmp", commit = "d6f837f4e8fe48eeae288e638691b91b97d1737f" },
             {
                 "hrsh7th/nvim-cmp",
-                -- branch = "dev",
                 after = "friendly-snippets",
                 config = function()
                     require("settings.completion").init()
