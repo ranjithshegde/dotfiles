@@ -89,7 +89,6 @@ Statusline.el = function()
     end
 
     --*********************************** SuperCollider ---------------------
-
     local scnvim = function(_, buffer)
         if Api.nvim_buf_get_option(buffer.bufnr, "filetype") == "supercollider" then
             local scstatus = "📡" .. vim.fn["scnvim#statusline#server_status"]()
@@ -114,9 +113,8 @@ Statusline.el = function()
                 },
             }
             local context = string.format("%s", f)
-
-            if context == "vim.NIL" then
-                return "   "
+            if context == "" then
+                return ""
             end
             return "  " .. context
         end
@@ -169,11 +167,10 @@ Statusline.el = function()
                 sections.highlight("DiagnosticWarn", git_branch),
                 space,
                 git_changes,
-                space,
                 sections.split,
                 lspstatus,
                 sections.highlight("ScStatus", scnvim),
-                sections.highlight("ScStatus", scContext),
+                sections.highlight("", scContext),
                 sections.split,
                 sections.highlight("FileIcon", file_icon),
                 sections.highlight("Statusline", builtin.tail_file),

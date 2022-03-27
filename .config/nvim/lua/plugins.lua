@@ -4,7 +4,14 @@ local packer_path = fn.stdpath "data" .. "/site/pack/packer/start/packer.nvim"
 
 -- selfmanage packer
 if fn.empty(fn.glob(packer_path)) > 0 then
-    fn.system { "git", "clone", "--depth", "1", "https://github.com/wbthomason/packer.nvim", packer_path }
+    packer_bootstrap = fn.system {
+        "git",
+        "clone",
+        "--depth",
+        "1",
+        "https://github.com/wbthomason/packer.nvim",
+        packer_path,
+    }
 end
 
 --------------------------------------------------------------------------------------------------------
@@ -345,6 +352,10 @@ return require("packer").startup {
                 end,
             },
         }
+
+        if packer_bootstrap then
+            require("packer").sync()
+        end
     end,
     config = {
         compile_path = require("packer.util").join_paths(fn.stdpath "config", "lua", "packer_compiled.lua"),

@@ -33,10 +33,10 @@
 ] @_conceal
 (#set! conceal ""))
 
-(inline_link 
+(inline_link
   ["]"] @conceal
   (#set! conceal " "))
 
-(inline_link 
+(inline_link
   "["  @conceal
   (#set! conceal ""))

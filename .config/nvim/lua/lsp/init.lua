@@ -62,7 +62,7 @@ function lsp.attach(client, bufnr)
         AuGroup("LspAutoFormat", {})
         AuCmd("BufWrite", {
             group = "LspAutoFormat",
-            pattern = "*.html,*.css,*.js,*.hpp,*.h,*.sh,*.lua,*.cpp,*.json,*.py,*.yaml,*.toml,*.vs,*.fs,*.gs,*.vert,*.frag,*.geom,*.glsl",
+            pattern = "*.html,*.css,*.js,*.hpp,*.h,*.sh,*.lua,*.cpp,*.json,*.py,*.yaml,*.toml,*.vs,*.fs,*.gs,*.vert,*.frag,*.geom,*.glsl,*.dart",
             callback = function()
                 vim.lsp.buf.formatting_sync(nil, 500)
             end,
@@ -102,6 +102,9 @@ end
 
 function lsp.servers()
     local dict = os.getenv "XDG_CONFIG_HOME" .. "/nvim/spell/en.utf-8.add"
+    local nilfunc = function(...)
+        return nil
+    end
     local configs = {
         jsonls = { on_attach = lsp.efm },
         yamlls = { on_attach = lsp.attach },
@@ -117,12 +120,8 @@ function lsp.servers()
             on_init = lsp.cinit,
             filetypes = { "c", "cpp", "objc", "objcpp", "opencl" },
             handlers = {
-                ["textDocument/publishDiagnostics"] = function(...)
-                    return nil
-                end,
-                ["textDocument/signatureHelp"] = function(...)
-                    return nil
-                end,
+                ["textDocument/publishDiagnostics"] = nilfunc,
+                ["textDocument/signatureHelp"] = nilfunc,
             },
             single_file_support = true,
             root_dir = lspconfig.util.root_pattern("compile_commands.json", "compile_flags.txt", ".git"),

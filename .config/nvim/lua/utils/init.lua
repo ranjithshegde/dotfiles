@@ -16,15 +16,19 @@ function utils.UnloadAllModules()
         "lsp",
         "debugger",
     }
+    local ok, _ = pcall(require, "impatient")
+    if ok then
+        Exec "LuaCacheClear"
+    end
     RELOAD(unload_modules)
 end
 
 -- Restart Vim without having to close and run again
 function utils.Restart()
-    Exec "LspStop"
+    -- vim.cmd "LspStop"
     utils.UnloadAllModules()
-    Exec "source $MYVIMRC"
-    Exec "doautocmd VimEnter"
+    vim.cmd "source $MYVIMRC"
+    Api.nvim_exec_autocmd("VimEnter", {})
 end
 
 ------------------------------------------------------------------------
