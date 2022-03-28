@@ -82,7 +82,7 @@ end
 
 -- Count tex words
 function langSettings.TexWordCount()
-    local count = Api.nvim_exec([[silent !texcount -inc -sum -1 %]], true)
+    local count = vim.api.nvim_exec([[silent !texcount -inc -sum -1 %]], true)
     print(count)
 end
 
@@ -149,7 +149,7 @@ langSettings.chainIndex = {
     end,
 
     function()
-        local ft = Api.nvim_buf_get_option(0, "filetype")
+        local ft = vim.api.nvim_buf_get_option(0, "filetype")
         if chainList.filetype[ft] then
             for _, v in pairs(chainList.filetype[ft]) do
                 require("utils").feedkey(v, "n")

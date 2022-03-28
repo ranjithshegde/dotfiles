@@ -1,4 +1,7 @@
 local utils = {}
+local exec = vim.api.nvim_command
+local aucmd = vim.api.nvim_create_autocmd
+local augroup = vim.api.nvim_create_augroup
 
 ------------------------------------------------------------------------
 --                              Vim options                           --
@@ -18,7 +21,7 @@ function utils.UnloadAllModules()
     }
     local ok, _ = pcall(require, "impatient")
     if ok then
-        Exec "LuaCacheClear"
+        vim.cmd "LuaCacheClear"
     end
     RELOAD(unload_modules)
 end
@@ -28,7 +31,7 @@ function utils.Restart()
     -- vim.cmd "LspStop"
     utils.UnloadAllModules()
     vim.cmd "source $MYVIMRC"
-    Api.nvim_exec_autocmd("VimEnter", {})
+    vim.api.nvim_exec_autocmd("VimEnter", {})
 end
 
 ------------------------------------------------------------------------
@@ -38,8 +41,8 @@ end
 utils.autocmd = function()
     -- ************** FileTypes  ---------------------------------------
 
-    AuGroup("FormatOptions", {})
-    AuCmd("FileType", {
+    augroup("FormatOptions", {})
+    aucmd("FileType", {
         group = "FormatOptions",
         callback = function()
             vim.opt.formatoptions = vim.opt.formatoptions
@@ -55,13 +58,13 @@ utils.autocmd = function()
         end,
     })
 
-    AuGroup("LspSettings", {})
-    AuCmd("FileType", {
+    augroup("LspSettings", {})
+    aucmd("FileType", {
         group = "LspSettings",
         pattern = "vim",
         command = "nn <silent><buffer>,K <cmd>exe 'h '.expand('<cword>')<CR>",
     })
-    AuCmd("FileType", {
+    aucmd("FileType", {
         group = "LspSettings",
         callback = function()
             require("lsp").settings()
@@ -70,15 +73,15 @@ utils.autocmd = function()
         end,
         once = true,
     })
-    AuCmd("FileType", {
+    aucmd("FileType", {
         group = "LspSettings",
         pattern = "opencl",
         callback = require("mappings").clang,
     })
 
     -- ************** Compilers and REPL  ------------------------------
-    AuGroup("MakeDispatch", {})
-    AuCmd("FileType", {
+    augroup("MakeDispatch", {})
+    aucmd("FileType", {
         group = "MakeDispatch",
         pattern = "java,lua,python,javascript",
         callback = function()
@@ -93,22 +96,22 @@ utils.autocmd = function()
             end, { desc = "Toggle REPL" })
         end,
     })
-    AuCmd("BufWritePost", {
+    aucmd("BufWritePost", {
         group = "MakeDispatch",
         pattern = "*.glsl,*.vert,*.frag,*.geom,*.vs,*.fs,*.gs",
         command = "Dispatch glslangValidator %",
     })
 
     -- Compile packer after writing plugins.lua
-    AuGroup("PluginLoad", {})
-    AuCmd("BufWritePost", { group = "PluginLoad", pattern = "plugins.lua", command = "source <afile> | PackerCompile" })
+    augroup("PluginLoad", {})
+    aucmd("BufWritePost", { group = "PluginLoad", pattern = "plugins.lua", command = "source <afile> | PackerCompile" })
 
     -- ************************ Terminal management --------------------
 
-    AuGroup("TermInsertModes", {})
-    AuCmd("BufWinEnter, WinEnter", { group = "TermInsertModes", pattern = "term://*", command = "startinsert" })
-    AuCmd("TermEnter", { group = "TermInsertModes", command = "startinsert" })
-    AuCmd("TermClose", { group = "TermInsertModes", command = "call nvim_input('<CR>')" })
+    augroup("TermInsertModes", {})
+    aucmd("BufWinEnter, WinEnter", { group = "TermInsertModes", pattern = "term://*", command = "startinsert" })
+    aucmd("TermEnter", { group = "TermInsertModes", command = "startinsert" })
+    aucmd("TermClose", { group = "TermInsertModes", command = "call nvim_input('<CR>')" })
 end
 
 ------------------------------------------------------------------------
@@ -117,7 +120,7 @@ end
 
 -- set silent exec option
 function utils.silent_shell(cmd)
-    Exec("silent exe '!" .. cmd .. " &'")
+    exec("silent exe '!" .. cmd .. " &'")
 end
 
 -- Toggleable terminal
@@ -125,24 +128,24 @@ function utils.toggleTerm(cmd, name, spl)
     local win = vim.fn.bufwinnr(name)
     local buf = vim.fn.bufexists(name)
     if win > 0 then
-        Exec(win .. " wincmd c")
+        exec(win .. " wincmd c")
     elseif buf > 0 then
         if spl > 0 then
-            Exec "belowright vnew"
+            exec "belowright vnew"
         else
-            Exec "belowright new"
+            exec "belowright new"
         end
-        Exec("buffer " .. name)
-        Exec "startinsert"
+        exec("buffer " .. name)
+        exec "startinsert"
     else
         if spl > 0 then
-            Exec "belowright vnew"
+            exec "belowright vnew"
         else
-            Exec "belowright new"
+            exec "belowright new"
         end
         vim.fn.termopen(cmd)
-        Exec "startinsert"
-        Exec("f " .. name)
+        exec "startinsert"
+        exec("f " .. name)
     end
 end
 
@@ -206,28 +209,28 @@ utils.concat_fileLines = function(file)
 end
 
 utils.feedkey = function(key, mode)
-    Api.nvim_feedkeys(Api.nvim_replace_termcodes(key, true, true, true), mode, true)
+    vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes(key, true, true, true), mode, true)
 end
 
 -- Access agenda from outside orgfile
 function utils.agenda()
-    Exec "PackerLoad orgmode"
+    exec "PackerLoad orgmode"
     require("orgmode").action "agenda.prompt"
 end
 
 function utils.thesaurus(cmd)
     local url = "https://www.thesaurus.com/browse/" .. cmd
-    Exec('!qutebrowser "' .. url .. '"')
+    exec('!qutebrowser "' .. url .. '"')
 end
 
 function utils.dictionary(cmd)
     local url = "https://en.wiktionary.org/wiki/" .. cmd
-    Exec('!qutebrowser "' .. url .. '"')
+    exec('!qutebrowser "' .. url .. '"')
 end
 
 local transparent = false
 function utils.trans()
-    local colo = Api.nvim_exec("colo", true)
+    local colo = vim.api.nvim_exec("colo", true)
     if colo == "dayfox" or colo == "dawnfox" then
         print "Error: Transparent background does not work with a light colorscheme!"
         return
@@ -247,7 +250,7 @@ end
 
 function utils.commands()
     require("mappings").diagnostic()
-    local cmd = Api.nvim_add_user_command
+    local cmd = vim.api.nvim_add_user_command
     local complete = function()
         return require("utils.langServers").getClientNames()
     end

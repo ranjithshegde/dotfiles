@@ -19,8 +19,8 @@ Statusline.el = function()
     local file_icon = subscribe.buf_autocmd("el_file_icon", "BufRead", function(_, buffer)
         local icon, color = require("nvim-web-devicons").get_icon_color(buffer.name, buffer.extension)
         if icon then
-            local table = Api.nvim_get_hl_by_name("Statusline", true)
-            Api.nvim_set_hl(0, "FileIcon", { bg = table["background"], fg = color, cterm = { bold = true } })
+            local table = vim.api.nvim_get_hl_by_name("Statusline", true)
+            vim.api.nvim_set_hl(0, "FileIcon", { bg = table["background"], fg = color, cterm = { bold = true } })
             return icon .. space
         end
         return ""
@@ -53,7 +53,7 @@ Statusline.el = function()
         local current_bg = mode_color[vim.fn.mode()]
         local current_fg = Colors.white
         -- Set color
-        Api.nvim_set_hl(0, "ElViMode", { fg = current_fg, bg = current_bg })
+        vim.api.nvim_set_hl(0, "ElViMode", { fg = current_fg, bg = current_bg })
         return current_mode
     end
 
@@ -90,15 +90,15 @@ Statusline.el = function()
 
     --*********************************** SuperCollider ---------------------
     local scnvim = function(_, buffer)
-        if Api.nvim_buf_get_option(buffer.bufnr, "filetype") == "supercollider" then
+        if vim.api.nvim_buf_get_option(buffer.bufnr, "filetype") == "supercollider" then
             local scstatus = "📡" .. vim.fn["scnvim#statusline#server_status"]()
-            Api.nvim_set_hl(0, "ScStatus", { bg = Colors.blue, fg = Colors.bg })
+            vim.api.nvim_set_hl(0, "ScStatus", { bg = Colors.blue, fg = Colors.bg })
             return scstatus
         end
     end
 
     local scContext = function(_, buffer)
-        if Api.nvim_buf_get_option(buffer.bufnr, "filetype") == "supercollider" then
+        if vim.api.nvim_buf_get_option(buffer.bufnr, "filetype") == "supercollider" then
             local f = require("nvim-treesitter").statusline {
                 indicator_size = 100,
                 type_patterns = {
@@ -122,7 +122,7 @@ Statusline.el = function()
 
     --*********************************** Git branch ------------------------
     local git_branch = subscribe.buf_autocmd("el_git_branch", "BufReadPre", function(window, buffer)
-        local ft = Api.nvim_buf_get_option(buffer.bufnr, "filetype")
+        local ft = vim.api.nvim_buf_get_option(buffer.bufnr, "filetype")
         if ft == "TelescopePrompt" then
             return
         end
@@ -203,9 +203,9 @@ end
 
 --*********************************** File label -----------------------
 local getTabLabel = function(n)
-    local current_win = Api.nvim_tabpage_get_win(n)
-    local current_buf = Api.nvim_win_get_buf(current_win)
-    local file_name = Api.nvim_buf_get_name(current_buf)
+    local current_win = vim.api.nvim_tabpage_get_win(n)
+    local current_buf = vim.api.nvim_win_get_buf(current_win)
+    local file_name = vim.api.nvim_buf_get_name(current_buf)
 
     local tail = vim.fn.fnamemodify(file_name, ":p:t")
     if tail == "" then
@@ -221,8 +221,8 @@ local getTabLabel = function(n)
 
     local icon, color = require("nvim-web-devicons").get_icon_color(tail, ext)
     if icon ~= nil then
-        local table = Api.nvim_get_hl_by_name("TablineSel", true)
-        Api.nvim_set_hl(0, "IconColor", { bg = table["background"], fg = color, cterm = { bold = true } })
+        local table = vim.api.nvim_get_hl_by_name("TablineSel", true)
+        vim.api.nvim_set_hl(0, "IconColor", { bg = table["background"], fg = color, cterm = { bold = true } })
         return { tail, icon }
     else
         return { tail }
@@ -243,8 +243,8 @@ end
 --*********************************** Tabline module -------------------
 function Statusline.tabs()
     local tabline = ""
-    local tab_list = Api.nvim_list_tabpages()
-    local current_tab = Api.nvim_get_current_tabpage()
+    local tab_list = vim.api.nvim_list_tabpages()
+    local current_tab = vim.api.nvim_get_current_tabpage()
     for _, val in ipairs(tab_list) do
         local name = getTabLabel(val)
         if val == current_tab then

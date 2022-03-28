@@ -1,4 +1,6 @@
 local lsp = {}
+local aucmd = vim.api.nvim_create_autocmd
+local augroup = vim.api.nvim_create_augroup
 
 ------------------------------------------------------------------------
 --                             Lsp settings                           --
@@ -6,8 +8,8 @@ local lsp = {}
 
 local lspconfig = require "lspconfig"
 function lsp.settings()
-    AuGroup("SetDiagnosticFuncs", {})
-    AuCmd({ "DiagnosticChanged" }, {
+    augroup("SetDiagnosticFuncs", {})
+    aucmd({ "DiagnosticChanged" }, {
         group = "SetDiagnosticFuncs",
         callback = function()
             vim.diagnostic.setloclist { open = false }
@@ -45,13 +47,13 @@ function lsp.attach(client, bufnr)
 
     local rc = client.resolved_capabilities
     if rc.document_highlight then
-        AuGroup("LspHighlightSymbols", {})
-        AuCmd("CursorHold", {
+        augroup("LspHighlightSymbols", {})
+        aucmd("CursorHold", {
             group = "LspHighlightSymbols",
             buffer = 0,
             callback = vim.lsp.buf.document_highlight,
         })
-        AuCmd("CursorMoved, CursorMovedI", {
+        aucmd("CursorMoved, CursorMovedI", {
             group = "LspHighlightSymbols",
             buffer = bufnr,
             callback = vim.lsp.buf.clear_references,
@@ -59,8 +61,8 @@ function lsp.attach(client, bufnr)
     end
 
     if rc.document_formatting then
-        AuGroup("LspAutoFormat", {})
-        AuCmd("BufWrite", {
+        augroup("LspAutoFormat", {})
+        aucmd("BufWrite", {
             group = "LspAutoFormat",
             pattern = "*.html,*.css,*.js,*.hpp,*.h,*.sh,*.lua,*.cpp,*.json,*.py,*.yaml,*.toml,*.vs,*.fs,*.gs,*.vert,*.frag,*.geom,*.glsl,*.dart",
             callback = function()
@@ -68,7 +70,7 @@ function lsp.attach(client, bufnr)
             end,
         })
     end
-    Api.nvim_add_user_command("LspCapabilities", require("utils.langServers").lsp_capabilities, {})
+    vim.api.nvim_add_user_command("LspCapabilities", require("utils.langServers").lsp_capabilities, {})
 end
 
 -- **************************** Ccls reduction function-----------------

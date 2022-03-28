@@ -69,7 +69,7 @@ return require("packer").startup {
             "jbyuki/instant.nvim",
             module_pattern = "instant.*",
             config = function()
-                G.instant_username = "Ranjith"
+                vim.g.instant_username = "Ranjith"
             end,
         }
 
@@ -198,9 +198,9 @@ return require("packer").startup {
                 fn["scnvim#install"]()
             end,
             config = function()
-                G.scnvim_snippet_format = "luasnip"
+                vim.g.scnvim_snippet_format = "luasnip"
                 require("luasnip").snippets.supercollider = require("scnvim/utils").get_snippets()
-                AuCmd("FileType", {
+                vim.api.nvim_create_autocmd("FileType", {
                     group = "LspSettings",
                     pattern = "supercollider",
                     callback = function()
@@ -216,7 +216,7 @@ return require("packer").startup {
             "lukas-reineke/indent-blankline.nvim",
             event = "BufReadPost",
             config = function()
-                G.indent_blankline_char = "┊"
+                vim.g.indent_blankline_char = "┊"
                 require("indent_blankline").setup {
                     show_current_context = true,
                     show_end_of_line = true,

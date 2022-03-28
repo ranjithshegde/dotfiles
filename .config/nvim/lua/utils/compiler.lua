@@ -1,4 +1,5 @@
 local Compiler = {}
+local exec = vim.api.nvim_command
 
 ------------------------------------------------------------------------
 --                                Env Setup	                          --
@@ -8,29 +9,29 @@ local Compiler = {}
 function Compiler.set_ctype()
     if Compiler.has_Cmake() then
         require("mappings").cmake()
-        G.makeFile = "CMakeLists.txt"
-        G.debugBin = "build/" .. vim.fn.fnamemodify(vim.fn.getcwd(), ":t")
-        G.cmakeBin = "./build/" .. vim.fn.fnamemodify(vim.fn.getcwd(), ":t")
-        G.cfiles = "src/* include/*"
+        vim.g.makeFile = "CMakeLists.txt"
+        vim.g.debugBin = "build/" .. vim.fn.fnamemodify(vim.fn.getcwd(), ":t")
+        vim.g.cmakeBin = "./build/" .. vim.fn.fnamemodify(vim.fn.getcwd(), ":t")
+        vim.g.cfiles = "src/* include/*"
     elseif Compiler.has_makefile() then
         require("mappings").makeC()
-        G.makeFile = "Makefile"
-        G.debugBin = "bin/" .. vim.fn.fnamemodify(vim.fn.getcwd(), ":t") .. "_debug"
-        G.cfiles = "src/*"
+        vim.g.makeFile = "Makefile"
+        vim.g.debugBin = "bin/" .. vim.fn.fnamemodify(vim.fn.getcwd(), ":t") .. "_debug"
+        vim.g.cfiles = "src/*"
     elseif Compiler.has_pio_file() then
-        Exec "set makeprg=pio\\ run"
+        exec "set makeprg=pio\\ run"
         require("mappings").micro()
-        G.makeFile = "platformio.ini"
+        vim.g.makeFile = "platformio.ini"
     elseif Compiler.has_gradle() then
         require("mappings").makeGradle()
-        G.makeFile = "build.gradle"
-        Exec "set makeprg=./gradlew"
-        -- G.debugBin = "bin/" .. vim.fn.fnamemodify(vim.fn.getcwd(), ":t") .. "_debug"
+        vim.g.makeFile = "build.gradle"
+        exec "set makeprg=./gradlew"
+        -- vim.g.debugBin = "bin/" .. vim.fn.fnamemodify(vim.fn.getcwd(), ":t") .. "_debug"
     else
-        Exec "set makeprg=g++"
+        exec "set makeprg=g++"
         require("mappings").ctests()
-        G.debugBin = vim.fn.expand "%<"
-        G.cfiles = "%"
+        vim.g.debugBin = vim.fn.expand "%<"
+        vim.g.cfiles = "%"
     end
 end
 
@@ -38,9 +39,9 @@ function Compiler.set_type()
     if Compiler.has_makefile() then
         require("mappings").pdc()
     else
-        Exec "set makeprg=gcc"
+        exec "set makeprg=gcc"
         require("mappings").ctests()
-        G.debugBin = vim.fn.expand "%<"
+        vim.g.debugBin = vim.fn.expand "%<"
     end
 end
 
@@ -52,7 +53,7 @@ function Compiler.cpractice()
         vim.fn.execute("cd " .. input)
     end)
     vim.ui.input({ prompt = "enter file name: ", completion = "file" }, function(input)
-        Exec("e " .. input)
+        exec("e " .. input)
     end)
 end
 
@@ -70,12 +71,12 @@ end
 -- Search Cplusplus.com for symbol
 function Compiler.creference(cmd)
     local url = "https://www.cplusplus.com/search.do?q=" .. cmd
-    Exec('!qutebrowser "' .. url .. '" &')
+    exec('!qutebrowser "' .. url .. '" &')
 end
 
 function Compiler.glRef(cmd)
     local url = "https://docs.gl/gl4/" .. cmd
-    Exec('!qutebrowser "' .. url .. '" &')
+    exec('!qutebrowser "' .. url .. '" &')
 end
 -- check if project has a Makefile
 function Compiler.has_makefile()
@@ -113,29 +114,29 @@ function Compiler.has_pd()
 end
 -- set default make to Dispatch Make
 function Compiler.make(cmd)
-    Exec("Make " .. cmd)
+    exec("Make " .. cmd)
 end
 
 -- set default terminal to Dispatch
 function Compiler.terminal(cmd)
-    Exec("Dispatch " .. cmd)
+    exec("Dispatch " .. cmd)
 end
 
 -- set alternate terminal to native terminal
 function Compiler.newTerm(cmd, opencmd)
-    Exec(opencmd or "new")
-    Exec("terminal " .. cmd)
+    exec(opencmd or "new")
+    exec("terminal " .. cmd)
 end
 
 -- open Makefile
 function Compiler.makefile(file)
-    Exec("tabnew " .. file)
+    exec("tabnew " .. file)
 end
 
 -- Launch debuger
 function Compiler.termdebug()
     require("debugger").init()
-    Exec "lua require('dap').continue()"
+    exec "lua require('dap').continue()"
 end
 
 function Compiler.ctags(files)
@@ -184,9 +185,9 @@ end
 ------------------------------------------------------------------------
 
 -- Variables
-G.extra_cmake_flags = "-DCMAKE_EXPORT_COMPILE_COMMANDS=ON"
-G.cmake_build_dir = "build"
-G.compiledb = "ln -s build/compile_commands.json ."
+vim.g.extra_cmake_flags = "-DCMAKE_EXPORT_COMPILE_COMMANDS=ON"
+vim.g.cmake_build_dir = "build"
+vim.g.compiledb = "ln -s build/compile_commands.json ."
 
 -- check if project has a CMakefile
 function Compiler.has_Cmake()
@@ -204,12 +205,12 @@ end
 function Compiler.cmake_gen()
     Compiler.terminal(
         "mkdir build; cmake -DCMAKE_BUILD_TYPE='Release' "
-            .. G.extra_cmake_flags
+            .. vim.g.extra_cmake_flags
             .. " -B "
-            .. G.cmake_build_dir
+            .. vim.g.cmake_build_dir
             .. " -S ."
             .. ";"
-            .. G.compiledb
+            .. vim.g.compiledb
     )
 end
 
@@ -217,18 +218,18 @@ end
 function Compiler.cmake_gen_debug()
     Compiler.terminal(
         "mkdir build; cmake -DCMAKE_BUILD_TYPE='Debug' "
-            .. G.extra_cmake_flags
+            .. vim.g.extra_cmake_flags
             .. " -B "
-            .. G.cmake_build_dir
+            .. vim.g.cmake_build_dir
             .. " -S ."
             .. ";"
-            .. G.compiledb
+            .. vim.g.compiledb
     )
 end
 
 -- Clean amd remove build dir
 function Compiler.cmake_clean()
-    Compiler.terminal("rm -r " .. G.cmake_build_dir .. ";" .. "rm compile_commands.json")
+    Compiler.terminal("rm -r " .. vim.g.cmake_build_dir .. ";" .. "rm compile_commands.json")
 end
 
 -- Clean and rebuild Release
@@ -251,7 +252,7 @@ end
 
 -- Cmake Install
 function Compiler.cmake_install()
-    Compiler.newTerm("cmake --build " .. G.cmake_build_dir .. " --config Release --target install")
+    Compiler.newTerm("cmake --build " .. vim.g.cmake_build_dir .. " --config Release --target install")
 end
 
 -----------------------------------------------------------------------
@@ -367,7 +368,7 @@ end
 
 function Compiler.ardRef(cmd)
     local url = "https://search.arduino.cc/search?tab=reference&q=" .. cmd
-    Exec('!qutebrowser "' .. url .. '" &')
+    exec('!qutebrowser "' .. url .. '" &')
 end
 
 return Compiler

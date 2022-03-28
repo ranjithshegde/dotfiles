@@ -104,8 +104,8 @@ Debugger.configs = function()
             type = "cppdbg",
             request = "launch",
             program = function()
-                if G.debugBin then
-                    return G.debugBin
+                if vim.g.debugBin then
+                    return vim.g.debugBin
                 else
                     return vim.fn.input("Path to executable: ", vim.fn.getcwd() .. "/", "file")
                 end
@@ -126,8 +126,8 @@ Debugger.configs = function()
             type = "cppdbg",
             request = "launch",
             program = function()
-                if G.debugBin then
-                    return G.debugBin
+                if vim.g.debugBin then
+                    return vim.g.debugBin
                 else
                     return vim.fn.input("Path to executable: ", vim.fn.getcwd() .. "/", "file")
                 end
@@ -148,8 +148,8 @@ Debugger.configs = function()
             type = "lldb",
             request = "launch",
             program = function()
-                if G.debugBin then
-                    return G.debugBin
+                if vim.g.debugBin then
+                    return vim.g.debugBin
                 else
                     return vim.fn.input("Path to executable: ", vim.fn.getcwd() .. "/", "file")
                 end

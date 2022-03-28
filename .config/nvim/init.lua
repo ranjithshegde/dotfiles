@@ -1,13 +1,8 @@
 --------------------------------------------------------------------------
 ----                              Global config variables               --
 --------------------------------------------------------------------------
-G = vim.g
-G.do_filetype_lua = 1
-G.did_load_filetypes = 0
-Api = vim.api
-Exec = Api.nvim_command
-AuCmd = Api.nvim_create_autocmd
-AuGroup = Api.nvim_create_augroup
+vim.g.do_filetype_lua = 1
+vim.g.did_load_filetypes = 0
 
 Colors = {
     bg = "#32302f",
