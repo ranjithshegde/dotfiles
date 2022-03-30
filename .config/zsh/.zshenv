@@ -13,7 +13,7 @@ export EM_PORTS="$XDG_DATA_HOME"/emscripten/cache
 export GDBHISTFILE="$XDG_DATA_HOME"/gdb/history
 export GEM_HOME="$XDG_DATA_HOME"/gem 
 export GEM_SPEC_CACHE="$XDG_CACHE_HOME"/gem
-export GNUPGHOME="$HOME"/.local/share/gnupg
+export GNUPGHOME="$XD_DATA_HOME"/gnupg
 export GOPATH="$XDG_DATA_HOME"/go
 export GRADLE_USER_HOME="$XDG_DATA_HOME"/gradle
 export GTK2_RC_FILES="$XDG_CONFIG_HOME"/gtk-2.0/gtkrc
@@ -24,7 +24,7 @@ export NMBGIT="$XDG_DATA_HOME"/notmuch/nmbug
 export NODE_REPL_HISTORY="$XDG_DATA_HOME"/node_repl_history
 export NOTMUCH_CONFIG="$XDG_CONFIG_HOME"/notmuch/notmuchrc
 export NPM_CONFIG_USERCONFIG="$XDG_CONFIG_HOME"/npm/npmrc
-export PASSWORD_STORE_DIR="$HOME"/.local/share/pass
+export PASSWORD_STORE_DIR="$XDG_DATA_HOME"/pass
 export PLATFORMIO_CACHE_DIR="$XDG_CACHE_HOME"/platformio
 export PLATFORMIO_CORE_DIR="$XDG_DATA_HOME"/platformio
 export PLATFORMIO_GLOBALLIB_DIR="$XDG_DATA_HOME"/platformio
@@ -59,15 +59,30 @@ appendpath () {
     esac
 }
 
-appendpath '/home/ranjith/.local/bin'
-appendpath '/home/ranjith/.local/share/cargo/bin'
-appendpath '/home/ranjith/.local/bin/scripts'
-appendpath '/home/ranjith/.local/share/npm/bin'
-appendpath '/home/ranjith/.local/share/go/bin'
-appendpath '/home/ranjith/.local/share/gem/bin'
-appendpath '/home/ranjith/.local/share/ltex-ls/bin'
-appendpath '/home/ranjith/.local/share/gem/ruby/3.0.0/bin'
+appendpath "$HOME"/.local/bin
+appendpath "$HOME"/.local/bin/scripts
+appendpath "$XDG_DATA_HOME"/cargo/bin
+appendpath "$XDG_DATA_HOME"/npm/bin
+appendpath "$XDG_DATA_HOME"/go/bin
+appendpath "$XDG_DATA_HOME"/gem/bin
+appendpath "$XDG_DATA_HOME"/ltex-ls/bin
+appendpath "$XDG_DATA_HOME"/gem/ruby/3.0.0/bin
 # appendpath '/usr/lib/emsdk/upstream/bin/'
 # appendpath '/usr/lib/emsdk/node/12.18.1_64bit/bin'
 unset -f appendpath
 export PATH
+
+
+appendmanpath () {
+    case ":$MANPATH:" in
+        *:"$1":*)
+            ;;
+        *)
+            MANPATH="${MANPATH:+$MANPATH:}$1"
+    esac
+}
+
+appendmanpath '/usr/share/man/'
+appendmanpath "$XDG_DATA_HOME"/man/
+unset -f appendmanpath
+export MANPATH

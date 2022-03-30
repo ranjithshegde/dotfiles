@@ -18,6 +18,7 @@ function ts.init()
             "css",
             "dart",
             "glsl",
+            "help",
             "html",
             "java",
             "javascript",

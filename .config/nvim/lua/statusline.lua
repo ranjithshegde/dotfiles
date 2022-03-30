@@ -3,6 +3,21 @@ local Statusline = {}
 -- Blank Between Components
 local space = " "
 
+local colors = {
+    bg = "#32302f",
+    bg2 = "#008080",
+    bg3 = "#d79921",
+    white = "#fbf1c7",
+    yellow = "#d79921",
+    cyan = "#008080",
+    grey = "#928374",
+    green = "#98971a",
+    purple = "#b16286",
+    orange = "#d65d0e",
+    blue = "#458588",
+    red = "#cc241d",
+}
+
 ------------------------------------------------------------------------
 --                              statusline                            --
 ------------------------------------------------------------------------
@@ -39,19 +54,19 @@ Statusline.el = function()
         }
 
         local mode_color = {
-            n = Colors.blue,
-            i = Colors.orange,
-            c = Colors.yellow,
-            v = Colors.cyan,
-            V = Colors.cyan,
-            [""] = Colors.cyan,
-            t = Colors.purple,
+            n = colors.blue,
+            i = colors.orange,
+            c = colors.yellow,
+            v = colors.cyan,
+            V = colors.cyan,
+            [""] = colors.cyan,
+            t = colors.purple,
         }
         -- Text for mode
         local current_mode = alias[vim.fn.mode()]
         -- Get color for mode
         local current_bg = mode_color[vim.fn.mode()]
-        local current_fg = Colors.white
+        local current_fg = colors.white
         -- Set color
         vim.api.nvim_set_hl(0, "ElViMode", { fg = current_fg, bg = current_bg })
         return current_mode
@@ -92,7 +107,7 @@ Statusline.el = function()
     local scnvim = function(_, buffer)
         if vim.api.nvim_buf_get_option(buffer.bufnr, "filetype") == "supercollider" then
             local scstatus = "📡" .. vim.fn["scnvim#statusline#server_status"]()
-            vim.api.nvim_set_hl(0, "ScStatus", { bg = Colors.blue, fg = Colors.bg })
+            vim.api.nvim_set_hl(0, "ScStatus", { bg = colors.blue, fg = colors.bg })
             return scstatus
         end
     end
@@ -139,13 +154,44 @@ Statusline.el = function()
         if not st then
             return
         end
+        local result = ""
         local add = st:match "+%d*"
-        add = add:gsub("+", " ")
+        if add then
+            add = add:gsub("+", " ")
+            result = result .. "%#GitGutterAdd# " .. add
+        end
         local change = st:match "~%d*"
-        change = change:gsub("~", " ")
+        if change then
+            change = change:gsub("~", " ")
+            result = result .. "%#GitGutterChange# " .. change
+        end
         local cut = st:match "-%d*"
-        cut = cut:gsub("-", " ")
-        return "%#GitGutterAdd# " .. add .. "%#GitGutterChange# " .. change .. "%#GitGutterDelete# " .. cut .. "%# #"
+        if cut then
+            cut = cut:gsub("-", " ")
+            result = result .. "%#GitGutterDelete# " .. cut
+        end
+        return result .. "%##"
+    end)
+
+    local insertions = subscribe.buf_autocmd("el_git_ins", "BufWritePost", function(_, buffer)
+        local insert = extensions.git_inserstions(_, buffer)
+        if insert then
+            return " " .. insert .. space
+        end
+    end)
+
+    local changes = subscribe.buf_autocmd("el_git_change", "BufWritePost", function(_, buffer)
+        local change = extensions.git_modifications(_, buffer)
+        if change then
+            return " " .. change .. space
+        end
+    end)
+
+    local deletions = subscribe.buf_autocmd("el_git_del", "BufWritePost", function(_, buffer)
+        local delete = extensions.git_deletions(_, buffer)
+        if delete then
+            return " " .. delete
+        end
     end)
 
     --*********************************** Lsp status  -----------------------
@@ -166,7 +212,9 @@ Statusline.el = function()
                 sections.highlight("ElViMode", mode),
                 sections.highlight("DiagnosticWarn", git_branch),
                 space,
-                git_changes,
+                sections.highlight("GitGutterAdd", insertions),
+                sections.highlight("GitGutterChange", changes),
+                sections.highlight("GitGutterDelete", deletions),
                 sections.split,
                 lspstatus,
                 sections.highlight("ScStatus", scnvim),

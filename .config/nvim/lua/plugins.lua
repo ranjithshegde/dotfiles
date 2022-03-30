@@ -57,7 +57,8 @@ return require("packer").startup {
 
         -- StatusLine
         use {
-            "tjdevries/express_line.nvim",
+            "ranjithshegde/express_line.nvim",
+            branch = "git_changes",
             requires = { "kyazdani42/nvim-web-devicons", "nvim-lua/plenary.nvim" },
             config = function()
                 require("statusline").el()

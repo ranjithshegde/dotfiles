@@ -149,33 +149,6 @@ function utils.toggleTerm(cmd, name, spl)
     end
 end
 
--- Use ranger as file picker
-utils.ranger = function(path, edit_cmd)
-    local cpath = "/tmp/chosenfile"
-    local currentPath = vim.fn.expand(path)
-    local rc = {}
-    rc.name = "ranger"
-    rc.edit_cmd = edit_cmd
-    function rc.on_exit(_, code, _)
-        if not code then
-            vim.cmd "silent! Bclose!"
-        end
-        if io.open(cpath, "r") then
-            for f in io.lines(cpath) do
-                vim.fn.execute(edit_cmd .. f)
-            end
-            cpath = nil
-        end
-    end
-    vim.cmd "enew"
-    if vim.fn.isdirectory(currentPath) then
-        vim.fn.termopen("ranger --choosefiles=" .. cpath .. ' "' .. currentPath .. '"', rc)
-    else
-        vim.fn.termopen("ranger --choosefiles=" .. cpath .. ' --selectfile="' .. currentPath .. '"', rc)
-    end
-    vim.cmd "startinsert"
-end
-
 ------------------------------------------------------------------------
 --                          Plugin functions                          --
 ------------------------------------------------------------------------

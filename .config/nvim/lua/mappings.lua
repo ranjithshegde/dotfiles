@@ -89,41 +89,41 @@ function M.ranger()
             name = "Ranger file picker",
             r = {
                 function()
-                    require("utils").ranger("%:p:h", "e ")
+                    vim.fn["util#ranger"]("%:p:h", "e ")
                 end,
                 "from current file",
             },
             R = {
                 function()
-                    require("utils").ranger(".", "e ")
+                    vim.fn["util#ranger"](".", "e ")
                 end,
                 "from current directory",
             },
             v = {
                 function()
                     vim.cmd "vnew"
-                    require("utils").ranger("%:p:h", "vs ")
+                    vim.fn["util#ranger"]("%:p:h", "vs ")
                 end,
                 "in a split from current file",
             },
             V = {
                 function()
                     vim.cmd "vnew"
-                    require("utils").ranger(".", "vs ")
+                    vim.fn["util#ranger"](".", "vs ")
                 end,
                 "in a split from current directory",
             },
             t = {
                 function()
                     vim.cmd "tabnew"
-                    require("utils").ranger("%:p:h", "tab drop ")
+                    vim.fn["util#ranger"]("%:p:h", "tab drop ")
                 end,
                 "in a new tab from current file",
             },
             T = {
                 function()
                     vim.cmd "tabnew"
-                    require("utils").ranger(".", "tab drop ")
+                    vim.fn["util#ranger"](".", "tab drop ")
                 end,
                 "in a new tab from current directory",
             },
