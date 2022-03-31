@@ -200,7 +200,7 @@ return require("packer").startup {
             end,
             config = function()
                 vim.g.scnvim_snippet_format = "luasnip"
-                require("luasnip").snippets.supercollider = require("scnvim/utils").get_snippets()
+                require("luasnip").add_snippets("supercollider", require("scnvim/utils").get_snippets())
                 vim.api.nvim_create_autocmd("FileType", {
                     group = "LspSettings",
                     pattern = "supercollider",
@@ -309,10 +309,10 @@ return require("packer").startup {
 
         -- completion and snippets
         use {
-            { "L3MON4D3/LuaSnip", commit = "468a3f8435c94af4352c330a7e113a8078b207af" },
+            "L3MON4D3/LuaSnip",
             "hrsh7th/cmp-nvim-lsp",
             { "hrsh7th/cmp-path", after = "nvim-cmp" },
-            { "saadparwaiz1/cmp_luasnip", after = "nvim-cmp", commit = "d6f837f4e8fe48eeae288e638691b91b97d1737f" },
+            { "saadparwaiz1/cmp_luasnip", after = "nvim-cmp" },
             {
                 "hrsh7th/nvim-cmp",
                 after = "friendly-snippets",

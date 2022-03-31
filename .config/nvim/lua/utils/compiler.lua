@@ -19,13 +19,13 @@ function Compiler.set_ctype()
         vim.g.debugBin = "bin/" .. vim.fn.fnamemodify(vim.fn.getcwd(), ":t") .. "_debug"
         vim.g.cfiles = "src/*"
     elseif Compiler.has_pio_file() then
-        exec "set makeprg=pio\\ run"
+        vim.opt.makeprg = "pio run"
         require("mappings").micro()
         vim.g.makeFile = "platformio.ini"
     elseif Compiler.has_gradle() then
         require("mappings").makeGradle()
         vim.g.makeFile = "build.gradle"
-        exec "set makeprg=./gradlew"
+        vim.opt.makeprg = "./gradlew"
         -- vim.g.debugBin = "bin/" .. vim.fn.fnamemodify(vim.fn.getcwd(), ":t") .. "_debug"
     else
         exec "set makeprg=g++"

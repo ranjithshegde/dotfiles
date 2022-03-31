@@ -275,10 +275,6 @@ function Diagnostics.configure_diagnostics(settings, client)
     end
 end
 
-function Diagnostics.resolve_handler(client, method)
-    return client.handlers[method]
-end
-
 function Diagnostics.display_status(msg, val, client)
     if not client then
         if val == false then

@@ -15,17 +15,12 @@ end
 ------------------------------------------------------------------------
 
 langSettings.lsp_capabilities = function()
-    local windows = require "lspconfig/ui/windows"
     local buf_clients = vim.lsp.buf_get_clients()
+    local windows = require "lspconfig/ui/windows"
     local win_info = windows.percentage_range_window(0.8, 0.7)
-    local bufnr, win_id = win_info.bufnr, win_info.win_id
+    local bufnr = win_info.bufnr
 
     local buf_lines = {}
-
-    local buf_client_names = {}
-    for _, client in pairs(buf_clients) do
-        table.insert(buf_client_names, client.name)
-    end
 
     local function available_capabilities(resolved_capabilities)
         -- these are the capabilities that might be interesting to the user
@@ -70,10 +65,10 @@ langSettings.lsp_capabilities = function()
     vim.api.nvim_buf_set_lines(bufnr, 0, -1, true, buf_lines)
     vim.api.nvim_buf_set_option(bufnr, "modifiable", false)
     vim.api.nvim_buf_set_option(bufnr, "filetype", "lspcapabilities")
-    local configs_pattern = [[\%(]] .. table.concat(buf_client_names, [[\|]]) .. [[\)]]
+    local configs_pattern = [[\%(]] .. table.concat(langSettings.getClientNames(), [[\|]]) .. [[\)]]
     vim.cmd([[syntax match Title /\%(Client\):.*\zs]] .. configs_pattern .. "/")
-    vim.api.nvim_buf_set_keymap(bufnr, "n", "<esc>", "<cmd>bd<CR>", { noremap = true })
-    vim.api.nvim_buf_set_keymap(bufnr, "n", "q", "<cmd>bd<CR>", { noremap = true })
+    vim.keymap.set("n", "<esc>", "<cmd>bd<CR>", { buffer = bufnr })
+    vim.keymap.set("n", "q", "<cmd>bd<CR>", { buffer = bufnr })
 end
 
 ------------------------------------------------------------------------

@@ -1,4 +1,4 @@
-local M = {}
+local mappings = {}
 local wk = require "which-key"
 local map = vim.keymap.set
 
@@ -6,11 +6,11 @@ local map = vim.keymap.set
 --                              General functions                     --
 ------------------------------------------------------------------------
 
-function M.general()
-    M.configFiles()
-    M.telescope()
-    M.treesitter()
-    M.coauthor()
+function mappings.general()
+    mappings.configFiles()
+    mappings.telescope()
+    mappings.treesitter()
+    mappings.coauthor()
 
     local opts = { nowait = true }
     --line movement
@@ -83,7 +83,7 @@ end
 --                              Utilities                             --
 ------------------------------------------------------------------------
 
-function M.ranger()
+function mappings.ranger()
     wk.register {
         ["<leader>r"] = {
             name = "Ranger file picker",
@@ -131,7 +131,7 @@ function M.ranger()
     }
 end
 
-function M.wordProcessor()
+function mappings.wordProcessor()
     wk.register({
         zG = {
             'writefile([expand("<cword>")], "/usr/share/words.txt", "a")',
@@ -150,7 +150,7 @@ end
 --                              Language servers                      --
 ------------------------------------------------------------------------
 
-function M.nvim_lsp()
+function mappings.nvim_lsp()
     wk.register({
         K = { vim.lsp.buf.hover, "Hover" },
         ["<F7>"] = { require("debugger").init, "Initialize Debugger adapter" },
@@ -212,7 +212,7 @@ end
 
 -- ******************************** Diagnostics------------------------
 
-function M.diagnostic()
+function mappings.diagnostic()
     local function fmt(diagnostic)
         if diagnostic.code then
             return ("[%s] %s"):format(diagnostic.code, diagnostic.message)
@@ -246,7 +246,7 @@ end
 --                              Vim config files                      --
 ------------------------------------------------------------------------
 
-function M.configFiles()
+function mappings.configFiles()
     local open = function(path)
         return string.format("<cmd>tabnew ~/.config/nvim/%s<CR>", path)
     end
@@ -309,7 +309,7 @@ end
 --                              Treesitter                            --
 ------------------------------------------------------------------------
 
-function M.treesitter()
+function mappings.treesitter()
     wk.register {
         [";"] = {
             name = "Syntax tree functions",
@@ -418,7 +418,7 @@ end
 --                              Telescope                             --
 ------------------------------------------------------------------------
 
-function M.telescope()
+function mappings.telescope()
     local tele = function(name)
         return function()
             require("telescope.builtin")[name]()
@@ -652,7 +652,7 @@ end
 --                              Git                                   --
 ------------------------------------------------------------------------
 
-function M.git()
+function mappings.git()
     wk.register {
         ["<leader>g"] = {
             name = "git functions",
@@ -677,7 +677,7 @@ end
 --                              SuperCollider                         --
 ------------------------------------------------------------------------
 
-function M.scnvim()
+function mappings.scnvim()
     map("n", "<F5>", "<Plug>(scnvim-send-block)", { buffer = true, desc = "Evaluate SC code block" })
     map("i", "<F5>", "<esc><Plug>(scnvim-send-block)", { buffer = true, desc = "Evaluate SC code block" })
     map("v", "<F5>", "<Plug>(scnvim-send-selection)", { buffer = true, desc = "Evaluate SC visual block" })
@@ -700,7 +700,7 @@ end
 --                              Arduino                               --
 ------------------------------------------------------------------------
 
-function M.micro()
+function mappings.micro()
     map({ "n", "t" }, "<F8>", function()
         vim.cmd "stopinsert"
         require("utils.compiler").monitor()
@@ -730,7 +730,7 @@ end
 --                              OpenFrameworks                        --
 ------------------------------------------------------------------------
 
-function M.makeC()
+function mappings.makeC()
     wk.register({
         ["<F4>"] = { "<cmd>w <CR> <cmd>Make Debug -j12<CR>", "Compile Debug" },
         ["<F5>"] = {
@@ -753,7 +753,7 @@ end
 ------------------------------------------------------------------------
 
 -- ******************************** C files ----------------------------
-function M.ctests()
+function mappings.ctests()
     wk.register({
         ["<F3>"] = { "<cmd>w <CR> <cmd>Dispatch gcc % -lm -o %<<CR> <cmd>Dispatch ./%<<CR>", "Use gcc" },
         ["<F4>"] = {
@@ -774,7 +774,7 @@ function M.ctests()
 end
 
 -- ******************************** Pd externals ------------------------
-function M.pdc()
+function mappings.pdc()
     wk.register({
         ["<F5>"] = { "<cmd>w<CR><cmd>Make<CR>", "Build Pd external" },
         ["<F6>"] = {
@@ -789,7 +789,7 @@ end
 
 -- ******************************** Clang Lsp----------------------------
 
-function M.clang()
+function mappings.clang()
     wk.register({
         [";"] = {
             b = { "<cmd>CclsBase<CR>", "Base function" },
@@ -847,7 +847,7 @@ end
 --                              Cmake                                 --
 ------------------------------------------------------------------------
 
-function M.cmake()
+function mappings.cmake()
     wk.register({
         ["<F2>"] = { require("utils.compiler").cmake_clean, "Clean cmake" },
         ["<F3>"] = {
@@ -878,7 +878,7 @@ end
 --                              Co-Autho                              --
 ------------------------------------------------------------------------
 
-function M.coauthor()
+function mappings.coauthor()
     wk.register {
         ["<leader>"] = {
             i = {
@@ -930,7 +930,7 @@ end
 --                              Debug Adapters                        --
 ------------------------------------------------------------------------
 
-function M.debug()
+function mappings.debug()
     wk.register({
         ["<leader>"] = {
             d = {
@@ -990,7 +990,7 @@ end
 --                              Latex                                 --
 ------------------------------------------------------------------------
 
-function M.tex()
+function mappings.tex()
     wk.register({
         ["<F3>"] = { "<cmd>TexWordCount<CR>", "Word count" },
         ["<F4>"] = { "<cmd>Make -C<CR>", "Clean tex files" },
@@ -999,4 +999,4 @@ function M.tex()
     }, { buffer = 0 })
 end
 
-return M
+return mappings
