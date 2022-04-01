@@ -79,7 +79,7 @@ function completion.init()
                 border = "double",
             },
         },
-        experimental = { ghost_text = true },
+        -- experimental = { ghost_text = true },
     }
     require("luasnip.loaders.from_vscode").lazy_load()
 end

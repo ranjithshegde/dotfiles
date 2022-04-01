@@ -104,6 +104,7 @@ end
 
 function lsp.servers()
     local dict = os.getenv "XDG_CONFIG_HOME" .. "/nvim/spell/en.utf-8.add"
+    ---@diagnostic disable-next-line: unused-vararg
     local nilfunc = function(...)
         return nil
     end

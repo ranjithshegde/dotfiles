@@ -44,7 +44,7 @@ function mappings.general()
         n = { "nzzzv", "jump to next search result" },
         N = { "Nzzzv", "jump to previous search result" },
         J = { "mzJ`z", "Adjoin next line" },
-        gm = { "cursor(0, virtcol('$')/2 )", "Move cursor to middle of the line", expr = true },
+        gm = { "cursor(0, virtcol('$')/2 )", "Move cursor to middle of the line", expr = true, buffer = 0 },
         gf = { "<cmd>e <cfile><CR>", "open file under cursor" },
         -- Terminals
         ["<leader>t"] = {
@@ -349,6 +349,7 @@ function mappings.treesitter()
                 p = "Paramater",
                 c = "conditional",
                 l = "loop",
+                v = "variable",
             },
             i = {
                 name = "inner",
@@ -357,6 +358,7 @@ function mappings.treesitter()
                 p = "Paramater",
                 c = "conditional",
                 l = "loop",
+                v = "variable",
             },
         },
         cX = {
@@ -370,6 +372,7 @@ function mappings.treesitter()
                 p = "Paramater",
                 c = "conditional",
                 l = "loop",
+                v = "variable",
             },
             i = {
                 name = "inner",
@@ -378,6 +381,7 @@ function mappings.treesitter()
                 p = "Paramater",
                 c = "conditional",
                 l = "loop",
+                v = "variable",
             },
         },
         -- Motions

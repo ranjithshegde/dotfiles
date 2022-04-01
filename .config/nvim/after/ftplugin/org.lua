@@ -1,4 +1,2 @@
-require("which-key").register({
-    ["<CR>"] = { require("utils").fs, "Follow file under cursor" },
-    ["<BS>"] = { require("utils").back, "Return to previous file" },
-}, { buffer = 0 })
+vim.keymap.set("n", "<CR>", require("utils").fs, { buffer = true, desc = "Follow file under cursor" })
+vim.keymap.set("n", "<BS>", require("utils").back, { buffer = true, desc = "Return to previous file" })

@@ -4,6 +4,7 @@ local packer_path = fn.stdpath "data" .. "/site/pack/packer/start/packer.nvim"
 
 -- selfmanage packer
 if fn.empty(fn.glob(packer_path)) > 0 then
+    ---@diagnostic disable-next-line: lowercase-global
     packer_bootstrap = fn.system {
         "git",
         "clone",

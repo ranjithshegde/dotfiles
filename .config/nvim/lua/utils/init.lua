@@ -31,7 +31,7 @@ function utils.Restart()
     -- vim.cmd "LspStop"
     utils.UnloadAllModules()
     vim.cmd "source $MYVIMRC"
-    vim.api.nvim_exec_autocmd("VimEnter", {})
+    vim.api.nvim_exec_autocmds("VimEnter", {})
 end
 
 ------------------------------------------------------------------------

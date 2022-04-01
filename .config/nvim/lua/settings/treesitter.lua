@@ -70,6 +70,8 @@ function ts.init()
                     ["ad"] = "@comment.outer",
                     ["aC"] = "@call.outer",
                     ["iC"] = "@call.inner",
+                    ["av"] = "@variable.outer",
+                    ["iv"] = "@variable.inner",
                 },
             },
             move = {
@@ -113,6 +115,8 @@ function ts.init()
                     ["cxao"] = "@comment.outer",
                     ["cxia"] = "@call.outer",
                     ["cxaa"] = "@call.inner",
+                    ["cxav"] = "@variable.outer",
+                    ["cxiv"] = "@variable.inner",
                 },
                 swap_previous = {
                     ["cXas"] = "@statement.outer",
@@ -127,6 +131,8 @@ function ts.init()
                     ["cXao"] = "@comment.outer",
                     ["cXaa"] = "@call.outer",
                     ["cXia"] = "@call.inner",
+                    ["cXav"] = "@variable.outer",
+                    ["cXiv"] = "@variable.inner",
                 },
             },
             lsp_interop = {

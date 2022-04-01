@@ -1,4 +1,1 @@
-require("which-key").register(
-    { ["<F6>"] = { '<cmd>Dispatch browser-sync start --server --files "*.js,*.html,*.css"<CR>', "Launch in browser" } },
-    { buffer = 0 }
-)
+vim.keymap.set("n", "<F6>", '<cmd>Dispatch browser-sync start --server --files "*.js,*.html,*.css"<CR>', { buffer = true, desc = "Launch in browser"})
