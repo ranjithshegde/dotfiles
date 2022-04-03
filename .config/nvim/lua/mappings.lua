@@ -77,6 +77,54 @@ function mappings.general()
             },
         },
     }
+
+    wk.register {
+        ["<leader>ow"] = {
+            name = "orgWiki",
+            w = "Index",
+            t = "Index in a new tab",
+            c = "Add color to header/link",
+            i = {
+                function()
+                    require("org.diary").diaryIndexOpen()
+                end,
+                "Open Diary index",
+            },
+            ["<leader>"] = {
+                name = "Diary entries",
+                w = {
+                    function()
+                        require("org.diary").diaryTodayOpen()
+                    end,
+                    "Today",
+                },
+                t = {
+                    function()
+                        require("org.diary").diaryTodayOpen "tabnew"
+                    end,
+                    "Today in a new tab",
+                },
+                i = {
+                    function()
+                        require("org.diary").diaryGenerateIndex()
+                    end,
+                    "Reindex",
+                },
+                y = {
+                    function()
+                        require("org.diary").diaryYesterdayOpen()
+                    end,
+                    "Yesterday",
+                },
+                m = {
+                    function()
+                        require("org.diary").diaryTomorrowOpen()
+                    end,
+                    "Tomorrow",
+                },
+            },
+        },
+    }
 end
 
 ------------------------------------------------------------------------
@@ -256,6 +304,11 @@ function mappings.configFiles()
                 name = "vimrc files",
                 p = { open "lua/plugins.lua", "Packer config" },
                 m = { open "lua/mappings.lua", "Keymaps" },
+                g = {
+                    name = "Org plugin",
+                    o = { open "lua/org/init.lua", "Index plugin" },
+                    d = { open "lua/org/diary.lua", "Diary plugin" },
+                },
                 o = {
                     name = "Options",
                     o = { open "lua/settings/init.lua", "vim" },

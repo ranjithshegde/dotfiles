@@ -18,6 +18,7 @@ function utils.UnloadAllModules()
         "utils",
         "lsp",
         "debugger",
+        "org",
     }
     local ok, _ = pcall(require, "impatient")
     if ok then
@@ -157,15 +158,6 @@ end
 local browser = "qutebrowser"
 function utils.open_in_browser(url)
     utils.silent_shell(browser .. " " .. url)
-end
-
-function utils.fs()
-    if vim.loop.fs_stat(vim.fn.expand "<cfile>") then
-        vim.cmd "e <cfile>"
-        vim.cmd "lcd %:h:t"
-    else
-        print "Not a file"
-    end
 end
 
 function utils.back()

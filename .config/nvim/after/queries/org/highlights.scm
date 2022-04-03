@@ -1,20 +1,20 @@
 (
-((stars) @stars (#eq? @stars "*")) @conceal
+((stars) @stars (#eq? @stars "*")) @OrgTSHeadlineLevel1
 (#set! conceal "◉")
 )
 (
-((stars) @stars (#eq? @stars "**")) @conceal
+((stars) @stars (#eq? @stars "**")) @OrgTSHeadlineLevel2
 (#set! conceal "○")
 )
 (
-((stars) @stars (#eq? @stars "***")) @conceal
+((stars) @stars (#eq? @stars "***")) @OrgTSHeadlineLevel3
 (#set! conceal "✸")
 )
 (
-((stars) @stars (#eq? @stars "****")) @conceal
+((stars) @stars (#eq? @stars "****")) @OrgTSHeadlineLevel4 
 (#set! conceal "✿")
 )
-(expr 
+(expr
   ["*"] @conceal
 (#set! conceal ""))
 
@@ -23,10 +23,3 @@
 (bullet)
 @text.strong (#set! conceal "•")
 ))
-
-(itemtext
-(list
-(listitem
-(bullet)
-@text.emphasis (#set! conceal ".")
-)))

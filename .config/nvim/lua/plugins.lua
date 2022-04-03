@@ -342,14 +342,7 @@ return require("packer").startup {
                 after = "nvim-cmp",
                 opt = true,
                 config = function()
-                    local npairs = require "nvim-autopairs"
-                    local Rule = require "nvim-autopairs.rule"
-                    npairs.setup()
-                    npairs.add_rules { Rule("|", "|", "supercollider") }
-                    require("cmp").event:on(
-                        "confirm_done",
-                        require("nvim-autopairs.completion.cmp").on_confirm_done { map_char = { tex = "" } }
-                    )
+                    require("settings.completion").pairs()
                 end,
             },
         }
