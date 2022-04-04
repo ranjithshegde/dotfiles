@@ -160,11 +160,6 @@ function utils.open_in_browser(url)
     utils.silent_shell(browser .. " " .. url)
 end
 
-function utils.back()
-    vim.cmd "bprevious"
-    vim.cmd "lcd %:p:h"
-end
-
 utils.concat_fileLines = function(file)
     local dictionary = {}
     for line in io.lines(file) do

@@ -83,7 +83,12 @@ function mappings.general()
             name = "orgWiki",
             w = "Index",
             t = "Index in a new tab",
-            c = "Add color to header/link",
+            d = {
+                function()
+                    require("org").deleteLink()
+                end,
+                "Delete link under cursor",
+            },
             i = {
                 function()
                     require("org.diary").diaryIndexOpen()
