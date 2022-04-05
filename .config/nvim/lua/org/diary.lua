@@ -1,4 +1,5 @@
 local diary = {}
+local exec = vim.api.nvim_command
 local diaryPath = vim.g.orgDiary or vim.fn.expand "~/Documents/Orgs/diary/"
 local diaryIndex = diaryPath .. "index.org"
 
@@ -130,24 +131,28 @@ end
 function diary.diaryTodayOpen(editcmd)
     local name = getDate(0)
     local opencmd = editcmd and editcmd .. " " or "e "
-    vim.cmd(opencmd .. diaryPath .. name)
+    exec("cd " .. diaryPath)
+    vim.cmd(opencmd .. name)
 end
 
 function diary.diaryYesterdayOpen(editcmd)
     local name = getDate(-1)
     local opencmd = editcmd and editcmd .. " " or "e "
-    vim.cmd(opencmd .. diaryPath .. name)
+    exec("cd " .. diaryPath)
+    vim.cmd(opencmd .. name)
 end
 
 function diary.diaryTomorrowOpen(editcmd)
     local name = getDate(1)
     local opencmd = editcmd and editcmd .. " " or "e "
-    vim.cmd(opencmd .. diaryPath .. name)
+    exec("cd " .. diaryPath)
+    vim.cmd(opencmd .. name)
 end
 
 function diary.diaryIndexOpen(editcmd)
     local opencmd = editcmd and editcmd .. " " or "e "
-    vim.cmd(opencmd .. diaryIndex)
+    exec("cd " .. diaryPath)
+    vim.cmd(opencmd .. "index.org")
 end
 
 return diary

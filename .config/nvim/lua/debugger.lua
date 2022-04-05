@@ -1,8 +1,8 @@
 local Debugger = {}
 
 Debugger.init = function()
-    vim.cmd "PackerLoad nvim-dap"
-    -- vim.cmd "PackerLoad telescope-dap.nvim"
+    require("packer").loader "nvim-dap"
+    -- require("packer").loader "telescope-dap.nvim"
     require("mappings").debug()
     require("dap.ext.vscode").load_launchjs "launch.json"
     -- require("telescope").load_extension "dap"

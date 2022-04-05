@@ -143,7 +143,7 @@ Statusline.el = function()
         end
         local branch = extensions.git_branch(window, buffer)
         if branch then
-            vim.cmd "PackerLoad gitsigns.nvim"
+            require("packer").loader "gitsigns.nvim"
             return " " .. extensions.git_icon() .. " " .. branch
         end
     end)
@@ -228,12 +228,12 @@ Statusline.el = function()
                     space,
                     space,
                     "[",
-                    builtin.line_number,
+                    builtin.line_with_width(3),
                     ":",
-                    builtin.column_number,
+                    builtin.column_with_width(2),
                     "]",
-                    space,
                 },
+                space,
                 sections.collapse_builtin {
                     "[ ",
                     builtin.help_list,

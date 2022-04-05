@@ -105,14 +105,26 @@ utils.autocmd = function()
 
     -- Compile packer after writing plugins.lua
     augroup("PluginLoad", {})
-    aucmd("BufWritePost", { group = "PluginLoad", pattern = "plugins.lua", command = "source <afile> | PackerCompile" })
+    aucmd("BufWritePost", {
+        group = "PluginLoad",
+        pattern = "plugins.lua",
+        callback = function()
+            exec "source <afile>"
+            require("packer").compile()
+        end,
+    })
 
     -- ************************ Terminal management --------------------
 
     augroup("TermInsertModes", {})
     aucmd("BufWinEnter, WinEnter", { group = "TermInsertModes", pattern = "term://*", command = "startinsert" })
     aucmd("TermEnter", { group = "TermInsertModes", command = "startinsert" })
-    aucmd("TermClose", { group = "TermInsertModes", command = "call nvim_input('<CR>')" })
+    aucmd("TermClose", {
+        group = "TermInsertModes",
+        callback = function()
+            vim.api.nvim_input "<CR>"
+        end,
+    })
 end
 
 ------------------------------------------------------------------------
@@ -174,7 +186,7 @@ end
 
 -- Access agenda from outside orgfile
 function utils.agenda()
-    exec "PackerLoad orgmode"
+    require("packer").loader "orgmode"
     require("orgmode").action "agenda.prompt"
 end
 

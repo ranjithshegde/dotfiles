@@ -37,7 +37,7 @@ end
 function lsp.attach(client, bufnr)
     require("mappings").nvim_lsp()
 
-    vim.cmd "PackerLoad lsp-status.nvim"
+    require("packer").loader "lsp-status.nvim"
     local lsp_status = require "lsp-status"
     if client.name ~= "ltex" and client.name ~= "efm" then
         lsp_status.register_progress()

@@ -28,7 +28,7 @@ function Compiler.set_ctype()
         vim.opt.makeprg = "./gradlew"
         -- vim.g.debugBin = "bin/" .. vim.fn.fnamemodify(vim.fn.getcwd(), ":t") .. "_debug"
     else
-        exec "set makeprg=g++"
+        vim.opt.makeprg = "g++"
         require("mappings").ctests()
         vim.g.debugBin = vim.fn.expand "%<"
         vim.g.cfiles = "%"
@@ -39,7 +39,7 @@ function Compiler.set_type()
     if Compiler.has_makefile() then
         require("mappings").pdc()
     else
-        exec "set makeprg=gcc"
+        vim.opt.makeprg = "gcc"
         require("mappings").ctests()
         vim.g.debugBin = vim.fn.expand "%<"
     end
@@ -136,7 +136,7 @@ end
 -- Launch debuger
 function Compiler.termdebug()
     require("debugger").init()
-    exec "lua require('dap').continue()"
+    require("dap").continue()
 end
 
 function Compiler.ctags(files)
