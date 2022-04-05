@@ -4,6 +4,8 @@ local notLinks = { hasBefore = false, hasAfter = false, before = "", after = "",
 local linkLines = {}
 local isIndexed = false
 
+local wikiPath = vim.g.orgWikiPath or "~/Documents/Orgs/"
+
 local haswin = function(tab, val)
     for index, sub in ipairs(tab) do
         if sub["winid"] == val then
@@ -73,6 +75,7 @@ local createLink = function(words)
     if words:match "/" then
         local path = vim.fn.fnamemodify(words, ":p:h")
         exec("!mkdir -p " .. path)
+        exec("!cp " .. wikiPath .. ".gitignore " .. path)
         local tag = vim.fn.input "Enter link name: "
         local link = string.format("[[%s][%s]]", words, tag)
         return link
@@ -190,6 +193,12 @@ local findAllLinks = function(bufnr)
 end
 
 local wiki = {}
+
+function wiki.openIndex(editcmd)
+    local opencmd = editcmd and editcmd .. " " or "e "
+    exec("cd " .. wikiPath)
+    exec(opencmd .. "Index.org")
+end
 
 function wiki.followOrCreate()
     local line = vim.api.nvim_get_current_line()

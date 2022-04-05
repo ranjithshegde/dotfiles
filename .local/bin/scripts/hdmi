@@ -1,16 +1,11 @@
-#!/usr/bin/zsh
+#!/bin/sh
+intern=eDP-1
+extern=HDMI-1-0
 
-C=$(xrandr --listmonitors)
-
-N=$(echo -e "${C}" | dmenu -i -p 'Pick a monitor: ')
-
-xrandr --output ${N} --auto
-
-# sleep 5
-
-# sudo -A modprobe snd_hda_codec_hdmi
-
-# systemctl --user restart pipewire.service
-
-# systemctl --user restart pipewire-pulse.service
-
+if xrandr | grep "$extern disconnected"; then
+	xrandr --output "$extern" --off --output "$intern" --mode 1920x1080 --rate 144 &
+	nitrogen --force-setter=xinerama --restore
+else
+	xrandr --output "$intern" --primary --mode 1920x1080 --rate 144 --output "$extern" --right-of "$intern" --mode 1920x1080 --rate 60 &
+	nitrogen --force-setter=xinerama --restore
+fi

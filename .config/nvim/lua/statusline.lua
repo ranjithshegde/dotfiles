@@ -227,9 +227,11 @@ Statusline.el = function()
                     builtin.modified_flag,
                     space,
                     space,
+                    "[",
                     builtin.line_number,
                     ":",
                     builtin.column_number,
+                    "]",
                     space,
                 },
                 sections.collapse_builtin {

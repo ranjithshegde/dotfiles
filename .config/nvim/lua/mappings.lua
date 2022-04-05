@@ -81,8 +81,18 @@ function mappings.general()
     wk.register {
         ["<leader>ow"] = {
             name = "orgWiki",
-            w = "Index",
-            t = "Index in a new tab",
+            w = {
+                function()
+                    require("org").openIndex()
+                end,
+                "Open Index",
+            },
+            t = {
+                function()
+                    require("org").openIndex "tabnew"
+                end,
+                "Open Index in a new tab",
+            },
             d = {
                 function()
                     require("org").deleteLink()
