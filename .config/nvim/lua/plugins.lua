@@ -237,34 +237,6 @@ return require("packer").startup {
             end,
         }
 
-        --Lsp config and companions
-        use {
-            "neovim/nvim-lspconfig",
-            { "nvim-lua/lsp-status.nvim", opt = true },
-            {
-                "folke/lua-dev.nvim",
-                ft = "lua",
-                config = function()
-                    require("lsp.sumneko").sumneko()
-                end,
-            },
-            {
-                "mfussenegger/nvim-jdtls",
-                ft = "java",
-                config = function()
-                    require("lsp.jdtls").jdtls()
-                end,
-            },
-            { "m-pilia/vim-ccls", ft = { "c", "cpp", "opencl" } },
-            {
-                "p00f/clangd_extensions.nvim",
-                ft = { "c", "cpp", "opencl" },
-                config = function()
-                    require("lsp.clangd").clangd()
-                end,
-            },
-        }
-
         -- Telescope
         use {
             {
@@ -306,6 +278,50 @@ return require("packer").startup {
             -- "nvim-telescope/telescope-dap.nvim",
             -- opt = true,
             -- },
+        }
+
+        --Lsp config and companions
+        use {
+            "neovim/nvim-lspconfig",
+            {
+                "j-hui/fidget.nvim",
+                opt = true,
+                config = function()
+                    require("fidget").setup {
+                        text = {
+                            spinner = "moon",
+                        },
+                        align = {
+                            bottom = true,
+                        },
+                        window = {
+                            relative = "editor",
+                        },
+                    }
+                end,
+            },
+            {
+                "folke/lua-dev.nvim",
+                ft = "lua",
+                config = function()
+                    require("lsp.sumneko").sumneko()
+                end,
+            },
+            {
+                "mfussenegger/nvim-jdtls",
+                ft = "java",
+                config = function()
+                    require("lsp.jdtls").jdtls()
+                end,
+            },
+            { "m-pilia/vim-ccls", ft = { "c", "cpp", "opencl" } },
+            {
+                "p00f/clangd_extensions.nvim",
+                ft = { "c", "cpp", "opencl" },
+                config = function()
+                    require("lsp.clangd").clangd()
+                end,
+            },
         }
 
         -- completion and snippets

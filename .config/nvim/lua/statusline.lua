@@ -42,7 +42,7 @@ Statusline.el = function()
     end)
 
     --*********************************** Vim Mode --------------------------
-    local mode = function()
+    local function mode()
         local alias = {
             n = "  ☉ ",
             i = "  ✎ ",
@@ -73,7 +73,7 @@ Statusline.el = function()
     end
 
     --*********************************** Scroll position -------------------
-    local scroll = function()
+    local function scroll()
         local current_line = vim.fn.line "."
         local total_lines = vim.fn.line "$"
         local chars = {
@@ -104,27 +104,29 @@ Statusline.el = function()
     end
 
     --*********************************** SuperCollider ---------------------
-    local scnvim = function(_, buffer)
+    local function scnvim(_, buffer)
         if vim.api.nvim_buf_get_option(buffer.bufnr, "filetype") == "supercollider" then
-            local scstatus = "📡" .. vim.fn["scnvim#statusline#server_status"]()
-            vim.api.nvim_set_hl(0, "ScStatus", { bg = colors.blue, fg = colors.bg })
+            local scstatus = "📡 [" .. vim.fn["scnvim#statusline#server_status"]() .. "]"
             return scstatus
         end
     end
 
-    local scContext = function(_, buffer)
-        if vim.api.nvim_buf_get_option(buffer.bufnr, "filetype") == "supercollider" then
+    local function gps(_, buffer)
+        if
+            vim.api.nvim_buf_get_option(buffer.bufnr, "filetype") == "supercollider"
+            or vim.api.nvim_buf_get_var(buffer.bufnr, "hasLsp")
+        then
             local f = require("nvim-treesitter").statusline {
-                indicator_size = 100,
+                indicator_size = 75,
                 type_patterns = {
                     "class",
                     "function",
                     "method",
+                    "struct",
+                    "enum",
                     "interface",
+                    "module",
                     "type_spec",
-                    "table",
-                    "if_statement",
-                    "for_statement",
                 },
             }
             local context = string.format("%s", f)
@@ -195,15 +197,39 @@ Statusline.el = function()
     end)
 
     --*********************************** Lsp status  -----------------------
-    local lspstatus = function(_, buffer)
-        local has_lsp_status, lsp_status = pcall(require, "lsp-status")
-        if not buffer.lsp or not has_lsp_status then
-            return ""
+    local diagnostics = require("el.diagnostic").make_buffer()
+
+    local diagnostic_changes = subscribe.buf_autocmd("el_git_changes", "DiagnosticChanged", function(_, buffer)
+        local display = diagnostics(_, buffer)
+
+        if not display then
+            return
+        end
+        local result = ""
+        local error = display:match "E:%d*"
+        if error then
+            error = error:gsub("E:", " ")
+            result = result .. "%#DiagnosticError# " .. error
         end
 
-        local ok, result = pcall(lsp_status.status)
-        return ok and result or ""
-    end
+        local warn = display:match "W:%d*"
+        if warn then
+            warn = warn:gsub("W:", " ")
+            result = result .. "%#DiagnosticWarn# " .. warn
+        end
+        local info = display:match "I:%d*"
+        if info then
+            info = info:gsub("I:", " ")
+            result = result .. "%#DiagnosticInfo# " .. info
+        end
+
+        local hint = display:match "H:%d*"
+        if hint then
+            hint = hint:gsub("H:", " ")
+            result = result .. "%#DiagnosticHint# " .. hint
+        end
+        return result .. "%##"
+    end)
 
     --*********************************** Status config ---------------------
     require("el").setup {
@@ -216,9 +242,9 @@ Statusline.el = function()
                 sections.highlight("GitGutterChange", changes),
                 sections.highlight("GitGutterDelete", deletions),
                 sections.split,
-                lspstatus,
-                sections.highlight("ScStatus", scnvim),
-                sections.highlight("", scContext),
+                diagnostic_changes,
+                sections.highlight("", scnvim),
+                sections.highlight("", gps),
                 sections.split,
                 sections.highlight("FileIcon", file_icon),
                 sections.highlight("Statusline", builtin.tail_file),
@@ -252,7 +278,7 @@ end
 ------------------------------------------------------------------------
 
 --*********************************** File label -----------------------
-local getTabLabel = function(n)
+local function getTabLabel(n)
     local current_win = vim.api.nvim_tabpage_get_win(n)
     local current_buf = vim.api.nvim_win_get_buf(current_win)
     local file_name = vim.api.nvim_buf_get_name(current_buf)
@@ -280,7 +306,7 @@ local getTabLabel = function(n)
 end
 
 --*********************************** File path ------------------------
-local rootDir = function()
+local function rootDir()
     local val = vim.fn.expand "%"
     if string.find(val, "term://") ~= nil then
         val = " " .. vim.fn.fnamemodify(val, ":p:t")

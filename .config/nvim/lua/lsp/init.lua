@@ -36,13 +36,9 @@ end
 -- **************************** Global attach function------------------
 function lsp.attach(client, bufnr)
     require("mappings").nvim_lsp()
+    vim.b.hasLsp = true
 
-    require("packer").loader "lsp-status.nvim"
-    local lsp_status = require "lsp-status"
-    if client.name ~= "ltex" and client.name ~= "efm" then
-        lsp_status.register_progress()
-    end
-    lsp_status.on_attach(client)
+    require("packer").loader "fidget.nvim"
     require("utils.diagnostics").attach({ all = false, underline = false, update_in_insert = false }, client)
 
     local rc = client.resolved_capabilities
