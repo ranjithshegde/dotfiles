@@ -125,6 +125,27 @@ utils.autocmd = function()
             vim.api.nvim_input "<CR>"
         end,
     })
+
+    augroup("ProjectDrawer", {})
+    aucmd("WinEnter", {
+        callback = function()
+            if
+                vim.fn.winnr "$" == 1
+                and vim.api.nvim_buf_get_option(vim.fn.winbufnr(vim.fn.winnr()), "filetype") == "netrw"
+            then
+                vim.cmd "q"
+            end
+        end,
+    })
+    aucmd("FileType", {
+        pattern = "netrw",
+        callback = function()
+            vim.keymap.set("n", "cd", function()
+                exec("cd " .. vim.b.netrw_curdir)
+                exec "pwd"
+            end, { buffer = true, desc = "CD directory under cursor" })
+        end,
+    })
 end
 
 ------------------------------------------------------------------------

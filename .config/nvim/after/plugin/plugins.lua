@@ -26,17 +26,13 @@ cmd("Cam", "call util#CamelCase()", {})
 cmd("Su", "call util#sudoWrite()", {})
 
 require("mappings").ranger()
+vim.keymap.set("n", "<leader>e", "<cmd>Lex<CR>", { desc = "Toggle Netrw" })
 
 -- ******************* new functions --------------------------------------------
 P = function(v)
     print(vim.inspect(v))
     return v
 end
-
--- W = function(v)
---     local f = io.open("package.txt", "w+")
---     f:write(vim.inspect(v))
--- end
 
 RELOAD = function(module)
     if type(module) == "table" then
@@ -51,4 +47,9 @@ end
 -- R = function(name)
 --     RELOAD(name)
 --     return require(name)
+-- end
+
+-- W = function(v)
+--     local f = io.open("package.txt", "w+")
+--     f:write(vim.inspect(v))
 -- end

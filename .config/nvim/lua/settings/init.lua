@@ -56,6 +56,11 @@ function settings.options()
     vim.g.loaded_perl_provider = 0
     vim.g.netrw_browsex_viewer = "xdg-open"
     vim.g.symbols_outline = { auto_preview = false, width = 40 }
+    vim.g.netrw_browse_split = 4
+    vim.g.netrw_winsize = 15
+    vim.g.netrw_liststyle = 3
+    vim.g.netrw_altv = 1
+    vim.g.loaded_netrwFileHandlers = 1
 
     -- ************** Disable builtin plugins ---------------------------------------------------------
     local disabled_built_ins = {
@@ -75,10 +80,10 @@ function settings.options()
         "spellfile_plugin",
         "shada",
         "matchit",
-        "netrw",
-        "netrwPlugin",
-        "netrwSettings",
-        "netrwFileHandlers",
+        -- "netrw",
+        -- "netrwPlugin",
+        -- "netrwSettings",
+        -- "netrwFileHandlers",
     }
 
     for _, plugin in pairs(disabled_built_ins) do
