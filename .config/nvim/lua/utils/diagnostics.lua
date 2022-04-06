@@ -6,7 +6,22 @@ local current_diagnostics = {}
 
 local TABLE = { "underline", "virtual_text", "signs", "update_in_insert" }
 
+local signs = function()
+    vim.api.nvim_command "sign define DiagnosticSignError text= texthl=DiagnosticSignError"
+    vim.api.nvim_command "sign define DiagnosticSignWarn text= texthl=DiagnosticSignWarn"
+    vim.api.nvim_command "sign define DiagnosticSignInfo text= texthl=DiagnosticSignInfo"
+    vim.api.nvim_command "sign define DiagnosticSignHint text= texthl=DiagnosticSignHint"
+end
+
+local fmt = function(diagnostic)
+    if diagnostic.code then
+        return ("[%s] %s"):format(diagnostic.code, diagnostic.message)
+    end
+    return diagnostic.message
+end
+
 function Diagnostics.attach(user_settings, client)
+    signs()
     local config = {
         settings = {
             all = true,
@@ -23,6 +38,8 @@ function Diagnostics.attach(user_settings, client)
         },
         float = {
             source = "always",
+            border = "double",
+            format = fmt,
         },
     }
     if vim.tbl_isempty(current_diagnostics) then
