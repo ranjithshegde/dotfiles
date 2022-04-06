@@ -131,7 +131,7 @@ Statusline.el = function()
             if context == "" then
                 return ""
             end
-            return "  " .. context
+            return " 🇻  " .. context
         end
     end
 
