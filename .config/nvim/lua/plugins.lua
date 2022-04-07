@@ -56,16 +56,6 @@ return require("packer").startup {
             end,
         }
 
-        -- StatusLine
-        use {
-            "ranjithshegde/express_line.nvim",
-            branch = "git_changes",
-            requires = { "kyazdani42/nvim-web-devicons", "nvim-lua/plenary.nvim" },
-            config = function()
-                require("statusline").el()
-            end,
-        }
-
         -- Coautoring
         use {
             "jbyuki/instant.nvim",
@@ -90,6 +80,16 @@ return require("packer").startup {
             keys = { "gc", "gb", { "v", "gc" }, { "v", "gb" } },
             config = function()
                 require("Comment").setup { ignore = "^$" }
+            end,
+        }
+
+        -- StatusLine
+        use {
+            "ranjithshegde/express_line.nvim",
+            branch = "git_changes",
+            requires = { "kyazdani42/nvim-web-devicons", "nvim-lua/plenary.nvim" },
+            config = function()
+                require("statusline").el()
             end,
         }
 
@@ -237,11 +237,50 @@ return require("packer").startup {
             end,
         }
 
+        -- completion and snippets
+        use {
+            "L3MON4D3/LuaSnip",
+            "hrsh7th/cmp-nvim-lsp",
+            { "hrsh7th/cmp-path", after = "nvim-cmp" },
+            { "saadparwaiz1/cmp_luasnip", after = "nvim-cmp" },
+            {
+                "hrsh7th/nvim-cmp",
+                after = "friendly-snippets",
+                config = function()
+                    require("settings.completion").init()
+                end,
+            },
+            {
+                "ray-x/lsp_signature.nvim",
+                event = "InsertEnter",
+                config = function()
+                    require("lsp_signature").setup {
+                        hint_enable = false,
+                    }
+                end,
+            },
+            {
+                "rafamadriz/friendly-snippets",
+                event = "InsertEnter",
+                config = function()
+                    require("luasnip.loaders.from_vscode").load()
+                end,
+            },
+            {
+                "windwp/nvim-autopairs",
+                after = "nvim-cmp",
+                opt = true,
+                config = function()
+                    require("settings.completion").pairs()
+                end,
+            },
+        }
+
         -- Telescope
         use {
             {
                 "nvim-telescope/telescope.nvim",
-                module_pattern = "telescope.*",
+                module = "telescope",
                 cmd = "Telescope",
                 config = function()
                     require("settings.telescope").telescope()
@@ -320,45 +359,6 @@ return require("packer").startup {
                 ft = { "c", "cpp", "opencl" },
                 config = function()
                     require("lsp.clangd").clangd()
-                end,
-            },
-        }
-
-        -- completion and snippets
-        use {
-            "L3MON4D3/LuaSnip",
-            "hrsh7th/cmp-nvim-lsp",
-            { "hrsh7th/cmp-path", after = "nvim-cmp" },
-            { "saadparwaiz1/cmp_luasnip", after = "nvim-cmp" },
-            {
-                "hrsh7th/nvim-cmp",
-                after = "friendly-snippets",
-                config = function()
-                    require("settings.completion").init()
-                end,
-            },
-            {
-                "ray-x/lsp_signature.nvim",
-                event = "InsertEnter",
-                config = function()
-                    require("lsp_signature").setup {
-                        hint_enable = false,
-                    }
-                end,
-            },
-            {
-                "rafamadriz/friendly-snippets",
-                event = "InsertEnter",
-                config = function()
-                    require("luasnip.loaders.from_vscode").load()
-                end,
-            },
-            {
-                "windwp/nvim-autopairs",
-                after = "nvim-cmp",
-                opt = true,
-                config = function()
-                    require("settings.completion").pairs()
                 end,
             },
         }

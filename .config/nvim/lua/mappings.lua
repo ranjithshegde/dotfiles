@@ -51,7 +51,7 @@ function mappings.general()
             name = "Launch terminal in split",
             h = { "<cmd>sp term://zsh<cr>", "Horizontal" },
             v = { "<cmd>vspl term://zsh<cr>", "Vertical" },
-            t = { "<cmd>tabnew term://zsh<cr>", "New tab" },
+            t = { "<cmd>tab drop term://zsh<cr>", "New tab" },
         },
         ["<leader><Tab>"] = { "<cmd>SidebarNvimToggle<CR>", "Toggle Symbolsbar" },
     }
@@ -89,7 +89,7 @@ function mappings.general()
             },
             t = {
                 function()
-                    require("org").openIndex "tabnew"
+                    require("org").openIndex "tab drop"
                 end,
                 "Open Index in a new tab",
             },
@@ -115,7 +115,7 @@ function mappings.general()
                 },
                 t = {
                     function()
-                        require("org.diary").diaryTodayOpen "tabnew"
+                        require("org.diary").diaryTodayOpen "tab drop"
                     end,
                     "Today in a new tab",
                 },
@@ -289,7 +289,7 @@ end
 
 function mappings.configFiles()
     local open = function(path)
-        return string.format("<cmd>tabnew ~/.config/nvim/%s<CR>", path)
+        return string.format("<cmd>tab drop ~/.config/nvim/%s<CR>", path)
     end
     wk.register {
         ["<leader>"] = {
@@ -1014,6 +1014,7 @@ function mappings.debug()
             ["."] = { require("dap").close, "End" },
             ["?"] = { require("debugger").frames, "Frames" },
             ["/"] = { require("debugger").scopes, "Scopes" },
+            t = { require("debugger").threads, "threads" },
             u = { require("dapui").toggle, "Toggle all UI" },
             c = { require("dap").continue, "continue to next breakpoint" },
             n = { require("dap").step_over, "step over" },

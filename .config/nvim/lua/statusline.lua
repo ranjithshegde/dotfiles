@@ -41,13 +41,13 @@ end)
 --*********************************** Vim Mode --------------------------
 local function mode()
     local alias = {
-        n = "  ☉ ",
-        i = "  ✎ ",
-        c = "  ⌨ ",
-        v = "  ✄ ",
-        V = "  ✄ ",
-        [""] = "  ✄ ",
-        t = "zsh  ▧ ",
+        n = " ☉ ",
+        i = " ✎ ",
+        c = " ⌨ ",
+        v = " ✄ ",
+        V = " ✄ ",
+        [""] = " ✄ ",
+        t = "zsh ▧ ",
     }
 
     local mode_color = {
@@ -108,6 +108,7 @@ local function scnvim(_, buffer)
             return "📡 [" .. scstatus .. "]"
         end
     end
+    return ""
 end
 
 --*********************************** Git branch ------------------------
@@ -176,7 +177,7 @@ local diagnostic_changes = subscribe.buf_autocmd("el_git_changes", "DiagnosticCh
     local display = diagnostics(_, buffer)
 
     if not display then
-        return
+        return ""
     end
     local result = ""
     local error = display:match "E:%d*"
@@ -222,12 +223,26 @@ local ft = {
         "function_definition",
         "struct",
         "enum",
+        "linkage_specification",
     },
     cpp = {
         "class",
         "function_definition",
         "struct",
         "enum",
+        "linkage_specification",
+    },
+    lua = {
+        "function",
+        "table_constructor",
+        "module",
+        "enum",
+    },
+    opencl = {
+        "function_definition",
+        "struct",
+        "enum",
+        "linkage_specification",
     },
     tex = {
         "chapter",
@@ -236,46 +251,16 @@ local ft = {
     },
 }
 
-local tree_symbol = {
-    ["class"] = "",
-    ["function"] = "",
-    ["void"] = "",
-    ["int"] = "",
-    ["float"] = "",
-    ["double"] = "",
-    ["method"] = "ƒ",
-    ["struct"] = "",
-    ["enum"] = "了",
-    ["interface"] = "ﰮ",
-    ["module"] = "",
-    ["require"] = "",
-    ["type_spec"] = "",
-    ["chapter"] = "",
-    ["section"] = "",
-    ["subsection"] = "",
-}
-
 local function gps(_, buffer)
     local fs = vim.api.nvim_buf_get_option(buffer.bufnr, "filetype")
-    if fs == "supercollider" or vim.api.nvim_buf_get_var(buffer.bufnr, "hasLsp") then
-        local context = require("nvim-treesitter").statusline {
-            indicator_size = 75,
-            type_patterns = ft[fs] or default,
-        }
-        if context == "" then
-            return ""
-        end
-
-        for index, value in pairs(tree_symbol) do
-            index = index:gsub("%[", "")
-            index = index:gsub("%]", "")
-            if string.find(context, index) then
-                context = context:gsub(index, value .. " " .. index)
-            end
-        end
-
-        return "🇻  " .. context
+    local context = require("settings.treesitter").statusline {
+        indicator_size = vim.g.gps or 35,
+        type_patterns = ft[fs] or default,
+    }
+    if context == "" then
+        return ""
     end
+    return "🇻  " .. context
 end
 
 --*********************************** Status config ---------------------
@@ -291,9 +276,8 @@ Statusline.el = function()
                 sections.highlight("GitGutterChange", changes),
                 sections.highlight("GitGutterDelete", deletions),
                 sections.split,
-                sections.highlight("", scnvim),
                 diagnostic_changes,
-                sections.collapse_builtin { space, gps },
+                sections.collapse_builtin { scnvim, space, gps },
                 sections.split,
                 sections.highlight("FileIcon", file_icon),
                 sections.highlight("Statusline", builtin.tail_file),

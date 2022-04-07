@@ -1,10 +1,10 @@
-local Telescope = {}
+local telescope = {}
 
 ------------------------------------------------------------------------
 --                       Telescope 									  --
 ------------------------------------------------------------------------
 
-function Telescope.telescope()
+function telescope.telescope()
     require("telescope").setup {
         pickers = {
             find_files = { follow = true },
@@ -73,4 +73,4 @@ function Telescope.telescope()
     }
 end
 
-return Telescope
+return telescope

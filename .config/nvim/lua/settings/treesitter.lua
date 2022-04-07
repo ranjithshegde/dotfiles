@@ -1,11 +1,14 @@
-local ts = {}
+local parsers = require "nvim-treesitter.parsers"
+local ts_utils = require "nvim-treesitter.ts_utils"
+local ls = require "utils.langServers"
 
+local ts = {}
 ------------------------------------------------------------------------
---                             Treesitter                             --
+--                             Treesitter Config                      --
 ------------------------------------------------------------------------
 
 function ts.init()
-    local ft_to_parser = require("nvim-treesitter.parsers").filetype_to_parsername
+    local ft_to_parser = parsers.filetype_to_parsername
     ft_to_parser.opencl = "c"
     ft_to_parser.vimwiki = "markdown"
     require("nvim-treesitter.configs").setup {
@@ -171,6 +174,47 @@ function ts.init()
         },
         playground = { enable = true, updatetime = 25, persist_queries = false },
     }
+end
+
+------------------------------------------------------------------------
+--                             Treesitter Statusline                  --
+------------------------------------------------------------------------
+
+function ts.statusline(opts)
+    if not parsers.has_parser() then
+        return
+    end
+    local options = opts
+
+    local indicator_size = options.indicator_size
+    local type_patterns = options.type_patterns
+    local transform_fn = ls.transform_line
+    local separator = " -> "
+
+    local current_node = ts_utils.get_node_at_cursor()
+    if not current_node then
+        return ""
+    end
+
+    local lines = {}
+    local expr = current_node
+
+    while expr do
+        local line = ls.get_line_for_node(expr, type_patterns, transform_fn)
+        if line ~= "" and not vim.tbl_contains(lines, line) then
+            table.insert(lines, 1, line)
+        end
+        expr = expr:parent()
+    end
+
+    local text = table.concat(lines, separator)
+    local text_len = #text
+    if text_len > indicator_size then
+        text_len = text:find(" ", indicator_size)
+        return text:sub(1, text_len) .. "..."
+    end
+
+    return text
 end
 
 return ts

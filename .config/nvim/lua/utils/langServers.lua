@@ -114,6 +114,75 @@ langSettings.kind_symbols = {
 }
 
 ------------------------------------------------------------------------
+--                              TSStatusLine                          --
+------------------------------------------------------------------------
+
+local ts_utils = require "nvim-treesitter.ts_utils"
+
+-- associate icons with nodes
+local tree_symbol = {
+    ["class"] = " ",
+    ["function"] = " ",
+    ["function_definition"] = " ",
+    ["method"] = "ƒ ",
+    ["struct"] = " ",
+    ["table_constructor"] = " ",
+    ["enum"] = "了 ",
+    ["interface"] = "ﰮ ",
+    ["module"] = " ",
+    ["require"] = " ",
+    ["type_spec"] = " ",
+    ["chapter"] = " ",
+    ["section"] = " ",
+    ["subsection"] = " ",
+    ["linkage_specification"] = " ",
+}
+
+-- Trim spaces and opening brackets from end
+function langSettings.transform_line(line)
+    return line:gsub("%s*[%[%(%{]*%s*$", "")
+end
+
+-- get current node
+function langSettings.get_line_for_node(node, type_patterns, transform_fn)
+    local node_type = node:type()
+    local is_valid = false
+    local i
+    for _, rgx in ipairs(type_patterns) do
+        if node_type:find(rgx) then
+            is_valid = true
+            i = rgx
+            break
+        end
+    end
+    if not is_valid then
+        return ""
+    end
+    local line = transform_fn(vim.trim(ts_utils.get_node_text(node)[1] or ""))
+
+    for index, value in pairs(tree_symbol) do
+        index = index:gsub("%[", "")
+        index = index:gsub("%]", "")
+        if index == "section" and line:find "*" then
+            line = line:gsub("*", "")
+        end
+
+        if index == i then
+            line = value .. line
+        end
+        if line:find(index) then
+            if line:find(value) then
+                line = line:gsub(index, "")
+            else
+                line = line:gsub(index, value)
+            end
+        end
+    end
+    -- Escape % to avoid statusline to evaluate content as expression
+    return line:gsub("%%", "%%%%")
+end
+
+------------------------------------------------------------------------
 --                              Chain completion                      --
 ------------------------------------------------------------------------
 

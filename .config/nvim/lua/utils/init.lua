@@ -11,7 +11,6 @@ function utils.UnloadAllModules()
     -- Lua patterns for the modules to unload
     local unload_modules = {
         "mappings",
-        "compiler",
         "plugins",
         "settings",
         "statusline",
