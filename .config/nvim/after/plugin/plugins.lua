@@ -1,5 +1,5 @@
 -- ******************* function calls --------------------------------------------
-local cmd = vim.api.nvim_add_user_command
+local cmd = vim.api.nvim_create_user_command
 
 cmd("Cpractice", function()
     require("utils.compiler").cpractice()

@@ -33,6 +33,7 @@ function ts.init()
             "python",
             "query",
             "regex",
+            "scheme",
             "supercollider",
             "toml",
             "vim",

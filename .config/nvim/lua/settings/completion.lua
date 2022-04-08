@@ -101,4 +101,14 @@ function completion.pairs()
     )
 end
 
+function completion.luasnip()
+    vim.api.nvim_create_autocmd("InsertEnter", {
+        pattern = "*.scd, *.sc, *.sc_help, *.quarks",
+        group = "LspSettings",
+        callback = function()
+            require("luasnip").add_snippets("supercollider", require("scnvim/utils").get_snippets())
+        end,
+    })
+end
+
 return completion

@@ -120,12 +120,12 @@ local git_branch = subscribe.buf_autocmd("el_git_branch", "BufReadPre", function
     local branch = extensions.git_branch(window, buffer)
     if branch then
         require("packer").loader "gitsigns.nvim"
-        return " " .. extensions.git_icon() .. " " .. branch
+        return space .. extensions.git_icon() .. space .. branch
     end
 end)
 
 --*********************************** Git sign changes ------------------
-local git_changes = function(_, _)
+local function git_changes(_, _)
     local st = vim.b.gitsigns_status
     if not st then
         return ""
@@ -192,15 +192,15 @@ local ft = {
     },
     tex = {
         "chapter",
-        "section",
         "subsection",
+        "section",
     },
 }
 
 local function gps(_, buffer)
     local fs = vim.api.nvim_buf_get_option(buffer.bufnr, "filetype")
     local context = require("settings.treesitter").statusline {
-        indicator_size = vim.g.gps or 35,
+        indicator_size = vim.b.gps or 35,
         type_patterns = ft[fs] or default,
     }
     if context == "" then

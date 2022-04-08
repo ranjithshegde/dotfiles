@@ -308,7 +308,6 @@ function mappings.configFiles()
                     t = { open "lua/settings/telescope.lua", "Telescope" },
                     s = { open "lua/settings/treesitter.lua", "Treesitter" },
                     c = { open "lua/settings/completion.lua", "Completion" },
-                    n = { open "lua/settings/notify.lua", "Notification API" },
                 },
                 l = {
                     name = "Lsp",
@@ -361,7 +360,7 @@ function mappings.treesitter()
         [";"] = {
             name = "Syntax tree functions",
             -- Plugins
-            K = { "<cmd>TSHighlightCapturesUnderCursor<cr>", "Show treesitter node" },
+            K = { "<cmd>TSNodeUnderCursor<cr>", "Show treesitter node" },
             P = { "<cmd>TSPlaygroundToggle<cr>", "Toggle playground" },
             --Refactor
             d = "Jump to node definition",

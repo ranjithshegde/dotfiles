@@ -41,6 +41,35 @@ end
 utils.autocmd = function()
     -- ************** FileTypes  ---------------------------------------
 
+    local lspfiles = {
+        "bash",
+        "sh",
+        "zsh",
+        "tex",
+        "bib",
+        "css",
+        "cmake",
+        "c",
+        "cpp",
+        "objc",
+        "opencl",
+        "dart",
+        "glsl",
+        "html",
+        "javascript",
+        "typescript",
+        "java",
+        "json",
+        "jsonc",
+        "lua",
+        "markdown",
+        "vimwiki",
+        "org",
+        "make",
+        "python",
+        "vim",
+        "yaml",
+    }
     augroup("FormatOptions", {})
     aucmd("FileType", {
         group = "FormatOptions",
@@ -62,7 +91,11 @@ utils.autocmd = function()
     aucmd("FileType", {
         group = "LspSettings",
         pattern = "vim",
-        command = "nn <silent><buffer>,K <cmd>exe 'h '.expand('<cword>')<CR>",
+        callback = function()
+            vim.keymap.set("n", ",K", function()
+                vim.fn.execute("h " .. vim.fn.expand "<cword>")
+            end, { buffer = true, desc = "Help instead of hover" })
+        end,
     })
     aucmd("FileType", {
         group = "LspSettings",
@@ -221,7 +254,7 @@ end
 
 function utils.commands()
     require("mappings").diagnostic()
-    local cmd = vim.api.nvim_add_user_command
+    local cmd = vim.api.nvim_create_user_command
     local complete = function()
         return require("utils.langServers").getClientNames()
     end

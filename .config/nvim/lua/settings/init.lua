@@ -41,7 +41,6 @@ function settings.options()
         verthoriz = "╋",
     }
     o.listchars:append "eol:↲"
-    -- o.listchars = "tab:<->,eol:↲,space:→"
     o.foldexpr = "nvim_treesitter#foldexpr()"
     o.completeopt = "menu,menuone,noinsert,noselect"
     o.dictionary = os.getenv "XDG_DATA_HOME" .. "/dict/words"

@@ -133,8 +133,8 @@ local tree_symbol = {
     ["require"] = " ",
     ["type_spec"] = " ",
     ["chapter"] = " ",
-    ["section"] = " ",
     ["subsection"] = " ",
+    ["section"] = " ",
     ["linkage_specification"] = " ",
 }
 

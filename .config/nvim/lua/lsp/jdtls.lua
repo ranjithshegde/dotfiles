@@ -14,7 +14,6 @@ function servers.jdtls()
         cmd = { "jdtls" },
         on_attach = function(client, bufnr)
             require("lsp").attach(client, bufnr)
-            vim.opt_local.formatexpr = "v:lua.vim.lsp.formatexpr()"
             require("jdtls").setup_dap { hotcodereplace = "auto" }
             require("jdtls.setup").add_commands()
         end,

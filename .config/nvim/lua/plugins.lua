@@ -34,7 +34,7 @@ return require("packer").startup {
         use {
             { "tpope/vim-surround", event = "BufReadPost" },
             { "tpope/vim-unimpaired", keys = { "[", "]" } },
-            { "tpope/vim-dispatch", cmd = { "Make", "Dispatch" } },
+            { "tpope/vim-dispatch", cmd = { "Make", "Dispatch", "Start" } },
             { "tpope/vim-fugitive", cmd = { "G", "Git", "Gclog" } },
         }
 
@@ -44,7 +44,7 @@ return require("packer").startup {
             { "p00f/nvim-ts-rainbow", event = "BufReadPre" },
             { "nvim-treesitter/nvim-treesitter-textobjects", event = "BufReadPost" },
             { "nvim-treesitter/nvim-treesitter-refactor", after = "scnvim" },
-            { "nvim-treesitter/playground", cmd = { "TSPlaygroundToggle", "TSHighlightCapturesUnderCursor" } },
+            { "nvim-treesitter/playground", cmd = { "TSPlaygroundToggle", "TSNodeUnderCursor" } },
         }
 
         -- Fold text
@@ -83,19 +83,10 @@ return require("packer").startup {
             end,
         }
 
-        -- Notifications
-        use {
-            "rcarriga/nvim-notify",
-            opt = true,
-            config = function()
-                require("settings.notify").init()
-            end,
-        }
-
         -- StatusLine
         use {
-            "ranjithshegde/express_line.nvim",
-            branch = "git_changes",
+            "tjdevries/express_line.nvim",
+            -- branch = "git_changes",
             requires = { "kyazdani42/nvim-web-devicons", "nvim-lua/plenary.nvim" },
             config = function()
                 require("statusline").el()
@@ -210,7 +201,7 @@ return require("packer").startup {
             end,
             config = function()
                 vim.g.scnvim_snippet_format = "luasnip"
-                require("luasnip").add_snippets("supercollider", require("scnvim/utils").get_snippets())
+                vim.g.scnvim_postwin_auto_toggle = 1
                 vim.api.nvim_create_autocmd("FileType", {
                     group = "LspSettings",
                     pattern = "supercollider",
@@ -246,39 +237,18 @@ return require("packer").startup {
             end,
         }
 
-        --Lsp config and companions
-        use {
-            "neovim/nvim-lspconfig",
-            {
-                "folke/lua-dev.nvim",
-                ft = "lua",
-                config = function()
-                    require("lsp.sumneko").sumneko()
-                end,
-            },
-            {
-                "mfussenegger/nvim-jdtls",
-                ft = "java",
-                config = function()
-                    require("lsp.jdtls").jdtls()
-                end,
-            },
-            { "m-pilia/vim-ccls", ft = { "c", "cpp", "opencl" } },
-            {
-                "p00f/clangd_extensions.nvim",
-                ft = { "c", "cpp", "opencl" },
-                config = function()
-                    require("lsp.clangd").clangd()
-                end,
-            },
-        }
-
         -- completion and snippets
         use {
-            "L3MON4D3/LuaSnip",
             "hrsh7th/cmp-nvim-lsp",
             { "hrsh7th/cmp-path", after = "nvim-cmp" },
             { "saadparwaiz1/cmp_luasnip", after = "nvim-cmp" },
+            {
+                "L3MON4D3/LuaSnip",
+                event = "InsertEnter",
+                config = function()
+                    require("settings.completion").luasnip()
+                end,
+            },
             {
                 "hrsh7th/nvim-cmp",
                 after = "friendly-snippets",
@@ -297,7 +267,7 @@ return require("packer").startup {
             },
             {
                 "rafamadriz/friendly-snippets",
-                event = "InsertEnter",
+                after = "LuaSnip",
                 config = function()
                     require("luasnip.loaders.from_vscode").load()
                 end,
@@ -353,6 +323,51 @@ return require("packer").startup {
             -- "nvim-telescope/telescope-dap.nvim",
             -- opt = true,
             -- },
+        }
+
+        --Lsp config and companions
+        use {
+            "neovim/nvim-lspconfig",
+            {
+                "folke/lua-dev.nvim",
+                ft = "lua",
+                config = function()
+                    require("lsp.sumneko").sumneko()
+                end,
+            },
+            {
+                "mfussenegger/nvim-jdtls",
+                ft = "java",
+                config = function()
+                    require("lsp.jdtls").jdtls()
+                end,
+            },
+            { "m-pilia/vim-ccls", ft = { "c", "cpp", "opencl" } },
+            {
+                "p00f/clangd_extensions.nvim",
+                ft = { "c", "cpp", "opencl" },
+                config = function()
+                    require("lsp.clangd").clangd()
+                end,
+            },
+            {
+                "j-hui/fidget.nvim",
+                opt = true,
+                config = function()
+                    require("fidget").setup {
+                        text = {
+                            spinner = "moon",
+                        },
+                        align = {
+                            bottom = true,
+                        },
+                        window = {
+                            relative = "editor",
+                            blend = 0,
+                        },
+                    }
+                end,
+            },
         }
 
         if packer_bootstrap then

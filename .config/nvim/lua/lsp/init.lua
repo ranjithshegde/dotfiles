@@ -38,8 +38,7 @@ function lsp.attach(client, bufnr)
     require("mappings").nvim_lsp()
     vim.b.hasLsp = true
 
-    require("packer").loader "nvim-notify"
-    require("settings.notify").lsp()
+    require("packer").loader "fidget.nvim"
     require("utils.diagnostics").attach({ all = false, underline = false, update_in_insert = false }, client)
 
     local rc = client.resolved_capabilities
@@ -67,16 +66,12 @@ function lsp.attach(client, bufnr)
             end,
         })
     end
-    vim.api.nvim_add_user_command("LspCapabilities", require("utils.langServers").lsp_capabilities, {})
+    vim.api.nvim_create_user_command("LspCapabilities", require("utils.langServers").lsp_capabilities, {})
 end
 
 -- **************************** Ccls reduction function-----------------
 function lsp.cinit(client)
     require("mappings").nvim_lsp()
-    local ok, lsp_status = pcall(require, "lsp-status")
-    if ok then
-        lsp_status.register_progress()
-    end
     client.server_capabilities.completionProvider = false
     local rc = client.resolved_capabilities
     rc.document_formatting = false
@@ -187,16 +182,32 @@ function lsp.lintFormat()
     local rootMarker = { vim.fn.getcwd() or { ".git/" } }
 
     local checkmake = { lintCommand = "checkmake", lintStdin = true }
-    local yamllint = { lintCommand = "yamllint -f parsable -", lintStdin = true }
-    local shfmt = { formatCommand = "shfmt -ci -s -bn", formatStdin = true }
-    local prettier = { formatCommand = "prettier --stdin --stdin-filepath ${INPUT}", formatStdin = true }
-    local isort = { formatCommand = "isort --stdout --profile black -", formatStdin = true }
     local black = { formatCommand = "black --fast -", formatStdin = true }
+    local shfmt = { formatCommand = "shfmt -ci -s -bn", formatStdin = true }
+    local yamllint = { lintCommand = "yamllint -f parsable -", lintStdin = true }
     local clang_format = { formatCommand = "clang-format -", formatStdin = true }
+    local isort = { formatCommand = "isort --stdout --profile black -", formatStdin = true }
+    local stylua = { formatCommand = "stylua --search-parent-directories -", formatStdin = true }
+    local prettier = { formatCommand = "prettier --stdin --stdin-filepath ${INPUT}", formatStdin = true }
+    local markdownlint = {
+        lintCommand = "markdownlint -f ${INPUT}",
+        lintStdin = true,
+        lintFormats = { "%f:%l %m", "%f:%l:%c %m", "%f: %l: %m" },
+    }
     local mypy = {
         lintCommand = "mypy --show-column-numbers",
         lintFormats = { "%f:%l:%c: %trror: %m", "%f:%l:%c: %tarning: %m", "%f:%l:%c: %tote: %m" },
         lintSource = "mypy",
+    }
+    local shellcheck = {
+        lintCommand = "shellcheck -f gcc -x -",
+        lintStdin = true,
+        lintFormats = { "%f:%l:%c: %trror: %m", "%f:%l:%c: %tarning: %m", "%f:%l:%c: %tote: %m" },
+    }
+    local vint = {
+        lintCommand = "vint -f '{file_path}:{line_number}:{column_number}: {severity}: {description} (see: {reference})' --enable-neovim",
+        lintStdin = false,
+        lintFormats = { "%f:%l:%c: %m" },
     }
     local flake8 = {
         lintCommand = "flake8 --max-line-length 160 --format '%(path)s:%(row)d:%(col)d: %(code)s %(code)s %(text)s' --stdin-display-name ${INPUT} -",
@@ -204,22 +215,6 @@ function lsp.lintFormat()
         lintIgnoreExitCode = true,
         lintFormats = { "%f:%l:%c: %t%n%n%n %m" },
         lintSource = "flake8",
-    }
-    local shellcheck = {
-        lintCommand = "shellcheck -f gcc -x -",
-        lintStdin = true,
-        lintFormats = { "%f:%l:%c: %trror: %m", "%f:%l:%c: %tarning: %m", "%f:%l:%c: %tote: %m" },
-    }
-    local markdownlint = {
-        lintCommand = "markdownlint -f ${INPUT}",
-        lintStdin = true,
-        lintFormats = { "%f:%l %m", "%f:%l:%c %m", "%f: %l: %m" },
-    }
-    local stylua = { formatCommand = "stylua --search-parent-directories -", formatStdin = true }
-    local vint = {
-        lintCommand = "vint -f '{file_path}:{line_number}:{column_number}: {severity}: {description} (see: {reference})' --enable-neovim",
-        lintStdin = false,
-        lintFormats = { "%f:%l:%c: %m" },
     }
 
     local languages = {

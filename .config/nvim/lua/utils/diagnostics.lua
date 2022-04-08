@@ -1,57 +1,161 @@
-local Diagnostics = {}
 local lsp = vim.lsp
 local util = require "lspconfig.util"
+
+------------------------------------------------------------------------
+--                              General functions                     --
+------------------------------------------------------------------------
 
 local current_diagnostics = {}
 
 local TABLE = { "underline", "virtual_text", "signs", "update_in_insert" }
 
-local severity = vim.diagnostic.severity
-
-Diagnostics.highlights = {
+local highlights = {
     error = "",
     warn = "",
     info = "",
     hint = "",
 }
 
-Diagnostics.sethl = function(error, warn, hint, info)
-    if error then
-        Diagnostics.highlights.error = "%#" .. error .. "#"
-    end
+local function signs()
+    vim.api.nvim_command "sign define DiagnosticSignError text= texthl=DiagnosticSignError"
+    vim.api.nvim_command "sign define DiagnosticSignWarn text= texthl=DiagnosticSignWarn"
+    vim.api.nvim_command "sign define DiagnosticSignInfo text= texthl=DiagnosticSignInfo"
+    vim.api.nvim_command "sign define DiagnosticSignHint text= texthl=DiagnosticSignHint"
+end
 
-    if warn then
-        Diagnostics.highlights.warn = "%#" .. warn .. "#"
+local function fmt(diagnostic)
+    if diagnostic.code then
+        return ("[%s] %s"):format(diagnostic.code, diagnostic.message)
     end
+    return diagnostic.message
+end
 
-    if info then
-        Diagnostics.highlights.info = "%#" .. info .. "#"
-    end
+local float_conf = {
+    virtual_text = {
+        source = "always",
+    },
+    float = {
+        source = "always",
+        border = "double",
+        format = fmt,
+    },
+}
 
-    if hint then
-        Diagnostics.highlights.hint = "%#" .. hint .. "#"
+local function displayStatus(msg, val, client)
+    if not client then
+        if val == false then
+            vim.api.nvim_echo({ { string.format("%s off", msg) } }, false, {})
+        else
+            vim.api.nvim_echo({ { string.format("%s on", msg) } }, false, {})
+        end
+    else
+        if val == false then
+            vim.api.nvim_echo({ { string.format("%s off for %s", msg, client) } }, false, {})
+        else
+            vim.api.nvim_echo({ { string.format("%s on for %s", msg, client) } }, false, {})
+        end
     end
 end
 
-Diagnostics.formatter = function(_, buffer, counts)
+local function tableHasKey(table, key)
+    if table[key] ~= nil then
+        return true
+    end
+end
+
+local function returinID(client)
+    local lang_server = util.get_active_client_by_name(0, client)
+    return lang_server.id
+end
+
+local function show(b, c, conf)
+    vim.diagnostic.show(lsp.diagnostic.get_namespace(c), b, nil, conf)
+end
+
+local function currentSettings(new_settings, client)
+    local settings = {}
+    for _, setting in pairs(TABLE) do
+        settings[setting] = current_diagnostics[client].settings[setting].value
+    end
+    if not vim.tbl_isempty(new_settings) then
+        for setting, value in pairs(new_settings) do
+            settings[setting] = value
+        end
+    end
+    return settings
+end
+
+local function configure(settings, client)
+    if not client then
+        for id, _ in pairs(current_diagnostics) do
+            local conf = currentSettings(settings, id)
+            vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
+                vim.lsp.diagnostic.on_publish_diagnostics,
+                conf
+            )
+            local client_id = returinID(id)
+            local buffers = lsp.get_buffers_by_client_id(client_id)
+            for _, buffer_id in ipairs(buffers) do
+                show(buffer_id, client_id, conf)
+            end
+        end
+    else
+        local conf = currentSettings(settings, client)
+        vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
+            vim.lsp.diagnostic.on_publish_diagnostics,
+            conf
+        )
+        local client_id = returinID(client)
+        local buffers = lsp.get_buffers_by_client_id(client_id)
+        for _, buffer_id in ipairs(buffers) do
+            show(buffer_id, client_id, conf)
+        end
+    end
+end
+
+local Diagnostics = {}
+
+------------------------------------------------------------------------
+--                              Diagnostic format                     --
+------------------------------------------------------------------------
+
+Diagnostics.sethl = function(error, warn, hint, info)
+    if error then
+        highlights.error = "%#" .. error .. "#"
+    end
+
+    if warn then
+        highlights.warn = "%#" .. warn .. "#"
+    end
+
+    if info then
+        highlights.info = "%#" .. info .. "#"
+    end
+
+    if hint then
+        highlights.hint = "%#" .. hint .. "#"
+    end
+end
+
+Diagnostics.formatter = function(_, _, counts)
     if not vim.b.hasLsp then
         return ""
     end
     local items = {}
     if counts.errors > 0 then
-        table.insert(items, string.format("%s %s", Diagnostics.highlights.error, counts.errors))
+        table.insert(items, string.format("%s %s", highlights.error, counts.errors))
     end
 
     if counts.warnings > 0 then
-        table.insert(items, string.format("%s %s", Diagnostics.highlights.warn, counts.warnings))
+        table.insert(items, string.format("%s %s", highlights.warn, counts.warnings))
     end
 
     if counts.infos > 0 then
-        table.insert(items, string.format("%s  %s", Diagnostics.highlights.info, counts.infos))
+        table.insert(items, string.format("%s  %s", highlights.info, counts.infos))
     end
 
     if counts.hints > 0 then
-        table.insert(items, string.format("%s  %s", Diagnostics.highlights.hint, counts.hints))
+        table.insert(items, string.format("%s  %s", highlights.hint, counts.hints))
     end
 
     if vim.tbl_isempty(items) then
@@ -60,18 +164,25 @@ Diagnostics.formatter = function(_, buffer, counts)
     return table.concat(items, " ") .. " %##"
 end
 
-local signs = function()
-    vim.api.nvim_command "sign define DiagnosticSignError text= texthl=DiagnosticSignError"
-    vim.api.nvim_command "sign define DiagnosticSignWarn text= texthl=DiagnosticSignWarn"
-    vim.api.nvim_command "sign define DiagnosticSignInfo text= texthl=DiagnosticSignInfo"
-    vim.api.nvim_command "sign define DiagnosticSignHint text= texthl=DiagnosticSignHint"
-end
+------------------------------------------------------------------------
+--                              Diagnostic Toggle                     --
+------------------------------------------------------------------------
 
-local fmt = function(diagnostic)
-    if diagnostic.code then
-        return ("[%s] %s"):format(diagnostic.code, diagnostic.message)
+local function init(settings, client, config)
+    local client_settings = settings or {}
+    for _, setting in ipairs(TABLE) do
+        if client_settings[setting] ~= nil then
+            config.settings[setting].default = client_settings[setting]
+        end
+        config.settings[setting].value = config.settings[setting].default
     end
-    return diagnostic.message
+    if client_settings["start_on"] ~= nil and not client_settings["start_on"] then
+        current_diagnostics[client] = config
+        Diagnostics.turn_off_diagnostics(client)
+    else
+        current_diagnostics[client] = config
+        configure({}, client)
+    end
 end
 
 function Diagnostics.attach(user_settings, client)
@@ -86,52 +197,23 @@ function Diagnostics.attach(user_settings, client)
             update_in_insert = { default = true },
         },
     }
-    vim.diagnostic.config {
-        virtual_text = {
-            source = "always",
-        },
-        float = {
-            source = "always",
-            border = "double",
-            format = fmt,
-        },
-    }
+    vim.diagnostic.config(float_conf)
+
     if vim.tbl_isempty(current_diagnostics) then
-        Diagnostics.init(user_settings, client.name, config)
+        init(user_settings, client.name, config)
     else
-        if Diagnostics.tableHasKey(current_diagnostics, client.name) then
+        if tableHasKey(current_diagnostics, client.name) then
             return
         else
-            Diagnostics.init(user_settings, client.name, config)
+            init(user_settings, client.name, config)
         end
     end
-end
-
-function Diagnostics.init(settings, client, config)
-    local client_settings = settings or {}
-    for _, setting in ipairs(TABLE) do
-        if client_settings[setting] ~= nil then
-            config.settings[setting].default = client_settings[setting]
-        end
-        config.settings[setting].value = config.settings[setting].default
-    end
-    if client_settings["start_on"] ~= nil and not client_settings["start_on"] then
-        current_diagnostics[client] = config
-        Diagnostics.turn_off_diagnostics(client)
-    else
-        current_diagnostics[client] = config
-        Diagnostics.configure_diagnostics({}, client)
-    end
-end
-
-Diagnostics.show = function(b, c, conf)
-    vim.diagnostic.show(lsp.diagnostic.get_namespace(c), b, nil, conf)
 end
 
 function Diagnostics.turn_off_diagnostics(client)
     if not client then
         for id, _ in pairs(current_diagnostics) do
-            Diagnostics.configure_diagnostics {
+            configure {
                 underline = false,
                 virtual_text = false,
                 signs = false,
@@ -142,7 +224,7 @@ function Diagnostics.turn_off_diagnostics(client)
     else
         local name = util.get_active_client_by_name(0, client)
         if name then
-            Diagnostics.configure_diagnostics({
+            configure({
                 underline = false,
                 virtual_text = false,
                 signs = false,
@@ -162,7 +244,7 @@ function Diagnostics.turn_on_diagnostics_default(client)
             for _, setting in ipairs(TABLE) do
                 settings[setting] = current_diagnostics[id].settings[setting].default
             end
-            Diagnostics.configure_diagnostics(settings)
+            configure(settings)
             current_diagnostics[id].settings.all = true
         end
         vim.api.nvim_echo({ { "diagnostics for all attached servers are at default" } }, false, {})
@@ -172,7 +254,7 @@ function Diagnostics.turn_on_diagnostics_default(client)
             for _, setting in ipairs(TABLE) do
                 settings[setting] = current_diagnostics[client].settings[setting].default
             end
-            Diagnostics.configure_diagnostics(settings, client)
+            configure(settings, client)
             current_diagnostics[client].settings.all = true
             vim.api.nvim_echo({ { string.format("all diagnostics for %s are at default", client) } }, false, {})
         else
@@ -184,7 +266,7 @@ end
 function Diagnostics.turn_on_diagnostics(client)
     if not client then
         for id, _ in pairs(current_diagnostics) do
-            Diagnostics.configure_diagnostics {
+            configure {
                 underline = true,
                 virtual_text = true,
                 signs = true,
@@ -195,7 +277,7 @@ function Diagnostics.turn_on_diagnostics(client)
     else
         local name = util.get_active_client_by_name(0, client)
         if name then
-            Diagnostics.configure_diagnostics({
+            configure({
                 underline = true,
                 virtual_text = true,
                 signs = true,
@@ -216,7 +298,7 @@ function Diagnostics.toggle_all_diagnostics(client)
             else
                 Diagnostics.turn_on_diagnostics()
             end
-            Diagnostics.display_status("all diagnostics for attached servers are", current_diagnostics[id].settings.all)
+            displayStatus("all diagnostics for attached servers are", current_diagnostics[id].settings.all)
         end
     else
         local name = util.get_active_client_by_name(0, client)
@@ -226,7 +308,7 @@ function Diagnostics.toggle_all_diagnostics(client)
             else
                 Diagnostics.turn_on_diagnostics(client)
             end
-            Diagnostics.display_status("all diagnostics are", current_diagnostics[client].settings.all, client)
+            displayStatus("all diagnostics are", current_diagnostics[client].settings.all, client)
         else
             print(string.format("The language server %s is not active on this buffer", client))
         end
@@ -243,8 +325,8 @@ function Diagnostics.toggle_diagnostic(name, client)
             else
                 current_diagnostics[id].settings[name].value = false
             end
-            Diagnostics.display_status(name .. " is", current_diagnostics[id].settings[name].value)
-            Diagnostics.configure_diagnostics { [name] = current_diagnostics[id].settings[name].value }
+            displayStatus(name .. " is", current_diagnostics[id].settings[name].value)
+            configure { [name] = current_diagnostics[id].settings[name].value }
             return current_diagnostics[id].settings[name].value
         end
     else
@@ -257,8 +339,8 @@ function Diagnostics.toggle_diagnostic(name, client)
             else
                 current_diagnostics[client].settings[name].value = false
             end
-            Diagnostics.display_status(name .. " is", current_diagnostics[client].settings[name].value, client)
-            Diagnostics.configure_diagnostics({
+            displayStatus(name .. " is", current_diagnostics[client].settings[name].value, client)
+            configure({
                 [name] = current_diagnostics[client].settings[name].value,
             }, client)
             return current_diagnostics[client].settings[name].value
@@ -300,79 +382,11 @@ function Diagnostics.toggle_update_in_insert(client)
     end
 end
 
-function Diagnostics.current_settings(new_settings, client)
-    local settings = {}
-    for _, setting in pairs(TABLE) do
-        settings[setting] = current_diagnostics[client].settings[setting].value
-    end
-    if not vim.tbl_isempty(new_settings) then
-        for setting, value in pairs(new_settings) do
-            settings[setting] = value
-        end
-    end
-    return settings
-end
-
-function Diagnostics.returnID(client)
-    local lang_server = util.get_active_client_by_name(0, client)
-    return lang_server.id
-end
-
-function Diagnostics.configure_diagnostics(settings, client)
-    if not client then
-        for id, _ in pairs(current_diagnostics) do
-            local conf = Diagnostics.current_settings(settings, id)
-            vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
-                vim.lsp.diagnostic.on_publish_diagnostics,
-                conf
-            )
-            local client_id = Diagnostics.returnID(id)
-            local buffers = lsp.get_buffers_by_client_id(client_id)
-            for _, buffer_id in ipairs(buffers) do
-                Diagnostics.show(buffer_id, client_id, conf)
-            end
-        end
-    else
-        local conf = Diagnostics.current_settings(settings, client)
-        vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
-            vim.lsp.diagnostic.on_publish_diagnostics,
-            conf
-        )
-        local client_id = Diagnostics.returnID(client)
-        local buffers = lsp.get_buffers_by_client_id(client_id)
-        for _, buffer_id in ipairs(buffers) do
-            Diagnostics.show(buffer_id, client_id, conf)
-        end
-    end
-end
-
-function Diagnostics.display_status(msg, val, client)
-    if not client then
-        if val == false then
-            vim.api.nvim_echo({ { string.format("%s off", msg) } }, false, {})
-        else
-            vim.api.nvim_echo({ { string.format("%s on", msg) } }, false, {})
-        end
-    else
-        if val == false then
-            vim.api.nvim_echo({ { string.format("%s off for %s", msg, client) } }, false, {})
-        else
-            vim.api.nvim_echo({ { string.format("%s on for %s", msg, client) } }, false, {})
-        end
-    end
-end
-
 function Diagnostics.dump(client)
     if not client then
         print(vim.inspect(current_diagnostics))
     end
     print(vim.inspect(current_diagnostics[client]))
-end
-
-function Diagnostics.tableHasKey(table, key)
-    if table[key] ~= nil then
-        return true
-    end
 end
 
 return Diagnostics
