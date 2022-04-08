@@ -83,6 +83,15 @@ return require("packer").startup {
             end,
         }
 
+        -- Notifications
+        use {
+            "rcarriga/nvim-notify",
+            opt = true,
+            config = function()
+                require("settings.notify").init()
+            end,
+        }
+
         -- StatusLine
         use {
             "ranjithshegde/express_line.nvim",
@@ -237,6 +246,33 @@ return require("packer").startup {
             end,
         }
 
+        --Lsp config and companions
+        use {
+            "neovim/nvim-lspconfig",
+            {
+                "folke/lua-dev.nvim",
+                ft = "lua",
+                config = function()
+                    require("lsp.sumneko").sumneko()
+                end,
+            },
+            {
+                "mfussenegger/nvim-jdtls",
+                ft = "java",
+                config = function()
+                    require("lsp.jdtls").jdtls()
+                end,
+            },
+            { "m-pilia/vim-ccls", ft = { "c", "cpp", "opencl" } },
+            {
+                "p00f/clangd_extensions.nvim",
+                ft = { "c", "cpp", "opencl" },
+                config = function()
+                    require("lsp.clangd").clangd()
+                end,
+            },
+        }
+
         -- completion and snippets
         use {
             "L3MON4D3/LuaSnip",
@@ -317,50 +353,6 @@ return require("packer").startup {
             -- "nvim-telescope/telescope-dap.nvim",
             -- opt = true,
             -- },
-        }
-
-        --Lsp config and companions
-        use {
-            "neovim/nvim-lspconfig",
-            {
-                "j-hui/fidget.nvim",
-                opt = true,
-                config = function()
-                    require("fidget").setup {
-                        text = {
-                            spinner = "moon",
-                        },
-                        align = {
-                            bottom = true,
-                        },
-                        window = {
-                            relative = "editor",
-                        },
-                    }
-                end,
-            },
-            {
-                "folke/lua-dev.nvim",
-                ft = "lua",
-                config = function()
-                    require("lsp.sumneko").sumneko()
-                end,
-            },
-            {
-                "mfussenegger/nvim-jdtls",
-                ft = "java",
-                config = function()
-                    require("lsp.jdtls").jdtls()
-                end,
-            },
-            { "m-pilia/vim-ccls", ft = { "c", "cpp", "opencl" } },
-            {
-                "p00f/clangd_extensions.nvim",
-                ft = { "c", "cpp", "opencl" },
-                config = function()
-                    require("lsp.clangd").clangd()
-                end,
-            },
         }
 
         if packer_bootstrap then

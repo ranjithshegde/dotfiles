@@ -308,6 +308,7 @@ function mappings.configFiles()
                     t = { open "lua/settings/telescope.lua", "Telescope" },
                     s = { open "lua/settings/treesitter.lua", "Treesitter" },
                     c = { open "lua/settings/completion.lua", "Completion" },
+                    n = { open "lua/settings/notify.lua", "Notification API" },
                 },
                 l = {
                     name = "Lsp",

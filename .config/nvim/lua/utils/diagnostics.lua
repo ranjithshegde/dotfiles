@@ -6,6 +6,60 @@ local current_diagnostics = {}
 
 local TABLE = { "underline", "virtual_text", "signs", "update_in_insert" }
 
+local severity = vim.diagnostic.severity
+
+Diagnostics.highlights = {
+    error = "",
+    warn = "",
+    info = "",
+    hint = "",
+}
+
+Diagnostics.sethl = function(error, warn, hint, info)
+    if error then
+        Diagnostics.highlights.error = "%#" .. error .. "#"
+    end
+
+    if warn then
+        Diagnostics.highlights.warn = "%#" .. warn .. "#"
+    end
+
+    if info then
+        Diagnostics.highlights.info = "%#" .. info .. "#"
+    end
+
+    if hint then
+        Diagnostics.highlights.hint = "%#" .. hint .. "#"
+    end
+end
+
+Diagnostics.formatter = function(_, buffer, counts)
+    if not vim.b.hasLsp then
+        return ""
+    end
+    local items = {}
+    if counts.errors > 0 then
+        table.insert(items, string.format("%s %s", Diagnostics.highlights.error, counts.errors))
+    end
+
+    if counts.warnings > 0 then
+        table.insert(items, string.format("%s %s", Diagnostics.highlights.warn, counts.warnings))
+    end
+
+    if counts.infos > 0 then
+        table.insert(items, string.format("%s  %s", Diagnostics.highlights.info, counts.infos))
+    end
+
+    if counts.hints > 0 then
+        table.insert(items, string.format("%s  %s", Diagnostics.highlights.hint, counts.hints))
+    end
+
+    if vim.tbl_isempty(items) then
+        return " "
+    end
+    return table.concat(items, " ") .. " %##"
+end
+
 local signs = function()
     vim.api.nvim_command "sign define DiagnosticSignError text= texthl=DiagnosticSignError"
     vim.api.nvim_command "sign define DiagnosticSignWarn text= texthl=DiagnosticSignWarn"

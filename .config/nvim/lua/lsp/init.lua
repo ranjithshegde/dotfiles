@@ -38,7 +38,8 @@ function lsp.attach(client, bufnr)
     require("mappings").nvim_lsp()
     vim.b.hasLsp = true
 
-    require("packer").loader "fidget.nvim"
+    require("packer").loader "nvim-notify"
+    require("settings.notify").lsp()
     require("utils.diagnostics").attach({ all = false, underline = false, update_in_insert = false }, client)
 
     local rc = client.resolved_capabilities

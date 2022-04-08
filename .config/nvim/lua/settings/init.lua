@@ -146,4 +146,5 @@ function settings.folds()
         border = "double",
     }
 end
+
 return settings

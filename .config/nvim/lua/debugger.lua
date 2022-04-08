@@ -6,6 +6,7 @@ Debugger.init = function()
     require("mappings").debug()
     require("dap.ext.vscode").load_launchjs "launch.json"
     -- require("telescope").load_extension "dap"
+    require("settings.notify").dap()
     print "Loaded nvim-dap. Bound keymaps"
 end
 

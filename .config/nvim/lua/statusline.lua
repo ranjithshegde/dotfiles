@@ -125,10 +125,10 @@ local git_branch = subscribe.buf_autocmd("el_git_branch", "BufReadPre", function
 end)
 
 --*********************************** Git sign changes ------------------
-local git_changes = subscribe.buf_autocmd("el_git_changes", "BufWritePost", function(window, buffer)
-    local st = extensions.git_changes(window, buffer)
+local git_changes = function(_, _)
+    local st = vim.b.gitsigns_status
     if not st then
-        return
+        return ""
     end
     local result = ""
     local add = st:match "+%d*"
@@ -147,65 +147,11 @@ local git_changes = subscribe.buf_autocmd("el_git_changes", "BufWritePost", func
         result = result .. "%#GitGutterDelete# " .. cut
     end
     return result .. "%##"
-end)
-
-local insertions = subscribe.buf_autocmd("el_git_ins", "BufWritePost", function(_, buffer)
-    local insert = extensions.git_inserstions(_, buffer)
-    if insert then
-        return " " .. insert .. space
-    end
-end)
-
-local changes = subscribe.buf_autocmd("el_git_change", "BufWritePost", function(_, buffer)
-    local change = extensions.git_modifications(_, buffer)
-    if change then
-        return " " .. change .. space
-    end
-end)
-
-local deletions = subscribe.buf_autocmd("el_git_del", "BufWritePost", function(_, buffer)
-    local delete = extensions.git_deletions(_, buffer)
-    if delete then
-        return " " .. delete
-    end
-end)
+end
 
 --*********************************** Lsp status  -----------------------
-local diagnostics = require("el.diagnostic").make_buffer()
+local diagnostics = require("el.diagnostic").make_buffer(require("utils.diagnostics").formatter)
 
-local diagnostic_changes = subscribe.buf_autocmd("el_git_changes", "DiagnosticChanged", function(_, buffer)
-    local display = diagnostics(_, buffer)
-
-    if not display then
-        return ""
-    end
-    local result = ""
-    local error = display:match "E:%d*"
-    if error then
-        error = error:gsub("E:", " ")
-        result = result .. "%#DiagnosticError# " .. error
-    end
-
-    local warn = display:match "W:%d*"
-    if warn then
-        warn = warn:gsub("W:", " ")
-        result = result .. "%#DiagnosticWarn# " .. warn
-    end
-    local info = display:match "I:%d*"
-    if info then
-        info = info:gsub("I:", " ")
-        result = result .. "%#DiagnosticInfo# " .. info
-    end
-
-    local hint = display:match "H:%d*"
-    if hint then
-        hint = hint:gsub("H:", " ")
-        result = result .. "%#DiagnosticHint# " .. hint
-    end
-    return result .. "%##"
-end)
-
---*********************************** Lsp Context -----------------------
 local default = {
     "class",
     "function",
@@ -266,17 +212,15 @@ end
 --*********************************** Status config ---------------------
 Statusline.el = function()
     require("el").reset_windows()
+    require("utils.diagnostics").sethl("DiagnosticError", "DiagnosticWarn", "DiagnosticHint", "DiagnosticInfo")
     require("el").setup {
         generator = function(_, _)
             return {
                 sections.highlight("ElViMode", mode),
                 sections.highlight("DiagnosticWarn", git_branch),
-                space,
-                sections.highlight("GitGutterAdd", insertions),
-                sections.highlight("GitGutterChange", changes),
-                sections.highlight("GitGutterDelete", deletions),
+                git_changes,
                 sections.split,
-                diagnostic_changes,
+                diagnostics,
                 sections.collapse_builtin { scnvim, space, gps },
                 sections.split,
                 sections.highlight("FileIcon", file_icon),
