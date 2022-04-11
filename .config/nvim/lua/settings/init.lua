@@ -41,7 +41,6 @@ function settings.options()
         verthoriz = "╋",
     }
     o.listchars:append "eol:↲"
-    -- o.listchars = "tab:<->,eol:↲,space:→"
     o.foldexpr = "nvim_treesitter#foldexpr()"
     o.completeopt = "menu,menuone,noinsert,noselect"
     o.dictionary = os.getenv "XDG_DATA_HOME" .. "/dict/words"
@@ -49,13 +48,13 @@ function settings.options()
     o.sessionoptions:append "terminal,tabpages"
     o.clipboard:append "unnamedplus"
     o.shortmess:append "c"
-    G.termdebug_wide = 1
-    G.markdown_folding = 1
-    G.tex_conceal = "abdmgs"
-    G.loaded_ruby_provider = 0
-    G.loaded_perl_provider = 0
-    G.netrw_browsex_viewer = "xdg-open"
-    G.symbols_outline = { auto_preview = false, width = 40 }
+    vim.g.termdebug_wide = 1
+    vim.g.markdown_folding = 1
+    vim.g.tex_conceal = "abdmgs"
+    vim.g.loaded_ruby_provider = 0
+    vim.g.loaded_perl_provider = 0
+    vim.g.netrw_browsex_viewer = "xdg-open"
+    vim.g.symbols_outline = { auto_preview = false, width = 40 }
 
     -- ************** Disable builtin plugins ---------------------------------------------------------
     local disabled_built_ins = {
@@ -86,7 +85,7 @@ function settings.options()
     end
 
     -- ************** HighlightOnYank ---------------------------------------------------------
-    AuCmd("TextYankPost", {
+    vim.api.nvim_create_autocmd("TextYankPost", {
         callback = function()
             vim.highlight.on_yank { higroup = "IncSearch", timeout = 200 }
         end,
@@ -107,10 +106,10 @@ function settings.vimwiki()
     l.auto_generte_links = 1
     l.nested_syntaxes = { cpp = "cpp" }
     l.autowriteall = 1
-    G.vimwiki_list = { l }
-    G.vimwiki_markdown_link_ext = 1
-    G.vimwiki_auto_chdir = 1
-    G.vimwiki_folding = "expr"
+    vim.g.vimwiki_list = { l }
+    vim.g.vimwiki_markdown_link_ext = 1
+    vim.g.vimwiki_auto_chdir = 1
+    vim.g.vimwiki_folding = "expr"
 end
 
 ------------------------------------------------------------------------
@@ -146,4 +145,5 @@ function settings.folds()
         border = "double",
     }
 end
+
 return settings

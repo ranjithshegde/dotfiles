@@ -1,4 +1,4 @@
-local M = {}
+local mappings = {}
 local wk = require "which-key"
 local map = vim.keymap.set
 
@@ -6,11 +6,11 @@ local map = vim.keymap.set
 --                              General functions                     --
 ------------------------------------------------------------------------
 
-function M.general()
-    M.configFiles()
-    M.telescope()
-    M.treesitter()
-    M.coauthor()
+function mappings.general()
+    mappings.configFiles()
+    mappings.telescope()
+    mappings.treesitter()
+    mappings.coauthor()
 
     local opts = { nowait = true }
     --line movement
@@ -44,14 +44,14 @@ function M.general()
         n = { "nzzzv", "jump to next search result" },
         N = { "Nzzzv", "jump to previous search result" },
         J = { "mzJ`z", "Adjoin next line" },
-        gm = { "cursor(0, virtcol('$')/2 )", "Move cursor to middle of the line", expr = true },
+        gm = { "cursor(0, virtcol('$')/2 )", "Move cursor to middle of the line", expr = true, buffer = 0 },
         gf = { "<cmd>e <cfile><CR>", "open file under cursor" },
         -- Terminals
         ["<leader>t"] = {
             name = "Launch terminal in split",
             h = { "<cmd>sp term://zsh<cr>", "Horizontal" },
             v = { "<cmd>vspl term://zsh<cr>", "Vertical" },
-            t = { "<cmd>tabnew term://zsh<cr>", "New tab" },
+            t = { "<cmd>tab drop term://zsh<cr>", "New tab" },
         },
         ["<leader><Tab>"] = { "<cmd>SidebarNvimToggle<CR>", "Toggle Symbolsbar" },
     }
@@ -77,53 +77,116 @@ function M.general()
             },
         },
     }
+
+    wk.register {
+        ["<leader>ow"] = {
+            name = "orgWiki",
+            w = {
+                function()
+                    require("org").openIndex()
+                end,
+                "Open Index",
+            },
+            t = {
+                function()
+                    require("org").openIndex "tab drop"
+                end,
+                "Open Index in a new tab",
+            },
+            d = {
+                function()
+                    require("org").deleteLink()
+                end,
+                "Delete link under cursor",
+            },
+            i = {
+                function()
+                    require("org.diary").diaryIndexOpen()
+                end,
+                "Open Diary index",
+            },
+            ["<leader>"] = {
+                name = "Diary entries",
+                w = {
+                    function()
+                        require("org.diary").diaryTodayOpen()
+                    end,
+                    "Today",
+                },
+                t = {
+                    function()
+                        require("org.diary").diaryTodayOpen "tab drop"
+                    end,
+                    "Today in a new tab",
+                },
+                i = {
+                    function()
+                        require("org.diary").diaryGenerateIndex()
+                    end,
+                    "Reindex",
+                },
+                y = {
+                    function()
+                        require("org.diary").diaryYesterdayOpen()
+                    end,
+                    "Yesterday",
+                },
+                m = {
+                    function()
+                        require("org.diary").diaryTomorrowOpen()
+                    end,
+                    "Tomorrow",
+                },
+            },
+        },
+    }
 end
 
 ------------------------------------------------------------------------
 --                              Utilities                             --
 ------------------------------------------------------------------------
 
-function M.ranger()
+function mappings.ranger()
     wk.register {
         ["<leader>r"] = {
             name = "Ranger file picker",
             r = {
                 function()
-                    require("utils").ranger("%:p:h", "e ")
+                    vim.fn["util#ranger"]("%:p:h", "e ")
                 end,
                 "from current file",
             },
             R = {
                 function()
-                    require("utils").ranger(".", "e ")
+                    vim.fn["util#ranger"](".", "e ")
                 end,
                 "from current directory",
             },
             v = {
                 function()
                     vim.cmd "vnew"
-                    require("utils").ranger("%:p:h", "vs ")
+                    vim.fn["util#ranger"]("%:p:h", "vs ")
                 end,
                 "in a split from current file",
             },
             V = {
                 function()
                     vim.cmd "vnew"
-                    require("utils").ranger(".", "vs ")
+                    vim.fn["util#ranger"](".", "vs ")
                 end,
                 "in a split from current directory",
             },
             t = {
                 function()
                     vim.cmd "tabnew"
-                    require("utils").ranger("%:p:h", "tab drop ")
+                    vim.fn["util#ranger"]("%:p:h", "tab drop ")
                 end,
                 "in a new tab from current file",
             },
             T = {
                 function()
                     vim.cmd "tabnew"
-                    require("utils").ranger(".", "tab drop ")
+                    vim.fn["util#ranger"](".", "tab drop ")
                 end,
                 "in a new tab from current directory",
             },
@@ -131,7 +194,7 @@ function M.ranger()
     }
 end
 
-function M.wordProcessor()
+function mappings.wordProcessor()
     wk.register({
         zG = {
             'writefile([expand("<cword>")], "/usr/share/words.txt", "a")',
@@ -150,7 +213,7 @@ end
 --                              Language servers                      --
 ------------------------------------------------------------------------
 
-function M.nvim_lsp()
+function mappings.nvim_lsp()
     wk.register({
         K = { vim.lsp.buf.hover, "Hover" },
         ["<F7>"] = { require("debugger").init, "Initialize Debugger adapter" },
@@ -212,33 +275,11 @@ end
 
 -- ******************************** Diagnostics------------------------
 
-function M.diagnostic()
-    local function fmt(diagnostic)
-        if diagnostic.code then
-            return ("[%s] %s"):format(diagnostic.code, diagnostic.message)
-        end
-        return diagnostic.message
-    end
-    local opts = { border = "double", format = fmt }
+function mappings.diagnostic()
     wk.register {
-        [",ld"] = {
-            function()
-                vim.diagnostic.open_float(opts)
-            end,
-            "Show line diagnostics",
-        },
-        ["[d"] = {
-            function()
-                vim.diagnostic.goto_prev { float = opts }
-            end,
-            "Show previous diagnostics",
-        },
-        ["]d"] = {
-            function()
-                vim.diagnostic.goto_next { float = opts }
-            end,
-            "Show next diagnostics",
-        },
+        [",ld"] = { vim.diagnostic.open_float, "Show line diagnostics" },
+        ["[d"] = { vim.diagnostic.goto_prev, "Show previous diagnostics" },
+        ["]d"] = { vim.diagnostic.goto_next, "Show next diagnostics" },
     }
 end
 
@@ -246,9 +287,9 @@ end
 --                              Vim config files                      --
 ------------------------------------------------------------------------
 
-function M.configFiles()
+function mappings.configFiles()
     local open = function(path)
-        return string.format("<cmd>tabnew ~/.config/nvim/%s<CR>", path)
+        return string.format("<cmd>tab drop ~/.config/nvim/%s<CR>", path)
     end
     wk.register {
         ["<leader>"] = {
@@ -256,6 +297,11 @@ function M.configFiles()
                 name = "vimrc files",
                 p = { open "lua/plugins.lua", "Packer config" },
                 m = { open "lua/mappings.lua", "Keymaps" },
+                g = {
+                    name = "Org plugin",
+                    o = { open "lua/org/init.lua", "Index plugin" },
+                    d = { open "lua/org/diary.lua", "Diary plugin" },
+                },
                 o = {
                     name = "Options",
                     o = { open "lua/settings/init.lua", "vim" },
@@ -309,12 +355,12 @@ end
 --                              Treesitter                            --
 ------------------------------------------------------------------------
 
-function M.treesitter()
+function mappings.treesitter()
     wk.register {
         [";"] = {
             name = "Syntax tree functions",
             -- Plugins
-            K = { "<cmd>TSHighlightCapturesUnderCursor<cr>", "Show treesitter node" },
+            K = { "<cmd>TSNodeUnderCursor<cr>", "Show treesitter node" },
             P = { "<cmd>TSPlaygroundToggle<cr>", "Toggle playground" },
             --Refactor
             d = "Jump to node definition",
@@ -349,6 +395,7 @@ function M.treesitter()
                 p = "Paramater",
                 c = "conditional",
                 l = "loop",
+                v = "variable",
             },
             i = {
                 name = "inner",
@@ -357,6 +404,7 @@ function M.treesitter()
                 p = "Paramater",
                 c = "conditional",
                 l = "loop",
+                v = "variable",
             },
         },
         cX = {
@@ -370,6 +418,7 @@ function M.treesitter()
                 p = "Paramater",
                 c = "conditional",
                 l = "loop",
+                v = "variable",
             },
             i = {
                 name = "inner",
@@ -378,6 +427,7 @@ function M.treesitter()
                 p = "Paramater",
                 c = "conditional",
                 l = "loop",
+                v = "variable",
             },
         },
         -- Motions
@@ -418,7 +468,7 @@ end
 --                              Telescope                             --
 ------------------------------------------------------------------------
 
-function M.telescope()
+function mappings.telescope()
     local tele = function(name)
         return function()
             require("telescope.builtin")[name]()
@@ -652,7 +702,7 @@ end
 --                              Git                                   --
 ------------------------------------------------------------------------
 
-function M.git()
+function mappings.git()
     wk.register {
         ["<leader>g"] = {
             name = "git functions",
@@ -677,7 +727,7 @@ end
 --                              Completion & Snippets                 --
 ------------------------------------------------------------------------
 
-function M.autoComplete()
+function mappings.autoComplete()
     -- change completion mode
     map("i", "<C-j>", "<Plug>(completion_next_source)")
     map("i", "<C-k>", "<Plug>(completion_prev_source)")
@@ -700,7 +750,7 @@ end
 --                              SuperCollider                         --
 ------------------------------------------------------------------------
 
-function M.scnvim()
+function mappings.scnvim()
     map("n", "<F5>", "<Plug>(scnvim-send-block)", { buffer = true, desc = "Evaluate SC code block" })
     map("i", "<F5>", "<esc><Plug>(scnvim-send-block)", { buffer = true, desc = "Evaluate SC code block" })
     map("v", "<F5>", "<Plug>(scnvim-send-selection)", { buffer = true, desc = "Evaluate SC visual block" })
@@ -723,7 +773,7 @@ end
 --                              Arduino                               --
 ------------------------------------------------------------------------
 
-function M.micro()
+function mappings.micro()
     map({ "n", "t" }, "<F8>", function()
         vim.cmd "stopinsert"
         require("utils.compiler").monitor()
@@ -753,7 +803,7 @@ end
 --                              OpenFrameworks                        --
 ------------------------------------------------------------------------
 
-function M.makeC()
+function mappings.makeC()
     wk.register({
         ["<F4>"] = { "<cmd>w <CR> <cmd>Make Debug -j12<CR>", "Compile Debug" },
         ["<F5>"] = {
@@ -776,7 +826,7 @@ end
 ------------------------------------------------------------------------
 
 -- ******************************** C files ----------------------------
-function M.ctests()
+function mappings.ctests()
     wk.register({
         ["<F3>"] = { "<cmd>w <CR> <cmd>Dispatch gcc % -lm -o %<<CR> <cmd>Dispatch ./%<<CR>", "Use gcc" },
         ["<F4>"] = {
@@ -797,7 +847,7 @@ function M.ctests()
 end
 
 -- ******************************** Pd externals ------------------------
-function M.pdc()
+function mappings.pdc()
     wk.register({
         ["<F5>"] = { "<cmd>w<CR><cmd>Make<CR>", "Build Pd external" },
         ["<F6>"] = {
@@ -812,7 +862,7 @@ end
 
 -- ******************************** Clang Lsp----------------------------
 
-function M.clang()
+function mappings.clang()
     wk.register({
         [";"] = {
             b = { "<cmd>CclsBase<CR>", "Base function" },
@@ -870,7 +920,7 @@ end
 --                              Cmake                                 --
 ------------------------------------------------------------------------
 
-function M.cmake()
+function mappings.cmake()
     wk.register({
         ["<F2>"] = { require("utils.compiler").cmake_clean, "Clean cmake" },
         ["<F3>"] = {
@@ -901,7 +951,7 @@ end
 --                              Co-Autho                              --
 ------------------------------------------------------------------------
 
-function M.coauthor()
+function mappings.coauthor()
     wk.register {
         ["<leader>"] = {
             i = {
@@ -953,7 +1003,7 @@ end
 --                              Debug Adapters                        --
 ------------------------------------------------------------------------
 
-function M.debug()
+function mappings.debug()
     wk.register({
         ["<leader>"] = {
             d = {
@@ -987,6 +1037,7 @@ function M.debug()
             ["."] = { require("dap").close, "End" },
             ["?"] = { require("debugger").frames, "Frames" },
             ["/"] = { require("debugger").scopes, "Scopes" },
+            t = { require("debugger").threads, "threads" },
             u = { require("dapui").toggle, "Toggle all UI" },
             c = { require("dap").continue, "continue to next breakpoint" },
             n = { require("dap").step_over, "step over" },
@@ -1013,7 +1064,7 @@ end
 --                              Latex                                 --
 ------------------------------------------------------------------------
 
-function M.tex()
+function mappings.tex()
     wk.register({
         ["<F3>"] = { "<cmd>TexWordCount<CR>", "Word count" },
         ["<F4>"] = { "<cmd>Make -C<CR>", "Clean tex files" },
@@ -1022,4 +1073,4 @@ function M.tex()
     }, { buffer = 0 })
 end
 
-return M
+return mappings

@@ -1,4 +1,6 @@
 local lsp = {}
+local aucmd = vim.api.nvim_create_autocmd
+local augroup = vim.api.nvim_create_augroup
 
 ------------------------------------------------------------------------
 --                             Lsp settings                           --
@@ -6,8 +8,8 @@ local lsp = {}
 
 local lspconfig = require "lspconfig"
 function lsp.settings()
-    AuGroup("SetDiagnosticFuncs", {})
-    AuCmd({ "DiagnosticChanged" }, {
+    augroup("SetDiagnosticFuncs", {})
+    aucmd({ "DiagnosticChanged" }, {
         group = "SetDiagnosticFuncs",
         callback = function()
             vim.diagnostic.setloclist { open = false }
@@ -23,31 +25,31 @@ function lsp.settings()
     )
 end
 
+-- **************************** Snippet capabilities--------------------
+function lsp.capabilities()
+    local capabilities = vim.lsp.protocol.make_client_capabilities()
+    capabilities.textDocument.completion.completionItem.snippetSupport = true
+    return capabilities
+end
+
+-- **************************** Global attach function------------------
 function lsp.attach(client, bufnr)
     require("mappings").nvim_lsp()
     require("utils.langServers").kind()
+    vim.b.hasLsp = true
 
-    vim.cmd "PackerLoad lsp-status.nvim"
-    local lsp_status = require "lsp-status"
-    if client.name ~= "ltex" and client.name ~= "efm" then
-        lsp_status.register_progress()
-    end
-    lsp_status.on_attach(client)
+    require("packer").loader "fidget.nvim"
     require("utils.diagnostics").attach({ all = false, underline = false, update_in_insert = false }, client)
 
     local rc = client.resolved_capabilities
     if rc.document_highlight then
-        -- Api.nvim_set_hl(0, "LspReferenceRead", { cterm = { bold = true }, ctermbg = "red", bg = Colors.cyan })
-        -- Api.nvim_set_hl(0, "LspReferenceText", { cterm = { bold = true }, ctermbg = "red", bg = "grey" })
-        -- Api.nvim_set_hl(0, "LspReferenceWrite", { cterm = { bold = true }, ctermbg = "red", bg = Colors.white })
-
-        AuGroup("LspHighlightSymbols", {})
-        AuCmd("CursorHold", {
+        augroup("LspHighlightSymbols", {})
+        aucmd("CursorHold", {
             group = "LspHighlightSymbols",
             buffer = 0,
             callback = vim.lsp.buf.document_highlight,
         })
-        AuCmd("CursorMoved, CursorMovedI", {
+        aucmd("CursorMoved, CursorMovedI", {
             group = "LspHighlightSymbols",
             buffer = bufnr,
             callback = vim.lsp.buf.clear_references,
@@ -55,22 +57,16 @@ function lsp.attach(client, bufnr)
     end
 
     if rc.document_formatting then
-        AuGroup("LspAutoFormat", {})
-        AuCmd("BufWrite", {
+        augroup("LspAutoFormat", {})
+        aucmd("BufWrite", {
             group = "LspAutoFormat",
-            pattern = "*.html,*.css,*.js,*.hpp,*.h,*.sh,*.lua,*.cpp,*.json,*.py,*.yaml,*.toml,*.vs,*.fs,*.gs,*.vert,*.frag,*.geom,*.glsl",
+            pattern = "*.html,*.css,*.js,*.hpp,*.h,*.sh,*.lua,*.cpp,*.json,*.py,*.yaml,*.toml,*.vs,*.fs,*.gs,*.vert,*.frag,*.geom,*.glsl,*.dart",
             callback = function()
                 vim.lsp.buf.formatting_sync(nil, 500)
             end,
         })
     end
-    Api.nvim_add_user_command("LspCapabilities", require("utils.langServers").lsp_capabilities, {})
-end
-
-function lsp.capabilities()
-    local capabilities = vim.lsp.protocol.make_client_capabilities()
-    capabilities.textDocument.completion.completionItem.snippetSupport = true
-    return capabilities
+    vim.api.nvim_create_user_command("LspCapabilities", require("utils.langServers").lsp_capabilities, {})
 end
 
 function lsp.cinit(client)
@@ -99,6 +95,10 @@ end
 
 function lsp.servers()
     local dict = os.getenv "XDG_CONFIG_HOME" .. "/nvim/spell/en.utf-8.add"
+    ---@diagnostic disable-next-line: unused-vararg
+    local nilfunc = function(...)
+        return nil
+    end
     local configs = {
         jsonls = { on_attach = lsp.efm },
         yamlls = { on_attach = lsp.attach },
@@ -114,12 +114,8 @@ function lsp.servers()
             on_init = lsp.cinit,
             filetypes = { "c", "cpp", "objc", "objcpp", "opencl" },
             handlers = {
-                ["textDocument/publishDiagnostics"] = function(...)
-                    return nil
-                end,
-                ["textDocument/signatureHelp"] = function(...)
-                    return nil
-                end,
+                ["textDocument/publishDiagnostics"] = nilfunc,
+                ["textDocument/signatureHelp"] = nilfunc,
             },
             single_file_support = true,
             root_dir = lspconfig.util.root_pattern("compile_commands.json", "compile_flags.txt", ".git"),
@@ -185,16 +181,32 @@ function lsp.lintFormat()
     local rootMarker = { vim.fn.getcwd() or { ".git/" } }
 
     local checkmake = { lintCommand = "checkmake", lintStdin = true }
-    local yamllint = { lintCommand = "yamllint -f parsable -", lintStdin = true }
-    local shfmt = { formatCommand = "shfmt -ci -s -bn", formatStdin = true }
-    local prettier = { formatCommand = "prettier --stdin --stdin-filepath ${INPUT}", formatStdin = true }
-    local isort = { formatCommand = "isort --stdout --profile black -", formatStdin = true }
     local black = { formatCommand = "black --fast -", formatStdin = true }
+    local shfmt = { formatCommand = "shfmt -ci -s -bn", formatStdin = true }
+    local yamllint = { lintCommand = "yamllint -f parsable -", lintStdin = true }
     local clang_format = { formatCommand = "clang-format -", formatStdin = true }
+    local isort = { formatCommand = "isort --stdout --profile black -", formatStdin = true }
+    local stylua = { formatCommand = "stylua --search-parent-directories -", formatStdin = true }
+    local prettier = { formatCommand = "prettier --stdin --stdin-filepath ${INPUT}", formatStdin = true }
+    local markdownlint = {
+        lintCommand = "markdownlint -f ${INPUT}",
+        lintStdin = true,
+        lintFormats = { "%f:%l %m", "%f:%l:%c %m", "%f: %l: %m" },
+    }
     local mypy = {
         lintCommand = "mypy --show-column-numbers",
         lintFormats = { "%f:%l:%c: %trror: %m", "%f:%l:%c: %tarning: %m", "%f:%l:%c: %tote: %m" },
         lintSource = "mypy",
+    }
+    local shellcheck = {
+        lintCommand = "shellcheck -f gcc -x -",
+        lintStdin = true,
+        lintFormats = { "%f:%l:%c: %trror: %m", "%f:%l:%c: %tarning: %m", "%f:%l:%c: %tote: %m" },
+    }
+    local vint = {
+        lintCommand = "vint -f '{file_path}:{line_number}:{column_number}: {severity}: {description} (see: {reference})' --enable-neovim",
+        lintStdin = false,
+        lintFormats = { "%f:%l:%c: %m" },
     }
     local flake8 = {
         lintCommand = "flake8 --max-line-length 160 --format '%(path)s:%(row)d:%(col)d: %(code)s %(code)s %(text)s' --stdin-display-name ${INPUT} -",
@@ -202,22 +214,6 @@ function lsp.lintFormat()
         lintIgnoreExitCode = true,
         lintFormats = { "%f:%l:%c: %t%n%n%n %m" },
         lintSource = "flake8",
-    }
-    local shellcheck = {
-        lintCommand = "shellcheck -f gcc -x -",
-        lintStdin = true,
-        lintFormats = { "%f:%l:%c: %trror: %m", "%f:%l:%c: %tarning: %m", "%f:%l:%c: %tote: %m" },
-    }
-    local markdownlint = {
-        lintCommand = "markdownlint -f ${INPUT}",
-        lintStdin = true,
-        lintFormats = { "%f:%l %m", "%f:%l:%c %m", "%f: %l: %m" },
-    }
-    local stylua = { formatCommand = "stylua --search-parent-directories -", formatStdin = true }
-    local vint = {
-        lintCommand = "vint -f '{file_path}:{line_number}:{column_number}: {severity}: {description} (see: {reference})' --enable-neovim",
-        lintStdin = false,
-        lintFormats = { "%f:%l:%c: %m" },
     }
 
     local languages = {

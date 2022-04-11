@@ -4,7 +4,15 @@ local packer_path = fn.stdpath "data" .. "/site/pack/packer/start/packer.nvim"
 
 -- selfmanage packer
 if fn.empty(fn.glob(packer_path)) > 0 then
-    fn.system { "git", "clone", "--depth", "1", "https://github.com/wbthomason/packer.nvim", packer_path }
+    ---@diagnostic disable-next-line: lowercase-global
+    packer_bootstrap = fn.system {
+        "git",
+        "clone",
+        "--depth",
+        "1",
+        "https://github.com/wbthomason/packer.nvim",
+        packer_path,
+    }
 end
 
 --------------------------------------------------------------------------------------------------------
@@ -26,7 +34,7 @@ return require("packer").startup {
         use {
             { "tpope/vim-surround", event = "BufReadPost" },
             { "tpope/vim-unimpaired", keys = { "[", "]" } },
-            { "tpope/vim-dispatch", cmd = { "Make", "Dispatch" } },
+            { "tpope/vim-dispatch", cmd = { "Make", "Dispatch", "Start" } },
             { "tpope/vim-fugitive", cmd = { "G", "Git", "Gclog" } },
         }
 
@@ -36,7 +44,7 @@ return require("packer").startup {
             { "p00f/nvim-ts-rainbow", event = "BufReadPre" },
             { "nvim-treesitter/nvim-treesitter-textobjects", event = "BufReadPost" },
             { "nvim-treesitter/nvim-treesitter-refactor", after = "scnvim" },
-            { "nvim-treesitter/playground", cmd = { "TSPlaygroundToggle", "TSHighlightCapturesUnderCursor" } },
+            { "nvim-treesitter/playground", cmd = { "TSPlaygroundToggle", "TSNodeUnderCursor" } },
         }
 
         -- Fold text
@@ -48,21 +56,12 @@ return require("packer").startup {
             end,
         }
 
-        -- StatusLine
-        use {
-            "tjdevries/express_line.nvim",
-            requires = { "kyazdani42/nvim-web-devicons", "nvim-lua/plenary.nvim" },
-            config = function()
-                require("statusline").el()
-            end,
-        }
-
         -- Coautoring
         use {
             "jbyuki/instant.nvim",
             module_pattern = "instant.*",
             config = function()
-                G.instant_username = "Ranjith"
+                vim.g.instant_username = "Ranjith"
             end,
         }
 
@@ -81,6 +80,16 @@ return require("packer").startup {
             keys = { "gc", "gb", { "v", "gc" }, { "v", "gb" } },
             config = function()
                 require("Comment").setup { ignore = "^$" }
+            end,
+        }
+
+        -- StatusLine
+        use {
+            "tjdevries/express_line.nvim",
+            -- branch = "git_changes",
+            requires = { "kyazdani42/nvim-web-devicons", "nvim-lua/plenary.nvim" },
+            config = function()
+                require("statusline").el()
             end,
         }
 
@@ -191,9 +200,9 @@ return require("packer").startup {
                 fn["scnvim#install"]()
             end,
             config = function()
-                G.scnvim_snippet_format = "luasnip"
-                require("luasnip").snippets.supercollider = require("scnvim/utils").get_snippets()
-                AuCmd("FileType", {
+                vim.g.scnvim_snippet_format = "luasnip"
+                vim.g.scnvim_postwin_auto_toggle = 1
+                vim.api.nvim_create_autocmd("FileType", {
                     group = "LspSettings",
                     pattern = "supercollider",
                     callback = function()
@@ -209,7 +218,7 @@ return require("packer").startup {
             "lukas-reineke/indent-blankline.nvim",
             event = "BufReadPost",
             config = function()
-                G.indent_blankline_char = "┊"
+                vim.g.indent_blankline_char = "┊"
                 require("indent_blankline").setup {
                     show_current_context = true,
                     show_end_of_line = true,
@@ -228,59 +237,34 @@ return require("packer").startup {
             end,
         }
 
-        --Lsp config and companions
-        use {
-            "neovim/nvim-lspconfig",
-            -- { "nvim-lua/lsp-status.nvim", opt = true },
-            "nvim-lua/lsp-status.nvim",
-            {
-                "folke/lua-dev.nvim",
-                ft = "lua",
-                config = function()
-                    require("lsp.sumneko").sumneko()
-                end,
-            },
-            {
-                "mfussenegger/nvim-jdtls",
-                ft = "java",
-                config = function()
-                    require("lsp.jdtls").jdtls()
-                end,
-            },
-            { "m-pilia/vim-ccls", ft = { "c", "cpp", "opencl" } },
-            {
-                "p00f/clangd_extensions.nvim",
-                ft = { "c", "cpp", "opencl" },
-                config = function()
-                    require("lsp.clangd").clangd()
-                end,
-            },
-        }
-
         -- completion and snippets
         use {
-            "L3MON4D3/LuaSnip",
+            {
+                "L3MON4D3/LuaSnip",
+                event = "InsertEnter",
+                config = function()
+                    require("settings.completion").luasnip()
+                end,
+            },
             {
                 "ranjithshegde/completion-nvim",
+                after = "LuaSnip",
                 config = function()
                     require("settings.completion").init()
                 end,
             },
             {
                 "rafamadriz/friendly-snippets",
-                event = "InsertEnter",
+                after = "LuaSnip",
                 config = function()
                     require("luasnip.loaders.from_vscode").load()
                 end,
             },
             {
                 "windwp/nvim-autopairs",
-                event = "InsertEnter",
+                after = "completion-nvim",
                 config = function()
-                    local npairs = require "nvim-autopairs"
-                    local Rule = require "nvim-autopairs.rule"
-                    npairs.setup()
-                    npairs.add_rules { Rule("|", "|", "supercollider") }
+                    require("settings.completion").pairs()
                 end,
             },
         }
@@ -289,7 +273,7 @@ return require("packer").startup {
         use {
             {
                 "nvim-telescope/telescope.nvim",
-                module_pattern = "telescope.*",
+                module = "telescope",
                 cmd = "Telescope",
                 config = function()
                     require("settings.telescope").telescope()
@@ -327,6 +311,55 @@ return require("packer").startup {
             -- opt = true,
             -- },
         }
+
+        --Lsp config and companions
+        use {
+            "neovim/nvim-lspconfig",
+            {
+                "folke/lua-dev.nvim",
+                ft = "lua",
+                config = function()
+                    require("lsp.sumneko").sumneko()
+                end,
+            },
+            {
+                "mfussenegger/nvim-jdtls",
+                ft = "java",
+                config = function()
+                    require("lsp.jdtls").jdtls()
+                end,
+            },
+            { "m-pilia/vim-ccls", ft = { "c", "cpp", "opencl" } },
+            {
+                "p00f/clangd_extensions.nvim",
+                ft = { "c", "cpp", "opencl" },
+                config = function()
+                    require("lsp.clangd").clangd()
+                end,
+            },
+            {
+                "j-hui/fidget.nvim",
+                opt = true,
+                config = function()
+                    require("fidget").setup {
+                        text = {
+                            spinner = "moon",
+                        },
+                        align = {
+                            bottom = true,
+                        },
+                        window = {
+                            relative = "editor",
+                            blend = 0,
+                        },
+                    }
+                end,
+            },
+        }
+
+        if packer_bootstrap then
+            require("packer").sync()
+        end
     end,
     config = {
         compile_path = require("packer.util").join_paths(fn.stdpath "config", "lua", "packer_compiled.lua"),

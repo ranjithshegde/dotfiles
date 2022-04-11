@@ -1,5 +1,5 @@
 -- ******************* function calls --------------------------------------------
-local cmd = vim.api.nvim_add_user_command
+local cmd = vim.api.nvim_create_user_command
 
 cmd("Cpractice", function()
     require("utils.compiler").cpractice()
@@ -33,11 +33,6 @@ P = function(v)
     return v
 end
 
--- W = function(v)
---     local f = io.open("package.txt", "w+")
---     f:write(vim.inspect(v))
--- end
-
 RELOAD = function(module)
     if type(module) == "table" then
         for _, value in pairs(module) do
@@ -52,3 +47,10 @@ end
 --     RELOAD(name)
 --     return require(name)
 -- end
+
+-- W = function(v)
+--     local f = io.open("package.txt", "w+")
+--     f:write(vim.inspect(v))
+-- end
+--
+--

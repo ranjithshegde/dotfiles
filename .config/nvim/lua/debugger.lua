@@ -1,8 +1,8 @@
 local Debugger = {}
 
 Debugger.init = function()
-    vim.cmd "PackerLoad nvim-dap"
-    -- vim.cmd "PackerLoad telescope-dap.nvim"
+    require("packer").loader "nvim-dap"
+    -- require("packer").loader "telescope-dap.nvim"
     require("mappings").debug()
     require("dap.ext.vscode").load_launchjs "launch.json"
     -- require("telescope").load_extension "dap"
@@ -104,8 +104,8 @@ Debugger.configs = function()
             type = "cppdbg",
             request = "launch",
             program = function()
-                if G.debugBin then
-                    return G.debugBin
+                if vim.g.debugBin then
+                    return vim.g.debugBin
                 else
                     return vim.fn.input("Path to executable: ", vim.fn.getcwd() .. "/", "file")
                 end
@@ -126,8 +126,8 @@ Debugger.configs = function()
             type = "cppdbg",
             request = "launch",
             program = function()
-                if G.debugBin then
-                    return G.debugBin
+                if vim.g.debugBin then
+                    return vim.g.debugBin
                 else
                     return vim.fn.input("Path to executable: ", vim.fn.getcwd() .. "/", "file")
                 end
@@ -148,8 +148,8 @@ Debugger.configs = function()
             type = "lldb",
             request = "launch",
             program = function()
-                if G.debugBin then
-                    return G.debugBin
+                if vim.g.debugBin then
+                    return vim.g.debugBin
                 else
                     return vim.fn.input("Path to executable: ", vim.fn.getcwd() .. "/", "file")
                 end
@@ -243,6 +243,8 @@ Debugger.makeSidebar = function(func)
         return widgets.sidebar(widgets.scopes, { width = 40 })
     elseif func == "frames" then
         return widgets.sidebar(widgets.frames, { width = 40 })
+    elseif func == "threads" then
+        return widgets.sidebar(widgets.threads, { width = 40 })
     elseif func == "exp" then
         return widgets.sidebar(widgets.expression, { width = 40 })
     end
@@ -274,6 +276,19 @@ Debugger.frames = function()
     end
 end
 
+Debugger.threads = function()
+    if not Sthread then
+        Sthread = Debugger.makeSidebar "threads"
+    end
+    if not Bthread then
+        Sthread.open()
+        Bthread = true
+    else
+        Sthread.close()
+        Bthread = false
+    end
+end
+
 Debugger.exp = function()
     if not Sexp then
         Sexp = Debugger.makeSidebar "exp"
@@ -290,6 +305,11 @@ end
 Debugger.fscopes = function()
     local widgets = require "dap.ui.widgets"
     widgets.centered_float(widgets.scopes, { border = "double" })
+end
+
+Debugger.fthreads = function()
+    local widgets = require "dap.ui.widgets"
+    widgets.centered_float(widgets.threads, { border = "double" })
 end
 
 Debugger.fframes = function()
