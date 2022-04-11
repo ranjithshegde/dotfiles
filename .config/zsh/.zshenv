@@ -39,8 +39,8 @@ export TERMINFO="$XDG_DATA_HOME"/terminfo
 export TIMEWARRIORDB="$XDG_DATA_HOME"/timewarrior
 export WGETRC="$XDG_CONFIG_HOME/wgetrc"
 export WINEPREFIX="$XDG_DATA_HOME"/wineprefixes/default
-export ZPLUG_BIN=/"$XDG_DATA_HOME"/bin
-export ZPLUG_HOME=/"$XDG_DATA_HOME"/zsh/zplug
+export ZPLUG_BIN="$XDG_DATA_HOME"/bin
+export ZPLUG_HOME="$XDG_DATA_HOME"/zsh/zplug
 export _JAVA_OPTIONS=-Djava.util.prefs.userRoot="$XDG_CONFIG_HOME"/java
 export OPENCV_OPENCL_DEVICE=NVIDIA:GPU:0
 
@@ -60,8 +60,8 @@ appendpath () {
 }
 
 appendpath '/home/ranjith/.local/bin'
-appendpath '/home/ranjith/.local/share/cargo/bin'
 appendpath '/home/ranjith/.local/bin/scripts'
+appendpath '/home/ranjith/.local/share/cargo/bin'
 appendpath '/home/ranjith/.local/share/npm/bin'
 appendpath '/home/ranjith/.local/share/go/bin'
 appendpath '/home/ranjith/.local/share/gem/bin'
