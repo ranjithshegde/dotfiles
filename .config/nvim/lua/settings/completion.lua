@@ -18,7 +18,7 @@ function completion.init()
                 require("luasnip").lsp_expand(args.body)
             end,
         },
-        mapping = {
+        mapping = cmp.mapping.preset.insert {
             ["<C-k>"] = cmp.mapping(function()
                 require("utils.langServers").next()
             end, { "i", "s" }),
@@ -79,9 +79,14 @@ function completion.init()
                 border = "double",
             },
         },
-        -- experimental = { ghost_text = true },
+        -- experimental = { ghost_text = false },
     }
     require("luasnip.loaders.from_vscode").lazy_load()
+
+    local fs = vim.api.nvim_buf_get_option(0, "filetype")
+    if fs == "cpp" or fs == "c" then
+        require("lsp.clangd").clangCmp()
+    end
 end
 
 function completion.pairs()
@@ -108,6 +113,7 @@ function completion.luasnip()
         callback = function()
             require("luasnip").add_snippets("supercollider", require("scnvim/utils").get_snippets())
         end,
+        once = true,
     })
 end
 

@@ -10,5 +10,6 @@ vim.filetype.add {
         pd_luax = "lua",
         cl = "opencl",
         ges = "gesture",
+        schelp = "scdoc",
     },
 }

@@ -1,27 +1,17 @@
-local Debugger = {}
-
-Debugger.init = function()
-    require("packer").loader "nvim-dap"
-    -- require("packer").loader "telescope-dap.nvim"
-    require("mappings").debug()
-    require("dap.ext.vscode").load_launchjs "launch.json"
-    -- require("telescope").load_extension "dap"
-    print "Loaded nvim-dap. Bound keymaps"
+local function makeSidebar(func)
+    local widgets = require "dap.ui.widgets"
+    if func == "scopes" then
+        return widgets.sidebar(widgets.scopes, { width = 40 })
+    elseif func == "frames" then
+        return widgets.sidebar(widgets.frames, { width = 40 })
+    elseif func == "threads" then
+        return widgets.sidebar(widgets.threads, { width = 40 })
+    elseif func == "exp" then
+        return widgets.sidebar(widgets.expression, { width = 40 })
+    end
 end
 
-Debugger.setup = function()
-    local dap = require "dap"
-
-    dap.defaults.fallback.terminal_win_cmd = "tabnew"
-    dap.defaults.fallback.external_terminal = {
-        command = "/usr/bin/st",
-        args = { "-e" },
-    }
-    require("debugger").adapters()
-    require("debugger").configs()
-end
-
-Debugger.adapters = function()
+local function adapters()
     local dap = require "dap"
     dap.adapters.lldb = {
         type = "executable",
@@ -96,7 +86,7 @@ Debugger.adapters = function()
     }
 end
 
-Debugger.configs = function()
+local function configs()
     local dap = require "dap"
     dap.configurations.cpp = {
         {
@@ -237,22 +227,30 @@ Debugger.configs = function()
     }
 end
 
-Debugger.makeSidebar = function(func)
-    local widgets = require "dap.ui.widgets"
-    if func == "scopes" then
-        return widgets.sidebar(widgets.scopes, { width = 40 })
-    elseif func == "frames" then
-        return widgets.sidebar(widgets.frames, { width = 40 })
-    elseif func == "threads" then
-        return widgets.sidebar(widgets.threads, { width = 40 })
-    elseif func == "exp" then
-        return widgets.sidebar(widgets.expression, { width = 40 })
-    end
+local Debugger = {}
+
+function Debugger.init()
+    require("packer").loader "nvim-dap"
+    require("mappings").debug()
+    require("dap.ext.vscode").load_launchjs "launch.json"
+    print "Loaded nvim-dap. Bound keymaps"
 end
 
-Debugger.scopes = function()
+function Debugger.setup()
+    local dap = require "dap"
+
+    dap.defaults.fallback.terminal_win_cmd = "tabnew"
+    dap.defaults.fallback.external_terminal = {
+        command = "/usr/bin/st",
+        args = { "-e" },
+    }
+    adapters()
+    configs()
+end
+
+function Debugger.scopes()
     if not Sscope then
-        Sscope = Debugger.makeSidebar "scopes"
+        Sscope = makeSidebar "scopes"
     end
     if not Bscope then
         Sscope.open()
@@ -263,9 +261,9 @@ Debugger.scopes = function()
     end
 end
 
-Debugger.frames = function()
+function Debugger.frames()
     if not Sframe then
-        Sframe = Debugger.makeSidebar "frames"
+        Sframe = makeSidebar "frames"
     end
     if not Bframe then
         Sframe.open()
@@ -276,9 +274,9 @@ Debugger.frames = function()
     end
 end
 
-Debugger.threads = function()
+function Debugger.threads()
     if not Sthread then
-        Sthread = Debugger.makeSidebar "threads"
+        Sthread = makeSidebar "threads"
     end
     if not Bthread then
         Sthread.open()
@@ -289,9 +287,9 @@ Debugger.threads = function()
     end
 end
 
-Debugger.exp = function()
+function Debugger.exp()
     if not Sexp then
-        Sexp = Debugger.makeSidebar "exp"
+        Sexp = makeSidebar "exp"
     end
     if not Bexp then
         Sexp.open()
@@ -302,22 +300,22 @@ Debugger.exp = function()
     end
 end
 
-Debugger.fscopes = function()
+function Debugger.fscopes()
     local widgets = require "dap.ui.widgets"
     widgets.centered_float(widgets.scopes, { border = "double" })
 end
 
-Debugger.fthreads = function()
+function Debugger.fthreads()
     local widgets = require "dap.ui.widgets"
     widgets.centered_float(widgets.threads, { border = "double" })
 end
 
-Debugger.fframes = function()
+function Debugger.fframes()
     local widgets = require "dap.ui.widgets"
     widgets.centered_float(widgets.frames, { border = "double" })
 end
 
-Debugger.fexp = function()
+function Debugger.fexp()
     local widgets = require "dap.ui.widgets"
     widgets.centered_float(widgets.expression, { border = "double" })
 end

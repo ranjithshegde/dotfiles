@@ -118,7 +118,6 @@ function lsp.servers()
                 ["textDocument/publishDiagnostics"] = nilfunc,
                 ["textDocument/signatureHelp"] = nilfunc,
             },
-            single_file_support = true,
             root_dir = lspconfig.util.root_pattern("compile_commands.json", "compile_flags.txt", ".git"),
         },
         ltex = {

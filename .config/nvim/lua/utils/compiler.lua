@@ -9,6 +9,7 @@ local exec = vim.api.nvim_command
 function Compiler.set_ctype()
     if Compiler.has_Cmake() then
         require("mappings").cmake()
+        vim.opt.makeprg = "make"
         vim.g.makeFile = "CMakeLists.txt"
         vim.g.debugBin = "build/" .. vim.fn.fnamemodify(vim.fn.getcwd(), ":t")
         vim.g.cmakeBin = "./build/" .. vim.fn.fnamemodify(vim.fn.getcwd(), ":t")
@@ -45,12 +46,23 @@ function Compiler.set_type()
     end
 end
 
+local function detRoot()
+    local files = { "compile_flags.txt", ".clang-format" }
+    if not io.open(files[1], "r") then
+        exec("!touch " .. files[1])
+    end
+    if not io.open(files[2], "r") then
+        exec "!clang-format -style=webkit -dump-config > .clang-format"
+    end
+end
+
 -- basic setup for small test files
-function Compiler.cpractice()
-    vim.cmd "cd $CWORK/Practice"
+function Compiler.Cscratch()
+    vim.cmd "cd $CWORK/Scratch"
     vim.ui.input({ prompt = "enter directory name: ", completion = "file" }, function(input)
         vim.fn.execute("!mkdir -p " .. input)
         vim.fn.execute("cd " .. input)
+        detRoot()
     end)
     vim.ui.input({ prompt = "enter file name: ", completion = "file" }, function(input)
         exec("e " .. input)

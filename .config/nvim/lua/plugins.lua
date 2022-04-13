@@ -192,27 +192,6 @@ return require("packer").startup {
             },
         }
 
-        -- SuperCollider
-        use {
-            "davidgranstrom/scnvim",
-            ft = "supercollider",
-            run = function()
-                fn["scnvim#install"]()
-            end,
-            config = function()
-                vim.g.scnvim_snippet_format = "luasnip"
-                vim.g.scnvim_postwin_auto_toggle = 1
-                vim.api.nvim_create_autocmd("FileType", {
-                    group = "LspSettings",
-                    pattern = "supercollider",
-                    callback = function()
-                        vim.opt_local.wrap = true
-                        require("mappings").scnvim()
-                    end,
-                })
-            end,
-        }
-
         -- Indents and chars
         use {
             "lukas-reineke/indent-blankline.nvim",
@@ -235,6 +214,72 @@ return require("packer").startup {
                     vim.cmd("let g:indent_blankline_context_patterns+=['" .. v .. "']")
                 end
             end,
+        }
+
+        -- SuperCollider
+        use {
+            "davidgranstrom/scnvim",
+            ft = "supercollider",
+            run = function()
+                fn["scnvim#install"]()
+            end,
+            config = function()
+                vim.g.scnvim_snippet_format = "luasnip"
+                vim.g.scnvim_postwin_auto_toggle = 1
+                vim.api.nvim_create_autocmd("FileType", {
+                    group = "LspSettings",
+                    pattern = "supercollider",
+                    callback = function()
+                        vim.opt_local.wrap = true
+                        require("mappings").scnvim()
+                    end,
+                })
+                vim.api.nvim_create_autocmd("FileType", {
+                    pattern = "supercollider",
+                    callback = function()
+                        require("scnvim").start()
+                    end,
+                })
+            end,
+        }
+
+        -- Telescope
+        use {
+            {
+                "nvim-telescope/telescope.nvim",
+                module = "telescope",
+                cmd = "Telescope",
+                config = function()
+                    require("settings.telescope").telescope()
+                end,
+                requires = "nvim-lua/plenary.nvim",
+            },
+            { "nvim-telescope/telescope-file-browser.nvim", after = "telescope.nvim" },
+            {
+                "nvim-telescope/telescope-fzf-native.nvim",
+                after = "telescope.nvim",
+                run = "make",
+                config = function()
+                    require("telescope").load_extension "fzf"
+                end,
+            },
+            {
+                "nvim-telescope/telescope-project.nvim",
+                after = "telescope.nvim",
+                config = function()
+                    require("telescope").setup {
+                        extensions = {
+                            project = {
+                                base_dirs = {
+                                    { "~/Software/Workspaces", max_depth = 5 },
+                                    { "~/Documents/ofWorkspace", max_depth = 5 },
+                                    { "~/Documents/LaTeX", max_depth = 3 },
+                                },
+                            },
+                        },
+                    }
+                end,
+            },
         }
 
         -- completion and snippets
@@ -275,54 +320,10 @@ return require("packer").startup {
             {
                 "windwp/nvim-autopairs",
                 after = "nvim-cmp",
-                opt = true,
                 config = function()
                     require("settings.completion").pairs()
                 end,
             },
-        }
-
-        -- Telescope
-        use {
-            {
-                "nvim-telescope/telescope.nvim",
-                module = "telescope",
-                cmd = "Telescope",
-                config = function()
-                    require("settings.telescope").telescope()
-                end,
-                requires = "nvim-lua/plenary.nvim",
-            },
-            { "nvim-telescope/telescope-file-browser.nvim", after = "telescope.nvim" },
-            {
-                "nvim-telescope/telescope-fzf-native.nvim",
-                after = "telescope.nvim",
-                run = "make",
-                config = function()
-                    require("telescope").load_extension "fzf"
-                end,
-            },
-            {
-                "nvim-telescope/telescope-project.nvim",
-                after = "telescope.nvim",
-                config = function()
-                    require("telescope").setup {
-                        extensions = {
-                            project = {
-                                base_dirs = {
-                                    { "~/Software/Workspaces", max_depth = 5 },
-                                    { "~/Documents/ofWorkspace", max_depth = 5 },
-                                    { "~/Documents/LaTeX", max_depth = 3 },
-                                },
-                            },
-                        },
-                    }
-                end,
-            },
-            -- {
-            -- "nvim-telescope/telescope-dap.nvim",
-            -- opt = true,
-            -- },
         }
 
         --Lsp config and companions

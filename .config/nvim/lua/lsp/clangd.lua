@@ -33,6 +33,9 @@ function servers.clangd()
             },
         },
     }
+end
+
+function servers.clangCmp()
     local cmp = require "cmp"
     cmp.setup.sorting = {
         comparators = {

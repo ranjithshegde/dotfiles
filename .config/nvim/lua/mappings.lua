@@ -658,8 +658,8 @@ function mappings.telescope()
                 h = { telargs("find_files", { cwd = "~" }), "Home directory" },
                 r = { tele "oldfiles", "Vim recent files" },
                 t = { tele "help_tags", "vim help files" },
-                C = { cd_files("C++ Practice files/dirs", "$CWORK/Practice"), "Open C practice" },
-                c = { cd_browser("C++ Practice files/dirs", "$CWORK/Practice"), "Open C practice" },
+                C = { cd_files("C++ Practice files/dirs", "$CWORK/Scratch"), "Open C practice" },
+                c = { cd_browser("C++ Practice files/dirs", "$CWORK/Scratch"), "Open C practice" },
                 s = { cd_files("SuperCollider Directory", "~/Documents/Supercollider/"), "SuperCollider files" },
                 w = { telargs("find_files", { cwd = "~/Documents/vimWiki", prompt_title = "vimWiki" }), "wiki" },
                 b = {

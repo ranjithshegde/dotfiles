@@ -8,13 +8,15 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
-   '(htmlize flex-autopair evil-escape evil-collection yasnippet-snippets yasnippet which-key evil-textobj-tree-sitter company flycheck fzf tree-sitter-indent tree-sitter-langs tree-sitter evil-tex evil-surround evil-commentary org-bullets evil lsp-mode ##)))
+   '(sclang-snippets sclang-extensions htmlize flex-autopair evil-escape evil-collection yasnippet-snippets yasnippet which-key evil-textobj-tree-sitter company flycheck fzf tree-sitter-indent tree-sitter-langs tree-sitter evil-tex evil-surround evil-commentary org-bullets evil lsp-mode ##)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  )
+
+(setq evil-want-keybinding nil)
 
 (require 'evil)
 (evil-mode 1)
@@ -31,9 +33,11 @@
 
 (global-evil-surround-mode 1)
 
+
 (evil-collection-init)
 
 (evil-escape-mode)
+
 
 (add-hook 'after-init-hook 'global-company-mode)
 
@@ -55,3 +59,5 @@
  'org-babel-load-languages
  '((R . t)
    (latex . t)))
+
+(require 'sclang)

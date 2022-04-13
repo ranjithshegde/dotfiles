@@ -1,8 +1,8 @@
 -- ******************* function calls --------------------------------------------
 local cmd = vim.api.nvim_create_user_command
 
-cmd("Cpractice", function()
-    require("utils.compiler").cpractice()
+cmd("CScratch", function()
+    require("utils.compiler").Cscratch()
 end, {})
 cmd("Cproject", function()
     require("utils.compiler").cproject()
