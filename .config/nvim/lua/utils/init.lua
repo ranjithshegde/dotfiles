@@ -63,7 +63,6 @@ utils.autocmd = function()
         "jsonc",
         "lua",
         "markdown",
-        "vimwiki",
         "org",
         "make",
         "python",

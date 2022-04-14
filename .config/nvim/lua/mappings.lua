@@ -56,30 +56,9 @@ function mappings.general()
         ["<leader><Tab>"] = { "<cmd>SidebarNvimToggle<CR>", "Toggle Symbolsbar" },
     }
 
-    -- ******************************** vimWiki-----------------------
+    -- ******************************** orgWiki -----------------------
     wk.register {
         ["<leader>w"] = {
-            name = "vimWiki",
-            w = "Index",
-            d = "Delete file",
-            r = "Rename file",
-            n = "New file",
-            i = "Diary index",
-            t = "Index in a new tab",
-            c = "Add color to header/link",
-            ["<leader>"] = {
-                name = "Diary entries",
-                w = "Today",
-                t = "Today in new tab",
-                i = "Reindex",
-                y = "Yesterday",
-                m = "Tomorrow",
-            },
-        },
-    }
-
-    wk.register {
-        ["<leader>ow"] = {
             name = "orgWiki",
             w = {
                 function()
@@ -332,7 +311,6 @@ function mappings.configFiles()
                     l = { open "after/ftplugin/lua.lua", "Lua" },
                     o = { open "after/ftplugin/org.lua", "Orgmode" },
                     t = { open "after/ftplugin/tex.lua", "Latex" },
-                    v = { open "after/ftplugin/vimwiki.lua", "Vimwiki" },
                 },
                 q = {
                     name = "Treesitter queries",
@@ -360,6 +338,12 @@ function mappings.treesitter()
         [";"] = {
             name = "Syntax tree functions",
             -- Plugins
+            J = {
+                function()
+                    require("trevj").format_at_cursor()
+                end,
+                "Reverse J",
+            },
             K = { "<cmd>TSNodeUnderCursor<cr>", "Show treesitter node" },
             P = { "<cmd>TSPlaygroundToggle<cr>", "Toggle playground" },
             --Refactor
@@ -639,17 +623,6 @@ function mappings.telescope()
                     end,
                     "Choose directory",
                 },
-                w = {
-                    name = "vimWiki",
-                    w = {
-                        telargs("live_grep", { cwd = "~/Documents/vimWiki", prompt_title = "wiki directory" }),
-                        "whole wiki",
-                    },
-                    d = {
-                        telargs("live_grep", { cwd = "~/Documents/vimWiki/diary", prompt_title = "Diary entires" }),
-                        "Inside diary",
-                    },
-                },
             },
             F = { tele "find_files", "Current directory" },
             f = {
@@ -661,7 +634,6 @@ function mappings.telescope()
                 C = { cd_files("C++ Practice files/dirs", "$CWORK/Scratch"), "Open C practice" },
                 c = { cd_browser("C++ Practice files/dirs", "$CWORK/Scratch"), "Open C practice" },
                 s = { cd_files("SuperCollider Directory", "~/Documents/Supercollider/"), "SuperCollider files" },
-                w = { telargs("find_files", { cwd = "~/Documents/vimWiki", prompt_title = "vimWiki" }), "wiki" },
                 b = {
                     telargs("find_files", { cwd = "~/.local/bin/", prompt_title = "Scripts and binaries in local" }),
                     "scripts & binaries",

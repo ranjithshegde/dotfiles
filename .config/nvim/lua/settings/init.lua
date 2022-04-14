@@ -3,6 +3,10 @@ local settings = {}
 local o = vim.opt
 require("impatient").enable_profile()
 
+------------------------------------------------------------------------
+--                              General                               --
+------------------------------------------------------------------------
+
 function settings.options()
     vim.cmd "colo duskfox"
     local tab = 4
@@ -90,26 +94,6 @@ function settings.options()
             vim.highlight.on_yank { higroup = "IncSearch", timeout = 200 }
         end,
     })
-end
-
-------------------------------------------------------------------------
---                              VimWiki                               --
-------------------------------------------------------------------------
-
-function settings.vimwiki()
-    local l = {}
-    l.path = "$HOME/Documents/vimWiki"
-    l.syntax = "markdown"
-    l.ext = ".md"
-    l.auto_diary_index = 1
-    l.auto_toc = 1
-    l.auto_generte_links = 1
-    l.nested_syntaxes = { cpp = "cpp" }
-    l.autowriteall = 1
-    vim.g.vimwiki_list = { l }
-    vim.g.vimwiki_markdown_link_ext = 1
-    vim.g.vimwiki_auto_chdir = 1
-    vim.g.vimwiki_folding = "expr"
 end
 
 ------------------------------------------------------------------------

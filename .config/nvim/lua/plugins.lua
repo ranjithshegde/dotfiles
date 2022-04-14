@@ -65,15 +65,6 @@ return require("packer").startup {
             end,
         }
 
-        -- Markdown preview
-        use {
-            "iamcco/markdown-preview.nvim",
-            run = function()
-                fn["mkdp#util#install"]()
-            end,
-            ft = { "vimwiki", "markdown" },
-        }
-
         -- Comment with TreeSitter
         use {
             "numToStr/Comment.nvim",
@@ -83,6 +74,14 @@ return require("packer").startup {
             end,
         }
 
+        -- ReverseJ
+        use {
+            "AckslD/nvim-trevJ.lua",
+            module = "trevj",
+            config = function()
+                require("trevj").setup()
+            end,
+        }
         -- StatusLine
         use {
             "tjdevries/express_line.nvim",
@@ -102,17 +101,6 @@ return require("packer").startup {
                 require("mappings").git()
             end,
             opt = true,
-        }
-
-        -- vimwiki
-        use {
-            "vimwiki/vimwiki",
-            branch = "dev",
-            ft = "vimwiki",
-            keys = { "<leader>ww", "<leader>w<leader>w", "<leader>wi", "<leader>wt", "<leader>wn" },
-            setup = function()
-                require("settings").vimwiki()
-            end,
         }
 
         -- WhichKey
