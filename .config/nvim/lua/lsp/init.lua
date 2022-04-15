@@ -33,6 +33,11 @@ function lsp.capabilities()
     end
 end
 
+local nofmt = {
+    "sumneko_lua",
+    "jsonls",
+}
+
 -- **************************** Global attach function------------------
 function lsp.attach(client, bufnr)
     require("mappings").nvim_lsp()
@@ -57,10 +62,18 @@ function lsp.attach(client, bufnr)
     end
 
     if rc.document_formatting then
+        for _, name in ipairs(nofmt) do
+            if client.name == name then
+                rc.document_formatting = false
+                if rc.document_range_formatting then
+                    rc.document_range_formatting = false
+                end
+            end
+        end
         augroup("LspAutoFormat", {})
         aucmd("BufWrite", {
             group = "LspAutoFormat",
-            pattern = "*.html,*.css,*.js,*.hpp,*.h,*.sh,*.lua,*.cpp,*.json,*.py,*.yaml,*.toml,*.vs,*.fs,*.gs,*.vert,*.frag,*.geom,*.glsl,*.dart",
+            buffer = bufnr,
             callback = function()
                 vim.lsp.buf.formatting_sync(nil, 500)
             end,
@@ -84,24 +97,18 @@ function lsp.cinit(client)
     rc.code_action = false
 end
 
--- **************************** Attach without formatting --------------
-function lsp.efm(client, bufnr)
-    lsp.attach(client, bufnr)
-    client.resolved_capabilities.document_formatting = false
-end
-
 ------------------------------------------------------------------------
 --                         Language servers                           --
 ------------------------------------------------------------------------
 
 function lsp.servers()
-    local dict = os.getenv "XDG_CONFIG_HOME" .. "/nvim/spell/en.utf-8.add"
+    local dict = vim.api.nvim_get_option "spellfile"
     ---@diagnostic disable-next-line: unused-vararg
     local nilfunc = function(...)
         return nil
     end
     local configs = {
-        jsonls = { on_attach = lsp.efm },
+        jsonls = { on_attach = lsp.attach },
         yamlls = { on_attach = lsp.attach },
         html = { on_attach = lsp.attach, capabilities = lsp.capabilities() },
         cssls = { on_attach = lsp.attach, capabilities = lsp.capabilities() },

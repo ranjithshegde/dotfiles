@@ -227,10 +227,17 @@ local function configs()
     }
 end
 
+local function signs()
+    vim.fn.sign_define("DapBreakpoint", { text = "🟥" })
+    vim.fn.sign_define("DapBreakpointRejected", { text = "🟦" })
+    vim.fn.sign_define("DapStopped", { text = "⭐️" })
+end
+
 local Debugger = {}
 
 function Debugger.init()
     require("packer").loader "nvim-dap"
+    signs()
     require("mappings").debug()
     require("dap.ext.vscode").load_launchjs "launch.json"
     print "Loaded nvim-dap. Bound keymaps"

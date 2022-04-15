@@ -31,8 +31,9 @@ function settings.options()
     o.foldmethod = "expr"
     o.inccommand = "split"
     o.spelloptions = "camel"
-    o.grepprg = "rg --vimgrep --smart-case --hidden"
     o.grepformat = "%f:%l:%c:%m"
+    o.grepprg = "rg --vimgrep --smart-case --hidden"
+    o.spellfile = vim.fn.stdpath "config" .. "/spell/en.utf-8.add"
     o.fillchars = {
         fold = ".",
         horiz = "━",
@@ -47,7 +48,7 @@ function settings.options()
     o.listchars:append "eol:↲"
     o.foldexpr = "nvim_treesitter#foldexpr()"
     o.completeopt = "menu,menuone,noinsert,noselect"
-    o.dictionary = os.getenv "XDG_DATA_HOME" .. "/dict/words"
+    o.dictionary = { "/usr/share/dict/us", "/usr/share/dict/british" }
     o.tabline = [[%!luaeval('require("statusline").tabs()')]]
     o.sessionoptions:append "terminal,tabpages"
     o.clipboard:append "unnamedplus"
@@ -59,9 +60,13 @@ function settings.options()
     vim.g.loaded_perl_provider = 0
     vim.g.netrw_browsex_viewer = "xdg-open"
     vim.g.symbols_outline = { auto_preview = false, width = 40 }
+    vim.g.netrw_browse_split = 4
+    vim.g.netrw_winsize = 15
+    vim.g.netrw_liststyle = 3
+    vim.g.netrw_altv = 1
 
     -- ************** Disable builtin plugins ---------------------------------------------------------
-    local disabled_built_ins = {
+    local disabled_builtins = {
         "fzf",
         "tar",
         "zip",
@@ -78,13 +83,10 @@ function settings.options()
         "spellfile_plugin",
         "shada",
         "matchit",
-        "netrw",
-        "netrwPlugin",
-        "netrwSettings",
         "netrwFileHandlers",
     }
 
-    for _, plugin in pairs(disabled_built_ins) do
+    for _, plugin in pairs(disabled_builtins) do
         vim.g["loaded_" .. plugin] = 1
     end
 

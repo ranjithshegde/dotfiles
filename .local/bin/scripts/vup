@@ -1,0 +1,7 @@
+#!/bin/sh
+
+sudo rm -r ~/.cache/paru/clone/neovim-git/
+paru -Sau neovim-git
+
+# sudo rm -r ~/.cache/paru/clone/neovim-nightly-bin/
+# paru -Sau neovim-nightly-bin

@@ -194,25 +194,43 @@ local chainList = {
     },
 }
 
+local function pumclose()
+    if vim.fn.pumvisible() == 1 then
+        vim.cmd "pclose"
+    end
+end
+
 langSettings.chainIndex = {
     function()
+        pumclose()
         local ok, cmp = pcall(require, "cmp")
         if ok then
-            cmp.setup.buffer {
-                sources = {
-                    { name = "nvim_lsp" },
-                    { name = "luasnip" },
-                },
-            }
+            if vim.api.nvim_buf_get_option(0, "filetype") == "org" then
+                cmp.setup.buffer {
+                    sources = {
+                        { name = "orgmode" },
+                        { name = "luasnip" },
+                    },
+                }
+            else
+                cmp.setup.buffer {
+                    sources = {
+                        { name = "nvim_lsp" },
+                        { name = "luasnip" },
+                    },
+                }
+            end
             cmp.complete()
         end
     end,
 
     function()
+        pumclose()
         require("utils").feedkey("<C-x><C-p>", "n")
     end,
 
     function()
+        pumclose()
         local ft = vim.api.nvim_buf_get_option(0, "filetype")
         if chainList.filetype[ft] then
             for _, v in pairs(chainList.filetype[ft]) do
@@ -224,6 +242,7 @@ langSettings.chainIndex = {
     end,
 
     function()
+        pumclose()
         local ok, cmp = pcall(require, "cmp")
         if ok then
             cmp.setup.buffer {

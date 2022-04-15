@@ -17,10 +17,10 @@ local highlights = {
 }
 
 local function signs()
-    vim.api.nvim_command "sign define DiagnosticSignError text= texthl=DiagnosticSignError"
-    vim.api.nvim_command "sign define DiagnosticSignWarn text= texthl=DiagnosticSignWarn"
-    vim.api.nvim_command "sign define DiagnosticSignInfo text= texthl=DiagnosticSignInfo"
-    vim.api.nvim_command "sign define DiagnosticSignHint text= texthl=DiagnosticSignHint"
+    vim.fn.sign_define("DiagnosticSignError", { text = "", texthl = "DiagnosticSignError" })
+    vim.fn.sign_define("DiagnosticSignWarn", { text = "", texthl = "DiagnosticSignWarn" })
+    vim.fn.sign_define("DiagnosticSignInfo", { text = "", texthl = "DiagnosticSignInfo" })
+    vim.fn.sign_define("DiagnosticSignHint", { text = "", texthl = "DiagnosticSignHint" })
 end
 
 local function fmt(diagnostic)

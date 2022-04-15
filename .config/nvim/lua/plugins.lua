@@ -82,10 +82,10 @@ return require("packer").startup {
                 require("trevj").setup()
             end,
         }
+
         -- StatusLine
         use {
             "tjdevries/express_line.nvim",
-            -- branch = "git_changes",
             requires = { "kyazdani42/nvim-web-devicons", "nvim-lua/plenary.nvim" },
             config = function()
                 require("statusline").el()
@@ -97,7 +97,7 @@ return require("packer").startup {
             "lewis6991/gitsigns.nvim",
             requires = "nvim-lua/plenary.nvim",
             config = function()
-                require("gitsigns").setup { keymaps = {} }
+                require("gitsigns").setup()
                 require("mappings").git()
             end,
             opt = true,
@@ -206,7 +206,9 @@ return require("packer").startup {
 
         -- SuperCollider
         use {
-            "davidgranstrom/scnvim",
+            -- "davidgranstrom/scnvim",
+            "ranjithshegde/scnvim",
+            branch = "0.7",
             ft = "supercollider",
             run = function()
                 fn["scnvim#install"]()
@@ -220,12 +222,8 @@ return require("packer").startup {
                     callback = function()
                         vim.opt_local.wrap = true
                         require("mappings").scnvim()
-                    end,
-                })
-                vim.api.nvim_create_autocmd("FileType", {
-                    pattern = "supercollider",
-                    callback = function()
                         require("scnvim").start()
+                        vim.api.nvim_input "<CR>"
                     end,
                 })
             end,

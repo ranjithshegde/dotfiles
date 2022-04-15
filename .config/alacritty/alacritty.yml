@@ -394,6 +394,9 @@ live_config_reload: true
 #mouse_bindings:
 #  - { mouse: Middle, action: PasteSelection }
 
+key_bindings:
+  - { key: I, mods: Control, chars: "\x1b[105;5u" }
+
 # key_bindings:
 #   # (Windows, Linux, and BSD only)
 #   - { key: V,        mods: Control|Shift,  action: Paste            }

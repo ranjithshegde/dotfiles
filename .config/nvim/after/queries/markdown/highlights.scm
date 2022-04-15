@@ -24,19 +24,3 @@
   (atx_h6_marker)
 ] @_conceal
 (#set! conceal ""))
-
-([
-  (info_string)
-  (fenced_code_block_delimiter)
-  (code_span_delimiter)
-  (emphasis_delimiter)
-] @_conceal
-(#set! conceal ""))
-
-(inline_link
-  ["]"] @conceal
-  (#set! conceal " "))
-
-(inline_link
-  "["  @conceal
-  (#set! conceal ""))

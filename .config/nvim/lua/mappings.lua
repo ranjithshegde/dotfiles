@@ -8,11 +8,14 @@ local map = vim.keymap.set
 
 function mappings.general()
     mappings.configFiles()
+    mappings.orgWiki()
     mappings.telescope()
     mappings.treesitter()
     mappings.coauthor()
 
     local opts = { nowait = true }
+    map("n", ",", "<C-,>")
+    map("n", ";", "<C-;>")
     --line movement
     map("x", "K", ":move '<-2<CR>gv-gv", { desc = "Move line up" })
     map("x", "J", ":move '>+1<CR>gv-gv", { desc = "Move line down" })
@@ -22,7 +25,6 @@ function mappings.general()
     map("v", "<", "<gv", opts)
     map("v", ">", ">gv", opts)
     -- Terminal
-    map("t", "<Esc>", "<C-\\><C-n>", opts)
     map({ "n", "t" }, "<F9>", function()
         vim.cmd "stopinsert"
         require("utils").toggleTerm("zsh", "shell", 1)
@@ -36,27 +38,78 @@ function mappings.general()
     map("n", "_", function()
         require("utils.qf").toggle_qf "l"
     end, { desc = "Toggle loclist" })
+    -- Toggle folds
+    map("n", "<Tab>", "za", { desc = "Toggle fold current" })
+    map("n", "<S-Tab>", "zA", { desc = "Toggle fold All" })
+    -- open folds when searching
+    map("n", "n", "nzzzv", { desc = "jump to next search result" })
+    map("n", "N", "Nzzzv", { desc = "jump to previous search result" })
+    map("n", "J", "mzJ`z", { desc = "Adjoin next line" })
+    map(
+        "n",
+        "gm",
+        "cursor(0,{desc =  virtcol('$')/2 )",
+        { desc = "Move cursor to middle of the line", expr = true, buffer = true }
+    )
+    map("n", "<leader><Tab>", "<cmd>SidebarNvimToggle<CR>", { desc = "Toggle Symbolsbar" })
 
+    -- Terminals
     wk.register {
-        ["<Tab>"] = { "za", "Toggle fold current" },
-        ["<S-Tab>"] = { "zA", "Toggle fold All" },
-        -- open folds when searching
-        n = { "nzzzv", "jump to next search result" },
-        N = { "Nzzzv", "jump to previous search result" },
-        J = { "mzJ`z", "Adjoin next line" },
-        gm = { "cursor(0, virtcol('$')/2 )", "Move cursor to middle of the line", expr = true, buffer = 0 },
-        gf = { "<cmd>e <cfile><CR>", "open file under cursor" },
-        -- Terminals
         ["<leader>t"] = {
             name = "Launch terminal in split",
             h = { "<cmd>sp term://zsh<cr>", "Horizontal" },
             v = { "<cmd>vspl term://zsh<cr>", "Vertical" },
             t = { "<cmd>tab drop term://zsh<cr>", "New tab" },
         },
-        ["<leader><Tab>"] = { "<cmd>SidebarNvimToggle<CR>", "Toggle Symbolsbar" },
     }
+end
 
-    -- ******************************** orgWiki -----------------------
+------------------------------------------------------------------------
+--                              Utilities                             --
+------------------------------------------------------------------------
+
+function mappings.ranger()
+    wk.register {
+        ["<leader>r"] = {
+            name = "Ranger file picker",
+        },
+    }
+    map("n", "<leader>rr", function()
+        vim.fn["util#ranger"]("%:p:h", "e ")
+    end, { desc = "from current file" })
+    map("n", "<leader>rR", function()
+        vim.fn["util#ranger"](".", "e ")
+    end, { desc = "from current directory" })
+    map("n", "<leader>rv", function()
+        vim.cmd "vnew"
+        vim.fn["util#ranger"]("%:p:h", "vs ")
+    end, { desc = "in a split from current file" })
+    map("n", "<leader>rV", function()
+        vim.cmd "vnew"
+        vim.fn["util#ranger"](".", "vs ")
+    end, { desc = "in a split from current directory" })
+    map("n", "<leader>rt", function()
+        vim.cmd "tabnew"
+        vim.fn["util#ranger"]("%:p:h", "tab drop ")
+    end, { desc = "in a new tab from current file" })
+    map("n", "<leader>rT", function()
+        vim.cmd "tabnew"
+        vim.fn["util#ranger"](".", "tab drop ")
+    end, { desc = "in a new tab from current directory" })
+end
+
+function mappings.wordProcessor()
+    map("n", "<leader><Space>", '<cmd>g/^/pu ="\n"<CR>', { desc = "Double space entire file" })
+    map("n", ",K", function()
+        require("utils").dictionary(vim.fn.expand "<cword>")
+    end, { desc = "Lookup Wikitionary" })
+    map("n", ",T", function()
+        require("utils").thesaurus(vim.fn.expand "<cword>")
+    end, { desc = "Lookup Synonyms" })
+end
+
+-- ******************************** orgWiki -----------------------
+function mappings.orgWiki()
     wk.register {
         ["<leader>w"] = {
             name = "orgWiki",
@@ -122,73 +175,6 @@ function mappings.general()
 end
 
 ------------------------------------------------------------------------
---                              Utilities                             --
-------------------------------------------------------------------------
-
-function mappings.ranger()
-    wk.register {
-        ["<leader>r"] = {
-            name = "Ranger file picker",
-            r = {
-                function()
-                    vim.fn["util#ranger"]("%:p:h", "e ")
-                end,
-                "from current file",
-            },
-            R = {
-                function()
-                    vim.fn["util#ranger"](".", "e ")
-                end,
-                "from current directory",
-            },
-            v = {
-                function()
-                    vim.cmd "vnew"
-                    vim.fn["util#ranger"]("%:p:h", "vs ")
-                end,
-                "in a split from current file",
-            },
-            V = {
-                function()
-                    vim.cmd "vnew"
-                    vim.fn["util#ranger"](".", "vs ")
-                end,
-                "in a split from current directory",
-            },
-            t = {
-                function()
-                    vim.cmd "tabnew"
-                    vim.fn["util#ranger"]("%:p:h", "tab drop ")
-                end,
-                "in a new tab from current file",
-            },
-            T = {
-                function()
-                    vim.cmd "tabnew"
-                    vim.fn["util#ranger"](".", "tab drop ")
-                end,
-                "in a new tab from current directory",
-            },
-        },
-    }
-end
-
-function mappings.wordProcessor()
-    wk.register({
-        zG = {
-            'writefile([expand("<cword>")], "/usr/share/words.txt", "a")',
-            "Add word to LanguageTool dictionary",
-            expr = true,
-        },
-        ["<leader><Space>"] = { '<cmd>g/^/pu ="\n"<CR>', "Double space entire file" },
-        [","] = {
-            K = { "<cmd>lua require('utils').dictionary(vim.fn.expand('<cword>'))<CR>", "Lookup Wikitionary" },
-            T = { "<cmd>lua require('utils').thesaurus(vim.fn.expand('<cword>'))<CR>", "Lookup Synonyms" },
-        },
-    }, { nowait = true, noremap = true, silent = true })
-end
-
-------------------------------------------------------------------------
 --                              Language servers                      --
 ------------------------------------------------------------------------
 
@@ -246,20 +232,15 @@ function mappings.nvim_lsp()
             f = { vim.lsp.buf.range_formatting, "Format range" },
         },
     }, { mode = "v", buffer = 0 })
-
-    wk.register {
-        ["<F11>"] = { "<cmd>SymbolsOutline<CR>", "Toggle Symbolsbar" },
-    }
+    map("n", "<F11>", "<cmd>SymbolsOutline<CR>", { desc = "Toggle Symbolsbar" })
 end
 
 -- ******************************** Diagnostics------------------------
 
 function mappings.diagnostic()
-    wk.register {
-        [",ld"] = { vim.diagnostic.open_float, "Show line diagnostics" },
-        ["[d"] = { vim.diagnostic.goto_prev, "Show previous diagnostics" },
-        ["]d"] = { vim.diagnostic.goto_next, "Show next diagnostics" },
-    }
+    map("n", ",ld", vim.diagnostic.open_float, { desc = "Show line diagnostics" })
+    map("n", "[d", vim.diagnostic.goto_prev, { desc = "Show previous diagnostics" })
+    map("n", "]d", vim.diagnostic.goto_next, { desc = "Show next diagnostics" })
 end
 
 ------------------------------------------------------------------------
@@ -453,6 +434,9 @@ end
 ------------------------------------------------------------------------
 
 function mappings.telescope()
+    local cd_files = require("settings.telescope").cdFiles
+    local cd_browser = require("settings.telescope").cdBrowser
+
     local tele = function(name)
         return function()
             require("telescope.builtin")[name]()
@@ -462,81 +446,6 @@ function mappings.telescope()
     local telargs = function(name, args)
         return function()
             require("telescope.builtin")[name](args)
-        end
-    end
-
-    local cd_browser = function(prompt, cwd)
-        return function()
-            require("telescope").extensions.file_browser.file_browser {
-                prompt_title = prompt,
-                cwd = cwd,
-                attach_mappings = function(prompt_bufnr, maps)
-                    local change_dir = function(window)
-                        local wd = require("telescope.actions.state").get_selected_entry().value
-                        require("telescope.actions.set").select(prompt_bufnr, window)
-                        if not require("plenary.path"):new(wd):is_dir() then
-                            local dir = vim.fn.fnamemodify(wd, ":p:h")
-                            vim.fn.execute("tcd " .. dir)
-                        end
-                    end
-                    maps("n", "<CR>", function()
-                        change_dir "default"
-                    end)
-                    maps("i", "<CR>", function()
-                        change_dir "default"
-                    end)
-                    maps("n", "<C-v>", function()
-                        change_dir "vertical"
-                    end)
-                    maps("i", "<C-v>", function()
-                        change_dir "vertical"
-                    end)
-                    maps("n", "<C-t>", function()
-                        change_dir "tab"
-                    end)
-                    maps("i", "<C-t>", function()
-                        change_dir "tab"
-                    end)
-                    return true
-                end,
-            }
-        end
-    end
-
-    local cd_files = function(prompt, cwd)
-        return function()
-            require("telescope.builtin").find_files {
-                prompt_title = prompt,
-                cwd = cwd,
-                attach_mappings = function(prompt_bufnr, maps)
-                    local change_dir = function(window)
-                        local wd = require("telescope.actions.state").get_selected_entry().value
-                        require("telescope.actions.set").select(prompt_bufnr, window)
-                        vim.fn.execute("tcd " .. cwd)
-                        local dir = vim.fn.fnamemodify(wd, ":p:h")
-                        vim.fn.execute("tcd " .. dir)
-                    end
-                    maps("n", "<CR>", function()
-                        change_dir "default"
-                    end)
-                    maps("i", "<CR>", function()
-                        change_dir "default"
-                    end)
-                    maps("n", "<C-v>", function()
-                        change_dir "vertical"
-                    end)
-                    maps("i", "<C-v>", function()
-                        change_dir "vertical"
-                    end)
-                    maps("n", "<C-t>", function()
-                        change_dir "tab"
-                    end)
-                    maps("i", "<C-t>", function()
-                        change_dir "tab"
-                    end)
-                    return true
-                end,
-            }
         end
     end
 
@@ -684,11 +593,12 @@ function mappings.git()
             a = { "<cmd>G add %<cr>", "add current buffer" },
             d = { "<cmd>G difftool<cr>", "launch difftool" },
             b = { "<cmd>G blame<cr>", "toggle blame" },
-            p = { "<cmd>Gitsigns preview_hunk<cr>", "preview hunk under cursor" },
+            p = { "<cmd>G push<cr>", "push commits" },
             s = { "<cmd>Gitsigns stage_hunk<cr>", "stage hunk under cursor" },
-            P = { "<cmd>G push<cr>", "push commits" },
+            P = { "<cmd>G push -f<cr>", "force push commits" },
             l = { "<cmd>G log<cr>", "commit history" },
             L = { "<cmd>Gclog<cr>", "commit CLog" },
+            h = { "<cmd>Gitsigns toggle_linehl<cr> <cmd>Gitsigns toggle_word_diff<cr>", "Toggle buffer highlights" },
         },
         ["]h"] = { "<cmd>Gitsigns next_hunk<cr>:Gitsigns preview_hunk<CR>", "Preview previous hunk" },
         ["[h"] = { "<cmd>Gitsigns prev_hunk<cr>:Gitsigns preview_hunk<CR>", "Preview next hunk" },
@@ -700,6 +610,20 @@ end
 ------------------------------------------------------------------------
 
 function mappings.scnvim()
+    map("n", "<F1>", require("scnvim").start, { buffer = true, desc = "Launch Sclang" })
+    map("n", "<F2>", "<cmd>SCNvimStatusLine<cr>", { buffer = true, desc = "Display server status" })
+    map(
+        "n",
+        "<F3>",
+        'scnvim#sclang#send_silent("Server.local.boot")',
+        { buffer = true, desc = "Boot local server", expr = true }
+    )
+    map(
+        "n",
+        "<F4>",
+        'scnvim#sclang#send_silent("WFSLib.startup")',
+        { buffer = true, desc = "Boot WFS server", expr = true }
+    )
     map("n", "<F5>", "<Plug>(scnvim-send-block)", { buffer = true, desc = "Evaluate SC code block" })
     map("i", "<F5>", "<esc><Plug>(scnvim-send-block)", { buffer = true, desc = "Evaluate SC code block" })
     map("v", "<F5>", "<Plug>(scnvim-send-selection)", { buffer = true, desc = "Evaluate SC visual block" })
@@ -708,14 +632,12 @@ function mappings.scnvim()
     map("n", ",s", function()
         require("scnvim.completion.signature").show { border = "rounded" }
     end, { buffer = true, desc = "SC signature help" })
-
-    wk.register({
-        ["<F1>"] = { require("scnvim").start, "Launch Sclang" },
-        ["<F2>"] = { "<cmd>SCNvimStatusLine<cr>", "Display server status" },
-        ["<F3>"] = { 'scnvim#sclang#send_silent("Server.local.boot")', "Boot local server", expr = true },
-        ["<F4>"] = { 'scnvim#sclang#send_silent("WFSLib.startup")', "Boot WFS server", expr = true },
-        ["<leader>s"] = { "<cmd>tabnew ~/.config/SuperCollider/startup.scd<cr>", "open startup file" },
-    }, { buffer = 0 })
+    map(
+        "n",
+        "<leader>s",
+        "<cmd>tabnew ~/.config/SuperCollider/startup.scd<cr>",
+        { buffer = true, desc = "open startup file" }
+    )
 end
 
 ------------------------------------------------------------------------
@@ -727,25 +649,19 @@ function mappings.micro()
         vim.cmd "stopinsert"
         require("utils.compiler").monitor()
     end, { desc = "Serial monitor toggle" })
+    map("n", "<F2>", require("utils.compiler").pio_clean, { buffer = true, desc = "Regenerate tags" })
+    map("n", "<F3>", require("utils.compiler").pio_check, { buffer = true, desc = "Verify code" })
+    map("n", "<F5>", "<cmd>w <CR> <cmd>Make<CR>", { buffer = true, desc = "Build" })
+    map("n", "<F6>", "<cmd>w <CR> <cmd>Make --target upload<CR>", { buffer = true, desc = "Upload" })
+    map("n", ",ka", function()
+        require("utils.compiler").ardRef(vim.fn.expand "<cword>")
+    end, { buffer = true, desc = "Arduino" })
+    map("n", ",kt", require("utils.compiler").teensypins, { buffer = true, desc = "teensy pins" })
+    map("n", ",kT", require("utils.compiler").teensyspecs, { buffer = true, desc = "teensy specs" })
 
-    wk.register({
-        ["<F2>"] = { require("utils.compiler").pio_clean, "Regenerate tags" },
-        ["<F3>"] = { require("utils.compiler").pio_check, "Verify code" },
-        ["<F5>"] = { "<cmd>w <CR> <cmd>Make<CR>", "Build" },
-        ["<F6>"] = { "<cmd>w <CR> <cmd>Make --target upload<CR>", "Upload" },
-        [","] = {
-            k = {
-                a = {
-                    function()
-                        require("utils.compiler").ardRef(vim.fn.expand "<cword>")
-                    end,
-                    "Arduino",
-                },
-                t = { require("utils.compiler").teensypins, "teensy pins" },
-                T = { require("utils.compiler").teensyspecs, "teensy specs" },
-            },
-        },
-    }, { buffer = 0 })
+    wk.register {
+        [","] = { k = { "Arduino documentation", buffer = 0 } },
+    }
 end
 
 ------------------------------------------------------------------------
@@ -753,21 +669,13 @@ end
 ------------------------------------------------------------------------
 
 function mappings.makeC()
-    wk.register({
-        ["<F4>"] = { "<cmd>w <CR> <cmd>Make Debug -j12<CR>", "Compile Debug" },
-        ["<F5>"] = {
-            function()
-                require("utils.compiler").renderOffload("make RunRelease", "Make -j12", true)
-            end,
-            "Compile and Run Release",
-        },
-        ["<F6>"] = {
-            function()
-                require("utils.compiler").renderOffload "make RunRelease"
-            end,
-            "Run Release",
-        },
-    }, { buffer = 0 })
+    map("n", "<F4>", "<cmd>w <CR> <cmd>Make Debug -j12<CR>", { buffer = true, desc = "Compile Debug" })
+    map("n", "<F5>", function()
+        require("utils.compiler").renderOffload("make RunRelease", "Make -j12", true)
+    end, { buffer = true, desc = "Compile and Run Release" })
+    map("n", "<F6>", function()
+        require("utils.compiler").renderOffload "make RunRelease"
+    end, { buffer = true, desc = "Run Release" })
 end
 
 ------------------------------------------------------------------------
@@ -776,37 +684,29 @@ end
 
 -- ******************************** C files ----------------------------
 function mappings.ctests()
-    wk.register({
-        ["<F3>"] = { "<cmd>w <CR> <cmd>Dispatch gcc % -lm -o %<<CR> <cmd>Dispatch ./%<<CR>", "Use gcc" },
-        ["<F4>"] = {
-            function()
-                vim.cmd "w | redraw"
-                require("utils.compiler").with_flags()
-            end,
-            "Make with defined flags",
-        },
-        ["<F5>"] = { "<cmd>w <CR> <cmd>Make -g % -o %<<CR>", "Make" },
-        ["<F6>"] = {
-            function()
-                require("utils.compiler").renderOffload "./%<"
-            end,
-            "Launch binary",
-        },
-    }, { buffer = 0 })
+    map(
+        "n",
+        "<F3>",
+        "<cmd>w <CR> <cmd>Dispatch gcc % -lm -o %<<CR> <cmd>Dispatch ./%<<CR>",
+        { buffer = true, desc = "Use gcc" }
+    )
+    map("n", "<F4>", function()
+        vim.cmd "w | redraw"
+        require("utils.compiler").with_flags()
+    end, { buffer = true, desc = "Make with defined flags" })
+    map("n", "<F5>", "<cmd>w <CR> <cmd>Make -g % -o %<<CR>", { buffer = true, desc = "Make" })
+    map("n", "<F6>", function()
+        require("utils.compiler").renderOffload "./%<"
+    end, { buffer = true, desc = "Launch binary" })
 end
 
 -- ******************************** Pd externals ------------------------
 function mappings.pdc()
-    wk.register({
-        ["<F5>"] = { "<cmd>w<CR><cmd>Make<CR>", "Build Pd external" },
-        ["<F6>"] = {
-            function()
-                vim.cmd "w | redraw"
-                require("utils.compiler").pdBuild()
-            end,
-            "Copy external to PD directory",
-        },
-    }, { buffer = 0 })
+    map("n", "<F5>", "<cmd>w<CR><cmd>Make<CR>", { buffer = true, desc = "Build Pd external" })
+    map("n", "<F6>", function()
+        vim.cmd "w | redraw"
+        require("utils.compiler").pdBuild()
+    end, { buffer = true, desc = "Copy external to PD directory" })
 end
 
 -- ******************************** Clang Lsp----------------------------
@@ -870,30 +770,19 @@ end
 ------------------------------------------------------------------------
 
 function mappings.cmake()
-    wk.register({
-        ["<F2>"] = { require("utils.compiler").cmake_clean, "Clean cmake" },
-        ["<F3>"] = {
-            function()
-                vim.cmd "w | redraw"
-                require("utils.compiler").cmake_gen_debug()
-            end,
-            "Generate Cmake Debug",
-        },
-        ["<F4>"] = {
-            function()
-                vim.cmd "w | redraw"
-                require("utils.compiler").cmake_gen()
-            end,
-            "Generate Cmake Release",
-        },
-        ["<F5>"] = { "<cmd>w <CR> <cmd>Make -j12 -C build<CR>", "Make" },
-        ["<F6>"] = {
-            function()
-                require("utils.compiler").renderOffload(vim.g.cmakeBin)
-            end,
-            "Launch binary",
-        },
-    }, { buffer = 0 })
+    map("n", "<F2>", require("utils.compiler").cmake_clean, { buffer = true, desc = "Clean cmake" })
+    map("n", "<F3>", function()
+        vim.cmd "w | redraw"
+        require("utils.compiler").cmake_gen_debug()
+    end, { buffer = true, desc = "Generate Cmake Debug" })
+    map("n", "<F4>", function()
+        vim.cmd "w | redraw"
+        require("utils.compiler").cmake_gen()
+    end, { buffer = true, desc = "Generate Cmake Release" })
+    map("n", "<F5>", "<cmd>w <CR> <cmd>Make -j12 -C build<CR>", { buffer = true, desc = "Make" })
+    map("n", "<F6>", function()
+        require("utils.compiler").renderOffload(vim.g.cmakeBin)
+    end, { buffer = true, desc = "Launch binary" })
 end
 
 ------------------------------------------------------------------------
@@ -1014,12 +903,10 @@ end
 ------------------------------------------------------------------------
 
 function mappings.tex()
-    wk.register({
-        ["<F3>"] = { "<cmd>TexWordCount<CR>", "Word count" },
-        ["<F4>"] = { "<cmd>Make -C<CR>", "Clean tex files" },
-        ["<F5>"] = { "<cmd>TexlabBuild<CR>", "Compile tex document" },
-        ["<F6>"] = { "<cmd>TexlabForward<CR>", "Launch zathura" },
-    }, { buffer = 0 })
+    map("n", "<F3>", "<cmd>TexWordCount<CR>", { buffer = true, desc = "Word count" })
+    map("n", "<F4>", "<cmd>Make -C<CR>", { buffer = true, desc = "Clean tex files" })
+    map("n", "<F5>", "<cmd>TexlabBuild<CR>", { buffer = true, desc = "Compile tex document" })
+    map("n", "<F6>", "<cmd>TexlabForward<CR>", { buffer = true, desc = "Launch zathura" })
 end
 
 return mappings

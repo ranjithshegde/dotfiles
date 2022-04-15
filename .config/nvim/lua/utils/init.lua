@@ -40,35 +40,6 @@ end
 
 utils.autocmd = function()
     -- ************** FileTypes  ---------------------------------------
-
-    local lspfiles = {
-        "bash",
-        "sh",
-        "zsh",
-        "tex",
-        "bib",
-        "css",
-        "cmake",
-        "c",
-        "cpp",
-        "objc",
-        "opencl",
-        "dart",
-        "glsl",
-        "html",
-        "javascript",
-        "typescript",
-        "java",
-        "json",
-        "jsonc",
-        "lua",
-        "markdown",
-        "org",
-        "make",
-        "python",
-        "vim",
-        "yaml",
-    }
     augroup("FormatOptions", {})
     aucmd("FileType", {
         group = "FormatOptions",
@@ -115,7 +86,7 @@ utils.autocmd = function()
     augroup("MakeDispatch", {})
     aucmd("FileType", {
         group = "MakeDispatch",
-        pattern = "java,lua,python,javascript",
+        pattern = { "java", "lua", "python", "javascript" },
         callback = function()
             vim.keymap.set("n", "<F5>", function()
                 vim.cmd "w | redraw"
@@ -130,7 +101,7 @@ utils.autocmd = function()
     })
     aucmd("BufWritePost", {
         group = "MakeDispatch",
-        pattern = "*.glsl,*.vert,*.frag,*.geom,*.vs,*.fs,*.gs",
+        pattern = { "*.glsl", "*.vert", "*.frag", "*.geom", "*.vs", "*.fs", "*.gs" },
         command = "Dispatch glslangValidator %",
     })
 
@@ -148,12 +119,48 @@ utils.autocmd = function()
     -- ************************ Terminal management --------------------
 
     augroup("TermInsertModes", {})
-    aucmd("BufWinEnter, WinEnter", { group = "TermInsertModes", pattern = "term://*", command = "startinsert" })
+    aucmd(
+        { "BufEnter", "BufWinEnter", "WinEnter" },
+        { group = "TermInsertModes", pattern = { "term://*", "shell" }, command = "startinsert" }
+    )
     aucmd("TermEnter", { group = "TermInsertModes", command = "startinsert" })
+    aucmd("TermEnter", {
+        group = "TermInsertModes",
+        callback = function()
+            local fs = vim.fn.expand "%"
+            if fs:match "ranger" then
+                vim.keymap.set("t", "<S-Esc>", "<C-\\><C-n>", { buffer = true, desc = "Escape Insert" })
+            else
+                vim.keymap.set("t", "<Esc>", "<C-\\><C-n>", { buffer = true, desc = "Escape Insert" })
+            end
+        end,
+    })
     aucmd("TermClose", {
         group = "TermInsertModes",
         callback = function()
             vim.api.nvim_input "<CR>"
+        end,
+    })
+
+    augroup("ProjectDrawer", {})
+    aucmd("WinEnter", {
+        callback = function()
+            if
+                vim.fn.winnr "$" == 1
+                and vim.api.nvim_buf_get_option(vim.fn.winbufnr(vim.fn.winnr()), "filetype") == "netrw"
+            then
+                vim.cmd "q"
+            end
+        end,
+    })
+    aucmd("FileType", {
+        pattern = "netrw",
+        callback = function()
+            vim.opt_local.fillchars:append "vert:║"
+            vim.keymap.set("n", "cd", function()
+                exec("cd " .. vim.b.netrw_curdir)
+                exec "pwd"
+            end, { buffer = true, desc = "CD directory under cursor" })
         end,
     })
 end

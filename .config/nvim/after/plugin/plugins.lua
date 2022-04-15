@@ -4,6 +4,7 @@ local cmd = vim.api.nvim_create_user_command
 cmd("CScratch", function()
     require("utils.compiler").Cscratch()
 end, {})
+
 cmd("Cproject", function()
     require("utils.compiler").cproject()
 end, {})
@@ -20,12 +21,12 @@ cmd("ToggleTransparency", function()
     require("utils").trans()
 end, {})
 
--- cmd("ClearBack", "call util#transparency()", {})
 cmd("Gram", "call util#WordProcessor()", {})
 cmd("Cam", "call util#CamelCase()", {})
 cmd("Su", "call util#sudoWrite()", {})
 
 require("mappings").ranger()
+vim.keymap.set("n", "<leader>e", "<cmd>Lex<CR>", { desc = "Toggle Netrw" })
 
 -- ******************* new functions --------------------------------------------
 P = function(v)
