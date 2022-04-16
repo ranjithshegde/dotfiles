@@ -7,8 +7,10 @@ local augroup = vim.api.nvim_create_augroup
 ------------------------------------------------------------------------
 
 local lspconfig = require "lspconfig"
+local opts = { clear = true }
+
 function lsp.settings()
-    augroup("SetDiagnosticFuncs", {})
+    augroup("SetDiagnosticFuncs", opts)
     aucmd({ "DiagnosticChanged" }, {
         group = "SetDiagnosticFuncs",
         callback = function()
@@ -16,6 +18,9 @@ function lsp.settings()
             require("utils").commands()
         end,
     })
+
+    augroup("LspHighlightSymbols", opts)
+    augroup("LspAutoFormat", opts)
 
     -- borders for floating windows
     vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, { border = "double" })
@@ -27,20 +32,19 @@ end
 
 -- **************************** Snippet capabilities--------------------
 function lsp.capabilities()
-    local ok, cmp = pcall(require, "cmp_nvim_lsp")
-    if ok then
-        return cmp.update_capabilities(vim.lsp.protocol.make_client_capabilities())
-    end
+    require("packer").loader "cmp-nvim-lsp"
+    return require("cmp_nvim_lsp").update_capabilities(vim.lsp.protocol.make_client_capabilities())
 end
 
+-- **************************** Global attach function------------------
 local nofmt = {
     "sumneko_lua",
     "jsonls",
 }
 
--- **************************** Global attach function------------------
 function lsp.attach(client, bufnr)
-    require("mappings").nvim_lsp()
+    local util = require "vim.lsp.util"
+    require("mappings").nvim_lsp(bufnr)
     vim.b.hasLsp = true
 
     require("packer").loader "fidget.nvim"
@@ -48,10 +52,9 @@ function lsp.attach(client, bufnr)
 
     local rc = client.resolved_capabilities
     if rc.document_highlight then
-        augroup("LspHighlightSymbols", {})
         aucmd("CursorHold", {
             group = "LspHighlightSymbols",
-            buffer = 0,
+            buffer = bufnr,
             callback = vim.lsp.buf.document_highlight,
         })
         aucmd("CursorMoved, CursorMovedI", {
@@ -62,20 +65,21 @@ function lsp.attach(client, bufnr)
     end
 
     if rc.document_formatting then
-        for _, name in ipairs(nofmt) do
-            if client.name == name then
-                rc.document_formatting = false
-                if rc.document_range_formatting then
-                    rc.document_range_formatting = false
-                end
+        for _, c in ipairs(nofmt) do
+            if client.name == c then
+                return
             end
         end
-        augroup("LspAutoFormat", {})
         aucmd("BufWrite", {
             group = "LspAutoFormat",
             buffer = bufnr,
             callback = function()
-                vim.lsp.buf.formatting_sync(nil, 500)
+                local params = util.make_formatting_params {}
+                local timeout_ms = 500
+                local result, _ = client.request_sync("textDocument/formatting", params, timeout_ms, bufnr)
+                if result and result.result then
+                    util.apply_text_edits(result.result, bufnr, client.offset_encoding)
+                end
             end,
         })
     end
@@ -84,7 +88,6 @@ end
 
 -- **************************** Ccls reduction function-----------------
 function lsp.cinit(client)
-    require("mappings").nvim_lsp()
     client.server_capabilities.completionProvider = false
     local rc = client.resolved_capabilities
     rc.document_formatting = false
@@ -103,11 +106,8 @@ end
 
 function lsp.servers()
     local dict = vim.api.nvim_get_option "spellfile"
-    ---@diagnostic disable-next-line: unused-vararg
-    local nilfunc = function(...)
-        return nil
-    end
     local configs = {
+        -- jsonls = { on_attach = lsp.efm },
         jsonls = { on_attach = lsp.attach },
         yamlls = { on_attach = lsp.attach },
         html = { on_attach = lsp.attach, capabilities = lsp.capabilities() },
@@ -118,15 +118,6 @@ function lsp.servers()
         pyright = { on_attach = lsp.attach, capabilities = lsp.capabilities() },
         tsserver = { on_attach = lsp.attach, capabilities = lsp.capabilities() },
         bashls = { on_attach = lsp.attach, capabilities = lsp.capabilities(), filetypes = { "sh", "zsh" } },
-        ccls = {
-            on_init = lsp.cinit,
-            filetypes = { "c", "cpp", "objc", "objcpp", "opencl" },
-            handlers = {
-                ["textDocument/publishDiagnostics"] = nilfunc,
-                ["textDocument/signatureHelp"] = nilfunc,
-            },
-            root_dir = lspconfig.util.root_pattern("compile_commands.json", "compile_flags.txt", ".git"),
-        },
         ltex = {
             filetypes = { "bib", "markdown", "org", "tex" },
             on_attach = lsp.attach,

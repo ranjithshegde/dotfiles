@@ -2,6 +2,7 @@ local utils = {}
 local exec = vim.api.nvim_command
 local aucmd = vim.api.nvim_create_autocmd
 local augroup = vim.api.nvim_create_augroup
+local auexec = vim.api.nvim_exec_autocmds
 
 ------------------------------------------------------------------------
 --                              Vim options                           --
@@ -31,7 +32,7 @@ function utils.Restart()
     -- vim.cmd "LspStop"
     utils.UnloadAllModules()
     vim.cmd "source $MYVIMRC"
-    vim.api.nvim_exec_autocmds("VimEnter", {})
+    auexec("VimEnter", {})
 end
 
 ------------------------------------------------------------------------
@@ -39,8 +40,11 @@ end
 ------------------------------------------------------------------------
 
 utils.autocmd = function()
-    -- ************** FileTypes  ---------------------------------------
-    augroup("FormatOptions", {})
+    local opts = { clear = true }
+
+    -- ************** Format handling  ---------------------------------------
+
+    augroup("FormatOptions", opts)
     aucmd("FileType", {
         group = "FormatOptions",
         callback = function()
@@ -56,8 +60,53 @@ utils.autocmd = function()
                 + "2" -- Indent according to 2nd line
         end,
     })
+    aucmd("InsertLeave", {
+        group = "FormatOptions",
+        callback = function()
+            require("utils.langServers").index = 1
+        end,
+    })
+    aucmd({ "InsertEnter", "WinLeave", "FocusLost", "BufNewFile", "BufReadPost" }, {
+        group = "FormatOptions",
+        command = "set number | set norelativenumber",
+    })
+    aucmd({ "InsertLeave", "WinEnter", "FocusGained" }, {
+        group = "FormatOptions",
+        command = "set number | set relativenumber",
+    })
 
-    augroup("LspSettings", {})
+    -- ************** Lsp Configuration loading  ------------------------------
+
+    local lspfiles = {
+        "bash",
+        "sh",
+        "zsh",
+        "tex",
+        "bib",
+        "css",
+        "cmake",
+        "c",
+        "cpp",
+        "objc",
+        "opencl",
+        "dart",
+        "glsl",
+        "html",
+        "javascript",
+        "typescript",
+        "java",
+        "json",
+        "jsonc",
+        "lua",
+        "make",
+        "markdown",
+        "org",
+        "python",
+        "vim",
+        "yaml",
+    }
+
+    augroup("LspSettings", opts)
     aucmd("FileType", {
         group = "LspSettings",
         pattern = "vim",
@@ -69,24 +118,29 @@ utils.autocmd = function()
     })
     aucmd("FileType", {
         group = "LspSettings",
+        pattern = lspfiles,
         callback = function()
             require("lsp").settings()
             require("lsp").servers()
             require("lsp").lintFormat()
+            auexec("FileType", { group = "lspconfig" })
         end,
         once = true,
     })
     aucmd("FileType", {
         group = "LspSettings",
         pattern = "opencl",
-        callback = require("mappings").clang,
+        callback = function()
+            require("mappings").clang()
+        end,
     })
 
     -- ************** Compilers and REPL  ------------------------------
-    augroup("MakeDispatch", {})
+    augroup("MakeDispatch", opts)
     aucmd("FileType", {
         group = "MakeDispatch",
         pattern = { "java", "lua", "python", "javascript" },
+        nested = true,
         callback = function()
             vim.keymap.set("n", "<F5>", function()
                 vim.cmd "w | redraw"
@@ -106,7 +160,7 @@ utils.autocmd = function()
     })
 
     -- Compile packer after writing plugins.lua
-    augroup("PluginLoad", {})
+    augroup("PluginLoad", opts)
     aucmd("BufWritePost", {
         group = "PluginLoad",
         pattern = "plugins.lua",
@@ -115,12 +169,13 @@ utils.autocmd = function()
             require("packer").compile()
         end,
     })
+    aucmd("BufReadPost", { group = "PluginLoad", command = "packadd matchit", once = true })
 
     -- ************************ Terminal management --------------------
 
-    augroup("TermInsertModes", {})
+    augroup("TermInsertModes", opts)
     aucmd(
-        { "BufEnter", "BufWinEnter", "WinEnter" },
+        { "BufEnter", "BufWinEnter", "TermOpen" },
         { group = "TermInsertModes", pattern = { "term://*", "shell" }, command = "startinsert" }
     )
     aucmd("TermEnter", { group = "TermInsertModes", command = "startinsert" })
@@ -142,8 +197,9 @@ utils.autocmd = function()
         end,
     })
 
-    augroup("ProjectDrawer", {})
+    augroup("ProjectDrawer", opts)
     aucmd("WinEnter", {
+        group = "ProjectDrawer",
         callback = function()
             if
                 vim.fn.winnr "$" == 1
@@ -155,6 +211,7 @@ utils.autocmd = function()
     })
     aucmd("FileType", {
         pattern = "netrw",
+        group = "ProjectDrawer",
         callback = function()
             vim.opt_local.fillchars:append "vert:║"
             vim.keymap.set("n", "cd", function()

@@ -26,9 +26,10 @@ return require("packer").startup {
 
         use "EdenEast/nightfox.nvim"
 
-        use { "petrbroz/vim-glsl", ft = "glsl" }
-
         use { "bkad/CamelCaseMotion", opt = true }
+
+        -- Taglist and sidebars
+        use { "simrat39/symbols-outline.nvim", cmd = "SymbolsOutline" }
 
         -- Tim pope
         use {
@@ -36,15 +37,6 @@ return require("packer").startup {
             { "tpope/vim-unimpaired", keys = { "[", "]" } },
             { "tpope/vim-dispatch", cmd = { "Make", "Dispatch", "Start" } },
             { "tpope/vim-fugitive", cmd = { "G", "Git", "Gclog" } },
-        }
-
-        -- TreeSitter
-        use {
-            { "nvim-treesitter/nvim-treesitter", run = ":TSUpdate" },
-            { "p00f/nvim-ts-rainbow", event = "BufReadPre" },
-            { "nvim-treesitter/nvim-treesitter-textobjects", event = "BufReadPost" },
-            { "nvim-treesitter/nvim-treesitter-refactor", after = "scnvim" },
-            { "nvim-treesitter/playground", cmd = { "TSPlaygroundToggle", "TSNodeUnderCursor" } },
         }
 
         -- Fold text
@@ -68,18 +60,9 @@ return require("packer").startup {
         -- Comment with TreeSitter
         use {
             "numToStr/Comment.nvim",
-            keys = { "gc", "gb", { "v", "gc" }, { "v", "gb" } },
+            keys = { "gc", "gb", "g>", "g<", { "v", "gc", "g<" }, { "v", "gb", "g>" } },
             config = function()
-                require("Comment").setup { ignore = "^$" }
-            end,
-        }
-
-        -- ReverseJ
-        use {
-            "AckslD/nvim-trevJ.lua",
-            module = "trevj",
-            config = function()
-                require("trevj").setup()
+                require("Comment").setup { ignore = "^$", mappings = { extended = true } }
             end,
         }
 
@@ -90,6 +73,15 @@ return require("packer").startup {
             config = function()
                 require("statusline").el()
             end,
+        }
+
+        -- TreeSitter
+        use {
+            { "nvim-treesitter/nvim-treesitter", run = ":TSUpdate" },
+            { "p00f/nvim-ts-rainbow", event = "BufReadPre" },
+            { "nvim-treesitter/nvim-treesitter-textobjects", event = "BufReadPost" },
+            { "nvim-treesitter/nvim-treesitter-refactor", after = "scnvim" },
+            { "nvim-treesitter/playground", cmd = { "TSPlaygroundToggle", "TSNodeUnderCursor" } },
         }
 
         -- Git Signs
@@ -116,20 +108,6 @@ return require("packer").startup {
             end,
         }
 
-        -- Taglist and sidebars
-        use {
-            { "simrat39/symbols-outline.nvim", cmd = "SymbolsOutline" },
-            {
-                "sidebar-nvim/sidebar.nvim",
-                cmd = "SidebarNvimToggle",
-                config = function()
-                    require("sidebar-nvim").setup {
-                        sections = { "buffers", "files", "symbols" },
-                    }
-                end,
-            },
-        }
-
         -- vim Orgmode
         use {
             "nvim-orgmode/orgmode",
@@ -153,6 +131,7 @@ return require("packer").startup {
                     cpp = { rgb_0x = true },
                     html = { mode = "foreground" },
                     css = { rgb_fn = true, css_fn = true },
+                    yaml = { rgb_0x = true },
                     "javascript",
                     "conf",
                 }
@@ -220,10 +199,13 @@ return require("packer").startup {
                     group = "LspSettings",
                     pattern = "supercollider",
                     callback = function()
-                        vim.opt_local.wrap = true
                         require("mappings").scnvim()
-                        require("scnvim").start()
-                        vim.api.nvim_input "<CR>"
+                        vim.opt_local.wrap = true
+                        if not require("scnvim").is_running() then
+                            require("scnvim").start()
+                            vim.api.nvim_input "<CR>"
+                        end
+                        -- require("lsp.sclang").init()
                     end,
                 })
             end,
@@ -268,10 +250,55 @@ return require("packer").startup {
             },
         }
 
+        --Lsp config and companions
+        use {
+            { "neovim/nvim-lspconfig", branch = "feat/0_7_goodies" },
+            {
+                "m-pilia/vim-ccls",
+                ft = { "c", "cpp", "opencl" },
+                config = function()
+                    require("lsp.clangd").ccls()
+                end,
+            },
+            {
+                "max397574/lua-dev.nvim",
+                ft = "lua",
+                config = function()
+                    require("lsp.sumneko").sumneko()
+                end,
+            },
+            {
+                "mfussenegger/nvim-jdtls",
+                ft = "java",
+                config = function()
+                    require("lsp.jdtls").jdtls()
+                end,
+            },
+            {
+                "p00f/clangd_extensions.nvim",
+                ft = { "c", "cpp", "opencl" },
+                config = function()
+                    require("lsp.clangd").clangd()
+                end,
+            },
+            {
+                "j-hui/fidget.nvim",
+                opt = true,
+                config = function()
+                    require("fidget").setup {
+                        text = { spinner = "moon" },
+                        align = { bottom = true },
+                        window = { relative = "editor", blend = 0 },
+                    }
+                end,
+            },
+        }
+
         -- completion and snippets
         use {
-            "hrsh7th/cmp-nvim-lsp",
+            { "hrsh7th/cmp-nvim-lsp", opt = "true" },
             { "hrsh7th/cmp-path", after = "nvim-cmp" },
+            { "hrsh7th/cmp-buffer", after = "nvim-cmp" },
             { "saadparwaiz1/cmp_luasnip", after = "nvim-cmp" },
             {
                 "L3MON4D3/LuaSnip",
@@ -288,12 +315,10 @@ return require("packer").startup {
                 end,
             },
             {
-                "ray-x/lsp_signature.nvim",
-                event = "InsertEnter",
+                "windwp/nvim-autopairs",
+                after = "nvim-cmp",
                 config = function()
-                    require("lsp_signature").setup {
-                        hint_enable = false,
-                    }
+                    require("settings.completion").pairs()
                 end,
             },
             {
@@ -304,54 +329,11 @@ return require("packer").startup {
                 end,
             },
             {
-                "windwp/nvim-autopairs",
-                after = "nvim-cmp",
+                "ray-x/lsp_signature.nvim",
+                event = "InsertEnter",
                 config = function()
-                    require("settings.completion").pairs()
-                end,
-            },
-        }
-
-        --Lsp config and companions
-        use {
-            "neovim/nvim-lspconfig",
-            {
-                "folke/lua-dev.nvim",
-                ft = "lua",
-                config = function()
-                    require("lsp.sumneko").sumneko()
-                end,
-            },
-            {
-                "mfussenegger/nvim-jdtls",
-                ft = "java",
-                config = function()
-                    require("lsp.jdtls").jdtls()
-                end,
-            },
-            { "m-pilia/vim-ccls", ft = { "c", "cpp", "opencl" } },
-            {
-                "p00f/clangd_extensions.nvim",
-                ft = { "c", "cpp", "opencl" },
-                config = function()
-                    require("lsp.clangd").clangd()
-                end,
-            },
-            {
-                "j-hui/fidget.nvim",
-                opt = true,
-                config = function()
-                    require("fidget").setup {
-                        text = {
-                            spinner = "moon",
-                        },
-                        align = {
-                            bottom = true,
-                        },
-                        window = {
-                            relative = "editor",
-                            blend = 0,
-                        },
+                    require("lsp_signature").setup {
+                        hint_enable = false,
                     }
                 end,
             },

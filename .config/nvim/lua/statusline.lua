@@ -166,16 +166,22 @@ local default = {
 
 local ft = {
     c = {
+        "function",
         "function_definition",
         "struct",
         "enum",
         "linkage_specification",
+        "if_statement",
+        "for_statement",
     },
     cpp = {
         "class",
+        "function",
         "function_definition",
         "struct",
         "enum",
+        "if_statement",
+        "for_statement",
         "linkage_specification",
     },
     lua = {
@@ -202,6 +208,7 @@ local function gps(_, buffer)
     local context = require("settings.treesitter").statusline {
         indicator_size = vim.b.gps or 35,
         type_patterns = ft[fs] or default,
+        bufnr = buffer.bufnr,
     }
     if context == "" then
         return ""

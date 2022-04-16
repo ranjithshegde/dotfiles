@@ -75,20 +75,23 @@ function settings.options()
         "tarPlugin",
         "vimball",
         "vimballPlugin",
+        "shada",
+        "logipat",
+        "rrhelper",
+        "compiler",
+        "bugreport",
+        "ftplugin",
         "getscript",
         "getscriptPlugin",
         "2html_plugin",
-        "logipat",
-        "rrhelper",
         "spellfile_plugin",
-        "shada",
-        "matchit",
         "netrwFileHandlers",
     }
 
     for _, plugin in pairs(disabled_builtins) do
         vim.g["loaded_" .. plugin] = 1
     end
+    vim.g.did_load_ftplugin = 1
 
     -- ************** HighlightOnYank ---------------------------------------------------------
     vim.api.nvim_create_autocmd("TextYankPost", {

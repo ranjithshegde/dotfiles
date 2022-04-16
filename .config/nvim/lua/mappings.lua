@@ -14,8 +14,8 @@ function mappings.general()
     mappings.coauthor()
 
     local opts = { nowait = true }
-    map("n", ",", "<C-,>")
-    map("n", ";", "<C-;>")
+    -- map("n", ",", "<C-,>")
+    -- map("n", ";", "<C-;>")
     --line movement
     map("x", "K", ":move '<-2<CR>gv-gv", { desc = "Move line up" })
     map("x", "J", ":move '>+1<CR>gv-gv", { desc = "Move line down" })
@@ -51,7 +51,6 @@ function mappings.general()
         "cursor(0,{desc =  virtcol('$')/2 )",
         { desc = "Move cursor to middle of the line", expr = true, buffer = true }
     )
-    map("n", "<leader><Tab>", "<cmd>SidebarNvimToggle<CR>", { desc = "Toggle Symbolsbar" })
 
     -- Terminals
     wk.register {
@@ -178,7 +177,7 @@ end
 --                              Language servers                      --
 ------------------------------------------------------------------------
 
-function mappings.nvim_lsp()
+function mappings.nvim_lsp(bufnr)
     wk.register({
         K = { vim.lsp.buf.hover, "Hover" },
         ["<F7>"] = { require("debugger").init, "Initialize Debugger adapter" },
@@ -223,7 +222,7 @@ function mappings.nvim_lsp()
                 },
             },
         },
-    }, { buffer = 0 })
+    }, { buffer = bufnr })
 
     wk.register({
         [","] = {
@@ -231,7 +230,7 @@ function mappings.nvim_lsp()
             a = { vim.lsp.buf.range_code_action, "Code actions for range" },
             f = { vim.lsp.buf.range_formatting, "Format range" },
         },
-    }, { mode = "v", buffer = 0 })
+    }, { mode = "v", buffer = bufnr })
     map("n", "<F11>", "<cmd>SymbolsOutline<CR>", { desc = "Toggle Symbolsbar" })
 end
 
@@ -247,62 +246,63 @@ end
 --                              Vim config files                      --
 ------------------------------------------------------------------------
 
+local open = function(path)
+    return string.format("<cmd>tab drop ~/.config/%s<CR>", path)
+end
+
 function mappings.configFiles()
-    local open = function(path)
-        return string.format("<cmd>tab drop ~/.config/nvim/%s<CR>", path)
-    end
     wk.register {
         ["<leader>"] = {
             a = {
                 name = "vimrc files",
-                p = { open "lua/plugins.lua", "Packer config" },
-                m = { open "lua/mappings.lua", "Keymaps" },
+                p = { open "nvim/lua/plugins.lua", "Packer config" },
+                m = { open "nvim/lua/mappings.lua", "Keymaps" },
                 g = {
                     name = "Org plugin",
-                    o = { open "lua/org/init.lua", "Index plugin" },
-                    d = { open "lua/org/diary.lua", "Diary plugin" },
+                    o = { open "nvim/lua/org/init.lua", "Index plugin" },
+                    d = { open "nvim/lua/org/diary.lua", "Diary plugin" },
                 },
                 o = {
                     name = "Options",
-                    o = { open "lua/settings/init.lua", "vim" },
-                    t = { open "lua/settings/telescope.lua", "Telescope" },
-                    s = { open "lua/settings/treesitter.lua", "Treesitter" },
-                    c = { open "lua/settings/completion.lua", "Completion" },
+                    o = { open "nvim/lua/settings/init.lua", "vim" },
+                    t = { open "nvim/lua/settings/telescope.lua", "Telescope" },
+                    s = { open "nvim/lua/settings/treesitter.lua", "Treesitter" },
+                    c = { open "nvim/lua/settings/completion.lua", "Completion" },
                 },
                 l = {
                     name = "Lsp",
-                    s = { open "lua/lsp/init.lua", "Functions and Inits" },
-                    l = { open "lua/lsp/sumneko.lua", "Sumneko" },
-                    j = { open "lua/lsp/jdtls.lua", "Jdt LS" },
-                    c = { open "lua/lsp/clangd.lua", "Clangd" },
+                    s = { open "nvim/lua/lsp/init.lua", "Functions and Inits" },
+                    l = { open "nvim/lua/lsp/sumneko.lua", "Sumneko" },
+                    j = { open "nvim/lua/lsp/jdtls.lua", "Jdt LS" },
+                    c = { open "nvim/lua/lsp/clangd.lua", "Clangd" },
                 },
                 u = {
                     name = "Utilities in lua",
-                    u = { open "lua/utils/init.lua", "General" },
-                    c = { open "lua/utils/compiler.lua", "Cpp Workstation" },
-                    d = { open "lua/utils/diagnostics.lua", "Diagnostic extensions" },
-                    l = { open "lua/utils/langServers.lua", "Langauge Server extensions" },
-                    q = { open "lua/utils/qf.lua", "Quickfix and Loclist" },
+                    u = { open "nvim/lua/utils/init.lua", "General" },
+                    c = { open "nvim/lua/utils/compiler.lua", "Cpp Workstation" },
+                    d = { open "nvim/lua/utils/diagnostics.lua", "Diagnostic extensions" },
+                    l = { open "nvim/lua/utils/langServers.lua", "Langauge Server extensions" },
+                    q = { open "nvim/lua/utils/qf.lua", "Quickfix and Loclist" },
                 },
                 f = {
                     name = "Filetype Plugins",
-                    c = { open "after/ftplugin/cpp.lua", "Cpp" },
-                    g = { open "after/ftplugin/glsl.lua", "Glsl" },
-                    j = { open "after/ftplugin/javascript.lua", "JavaScript" },
-                    l = { open "after/ftplugin/lua.lua", "Lua" },
-                    o = { open "after/ftplugin/org.lua", "Orgmode" },
-                    t = { open "after/ftplugin/tex.lua", "Latex" },
+                    c = { open "nvim/after/ftplugin/cpp.lua", "Cpp" },
+                    g = { open "nvim/after/ftplugin/glsl.lua", "Glsl" },
+                    j = { open "nvim/after/ftplugin/javascript.lua", "JavaScript" },
+                    l = { open "nvim/after/ftplugin/lua.lua", "Lua" },
+                    o = { open "nvim/after/ftplugin/org.lua", "Orgmode" },
+                    t = { open "nvim/after/ftplugin/tex.lua", "Latex" },
                 },
                 q = {
                     name = "Treesitter queries",
-                    m = { open "after/queries/markdown/highlights.scm", "Markdown" },
-                    o = { open "after/queries/org/highlights.scm", "Org" },
+                    m = { open "nvim/after/queries/markdown/highlights.scm", "Markdown" },
+                    o = { open "nvim/after/queries/org/highlights.scm", "Org" },
                 },
-                d = { open "lua/debugger.lua", "Debug adapter protocol" },
-                s = { open "lua/statusline.lua", "Statusline and Tabline" },
-                a = { open "autoload/util.vim", "Utilities in autoload" },
-                c = { open "after/plugin/plugins.lua", "User defined commands" },
-                r = { open "init.lua", "VimRC" },
+                d = { open "nvim/lua/debugger.lua", "Debug adapter protocol" },
+                s = { open "nvim/lua/statusline.lua", "Statusline and Tabline" },
+                a = { open "nvim/autoload/util.vim", "Utilities in autoload" },
+                c = { open "nvim/after/plugin/plugin.lua", "User defined commands" },
+                r = { open "nvim/init.lua", "VimRC" },
                 P = { require("packer").sync, "Update packages" },
                 R = { require("utils").Restart, "Reload Vim" },
             },
@@ -319,12 +319,6 @@ function mappings.treesitter()
         [";"] = {
             name = "Syntax tree functions",
             -- Plugins
-            J = {
-                function()
-                    require("trevj").format_at_cursor()
-                end,
-                "Reverse J",
-            },
             K = { "<cmd>TSNodeUnderCursor<cr>", "Show treesitter node" },
             P = { "<cmd>TSPlaygroundToggle<cr>", "Toggle playground" },
             --Refactor
@@ -612,32 +606,24 @@ end
 function mappings.scnvim()
     map("n", "<F1>", require("scnvim").start, { buffer = true, desc = "Launch Sclang" })
     map("n", "<F2>", "<cmd>SCNvimStatusLine<cr>", { buffer = true, desc = "Display server status" })
-    map(
-        "n",
-        "<F3>",
-        'scnvim#sclang#send_silent("Server.local.boot")',
-        { buffer = true, desc = "Boot local server", expr = true }
-    )
-    map(
-        "n",
-        "<F4>",
-        'scnvim#sclang#send_silent("WFSLib.startup")',
-        { buffer = true, desc = "Boot WFS server", expr = true }
-    )
+    map("n", "<F3>", function()
+        require("scnvim").send("Server.local.boot", true)
+    end, { buffer = true, desc = "Boot local server", expr = true })
+
+    map("n", "<F4>", function()
+        require("scnvim").send("WFS.startup", true)
+    end, { buffer = true, desc = "Boot WFS server", expr = true })
+
     map("n", "<F5>", "<Plug>(scnvim-send-block)", { buffer = true, desc = "Evaluate SC code block" })
     map("i", "<F5>", "<esc><Plug>(scnvim-send-block)", { buffer = true, desc = "Evaluate SC code block" })
     map("v", "<F5>", "<Plug>(scnvim-send-selection)", { buffer = true, desc = "Evaluate SC visual block" })
     map("n", "<F6>", "<Plug>(scnvim-send-line)", { buffer = true, desc = "Evaluate SC line" })
     map("i", "<F6>", "<Plug><esc>(scnvim-send-line)", { buffer = true, desc = "Evaluate SC line" })
+    map("n", "<leader>s", open "SuperCollider/startup.scd", { buffer = true, desc = "open startup file" })
+
     map("n", ",s", function()
         require("scnvim.completion.signature").show { border = "rounded" }
     end, { buffer = true, desc = "SC signature help" })
-    map(
-        "n",
-        "<leader>s",
-        "<cmd>tabnew ~/.config/SuperCollider/startup.scd<cr>",
-        { buffer = true, desc = "open startup file" }
-    )
 end
 
 ------------------------------------------------------------------------
@@ -745,6 +731,12 @@ function mappings.clang()
                     end,
                     "OpenGL reference",
                 },
+            },
+            h = {
+                function()
+                    require("clangd_extensions.inlay_hints").toggle_inlay_hints()
+                end,
+                "Toggle hints",
             },
         },
         ["<leader>"] = {

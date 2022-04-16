@@ -117,8 +117,6 @@ langSettings.kind_symbols = {
 --                              TSStatusLine                          --
 ------------------------------------------------------------------------
 
-local ts_utils = require "nvim-treesitter.ts_utils"
-
 -- associate icons with nodes
 local tree_symbol = {
     ["class"] = " ",
@@ -140,11 +138,13 @@ local tree_symbol = {
 
 -- Trim spaces and opening brackets from end
 function langSettings.transform_line(line)
-    return line:gsub("%s*[%[%(%{]*%s*$", "")
+    line = line:gsub("%s*[%[%(%{]*%s*$", "")
+    line = line:sub(1, line:find "\n")
+    return line:gsub("\n", "")
 end
 
 -- get current node
-function langSettings.get_line_for_node(node, type_patterns, transform_fn)
+function langSettings.get_line_for_node(node, type_patterns, transform_fn, bufnr)
     local node_type = node:type()
     local is_valid = false
     local i
@@ -158,7 +158,7 @@ function langSettings.get_line_for_node(node, type_patterns, transform_fn)
     if not is_valid then
         return ""
     end
-    local line = transform_fn(vim.trim(ts_utils.get_node_text(node)[1] or ""))
+    local line = transform_fn(vim.trim(vim.treesitter.query.get_node_text(node, bufnr) or ""))
 
     for index, value in pairs(tree_symbol) do
         index = index:gsub("%[", "")

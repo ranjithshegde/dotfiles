@@ -51,4 +51,22 @@ function servers.clangCmp()
     }
 end
 
+function servers.ccls()
+    ---@diagnostic disable-next-line: unused-vararg
+    local nilfunc = function(...)
+        return nil
+    end
+    local lspconfig = require "lspconfig"
+    local ccls = {
+        on_init = require("lsp").cinit,
+        filetypes = { "c", "cpp", "objc", "objcpp", "opencl" },
+        handlers = {
+            ["textDocument/publishDiagnostics"] = nilfunc,
+            ["textDocument/signatureHelp"] = nilfunc,
+        },
+        root_dir = lspconfig.util.root_pattern("compile_commands.json", "compile_flags.txt", ".git"),
+    }
+    require("lspconfig").ccls.setup(ccls)
+end
+
 return servers

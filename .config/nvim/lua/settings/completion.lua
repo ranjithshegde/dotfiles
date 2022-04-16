@@ -53,6 +53,15 @@ function completion.init()
             { name = "nvim_lsp" },
             { name = "luasnip" },
         }, {
+            {
+                name = "buffer",
+                option = {
+                    get_bufnrs = function()
+                        return vim.api.nvim_list_bufs()
+                    end,
+                },
+            },
+        }, {
             { name = "orgmode" },
         }),
         formatting = {
@@ -107,10 +116,10 @@ function completion.pairs()
 end
 
 function completion.luasnip()
-    -- vim.api.nvim_create_autocmd("InsertEnter", {
-    --     pattern = "*.scd, *.sc, *.sc_help, *.quark",
-    vim.api.nvim_create_autocmd("FileType", {
-        pattern = "supercollider",
+    vim.api.nvim_create_autocmd("InsertEnter", {
+        pattern = "*.scd, *.sc, *.sc_help, *.quark",
+        -- vim.api.nvim_create_autocmd("FileType", {
+        --     pattern = "supercollider",
         group = "LspSettings",
         callback = function()
             require("luasnip").add_snippets("supercollider", require("scnvim/utils").get_snippets())

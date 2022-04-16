@@ -186,6 +186,7 @@ function ts.statusline(opts)
     end
     local options = opts
 
+    local bufnr = options.bufnr
     local indicator_size = options.indicator_size
     local type_patterns = options.type_patterns
     local transform_fn = ls.transform_line
@@ -200,7 +201,7 @@ function ts.statusline(opts)
     local expr = current_node
 
     while expr do
-        local line = ls.get_line_for_node(expr, type_patterns, transform_fn)
+        local line = ls.get_line_for_node(expr, type_patterns, transform_fn, bufnr)
         if line ~= "" and not vim.tbl_contains(lines, line) then
             table.insert(lines, 1, line)
         end
