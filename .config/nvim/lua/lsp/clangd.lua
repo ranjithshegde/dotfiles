@@ -56,6 +56,8 @@ function servers.ccls()
     local nilfunc = function(...)
         return nil
     end
+    vim.cmd "let g:ccls_log_file = expand('~/.cache/ccls.txt')"
+
     local lspconfig = require "lspconfig"
     local ccls = {
         on_init = require("lsp").cinit,
@@ -67,6 +69,7 @@ function servers.ccls()
         root_dir = lspconfig.util.root_pattern("compile_commands.json", "compile_flags.txt", ".git"),
     }
     require("lspconfig").ccls.setup(ccls)
+    vim.g.lspconfig = 1
 end
 
 return servers

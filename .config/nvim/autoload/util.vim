@@ -36,7 +36,7 @@ function! util#WordProcessor() abort
     setlocal spell spelllang=en_us,en_gb
     setlocal complete+=k
     set thesaurus+=$HOME/.config/nvim/thesaurus/mthesaur.txt
-    lua require('mappings').wordProcessor()
+    lua require('mappings.util').wordProcessor()
 endfunction
 
 "************** custom Sudo ----------------------------------------------------

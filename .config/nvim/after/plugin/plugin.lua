@@ -25,8 +25,20 @@ cmd("Gram", "call util#WordProcessor()", {})
 cmd("Cam", "call util#CamelCase()", {})
 cmd("Su", "call util#sudoWrite()", {})
 
-require("mappings").ranger()
+-- ******************* Plugin mappings --------------------------------------------
+require("mappings.util").ranger()
+require("mappings.util").orgWiki()
+require("mappings.util").coauthor()
+require "mappings.telescope"
 vim.keymap.set("n", "<leader>e", "<cmd>Lex<CR>", { desc = "Toggle Netrw" })
+
+vim.g.fold_preview = true
+vim.keymap.set("n", "l", function()
+    require("utils.preview").keymap_open_close "l"
+end)
+vim.keymap.set("n", "h", function()
+    require("utils.preview").keymap_close "h"
+end)
 
 -- ******************* new functions --------------------------------------------
 P = function(v)
@@ -55,4 +67,3 @@ end
 -- end
 --
 --
-

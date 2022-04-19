@@ -1,11 +1,10 @@
 -- -------------------------- Defs **********************************************************************
-local fn = vim.fn
-local packer_path = fn.stdpath "data" .. "/site/pack/packer/start/packer.nvim"
+local packer_path = vim.fn.stdpath "data" .. "/site/pack/packer/start/packer.nvim"
 
 -- selfmanage packer
-if fn.empty(fn.glob(packer_path)) > 0 then
+if vim.fn.empty(vim.fn.glob(packer_path)) > 0 then
     ---@diagnostic disable-next-line: lowercase-global
-    packer_bootstrap = fn.system {
+    packer_bootstrap = vim.fn.system {
         "git",
         "clone",
         "--depth",
@@ -37,15 +36,6 @@ return require("packer").startup {
             { "tpope/vim-unimpaired", keys = { "[", "]" } },
             { "tpope/vim-dispatch", cmd = { "Make", "Dispatch", "Start" } },
             { "tpope/vim-fugitive", cmd = { "G", "Git", "Gclog" } },
-        }
-
-        -- Fold text
-        use {
-            "anuvyklack/pretty-fold.nvim",
-            event = "BufReadPost",
-            config = function()
-                require("settings").folds()
-            end,
         }
 
         -- Coautoring
@@ -90,7 +80,7 @@ return require("packer").startup {
             requires = "nvim-lua/plenary.nvim",
             config = function()
                 require("gitsigns").setup()
-                require("mappings").git()
+                require "mappings.git"
             end,
             opt = true,
         }
@@ -190,7 +180,7 @@ return require("packer").startup {
             branch = "0.7",
             ft = "supercollider",
             run = function()
-                fn["scnvim#install"]()
+                vim.fn["scnvim#install"]()
             end,
             config = function()
                 vim.g.scnvim_snippet_format = "luasnip"
@@ -199,13 +189,12 @@ return require("packer").startup {
                     group = "LspSettings",
                     pattern = "supercollider",
                     callback = function()
-                        require("mappings").scnvim()
+                        require("mappings.filetypes").scnvim()
                         vim.opt_local.wrap = true
                         if not require("scnvim").is_running() then
                             require("scnvim").start()
                             vim.api.nvim_input "<CR>"
                         end
-                        -- require("lsp.sclang").init()
                     end,
                 })
             end,
@@ -344,7 +333,7 @@ return require("packer").startup {
         end
     end,
     config = {
-        compile_path = require("packer.util").join_paths(fn.stdpath "config", "lua", "packer_compiled.lua"),
+        compile_path = require("packer.util").join_paths(vim.fn.stdpath "config", "lua", "packer_compiled.lua"),
         profile = { enable = true, threshold = 0 },
         autoremove = true,
     },

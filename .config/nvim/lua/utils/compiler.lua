@@ -8,29 +8,29 @@ local exec = vim.api.nvim_command
 -- Set C environment based on type [with makefile, microcontroller, cmake project or plain c]
 function Compiler.set_ctype()
     if Compiler.has_Cmake() then
-        require("mappings").cmake()
+        require("mappings.clang").cmake()
         vim.opt.makeprg = "make"
         vim.g.makeFile = "CMakeLists.txt"
         vim.g.debugBin = "build/" .. vim.fn.fnamemodify(vim.fn.getcwd(), ":t")
         vim.g.cmakeBin = "./build/" .. vim.fn.fnamemodify(vim.fn.getcwd(), ":t")
         vim.g.cfiles = "src/* include/*"
     elseif Compiler.has_makefile() then
-        require("mappings").makeC()
+        require("mappings.clang").makeC()
         vim.g.makeFile = "Makefile"
         vim.g.debugBin = "bin/" .. vim.fn.fnamemodify(vim.fn.getcwd(), ":t") .. "_debug"
         vim.g.cfiles = "src/*"
     elseif Compiler.has_pio_file() then
         vim.opt.makeprg = "pio run"
-        require("mappings").micro()
+        require("mappings.clang").micro()
         vim.g.makeFile = "platformio.ini"
     elseif Compiler.has_gradle() then
-        require("mappings").makeGradle()
+        require("mappings.clang").makeGradle()
         vim.g.makeFile = "build.gradle"
         vim.opt.makeprg = "./gradlew"
         -- vim.g.debugBin = "bin/" .. vim.fn.fnamemodify(vim.fn.getcwd(), ":t") .. "_debug"
     else
         vim.opt.makeprg = "g++"
-        require("mappings").ctests()
+        require("mappings.clang").ctests()
         vim.g.debugBin = vim.fn.expand "%<"
         vim.g.cfiles = "%"
     end
@@ -38,10 +38,10 @@ end
 
 function Compiler.set_type()
     if Compiler.has_makefile() then
-        require("mappings").pdc()
+        require("mappings.clang").pdc()
     else
         vim.opt.makeprg = "gcc"
-        require("mappings").ctests()
+        require("mappings.clang").ctests()
         vim.g.debugBin = vim.fn.expand "%<"
     end
 end

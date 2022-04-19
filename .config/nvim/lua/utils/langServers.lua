@@ -23,29 +23,8 @@ langSettings.lsp_capabilities = function()
     local buf_lines = {}
 
     local function available_capabilities(resolved_capabilities)
-        -- these are the capabilities that might be interesting to the user
-        local display_keys = {
-            "call_hierarchy",
-            "code_action",
-            "code_lens",
-            "completion",
-            "declaration",
-            "document_formatting",
-            "document_highlight",
-            "document_range_formatting",
-            "document_symbol",
-            "execute_command",
-            "find_references",
-            "goto_definition",
-            "hover",
-            "implementation",
-            "rename",
-            "signature_help",
-            "type_definition",
-        }
         return vim.tbl_filter(function(key)
-            -- keep only the capabilities that are interesting & available
-            return vim.tbl_contains(display_keys, key) and resolved_capabilities[key] == true
+            return resolved_capabilities[key] == true
         end, vim.tbl_keys(resolved_capabilities))
     end
 
@@ -75,7 +54,7 @@ end
 --                              TexLab                                --
 ------------------------------------------------------------------------
 
--- Count tex words
+---Return word count for the tex document
 function langSettings.TexWordCount()
     local count = vim.api.nvim_exec([[silent !texcount -inc -sum -1 %]], true)
     print(count)
@@ -136,13 +115,6 @@ local tree_symbol = {
     ["linkage_specification"] = " ",
 }
 
--- Trim spaces and opening brackets from end
-function langSettings.transform_line(line)
-    line = line:gsub("%s*[%[%(%{]*%s*$", "")
-    line = line:sub(1, line:find "\n")
-    return line:gsub("\n", "")
-end
-
 -- get current node
 function langSettings.get_line_for_node(node, type_patterns, transform_fn, bufnr)
     local node_type = node:type()
@@ -200,7 +172,7 @@ local function pumclose()
     end
 end
 
-langSettings.chainIndex = {
+local chainIndex = {
     function()
         pumclose()
         local ok, cmp = pcall(require, "cmp")
@@ -258,21 +230,21 @@ langSettings.chainIndex = {
 langSettings.index = 1
 
 langSettings.next = function()
-    if langSettings.index ~= #langSettings.chainIndex then
+    if langSettings.index ~= #chainIndex then
         langSettings.index = langSettings.index + 1
     else
         langSettings.index = 1
     end
-    return langSettings.chainIndex[langSettings.index]()
+    return chainIndex[langSettings.index]()
 end
 
 langSettings.prev = function()
     if langSettings.index ~= 1 then
         langSettings.index = langSettings.index - 1
     else
-        langSettings.index = #langSettings.chainIndex
+        langSettings.index = #chainIndex
     end
-    return langSettings.chainIndex[langSettings.index]()
+    return chainIndex[langSettings.index]()
 end
 
 return langSettings

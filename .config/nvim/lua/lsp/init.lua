@@ -9,8 +9,12 @@ local augroup = vim.api.nvim_create_augroup
 local lspconfig = require "lspconfig"
 local opts = { clear = true }
 
+---**************************** LSP AuGroups and Handlers
 function lsp.settings()
     augroup("SetDiagnosticFuncs", opts)
+    augroup("LspHighlightSymbols", opts)
+    augroup("LspAutoFormat", opts)
+
     aucmd({ "DiagnosticChanged" }, {
         group = "SetDiagnosticFuncs",
         callback = function()
@@ -18,9 +22,6 @@ function lsp.settings()
             require("utils").commands()
         end,
     })
-
-    augroup("LspHighlightSymbols", opts)
-    augroup("LspAutoFormat", opts)
 
     -- borders for floating windows
     vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, { border = "double" })
@@ -30,13 +31,13 @@ function lsp.settings()
     )
 end
 
--- **************************** Snippet capabilities--------------------
+---**************************** Snippet capabilities
 function lsp.capabilities()
     require("packer").loader "cmp-nvim-lsp"
     return require("cmp_nvim_lsp").update_capabilities(vim.lsp.protocol.make_client_capabilities())
 end
 
--- **************************** Global attach function------------------
+---**************************** Global attach function
 local nofmt = {
     "sumneko_lua",
     "jsonls",
@@ -44,7 +45,7 @@ local nofmt = {
 
 function lsp.attach(client, bufnr)
     local util = require "vim.lsp.util"
-    require("mappings").nvim_lsp(bufnr)
+    require("mappings.lsp").lsp(bufnr)
     vim.b.hasLsp = true
 
     require("packer").loader "fidget.nvim"
@@ -64,29 +65,30 @@ function lsp.attach(client, bufnr)
         })
     end
 
-    if rc.document_formatting then
-        for _, c in ipairs(nofmt) do
-            if client.name == c then
-                return
-            end
+    if rc.document_formatting or rc.ducment_range_formatting then
+        if vim.tbl_contains(nofmt, client.name) then
+            return
         end
+        local timeout_ms = 500
         aucmd("BufWrite", {
             group = "LspAutoFormat",
             buffer = bufnr,
             callback = function()
                 local params = util.make_formatting_params {}
-                local timeout_ms = 500
                 local result, _ = client.request_sync("textDocument/formatting", params, timeout_ms, bufnr)
                 if result and result.result then
                     util.apply_text_edits(result.result, bufnr, client.offset_encoding)
                 end
             end,
         })
+        vim.keymap.set({ "n", "v" }, ",f", function()
+            client.request("textDocument/formatting", util.make_formatting_params {}, nil, bufnr)
+        end, { buffer = bufnr })
     end
     vim.api.nvim_create_user_command("LspCapabilities", require("utils.langServers").lsp_capabilities, {})
 end
 
--- **************************** Ccls reduction function-----------------
+---**************************** Ccls reduction function
 function lsp.cinit(client)
     client.server_capabilities.completionProvider = false
     local rc = client.resolved_capabilities
@@ -107,7 +109,6 @@ end
 function lsp.servers()
     local dict = vim.api.nvim_get_option "spellfile"
     local configs = {
-        -- jsonls = { on_attach = lsp.efm },
         jsonls = { on_attach = lsp.attach },
         yamlls = { on_attach = lsp.attach },
         html = { on_attach = lsp.attach, capabilities = lsp.capabilities() },
@@ -136,7 +137,7 @@ function lsp.servers()
         },
         texlab = {
             on_attach = lsp.attach,
-            capabilities = lsp.capabilities(),
+            capabilities = lsp.capabilities,
             settings = {
                 texlab = {
                     build = {

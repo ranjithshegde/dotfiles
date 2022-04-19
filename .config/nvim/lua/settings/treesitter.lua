@@ -180,6 +180,12 @@ end
 --                             Treesitter Statusline                  --
 ------------------------------------------------------------------------
 
+-- Trim spaces and opening brackets from end
+local function transform_line(line)
+    line = line:sub(1, line:find "\n")
+    return line:gsub("%s*[%[%(%{]*%s*$", "")
+end
+
 function ts.statusline(opts)
     if not parsers.has_parser() then
         return
@@ -189,7 +195,7 @@ function ts.statusline(opts)
     local bufnr = options.bufnr
     local indicator_size = options.indicator_size
     local type_patterns = options.type_patterns
-    local transform_fn = ls.transform_line
+    local transform_fn = transform_line
     local separator = " -> "
 
     local current_node = ts_utils.get_node_at_cursor()

@@ -1,0 +1,132 @@
+local lspmap = {}
+local wk = require "which-key"
+local map = vim.keymap.set
+------------------------------------------------------------------------
+--                              Language servers                      --
+------------------------------------------------------------------------
+
+function lspmap.lsp(bufnr)
+    wk.register({
+        K = { vim.lsp.buf.hover, "Hover" },
+        ["<F7>"] = { require("debugger").init, "Initialize Debugger adapter" },
+        [","] = {
+            name = "Lsp functions",
+            D = { vim.lsp.buf.declaration, "Jump to Declaration" },
+            d = { vim.lsp.buf.definition, "Jump to Definition" },
+            i = { vim.lsp.buf.implementation, "Jump to Implementation" },
+            t = { vim.lsp.buf.type_definition, "Jump to Type definition" },
+            s = { vim.lsp.buf.signature_help, "Show signature" },
+            R = { vim.lsp.buf.rename, "Rename symbol" },
+            a = { vim.lsp.buf.code_action, "Code actions for buffer" },
+            r = {
+                function()
+                    vim.lsp.buf.references { includeDeclaration = false }
+                end,
+                "References",
+            },
+            c = {
+                name = "Codelens",
+                c = { vim.lsp.codelens.display, "Display" },
+                r = { vim.lsp.codelens.run, "Run" },
+                R = { vim.lsp.codelens.refresh, "Refresh" },
+                g = { vim.lsp.codelens.get, "Fetch" },
+            },
+            l = {
+                name = "Toggle diagnostics",
+                v = { require("utils.diagnostics").toggle_virtual_text, "Virtual text" },
+                s = { require("utils.diagnostics").toggle_signs, "Sings" },
+                u = { require("utils.diagnostics").toggle_underline, "Underline" },
+            },
+            w = {
+                name = "Workspace",
+                a = { vim.lsp.buf.add_workspace_folder, "Add workspace folder" },
+                r = { vim.lsp.buf.remove_workspace_folder, "Remove workspace folder" },
+                l = {
+                    function()
+                        print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
+                    end,
+                    "List workspace folder",
+                },
+            },
+        },
+    }, { buffer = bufnr })
+
+    wk.register({
+        [","] = {
+            name = "Lsp visual mode",
+            a = { vim.lsp.buf.range_code_action, "Code actions for range" },
+        },
+    }, { mode = "v", buffer = bufnr })
+    map("n", "<F11>", "<cmd>SymbolsOutline<CR>", { desc = "Toggle Symbolsbar" })
+end
+
+-- ******************************** Diagnostics------------------------
+
+function lspmap.diagnostic()
+    map("n", ",ld", vim.diagnostic.open_float, { desc = "Show line diagnostics" })
+    map("n", "[d", vim.diagnostic.goto_prev, { desc = "Show previous diagnostics" })
+    map("n", "]d", vim.diagnostic.goto_next, { desc = "Show next diagnostics" })
+end
+
+------------------------------------------------------------------------
+--                              Debug Adapters                        --
+------------------------------------------------------------------------
+
+function lspmap.debug()
+    wk.register({
+        ["<leader>"] = {
+            d = {
+                name = "debug",
+                b = { require("dap").toggle_breakpoint, "set breakpoint" },
+                x = { require("dap").set_exception_breakpoints, "set breakpoint" },
+                f = {
+                    function()
+                        require("dapui").float_element("scopes", { enter = true })
+                    end,
+                    "Floating Scopes",
+                },
+                F = {
+                    function()
+                        require("dapui").float_element("stacks", { enter = true })
+                    end,
+                    "Floating Stacks",
+                },
+                B = {
+                    function()
+                        require("dap").toggle_breakpoint(vim.fn.input "Breakpoint condition: ")
+                    end,
+                    "set breakpoint",
+                },
+            },
+        },
+    }, { buffer = 0 })
+    wk.register {
+        ["<leader>d"] = {
+            name = "debug",
+            ["."] = { require("dap").close, "End" },
+            ["?"] = { require("debugger").frames, "Frames" },
+            ["/"] = { require("debugger").scopes, "Scopes" },
+            t = { require("debugger").threads, "threads" },
+            u = { require("dapui").toggle, "Toggle all UI" },
+            c = { require("dap").continue, "continue to next breakpoint" },
+            n = { require("dap").step_over, "step over" },
+            s = { require("dap").step_into, "step into" },
+            S = { require("dap").step_out, "step Out" },
+        },
+        ["<F10>"] = {
+            function()
+                require("dap").repl.toggle({ height = 10 }, "split")
+            end,
+            "Repl Toggle",
+        },
+    }
+
+    map({ "n", "v", "s" }, "<leader>de", function()
+        require("dapui").eval()
+        require("dapui").eval()
+    end, { buffer = true, desc = "Evaluate Hover " })
+    map({ "n", "v" }, "<leader>do", require("dapui").float_element, { buffer = true, desc = "Open floating elements" })
+    map({ "n", "v", "s" }, "<leader>dE", require("debugger").exp, { buffer = true, desc = "Expressions" })
+end
+
+return lspmap

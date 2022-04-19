@@ -312,6 +312,8 @@ function wiki.back()
     vim.cmd "lcd %:p:h"
 end
 
+-- Find the the next link closest to the cursor
+-- Jump the cursot to the link
 function wiki.gotoNext()
     local winnr = vim.api.nvim_get_current_win()
     local bufnr = vim.api.nvim_get_current_buf()
@@ -342,6 +344,8 @@ function wiki.gotoNext()
     end
 end
 
+-- Find the the previous link closest to the cursor
+-- Jump the cursot to the link
 function wiki.gotoPrev()
     local winnr = vim.api.nvim_get_current_win()
     local bufnr = vim.api.nvim_get_current_buf()

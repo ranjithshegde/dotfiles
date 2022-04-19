@@ -6,5 +6,5 @@ require "plugins"
 pcall(require, "packer_compiled")
 require("settings").options()
 require("settings.treesitter").init()
-require("mappings").general()
+require("mappings").init()
 require("utils").autocmd()

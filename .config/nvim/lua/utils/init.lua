@@ -27,7 +27,7 @@ function utils.UnloadAllModules()
     RELOAD(unload_modules)
 end
 
--- Restart Vim without having to close and run again
+---Restart Vim without having to close and run again
 function utils.Restart()
     -- vim.cmd "LspStop"
     utils.UnloadAllModules()
@@ -60,19 +60,36 @@ utils.autocmd = function()
                 + "2" -- Indent according to 2nd line
         end,
     })
-    aucmd("InsertLeave", {
-        group = "FormatOptions",
-        callback = function()
-            require("utils.langServers").index = 1
-        end,
-    })
+
+    local ignorefiles = {
+        "packer",
+        "netrw",
+        "Outline",
+        "qf",
+        "lspinfo",
+        "checkhealth",
+        "help",
+        "man",
+        "",
+    }
+
     aucmd({ "InsertEnter", "WinLeave", "FocusLost", "BufNewFile", "BufReadPost" }, {
         group = "FormatOptions",
-        command = "set number | set norelativenumber",
+        callback = function()
+            if vim.tbl_contains(ignorefiles, vim.api.nvim_buf_get_option(0, "filetype")) then
+                return
+            end
+            vim.opt.relativenumber = false
+        end,
     })
     aucmd({ "InsertLeave", "WinEnter", "FocusGained" }, {
         group = "FormatOptions",
-        command = "set number | set relativenumber",
+        callback = function()
+            if vim.tbl_contains(ignorefiles, vim.api.nvim_buf_get_option(0, "filetype")) then
+                return
+            end
+            vim.opt.relativenumber = true
+        end,
     })
 
     -- ************** Lsp Configuration loading  ------------------------------
@@ -131,7 +148,15 @@ utils.autocmd = function()
         group = "LspSettings",
         pattern = "opencl",
         callback = function()
-            require("mappings").clang()
+            require("mappings.clang").clang()
+        end,
+    })
+    -- ************** Treesitter --------------------------------------
+    augroup("TreeSitter", opts)
+    aucmd("BufReadPost", {
+        group = "TreeSitter",
+        callback = function()
+            require "mappings.treesitter"
         end,
     })
 
@@ -170,6 +195,7 @@ utils.autocmd = function()
         end,
     })
     aucmd("BufReadPost", { group = "PluginLoad", command = "packadd matchit", once = true })
+    aucmd("User", { pattern = "PackerComplete", group = "PluginLoad", command = "LuaCacheClear" })
 
     -- ************************ Terminal management --------------------
 
@@ -232,6 +258,9 @@ function utils.silent_shell(cmd)
 end
 
 -- Toggleable terminal
+---@param cmd string launch the shell with
+---@param name string name/ID for the terminal window
+---@param spl number 0 = horizontal split, 1 = vertical split
 function utils.toggleTerm(cmd, name, spl)
     local win = vim.fn.bufwinnr(name)
     local buf = vim.fn.bufexists(name)
@@ -267,6 +296,9 @@ function utils.open_in_browser(url)
     utils.silent_shell(browser .. " " .. url)
 end
 
+---Concat all lines from a file into a table
+---@param file string filepath
+---@return table
 utils.concat_fileLines = function(file)
     local dictionary = {}
     for line in io.lines(file) do
@@ -275,27 +307,35 @@ utils.concat_fileLines = function(file)
     return dictionary
 end
 
+---Get keys with replaced termcodes
+---@param key string key sequence
+---@param mode string vim-mode for the keymap
 utils.feedkey = function(key, mode)
     vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes(key, true, true, true), mode, true)
 end
 
--- Access agenda from outside orgfile
+---Access agenda from outside orgfile
 function utils.agenda()
     require("packer").loader "orgmode"
     require("orgmode").action "agenda.prompt"
 end
 
+---Open thesaurus for the word online
+---@param cmd string Word to search
 function utils.thesaurus(cmd)
     local url = "https://www.thesaurus.com/browse/" .. cmd
     exec('!qutebrowser "' .. url .. '"')
 end
 
+---Open wiktionary for the word online
+---@param cmd string Word to search
 function utils.dictionary(cmd)
     local url = "https://en.wiktionary.org/wiki/" .. cmd
     exec('!qutebrowser "' .. url .. '"')
 end
 
 local transparent = false
+---Toggle background transparency for dark colorschemes
 function utils.trans()
     local colo = vim.api.nvim_exec("colo", true)
     if colo == "dayfox" or colo == "dawnfox" then
@@ -316,7 +356,7 @@ end
 ------------------------------------------------------------------------
 
 function utils.commands()
-    require("mappings").diagnostic()
+    require("mappings.lsp").diagnostic()
     local cmd = vim.api.nvim_create_user_command
     local complete = function()
         return require("utils.langServers").getClientNames()

@@ -28,14 +28,14 @@ function settings.options()
     o.timeoutlen = 100
     o.conceallevel = 1
     o.laststatus = 3
-    o.foldmethod = "expr"
+    o.foldmethod = "indent"
     o.inccommand = "split"
     o.spelloptions = "camel"
     o.grepformat = "%f:%l:%c:%m"
     o.grepprg = "rg --vimgrep --smart-case --hidden"
     o.spellfile = vim.fn.stdpath "config" .. "/spell/en.utf-8.add"
     o.fillchars = {
-        fold = ".",
+        fold = " ",
         horiz = "━",
         horizup = "┻",
         horizdown = "┳",
@@ -45,25 +45,28 @@ function settings.options()
         vertright = "┣",
         verthoriz = "╋",
     }
+    o.shortmess:append "c"
     o.listchars:append "eol:↲"
+    o.clipboard:append "unnamedplus"
+    o.sessionoptions:append "terminal,tabpages"
     o.foldexpr = "nvim_treesitter#foldexpr()"
     o.completeopt = "menu,menuone,noinsert,noselect"
-    o.dictionary = { "/usr/share/dict/us", "/usr/share/dict/british" }
+    o.foldtext = [[luaeval('require("settings").foldText()')]]
     o.tabline = [[%!luaeval('require("statusline").tabs()')]]
-    o.sessionoptions:append "terminal,tabpages"
-    o.clipboard:append "unnamedplus"
-    o.shortmess:append "c"
-    vim.g.termdebug_wide = 1
-    vim.g.markdown_folding = 1
-    vim.g.tex_conceal = "abdmgs"
-    vim.g.loaded_ruby_provider = 0
-    vim.g.loaded_perl_provider = 0
-    vim.g.netrw_browsex_viewer = "xdg-open"
-    vim.g.symbols_outline = { auto_preview = false, width = 40 }
-    vim.g.netrw_browse_split = 4
+    o.dictionary = { "/usr/share/dict/us", "/usr/share/dict/british" }
+
+    vim.g.netrw_altv = 1
     vim.g.netrw_winsize = 15
     vim.g.netrw_liststyle = 3
-    vim.g.netrw_altv = 1
+    vim.g.netrw_browse_split = 4
+    vim.g.loaded_ruby_provider = 0
+    vim.g.loaded_perl_provider = 0
+    vim.g.termdebug_wide = 1
+    vim.g.markdown_folding = 1
+    vim.g.fold_preview = true
+    vim.g.tex_conceal = "abdmgs"
+    vim.g.netrw_browsex_viewer = "xdg-open"
+    vim.g.symbols_outline = { auto_preview = false, width = 40 }
 
     -- ************** Disable builtin plugins ---------------------------------------------------------
     local disabled_builtins = {
@@ -101,38 +104,16 @@ function settings.options()
     })
 end
 
-------------------------------------------------------------------------
---                       Custom Folds            	                  --
-------------------------------------------------------------------------
+function settings.foldText()
+    local foldlines = vim.api.nvim_buf_get_lines(0, vim.v.foldstart, vim.v.foldend, true)
+    local text = string.format(
+        "%s%s%s",
+        string.gsub(foldlines[1], "\\t", string.rep(" ", vim.api.nvim_get_option "tabstop")),
+        "    +    (" .. (vim.v.foldend - vim.v.foldstart - 1) .. " lines)    +    ",
+        vim.fn.trim(foldlines[#foldlines])
+    )
 
-function settings.folds()
-    require("pretty-fold").setup {
-        fill_char = "━",
-        sections = {
-            left = {
-                "━ ",
-                function()
-                    return string.rep("*", vim.v.foldlevel)
-                end,
-                " ━┫",
-                "content",
-                "     ",
-                "number_of_folded_lines",
-                " ┣",
-            },
-            right = {
-                "┫ ",
-                "number_of_folded_lines",
-                ": ",
-                "percentage",
-                " ┣━━",
-            },
-        },
-    }
-    require("pretty-fold.preview").setup {
-        key = "l",
-        border = "double",
-    }
+    return text
 end
 
 return settings

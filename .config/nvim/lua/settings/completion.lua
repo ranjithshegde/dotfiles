@@ -75,6 +75,7 @@ function completion.init()
                     nvim_lsp = "[LSP]",
                     luasnip = "[LuaSnip]",
                     path = "[Path]",
+                    buffer = "[Buffer]",
                     orgmode = "[Org]",
                 })[entry.source.name]
                 return vim_item
@@ -96,6 +97,13 @@ function completion.init()
     if fs == "cpp" or fs == "c" then
         require("lsp.clangd").clangCmp()
     end
+
+    vim.api.nvim_create_autocmd("InsertLeave", {
+        group = "FormatOptions",
+        callback = function()
+            require("utils.langServers").index = 1
+        end,
+    })
 end
 
 function completion.pairs()
