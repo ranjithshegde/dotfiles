@@ -173,6 +173,13 @@ function ts.init()
             extended_mode = true,
         },
         playground = { enable = true, updatetime = 25, persist_queries = false },
+        nt_cpp_tools = {
+            enable = true,
+            preview = {
+                quit = "q", -- optional keymapping for quit preview
+                accept = "<tab>", -- optional keymapping for accept preview
+            },
+        },
     }
 end
 

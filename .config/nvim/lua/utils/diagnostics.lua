@@ -39,6 +39,7 @@ local float_conf = {
         border = "double",
         format = fmt,
     },
+    severity_sort = true,
 }
 
 local function displayStatus(msg, val, client)

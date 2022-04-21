@@ -72,6 +72,7 @@ return require("packer").startup {
             { "nvim-treesitter/nvim-treesitter-textobjects", event = "BufReadPost" },
             { "nvim-treesitter/nvim-treesitter-refactor", after = "scnvim" },
             { "nvim-treesitter/playground", cmd = { "TSPlaygroundToggle", "TSNodeUnderCursor" } },
+            { "Badhi/nvim-treesitter-cpp-tools", ft = { "c", "cpp", "opencl" } },
         }
 
         -- Git Signs
@@ -112,6 +113,23 @@ return require("packer").startup {
             end,
         }
 
+        -- Indents and chars
+        use {
+            "lukas-reineke/indent-blankline.nvim",
+            event = "BufReadPost",
+            config = function()
+                vim.g.indent_blankline_char = "┊"
+                require("indent_blankline").setup {
+                    show_current_context = true,
+                    show_end_of_line = true,
+                    use_treesitter = true,
+                }
+                for _, v in pairs(require("utils.tables").indentContext) do
+                    vim.cmd("let g:indent_blankline_context_patterns+=['" .. v .. "']")
+                end
+            end,
+        }
+
         -- Colorizer
         use {
             "afonsocraposo/nvim-colorizer.lua",
@@ -149,35 +167,9 @@ return require("packer").startup {
             },
         }
 
-        -- Indents and chars
-        use {
-            "lukas-reineke/indent-blankline.nvim",
-            event = "BufReadPost",
-            config = function()
-                vim.g.indent_blankline_char = "┊"
-                require("indent_blankline").setup {
-                    show_current_context = true,
-                    show_end_of_line = true,
-                    use_treesitter = true,
-                }
-                -- stylua: ignore
-                local context = {
-                    "^for", "^case", "block", "^table", "return", "^while", "^public", "^switch",
-                    "^object", "inherits", "^private", "^protected", "jsx_element", "jsx_element",
-                    "else_clause", "if_statement", "catch_clause", "try_statement", "operation_type",
-                    "access_specifier", "import_statement", "jsx_self_closing_element",
-                }
-                for _, v in pairs(context) do
-                    vim.cmd("let g:indent_blankline_context_patterns+=['" .. v .. "']")
-                end
-            end,
-        }
-
         -- SuperCollider
         use {
-            -- "davidgranstrom/scnvim",
-            "ranjithshegde/scnvim",
-            branch = "0.7",
+            "davidgranstrom/scnvim",
             ft = "supercollider",
             run = function()
                 vim.fn["scnvim#install"]()

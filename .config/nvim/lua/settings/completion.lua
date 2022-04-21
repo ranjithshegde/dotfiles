@@ -68,7 +68,7 @@ function completion.init()
             format = function(entry, vim_item)
                 vim_item.kind = string.format(
                     "%s %s",
-                    require("utils.langServers").kind_symbols[vim_item.kind],
+                    require("utils.tables").kindSymbols[vim_item.kind],
                     vim_item.kind
                 )
                 vim_item.menu = ({

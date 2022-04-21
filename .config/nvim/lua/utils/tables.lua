@@ -1,0 +1,191 @@
+local tables = {}
+
+------------------------------------------------------------------------
+--                              FileTypes                             --
+------------------------------------------------------------------------
+---Filetypes with Language Servers
+tables.lspfiles = {
+    "bash",
+    "sh",
+    "zsh",
+    "tex",
+    "bib",
+    "css",
+    "cmake",
+    "c",
+    "cpp",
+    "objc",
+    "opencl",
+    "dart",
+    "glsl",
+    "html",
+    "javascript",
+    "typescript",
+    "java",
+    "json",
+    "jsonc",
+    "lua",
+    "make",
+    "markdown",
+    "org",
+    "python",
+    "vim",
+    "yaml",
+}
+
+---Filetypes that are read-only
+tables.ignoreFiles = {
+    "qf",
+    "man",
+    "help",
+    "netrw",
+    "scnvim",
+    "packer",
+    "Outline",
+    "lspinfo",
+    "checkhealth",
+    "",
+}
+
+------------------------------------------------------------------------
+--                              Symbols                               --
+------------------------------------------------------------------------
+
+--- Lsp Kind Icons
+tables.kindSymbols = {
+    Text = "",
+    Method = "ƒ",
+    Function = "",
+    Constructor = "",
+    Field = "",
+    Variable = "",
+    Class = "",
+    Interface = "ﰮ",
+    Module = "",
+    Property = "",
+    Unit = "",
+    Value = "",
+    Enum = "了",
+    Keyword = "",
+    Snippet = "﬌",
+    Color = "",
+    File = "",
+    Reference = "",
+    Folder = "",
+    EnumMember = "",
+    Constant = "",
+    Struct = "",
+    Event = "",
+    Operator = "",
+    TypeParameter = "",
+}
+
+-- associate icons with nodes
+tables.tsNodeSymbols = {
+    ["class"] = " ",
+    ["function"] = " ",
+    ["function_definition"] = " ",
+    ["method"] = "ƒ ",
+    ["struct"] = " ",
+    ["table_constructor"] = " ",
+    ["enum"] = "了 ",
+    ["interface"] = "ﰮ ",
+    ["module"] = " ",
+    ["require"] = " ",
+    ["type_spec"] = " ",
+    ["chapter"] = " ",
+    ["subsection"] = " ",
+    ["section"] = " ",
+    ["linkage_specification"] = " ",
+}
+
+------------------------------------------------------------------------
+--                              File association settins              --
+------------------------------------------------------------------------
+
+---TreeSitter nodes selection
+tables.tsNodes = {
+    --- Default fallback
+    default = {
+        "class",
+        "function",
+        "method",
+        "struct",
+        "enum",
+        "interface",
+        "module",
+        "type_spec",
+        "section",
+    },
+    ---per filetype
+    filetype = {
+
+        c = {
+            "function",
+            "function_definition",
+            "struct",
+            "enum",
+            "linkage_specification",
+            "if_statement",
+            "for_statement",
+        },
+        cpp = {
+            "class",
+            "function",
+            "function_definition",
+            "struct",
+            "enum",
+            "if_statement",
+            "for_statement",
+            "linkage_specification",
+        },
+        lua = {
+            "function",
+            "table_constructor",
+            "module",
+            "enum",
+        },
+        opencl = {
+            "function_definition",
+            "struct",
+            "enum",
+            "linkage_specification",
+        },
+        tex = {
+            "chapter",
+            "subsection",
+            "section",
+        },
+    },
+}
+
+------------------------------------------------------------------------
+--                              Properties                            --
+------------------------------------------------------------------------
+
+tables.indentContext = {
+    "^for",
+    "^case",
+    "block",
+    "^table",
+    "return",
+    "^while",
+    "^public",
+    "^switch",
+    "^object",
+    "inherits",
+    "^private",
+    "^protected",
+    "jsx_element",
+    "jsx_element",
+    "else_clause",
+    "if_statement",
+    "catch_clause",
+    "try_statement",
+    "operation_type",
+    "access_specifier",
+    "import_statement",
+    "jsx_self_closing_element",
+}
+
+return tables

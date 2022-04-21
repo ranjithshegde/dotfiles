@@ -152,62 +152,12 @@ end
 --*********************************** Lsp status  -----------------------
 local diagnostics = require("el.diagnostic").make_buffer(require("utils.diagnostics").formatter)
 
-local default = {
-    "class",
-    "function",
-    "method",
-    "struct",
-    "enum",
-    "interface",
-    "module",
-    "type_spec",
-    "section",
-}
-
-local ft = {
-    c = {
-        "function",
-        "function_definition",
-        "struct",
-        "enum",
-        "linkage_specification",
-        "if_statement",
-        "for_statement",
-    },
-    cpp = {
-        "class",
-        "function",
-        "function_definition",
-        "struct",
-        "enum",
-        "if_statement",
-        "for_statement",
-        "linkage_specification",
-    },
-    lua = {
-        "function",
-        "table_constructor",
-        "module",
-        "enum",
-    },
-    opencl = {
-        "function_definition",
-        "struct",
-        "enum",
-        "linkage_specification",
-    },
-    tex = {
-        "chapter",
-        "subsection",
-        "section",
-    },
-}
-
+local tsNodes = require("utils.tables").tsNodes
 local function gps(_, buffer)
     local fs = vim.api.nvim_buf_get_option(buffer.bufnr, "filetype")
     local context = require("settings.treesitter").statusline {
         indicator_size = vim.b.gps or 35,
-        type_patterns = ft[fs] or default,
+        type_patterns = tsNodes.filetype[fs] or tsNodes.default,
         bufnr = buffer.bufnr,
     }
     if context == "" then

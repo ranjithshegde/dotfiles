@@ -109,6 +109,7 @@ function mappings.configFiles()
                     l = { open "lua/utils/langServers.lua", "Langauge Server extensions" },
                     q = { open "lua/utils/qf.lua", "Quickfix and Loclist" },
                     p = { open "lua/utils/preview.lua", "Fold preview" },
+                    t = { open "lua/utils/tables.lua", "Filter tables" },
                 },
                 f = {
                     name = "Filetype Plugins",

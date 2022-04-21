@@ -61,22 +61,10 @@ utils.autocmd = function()
         end,
     })
 
-    local ignorefiles = {
-        "packer",
-        "netrw",
-        "Outline",
-        "qf",
-        "lspinfo",
-        "checkhealth",
-        "help",
-        "man",
-        "",
-    }
-
     aucmd({ "InsertEnter", "WinLeave", "FocusLost", "BufNewFile", "BufReadPost" }, {
         group = "FormatOptions",
         callback = function()
-            if vim.tbl_contains(ignorefiles, vim.api.nvim_buf_get_option(0, "filetype")) then
+            if vim.tbl_contains(require("utils.tables").ignoreFiles, vim.api.nvim_buf_get_option(0, "filetype")) then
                 return
             end
             vim.opt.relativenumber = false
@@ -85,43 +73,22 @@ utils.autocmd = function()
     aucmd({ "InsertLeave", "WinEnter", "FocusGained" }, {
         group = "FormatOptions",
         callback = function()
-            if vim.tbl_contains(ignorefiles, vim.api.nvim_buf_get_option(0, "filetype")) then
+            if vim.tbl_contains(require("utils.tables").ignoreFiles, vim.api.nvim_buf_get_option(0, "filetype")) then
                 return
             end
             vim.opt.relativenumber = true
         end,
     })
+    aucmd("FileType", {
+        group = "FormatOptions",
+        callback = function()
+            if vim.tbl_contains(require("utils.tables").ignoreFiles, vim.api.nvim_buf_get_option(0, "filetype")) then
+                vim.opt_local.foldenable = false
+            end
+        end,
+    })
 
     -- ************** Lsp Configuration loading  ------------------------------
-
-    local lspfiles = {
-        "bash",
-        "sh",
-        "zsh",
-        "tex",
-        "bib",
-        "css",
-        "cmake",
-        "c",
-        "cpp",
-        "objc",
-        "opencl",
-        "dart",
-        "glsl",
-        "html",
-        "javascript",
-        "typescript",
-        "java",
-        "json",
-        "jsonc",
-        "lua",
-        "make",
-        "markdown",
-        "org",
-        "python",
-        "vim",
-        "yaml",
-    }
 
     augroup("LspSettings", opts)
     aucmd("FileType", {
@@ -131,11 +98,14 @@ utils.autocmd = function()
             vim.keymap.set("n", ",K", function()
                 vim.fn.execute("h " .. vim.fn.expand "<cword>")
             end, { buffer = true, desc = "Help instead of hover" })
+            vim.keymap.set("n", "<F6>", function()
+                vim.cmd "w | source %"
+            end, { buffer = true, desc = "evaluate current file" })
         end,
     })
     aucmd("FileType", {
         group = "LspSettings",
-        pattern = lspfiles,
+        pattern = require("utils.tables").lspfiles,
         callback = function()
             require("lsp").settings()
             require("lsp").servers()

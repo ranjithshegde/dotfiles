@@ -61,59 +61,8 @@ function langSettings.TexWordCount()
 end
 
 ------------------------------------------------------------------------
---                              CompletionKind                        --
-------------------------------------------------------------------------
-
-langSettings.kind_symbols = {
-    Text = "",
-    Method = "ƒ",
-    Function = "",
-    Constructor = "",
-    Field = "",
-    Variable = "",
-    Class = "",
-    Interface = "ﰮ",
-    Module = "",
-    Property = "",
-    Unit = "",
-    Value = "",
-    Enum = "了",
-    Keyword = "",
-    Snippet = "﬌",
-    Color = "",
-    File = "",
-    Reference = "",
-    Folder = "",
-    EnumMember = "",
-    Constant = "",
-    Struct = "",
-    Event = "",
-    Operator = "",
-    TypeParameter = "",
-}
-
-------------------------------------------------------------------------
 --                              TSStatusLine                          --
 ------------------------------------------------------------------------
-
--- associate icons with nodes
-local tree_symbol = {
-    ["class"] = " ",
-    ["function"] = " ",
-    ["function_definition"] = " ",
-    ["method"] = "ƒ ",
-    ["struct"] = " ",
-    ["table_constructor"] = " ",
-    ["enum"] = "了 ",
-    ["interface"] = "ﰮ ",
-    ["module"] = " ",
-    ["require"] = " ",
-    ["type_spec"] = " ",
-    ["chapter"] = " ",
-    ["subsection"] = " ",
-    ["section"] = " ",
-    ["linkage_specification"] = " ",
-}
 
 -- get current node
 function langSettings.get_line_for_node(node, type_patterns, transform_fn, bufnr)
@@ -132,7 +81,7 @@ function langSettings.get_line_for_node(node, type_patterns, transform_fn, bufnr
     end
     local line = transform_fn(vim.trim(vim.treesitter.query.get_node_text(node, bufnr) or ""))
 
-    for index, value in pairs(tree_symbol) do
+    for index, value in pairs(require("utils.tables").tsNodeSymbols) do
         index = index:gsub("%[", "")
         index = index:gsub("%]", "")
         if index == "section" and line:find "*" then

@@ -51,8 +51,8 @@ function lsp.attach(client, bufnr)
     require("packer").loader "fidget.nvim"
     require("utils.diagnostics").attach({ all = false, underline = false, update_in_insert = false }, client)
 
-    local rc = client.resolved_capabilities
-    if rc.document_highlight then
+    local sc = client.server_capabilities
+    if sc.documentHighlightProvider then
         aucmd("CursorHold", {
             group = "LspHighlightSymbols",
             buffer = bufnr,
@@ -65,7 +65,7 @@ function lsp.attach(client, bufnr)
         })
     end
 
-    if rc.document_formatting or rc.ducment_range_formatting then
+    if sc.documentFormattingProvider or sc.rangeFormattingProvider then
         if vim.tbl_contains(nofmt, client.name) then
             return
         end
@@ -137,7 +137,7 @@ function lsp.servers()
         },
         texlab = {
             on_attach = lsp.attach,
-            capabilities = lsp.capabilities,
+            -- capabilities = lsp.capabilities,
             settings = {
                 texlab = {
                     build = {

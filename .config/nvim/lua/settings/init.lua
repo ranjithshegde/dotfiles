@@ -35,7 +35,7 @@ function settings.options()
     o.grepprg = "rg --vimgrep --smart-case --hidden"
     o.spellfile = vim.fn.stdpath "config" .. "/spell/en.utf-8.add"
     o.fillchars = {
-        fold = " ",
+        fold = ".",
         horiz = "━",
         horizup = "┻",
         horizdown = "┳",
@@ -105,7 +105,7 @@ function settings.options()
 end
 
 function settings.foldText()
-    local foldlines = vim.api.nvim_buf_get_lines(0, vim.v.foldstart, vim.v.foldend, true)
+    local foldlines = vim.api.nvim_buf_get_lines(0, vim.v.foldstart - 1, vim.v.foldend, true)
     local text = string.format(
         "%s%s%s",
         string.gsub(foldlines[1], "\\t", string.rep(" ", vim.api.nvim_get_option "tabstop")),
