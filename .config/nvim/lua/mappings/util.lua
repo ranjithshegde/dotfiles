@@ -10,30 +10,48 @@ function utilmaps.ranger()
     wk.register {
         ["<leader>r"] = {
             name = "Ranger file picker",
+            r = {
+                function()
+                    require("utils").ranger("%:p:h", "e ")
+                end,
+                "from current file",
+            },
+            R = {
+                function()
+                    require("utils").ranger(".", "e ")
+                end,
+                "from current directory",
+            },
+            v = {
+                function()
+                    vim.cmd "vnew"
+                    require("utils").ranger("%:p:h", "vs ")
+                end,
+                "in a split from current file",
+            },
+            V = {
+                function()
+                    vim.cmd "vnew"
+                    require("utils").ranger(".", "vs ")
+                end,
+                "in a split from current directory",
+            },
+            t = {
+                function()
+                    vim.cmd "tabnew"
+                    require("utils").ranger("%:p:h", "tab drop ")
+                end,
+                "in a new tab from current file",
+            },
+            T = {
+                function()
+                    vim.cmd "tabnew"
+                    require("utils").ranger(".", "tab drop ")
+                end,
+                "in a new tab from current directory",
+            },
         },
     }
-    map("n", "<leader>rr", function()
-        vim.fn["util#ranger"]("%:p:h", "e ")
-    end, { desc = "from current file" })
-    map("n", "<leader>rR", function()
-        vim.fn["util#ranger"](".", "e ")
-    end, { desc = "from current directory" })
-    map("n", "<leader>rv", function()
-        vim.cmd "vnew"
-        vim.fn["util#ranger"]("%:p:h", "vs ")
-    end, { desc = "in a split from current file" })
-    map("n", "<leader>rV", function()
-        vim.cmd "vnew"
-        vim.fn["util#ranger"](".", "vs ")
-    end, { desc = "in a split from current directory" })
-    map("n", "<leader>rt", function()
-        vim.cmd "tabnew"
-        vim.fn["util#ranger"]("%:p:h", "tab drop ")
-    end, { desc = "in a new tab from current file" })
-    map("n", "<leader>rT", function()
-        vim.cmd "tabnew"
-        vim.fn["util#ranger"](".", "tab drop ")
-    end, { desc = "in a new tab from current directory" })
 end
 
 function utilmaps.wordProcessor()
@@ -112,56 +130,17 @@ function utilmaps.orgWiki()
     }
 end
 
-------------------------------------------------------------------------
---                              Co-Author                              --
-------------------------------------------------------------------------
+-- ******************************* Misc -------------------------------
+function utilmaps.misc()
+    vim.keymap.set("n", "<leader>e", "<cmd>Lex<CR>", { desc = "Toggle Netrw" })
 
-function utilmaps.coauthor()
-    wk.register {
-        ["<leader>"] = {
-            i = {
-                name = "Co-Authoring",
-                i = {
-                    function()
-                        require("instant.server").StartServer("192.168." .. vim.fn.input "Enter extension: ", "8080")
-                    end,
-                    "Start Co-authoring Server",
-                },
-                s = {
-                    function()
-                        require("instant").StartServer("192.168." .. vim.fn.input "Enter extension: ", "8080")
-                    end,
-                    "Launch session",
-                },
-                b = {
-                    function()
-                        require("instant").Start("192.168." .. vim.fn.input "Enter extension: ", "8080")
-                    end,
-                    "Launch current buffer",
-                },
-                j = {
-                    function()
-                        require("instant").JoinSession("192.168." .. vim.fn.input "Enter extension: ", "8080")
-                        require("instant").StartFollow(vim.fn.input "User to follow: ")
-                    end,
-                    "Join session",
-                },
-                J = {
-                    function()
-                        require("instant").Join("192.168." .. vim.fn.input "Enter extension: ", "8080")
-                        require("instant").StartFollow(vim.fn.input "User to follow: ")
-                    end,
-                    "Join single buffer",
-                },
-                f = {
-                    function()
-                        require("instant").StartFollow(vim.fn.input "User to follow: ")
-                    end,
-                    "follow user",
-                },
-            },
-        },
-    }
+    vim.g.fold_preview = true
+    vim.keymap.set("n", "l", function()
+        require("utils.preview").keymap_open_close "l"
+    end)
+    vim.keymap.set("n", "h", function()
+        require("utils.preview").keymap_close "h"
+    end)
 end
 
 return utilmaps

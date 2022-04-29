@@ -47,7 +47,7 @@ end
 --                              Lua                                   --
 ------------------------------------------------------------------------
 
-local scratch = os.getenv "HOME" .. "/Software/Workspaces/lua/Scratch/"
+local scratch = vim.env.HOME .. "/Software/Workspaces/lua/Scratch/"
 
 local function openScratch()
     vim.cmd("lcd " .. scratch)

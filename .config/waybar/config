@@ -7,7 +7,7 @@
     "height": 24,
     "modules-left": ["sway/workspaces", "sway/mode", "sway/window"],
     "modules-center": ["clock"],
-    "modules-right": ["custom/weather", "temperature", "backlight", "cpu", "pulseaudio","network", "battery", "tray"],
+    "modules-right": [ "temperature", "backlight", "cpu", "pulseaudio","network", "battery", "tray"],
 
     // Modules configuration
      "sway/workspaces": {

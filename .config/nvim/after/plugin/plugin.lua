@@ -23,27 +23,19 @@ end, {})
 
 cmd("Gram", "call util#WordProcessor()", {})
 cmd("Cam", "call util#CamelCase()", {})
-cmd("Su", "call util#sudoWrite()", {})
+cmd("Su", "w !sudo tee %", {})
 
 -- ******************* Plugin mappings --------------------------------------------
 require("mappings.util").ranger()
 require("mappings.util").orgWiki()
-require("mappings.util").coauthor()
+require("mappings.util").misc()
 require "mappings.telescope"
-vim.keymap.set("n", "<leader>e", "<cmd>Lex<CR>", { desc = "Toggle Netrw" })
-
-vim.g.fold_preview = true
-vim.keymap.set("n", "l", function()
-    require("utils.preview").keymap_open_close "l"
-end)
-vim.keymap.set("n", "h", function()
-    require("utils.preview").keymap_close "h"
-end)
 
 -- ******************* new functions --------------------------------------------
-P = function(v)
-    print(vim.inspect(v))
-    return v
+
+W = function(v)
+    local f = io.open("package.txt", "w+")
+    f:write(vim.inspect(v))
 end
 
 RELOAD = function(module)
@@ -55,15 +47,3 @@ RELOAD = function(module)
         return require("plenary.reload").reload_module(module)
     end
 end
-
--- R = function(name)
---     RELOAD(name)
---     return require(name)
--- end
-
--- W = function(v)
---     local f = io.open("package.txt", "w+")
---     f:write(vim.inspect(v))
--- end
---
---

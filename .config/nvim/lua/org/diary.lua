@@ -54,17 +54,18 @@ local getDate = function(day)
     return string.format("%s-%s-%s %s.org", date["year"], date["month"], date["day"], weeks[date["wday"]])
 end
 
-local parseList = function(s, delimiter)
-    local result = {}
-    for match in (s .. delimiter):gmatch("(.-)" .. delimiter) do
-        table.insert(result, match)
-    end
-    return result
-end
+-- local parseList = function(s, delimiter)
+--     local result = {}
+--     for match in (s .. delimiter):gmatch("(.-)" .. delimiter) do
+--         table.insert(result, match)
+--     end
+--     return result
+-- end
 
 local getDiaryfiles = function()
     local dirs = vim.fn.system "ls ~/Documents/Orgs/diary"
-    local list = parseList(dirs, "\n")
+    -- local list = parseList(dirs, "\n")
+    local list = vim.split(dirs, "\n")
     local result = {}
 
     for _, data in ipairs(list) do

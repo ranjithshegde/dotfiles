@@ -9,11 +9,27 @@ local augroup = vim.api.nvim_create_augroup
 local lspconfig = require "lspconfig"
 local opts = { clear = true }
 
+local nofmt = {
+    "sumneko_lua",
+    "jsonls",
+}
+
+local function filterfmt(clients)
+    return vim.tbl_filter(function(client)
+        if client.name == "efm" then
+            return true
+        elseif vim.tbl_contains(nofmt, client.name) then
+            return false
+        end
+    end, clients)
+end
+
 ---**************************** LSP AuGroups and Handlers
 function lsp.settings()
     augroup("SetDiagnosticFuncs", opts)
     augroup("LspHighlightSymbols", opts)
     augroup("LspAutoFormat", opts)
+    augroup("LspCodeLens", opts)
 
     aucmd({ "DiagnosticChanged" }, {
         group = "SetDiagnosticFuncs",
@@ -38,13 +54,7 @@ function lsp.capabilities()
 end
 
 ---**************************** Global attach function
-local nofmt = {
-    "sumneko_lua",
-    "jsonls",
-}
-
 function lsp.attach(client, bufnr)
-    local util = require "vim.lsp.util"
     require("mappings.lsp").lsp(bufnr)
     vim.b.hasLsp = true
 
@@ -66,40 +76,38 @@ function lsp.attach(client, bufnr)
     end
 
     if sc.documentFormattingProvider or sc.rangeFormattingProvider then
-        if vim.tbl_contains(nofmt, client.name) then
-            return
-        end
-        local timeout_ms = 500
         aucmd("BufWrite", {
             group = "LspAutoFormat",
             buffer = bufnr,
             callback = function()
-                local params = util.make_formatting_params {}
-                local result, _ = client.request_sync("textDocument/formatting", params, timeout_ms, bufnr)
-                if result and result.result then
-                    util.apply_text_edits(result.result, bufnr, client.offset_encoding)
-                end
+                vim.lsp.buf.format { filter = filterfmt }
             end,
         })
         vim.keymap.set({ "n", "v" }, ",f", function()
-            client.request("textDocument/formatting", util.make_formatting_params {}, nil, bufnr)
+            vim.lsp.buf.format { filter = filterfmt, timeout_ms = 2000 }
         end, { buffer = bufnr })
     end
     vim.api.nvim_create_user_command("LspCapabilities", require("utils.langServers").lsp_capabilities, {})
 end
 
 ---**************************** Ccls reduction function
-function lsp.cinit(client)
-    client.server_capabilities.completionProvider = false
-    local rc = client.resolved_capabilities
-    rc.document_formatting = false
-    rc.document_range_formatting = false
-    rc.document_highlight = false
-    rc.document_symbol = false
-    rc.workspace_symbol = false
-    rc.rename = false
-    rc.hover = false
-    rc.code_action = false
+function lsp.cattach(client, bufnr)
+    local sc = client.server_capabilities
+    sc.completionProvider = false
+    sc.documentFormattingProvider = false
+    sc.documentRangeFormattingProvider = false
+    sc.documentHighlightProvider = false
+    sc.documentSymbolProvider = false
+    sc.workspaceSymbolProvider = false
+    sc.renameProvider = false
+    sc.hoverProvider = false
+    sc.codeActionProvider = false
+    aucmd("BufWritePost", {
+        buffer = bufnr,
+        group = "LspCodeLens",
+        callback = vim.lsp.codelens.refresh,
+    })
+    vim.lsp.codelens.refresh()
 end
 
 ------------------------------------------------------------------------
@@ -120,6 +128,7 @@ function lsp.servers()
         tsserver = { on_attach = lsp.attach, capabilities = lsp.capabilities() },
         bashls = { on_attach = lsp.attach, capabilities = lsp.capabilities(), filetypes = { "sh", "zsh" } },
         ltex = {
+            autostart = false,
             filetypes = { "bib", "markdown", "org", "tex" },
             on_attach = lsp.attach,
             capabilities = lsp.capabilities(),

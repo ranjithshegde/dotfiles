@@ -20,7 +20,7 @@ local function adapters()
     }
     dap.adapters.cppdbg = {
         type = "executable",
-        command = os.getenv "XDG_DATA_HOME" .. "/debug-adapters/cpptools/extension/debugAdapters/bin/OpenDebugAD7",
+        command = vim.env.XDG_DATA_HOME .. "/debug-adapters/cpptools/extension/debugAdapters/bin/OpenDebugAD7",
     }
     dap.adapters.python = {
         type = "executable",
@@ -30,12 +30,12 @@ local function adapters()
     dap.adapters.node2 = {
         type = "executable",
         command = "node",
-        args = { os.getenv "XDG_DATA_HOME" .. "/debug-adapters/node-debug2/out/src/nodeDebug.js" },
+        args = { vim.env.XDG_DATA_HOME .. "/debug-adapters/node-debug2/out/src/nodeDebug.js" },
     }
     dap.adapters.codelldb = function(on_adapter)
         local stdout = vim.loop.new_pipe(false)
         local stderr = vim.loop.new_pipe(false)
-        local cmd = os.getenv "XDG_DATA_HOME" .. "/debug-adapters/lldb/extension/adapter/codelldb"
+        local cmd = vim.env.XDG_DATA_HOME .. "/debug-adapters/lldb/extension/adapter/codelldb"
 
         local handle, pid_or_err
         local opts = {
@@ -82,7 +82,7 @@ local function adapters()
     dap.adapters.dart = {
         type = "executable",
         command = "node",
-        args = { os.getenv "XDG_DATA_HOME" .. "/debug-adapters/Dart-Code/out/dist/debug.js", "flutter" },
+        args = { vim.env.XDG_DATA_HOME .. "/debug-adapters/Dart-Code/out/dist/debug.js", "flutter" },
     }
 end
 
@@ -101,7 +101,7 @@ local function configs()
                 end
             end,
             -- externalConsole = true,
-            visualizerFile = os.getenv "XDG_DATA_HOME" .. "/debug-adapters/natvis/concurrency.natvis",
+            visualizerFile = vim.env.XDG_DATA_HOME .. "/debug-adapters/natvis/concurrency.natvis",
             cwd = "${workspaceFolder}",
             stopOnEntry = false,
             showDisplayString = true,
@@ -123,7 +123,7 @@ local function configs()
                 end
             end,
             -- externalConsole = true,
-            visualizerFile = os.getenv "XDG_DATA_HOME" .. "/debug-adapters/natvis/concurrency.natvis",
+            visualizerFile = vim.env.XDG_DATA_HOME .. "/debug-adapters/natvis/concurrency.natvis",
             cwd = "${workspaceFolder}",
             stopOnEntry = false,
             showDisplayString = true,
@@ -203,15 +203,6 @@ local function configs()
             type = "node2",
             request = "attach",
             processId = require("dap.utils").pick_process,
-        },
-    }
-    dap.configurations.java = {
-        {
-            type = "java",
-            request = "attach",
-            name = "Debug (Attach) - Remote",
-            hostName = "127.0.0.1",
-            port = 5005,
         },
     }
     dap.configurations.dart = {

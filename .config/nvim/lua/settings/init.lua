@@ -1,7 +1,5 @@
 local settings = {}
-
 local o = vim.opt
-require("impatient").enable_profile()
 
 ------------------------------------------------------------------------
 --                              General                               --

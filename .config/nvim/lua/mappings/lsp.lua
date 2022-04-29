@@ -43,7 +43,7 @@ function lspmap.lsp(bufnr)
                 r = { vim.lsp.buf.remove_workspace_folder, "Remove workspace folder" },
                 l = {
                     function()
-                        print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
+                        vim.pretty_print(vim.lsp.buf.list_workspace_folders())
                     end,
                     "List workspace folder",
                 },

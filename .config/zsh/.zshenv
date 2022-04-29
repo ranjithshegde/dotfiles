@@ -7,11 +7,11 @@
 # CONFIG & PATHS
 export CARGO_HOME="$XDG_DATA_HOME"/cargo
 export CUDA_CACHE_PATH="$XDG_CACHE_HOME"/nv
-export EM_CACHE="$XDG_CACHE_HOME"/emscripten/cache 
-export EM_CONFIG="$XDG_CONFIG_HOME"/emscripten/config 
+export EM_CACHE="$XDG_CACHE_HOME"/emscripten/cache
+export EM_CONFIG="$XDG_CONFIG_HOME"/emscripten/config
 export EM_PORTS="$XDG_DATA_HOME"/emscripten/cache
 export GDBHISTFILE="$XDG_DATA_HOME"/gdb/history
-export GEM_HOME="$XDG_DATA_HOME"/gem 
+export GEM_HOME="$XDG_DATA_HOME"/gem
 export GEM_SPEC_CACHE="$XDG_CACHE_HOME"/gem
 export GNUPGHOME="$XDG_DATA_HOME"/gnupg
 export GOPATH="$XDG_DATA_HOME"/go
@@ -44,19 +44,19 @@ export ZPLUG_HOME="$XDG_DATA_HOME"/zsh/zplug
 export _JAVA_OPTIONS=-Djava.util.prefs.userRoot="$XDG_CONFIG_HOME"/java
 export OPENCV_OPENCL_DEVICE=NVIDIA:GPU:0
 
-
 # CUSTOM PATH ENVS
 export PG_OF_PATH="$HOME"/Documents/ofWorkspace/
 export CWORK="$HOME"/Software/Workspaces/Cpp
 
 # Addition to path...
-appendpath () {
-    case ":$PATH:" in
-        *:"$1":*)
-            ;;
-        *)
-            PATH="${PATH:+$PATH:}$1"
-    esac
+appendpath() {
+	case ":$PATH:" in
+		*:"$1":*) ;;
+
+		*)
+			PATH="${PATH:+$PATH:}$1"
+			;;
+	esac
 }
 
 appendpath '/home/ranjith/.local/bin'

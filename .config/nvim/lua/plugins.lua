@@ -38,15 +38,6 @@ return require("packer").startup {
             { "tpope/vim-fugitive", cmd = { "G", "Git", "Gclog" } },
         }
 
-        -- Coautoring
-        use {
-            "jbyuki/instant.nvim",
-            module_pattern = "instant.*",
-            config = function()
-                vim.g.instant_username = "Ranjith"
-            end,
-        }
-
         -- Comment with TreeSitter
         use {
             "numToStr/Comment.nvim",
@@ -88,27 +79,10 @@ return require("packer").startup {
 
         -- WhichKey
         use {
-            "xiyaowong/which-key.nvim",
+            "folke/which-key.nvim",
             config = function()
                 require("which-key").setup {
-                    layout = {
-                        width = { max = 80 },
-                        { spacing = 10 },
-                    },
-                }
-            end,
-        }
-
-        -- vim Orgmode
-        use {
-            "nvim-orgmode/orgmode",
-            ft = "org",
-            config = function()
-                require("orgmode").setup_ts_grammar()
-                require("orgmode").setup {
-                    org_agenda_files = "~/Documents/Orgs/*",
-                    org_highlight_latex_and_related = "entities",
-                    emacs_config = { config_path = "$XDG_CONFIG_HOME/emacs/init.el" },
+                    layout = { width = { max = 80 }, { spacing = 10 } },
                 }
             end,
         }
@@ -145,6 +119,25 @@ return require("packer").startup {
                 }
             end,
             cmd = { "ColorizerAttachToBuffer", "ColorizerToggle" },
+        }
+
+        -- vim Orgmode
+        use {
+            "nvim-orgmode/orgmode",
+            ft = "org",
+            config = function()
+                require("orgmode").setup_ts_grammar()
+                require("orgmode").setup {
+                    org_agenda_files = {
+                        "~/Documents/Orgs/*",
+                        "~/Documents/Orgs/*/*",
+                        "~/Documents/Orgs/*/*/*",
+                        "~/Documents/Orgs/*/*/*/*",
+                    },
+                    org_highlight_latex_and_related = "entities",
+                    emacs_config = { config_path = "$XDG_CONFIG_HOME/emacs/init.el" },
+                }
+            end,
         }
 
         -- Debugger adapter protocol
@@ -234,25 +227,19 @@ return require("packer").startup {
         --Lsp config and companions
         use {
             { "neovim/nvim-lspconfig", branch = "feat/0_7_goodies" },
+            { "/home/ranjith/Software/Workspaces/Repos/ccls.nvim", after = "vim-ccls" },
             {
-                "m-pilia/vim-ccls",
+                "/home/ranjith/Software/Workspaces/Repos/vim-ccls",
                 ft = { "c", "cpp", "opencl" },
                 config = function()
                     require("lsp.clangd").ccls()
                 end,
             },
             {
-                "max397574/lua-dev.nvim",
+                "folke/lua-dev.nvim",
                 ft = "lua",
                 config = function()
                     require("lsp.sumneko").sumneko()
-                end,
-            },
-            {
-                "mfussenegger/nvim-jdtls",
-                ft = "java",
-                config = function()
-                    require("lsp.jdtls").jdtls()
                 end,
             },
             {

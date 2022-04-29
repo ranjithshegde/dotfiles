@@ -10,6 +10,10 @@ function mappings.init()
     mappings.configFiles()
 
     local opts = { nowait = true }
+    map("n", "<C-;>", ";")
+    map("n", "<C-,>", ",")
+    map("n", "<C-i>", "<C-i>", { desc = "Dont map C-i to Tab" })
+    map({ "n", "i", "s" }, "<BS>", "<BS>", { desc = "Dont map C-h to backspace" })
     --line movement
     map("x", "K", ":move '<-2<CR>gv-gv", { desc = "Move line up" })
     map("x", "J", ":move '>+1<CR>gv-gv", { desc = "Move line down" })

@@ -15,8 +15,10 @@ function servers.sumneko()
             settings = { Lua = { diagnostics = { globals = { "vim", "pd" } } } },
         },
     }
-    luadev.settings.Lua.workspace.library[vim.fn.expand "~/.config/nvim"] = true
-    luadev.settings.Lua.workspace.library["/usr/lib/pd/extra/pdlua"] = true
+    table.insert(luadev.settings.Lua.workspace.library, vim.fn.expand "~/.config/nvim")
+    if vim.b.isPD then
+        table.insert(luadev.settings.Lua.workspace.library, "/usr/lib/pd/extra/pdlua")
+    end
     require("lspconfig").sumneko_lua.setup(luadev)
 end
 

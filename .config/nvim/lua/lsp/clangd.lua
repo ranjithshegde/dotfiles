@@ -60,7 +60,7 @@ function servers.ccls()
 
     local lspconfig = require "lspconfig"
     local ccls = {
-        on_init = require("lsp").cinit,
+        on_attach = require("lsp").cattach,
         filetypes = { "c", "cpp", "objc", "objcpp", "opencl" },
         handlers = {
             ["textDocument/publishDiagnostics"] = nilfunc,

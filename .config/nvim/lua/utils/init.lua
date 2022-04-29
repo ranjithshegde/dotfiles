@@ -216,6 +216,17 @@ utils.autocmd = function()
             end, { buffer = true, desc = "CD directory under cursor" })
         end,
     })
+
+    augroup("NoVim", opts)
+    aucmd("BufRead", {
+        pattern = { "*.png", "*.jpg", "*.pdf", "*.gif", "*.jpeg", "*.svg", "*.odt", "*.doc*", "*.rtf" },
+        group = "NoVim",
+        callback = function()
+            os.execute("xdg-open " .. vim.fn.shellescape(vim.fn.expand "%:p"))
+            vim.api.nvim_buf_delete(vim.api.nvim_get_current_buf(), { force = true })
+            vim.cmd "let &ft = &ft"
+        end,
+    })
 end
 
 ------------------------------------------------------------------------
@@ -263,7 +274,7 @@ end
 -- set browser
 local browser = "qutebrowser"
 function utils.open_in_browser(url)
-    utils.silent_shell(browser .. " " .. url)
+    os.execute(browser .. " " .. url)
 end
 
 ---Concat all lines from a file into a table
@@ -294,14 +305,16 @@ end
 ---@param cmd string Word to search
 function utils.thesaurus(cmd)
     local url = "https://www.thesaurus.com/browse/" .. cmd
-    exec('!qutebrowser "' .. url .. '"')
+    -- exec('!qutebrowser "' .. url .. '"')
+    utils.open_in_browser(url)
 end
 
 ---Open wiktionary for the word online
 ---@param cmd string Word to search
 function utils.dictionary(cmd)
     local url = "https://en.wiktionary.org/wiki/" .. cmd
-    exec('!qutebrowser "' .. url .. '"')
+    -- exec('!qutebrowser "' .. url .. '"')
+    utils.open_in_browser(url)
 end
 
 local transparent = false
@@ -319,6 +332,30 @@ function utils.trans()
         },
     }
     vim.cmd("colo " .. colo)
+end
+
+utils.ranger = function(path, edit_cmd)
+    local cpath = "/tmp/chosenfile"
+    local currentPath = vim.fn.expand(path)
+    local rc = { name = "ranger", edit_cmd = edit_cmd }
+    function rc.on_exit(_, code, _)
+        if not code then
+            vim.api.nvim_buf_delete(0, { force = true })
+        end
+        if io.open(cpath, "r") then
+            for f in io.lines(cpath) do
+                vim.fn.execute(edit_cmd .. f)
+            end
+            os.remove(cpath)
+        end
+    end
+    vim.cmd "enew"
+    if vim.fn.isdirectory(currentPath) then
+        vim.fn.termopen("ranger --choosefiles=" .. cpath .. ' "' .. currentPath .. '"', rc)
+    else
+        vim.fn.termopen("ranger --choosefiles=" .. cpath .. ' --selectfile="' .. currentPath .. '"', rc)
+    end
+    vim.cmd "startinsert"
 end
 
 ------------------------------------------------------------------------

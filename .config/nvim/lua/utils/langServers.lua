@@ -22,16 +22,16 @@ langSettings.lsp_capabilities = function()
 
     local buf_lines = {}
 
-    local function available_capabilities(resolved_capabilities)
+    local function available_capabilities(server_capabilities)
         return vim.tbl_filter(function(key)
-            return resolved_capabilities[key] == true
-        end, vim.tbl_keys(resolved_capabilities))
+            return server_capabilities[key] == true
+        end, vim.tbl_keys(server_capabilities))
     end
 
     local function make_client_info(client)
         return {
             "Client: " .. client.name .. " (id " .. tostring(client.id) .. ")",
-            "resolved: \t" .. table.concat(available_capabilities(client.resolved_capabilities or {}), ", "),
+            "resolved: \t" .. table.concat(available_capabilities(client.server_capabilities or {}), ", "),
             "raw: \t" .. table.concat(vim.tbl_keys(client.server_capabilities or {}), ", "),
         }
     end
@@ -43,7 +43,7 @@ langSettings.lsp_capabilities = function()
 
     vim.api.nvim_buf_set_lines(bufnr, 0, -1, true, buf_lines)
     vim.api.nvim_buf_set_option(bufnr, "modifiable", false)
-    vim.api.nvim_buf_set_option(bufnr, "filetype", "lspcapabilities")
+    vim.api.nvim_buf_set_option(bufnr, "filetype", "lspinfo")
     local configs_pattern = [[\%(]] .. table.concat(langSettings.getClientNames(), [[\|]]) .. [[\)]]
     vim.cmd([[syntax match Title /\%(Client\):.*\zs]] .. configs_pattern .. "/")
     vim.keymap.set("n", "<esc>", "<cmd>bd<CR>", { buffer = bufnr })
@@ -101,99 +101,6 @@ function langSettings.get_line_for_node(node, type_patterns, transform_fn, bufnr
     end
     -- Escape % to avoid statusline to evaluate content as expression
     return line:gsub("%%", "%%%%")
-end
-
-------------------------------------------------------------------------
---                              Chain completion                      --
-------------------------------------------------------------------------
-
-local chainList = {
-    filetype = {
-        glsl = {
-            "<C-x><C-u>",
-        },
-    },
-}
-
-local function pumclose()
-    if vim.fn.pumvisible() == 1 then
-        vim.cmd "pclose"
-    end
-end
-
-local chainIndex = {
-    function()
-        pumclose()
-        local ok, cmp = pcall(require, "cmp")
-        if ok then
-            if vim.api.nvim_buf_get_option(0, "filetype") == "org" then
-                cmp.setup.buffer {
-                    sources = {
-                        { name = "orgmode" },
-                        { name = "luasnip" },
-                    },
-                }
-            else
-                cmp.setup.buffer {
-                    sources = {
-                        { name = "nvim_lsp" },
-                        { name = "luasnip" },
-                    },
-                }
-            end
-            cmp.complete()
-        end
-    end,
-
-    function()
-        pumclose()
-        require("utils").feedkey("<C-x><C-p>", "n")
-    end,
-
-    function()
-        pumclose()
-        local ft = vim.api.nvim_buf_get_option(0, "filetype")
-        if chainList.filetype[ft] then
-            for _, v in pairs(chainList.filetype[ft]) do
-                require("utils").feedkey(v, "n")
-            end
-        else
-            require("utils").feedkey("<C-x><C-n>", "n")
-        end
-    end,
-
-    function()
-        pumclose()
-        local ok, cmp = pcall(require, "cmp")
-        if ok then
-            cmp.setup.buffer {
-                sources = {
-                    { name = "path" },
-                },
-            }
-            cmp.complete()
-        end
-    end,
-}
-
-langSettings.index = 1
-
-langSettings.next = function()
-    if langSettings.index ~= #chainIndex then
-        langSettings.index = langSettings.index + 1
-    else
-        langSettings.index = 1
-    end
-    return chainIndex[langSettings.index]()
-end
-
-langSettings.prev = function()
-    if langSettings.index ~= 1 then
-        langSettings.index = langSettings.index - 1
-    else
-        langSettings.index = #chainIndex
-    end
-    return chainIndex[langSettings.index]()
 end
 
 return langSettings

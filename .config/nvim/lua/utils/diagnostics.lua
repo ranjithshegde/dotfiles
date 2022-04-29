@@ -385,9 +385,9 @@ end
 
 function Diagnostics.dump(client)
     if not client then
-        print(vim.inspect(current_diagnostics))
+        vim.pretty_print(current_diagnostics)
     end
-    print(vim.inspect(current_diagnostics[client]))
+    vim.pretty_print(current_diagnostics[client])
 end
 
 return Diagnostics

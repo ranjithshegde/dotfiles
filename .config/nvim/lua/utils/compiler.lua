@@ -1,29 +1,37 @@
 local Compiler = {}
 local exec = vim.api.nvim_command
 
+local function isFile(file)
+    if vim.loop.fs_stat(file) ~= nil then
+        return true
+    else
+        return false
+    end
+end
+
 ------------------------------------------------------------------------
 --                                Env Setup	                          --
 ------------------------------------------------------------------------
 
 -- Set C environment based on type [with makefile, microcontroller, cmake project or plain c]
 function Compiler.set_ctype()
-    if Compiler.has_Cmake() then
+    if isFile "CMakeLists.txt" then
         require("mappings.clang").cmake()
         vim.opt.makeprg = "make"
         vim.g.makeFile = "CMakeLists.txt"
         vim.g.debugBin = "build/" .. vim.fn.fnamemodify(vim.fn.getcwd(), ":t")
         vim.g.cmakeBin = "./build/" .. vim.fn.fnamemodify(vim.fn.getcwd(), ":t")
         vim.g.cfiles = "src/* include/*"
-    elseif Compiler.has_makefile() then
+    elseif isFile "Makefile" then
         require("mappings.clang").makeC()
         vim.g.makeFile = "Makefile"
         vim.g.debugBin = "bin/" .. vim.fn.fnamemodify(vim.fn.getcwd(), ":t") .. "_debug"
         vim.g.cfiles = "src/*"
-    elseif Compiler.has_pio_file() then
+    elseif isFile "platformio.ini" then
         vim.opt.makeprg = "pio run"
         require("mappings.clang").micro()
         vim.g.makeFile = "platformio.ini"
-    elseif Compiler.has_gradle() then
+    elseif isFile "build.gradle" then
         require("mappings.clang").makeGradle()
         vim.g.makeFile = "build.gradle"
         vim.opt.makeprg = "./gradlew"
@@ -37,7 +45,7 @@ function Compiler.set_ctype()
 end
 
 function Compiler.set_type()
-    if Compiler.has_makefile() then
+    if isFile "Makefile" then
         require("mappings.clang").pdc()
     else
         vim.opt.makeprg = "gcc"
@@ -89,29 +97,6 @@ end
 function Compiler.glRef(cmd)
     local url = "https://docs.gl/gl4/" .. cmd
     exec('!qutebrowser "' .. url .. '" &')
-end
--- check if project has a Makefile
-function Compiler.has_makefile()
-    local name = "Makefile"
-    local f = io.open(name, "r")
-    if f ~= nil then
-        io.close(f)
-        return true
-    else
-        return false
-    end
-end
-
--- Check of its ofAndroid project
-function Compiler.has_gradle()
-    local name = "build.gradle"
-    local f = io.open(name, "r")
-    if f ~= nil then
-        io.close(f)
-        return true
-    else
-        return false
-    end
 end
 
 function Compiler.has_pd()
@@ -200,18 +185,6 @@ end
 vim.g.extra_cmake_flags = "-DCMAKE_EXPORT_COMPILE_COMMANDS=ON"
 vim.g.cmake_build_dir = "build"
 vim.g.compiledb = "ln -s build/compile_commands.json ."
-
--- check if project has a CMakefile
-function Compiler.has_Cmake()
-    local name = "CMakeLists.txt"
-    local f = io.open(name, "r")
-    if f ~= nil then
-        io.close(f)
-        return true
-    else
-        return false
-    end
-end
 
 -- Cmake generate
 function Compiler.cmake_gen()
@@ -380,7 +353,7 @@ end
 
 function Compiler.ardRef(cmd)
     local url = "https://search.arduino.cc/search?tab=reference&q=" .. cmd
-    exec('!qutebrowser "' .. url .. '" &')
+    require("utils").open_in_browser(url)
 end
 
 return Compiler

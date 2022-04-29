@@ -53,7 +53,10 @@ function M.show_preview()
     ---The width of offset of a window, occupied by line number column,
     ---fold column and sign column.
 
-    ffi.cdef "int curwin_col_off(void);"
+    ffi.cdef [[
+    int curwin_col_off(void);
+    ]]
+
     local gutter_width = ffi.C.curwin_col_off()
 
     ---The number of columns from the left boundary of the preview window to the

@@ -6,10 +6,6 @@ local completion = {}
 
 function completion.init()
     local cmp = require "cmp"
-    local has_words_before = function()
-        local line, col = unpack(vim.api.nvim_win_get_cursor(0))
-        return col ~= 0 and vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match "%s" == nil
-    end
     local luasnip = require "luasnip"
 
     cmp.setup {
@@ -19,31 +15,41 @@ function completion.init()
             end,
         },
         mapping = cmp.mapping.preset.insert {
-            ["<C-k>"] = cmp.mapping(function()
-                require("utils.langServers").next()
-            end, { "i", "s" }),
-            ["<C-j>"] = cmp.mapping(function()
-                require("utils.langServers").prev()
-            end, { "i", "s" }),
-            ["<C-p>"] = cmp.mapping.select_prev_item(),
-            ["<C-n>"] = cmp.mapping.select_next_item(),
             ["<C-b>"] = cmp.mapping.scroll_docs(-4),
             ["<C-f>"] = cmp.mapping.scroll_docs(4),
             ["<C-o>"] = cmp.mapping.complete(),
             ["<C-e>"] = cmp.mapping.close(),
-            ["<CR>"] = cmp.mapping.confirm { select = true },
-            ["<C-l>"] = cmp.mapping(function(fallback)
+            ["<CR>"] = cmp.mapping.confirm { select = false },
+            ["<C-k>"] = cmp.mapping(function()
+                require("utils").feedkey("<C-x><C-k>", "n")
+            end, { "i", "s" }),
+            ["<C-h>"] = cmp.mapping(function(_)
+                if luasnip.jumpable(-1) then
+                    luasnip.jump(-1)
+                end
+            end, { "i", "s" }),
+            ["<C-l>"] = cmp.mapping(function(_)
                 if luasnip.expand_or_jumpable() then
                     luasnip.expand_or_jump()
-                elseif has_words_before() then
-                    cmp.complete()
+                end
+            end, { "i", "s" }),
+            ["<C-j>"] = cmp.mapping(function(fallback)
+                if luasnip.choice_active() then
+                    luasnip.change_choice(1)
                 else
                     fallback()
                 end
             end, { "i", "s" }),
-            ["<C-h>"] = cmp.mapping(function(fallback)
-                if luasnip.jumpable(-1) then
-                    luasnip.jump(-1)
+            ["<C-p>"] = cmp.mapping(function(fallback)
+                if cmp.visible() then
+                    cmp.select_prev_item()
+                else
+                    fallback()
+                end
+            end, { "i", "s" }),
+            ["<C-n>"] = cmp.mapping(function(fallback)
+                if cmp.visible() then
+                    cmp.select_next_item()
                 else
                     fallback()
                 end
@@ -52,6 +58,8 @@ function completion.init()
         sources = cmp.config.sources({
             { name = "nvim_lsp" },
             { name = "luasnip" },
+            { name = "orgmode" },
+            { name = "path" },
         }, {
             {
                 name = "buffer",
@@ -61,8 +69,6 @@ function completion.init()
                     end,
                 },
             },
-        }, {
-            { name = "orgmode" },
         }),
         formatting = {
             format = function(entry, vim_item)
@@ -89,7 +95,6 @@ function completion.init()
                 border = "double",
             },
         },
-        -- experimental = { ghost_text = false },
     }
     require("luasnip.loaders.from_vscode").lazy_load()
 
@@ -108,13 +113,14 @@ end
 
 function completion.pairs()
     local npairs = require "nvim-autopairs"
+    npairs.setup { check_ts = true }
+
     local Rule = require "nvim-autopairs.rule"
     local ts_conds = require "nvim-autopairs.ts-conds"
-    npairs.setup()
     npairs.add_rules {
         Rule("|", "|", "supercollider"),
-        Rule("{", "},", "lua"):with_pair(ts_conds.is_ts_node { "table_constructor" }),
-        Rule('"', '",', "lua"):with_pair(ts_conds.is_ts_node { "table_constructor" }),
+        Rule("{", "},", "lua"):with_pair(ts_conds.is_ts_node "table_constructor"),
+        Rule('"', '",', "lua"):with_pair(ts_conds.is_ts_node "table_constructor"),
     }
 
     require("cmp").event:on(
@@ -126,14 +132,24 @@ end
 function completion.luasnip()
     vim.api.nvim_create_autocmd("InsertEnter", {
         pattern = "*.scd, *.sc, *.sc_help, *.quark",
-        -- vim.api.nvim_create_autocmd("FileType", {
-        --     pattern = "supercollider",
         group = "LspSettings",
         callback = function()
             require("luasnip").add_snippets("supercollider", require("scnvim/utils").get_snippets())
         end,
         once = true,
     })
+    local types = require "luasnip.util.types"
+    require("luasnip").config.set_config {
+        history = true,
+        updateevents = "TextChanged, TextChangedI",
+        ext_opts = {
+            [types.choiceNode] = {
+                active = {
+                    virt_text = { { "✿" } },
+                },
+            },
+        },
+    }
 end
 
 return completion
