@@ -9,13 +9,6 @@ local current_diagnostics = {}
 
 local TABLE = { "underline", "virtual_text", "signs", "update_in_insert" }
 
-local highlights = {
-    error = "",
-    warn = "",
-    info = "",
-    hint = "",
-}
-
 local function signs()
     vim.fn.sign_define("DiagnosticSignError", { text = "", texthl = "DiagnosticSignError" })
     vim.fn.sign_define("DiagnosticSignWarn", { text = "", texthl = "DiagnosticSignWarn" })
@@ -115,55 +108,6 @@ local function configure(settings, client)
 end
 
 local Diagnostics = {}
-
-------------------------------------------------------------------------
---                              Diagnostic format                     --
-------------------------------------------------------------------------
-
-Diagnostics.sethl = function(error, warn, hint, info)
-    if error then
-        highlights.error = "%#" .. error .. "#"
-    end
-
-    if warn then
-        highlights.warn = "%#" .. warn .. "#"
-    end
-
-    if info then
-        highlights.info = "%#" .. info .. "#"
-    end
-
-    if hint then
-        highlights.hint = "%#" .. hint .. "#"
-    end
-end
-
-Diagnostics.formatter = function(_, _, counts)
-    if not vim.b.hasLsp then
-        return ""
-    end
-    local items = {}
-    if counts.errors > 0 then
-        table.insert(items, string.format("%s %s", highlights.error, counts.errors))
-    end
-
-    if counts.warnings > 0 then
-        table.insert(items, string.format("%s %s", highlights.warn, counts.warnings))
-    end
-
-    if counts.infos > 0 then
-        table.insert(items, string.format("%s  %s", highlights.info, counts.infos))
-    end
-
-    if counts.hints > 0 then
-        table.insert(items, string.format("%s  %s", highlights.hint, counts.hints))
-    end
-
-    if vim.tbl_isempty(items) then
-        return " "
-    end
-    return table.concat(items, " ") .. " %##"
-end
 
 ------------------------------------------------------------------------
 --                              Diagnostic Toggle                     --

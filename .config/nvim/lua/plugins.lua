@@ -227,9 +227,8 @@ return require("packer").startup {
         --Lsp config and companions
         use {
             { "neovim/nvim-lspconfig", branch = "feat/0_7_goodies" },
-            { "/home/ranjith/Software/Workspaces/Repos/ccls.nvim", after = "vim-ccls" },
             {
-                "/home/ranjith/Software/Workspaces/Repos/vim-ccls",
+                "m-pilia/vim-ccls",
                 ft = { "c", "cpp", "opencl" },
                 config = function()
                     require("lsp.clangd").ccls()

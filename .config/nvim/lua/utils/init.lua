@@ -1,8 +1,6 @@
-local utils = {}
 local exec = vim.api.nvim_command
-local aucmd = vim.api.nvim_create_autocmd
-local augroup = vim.api.nvim_create_augroup
 local auexec = vim.api.nvim_exec_autocmds
+local utils = {}
 
 ------------------------------------------------------------------------
 --                              Vim options                           --
@@ -36,200 +34,6 @@ function utils.Restart()
 end
 
 ------------------------------------------------------------------------
---                              AutoCommands                          --
-------------------------------------------------------------------------
-
-utils.autocmd = function()
-    local opts = { clear = true }
-
-    -- ************** Format handling  ---------------------------------------
-
-    augroup("FormatOptions", opts)
-    aucmd("FileType", {
-        group = "FormatOptions",
-        callback = function()
-            vim.opt.formatoptions = vim.opt.formatoptions
-                - "a" -- Dont format pasted code
-                - "t" -- Delegate to linter prgs/LSP
-                - "o" -- O and o don't continue comments
-                - "r" -- Return does not continue comments
-                + "c" -- comments respect textwidth
-                + "q" -- Allow formatting comments w/ gq
-                + "n" -- Recognize numbered lists
-                + "j" -- Auto-remove comments if possible.
-                + "2" -- Indent according to 2nd line
-        end,
-    })
-
-    aucmd({ "InsertEnter", "WinLeave", "FocusLost", "BufNewFile", "BufReadPost" }, {
-        group = "FormatOptions",
-        callback = function()
-            if vim.tbl_contains(require("utils.tables").ignoreFiles, vim.api.nvim_buf_get_option(0, "filetype")) then
-                return
-            end
-            vim.opt.relativenumber = false
-        end,
-    })
-    aucmd({ "InsertLeave", "WinEnter", "FocusGained" }, {
-        group = "FormatOptions",
-        callback = function()
-            if vim.tbl_contains(require("utils.tables").ignoreFiles, vim.api.nvim_buf_get_option(0, "filetype")) then
-                return
-            end
-            vim.opt.relativenumber = true
-        end,
-    })
-    aucmd("FileType", {
-        group = "FormatOptions",
-        callback = function()
-            if vim.tbl_contains(require("utils.tables").ignoreFiles, vim.api.nvim_buf_get_option(0, "filetype")) then
-                vim.opt_local.foldenable = false
-            end
-        end,
-    })
-
-    -- ************** Lsp Configuration loading  ------------------------------
-
-    augroup("LspSettings", opts)
-    aucmd("FileType", {
-        group = "LspSettings",
-        pattern = "vim",
-        callback = function()
-            vim.keymap.set("n", ",K", function()
-                vim.fn.execute("h " .. vim.fn.expand "<cword>")
-            end, { buffer = true, desc = "Help instead of hover" })
-            vim.keymap.set("n", "<F6>", function()
-                vim.cmd "w | source %"
-            end, { buffer = true, desc = "evaluate current file" })
-        end,
-    })
-    aucmd("FileType", {
-        group = "LspSettings",
-        pattern = require("utils.tables").lspfiles,
-        callback = function()
-            require("lsp").settings()
-            require("lsp").servers()
-            require("lsp").lintFormat()
-            auexec("FileType", { group = "lspconfig" })
-        end,
-        once = true,
-    })
-    aucmd("FileType", {
-        group = "LspSettings",
-        pattern = "opencl",
-        callback = function()
-            require("mappings.clang").clang()
-        end,
-    })
-    -- ************** Treesitter --------------------------------------
-    augroup("TreeSitter", opts)
-    aucmd("BufReadPost", {
-        group = "TreeSitter",
-        callback = function()
-            require "mappings.treesitter"
-        end,
-    })
-
-    -- ************** Compilers and REPL  ------------------------------
-    augroup("MakeDispatch", opts)
-    aucmd("FileType", {
-        group = "MakeDispatch",
-        pattern = { "java", "lua", "python", "javascript" },
-        nested = true,
-        callback = function()
-            vim.keymap.set("n", "<F5>", function()
-                vim.cmd "w | redraw"
-                vim.cmd "Dispatch"
-            end, { buffer = true, desc = "Call native compile Dispatch command" })
-
-            vim.keymap.set({ "n", "t" }, "<F10>", function()
-                vim.cmd "stopinsert"
-                require("utils").toggleTerm(vim.g.repl, "repl", 0)
-            end, { desc = "Toggle REPL" })
-        end,
-    })
-    aucmd("BufWritePost", {
-        group = "MakeDispatch",
-        pattern = { "*.glsl", "*.vert", "*.frag", "*.geom", "*.vs", "*.fs", "*.gs" },
-        command = "Dispatch glslangValidator %",
-    })
-
-    -- Compile packer after writing plugins.lua
-    augroup("PluginLoad", opts)
-    aucmd("BufWritePost", {
-        group = "PluginLoad",
-        pattern = "plugins.lua",
-        callback = function()
-            exec "source <afile>"
-            require("packer").compile()
-        end,
-    })
-    aucmd("BufReadPost", { group = "PluginLoad", command = "packadd matchit", once = true })
-    aucmd("User", { pattern = "PackerComplete", group = "PluginLoad", command = "LuaCacheClear" })
-
-    -- ************************ Terminal management --------------------
-
-    augroup("TermInsertModes", opts)
-    aucmd(
-        { "BufEnter", "BufWinEnter", "TermOpen" },
-        { group = "TermInsertModes", pattern = { "term://*", "shell" }, command = "startinsert" }
-    )
-    aucmd("TermEnter", { group = "TermInsertModes", command = "startinsert" })
-    aucmd("TermEnter", {
-        group = "TermInsertModes",
-        callback = function()
-            local fs = vim.fn.expand "%"
-            if fs:match "ranger" then
-                vim.keymap.set("t", "<S-Esc>", "<C-\\><C-n>", { buffer = true, desc = "Escape Insert" })
-            else
-                vim.keymap.set("t", "<Esc>", "<C-\\><C-n>", { buffer = true, desc = "Escape Insert" })
-            end
-        end,
-    })
-    aucmd("TermClose", {
-        group = "TermInsertModes",
-        callback = function()
-            vim.api.nvim_input "<CR>"
-        end,
-    })
-
-    augroup("ProjectDrawer", opts)
-    aucmd("WinEnter", {
-        group = "ProjectDrawer",
-        callback = function()
-            if
-                vim.fn.winnr "$" == 1
-                and vim.api.nvim_buf_get_option(vim.fn.winbufnr(vim.fn.winnr()), "filetype") == "netrw"
-            then
-                vim.cmd "q"
-            end
-        end,
-    })
-    aucmd("FileType", {
-        pattern = "netrw",
-        group = "ProjectDrawer",
-        callback = function()
-            vim.opt_local.fillchars:append "vert:║"
-            vim.keymap.set("n", "cd", function()
-                exec("cd " .. vim.b.netrw_curdir)
-                exec "pwd"
-            end, { buffer = true, desc = "CD directory under cursor" })
-        end,
-    })
-
-    augroup("NoVim", opts)
-    aucmd("BufRead", {
-        pattern = { "*.png", "*.jpg", "*.pdf", "*.gif", "*.jpeg", "*.svg", "*.odt", "*.doc*", "*.rtf" },
-        group = "NoVim",
-        callback = function()
-            os.execute("xdg-open " .. vim.fn.shellescape(vim.fn.expand "%:p"))
-            vim.api.nvim_buf_delete(vim.api.nvim_get_current_buf(), { force = true })
-            vim.cmd "let &ft = &ft"
-        end,
-    })
-end
-
-------------------------------------------------------------------------
 --                              Terminal                              --
 ------------------------------------------------------------------------
 
@@ -245,26 +49,46 @@ end
 function utils.toggleTerm(cmd, name, spl)
     local win = vim.fn.bufwinnr(name)
     local buf = vim.fn.bufexists(name)
+    local split = spl and "belowright vnew" or "belowright new"
     if win > 0 then
         exec(win .. " wincmd c")
     elseif buf > 0 then
-        if spl > 0 then
-            exec "belowright vnew"
-        else
-            exec "belowright new"
-        end
+        exec(split)
         exec("buffer " .. name)
         exec "startinsert"
     else
-        if spl > 0 then
-            exec "belowright vnew"
-        else
-            exec "belowright new"
-        end
+        exec(split)
         vim.fn.termopen(cmd)
         exec "startinsert"
         exec("f " .. name)
     end
+end
+
+---Use ranger as file picker
+---@param path string Patht open ranger from
+---@param edit_cmd string Ranger window position - e: open over current buffer - vs: Vertical split - tab drop: in new or existing tab window
+utils.ranger = function(path, edit_cmd)
+    local cpath = "/tmp/chosenfile"
+    local currentPath = vim.fn.expand(path)
+    local rc = { name = "ranger", edit_cmd = edit_cmd }
+    function rc.on_exit(_, code, _)
+        if not code then
+            vim.api.nvim_buf_delete(0, { force = true })
+        end
+        if io.open(cpath, "r") then
+            for f in io.lines(cpath) do
+                vim.fn.execute(edit_cmd .. f)
+            end
+            os.remove(cpath)
+        end
+    end
+    vim.cmd "enew"
+    if vim.fn.isdirectory(currentPath) then
+        vim.fn.termopen("ranger --choosefiles=" .. cpath .. ' "' .. currentPath .. '"', rc)
+    else
+        vim.fn.termopen("ranger --choosefiles=" .. cpath .. ' --selectfile="' .. currentPath .. '"', rc)
+    end
+    vim.cmd "startinsert"
 end
 
 ------------------------------------------------------------------------
@@ -305,7 +129,6 @@ end
 ---@param cmd string Word to search
 function utils.thesaurus(cmd)
     local url = "https://www.thesaurus.com/browse/" .. cmd
-    -- exec('!qutebrowser "' .. url .. '"')
     utils.open_in_browser(url)
 end
 
@@ -313,7 +136,6 @@ end
 ---@param cmd string Word to search
 function utils.dictionary(cmd)
     local url = "https://en.wiktionary.org/wiki/" .. cmd
-    -- exec('!qutebrowser "' .. url .. '"')
     utils.open_in_browser(url)
 end
 
@@ -332,70 +154,6 @@ function utils.trans()
         },
     }
     vim.cmd("colo " .. colo)
-end
-
-utils.ranger = function(path, edit_cmd)
-    local cpath = "/tmp/chosenfile"
-    local currentPath = vim.fn.expand(path)
-    local rc = { name = "ranger", edit_cmd = edit_cmd }
-    function rc.on_exit(_, code, _)
-        if not code then
-            vim.api.nvim_buf_delete(0, { force = true })
-        end
-        if io.open(cpath, "r") then
-            for f in io.lines(cpath) do
-                vim.fn.execute(edit_cmd .. f)
-            end
-            os.remove(cpath)
-        end
-    end
-    vim.cmd "enew"
-    if vim.fn.isdirectory(currentPath) then
-        vim.fn.termopen("ranger --choosefiles=" .. cpath .. ' "' .. currentPath .. '"', rc)
-    else
-        vim.fn.termopen("ranger --choosefiles=" .. cpath .. ' --selectfile="' .. currentPath .. '"', rc)
-    end
-    vim.cmd "startinsert"
-end
-
-------------------------------------------------------------------------
---                          User commands                             --
-------------------------------------------------------------------------
-
-function utils.commands()
-    require("mappings.lsp").diagnostic()
-    local cmd = vim.api.nvim_create_user_command
-    local complete = function()
-        return require("utils.langServers").getClientNames()
-    end
-
-    cmd("ToggleVirtual", function(opts)
-        require("utils.diagnostics").toggle_virtual_text(opts.args)
-    end, { nargs = 1, complete = complete })
-
-    cmd("ToggleSigns", function(opts)
-        require("utils.diagnostics").toggle_signs(opts.args)
-    end, { nargs = 1, complete = complete })
-
-    cmd("ToggleUnderline", function(opts)
-        require("utils.diagnostics").toggle_underline(opts.args)
-    end, { nargs = 1, complete = complete })
-
-    cmd("ToggleAllDiagnostics", function(opts)
-        require("utils.diagnostics").toggle_all_diagnostics(opts.args)
-    end, { nargs = 1, complete = complete })
-
-    cmd("DisableDiagnostics", function(opts)
-        require("utils.diagnostics").turn_off_diagnostics(opts.args)
-    end, { nargs = 1, complete = complete })
-
-    cmd("EnableDiagnostics", function(opts)
-        require("utils.diagnostics").turn_on_diagnostics(opts.args)
-    end, { nargs = 1, complete = complete })
-
-    cmd("DefaultDiagnostics", function(opts)
-        require("utils.diagnostics").turn_on_diagnostics_default(opts.args)
-    end, { nargs = 1, complete = complete })
 end
 
 return utils

@@ -33,6 +33,17 @@ tables.lspfiles = {
     "yaml",
 }
 
+tables.projectTypes = {
+    "cpp",
+    "dart",
+    "electronics",
+    "lua",
+    "js",
+    "python",
+    "supercollider",
+    "website",
+}
+
 ---Filetypes that are read-only
 tables.ignoreFiles = {
     "qf",
@@ -45,6 +56,22 @@ tables.ignoreFiles = {
     "lspinfo",
     "checkhealth",
     "",
+}
+
+tables.ignore_binaries = {
+    "%.jpeg",
+    "%.MOV",
+    "%.mov",
+    "%.mp4",
+    "%.wav",
+    "%.WAV",
+    "%.mkv",
+    "%.gif",
+    "%.mp3",
+    "%.m4a",
+    "%.png",
+    "%.jpg",
+    "%.au",
 }
 
 ------------------------------------------------------------------------
@@ -163,6 +190,11 @@ tables.tsNodes = {
 --                              Properties                            --
 ------------------------------------------------------------------------
 
+------------------------------------------------------------------------
+--                              Plugin lists                          --
+------------------------------------------------------------------------
+
+--- CUrrent context for indent blankline
 tables.indentContext = {
     "^for",
     "^case",
@@ -186,6 +218,59 @@ tables.indentContext = {
     "access_specifier",
     "import_statement",
     "jsx_self_closing_element",
+}
+
+--- disable builtin vim plugins
+tables.disabled_builtins = {
+    "fzf",
+    "tar",
+    "zip",
+    "gzip",
+    "zipPlugin",
+    "tarPlugin",
+    "vimball",
+    "vimballPlugin",
+    "shada",
+    "logipat",
+    "rrhelper",
+    "compiler",
+    "bugreport",
+    "ftplugin",
+    "getscript",
+    "getscriptPlugin",
+    "2html_plugin",
+    "spellfile_plugin",
+    "netrwFileHandlers",
+}
+
+--- TreeSitter parsers to keep installed
+tables.ts_parsers = {
+    "bash",
+    "bibtex",
+    "cmake",
+    "cpp",
+    "comment",
+    "css",
+    "dart",
+    "glsl",
+    "help",
+    "html",
+    "java",
+    "javascript",
+    "json",
+    "latex",
+    "lua",
+    "make",
+    "markdown",
+    "python",
+    "query",
+    "regex",
+    "scheme",
+    "supercollider",
+    "toml",
+    "vim",
+    "yaml",
+    "org",
 }
 
 return tables

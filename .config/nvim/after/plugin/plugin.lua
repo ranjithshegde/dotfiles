@@ -2,7 +2,7 @@
 local cmd = vim.api.nvim_create_user_command
 
 cmd("CScratch", function()
-    require("utils.compiler").Cscratch()
+    require "utils.scratchpad" "cpp"
 end, {})
 
 cmd("Cproject", function()
@@ -21,8 +21,14 @@ cmd("ToggleTransparency", function()
     require("utils").trans()
 end, {})
 
-cmd("Gram", "call util#WordProcessor()", {})
-cmd("Cam", "call util#CamelCase()", {})
+cmd("Gram", function()
+    require("utils.autoload").WordProcessor()
+end, {})
+
+cmd("Cam", function()
+    require("utils.autoload").CamelCase()
+end, {})
+
 cmd("Su", "w !sudo tee %", {})
 
 -- ******************* Plugin mappings --------------------------------------------

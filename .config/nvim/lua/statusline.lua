@@ -150,7 +150,7 @@ local function git_changes(_, _)
 end
 
 --*********************************** Lsp status  -----------------------
-local diagnostics = require("el.diagnostic").make_buffer(require("utils.diagnostics").formatter)
+local diagnostics = require("el.diagnostic").make_buffer(require("utils.diagnostics.format").formatter)
 
 local tsNodes = require("utils.tables").tsNodes
 local function gps(_, buffer)
@@ -169,7 +169,7 @@ end
 --*********************************** Status config ---------------------
 Statusline.el = function()
     require("el").reset_windows()
-    require("utils.diagnostics").sethl("DiagnosticError", "DiagnosticWarn", "DiagnosticHint", "DiagnosticInfo")
+    require("utils.diagnostics.format").sethl("DiagnosticError", "DiagnosticWarn", "DiagnosticHint", "DiagnosticInfo")
     require("el").setup {
         generator = function(_, _)
             return {

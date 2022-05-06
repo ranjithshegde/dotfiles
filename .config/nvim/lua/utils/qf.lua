@@ -1,6 +1,6 @@
 local qf = {}
 
-function qf.tablelength(T)
+local function tablelength(T)
     local count = 0
     for _ in pairs(T) do
         count = count + 1
@@ -10,7 +10,7 @@ end
 
 -- 'q': find the quickfix window
 -- 'l': find all loclist windows
-function qf.find_qf(type)
+local function find_qf(type)
     local wininfo = vim.fn.getwininfo()
     local win_tbl = {}
     for _, win in pairs(wininfo) do
@@ -30,7 +30,7 @@ function qf.find_qf(type)
 end
 
 -- open quickfix if not empty
-function qf.open_qf()
+local function open_qf()
     local qf_name = "quickfix"
     local qf_empty = function()
         return vim.tbl_isempty(vim.fn.getqflist())
@@ -45,7 +45,7 @@ end
 
 -- enum all non-qf windows and open
 -- loclist on all windows where not empty
-function qf.open_loclist_all()
+local function open_loclist_all()
     local wininfo = vim.fn.getwininfo()
     local qf_name = "loclist"
     local qf_empty = function(winnr)
@@ -68,8 +68,8 @@ end
 -- type='l': loclist toggle (all windows)
 -- map to ":lua require'utils'.toggle_qf('l')"
 function qf.toggle_qf(type)
-    local windows = qf.find_qf(type)
-    if qf.tablelength(windows) > 0 then
+    local windows = find_qf(type)
+    if tablelength(windows) > 0 then
         -- hide all visible windows
         for _, win in pairs(windows) do
             vim.api.nvim_win_hide(win.winid)
@@ -77,11 +77,35 @@ function qf.toggle_qf(type)
     else
         -- no windows are visible, attempt to open
         if type == "l" then
-            qf.open_loclist_all()
+            open_loclist_all()
         else
-            qf.open_qf()
+            open_qf()
         end
     end
+end
+
+function qf.delete(bufnr)
+    bufnr = bufnr or vim.api.nvim_get_current_buf()
+    local qfl = vim.fn.getqflist()
+    local line = unpack(vim.api.nvim_win_get_cursor(0))
+
+    local mode = vim.api.nvim_get_mode().mode
+    if mode == "v" or mode == "V" then
+        local startline = unpack(vim.api.nvim_buf_get_mark(0, "<"))
+        local endline = unpack(vim.api.nvim_buf_get_mark(0, ">"))
+        local result = {}
+        for i, item in ipairs(qfl) do
+            if i < startline or i > endline then
+                table.insert(result, item)
+            end
+        end
+        qfl = result
+    else
+        table.remove(qfl, line)
+    end
+
+    vim.fn.setqflist({}, "r", { items = qfl })
+    vim.fn.setpos(".", { bufnr, line, 1, 0 })
 end
 
 return qf

@@ -44,6 +44,39 @@ local bufferPicker = {
     },
 }
 
+local function navigate(prompt_bufnr, maps, cwd, files)
+    local change_dir = function(window)
+        local wd = require("telescope.actions.state").get_selected_entry().value
+        require("telescope.actions.set").select(prompt_bufnr, window)
+        if files then
+            vim.fn.execute("tcd " .. cwd)
+        end
+        if not require("plenary.path"):new(wd):is_dir() then
+            local dir = vim.fn.fnamemodify(wd, ":p:h")
+            vim.fn.execute("tcd " .. dir)
+        end
+    end
+    maps("n", "<CR>", function()
+        change_dir "default"
+    end)
+    maps("i", "<CR>", function()
+        change_dir "default"
+    end)
+    maps("n", "<C-v>", function()
+        change_dir "vertical"
+    end)
+    maps("i", "<C-v>", function()
+        change_dir "vertical"
+    end)
+    maps("n", "<C-t>", function()
+        change_dir "tab"
+    end)
+    maps("i", "<C-t>", function()
+        change_dir "tab"
+    end)
+    return true
+end
+
 ------------------------------------------------------------------------
 --                       Telescope 									  --
 ------------------------------------------------------------------------
@@ -56,33 +89,7 @@ function telescope.cdBrowser(prompt, cwd)
             prompt_title = prompt,
             cwd = cwd,
             attach_mappings = function(prompt_bufnr, maps)
-                local change_dir = function(window)
-                    local wd = require("telescope.actions.state").get_selected_entry().value
-                    require("telescope.actions.set").select(prompt_bufnr, window)
-                    if not require("plenary.path"):new(wd):is_dir() then
-                        local dir = vim.fn.fnamemodify(wd, ":p:h")
-                        vim.fn.execute("tcd " .. dir)
-                    end
-                end
-                maps("n", "<CR>", function()
-                    change_dir "default"
-                end)
-                maps("i", "<CR>", function()
-                    change_dir "default"
-                end)
-                maps("n", "<C-v>", function()
-                    change_dir "vertical"
-                end)
-                maps("i", "<C-v>", function()
-                    change_dir "vertical"
-                end)
-                maps("n", "<C-t>", function()
-                    change_dir "tab"
-                end)
-                maps("i", "<C-t>", function()
-                    change_dir "tab"
-                end)
-                return true
+                return navigate(prompt_bufnr, maps, cwd, false)
             end,
         }
     end
@@ -94,32 +101,7 @@ function telescope.cdFiles(prompt, cwd)
             prompt_title = prompt,
             cwd = cwd,
             attach_mappings = function(prompt_bufnr, maps)
-                local change_dir = function(window)
-                    local wd = require("telescope.actions.state").get_selected_entry().value
-                    require("telescope.actions.set").select(prompt_bufnr, window)
-                    vim.fn.execute("tcd " .. cwd)
-                    local dir = vim.fn.fnamemodify(wd, ":p:h")
-                    vim.fn.execute("tcd " .. dir)
-                end
-                maps("n", "<CR>", function()
-                    change_dir "default"
-                end)
-                maps("i", "<CR>", function()
-                    change_dir "default"
-                end)
-                maps("n", "<C-v>", function()
-                    change_dir "vertical"
-                end)
-                maps("i", "<C-v>", function()
-                    change_dir "vertical"
-                end)
-                maps("n", "<C-t>", function()
-                    change_dir "tab"
-                end)
-                maps("i", "<C-t>", function()
-                    change_dir "tab"
-                end)
-                return true
+                return navigate(prompt_bufnr, maps, cwd, true)
             end,
         }
     end
@@ -135,6 +117,7 @@ function telescope.telescope()
             oldfiles = { attach_mappings = foldMaps },
             buffers = bufferPicker,
         },
+
         defaults = {
             vimgrep_arguments = {
                 "rg",
@@ -148,18 +131,7 @@ function telescope.telescope()
             },
             prompt_prefix = "❯ ",
             selection_caret = "❯ ",
-            file_ignore_patterns = {
-                "%.MOV",
-                "%.mov",
-                "%.mp4",
-                "%.wav",
-                "%.WAV",
-                "%.mkv",
-                "%.gif",
-                "%.mp3",
-                "%.m4a",
-                "%.au",
-            },
+            file_ignore_patterns = require("utils.tables").ignore_binaries,
         },
     }
 end

@@ -47,20 +47,8 @@ end
 --                              Lua                                   --
 ------------------------------------------------------------------------
 
-local scratch = vim.env.HOME .. "/Software/Workspaces/lua/Scratch/"
-
-local function openScratch()
-    vim.cmd("lcd " .. scratch)
-    vim.ui.input({ prompt = "Enter  filename: ", completion = "file" }, function(input)
-        vim.cmd("e " .. input)
-    end)
-end
-
 function ftmaps.lua()
     vim.keymap.set("n", "<F6>", "<cmd>w<cr><cmd>source %<CR>", { buffer = true, desc = "Evaluate current file" })
-    vim.keymap.set("n", "<leader>s", function()
-        openScratch()
-    end, { buffer = true, desc = "Open a scratch file" })
 end
 
 return ftmaps

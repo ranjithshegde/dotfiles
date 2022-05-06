@@ -1,2 +1,2 @@
 vim.opt_local.tw = 130
-vim.fn["util#WordProcessor"]()
+require("utils.autoload").WordProcessor()

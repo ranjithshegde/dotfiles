@@ -5,6 +5,7 @@
 # Cleaning from HOME
 
 # CONFIG & PATHS
+export HISTFILE="$XDG_DATA_HOME"/zsh/history
 export CARGO_HOME="$XDG_DATA_HOME"/cargo
 export CUDA_CACHE_PATH="$XDG_CACHE_HOME"/nv
 export EM_CACHE="$XDG_CACHE_HOME"/emscripten/cache
@@ -32,11 +33,9 @@ export PLATFORMIO_PACKAGES_DIR="$XDG_DATA_HOME"/platformio/packages
 export PLATFORMIO_PLATFORMS_DIR="$XDG_DATA_HOME"/platformio/platforms
 export PYLINTHOME="$XDG_CACHE_HOME"/pylint
 export PYTHONHISTFILE="$XDG_DATA_HOME"/python_history
-# export PYTHONHISTFILE=/dev/null
 export RUSTUP_HOME="$XDG_DATA_HOME"/rustup
 export SSB_HOME="$XDG_DATA_HOME"/zoom
 export TERMINFO="$XDG_DATA_HOME"/terminfo
-export TIMEWARRIORDB="$XDG_DATA_HOME"/timewarrior
 export WGETRC="$XDG_CONFIG_HOME/wgetrc"
 export WINEPREFIX="$XDG_DATA_HOME"/wineprefixes/default
 export ZPLUG_BIN="$XDG_DATA_HOME"/bin
@@ -46,7 +45,8 @@ export OPENCV_OPENCL_DEVICE=NVIDIA:GPU:0
 
 # CUSTOM PATH ENVS
 export PG_OF_PATH="$HOME"/Documents/ofWorkspace/
-export CWORK="$HOME"/Software/Workspaces/Cpp
+export CWORK="$HOME"/Software/Workspaces/cpp
+export WORKSPACE="$HOME"/Software/Workspaces/
 
 # Addition to path...
 appendpath() {

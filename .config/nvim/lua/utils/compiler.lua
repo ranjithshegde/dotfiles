@@ -54,29 +54,6 @@ function Compiler.set_type()
     end
 end
 
-local function detRoot()
-    local files = { "compile_flags.txt", ".clang-format" }
-    if not io.open(files[1], "r") then
-        exec("!touch " .. files[1])
-    end
-    if not io.open(files[2], "r") then
-        exec "!clang-format -style=webkit -dump-config > .clang-format"
-    end
-end
-
--- basic setup for small test files
-function Compiler.Cscratch()
-    vim.cmd "cd $CWORK/Scratch"
-    vim.ui.input({ prompt = "enter directory name: ", completion = "file" }, function(input)
-        vim.fn.execute("!mkdir -p " .. input)
-        vim.fn.execute("cd " .. input)
-        detRoot()
-    end)
-    vim.ui.input({ prompt = "enter file name: ", completion = "file" }, function(input)
-        exec("e " .. input)
-    end)
-end
-
 function Compiler.cproject()
     local dir = vim.fn.input "enter directory name: "
     vim.fn.execute("!mkdir -p $CWORK/" .. dir)
@@ -91,23 +68,16 @@ end
 -- Search Cplusplus.com for symbol
 function Compiler.creference(cmd)
     local url = "https://www.cplusplus.com/search.do?q=" .. cmd
-    exec('!qutebrowser "' .. url .. '" &')
+    require("utils").open_in_browser(url)
 end
 
 function Compiler.glRef(cmd)
     local url = "https://docs.gl/gl4/" .. cmd
-    exec('!qutebrowser "' .. url .. '" &')
+    require("utils").open_in_browser(url)
 end
 
 function Compiler.has_pd()
-    local name = "Makefile.pdlibbuilder"
-    local f = io.open(name, "r")
-    if f ~= nil then
-        io.close(f)
-        return true
-    else
-        return false
-    end
+    return isFile "Makefile.pdlibbuilder"
 end
 -- set default make to Dispatch Make
 function Compiler.make(cmd)
@@ -117,12 +87,6 @@ end
 -- set default terminal to Dispatch
 function Compiler.terminal(cmd)
     exec("Dispatch " .. cmd)
-end
-
--- set alternate terminal to native terminal
-function Compiler.newTerm(cmd, opencmd)
-    exec(opencmd or "new")
-    exec("terminal " .. cmd)
 end
 
 -- open Makefile
@@ -237,7 +201,7 @@ end
 
 -- Cmake Install
 function Compiler.cmake_install()
-    Compiler.newTerm("cmake --build " .. vim.g.cmake_build_dir .. " --config Release --target install")
+    Compiler.terminal("cmake --build " .. vim.g.cmake_build_dir .. " --config Release --target install")
 end
 
 -----------------------------------------------------------------------
@@ -320,7 +284,7 @@ end
 -- print serial monitor
 function Compiler.monitor()
     local cmd = "pio device monitor"
-    require("utils").toggleTerm(cmd, "pio", 0)
+    require("utils").toggleTerm(cmd, "pio")
 end
 
 -- Clean directory

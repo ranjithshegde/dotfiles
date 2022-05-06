@@ -1,6 +1,5 @@
 local parsers = require "nvim-treesitter.parsers"
 local ts_utils = require "nvim-treesitter.ts_utils"
-local ls = require "utils.langServers"
 
 local ts = {}
 ------------------------------------------------------------------------
@@ -11,34 +10,7 @@ function ts.init()
     local ft_to_parser = parsers.filetype_to_parsername
     ft_to_parser.opencl = "c"
     require("nvim-treesitter.configs").setup {
-        ensure_installed = {
-            "bash",
-            "bibtex",
-            "cmake",
-            "cpp",
-            "comment",
-            "css",
-            "dart",
-            "glsl",
-            "help",
-            "html",
-            "java",
-            "javascript",
-            "json",
-            "latex",
-            "lua",
-            "make",
-            "markdown",
-            "python",
-            "query",
-            "regex",
-            "scheme",
-            "supercollider",
-            "toml",
-            "vim",
-            "yaml",
-            "org",
-        },
+        ensure_installed = require("utils.tables").ts_parsers,
         highlight = {
             enable = true,
             additional_vim_regex_highlighting = { "latex", "org" },
@@ -164,7 +136,7 @@ function ts.init()
             smart_rename = {
                 enable = true,
                 keymaps = {
-                    smart_rename = ";r",
+                    smart_rename = ";R",
                 },
             },
         },
@@ -176,8 +148,8 @@ function ts.init()
         nt_cpp_tools = {
             enable = true,
             preview = {
-                quit = "q", -- optional keymapping for quit preview
-                accept = "<tab>", -- optional keymapping for accept preview
+                quit = "Q",
+                accept = "<leader><cr>",
             },
         },
     }
@@ -187,6 +159,44 @@ end
 --                             Treesitter Statusline                  --
 ------------------------------------------------------------------------
 
+-- get current node
+local function get_line_for_node(node, type_patterns, transform_fn, bufnr)
+    local node_type = node:type()
+    local is_valid = false
+    local i
+    for _, rgx in ipairs(type_patterns) do
+        if node_type:find(rgx) then
+            is_valid = true
+            i = rgx
+            break
+        end
+    end
+    if not is_valid then
+        return ""
+    end
+    local line = transform_fn(vim.trim(vim.treesitter.query.get_node_text(node, bufnr) or ""))
+
+    for index, value in pairs(require("utils.tables").tsNodeSymbols) do
+        index = index:gsub("%[", "")
+        index = index:gsub("%]", "")
+        if index == "section" and line:find "*" then
+            line = line:gsub("*", "")
+        end
+
+        if index == i then
+            line = value .. line
+        end
+        if line:find(index) then
+            if line:find(value) then
+                line = line:gsub(index, "")
+            else
+                line = line:gsub(index, value)
+            end
+        end
+    end
+    -- Escape % to avoid statusline to evaluate content as expression
+    return line:gsub("%%", "%%%%")
+end
 -- Trim spaces and opening brackets from end
 local function transform_line(line)
     line = line:sub(1, line:find "\n")
@@ -214,7 +224,7 @@ function ts.statusline(opts)
     local expr = current_node
 
     while expr do
-        local line = ls.get_line_for_node(expr, type_patterns, transform_fn, bufnr)
+        local line = get_line_for_node(expr, type_patterns, transform_fn, bufnr)
         if line ~= "" and not vim.tbl_contains(lines, line) then
             table.insert(lines, 1, line)
         end

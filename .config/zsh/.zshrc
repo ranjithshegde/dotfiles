@@ -16,7 +16,6 @@ zstyle :compinstall filename $ZDOTDIR/.zshrc
 # End of lines added by compinstall
 
 # Lines configured by zsh-newuser-install------------------------------------------------
-HISTFILE="$XDG_DATA_HOME"/zsh/history
 HISTSIZE=1000
 SAVEHIST=1000
 setopt autocd beep extendedglob notify
@@ -29,19 +28,16 @@ zstyle ':completion:*' menu select
 zmodload zsh/complist
 compinit -d $XDG_CACHE_HOME/zsh/zcompdump-$ZSH_VERSION
 _comp_options+=(globdots)
-export HISTFILE="$XDG_DATA_HOME"/zsh/history
 
 
 # Aliases--------------------------------------------------------------------------------
 
-# alias ls='ls --color=auto'
 alias ls=lsd
 alias python=python3
 alias grep='grep --color=auto'
 alias weather='curl wttr.in/"rotterdam"'
 alias cat=bat
 alias pd='/usr/bin/pdl'
-# alias bbook='abook --config "$XDG_CONFIG_HOME"/abook/abookrc --datafile "$XDG_DATA_HOME"/abook/addressbook'
 alias nv-settings='nvidia-settings --config="$XDG_CONFIG_HOME"/nvidia/settings'
 alias yarn='yarn --use-yarnrc "$XDG_CONFIG_HOME"/yarn/config'
 alias wget '--hsts-file="$XDG_CACHE_HOME"/wget-hsts'
@@ -50,11 +46,11 @@ alias config='/usr/bin/git --git-dir=/home/ranjith/Software/Workspaces/Repos/dot
 alias cvim='GIT_DIR=/home/ranjith/Software/Workspaces/Repos/dotfiles GIT_WORK_TREE=$HOME vim'
 alias bs='browser-sync start --server --files "*.js, *.html, *.css"'
 alias paclist="expac --timefmt='%Y-%m-%d %T' '%l\t%n' | sort | tail -n 100"
+alias ydl='youtube-dl --external-downloader aria2c --external-downloader-args "-c -j 3 -x 3 -s 3 -k 1M"'
 
-VISUAL=editor
-# VISUAL='nvr -s --nostart --remote-tab-wait +"set bufhidden=delete"'
+VISUAL=nvim
 export VISUAL
-export EDITOR=editor
+export EDITOR=nvim
 
 setopt correct
 # Colours for Less pager-----------------------------------------------------------------

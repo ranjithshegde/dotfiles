@@ -20,6 +20,8 @@ local function filterfmt(clients)
             return true
         elseif vim.tbl_contains(nofmt, client.name) then
             return false
+        else
+            return true
         end
     end, clients)
 end
@@ -35,7 +37,7 @@ function lsp.settings()
         group = "SetDiagnosticFuncs",
         callback = function()
             vim.diagnostic.setloclist { open = false }
-            require("utils").commands()
+            require("utils.autoload").commands()
         end,
     })
 

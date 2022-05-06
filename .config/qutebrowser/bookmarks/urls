@@ -47,3 +47,4 @@ https://github.com/jceb/srandrd/ jceb/srandrd: srandrd - simple randr daemon
 https://learnvim.irian.to/vimscript/vimscript_functions Vimscript Functions | Learn Vim
 https://thevaluable.dev/vim-create-text-objects/ How to Create Vim Text-Objects in Lua
 https://yszheda.github.io/lua-table-talk/#/3 reveal.js
+https://github.com/vim/vim/issues/812 Loss of scope data when using nested partials/funcref · Issue #812 · vim/vim

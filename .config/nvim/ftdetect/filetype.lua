@@ -9,6 +9,5 @@ vim.filetype.add {
         pd_lua = "lua",
         pd_luax = "lua",
         cl = "opencl",
-        ges = "gesture",
     },
 }

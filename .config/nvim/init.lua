@@ -11,4 +11,4 @@ pcall(require, "packer_compiled")
 require("settings").options()
 require("settings.treesitter").init()
 require("mappings").init()
-require("utils").autocmd()
+require "settings.autocmds"

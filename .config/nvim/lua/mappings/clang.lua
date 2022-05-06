@@ -91,6 +91,13 @@ function cmaps.clang()
                 C = { "<cmd>CclsCalleeHierarchy -float<CR>", "Callee" },
                 d = { "<cmd>CclsDerivedHierarchy -float<CR>", "Derived functions" },
             },
+            r = {
+                name = "Refactor Cpp",
+                f = { "<cmd>TSCppDefineClassFunc<CR>", "function definition from declaration", mode = "v" },
+                c = { "<cmd>TSCppMakeConcreteClass<CR>", "Convert virtual class to concrete class", mode = "v" },
+                C = { "<cmd>TSCppRuleOf3<CR>", "Add Constructor, destructor and copy", mode = "v" },
+                m = { "<cmd>TSCppRuleOf5<CR>", "Add move Constructor", mode = "v" },
+            },
         },
         [","] = {
             k = {

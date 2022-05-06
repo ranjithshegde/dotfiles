@@ -43,12 +43,14 @@ function mappings.init()
     map("n", "n", "nzzzv", { desc = "jump to next search result" })
     map("n", "N", "Nzzzv", { desc = "jump to previous search result" })
     map("n", "J", "mzJ`z", { desc = "Adjoin next line" })
-    map(
-        "n",
-        "gm",
-        "cursor(0,{desc =  virtcol('$')/2 )",
-        { desc = "Move cursor to middle of the line", expr = true, buffer = true }
-    )
+    map("n", "gm", function()
+        local virt = vim.fn.virtcol "$"
+        virt = virt / 2
+        vim.fn.cursor { 0, virt }
+    end, { desc = "Move cursor to middle of the line" })
+    map("n", "<leader>S", function()
+        require "utils.scratchpad"(_, "tab")
+    end, { desc = "Toggle quickfix" })
 
     -- Terminals
     wk.register {
@@ -97,6 +99,7 @@ function mappings.configFiles()
                     t = { open "lua/settings/telescope.lua", "Telescope" },
                     s = { open "lua/settings/treesitter.lua", "Treesitter" },
                     c = { open "lua/settings/completion.lua", "Completion" },
+                    a = { open "lua/settings/autocmds.lua", "Autocmds" },
                 },
                 l = {
                     name = "Lsp",
@@ -109,10 +112,12 @@ function mappings.configFiles()
                     name = "Utilities in lua",
                     u = { open "lua/utils/init.lua", "General" },
                     c = { open "lua/utils/compiler.lua", "Cpp Workstation" },
-                    d = { open "lua/utils/diagnostics.lua", "Diagnostic extensions" },
+                    d = { open "lua/utils/diagnostics/init.lua", "Diagnostic extensions" },
                     l = { open "lua/utils/langServers.lua", "Langauge Server extensions" },
                     q = { open "lua/utils/qf.lua", "Quickfix and Loclist" },
                     p = { open "lua/utils/preview.lua", "Fold preview" },
+                    a = { open "lua/utils/autoload.lua", "Autoload functions" },
+                    s = { open "lua/utils/scratchpad.lua", "Filter tables" },
                     t = { open "lua/utils/tables.lua", "Filter tables" },
                 },
                 f = {
@@ -131,7 +136,6 @@ function mappings.configFiles()
                 },
                 d = { open "lua/debugger.lua", "Debug adapter protocol" },
                 s = { open "lua/statusline.lua", "Statusline and Tabline" },
-                a = { open "autoload/util.vim", "Utilities in autoload" },
                 c = { open "after/plugin/plugin.lua", "User defined commands" },
                 r = { open "init.lua", "VimRC" },
                 P = { require("packer").sync, "Update packages" },

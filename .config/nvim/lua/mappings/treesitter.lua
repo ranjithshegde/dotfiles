@@ -16,7 +16,7 @@ return require("which-key").register {
             l = "local",
             g = "Global",
         },
-        r = "rename",
+        R = "rename",
         ["*"] = "jump to node's next usage",
         ["#"] = "jump to node's previous usage",
         -- TextObjects
@@ -33,6 +33,10 @@ return require("which-key").register {
             r = { "Decrememnt nodes", mode = "v" },
         },
     },
+    -- Refactor
+    ["<leader><CR>"] = "Accept refactor edits",
+    Q = "Reject refactor edits",
+    -- Swap
     cx = {
         name = "Swap forwards",
         a = {

@@ -81,7 +81,7 @@ return require("which-key").register {
             s = {
                 telargs(
                     "live_grep",
-                    { cwd = "~/Documents/Supercollider/", prompt_title = "SuperCollider Workspace grep" }
+                    { cwd = "~/Software/Workspaces/supercollider/", prompt_title = "SuperCollider Workspace grep" }
                 ),
                 "grep SuperCollider",
             },
@@ -112,7 +112,7 @@ return require("which-key").register {
             t = { tele "help_tags", "vim help files" },
             C = { cd_files("C++ Practice files/dirs", "$CWORK/Scratch"), "Open C practice" },
             c = { cd_browser("C++ Practice files/dirs", "$CWORK/Scratch"), "Open C practice" },
-            s = { cd_files("SuperCollider Directory", "~/Documents/Supercollider/"), "SuperCollider files" },
+            s = { cd_files("SuperCollider Directory", "~/Software/Workspaces/supercollider/"), "SuperCollider files" },
             b = {
                 telargs("find_files", { cwd = "~/.local/bin/", prompt_title = "Scripts and binaries in local" }),
                 "scripts & binaries",
