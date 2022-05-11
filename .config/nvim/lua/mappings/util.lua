@@ -71,25 +71,37 @@ function utilmaps.orgWiki()
             name = "orgWiki",
             w = {
                 function()
-                    require("org").openIndex()
+                    require("orgWiki.wiki").openIndex()
                 end,
                 "Open Index",
             },
+            n = {
+                function()
+                    require("orgWiki.wiki").nextWiki "tabnew"
+                end,
+                "Open next wiki Index",
+            },
+            c = {
+                function()
+                    require("orgWiki.wiki").select "tabnew"
+                end,
+                "Open next wiki Index",
+            },
             t = {
                 function()
-                    require("org").openIndex "tab drop"
+                    require("orgWiki.wiki").openIndex "tab drop"
                 end,
                 "Open Index in a new tab",
             },
             d = {
                 function()
-                    require("org").deleteLink()
+                    require("orgWiki.wiki").deleteLink()
                 end,
                 "Delete link under cursor",
             },
             i = {
                 function()
-                    require("org.diary").diaryIndexOpen()
+                    require("orgWiki.diary").diaryIndexOpen()
                 end,
                 "Open Diary index",
             },
@@ -97,31 +109,31 @@ function utilmaps.orgWiki()
                 name = "Diary entries",
                 w = {
                     function()
-                        require("org.diary").diaryTodayOpen()
+                        require("orgWiki.diary").diaryTodayOpen()
                     end,
                     "Today",
                 },
                 t = {
                     function()
-                        require("org.diary").diaryTodayOpen "tab drop"
+                        require("orgWiki.diary").diaryTodayOpen "tab drop"
                     end,
                     "Today in a new tab",
                 },
                 i = {
                     function()
-                        require("org.diary").diaryGenerateIndex()
+                        require("orgWiki.diary").diaryGenerateIndex()
                     end,
                     "Reindex",
                 },
                 y = {
                     function()
-                        require("org.diary").diaryYesterdayOpen()
+                        require("orgWiki.diary").diaryYesterdayOpen()
                     end,
                     "Yesterday",
                 },
                 m = {
                     function()
-                        require("org.diary").diaryTomorrowOpen()
+                        require("orgWiki.diary").diaryTomorrowOpen()
                     end,
                     "Tomorrow",
                 },

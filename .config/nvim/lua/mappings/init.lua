@@ -88,11 +88,6 @@ function mappings.configFiles()
                     s = { open "lua/mappings/treesitter.lua", "Treesitter" },
                     g = { open "lua/mappings/git.lua", "Git" },
                 },
-                g = {
-                    name = "Org plugin",
-                    o = { open "lua/org/init.lua", "Index plugin" },
-                    d = { open "lua/org/diary.lua", "Diary plugin" },
-                },
                 o = {
                     name = "Options",
                     o = { open "lua/settings/init.lua", "vim" },

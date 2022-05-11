@@ -36,13 +36,21 @@ local function openScratch(type)
     end
     vim.cmd("lcd " .. dir)
 
-    vim.ui.input({ prompt = "enter directory name: ", completion = "file" }, function(input)
-        vim.fn.execute("!mkdir -p " .. input)
-        vim.fn.execute("lcd " .. input)
-        execRoot(type)
-    end)
-    vim.ui.input({ prompt = "Enter  filename: ", completion = "file" }, function(input)
-        vim.cmd("e " .. input)
+    vim.ui.input({ prompt = "Enter filename or directory : ", completion = "file" }, function(input)
+        if not vim.loop.fs_stat(input) then
+            execRoot(type)
+            vim.cmd("e " .. input)
+        elseif vim.loop.fs_stat(input).type == "directory" then
+            vim.fn.execute("!mkdir -p " .. input)
+            vim.fn.execute("lcd " .. input)
+            execRoot(type)
+            vim.ui.input({ prompt = "Enter  filename: ", completion = "file" }, function(i)
+                vim.cmd("e " .. i)
+            end)
+        else
+            execRoot(type)
+            vim.cmd("e " .. input)
+        end
     end)
 end
 

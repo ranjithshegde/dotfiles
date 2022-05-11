@@ -1,12 +1,8 @@
 -- ******************* function calls --------------------------------------------
 local cmd = vim.api.nvim_create_user_command
 
-cmd("CScratch", function()
-    require "utils.scratchpad" "cpp"
-end, {})
-
-cmd("Cproject", function()
-    require("utils.compiler").cproject()
+cmd("Scratch", function(opts)
+    require "utils.scratchpad"(_, opts.args)
 end, {})
 
 cmd("WordCount", function()
@@ -14,7 +10,8 @@ cmd("WordCount", function()
 end, {})
 
 cmd("Agenda", function()
-    require("utils").agenda()
+    require("packer").loader "orgmode"
+    require("orgmode").action "agenda.prompt"
 end, {})
 
 cmd("ToggleTransparency", function()

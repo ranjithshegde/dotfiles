@@ -119,12 +119,6 @@ utils.feedkey = function(key, mode)
     vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes(key, true, true, true), mode, true)
 end
 
----Access agenda from outside orgfile
-function utils.agenda()
-    require("packer").loader "orgmode"
-    require("orgmode").action "agenda.prompt"
-end
-
 ---Open thesaurus for the word online
 ---@param cmd string Word to search
 function utils.thesaurus(cmd)

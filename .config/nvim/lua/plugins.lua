@@ -14,6 +14,10 @@ if vim.fn.empty(vim.fn.glob(packer_path)) > 0 then
     }
 end
 
+local wikiP = vim.loop.fs_stat(vim.fn.glob "$WORKSPACE/Repos/orgWiki.nvim")
+        and "/home/ranjith/Software/Workspaces/Repos/orgWiki.nvim"
+    or "ranjithshegde/orgWiki.nvim"
+
 --------------------------------------------------------------------------------------------------------
 --				 Plugins                                            							      --
 --------------------------------------------------------------------------------------------------------
@@ -93,6 +97,7 @@ return require("packer").startup {
             event = "BufReadPost",
             config = function()
                 vim.g.indent_blankline_char = "┊"
+                -- vim.g.indent_blankline_use_treesitter_scope = true
                 require("indent_blankline").setup {
                     show_current_context = true,
                     show_end_of_line = true,
@@ -121,7 +126,7 @@ return require("packer").startup {
             cmd = { "ColorizerAttachToBuffer", "ColorizerToggle" },
         }
 
-        -- vim Orgmode
+        -- Orgmode
         use {
             "nvim-orgmode/orgmode",
             ft = "org",
@@ -136,6 +141,19 @@ return require("packer").startup {
                     },
                     org_highlight_latex_and_related = "entities",
                     emacs_config = { config_path = "$XDG_CONFIG_HOME/emacs/init.el" },
+                }
+            end,
+        }
+
+        -- OrgWiki
+        use {
+            wikiP,
+            module = "orgWiki",
+            config = function()
+                require("orgWiki").setup {
+                    disable_mappings = true,
+                    wiki_path = { "~/Documents/Orgs/", "~/Documents/Projects/" },
+                    diary_path = "~/Documents/Orgs/diary/",
                 }
             end,
         }
