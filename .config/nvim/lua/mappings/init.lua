@@ -9,14 +9,14 @@ local map = vim.keymap.set
 function mappings.init()
     mappings.configFiles()
 
-    local opts = { nowait = true }
+    local opts = { nowait = true, silent = true }
     map("n", "<C-;>", ";")
     map("n", "<C-,>", ",")
     map("n", "<C-i>", "<C-i>", { desc = "Dont map C-i to Tab" })
     map({ "n", "i", "s" }, "<BS>", "<BS>", { desc = "Dont map C-h to backspace" })
     --line movement
-    map("x", "K", ":move '<-2<CR>gv-gv", { desc = "Move line up" })
-    map("x", "J", ":move '>+1<CR>gv-gv", { desc = "Move line down" })
+    map("x", "K", ":move '<-2<CR>gv", { desc = "Move line up" })
+    map("x", "J", ":move '>+1<CR>gv", { desc = "Move line down" })
     -- visual cut for replase
     map({ "v", "s" }, "<leader>p", '"_dP', opts)
     -- Indent
@@ -56,9 +56,29 @@ function mappings.init()
     wk.register {
         ["<leader>t"] = {
             name = "Launch terminal in split",
-            h = { "<cmd>sp term://zsh<cr>", "Horizontal" },
-            v = { "<cmd>vspl term://zsh<cr>", "Vertical" },
-            t = { "<cmd>tab drop term://zsh<cr>", "New tab" },
+            h = {
+                function()
+                    require("utils").ex_cmd("vsplit", { "term://zsh" }, { silent = true }, { file = true, bar = true })
+                end,
+                "Horizontal",
+            },
+            v = {
+                function()
+                    require("utils").ex_cmd("vsplit", { "term://zsh" }, { silent = true }, { file = true, bar = true })
+                end,
+                "Vertical",
+            },
+            t = {
+                function()
+                    require("utils").ex_cmd(
+                        "drop",
+                        { "term://zsh" },
+                        { silent = true, tab = 2 },
+                        { file = true, bar = true }
+                    )
+                end,
+                "New tab",
+            },
         },
     }
 end
@@ -68,7 +88,14 @@ end
 ------------------------------------------------------------------------
 
 local open = function(path)
-    return string.format("<cmd>tab drop ~/.config/nvim/%s<CR>", path)
+    return function()
+        require("utils").ex_cmd(
+            "drop",
+            { "~/.config/nvim/" .. path },
+            { tab = 2, silent = true },
+            { file = true, bar = true }
+        )
+    end
 end
 
 function mappings.configFiles()
@@ -87,6 +114,7 @@ function mappings.configFiles()
                     t = { open "lua/mappings/telescope.lua", "Telescope" },
                     s = { open "lua/mappings/treesitter.lua", "Treesitter" },
                     g = { open "lua/mappings/git.lua", "Git" },
+                    p = { open "lua/mappings/pairs.lua", "Unimpaired" },
                 },
                 o = {
                     name = "Options",

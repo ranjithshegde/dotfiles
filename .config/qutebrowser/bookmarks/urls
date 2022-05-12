@@ -48,3 +48,4 @@ https://learnvim.irian.to/vimscript/vimscript_functions Vimscript Functions | Le
 https://thevaluable.dev/vim-create-text-objects/ How to Create Vim Text-Objects in Lua
 https://yszheda.github.io/lua-table-talk/#/3 reveal.js
 https://github.com/vim/vim/issues/812 Loss of scope data when using nested partials/funcref · Issue #812 · vim/vim
+https://embeddedartistry.com/blog/2017/05/17/creating-a-circular-buffer-in-c-and-c/ Creating a Circular Buffer in C and C++ - Embedded Artistry

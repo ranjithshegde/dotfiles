@@ -26,7 +26,8 @@ function settings.options()
     o.timeoutlen = 100
     o.conceallevel = 1
     o.laststatus = 3
-    o.foldmethod = "indent"
+    -- o.foldmethod = "indent"
+    o.foldmethod = "expr"
     o.inccommand = "split"
     o.spelloptions = "camel"
     o.grepformat = "%f:%l:%c:%m"

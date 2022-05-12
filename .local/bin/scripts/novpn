@@ -1,9 +1,4 @@
-#!/usr/bin/zsh
-
+#!/bin/sh
 
 nordvpn disconnect
-
 sudo systemctl stop nordvpnd.service
-
-# sudo systemctl stop nordvpnd.socket
-

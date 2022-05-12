@@ -6,8 +6,18 @@ return require("which-key").register {
     [";"] = {
         name = "Syntax tree functions",
         -- Plugins
-        K = { "<cmd>TSNodeUnderCursor<cr>", "Show treesitter node" },
-        P = { "<cmd>TSPlaygroundToggle<cr>", "Toggle playground" },
+        K = {
+            function()
+                require("nvim-treesitter-playground.hl-info").show_ts_node()
+            end,
+            "Show treesitter node",
+        },
+        P = {
+            function()
+                require("nvim-treesitter-playground.internal").toggle()
+            end,
+            "Toggle playground",
+        },
         --Refactor
         d = "Jump to node definition",
         f = { "gg=G<C-o>zz", "indent" },

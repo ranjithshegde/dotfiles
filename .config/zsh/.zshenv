@@ -42,6 +42,8 @@ export ZPLUG_BIN="$XDG_DATA_HOME"/bin
 export ZPLUG_HOME="$XDG_DATA_HOME"/zsh/zplug
 export _JAVA_OPTIONS=-Djava.util.prefs.userRoot="$XDG_CONFIG_HOME"/java
 export OPENCV_OPENCL_DEVICE=NVIDIA:GPU:0
+export OCTAVE_HISTFILE="$XDG_CACHE_HOME/octave-hsts"
+export OCTAVE_SITE_INITFILE="$XDG_CONFIG_HOME/octave/octaverc"
 
 # CUSTOM PATH ENVS
 export PG_OF_PATH="$HOME"/Documents/ofWorkspace/
@@ -65,7 +67,6 @@ appendpath '/home/ranjith/.local/share/cargo/bin'
 appendpath '/home/ranjith/.local/share/npm/bin'
 appendpath '/home/ranjith/.local/share/go/bin'
 appendpath '/home/ranjith/.local/share/gem/bin'
-appendpath '/home/ranjith/.local/share/ltex-ls/bin'
 appendpath '/home/ranjith/.local/share/gem/ruby/3.0.0/bin'
 # appendpath '/usr/lib/emsdk/upstream/bin/'
 # appendpath '/usr/lib/emsdk/node/12.18.1_64bit/bin'

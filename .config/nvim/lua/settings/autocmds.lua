@@ -130,6 +130,12 @@ aucmd("BufWritePost", {
         require("packer").compile()
     end,
 })
+aucmd("BufReadPost", {
+    group = "PluginLoad",
+    callback = function()
+        require "mappings.pairs"
+    end,
+})
 aucmd("BufReadPost", { group = "PluginLoad", command = "packadd matchit", once = true })
 aucmd("User", { pattern = "PackerComplete", group = "PluginLoad", command = "LuaCacheClear" })
 
@@ -188,6 +194,7 @@ aucmd("BufRead", {
     pattern = { "*.png", "*.jpg", "*.pdf", "*.gif", "*.jpeg", "*.svg", "*.odt", "*.doc*", "*.rtf" },
     group = "NoVim",
     callback = function()
+        ---@diagnostic disable-next-line: missing-parameter
         os.execute("xdg-open " .. vim.fn.shellescape(vim.fn.expand "%:p"))
         vim.api.nvim_buf_delete(vim.api.nvim_get_current_buf(), { force = true })
         vim.cmd "let &ft = &ft"

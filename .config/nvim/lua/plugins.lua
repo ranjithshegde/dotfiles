@@ -1,3 +1,4 @@
+---@diagnostic disable: missing-parameter
 -- -------------------------- Defs **********************************************************************
 local packer_path = vim.fn.stdpath "data" .. "/site/pack/packer/start/packer.nvim"
 
@@ -14,9 +15,8 @@ if vim.fn.empty(vim.fn.glob(packer_path)) > 0 then
     }
 end
 
-local wikiP = vim.loop.fs_stat(vim.fn.glob "$WORKSPACE/Repos/orgWiki.nvim")
-        and "/home/ranjith/Software/Workspaces/Repos/orgWiki.nvim"
-    or "ranjithshegde/orgWiki.nvim"
+local wikiP = vim.env.WORKSPACE and vim.env.WORKSPACE .. "Repos/orgWiki.nvim"
+local wiki = vim.env.WORKSPACE and vim.loop.fs_stat(wikiP) and wikiP or "ranjithshegde/orgWiki.nvim"
 
 --------------------------------------------------------------------------------------------------------
 --				 Plugins                                            							      --
@@ -32,12 +32,11 @@ return require("packer").startup {
         use { "bkad/CamelCaseMotion", opt = true }
 
         -- Taglist and sidebars
-        use { "simrat39/symbols-outline.nvim", cmd = "SymbolsOutline" }
+        use { "simrat39/symbols-outline.nvim", module = "symbols-outline" }
 
         -- Tim pope
         use {
             { "tpope/vim-surround", event = "BufReadPost" },
-            { "tpope/vim-unimpaired", keys = { "[", "]" } },
             { "tpope/vim-dispatch", cmd = { "Make", "Dispatch", "Start" } },
             { "tpope/vim-fugitive", cmd = { "G", "Git", "Gclog" } },
         }
@@ -66,19 +65,8 @@ return require("packer").startup {
             { "p00f/nvim-ts-rainbow", event = "BufReadPre" },
             { "nvim-treesitter/nvim-treesitter-textobjects", event = "BufReadPost" },
             { "nvim-treesitter/nvim-treesitter-refactor", after = "scnvim" },
-            { "nvim-treesitter/playground", cmd = { "TSPlaygroundToggle", "TSNodeUnderCursor" } },
+            { "nvim-treesitter/playground", module = "nvim-treesitter-playground" },
             { "Badhi/nvim-treesitter-cpp-tools", ft = { "c", "cpp", "opencl" } },
-        }
-
-        -- Git Signs
-        use {
-            "lewis6991/gitsigns.nvim",
-            requires = "nvim-lua/plenary.nvim",
-            config = function()
-                require("gitsigns").setup()
-                require "mappings.git"
-            end,
-            opt = true,
         }
 
         -- WhichKey
@@ -89,6 +77,52 @@ return require("packer").startup {
                     layout = { width = { max = 80 }, { spacing = 10 } },
                 }
             end,
+        }
+
+        -- OrgWiki
+        use {
+            wiki,
+            module = "orgWiki",
+            config = function()
+                require("orgWiki").setup {
+                    disable_mappings = true,
+                    wiki_path = { "~/Documents/Orgs/", "~/Documents/Projects/" },
+                    diary_path = "~/Documents/Orgs/diary/",
+                }
+            end,
+        }
+
+        -- Git Signs
+        use {
+            "lewis6991/gitsigns.nvim",
+            requires = "nvim-lua/plenary.nvim",
+            config = function()
+                require("gitsigns").setup {
+                    on_attach = function(bufnr)
+                        local gs = package.loaded.gitsigns
+                        require("mappings.git").signs(bufnr, gs)
+                    end,
+                }
+                require("mappings.git").fugitive()
+            end,
+            opt = true,
+        }
+
+        -- Colorizer
+        use {
+            "afonsocraposo/nvim-colorizer.lua",
+            config = function()
+                require("colorizer").setup {
+                    "*",
+                    cpp = { rgb_0x = true },
+                    html = { mode = "foreground" },
+                    css = { rgb_fn = true, css_fn = true },
+                    yaml = { rgb_0x = true },
+                    "javascript",
+                    "conf",
+                }
+            end,
+            cmd = { "ColorizerAttachToBuffer", "ColorizerToggle" },
         }
 
         -- Indents and chars
@@ -109,23 +143,6 @@ return require("packer").startup {
             end,
         }
 
-        -- Colorizer
-        use {
-            "afonsocraposo/nvim-colorizer.lua",
-            config = function()
-                require("colorizer").setup {
-                    "*",
-                    cpp = { rgb_0x = true },
-                    html = { mode = "foreground" },
-                    css = { rgb_fn = true, css_fn = true },
-                    yaml = { rgb_0x = true },
-                    "javascript",
-                    "conf",
-                }
-            end,
-            cmd = { "ColorizerAttachToBuffer", "ColorizerToggle" },
-        }
-
         -- Orgmode
         use {
             "nvim-orgmode/orgmode",
@@ -141,19 +158,6 @@ return require("packer").startup {
                     },
                     org_highlight_latex_and_related = "entities",
                     emacs_config = { config_path = "$XDG_CONFIG_HOME/emacs/init.el" },
-                }
-            end,
-        }
-
-        -- OrgWiki
-        use {
-            wikiP,
-            module = "orgWiki",
-            config = function()
-                require("orgWiki").setup {
-                    disable_mappings = true,
-                    wiki_path = { "~/Documents/Orgs/", "~/Documents/Projects/" },
-                    diary_path = "~/Documents/Orgs/diary/",
                 }
             end,
         }

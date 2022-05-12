@@ -160,10 +160,7 @@ local function gps(_, buffer)
         type_patterns = tsNodes.filetype[fs] or tsNodes.default,
         bufnr = buffer.bufnr,
     }
-    if context == "" then
-        return ""
-    end
-    return "🇻  " .. context
+    return context ~= "" and "🇻  " .. context or context
 end
 
 --*********************************** Status config ---------------------

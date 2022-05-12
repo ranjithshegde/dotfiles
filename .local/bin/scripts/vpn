@@ -1,8 +1,4 @@
-#!/usr/bin/zsh
+#!/bin/sh
 
-# choice = $(echo -e "please enter a country" | dmenu -i)
-
-sudo systemctl start nordvpnd
-
-# nordvpn connect ${choice}
+sudo systemctl start nordvpnd.service
 nordvpn connect

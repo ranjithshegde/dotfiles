@@ -1,0 +1,358 @@
+; opacity
+[colors]
+background = #99000000
+; background = #99162258
+background-alt =  #444
+foreground = #dfdfdf
+foreground-alt = #ffb52a
+primary = #e60053
+secondary = #555 
+alert = #bd2c40
+xwin = #fff8e6
+dxwin = #b9d9eb
+wifi = #74b741 
+temp = #fee11a 
+temp2 = #ff0000 
+bat = #ffb52a
+char = #21891d 
+full = #ffffff
+
+;==================================================================================================
+
+[bar/main]
+
+width = 100%
+height = 27
+; offset-x = 1%
+; offset-y = 0.5%
+radius = 15.0
+fixed-center = false
+enable-ipc = true
+
+background = ${colors.background}
+foreground = ${colors.foreground}
+
+line-size = 3
+line-color = #f00
+
+border-size = 2
+border-color = #00000000
+
+padding-left = 0
+padding-right = 2
+
+module-margin-left = 1
+module-margin-right = 2
+
+font-0 = Mononoki Nerd Font Bold:size=10:pixelsize=12
+font-1 = Material Design Icons:pixelsize=12
+font-2 = MesloLGS NF:style=Regular:size=10
+font-3 = JoyPixels:size=12:pixelsize=10:scale=10
+font-4 = Hack:size=10:pixelsize=10
+
+modules-left = dwm xwindow
+modules-center = date 
+modules-right = backlight alsa wlan battery 
+
+tray-position = right
+tray-padding = 2
+;tray-background = #0063ff
+
+override-redirect = false
+
+[bar/alternate]
+
+width = 100%
+height = 27
+; offset-x = 1%
+; offset-y = 0.5%
+radius = 15.0
+fixed-center = false
+enable-ipc = true
+
+background = ${colors.background}
+foreground = ${colors.foreground}
+
+line-size = 3
+line-color = #f00
+
+border-size = 2
+border-color = #00000000
+
+padding-left = 0
+padding-right = 2
+
+module-margin-left = 1
+module-margin-right = 2
+
+font-0 = Mononoki Nerd Font Bold:size=10:pixelsize=12
+font-1 = Material Design Icons:pixelsize=12
+font-2 = MesloLGS NF:style=Regular:size=10
+font-3 = JoyPixels:size=12:pixelsize=10:scale=10
+font-4 = Hack:size=10:pixelsize=10
+
+modules-left = dwm xwindow
+modules-center = date 
+modules-right = backlight temperature alsa cpu wlan battery
+
+tray-position = right
+tray-padding = 2
+;tray-background = #0063ff
+
+override-redirect = false
+
+;==================================================================================================
+
+[module/xwindow]
+type = internal/xwindow
+label = %title:0:30:...%
+label-foreground = ${colors.xwin}
+label-empty = "󰣇dwm"
+label-empty-foreground = ${colors.dxwin}
+; label-underline = ${colors.primary}
+
+;==================================================================================================
+
+[module/dwm]
+type = internal/dwm
+format = <label-layout> <label-tags> <label-floating>
+
+enable-tags-click = true
+enable-tags-scroll = true
+secondary-layout-symbol = 
+
+label-floating = F
+
+label-title = %title%
+label-title-maxlen = 35
+label-title-padding = 1
+label-title-foreground = ${colors.foreground}
+label-title-background = ${colors.background}
+
+label-layout = %symbol%
+label-layout-padding = 2
+label-layout-foreground = #000
+label-layout-background = ${colors.primary}
+; label-layout-foreground = ${colors.foreground}
+; label-layout-background = ${colors.background}
+
+; focused = Active tag on focused monitor
+label-focused = %name%
+; label-focused-background = ${colors.tag-focused-background}
+label-focused-foreground = ${colors.foreground}
+label-focused-padding = 2
+label-focused-font = 4
+
+; unfocused = Inactive tag on any monitor
+label-unfocused = %name%
+; label-unfocused-background = ${colors.tag-unfocused-background}
+label-unfocused-foreground = ${colors.foreground}
+label-unfocused-padding = 2
+label-unfocused-font = 5
+
+; visible = Active tag on unfocused monitor
+label-visible = %name%
+; label-visible-background = ${colors.tag-visible-background}
+label-visible-foreground = ${colors.foreground}
+label-visible-padding = 2
+label-visible-font = 5
+
+; urgent = Tag with urgency hint set
+label-urgent = %name%
+; label-urgent-background = ${colors.tag-urgent-background}
+label-urgent-padding = 2
+label-urgent-font = 4
+
+; empty = Tags with no windows assigned
+; This can be set to an empty string to hide empty tags
+label-empty =
+
+;==================================================================================================
+
+[module/backlight]
+type = internal/backlight
+card = intel_backlight
+format = <ramp><label> 
+label = %percentage%%
+ramp-0 = 🌕
+ramp-1 = 🌔
+ramp-2 = 🌓
+ramp-3 = 🌒
+ramp-4 = 🌑
+
+;==================================================================================================
+
+[module/wlan]
+type = internal/network
+; interface = wlo1
+interface = wlan0
+interval = 60
+format-connected = %{A1:connman-gtk:}<ramp-signal>%{A} 
+format-disconnected =  %{A1:connman-gtk:}<label-disconnected>%{A}
+label-disconnected = "󰤮 "
+
+format-connected-foreground = ${colors.wifi}
+
+format-disconnected-foreground = ${colors.foreground}
+
+ramp-signal-0 = "󰤯 "
+ramp-signal-1 = "󰤟 "
+ramp-signal-2 = "󰤢 "
+ramp-signal-3 = "󰤥 "
+ramp-signal-4 = "󰤨 "
+
+;==================================================================================================
+
+[module/date]
+type = internal/date
+interval = 45
+
+date =" %b %e,"
+date-alt = " %A %B %e %Y,"
+time = "%H:%M "
+time-alt = "%H:%M "
+
+format-prefix = "󰃰"
+format-prefix-foreground = ${colors.foreground}
+; format-prefix-background = 
+;format-underline = #e6c9c4
+
+label =%date% %time%
+; label-background = 
+label-foreground = ${colors.foreground}
+
+;==================================================================================================
+
+[module/alsa]
+type = internal/pulseaudio
+
+format-volume = %{A3:pavucontrol:}<ramp-volume> <label-volume>%{A}
+label-volume-foreground = ${root.foreground}
+
+label-muted = 🔇
+ramp-volume-0 = 🔈
+ramp-volume-1 = 🔉
+ramp-volume-2 = 🔊
+; format-muted-foreground = ${colors.foreground}
+
+;==================================================================================================
+
+[module/battery]
+type = internal/battery
+battery = BAT0
+adapter = ADP1
+full-at = 98
+format-charging = <animation-charging> <label-charging> 
+format-discharging = <ramp-capacity> <label-discharging> 
+format-full = <ramp-capacity> <label-full> 
+
+label-charging = "%percentage%%  "
+label-discharging = "%percentage%%  "
+label-full = "%percentage%%  "
+
+format-charging-background = ${colors.background}
+format-discharging-background = ${colors.background}
+format-full-background = ${colors.background}
+
+format-charging-foreground = ${colors.char}
+format-discharging-foreground = ${colors.bat}
+format-full-foreground = ${colors.full}
+
+
+ramp-capacity-0 = "󰁻"
+ramp-capacity-1 = "󰁼"
+ramp-capacity-2 = "󰁽"
+ramp-capacity-3 = "󰁾"
+ramp-capacity-4 = "󰁿"
+ramp-capacity-5 = "󰂀"
+ramp-capacity-6 = "󰂁"
+ramp-capacity-7 = "󰂂"
+ramp-capacity-8 = "󰁹"
+
+animation-charging-0 = "󰢜"
+animation-charging-1 = "󰂆"
+animation-charging-2 = "󰂇"
+animation-charging-3 = "󰂈"
+animation-charging-4 = "󰢝"
+animation-charging-5 = "󰂉"
+animation-charging-6 = "󰢞"
+animation-charging-7 = "󰂊"
+animation-charging-8 = "󰂋"
+animation-charging-9 = "󰂅"
+animation-charging-framerate = 750
+
+
+;==================================================================================================
+
+[module/cpu]
+type = internal/cpu
+interval = 30
+format-prefix = %{A1:st -e btop:}󰌢%{A}
+format-prefix-foreground = ${colors.foreground-alt}
+; format-underline = #f90000
+label = %percentage:2%%
+
+
+;==================================================================================================
+
+[module/memory]
+type = internal/memory
+interval = 30
+format-prefix = " "
+format-prefix-foreground = ${colors.foreground-alt}
+format-underline = #4bffdc
+label = %percentage_used%%
+
+;==================================================================================================
+
+[module/temperature]
+type = internal/temperature
+thermal-zone = 0
+warn-temperature = 60
+
+format = <label>
+; format-underline = #f50a4d
+format-warn = <label-warn>
+; format-warn-underline = ${self.format-underline}
+
+label = "󰈸%temperature-c%"
+label-foreground = ${colors.temp}
+label-warn = "󰌬%temperature-c%"
+label-warn-foreground = ${colors.temp2}
+
+;==================================================================================================
+
+[module/padding]
+	type               = custom/text
+	content            = ||
+	content-padding    = 1
+	content-foreground = #000f0f0f
+	content-background = #000f0f0f
+
+[module/paddingbig]
+	type               = custom/text
+	content            = | 
+	content-padding    = 18
+	content-foreground = #000f0f0f
+	content-background = #000f0f0f
+
+[module/paddingmega]
+	type               = custom/text
+	content            = | |
+	content-padding    = 30
+	content-foreground = #000f0f0f
+	content-background = #000f0f0f
+	content-radius = 30
+
+
+;==================================================================================================
+
+[settings]
+screenchange-reload = true
+pseudo-transparency = true
+
+[global/wm]
+margin-top = 5
+margin-bottom = 5
+
+; vim:ft=dosini

@@ -57,7 +57,9 @@ function lspmap.lsp(bufnr)
             a = { vim.lsp.buf.range_code_action, "Code actions for range" },
         },
     }, { mode = "v", buffer = bufnr })
-    map("n", "<F11>", "<cmd>SymbolsOutline<CR>", { desc = "Toggle Symbolsbar" })
+    map("n", "<F11>", function()
+        require("symbols-outline").toggle_outline()
+    end, { desc = "Toggle Symbolsbar" })
 end
 
 -- ******************************** Diagnostics------------------------

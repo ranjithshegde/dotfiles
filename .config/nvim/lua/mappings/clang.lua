@@ -13,8 +13,13 @@ function cmaps.micro()
     end, { desc = "Serial monitor toggle" })
     map("n", "<F2>", require("utils.compiler").pio_clean, { buffer = true, desc = "Regenerate tags" })
     map("n", "<F3>", require("utils.compiler").pio_check, { buffer = true, desc = "Verify code" })
-    map("n", "<F5>", "<cmd>w <CR> <cmd>Make<CR>", { buffer = true, desc = "Build" })
-    map("n", "<F6>", "<cmd>w <CR> <cmd>Make --target upload<CR>", { buffer = true, desc = "Upload" })
+    map("n", "<F5>", function()
+        vim.cmd "w | Make"
+    end, { buffer = true, desc = "Build" })
+    map("n", "<F6>", function()
+        vim.cmd "w"
+        vim.cmd "Make --target upload"
+    end, { buffer = true, desc = "Upload" })
     map("n", ",ka", function()
         require("utils.compiler").ardRef(vim.fn.expand "<cword>")
     end, { buffer = true, desc = "Arduino" })
@@ -31,12 +36,14 @@ end
 ------------------------------------------------------------------------
 
 function cmaps.makeC()
-    map("n", "<F4>", "<cmd>w <CR> <cmd>Make Debug -j12<CR>", { buffer = true, desc = "Compile Debug" })
+    map("n", "<F4>", function()
+        vim.cmd "w | Make Debug -j12"
+    end, { buffer = true, desc = "Compile Debug" })
     map("n", "<F5>", function()
-        require("utils.compiler").renderOffload("make RunRelease", "Make -j12", true)
+        require("utils.compiler").renderOffload({ "make", "RunRelease" }, "-j12", true)
     end, { buffer = true, desc = "Compile and Run Release" })
     map("n", "<F6>", function()
-        require("utils.compiler").renderOffload "make RunRelease"
+        require("utils.compiler").renderOffload { "make", "RunRelease" }
     end, { buffer = true, desc = "Run Release" })
 end
 
@@ -46,25 +53,30 @@ end
 
 -- ******************************** C files ----------------------------
 function cmaps.ctests()
-    map(
-        "n",
-        "<F3>",
-        "<cmd>w <CR> <cmd>Dispatch gcc % -lm -o %<<CR> <cmd>Dispatch ./%<<CR>",
-        { buffer = true, desc = "Use gcc" }
-    )
+    map("n", "<F3>", function()
+        vim.cmd "w"
+        require("utils").ex_cmd("Dispatch", { "gcc", "%", "-lm", "-o", "%<" }, { silent = true }, { file = true })
+    end, { buffer = true, desc = "Use gcc" })
     map("n", "<F4>", function()
         vim.cmd "w | redraw"
         require("utils.compiler").with_flags()
     end, { buffer = true, desc = "Make with defined flags" })
-    map("n", "<F5>", "<cmd>w <CR> <cmd>Make -g % -o %<<CR>", { buffer = true, desc = "Make" })
+
+    map("n", "<F5>", function()
+        vim.cmd "w"
+        require("utils").ex_cmd("Make", { "-g", "%", "-o", "%<" }, { silent = true }, { file = true })
+    end, { buffer = true, desc = "Make" })
+
     map("n", "<F6>", function()
-        require("utils.compiler").renderOffload "./%<"
+        require("utils.compiler").renderOffload { "./%<" }
     end, { buffer = true, desc = "Launch binary" })
 end
 
 -- ******************************** Pd externals ------------------------
 function cmaps.pdc()
-    map("n", "<F5>", "<cmd>w<CR><cmd>Make<CR>", { buffer = true, desc = "Build Pd external" })
+    map("n", "<F5>", function()
+        vim.cmd "w | Make"
+    end, { buffer = true, desc = "Build Pd external" })
     map("n", "<F6>", function()
         vim.cmd "w | redraw"
         require("utils.compiler").pdBuild()
@@ -154,9 +166,12 @@ function cmaps.cmake()
         vim.cmd "w | redraw"
         require("utils.compiler").cmake_gen()
     end, { buffer = true, desc = "Generate Cmake Release" })
-    map("n", "<F5>", "<cmd>w <CR> <cmd>Make -j12 -C build<CR>", { buffer = true, desc = "Make" })
+    map("n", "<F5>", function()
+        vim.cmd "w"
+        require("utils").ex_cmd("Make", { "-j12", "-C", "build" }, { silent = true })
+    end, { buffer = true, desc = "Make" })
     map("n", "<F6>", function()
-        require("utils.compiler").renderOffload(vim.g.cmakeBin)
+        require("utils.compiler").renderOffload { vim.g.cmakeBin }
     end, { buffer = true, desc = "Launch binary" })
 end
 

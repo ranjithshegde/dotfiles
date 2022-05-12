@@ -48,9 +48,9 @@ alias bs='browser-sync start --server --files "*.js, *.html, *.css"'
 alias paclist="expac --timefmt='%Y-%m-%d %T' '%l\t%n' | sort | tail -n 100"
 alias ydl='youtube-dl --external-downloader aria2c --external-downloader-args "-c -j 3 -x 3 -s 3 -k 1M"'
 
-VISUAL=nvim
+VISUAL=editor
 export VISUAL
-export EDITOR=nvim
+export EDITOR=editor
 
 setopt correct
 # Colours for Less pager-----------------------------------------------------------------

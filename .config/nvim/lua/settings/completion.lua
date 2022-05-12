@@ -20,9 +20,6 @@ function completion.init()
             ["<C-o>"] = cmp.mapping.complete(),
             ["<C-e>"] = cmp.mapping.close(),
             ["<CR>"] = cmp.mapping.confirm { select = false },
-            ["<C-k>"] = cmp.mapping(function()
-                require("utils").feedkey("<C-x><C-k>", "n")
-            end, { "i", "s" }),
             ["<C-h>"] = cmp.mapping(function(_)
                 if luasnip.jumpable(-1) then
                     luasnip.jump(-1)
@@ -109,6 +106,18 @@ function completion.init()
             require("utils.langServers").index = 1
         end,
     })
+    local isCmp = true
+    vim.keymap.set({ "i", "s" }, "<C-k>", function()
+        if isCmp then
+            cmp.mapping.close()
+            isCmp = false
+        else
+            isCmp = true
+            require("utils").feedkey("<C-e>", "n")
+            cmp.complete()
+        end
+        return "<C-N>"
+    end, { expr = true })
 end
 
 function completion.pairs()

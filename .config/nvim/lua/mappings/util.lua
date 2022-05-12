@@ -6,48 +6,41 @@ local map = vim.keymap.set
 --                              Utilities                             --
 ------------------------------------------------------------------------
 
+local function ranger(path, cmd, spl)
+    return function()
+        if spl then
+            vim.cmd(spl)
+        end
+        require("utils").ranger(path, cmd)
+    end
+end
+
 function utilmaps.ranger()
     wk.register {
         ["<leader>r"] = {
             name = "Ranger file picker",
             r = {
-                function()
-                    require("utils").ranger("%:p:h", "e ")
-                end,
+                ranger("%:p:h", "e "),
                 "from current file",
             },
             R = {
-                function()
-                    require("utils").ranger(".", "e ")
-                end,
+                ranger(".", "e "),
                 "from current directory",
             },
             v = {
-                function()
-                    vim.cmd "vnew"
-                    require("utils").ranger("%:p:h", "vs ")
-                end,
+                ranger("%:p:h", "vs ", "vnew"),
                 "in a split from current file",
             },
             V = {
-                function()
-                    vim.cmd "vnew"
-                    require("utils").ranger(".", "vs ")
-                end,
+                ranger(".", "vs ", "vnew"),
                 "in a split from current directory",
             },
             t = {
-                function()
-                    vim.cmd "tabnew"
-                    require("utils").ranger("%:p:h", "tab drop ")
-                end,
+                ranger("%:p:h", "tab drop ", "tabnew"),
                 "in a new tab from current file",
             },
             T = {
-                function()
-                    vim.cmd "tabnew"
-                    require("utils").ranger(".", "tab drop ")
-                end,
+                ranger(".", "tab drop ", "tabnew"),
                 "in a new tab from current directory",
             },
         },
@@ -55,7 +48,9 @@ function utilmaps.ranger()
 end
 
 function utilmaps.wordProcessor()
-    map("n", "<leader><Space>", '<cmd>g/^/pu ="\n"<CR>', { desc = "Double space entire file" })
+    map("n", "<leader><Space>", function()
+        require("utils").ex_cmd("global", { "/^/pu='\n'" }, { silent = true })
+    end, { desc = "Double space entire file" })
     map("n", ",K", function()
         require("utils").dictionary(vim.fn.expand "<cword>")
     end, { desc = "Lookup Wikitionary" })
@@ -144,7 +139,9 @@ end
 
 -- ******************************* Misc -------------------------------
 function utilmaps.misc()
-    vim.keymap.set("n", "<leader>e", "<cmd>Lex<CR>", { desc = "Toggle Netrw" })
+    vim.keymap.set("n", "<leader>e", function()
+        vim.cmd "Lex"
+    end, { desc = "Toggle Netrw" })
 
     vim.g.fold_preview = true
     vim.keymap.set("n", "l", function()

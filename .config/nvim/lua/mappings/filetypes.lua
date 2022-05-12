@@ -22,7 +22,7 @@ end
 
 function ftmaps.scnvim()
     map("n", "<F1>", require("scnvim").start, { buffer = true, desc = "Launch Sclang" })
-    map("n", "<F2>", "<cmd>SCNvimStatusLine<cr>", { buffer = true, desc = "Display server status" })
+    map("n", "<F2>", "scnvim#statusline#sclang_poll()", { expr = true, buffer = true, desc = "Display server status" })
     map("n", "<F3>", function()
         require("scnvim").send("Server.local.boot", true)
     end, { buffer = true, desc = "Boot local server", expr = true })

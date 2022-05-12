@@ -1,3 +1,4 @@
+---@diagnostic disable: missing-parameter
 local Compiler = {}
 local exec = vim.api.nvim_command
 
@@ -7,6 +8,16 @@ local function isFile(file)
     else
         return false
     end
+end
+
+-- set default make to Dispatch Make
+local function make(args)
+    vim.api.nvim_cmd({ cmd = "Make", args = args, mods = { silent = true } }, {})
+end
+
+-- set default terminal to Dispatch
+local function terminal(args)
+    vim.api.nvim_cmd({ cmd = "Dispatch", args = args, mods = { silent = true } }, {})
 end
 
 ------------------------------------------------------------------------
@@ -35,7 +46,6 @@ function Compiler.set_ctype()
         require("mappings.clang").makeGradle()
         vim.g.makeFile = "build.gradle"
         vim.opt.makeprg = "./gradlew"
-        -- vim.g.debugBin = "bin/" .. vim.fn.fnamemodify(vim.fn.getcwd(), ":t") .. "_debug"
     else
         vim.opt.makeprg = "g++"
         require("mappings.clang").ctests()
@@ -58,12 +68,13 @@ end
 --                                Cpp Setup	                          --
 ------------------------------------------------------------------------
 
--- Search Cplusplus.com for symbol
+---Search Cplusplus.com for symbol
 function Compiler.creference(cmd)
     local url = "https://www.cplusplus.com/search.do?q=" .. cmd
     require("utils").open_in_browser(url)
 end
 
+---Search OpenGL reference manual for symbol
 function Compiler.glRef(cmd)
     local url = "https://docs.gl/gl4/" .. cmd
     require("utils").open_in_browser(url)
@@ -71,15 +82,6 @@ end
 
 function Compiler.has_pd()
     return isFile "Makefile.pdlibbuilder"
-end
--- set default make to Dispatch Make
-function Compiler.make(cmd)
-    exec("Make " .. cmd)
-end
-
--- set default terminal to Dispatch
-function Compiler.terminal(cmd)
-    exec("Dispatch " .. cmd)
 end
 
 -- open Makefile
@@ -94,19 +96,26 @@ function Compiler.termdebug()
 end
 
 function Compiler.ctags(files)
-    local cmd = "ctagInc"
-    Compiler.terminal(cmd .. " " .. files)
+    terminal { "ctagInc", files }
 end
 
 function Compiler.pdBuild()
-    local bin = vim.fn.fnamemodify(vim.fn.getcwd(), ":t")
+    local bin = vim.fn.fnamemodify(vim.fn.getcwd(), ":t") .. ".pd_linux"
     local dest = "~/.local/lib/pd/extra/"
-    Compiler.terminal("\\cp " .. bin .. ".pd_linux " .. dest)
+    terminal { "cp", bin, dest }
 end
 
 function Compiler.with_flags()
     local flags = vim.fn.input "Enter compiler flags: "
-    Compiler.make("-g -o %< " .. flags .. " %")
+    local cmd = { "-g", "-o", "%<", "%" }
+    flags = vim.split(flags, " ")
+
+    local i = 4
+    for _, value in ipairs(flags) do
+        table.insert(cmd, i, value)
+        i = i + 1
+    end
+    make(cmd)
 end
 
 function Compiler.renderOffload(dispatch, cmd, toSave)
@@ -118,18 +127,15 @@ function Compiler.renderOffload(dispatch, cmd, toSave)
         { "Integrated graphics", "Dedicated (Nvidia) Graphics" },
         { prompt = "Run the binary on: " },
         function(choice)
-            if choice == "Integrated graphics" then
-                if cmd then
-                    vim.cmd(cmd .. " && " .. dispatch)
-                else
-                    Compiler.terminal(dispatch)
-                end
+            if choice ~= "Integrated graphics" then
+                table.insert(dispatch, 1, "prime-run")
+            end
+            if cmd then
+                table.insert(dispatch, 1, "&&")
+                table.insert(dispatch, 1, cmd)
+                make(dispatch)
             else
-                if cmd then
-                    vim.cmd(cmd .. " && prime-run " .. dispatch)
-                else
-                    Compiler.terminal("prime-run " .. dispatch)
-                end
+                terminal(dispatch)
             end
         end
     )
@@ -141,37 +147,49 @@ end
 -- Variables
 vim.g.extra_cmake_flags = "-DCMAKE_EXPORT_COMPILE_COMMANDS=ON"
 vim.g.cmake_build_dir = "build"
-vim.g.compiledb = "ln -s build/compile_commands.json ."
+vim.g.compiledb = { "ln", "-s", "build/compile_commands.json", "." }
 
 -- Cmake generate
 function Compiler.cmake_gen()
-    Compiler.terminal(
-        "mkdir build; cmake -DCMAKE_BUILD_TYPE='Release' "
-            .. vim.g.extra_cmake_flags
-            .. " -B "
-            .. vim.g.cmake_build_dir
-            .. " -S ."
-            .. ";"
-            .. vim.g.compiledb
-    )
+    terminal {
+        "mkdir",
+        "build",
+        ";",
+        "cmake",
+        "-DCMAKE_BUILD_TYPE='Release'",
+        vim.g.extra_cmake_flags,
+        "-B",
+        vim.g.cmake_build_dir,
+        "-S",
+        ".",
+        ";",
+        unpack(vim.g.compiledb),
+    }
 end
 
 -- Cmake generate debug
 function Compiler.cmake_gen_debug()
-    Compiler.terminal(
-        "mkdir build; cmake -DCMAKE_BUILD_TYPE='Debug' "
-            .. vim.g.extra_cmake_flags
-            .. " -B "
-            .. vim.g.cmake_build_dir
-            .. " -S ."
-            .. ";"
-            .. vim.g.compiledb
-    )
+    terminal {
+        "mkdir",
+        "build",
+        ";",
+        "cmake",
+        "-DCMAKE_BUILD_TYPE='Debug'",
+        vim.g.extra_cmake_flags,
+        "-B",
+        vim.g.cmake_build_dir,
+        "-S",
+        ".",
+        ";",
+        unpack(vim.g.compiledb),
+    }
 end
 
 -- Clean amd remove build dir
 function Compiler.cmake_clean()
-    Compiler.terminal("rm -r " .. vim.g.cmake_build_dir .. ";" .. "rm compile_commands.json")
+    local args = { "rm", "-r", vim.g.cmake_build_dir }
+    require("utils").silent_shell(args)
+    require("utils").silent_shell { "rm", "compile_commands.json" }
 end
 
 -- Clean and rebuild Release
@@ -189,12 +207,12 @@ end
 -- Run the binary
 function Compiler.cmake_run()
     local bin = vim.fn.fnamemodify(vim.fn.getcwd(), ":t")
-    Compiler.terminal("./build/" .. bin)
+    terminal { "./build/" .. bin }
 end
 
 -- Cmake Install
 function Compiler.cmake_install()
-    Compiler.terminal("cmake --build " .. vim.g.cmake_build_dir .. " --config Release --target install")
+    terminal { "cmake", "--build", vim.g.cmake_build_dir, "--config", "Release", "--target", "install" }
 end
 
 -----------------------------------------------------------------------
@@ -202,9 +220,8 @@ end
 ------------------------------------------------------------------------
 
 function Compiler.compiletags()
-    local create_tags_cmd = "-t compiledb"
     local controllers = Compiler.pio_env()
-    Compiler.make(create_tags_cmd)
+    make { "-t", "compiledb" }
     -- Just choose the first controller in environment list
     Compiler.linktags(controllers[1])
 end
@@ -212,7 +229,7 @@ end
 -- This is a dirty hack for LSP. There must be a nicer way of doing this. Right?
 function Compiler.linktags(microcontroller)
     local board = microcontroller or "teensy31"
-    local link_cmd = "ln -sf .pio/build/" .. board .. "/compile_commands.json ."
+    local link_cmd = { "ln", "-sf", ".pio/build/" .. board .. "/compile_commands.json", "." }
     require("utils").silent_shell(link_cmd)
 end
 
@@ -282,15 +299,13 @@ end
 
 -- Clean directory
 function Compiler.pio_clean()
-    local cmd = "pio run -t clean"
-    Compiler.terminal(cmd)
+    make { "-t", "clean" }
     Compiler.compiletags()
 end
 
 -- check directory
 function Compiler.pio_check()
-    local cmd = "pio check --skip-packages"
-    Compiler.terminal(cmd)
+    terminal { "pio", "check", "--skip-packages" }
 end
 
 function Compiler.teensypins()

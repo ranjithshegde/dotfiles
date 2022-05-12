@@ -4,8 +4,9 @@
 local exec = vim.api.nvim_command
 
 local function isFile(file)
-    if vim.loop.fs_stat(file) ~= nil then
-        return true
+    local stat = vim.loop.fs_stat(file)
+    if stat ~= nil then
+        return stat
     else
         return false
     end
@@ -32,16 +33,16 @@ end
 local function openScratch(type)
     local dir = vim.env.WORKSPACE .. type .. "/Scratch"
     if not vim.loop.fs_stat(dir).type == "directory" then
-        vim.cmd("!mkdir -p " .. dir)
+        vim.cmd { cmd = "!", args = { "mkdir", "-p", dir }, mods = { silent = true } }
     end
     vim.cmd("lcd " .. dir)
 
     vim.ui.input({ prompt = "Enter filename or directory : ", completion = "file" }, function(input)
-        if not vim.loop.fs_stat(input) then
-            execRoot(type)
-            vim.cmd("e " .. input)
-        elseif vim.loop.fs_stat(input).type == "directory" then
-            vim.fn.execute("!mkdir -p " .. input)
+        local stat = isFile(input)
+        ---@diagnostic disable-next-line: missing-parameter
+        local ext = vim.fn.fnamemodify(input, ":e")
+        if stat and stat.type == "directory" or ext == "" then
+            vim.cmd { cmd = "!", args = { "mkdir", "-p", input }, mods = { silent = true } }
             vim.fn.execute("lcd " .. input)
             execRoot(type)
             vim.ui.input({ prompt = "Enter  filename: ", completion = "file" }, function(i)
@@ -65,7 +66,7 @@ return function(type, split)
         elseif split == "v" or split == "vs" then
             opencmd = "belowright vnew"
         else
-            opencmd = "belowright new"
+            opencmd = "enew"
         end
         vim.cmd(opencmd)
     end

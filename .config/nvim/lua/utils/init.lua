@@ -27,7 +27,6 @@ end
 
 ---Restart Vim without having to close and run again
 function utils.Restart()
-    -- vim.cmd "LspStop"
     utils.UnloadAllModules()
     vim.cmd "source $MYVIMRC"
     auexec("VimEnter", {})
@@ -38,8 +37,8 @@ end
 ------------------------------------------------------------------------
 
 -- set silent exec option
-function utils.silent_shell(cmd)
-    exec("silent exe '!" .. cmd .. " &'")
+function utils.silent_shell(args)
+    vim.api.nvim_cmd({ cmd = "!", args = args, mods = { silent = true } }, {})
 end
 
 -- Toggleable terminal
@@ -148,6 +147,15 @@ function utils.trans()
         },
     }
     vim.cmd("colo " .. colo)
+end
+
+---Execute ex-command through nvim_cmd
+---@param cmd string command to execute
+---@param args table a list of arguments (each is as a string)
+---@param mods table list of modifiers like silent, split, position etc..
+---@param magic table whether the command contains magic expansion chars (%) or seperators (|)
+function utils.ex_cmd(cmd, args, mods, magic)
+    vim.api.nvim_cmd({ cmd = cmd, args = args and args, mods = mods and mods, magic = magic and magic }, {})
 end
 
 return utils

@@ -1,0 +1,87 @@
+;==================================================================================================
+
+; transparency
+; [colors]
+; background = #002F343F 
+; background-alt = #aa2F343F 
+; foreground = #000000 
+; foreground-alt = #ffb52a
+; primary = #ffffff 
+; secondary = #ff0000 
+; alert = #bd2c40
+; dat = 
+; xwin = 
+; wifi = 
+; temp = 
+; batt = 
+;
+
+
+
+;==================================================================================================
+
+;[bar/trial]
+
+;width = 100%
+;height = 27
+;; offset-x = 1%
+;offset-y = 0.5%
+;radius = 15.0
+;fixed-center = false
+;enable-ipc = true
+
+;background = ${colors.background}
+;foreground = ${colors.foreground}
+
+;line-size = 3
+;line-color = #f00
+
+;border-size = 2
+;border-color = #00000000
+
+;padding-left = 0
+;padding-right = 2
+
+;module-margin-left = 1
+;module-margin-right = 2
+
+;font-0 = Mononoki Nerd Font Bold:pixelsize=12;1
+;font-1 = Material Design Icons:pixelsize=12;1
+;font-2 = MesloLGS NF:style=Regular:size=20;3
+;font-3 = JoyPixels:pixelsize=10;1
+;font-4 = Hack:pixelsize=10;1
+
+;modules-left = dwm paddingbig xwindow paddingmega date  
+;; modules-center = date  
+;modules-right = paddingmega backlight alsa cpu wlan temperature battery 
+
+;tray-position = right
+;tray-padding = 2
+;;tray-background = #0063ff
+
+;override-redirect = false
+
+
+
+
+
+;==================================================================================================
+
+; [module/filesystem]
+; type = internal/fs
+; interval = 25
+
+; mount-0 = /
+
+; label-mounted = %{F#0a81f5}%mountpoint%%{F-}: %percentage_used%%
+; label-unmounted = %mountpoint% not mounted
+; label-unmounted-foreground = ${colors.foreground-alt}
+
+; format-prefix =  " "
+; label-volume = 󰕾
+
+
+compositing-background = xor
+compositing-background = screen
+compositing-foreground = source
+compositing-border = over
