@@ -1,7 +1,6 @@
-#!/usr/bin/zsh
+#!/bin/sh
 
 modprobe bluetooth
 modprobe btusb
 systemctl start bluetooth
 rfkill unblock all
-

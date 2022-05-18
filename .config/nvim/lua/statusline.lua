@@ -102,7 +102,7 @@ end
 
 --*********************************** SuperCollider ---------------------
 local function scnvim(_, buffer)
-    if vim.api.nvim_buf_get_option(buffer.bufnr, "filetype") == "supercollider" then
+    if vim.bo[buffer.bufnr].filetype == "supercollider" then
         local scstatus = vim.fn["scnvim#statusline#server_status"]()
         if scstatus ~= "" then
             return "📡 [" .. scstatus .. "]"
@@ -113,7 +113,7 @@ end
 
 --*********************************** Git branch ------------------------
 local git_branch = subscribe.buf_autocmd("el_git_branch", "BufReadPre", function(window, buffer)
-    local ft = vim.api.nvim_buf_get_option(buffer.bufnr, "filetype")
+    local ft = vim.bo[buffer.bufnr].filetype
     if ft == "TelescopePrompt" then
         return
     end
@@ -154,7 +154,7 @@ local diagnostics = require("el.diagnostic").make_buffer(require("utils.diagnost
 
 local tsNodes = require("utils.tables").tsNodes
 local function gps(_, buffer)
-    local fs = vim.api.nvim_buf_get_option(buffer.bufnr, "filetype")
+    local fs = vim.bo[buffer.bufnr].filetype
     local context = require("settings.treesitter").statusline {
         indicator_size = vim.b.gps or 35,
         type_patterns = tsNodes.filetype[fs] or tsNodes.default,
@@ -209,8 +209,8 @@ end
 ------------------------------------------------------------------------
 
 --*********************************** File label -----------------------
-local function getTabLabel(n)
-    local current_win = vim.api.nvim_tabpage_get_win(n)
+local function getTabLabel(n, tab)
+    local current_win = tab and vim.api.nvim_tabpage_get_win(n) or n
     local current_buf = vim.api.nvim_win_get_buf(current_win)
     local file_name = vim.api.nvim_buf_get_name(current_buf)
 
@@ -229,7 +229,12 @@ local function getTabLabel(n)
     local icon, color = require("nvim-web-devicons").get_icon_color(tail, ext)
     if icon ~= nil then
         local table = vim.api.nvim_get_hl_by_name("TablineSel", true)
-        vim.api.nvim_set_hl(0, "IconColor", { bg = table["background"], fg = color, cterm = { bold = true } })
+        if tab then
+            vim.api.nvim_set_hl(0, "IconColor", { bg = table["background"], fg = color, cterm = { bold = true } })
+            vim.api.nvim_set_hl(0, "WinBar", { fg = color, cterm = { bold = true } })
+        else
+            vim.api.nvim_set_hl(0, "WinBar", { fg = color, cterm = { bold = true } })
+        end
         return { tail, icon }
     else
         return { tail }
@@ -253,7 +258,7 @@ function Statusline.tabs()
     local tab_list = vim.api.nvim_list_tabpages()
     local current_tab = vim.api.nvim_get_current_tabpage()
     for _, val in ipairs(tab_list) do
-        local name = getTabLabel(val)
+        local name = getTabLabel(val, true)
         if val == current_tab then
             if name[2] then
                 tabline = tabline .. "%#IconColor#" .. space .. name[2] .. "%#TabLineSel# " .. name[1] .. space
@@ -267,6 +272,27 @@ function Statusline.tabs()
     tabline = tabline .. "%#TabLineFill#" .. "%="
     tabline = tabline .. "%#TabLineSel# " .. rootDir() .. space
     return tabline
+end
+
+function Statusline.winbar(n)
+    local label = getTabLabel(n, false)
+    if label[1]:match "Empty" then
+        return
+    end
+    local tabpage = vim.api.nvim_win_get_tabpage(n)
+    local list = vim.api.nvim_tabpage_list_wins(tabpage)
+
+    if not list[2] then
+        return
+    end
+
+    local winbar
+    if label[2] then
+        winbar = "%=" .. "%#WinBar#" .. space .. label[2] .. "%## " .. label[1] .. "%="
+    else
+        winbar = "%=" .. label[1] .. "%="
+    end
+    vim.wo.winbar = winbar
 end
 
 return Statusline

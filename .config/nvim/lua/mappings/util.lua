@@ -19,30 +19,12 @@ function utilmaps.ranger()
     wk.register {
         ["<leader>r"] = {
             name = "Ranger file picker",
-            r = {
-                ranger("%:p:h", "e "),
-                "from current file",
-            },
-            R = {
-                ranger(".", "e "),
-                "from current directory",
-            },
-            v = {
-                ranger("%:p:h", "vs ", "vnew"),
-                "in a split from current file",
-            },
-            V = {
-                ranger(".", "vs ", "vnew"),
-                "in a split from current directory",
-            },
-            t = {
-                ranger("%:p:h", "tab drop ", "tabnew"),
-                "in a new tab from current file",
-            },
-            T = {
-                ranger(".", "tab drop ", "tabnew"),
-                "in a new tab from current directory",
-            },
+            r = { ranger("%:p:h", "e "), "from current file" },
+            R = { ranger(".", "e "), "from current directory" },
+            v = { ranger("%:p:h", "vs ", "vnew"), "in a split from current file" },
+            V = { ranger(".", "vs ", "vnew"), "in a split from current directory" },
+            t = { ranger("%:p:h", "tab drop ", "tabnew"), "in a new tab from current file" },
+            T = { ranger(".", "tab drop ", "tabnew"), "in a new tab from current directory" },
         },
     }
 end

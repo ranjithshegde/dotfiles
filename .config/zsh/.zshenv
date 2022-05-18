@@ -46,9 +46,9 @@ export OCTAVE_HISTFILE="$XDG_CACHE_HOME/octave-hsts"
 export OCTAVE_SITE_INITFILE="$XDG_CONFIG_HOME/octave/octaverc"
 
 # CUSTOM PATH ENVS
-export PG_OF_PATH="$HOME"/Documents/ofWorkspace/
 export CWORK="$HOME"/Software/Workspaces/cpp
 export WORKSPACE="$HOME"/Software/Workspaces/
+export PG_OF_PATH="$WORKSPACE"openFrameworks
 
 # Addition to path...
 appendpath() {

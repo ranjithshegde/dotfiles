@@ -46,7 +46,10 @@
 
 (require 'ox-latex)
 (add-to-list 'org-latex-packages-alist '("" "minted"))
-(setq org-latex-listings 'minted) 
+(setq org-latex-listings 'minted)
+
+;; (add-to-list 'org-latex-packages-alist '("" "lstlisting"))
+;; (setq org-latex-listings 'lstlisting)
 
 (setq org-latex-pdf-process
       '("pdflatex -shell-escape -interaction nonstopmode -output-directory %o %f"

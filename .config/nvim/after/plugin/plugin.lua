@@ -2,7 +2,11 @@
 local cmd = vim.api.nvim_create_user_command
 
 cmd("Scratch", function(opts)
-    require "utils.scratchpad"(_, opts.args)
+    if opts.args ~= "" then
+        require "utils.scratchpad"(_, string.gsub(opts.args, [["]], ""))
+    else
+        require "utils.scratchpad"()
+    end
 end, {})
 
 cmd("WordCount", function()
@@ -32,14 +36,18 @@ cmd("Su", "w !sudo tee %", {})
 require("mappings.util").ranger()
 require("mappings.util").orgWiki()
 require("mappings.util").misc()
-require "mappings.telescope"
+vim.keymap.set("n", "<Space>", function()
+    vim.keymap.del("n", "<Space>")
+    require "mappings.telescope"
+    vim.api.nvim_input "<Space>"
+end)
 
--- ******************* new functions --------------------------------------------
+-- ******************* Global functions --------------------------------------------
 
-W = function(v)
-    local f = io.open("package.txt", "w+")
-    f:write(vim.inspect(v))
-end
+-- W = function(v)
+--     local f = io.open("package.txt", "w+")
+--     f:write(vim.inspect(v))
+-- end
 
 RELOAD = function(module)
     if type(module) == "table" then

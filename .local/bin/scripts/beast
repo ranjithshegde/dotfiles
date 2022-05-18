@@ -1,10 +1,8 @@
 #!/bin/sh
 
-echo performance > /sys/module/pcie_aspm/parameters/policy
-# echo 'performance' > /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor
-# cpupower frequency-set -g performance
+echo performance >/sys/module/pcie_aspm/parameters/policy
 x86_energy_perf_policy performance
-asusctl profile boost -f boost -t true
+asusctl profile -P Performance
+# asusctl profile -P Performance -f boost -t true
 
 echo "boost on, cpu & pci-e ports on performance mode"
-

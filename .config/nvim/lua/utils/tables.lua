@@ -27,6 +27,7 @@ tables.lspfiles = {
     "lua",
     "make",
     "markdown",
+    -- "supercollider",
     "org",
     "python",
     "vim",
@@ -46,6 +47,7 @@ tables.projectTypes = {
 
 ---Filetypes that are read-only
 tables.ignoreFiles = {
+    "",
     "qf",
     "man",
     "help",
@@ -54,8 +56,10 @@ tables.ignoreFiles = {
     "packer",
     "Outline",
     "lspinfo",
+    "WhichKey",
     "checkhealth",
-    "",
+    "TelescopePrompt",
+    "TelescopeResults",
 }
 
 tables.ignore_binaries = {

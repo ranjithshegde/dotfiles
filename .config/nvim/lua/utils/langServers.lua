@@ -42,8 +42,8 @@ langSettings.lsp_capabilities = function()
     end
 
     vim.api.nvim_buf_set_lines(bufnr, 0, -1, true, buf_lines)
-    vim.api.nvim_buf_set_option(bufnr, "modifiable", false)
-    vim.api.nvim_buf_set_option(bufnr, "filetype", "lspinfo")
+    vim.bo[bufnr].modifiable = false
+    vim.bo[bufnr].filetype = "lspinfo"
     local configs_pattern = [[\%(]] .. table.concat(langSettings.getClientNames(), [[\|]]) .. [[\)]]
     vim.cmd([[syntax match Title /\%(Client\):.*\zs]] .. configs_pattern .. "/")
     vim.keymap.set("n", "<esc>", "<cmd>bd<CR>", { buffer = bufnr })

@@ -97,7 +97,11 @@ end
 -- set browser
 local browser = "qutebrowser"
 function utils.open_in_browser(url)
-    os.execute(browser .. " " .. url)
+    if type(url) == "table" then
+        vim.loop.spawn(browser, { args = url })
+    else
+        vim.loop.spawn(browser, { args = { url } })
+    end
 end
 
 ---Concat all lines from a file into a table
@@ -156,6 +160,22 @@ end
 ---@param magic table whether the command contains magic expansion chars (%) or seperators (|)
 function utils.ex_cmd(cmd, args, mods, magic)
     vim.api.nvim_cmd({ cmd = cmd, args = args and args, mods = mods and mods, magic = magic and magic }, {})
+end
+
+function utils.get_visual_selection(bufnr)
+    vim.api.nvim_input "<Esc>"
+    vim.api.nvim_input "gv"
+    local first = vim.api.nvim_buf_get_mark(bufnr, "<")
+    local last = vim.api.nvim_buf_get_mark(bufnr, ">")
+    local lines = vim.api.nvim_buf_get_lines(bufnr, first[1], last[1], true)
+
+    return {
+        lines = lines,
+        line_start = first[1],
+        line_end = last[1],
+        col_start = first[2],
+        col_end = last[2],
+    }
 end
 
 return utils

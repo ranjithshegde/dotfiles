@@ -1,3 +1,4 @@
+---@diagnostic disable: missing-parameter
 local aucmd = vim.api.nvim_create_autocmd
 local augroup = vim.api.nvim_create_augroup
 local auexec = vim.api.nvim_exec_autocmds
@@ -25,33 +26,61 @@ aucmd("FileType", {
             + "j" -- Auto-remove comments if possible.
             + "2" -- Indent according to 2nd line
     end,
+    desc = "Custom formatoptions",
 })
-
-aucmd({ "InsertEnter", "WinLeave", "FocusLost", "BufNewFile", "BufReadPost" }, {
+aucmd("FileType", {
+    group = "FormatOptions",
+    callback = function(args)
+        if vim.tbl_contains(require("utils.tables").ignoreFiles, args.match) then
+            vim.opt.relativenumber = false
+            vim.opt_local.cursorline = false
+            return
+        end
+        vim.opt.relativenumber = true
+        vim.opt_local.cursorline = true
+        require("statusline").winbar(vim.api.nvim_get_current_win())
+    end,
+})
+aucmd({ "InsertEnter", "WinLeave", "FocusLost", "BufNewFile" }, {
     group = "FormatOptions",
     callback = function()
-        if vim.tbl_contains(require("utils.tables").ignoreFiles, vim.api.nvim_buf_get_option(0, "filetype")) then
+        if vim.tbl_contains(require("utils.tables").ignoreFiles, vim.bo.filetype) then
             return
         end
         vim.opt.relativenumber = false
     end,
+    desc = "Dont use relativenumber where it makes no sense",
 })
 aucmd({ "InsertLeave", "WinEnter", "FocusGained" }, {
     group = "FormatOptions",
     callback = function()
-        if vim.tbl_contains(require("utils.tables").ignoreFiles, vim.api.nvim_buf_get_option(0, "filetype")) then
+        if vim.tbl_contains(require("utils.tables").ignoreFiles, vim.bo.filetype) then
             return
         end
         vim.opt.relativenumber = true
     end,
+    desc = "use relativenumber conditionally",
 })
-aucmd("FileType", {
+aucmd({ "FocusGained", "WinEnter" }, {
     group = "FormatOptions",
     callback = function()
-        if vim.tbl_contains(require("utils.tables").ignoreFiles, vim.api.nvim_buf_get_option(0, "filetype")) then
-            vim.opt_local.foldenable = false
+        if vim.tbl_contains(require("utils.tables").ignoreFiles, vim.bo.filetype) then
+            return
         end
+        vim.opt_local.cursorline = true
+        require("statusline").winbar(vim.api.nvim_get_current_win())
     end,
+    desc = "use cursorline only on active buffers && Winbar on tabpages with more than one window",
+})
+aucmd({ "FocusLost", "WinLeave" }, {
+    group = "FormatOptions",
+    callback = function()
+        if vim.tbl_contains(require("utils.tables").ignoreFiles, vim.bo.filetype) then
+            return
+        end
+        vim.opt_local.cursorline = false
+    end,
+    desc = "dont use cursorline only on inactive buffers",
 })
 
 -- ************** Lsp Configuration loading  ------------------------------
@@ -68,6 +97,7 @@ aucmd("FileType", {
             vim.cmd "w | source %"
         end, { buffer = true, desc = "evaluate current file" })
     end,
+    desc = "FileType optiosn & keybinds for Vimscript",
 })
 aucmd("FileType", {
     group = "LspSettings",
@@ -79,6 +109,7 @@ aucmd("FileType", {
         auexec("FileType", { group = "lspconfig" })
     end,
     once = true,
+    desc = "Initialize lsp settings, AuGroups and server configurations",
 })
 aucmd("FileType", {
     group = "LspSettings",
@@ -86,7 +117,18 @@ aucmd("FileType", {
     callback = function()
         require("mappings.clang").clang()
     end,
+    desc = "OpenCL filetype to handle C++ lsp",
 })
+aucmd("LspAttach", {
+    group = "LspSettings",
+    callback = function(args)
+        local bufnr = args.buf
+        local client = vim.lsp.get_client_by_id(args.data.client_id)
+        require("lsp").attach(client, bufnr)
+    end,
+    desc = "Call attach function on event LspAttach",
+})
+
 -- ************** Treesitter --------------------------------------
 augroup("TreeSitter", opts)
 aucmd("BufReadPost", {
@@ -113,11 +155,13 @@ aucmd("FileType", {
             require("utils").toggleTerm(vim.g.repl, "repl")
         end, { desc = "Toggle REPL" })
     end,
+    desc = "set compiler and toggleable REPL for capable filetypes",
 })
 aucmd("BufWritePost", {
     group = "MakeDispatch",
     pattern = { "*.glsl", "*.vert", "*.frag", "*.geom", "*.vs", "*.fs", "*.gs" },
     command = "Dispatch glslangValidator %",
+    desc = "Glsl linter",
 })
 
 -- Compile packer after writing plugins.lua
@@ -129,12 +173,14 @@ aucmd("BufWritePost", {
         exec "source <afile>"
         require("packer").compile()
     end,
+    desc = "Autocompile packer",
 })
 aucmd("BufReadPost", {
     group = "PluginLoad",
     callback = function()
         require "mappings.pairs"
     end,
+    desc = "Load unimpaired mappings after reading buffer",
 })
 aucmd("BufReadPost", { group = "PluginLoad", command = "packadd matchit", once = true })
 aucmd("User", { pattern = "PackerComplete", group = "PluginLoad", command = "LuaCacheClear" })
@@ -191,12 +237,12 @@ aucmd("FileType", {
 
 augroup("NoVim", opts)
 aucmd("BufRead", {
-    pattern = { "*.png", "*.jpg", "*.pdf", "*.gif", "*.jpeg", "*.svg", "*.odt", "*.doc*", "*.rtf" },
+    pattern = { "*.png", "*.PNG", "*.jpg", "*.pdf", "*.gif", "*.jpeg", "*.svg", "*.odt", "*.doc*", "*.rtf" },
     group = "NoVim",
     callback = function()
-        ---@diagnostic disable-next-line: missing-parameter
-        os.execute("xdg-open " .. vim.fn.shellescape(vim.fn.expand "%:p"))
+        vim.loop.spawn("xdg-open", { args = { vim.fn.expand "%:p" } })
         vim.api.nvim_buf_delete(vim.api.nvim_get_current_buf(), { force = true })
         vim.cmd "let &ft = &ft"
     end,
+    desc = "Open non text files with MIME",
 })

@@ -84,27 +84,23 @@ end
 local telescope = {}
 
 function telescope.cdBrowser(prompt, cwd)
-    return function()
-        require("telescope").extensions.file_browser.file_browser {
-            prompt_title = prompt,
-            cwd = cwd,
-            attach_mappings = function(prompt_bufnr, maps)
-                return navigate(prompt_bufnr, maps, cwd, false)
-            end,
-        }
-    end
+    require("telescope").extensions.file_browser.file_browser {
+        prompt_title = prompt,
+        cwd = cwd,
+        attach_mappings = function(prompt_bufnr, maps)
+            return navigate(prompt_bufnr, maps, cwd, false)
+        end,
+    }
 end
 
 function telescope.cdFiles(prompt, cwd)
-    return function()
-        require("telescope.builtin").find_files {
-            prompt_title = prompt,
-            cwd = cwd,
-            attach_mappings = function(prompt_bufnr, maps)
-                return navigate(prompt_bufnr, maps, cwd, true)
-            end,
-        }
-    end
+    require("telescope.builtin").find_files {
+        prompt_title = prompt,
+        cwd = cwd,
+        attach_mappings = function(prompt_bufnr, maps)
+            return navigate(prompt_bufnr, maps, cwd, true)
+        end,
+    }
 end
 
 function telescope.telescope()
@@ -132,6 +128,10 @@ function telescope.telescope()
             prompt_prefix = "❯ ",
             selection_caret = "❯ ",
             file_ignore_patterns = require("utils.tables").ignore_binaries,
+            history = {
+                path = vim.env.XDG_DATA_HOME .. "/nvim/databases/telescope_history.sqlite3",
+                limit = 100,
+            },
         },
     }
 end

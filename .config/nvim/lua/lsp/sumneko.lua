@@ -10,7 +10,6 @@ function servers.sumneko()
             plugins = { "plenary.nvim", "express_line.nvim", "nvim-lspconfig", "nvim-treesitter" },
         },
         lspconfig = {
-            on_attach = require("lsp").attach,
             capabilities = require("lsp").capabilities(),
             settings = { Lua = { diagnostics = { globals = { "vim", "pd" } } } },
         },

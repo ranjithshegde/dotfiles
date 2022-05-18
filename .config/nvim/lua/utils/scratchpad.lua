@@ -57,7 +57,7 @@ end
 
 return function(type, split)
     if not type then
-        type = vim.api.nvim_buf_get_option(0, "filetype")
+        type = vim.bo.filetype
     end
     local opencmd
     if split then

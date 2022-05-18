@@ -1,1 +1,7 @@
-vim.keymap.set("n", "<F6>", '<cmd>Dispatch browser-sync start --server --files "*.js,*.html,*.css"<CR>', { buffer = true, desc = "Launch in browser"})
+vim.keymap.set("n", "<F6>", function()
+    vim.api.nvim_cmd({
+        cmd = "Dispatch",
+        args = { "browser-sync", "start", "--server", "--files", '"*.js,*.html,*.css"' },
+        magic = { file = true },
+    }, {})
+end, { buffer = true, desc = "Launch in browser" })

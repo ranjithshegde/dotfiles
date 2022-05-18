@@ -120,14 +120,14 @@ for_window [instance="dropdown_*"] move position center
 
   output eDP-1 {
   background /home/ranjith/Pictures/backgrounds/blob.png fill
-  # bg /usr/share/backgrounds/sway/Sway_Wallpaper_Blue_1920x1080.png fill
-  # resolution 1920x1080@59.999001Hz
   }
 
+  output HDMI1 pos 0 0 res 1920x1080
+
   # output HDMI1
-  # output HDMI1 { 
-  # pos 1920 0
-  # res 1920x1080
+  # set $output-seconary HDMI1 {
+  #   pos 1920 0
+  #   res 1920x1080
   # }
 
 #

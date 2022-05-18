@@ -64,6 +64,25 @@ function lsp.attach(client, bufnr)
     require("utils.diagnostics").attach({ all = false, underline = false, update_in_insert = false }, client)
 
     local sc = client.server_capabilities
+    if client.name == "ccls" then
+        sc.completionProvider = false
+        sc.documentFormattingProvider = false
+        sc.documentRangeFormattingProvider = false
+        sc.documentHighlightProvider = false
+        sc.documentSymbolProvider = false
+        sc.workspaceSymbolProvider = false
+        sc.renameProvider = false
+        sc.hoverProvider = false
+        sc.codeActionProvider = false
+        aucmd("BufWritePost", {
+            buffer = bufnr,
+            group = "LspCodeLens",
+            callback = vim.lsp.codelens.refresh,
+        })
+        vim.lsp.codelens.refresh()
+        return
+    end
+
     if sc.documentHighlightProvider then
         aucmd("CursorHold", {
             group = "LspHighlightSymbols",
@@ -92,26 +111,6 @@ function lsp.attach(client, bufnr)
     vim.api.nvim_create_user_command("LspCapabilities", require("utils.langServers").lsp_capabilities, {})
 end
 
----**************************** Ccls reduction function
-function lsp.cattach(client, bufnr)
-    local sc = client.server_capabilities
-    sc.completionProvider = false
-    sc.documentFormattingProvider = false
-    sc.documentRangeFormattingProvider = false
-    sc.documentHighlightProvider = false
-    sc.documentSymbolProvider = false
-    sc.workspaceSymbolProvider = false
-    sc.renameProvider = false
-    sc.hoverProvider = false
-    sc.codeActionProvider = false
-    aucmd("BufWritePost", {
-        buffer = bufnr,
-        group = "LspCodeLens",
-        callback = vim.lsp.codelens.refresh,
-    })
-    vim.lsp.codelens.refresh()
-end
-
 ------------------------------------------------------------------------
 --                         Language servers                           --
 ------------------------------------------------------------------------
@@ -119,20 +118,20 @@ end
 function lsp.servers()
     local dict = vim.api.nvim_get_option "spellfile"
     local configs = {
-        jsonls = { on_attach = lsp.attach },
-        yamlls = { on_attach = lsp.attach },
-        html = { on_attach = lsp.attach, capabilities = lsp.capabilities() },
-        cssls = { on_attach = lsp.attach, capabilities = lsp.capabilities() },
-        cmake = { on_attach = lsp.attach, capabilities = lsp.capabilities() },
-        vimls = { on_attach = lsp.attach, capabilities = lsp.capabilities() },
-        dartls = { on_attach = lsp.attach, capabilities = lsp.capabilities() },
-        pyright = { on_attach = lsp.attach, capabilities = lsp.capabilities() },
-        tsserver = { on_attach = lsp.attach, capabilities = lsp.capabilities() },
-        bashls = { on_attach = lsp.attach, capabilities = lsp.capabilities(), filetypes = { "sh", "zsh" } },
+        jsonls = {},
+        yamlls = {},
+        -- supercollider = {},
+        html = { capabilities = lsp.capabilities() },
+        cssls = { capabilities = lsp.capabilities() },
+        cmake = { capabilities = lsp.capabilities() },
+        vimls = { capabilities = lsp.capabilities() },
+        dartls = { capabilities = lsp.capabilities() },
+        pyright = { capabilities = lsp.capabilities() },
+        tsserver = { capabilities = lsp.capabilities() },
+        bashls = { capabilities = lsp.capabilities(), filetypes = { "sh", "zsh" } },
         ltex = {
             autostart = false,
             filetypes = { "bib", "markdown", "org", "tex" },
-            on_attach = lsp.attach,
             capabilities = lsp.capabilities(),
             settings = {
                 ltex = {
@@ -147,7 +146,6 @@ function lsp.servers()
             },
         },
         texlab = {
-            on_attach = lsp.attach,
             -- capabilities = lsp.capabilities,
             settings = {
                 texlab = {
@@ -244,7 +242,6 @@ function lsp.lintFormat()
     lspconfig.efm.setup {
         filetypes = vim.tbl_keys(languages),
         root_dir = rootDir,
-        on_attach = lsp.attach,
         init_options = { documentFormatting = true, codeAction = true },
         settings = { rootMarkers = rootMarker, languages = languages },
     }

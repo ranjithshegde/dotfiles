@@ -2,8 +2,19 @@
 --                              Telescope                             --
 ------------------------------------------------------------------------
 
-local cd_files = require("settings.telescope").cdFiles
-local cd_browser = require("settings.telescope").cdBrowser
+local cd_files = function(...)
+    local args = { ... }
+    return function()
+        require("settings.telescope").cdFiles(args[1], args[2])
+    end
+end
+
+local cd_browser = function(...)
+    local args = { ... }
+    return function()
+        require("settings.telescope").cdBrowser(args[1], args[2])
+    end
+end
 
 local tele = function(name)
     return function()

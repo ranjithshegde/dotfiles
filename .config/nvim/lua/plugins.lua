@@ -79,6 +79,19 @@ return require("packer").startup {
             end,
         }
 
+        -- ZenMode
+        use {
+            { "folke/zen-mode.nvim", cmd = "ZenMode" },
+            {
+                "folke/twilight.nvim",
+                after = "zen-mode.nvim",
+                config = function()
+                    require("zen-mode").setup()
+                    require("twilight").setup()
+                end,
+            },
+        }
+
         -- OrgWiki
         use {
             wiki,
@@ -207,45 +220,6 @@ return require("packer").startup {
             end,
         }
 
-        -- Telescope
-        use {
-            {
-                "nvim-telescope/telescope.nvim",
-                module = "telescope",
-                cmd = "Telescope",
-                config = function()
-                    require("settings.telescope").telescope()
-                end,
-                requires = "nvim-lua/plenary.nvim",
-            },
-            { "nvim-telescope/telescope-file-browser.nvim", after = "telescope.nvim" },
-            {
-                "nvim-telescope/telescope-fzf-native.nvim",
-                after = "telescope.nvim",
-                run = "make",
-                config = function()
-                    require("telescope").load_extension "fzf"
-                end,
-            },
-            {
-                "nvim-telescope/telescope-project.nvim",
-                after = "telescope.nvim",
-                config = function()
-                    require("telescope").setup {
-                        extensions = {
-                            project = {
-                                base_dirs = {
-                                    { "~/Software/Workspaces", max_depth = 5 },
-                                    { "~/Documents/ofWorkspace", max_depth = 5 },
-                                    { "~/Documents/LaTeX", max_depth = 3 },
-                                },
-                            },
-                        },
-                    }
-                end,
-            },
-        }
-
         --Lsp config and companions
         use {
             { "neovim/nvim-lspconfig", branch = "feat/0_7_goodies" },
@@ -323,6 +297,57 @@ return require("packer").startup {
                 config = function()
                     require("lsp_signature").setup {
                         hint_enable = false,
+                    }
+                end,
+            },
+        }
+
+        -- Telescope
+        use {
+            {
+                "nvim-telescope/telescope.nvim",
+                module = "telescope",
+                cmd = "Telescope",
+                config = function()
+                    require("packer").loader "sqlite.lua"
+                    require("settings.telescope").telescope()
+                end,
+                requires = "nvim-lua/plenary.nvim",
+            },
+            { "nvim-telescope/telescope-file-browser.nvim", after = "telescope-project.nvim" },
+            {
+                "nvim-telescope/telescope-fzf-native.nvim",
+                after = "telescope-smart-history.nvim",
+                run = "make",
+                config = function()
+                    require("telescope").load_extension "fzf"
+                end,
+            },
+            {
+                "nvim-telescope/telescope-smart-history.nvim",
+                after = "sqlite.lua",
+                config = function()
+                    require("telescope").load_extension "smart_history"
+                end,
+            },
+            { "tami5/sqlite.lua", opt = true },
+            {
+                "nvim-telescope/telescope-project.nvim",
+                after = "telescope-fzf-native.nvim",
+                config = function()
+                    require("telescope").setup {
+                        extensions = {
+                            project = {
+                                base_dirs = {
+                                    { "~/Documents/LaTeX", max_depth = 3 },
+                                    { "~/Software/Workspaces/lua", max_depth = 4 },
+                                    { "~/Software/Workspaces/cpp", max_depth = 4 },
+                                    { "~/Software/Workspaces/Repos", max_depth = 4 },
+                                    { "~/Software/Workspaces/electronics", max_depth = 4 },
+                                    { "~/Software/Workspaces/openFrameworks", max_depth = 5 },
+                                },
+                            },
+                        },
                     }
                 end,
             },

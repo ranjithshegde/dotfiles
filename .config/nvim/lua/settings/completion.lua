@@ -95,17 +95,11 @@ function completion.init()
     }
     require("luasnip.loaders.from_vscode").lazy_load()
 
-    local fs = vim.api.nvim_buf_get_option(0, "filetype")
+    local fs = vim.bo.filetype
     if fs == "cpp" or fs == "c" then
         require("lsp.clangd").clangCmp()
     end
 
-    vim.api.nvim_create_autocmd("InsertLeave", {
-        group = "FormatOptions",
-        callback = function()
-            require("utils.langServers").index = 1
-        end,
-    })
     local isCmp = true
     vim.keymap.set({ "i", "s" }, "<C-k>", function()
         if isCmp then

@@ -11,7 +11,6 @@ function settings.options()
     -- o.list = true
     o.number = true
     o.expandtab = true
-    o.cursorline = true
     o.shiftround = true
     o.splitbelow = true
     o.splitright = true
@@ -26,7 +25,6 @@ function settings.options()
     o.timeoutlen = 100
     o.conceallevel = 1
     o.laststatus = 3
-    -- o.foldmethod = "indent"
     o.foldmethod = "expr"
     o.inccommand = "split"
     o.spelloptions = "camel"

@@ -11,13 +11,28 @@ function lspmap.lsp(bufnr)
         ["<F7>"] = { require("debugger").init, "Initialize Debugger adapter" },
         [","] = {
             name = "Lsp functions",
-            D = { vim.lsp.buf.declaration, "Jump to Declaration" },
-            d = { vim.lsp.buf.definition, "Jump to Definition" },
-            i = { vim.lsp.buf.implementation, "Jump to Implementation" },
-            t = { vim.lsp.buf.type_definition, "Jump to Type definition" },
-            s = { vim.lsp.buf.signature_help, "Show signature" },
             R = { vim.lsp.buf.rename, "Rename symbol" },
+            s = { vim.lsp.buf.signature_help, "Show signature" },
             a = { vim.lsp.buf.code_action, "Code actions for buffer" },
+            i = { vim.lsp.buf.implementation, "Jump to Implementation" },
+            D = {
+                function()
+                    vim.lsp.buf.declaration { reuse_win = true }
+                end,
+                "Jump to Declaration",
+            },
+            d = {
+                function()
+                    vim.lsp.buf.definition { reuse_win = true }
+                end,
+                "Jump to Definition",
+            },
+            t = {
+                function()
+                    vim.lsp.buf.type_definition { reuse_win = true }
+                end,
+                "Jump to Type definition",
+            },
             r = {
                 function()
                     vim.lsp.buf.references { includeDeclaration = false }

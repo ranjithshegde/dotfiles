@@ -7,7 +7,6 @@ local servers = {}
 function servers.clangd()
     require("clangd_extensions").setup {
         server = {
-            on_attach = require("lsp").attach,
             capabilities = require("lsp").capabilities(),
             filetypes = { "c", "cpp", "opencl" },
             cmd = {
@@ -60,7 +59,6 @@ function servers.ccls()
 
     local lspconfig = require "lspconfig"
     local ccls = {
-        on_attach = require("lsp").cattach,
         filetypes = { "c", "cpp", "objc", "objcpp", "opencl" },
         handlers = {
             ["textDocument/publishDiagnostics"] = nilfunc,

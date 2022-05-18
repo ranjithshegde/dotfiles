@@ -220,35 +220,13 @@ end
 ------------------------------------------------------------------------
 
 function Compiler.compiletags()
-    local controllers = Compiler.pio_env()
     make { "-t", "compiledb" }
-    -- Just choose the first controller in environment list
-    Compiler.linktags(controllers[1])
-end
-
--- This is a dirty hack for LSP. There must be a nicer way of doing this. Right?
-function Compiler.linktags(microcontroller)
-    local board = microcontroller or "teensy31"
-    local link_cmd = { "ln", "-sf", ".pio/build/" .. board .. "/compile_commands.json", "." }
-    require("utils").silent_shell(link_cmd)
-end
-
--- Check if there is a platformio init file in root
-function Compiler.has_pio_file()
-    local name = "platformio.ini"
-    local f = io.open(name, "r")
-    if f ~= nil then
-        io.close(f)
-        return true
-    else
-        return false
-    end
 end
 
 -- get all lines from a file, returns an empty
 -- list/table if the file does not exist
 function Compiler.lines_from(file)
-    if not Compiler.has_pio_file() then
+    if not isFile(file) then
         return {}
     end
     local lines = {}

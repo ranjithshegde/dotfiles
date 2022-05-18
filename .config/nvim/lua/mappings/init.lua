@@ -50,7 +50,7 @@ function mappings.init()
     end, { desc = "Move cursor to middle of the line" })
     map("n", "<leader>S", function()
         require "utils.scratchpad"(_, "tab")
-    end, { desc = "Toggle quickfix" })
+    end, { desc = "Open ScratchPad" })
 
     -- Terminals
     wk.register {

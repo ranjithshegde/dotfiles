@@ -123,6 +123,9 @@ source /usr/share/fzf/completion.zsh
 # source "$ZDOTDIR"/functions/status.sh
 
 eval "$(pip completion --zsh)"
+# Begin: PlatformIO Core completion support
+eval "$(_PIO_COMPLETE=zsh_source pio)"
+# End: PlatformIO Core completion support
 
 
 bindkey '^[[A' history-substring-search-up

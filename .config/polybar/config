@@ -212,12 +212,12 @@ date-alt = " %A %B %e %Y,"
 time = "%H:%M "
 time-alt = "%H:%M "
 
-format-prefix = "󰃰"
+format-prefix = 󰃰
 format-prefix-foreground = ${colors.foreground}
 ; format-prefix-background = 
-;format-underline = #e6c9c4
+; format-underline = #e6c9c4
 
-label =%date% %time%
+label = %{A3:st -e nvim -c "lua require('orgWiki.diary').diaryTodayOpen()":}%date% %time%%{A}
 ; label-background = 
 label-foreground = ${colors.foreground}
 
@@ -242,8 +242,8 @@ type = internal/battery
 battery = BAT0
 adapter = ADP1
 full-at = 98
-format-charging = <animation-charging> <label-charging> 
-format-discharging = <ramp-capacity> <label-discharging> 
+format-charging = %{A1:st -e sudo powertop:}<animation-charging> <label-charging>%{A} 
+format-discharging = %{A1:st -e sudo powertop:}<ramp-capacity> <label-discharging>%{A} 
 format-full = <ramp-capacity> <label-full> 
 
 label-charging = "%percentage%%  "

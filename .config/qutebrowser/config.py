@@ -1,5 +1,22 @@
 import os
+import subprocess
 import sys
+
+from qutebrowser.api import interceptor
+
+
+def filter_yt(info: interceptor.Request):
+    url = info.request_url
+    if (
+        url.host() == "www.youtube.com"
+        and url.path() == "/get_video_info"
+        and "&adformat=" in url.query()
+    ):
+        info.block()
+
+
+interceptor.register(filter_yt)
+
 
 config.load_autoconfig(True)
 
@@ -12,6 +29,7 @@ c.qt.args = [
     "ignore-gpu-blocklist",
     "use-gl=egl",
     "enable-native-gpu-memory-buffers",
+    "enable-oop-rasterization",
 ]
 
 
@@ -64,6 +82,15 @@ config.set(
 )
 
 c.content.blocking.method = "both"
+
+c.content.blocking.adblock.lists = [
+    "https://easylist.to/easylist/easylist.txt",
+    "https://easylist.to/easylist/easyprivacy.txt",
+    "https://easylist-downloads.adblockplus.org/easylistdutch.txt",
+    "https://easylist-downloads.adblockplus.org/abp-filters-anti-cv.txt",
+    "https://www.i-dont-care-about-cookies.eu/abp/",
+    "https://secure.fanboy.co.nz/fanboy-cookiemonster.txt",
+]
 
 # Load images automatically in web pages.
 # Type: Bool
