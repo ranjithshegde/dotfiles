@@ -215,8 +215,15 @@ local function getTabLabel(n, tab)
     local file_name = vim.api.nvim_buf_get_name(current_buf)
 
     local tail = vim.fn.fnamemodify(file_name, ":p:t")
+
+    local result = {
+        tail = tail,
+        icon = nil,
+        color = nil,
+    }
     if tail == "" then
-        return { "Empty buffer" }
+        result.tail = "Empty Buffer"
+        return result
     end
 
     local ext = nil
@@ -227,18 +234,16 @@ local function getTabLabel(n, tab)
     end
 
     local icon, color = require("nvim-web-devicons").get_icon_color(tail, ext)
+
     if icon ~= nil then
         local table = vim.api.nvim_get_hl_by_name("TablineSel", true)
         if tab then
             vim.api.nvim_set_hl(0, "IconColor", { bg = table["background"], fg = color, cterm = { bold = true } })
-            vim.api.nvim_set_hl(0, "WinBar", { fg = color, cterm = { bold = true } })
-        else
-            vim.api.nvim_set_hl(0, "WinBar", { fg = color, cterm = { bold = true } })
         end
-        return { tail, icon }
-    else
-        return { tail }
+        result.icon = icon
+        result.color = color
     end
+    return result
 end
 
 --*********************************** File path ------------------------
@@ -260,13 +265,13 @@ function Statusline.tabs()
     for _, val in ipairs(tab_list) do
         local name = getTabLabel(val, true)
         if val == current_tab then
-            if name[2] then
-                tabline = tabline .. "%#IconColor#" .. space .. name[2] .. "%#TabLineSel# " .. name[1] .. space
+            if name.icon then
+                tabline = tabline .. "%#IconColor#" .. space .. name.icon .. "%#TabLineSel# " .. name.tail .. space
             else
-                tabline = tabline .. space .. "%#TabLineSel# " .. name[1] .. space
+                tabline = tabline .. space .. "%#TabLineSel# " .. name.tail .. space
             end
         else
-            tabline = tabline .. space .. "%#TabLine# " .. name[1] .. space
+            tabline = tabline .. space .. "%#TabLine# " .. name.tail .. space
         end
     end
     tabline = tabline .. "%#TabLineFill#" .. "%="
@@ -276,23 +281,39 @@ end
 
 function Statusline.winbar(n)
     local label = getTabLabel(n, false)
-    if label[1]:match "Empty" then
+    if label.tail:match "Empty" then
+        vim.wo[n].winbar = ""
         return
     end
     local tabpage = vim.api.nvim_win_get_tabpage(n)
     local list = vim.api.nvim_tabpage_list_wins(tabpage)
 
     if not list[2] then
+        vim.wo[n].winbar = ""
+        return
+    end
+
+    local i = #list
+    for _, v in ipairs(list) do
+        local b = vim.api.nvim_win_get_buf(v)
+        if vim.tbl_contains(require("utils.tables").ignoreFiles, vim.bo[b].filetype) then
+            i = i - 1
+        end
+    end
+
+    if i <= 1 then
+        vim.wo[n].winbar = ""
         return
     end
 
     local winbar
-    if label[2] then
-        winbar = "%=" .. "%#WinBar#" .. space .. label[2] .. "%## " .. label[1] .. "%="
+    vim.api.nvim_set_hl(0, "WinBar" .. n, { fg = label.color, cterm = { bold = true } })
+    if label.icon then
+        winbar = "%=" .. "%#WinBar" .. n .. "#" .. space .. label.icon .. "%## " .. label.tail .. "%="
     else
-        winbar = "%=" .. label[1] .. "%="
+        winbar = "%=" .. label.tail .. "%="
     end
-    vim.wo.winbar = winbar
+    vim.wo[n].winbar = winbar
 end
 
 return Statusline

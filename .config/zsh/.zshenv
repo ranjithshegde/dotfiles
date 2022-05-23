@@ -38,6 +38,8 @@ export SSB_HOME="$XDG_DATA_HOME"/zoom
 export TERMINFO="$XDG_DATA_HOME"/terminfo
 export WGETRC="$XDG_CONFIG_HOME/wgetrc"
 export WINEPREFIX="$XDG_DATA_HOME"/wineprefixes/default
+# export WINEPREFIX=/storage/Wine32
+# export WINEARCH=win32
 export ZPLUG_BIN="$XDG_DATA_HOME"/bin
 export ZPLUG_HOME="$XDG_DATA_HOME"/zsh/zplug
 export _JAVA_OPTIONS=-Djava.util.prefs.userRoot="$XDG_CONFIG_HOME"/java

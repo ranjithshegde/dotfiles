@@ -59,6 +59,33 @@ return require("packer").startup {
             end,
         }
 
+        -- Colorizer
+        use {
+            "afonsocraposo/nvim-colorizer.lua",
+            config = function()
+                require("settings.plugin").color()
+            end,
+            cmd = { "ColorizerAttachToBuffer", "ColorizerToggle" },
+        }
+
+        -- Indents and chars
+        use {
+            "lukas-reineke/indent-blankline.nvim",
+            event = "BufReadPost",
+            config = function()
+                require("settings.plugin").indent()
+            end,
+        }
+
+        -- Orgmode
+        use {
+            "nvim-orgmode/orgmode",
+            ft = "org",
+            config = function()
+                require("settings.plugin").org()
+            end,
+        }
+
         -- TreeSitter
         use {
             { "nvim-treesitter/nvim-treesitter", run = ":TSUpdate" },
@@ -67,6 +94,16 @@ return require("packer").startup {
             { "nvim-treesitter/nvim-treesitter-refactor", after = "scnvim" },
             { "nvim-treesitter/playground", module = "nvim-treesitter-playground" },
             { "Badhi/nvim-treesitter-cpp-tools", ft = { "c", "cpp", "opencl" } },
+        }
+
+        -- SuperCollider
+        use {
+            "davidgranstrom/scnvim",
+            branch = "topic/lua-config",
+            ft = "supercollider",
+            config = function()
+                require("settings.plugin").scnvim()
+            end,
         }
 
         -- WhichKey
@@ -79,17 +116,14 @@ return require("packer").startup {
             end,
         }
 
-        -- ZenMode
+        -- Git Signs
         use {
-            { "folke/zen-mode.nvim", cmd = "ZenMode" },
-            {
-                "folke/twilight.nvim",
-                after = "zen-mode.nvim",
-                config = function()
-                    require("zen-mode").setup()
-                    require("twilight").setup()
-                end,
-            },
+            "lewis6991/gitsigns.nvim",
+            requires = "nvim-lua/plenary.nvim",
+            config = function()
+                require("settings.plugin").gitsigns()
+            end,
+            opt = true,
         }
 
         -- OrgWiki
@@ -101,76 +135,6 @@ return require("packer").startup {
                     disable_mappings = true,
                     wiki_path = { "~/Documents/Orgs/", "~/Documents/Projects/" },
                     diary_path = "~/Documents/Orgs/diary/",
-                }
-            end,
-        }
-
-        -- Git Signs
-        use {
-            "lewis6991/gitsigns.nvim",
-            requires = "nvim-lua/plenary.nvim",
-            config = function()
-                require("gitsigns").setup {
-                    on_attach = function(bufnr)
-                        local gs = package.loaded.gitsigns
-                        require("mappings.git").signs(bufnr, gs)
-                    end,
-                }
-                require("mappings.git").fugitive()
-            end,
-            opt = true,
-        }
-
-        -- Colorizer
-        use {
-            "afonsocraposo/nvim-colorizer.lua",
-            config = function()
-                require("colorizer").setup {
-                    "*",
-                    cpp = { rgb_0x = true },
-                    html = { mode = "foreground" },
-                    css = { rgb_fn = true, css_fn = true },
-                    yaml = { rgb_0x = true },
-                    "javascript",
-                    "conf",
-                }
-            end,
-            cmd = { "ColorizerAttachToBuffer", "ColorizerToggle" },
-        }
-
-        -- Indents and chars
-        use {
-            "lukas-reineke/indent-blankline.nvim",
-            event = "BufReadPost",
-            config = function()
-                vim.g.indent_blankline_char = "┊"
-                -- vim.g.indent_blankline_use_treesitter_scope = true
-                require("indent_blankline").setup {
-                    show_current_context = true,
-                    show_end_of_line = true,
-                    use_treesitter = true,
-                }
-                for _, v in pairs(require("utils.tables").indentContext) do
-                    vim.cmd("let g:indent_blankline_context_patterns+=['" .. v .. "']")
-                end
-            end,
-        }
-
-        -- Orgmode
-        use {
-            "nvim-orgmode/orgmode",
-            ft = "org",
-            config = function()
-                require("orgmode").setup_ts_grammar()
-                require("orgmode").setup {
-                    org_agenda_files = {
-                        "~/Documents/Orgs/*",
-                        "~/Documents/Orgs/*/*",
-                        "~/Documents/Orgs/*/*/*",
-                        "~/Documents/Orgs/*/*/*/*",
-                    },
-                    org_highlight_latex_and_related = "entities",
-                    emacs_config = { config_path = "$XDG_CONFIG_HOME/emacs/init.el" },
                 }
             end,
         }
@@ -195,34 +159,36 @@ return require("packer").startup {
             },
         }
 
-        -- SuperCollider
+        -- Telescope
         use {
-            "davidgranstrom/scnvim",
-            ft = "supercollider",
-            run = function()
-                vim.fn["scnvim#install"]()
-            end,
-            config = function()
-                vim.g.scnvim_snippet_format = "luasnip"
-                vim.g.scnvim_postwin_auto_toggle = 1
-                vim.api.nvim_create_autocmd("FileType", {
-                    group = "LspSettings",
-                    pattern = "supercollider",
-                    callback = function()
-                        require("mappings.filetypes").scnvim()
-                        vim.opt_local.wrap = true
-                        if not require("scnvim").is_running() then
-                            require("scnvim").start()
-                            vim.api.nvim_input "<CR>"
-                        end
-                    end,
-                })
-            end,
+            { "nvim-telescope/telescope-file-browser.nvim", after = "telescope-project.nvim" },
+            {
+                "nvim-telescope/telescope-project.nvim",
+                after = "telescope-fzf-native.nvim",
+            },
+            {
+                "nvim-telescope/telescope-fzf-native.nvim",
+                after = "telescope.nvim",
+                run = "make",
+                config = function()
+                    require("telescope").load_extension "fzf"
+                end,
+            },
+            {
+                "nvim-telescope/telescope.nvim",
+                module = "telescope",
+                cmd = "Telescope",
+                config = function()
+                    require("settings.telescope").telescope()
+                end,
+                requires = "nvim-lua/plenary.nvim",
+            },
         }
 
         --Lsp config and companions
         use {
             { "neovim/nvim-lspconfig", branch = "feat/0_7_goodies" },
+            { "/home/ranjith/Software/Workspaces/Repos/ccls.nvim", after = "vim-ccls" },
             {
                 "m-pilia/vim-ccls",
                 ft = { "c", "cpp", "opencl" },
@@ -297,57 +263,6 @@ return require("packer").startup {
                 config = function()
                     require("lsp_signature").setup {
                         hint_enable = false,
-                    }
-                end,
-            },
-        }
-
-        -- Telescope
-        use {
-            {
-                "nvim-telescope/telescope.nvim",
-                module = "telescope",
-                cmd = "Telescope",
-                config = function()
-                    require("packer").loader "sqlite.lua"
-                    require("settings.telescope").telescope()
-                end,
-                requires = "nvim-lua/plenary.nvim",
-            },
-            { "nvim-telescope/telescope-file-browser.nvim", after = "telescope-project.nvim" },
-            {
-                "nvim-telescope/telescope-fzf-native.nvim",
-                after = "telescope-smart-history.nvim",
-                run = "make",
-                config = function()
-                    require("telescope").load_extension "fzf"
-                end,
-            },
-            {
-                "nvim-telescope/telescope-smart-history.nvim",
-                after = "sqlite.lua",
-                config = function()
-                    require("telescope").load_extension "smart_history"
-                end,
-            },
-            { "tami5/sqlite.lua", opt = true },
-            {
-                "nvim-telescope/telescope-project.nvim",
-                after = "telescope-fzf-native.nvim",
-                config = function()
-                    require("telescope").setup {
-                        extensions = {
-                            project = {
-                                base_dirs = {
-                                    { "~/Documents/LaTeX", max_depth = 3 },
-                                    { "~/Software/Workspaces/lua", max_depth = 4 },
-                                    { "~/Software/Workspaces/cpp", max_depth = 4 },
-                                    { "~/Software/Workspaces/Repos", max_depth = 4 },
-                                    { "~/Software/Workspaces/electronics", max_depth = 4 },
-                                    { "~/Software/Workspaces/openFrameworks", max_depth = 5 },
-                                },
-                            },
-                        },
                     }
                 end,
             },

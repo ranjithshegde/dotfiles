@@ -88,19 +88,6 @@ aucmd({ "FocusLost", "WinLeave" }, {
 augroup("LspSettings", opts)
 aucmd("FileType", {
     group = "LspSettings",
-    pattern = "vim",
-    callback = function()
-        vim.keymap.set("n", ",K", function()
-            vim.fn.execute("h " .. vim.fn.expand "<cword>")
-        end, { buffer = true, desc = "Help instead of hover" })
-        vim.keymap.set("n", "<F6>", function()
-            vim.cmd "w | source %"
-        end, { buffer = true, desc = "evaluate current file" })
-    end,
-    desc = "FileType optiosn & keybinds for Vimscript",
-})
-aucmd("FileType", {
-    group = "LspSettings",
     pattern = require("utils.tables").lspfiles,
     callback = function()
         require("lsp").settings()
@@ -156,12 +143,6 @@ aucmd("FileType", {
         end, { desc = "Toggle REPL" })
     end,
     desc = "set compiler and toggleable REPL for capable filetypes",
-})
-aucmd("BufWritePost", {
-    group = "MakeDispatch",
-    pattern = { "*.glsl", "*.vert", "*.frag", "*.geom", "*.vs", "*.fs", "*.gs" },
-    command = "Dispatch glslangValidator %",
-    desc = "Glsl linter",
 })
 
 -- Compile packer after writing plugins.lua

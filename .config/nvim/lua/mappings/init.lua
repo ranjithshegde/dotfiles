@@ -122,6 +122,7 @@ function mappings.configFiles()
                     t = { open "lua/settings/telescope.lua", "Telescope" },
                     s = { open "lua/settings/treesitter.lua", "Treesitter" },
                     c = { open "lua/settings/completion.lua", "Completion" },
+                    p = { open "lua/settings/plugin.lua", "Settings for plugins" },
                     a = { open "lua/settings/autocmds.lua", "Autocmds" },
                 },
                 l = {

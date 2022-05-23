@@ -192,12 +192,12 @@ syn match texSpecialChar '\\#' contained conceal cchar=#
 
 syn match texStatement '``' contained conceal cchar=“
 syn match texStatement '\'\'' contained conceal cchar=”
-syn match texStatement '\\item\>' contained conceal cchar=•
+" syn match texStatement '\\item\>' contained conceal cchar=•
 syn match texStatement '\\ldots' contained conceal cchar=…
 syn match texStatement '\\quad' contained conceal cchar=  
 syn match texStatement '\\qquad' contained conceal cchar=    
-"syn match texStatement '\\\[' contained conceal cchar=⟦
-"syn match texStatement '\\\]' contained conceal cchar=⟧
+syn match texStatement '\\\[' contained conceal cchar=⟦
+syn match texStatement '\\\]' contained conceal cchar=⟧
 syn match texDelimiter '\\{' contained conceal cchar={
 syn match texDelimiter '\\}' contained conceal cchar=}
 syn match texMathSymbol '\\setminus\>' contained conceal cchar=\

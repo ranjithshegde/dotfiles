@@ -95,8 +95,7 @@ function completion.init()
     }
     require("luasnip.loaders.from_vscode").lazy_load()
 
-    local fs = vim.bo.filetype
-    if fs == "cpp" or fs == "c" then
+    if vim.tbl_contains({ "c", "cpp", "opencl" }, vim.bo.filetype) then
         require("lsp.clangd").clangCmp()
     end
 

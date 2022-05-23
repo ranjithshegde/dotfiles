@@ -83,6 +83,11 @@ function lsp.attach(client, bufnr)
         return
     end
 
+    -- if client.name == "supercollider" then
+    --     sc.completionProvider = false
+    --     sc.hoverProvider = false
+    -- end
+
     if sc.documentHighlightProvider then
         aucmd("CursorHold", {
             group = "LspHighlightSymbols",
@@ -120,7 +125,7 @@ function lsp.servers()
     local configs = {
         jsonls = {},
         yamlls = {},
-        -- supercollider = {},
+        supercollider = {},
         html = { capabilities = lsp.capabilities() },
         cssls = { capabilities = lsp.capabilities() },
         cmake = { capabilities = lsp.capabilities() },

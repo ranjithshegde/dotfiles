@@ -3,9 +3,9 @@ intern=eDP-1
 extern=HDMI-1-0
 
 if xrandr | grep "$extern disconnected"; then
-	xrandr --output "$extern" --off --output "$intern" --mode 1920x1080 --rate 144 &
+	xrandr --output "$extern" --off --output "$intern" --mode 1920x1080 --rate 144 --dpi 96 &
 	nitrogen --force-setter=xinerama --restore
 else
-	xrandr --output "$intern" --primary --mode 1920x1080 --rate 144 --output "$extern" --right-of "$intern" --mode 1920x1080 --rate 60 &
+	xrandr --output "$intern" --primary --mode 1920x1080 --rate 144 --dpi 96 --output "$extern" --right-of "$intern" --mode 1920x1080 --rate 60 --dpi 96 &
 	nitrogen --force-setter=xinerama --restore
 fi

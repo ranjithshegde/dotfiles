@@ -8,7 +8,6 @@ local o = vim.opt
 function settings.options()
     vim.cmd "colo duskfox"
     local tab = 4
-    -- o.list = true
     o.number = true
     o.expandtab = true
     o.shiftround = true
@@ -58,7 +57,6 @@ function settings.options()
     vim.g.netrw_browse_split = 4
     vim.g.loaded_ruby_provider = 0
     vim.g.loaded_perl_provider = 0
-    vim.g.termdebug_wide = 1
     vim.g.markdown_folding = 1
     vim.g.fold_preview = true
     vim.g.tex_conceal = "abdmgs"

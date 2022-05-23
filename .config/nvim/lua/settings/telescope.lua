@@ -128,9 +128,17 @@ function telescope.telescope()
             prompt_prefix = "❯ ",
             selection_caret = "❯ ",
             file_ignore_patterns = require("utils.tables").ignore_binaries,
-            history = {
-                path = vim.env.XDG_DATA_HOME .. "/nvim/databases/telescope_history.sqlite3",
-                limit = 100,
+        },
+        extensions = {
+            project = {
+                base_dirs = {
+                    { "~/Documents/LaTeX", max_depth = 3 },
+                    { "~/Software/Workspaces/lua", max_depth = 4 },
+                    { "~/Software/Workspaces/cpp", max_depth = 4 },
+                    { "~/Software/Workspaces/Repos", max_depth = 4 },
+                    { "~/Software/Workspaces/electronics", max_depth = 4 },
+                    { "~/Software/Workspaces/openFrameworks", max_depth = 5 },
+                },
             },
         },
     }

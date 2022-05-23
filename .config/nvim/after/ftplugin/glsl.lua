@@ -7,3 +7,10 @@ vim.keymap.set("n", "<leader>s", function()
         vim.cmd("e " .. vim.fn.expand "%:r" .. ".vert")
     end
 end, { buffer = 0, silent = true, desc = "Open alternate shader file" })
+
+vim.api.nvim_create_autocmd("BufWritePost", {
+    group = "MakeDispatch",
+    buffer = 0,
+    command = "Dispatch glslangValidator %",
+    desc = "Glsl linter",
+})

@@ -219,10 +219,6 @@ end
 --                    MicroControllers  	                          --
 ------------------------------------------------------------------------
 
-function Compiler.compiletags()
-    make { "-t", "compiledb" }
-end
-
 -- get all lines from a file, returns an empty
 -- list/table if the file does not exist
 function Compiler.lines_from(file)
@@ -278,7 +274,7 @@ end
 -- Clean directory
 function Compiler.pio_clean()
     make { "-t", "clean" }
-    Compiler.compiletags()
+    make { "-t", "compiledb" }
 end
 
 -- check directory

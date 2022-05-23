@@ -27,7 +27,7 @@ tables.lspfiles = {
     "lua",
     "make",
     "markdown",
-    -- "supercollider",
+    "supercollider",
     "org",
     "python",
     "vim",

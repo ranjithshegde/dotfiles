@@ -31,16 +31,7 @@ function ftmaps.scnvim()
         require("scnvim").send("WFS.startup", true)
     end, { buffer = true, desc = "Boot WFS server", expr = true })
 
-    map("n", "<F5>", "<Plug>(scnvim-send-block)", { buffer = true, desc = "Evaluate SC code block" })
-    map("i", "<F5>", "<esc><Plug>(scnvim-send-block)", { buffer = true, desc = "Evaluate SC code block" })
-    map("v", "<F5>", "<Plug>(scnvim-send-selection)", { buffer = true, desc = "Evaluate SC visual block" })
-    map("n", "<F6>", "<Plug>(scnvim-send-line)", { buffer = true, desc = "Evaluate SC line" })
-    map("i", "<F6>", "<Plug><esc>(scnvim-send-line)", { buffer = true, desc = "Evaluate SC line" })
     map("n", "<leader>s", open "SuperCollider/startup.scd", { buffer = true, desc = "open startup file" })
-
-    map("n", ",s", function()
-        require("scnvim.completion.signature").show { border = "rounded" }
-    end, { buffer = true, desc = "SC signature help" })
 end
 
 ------------------------------------------------------------------------
