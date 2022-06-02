@@ -43,6 +43,9 @@ function mappings.init()
     map("n", "n", "nzzzv", { desc = "jump to next search result" })
     map("n", "N", "Nzzzv", { desc = "jump to previous search result" })
     map("n", "J", "mzJ`z", { desc = "Adjoin next line" })
+    map("n", "gx", function()
+        require("utils").open_in_browser(vim.fn.expand "<cWORD>")
+    end, { desc = "exec word under cursor" })
     map("n", "gm", function()
         local virt = vim.fn.virtcol "$"
         virt = virt / 2

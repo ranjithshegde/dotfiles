@@ -112,6 +112,9 @@ function telescope.telescope()
             live_grep = { attach_mappings = foldMaps },
             oldfiles = { attach_mappings = foldMaps },
             buffers = bufferPicker,
+            current_buffer_fuzzy_find = { theme = "ivy" },
+            lsp_document_symbols = { theme = "ivy" },
+            lsp_references = { theme = "cursor" },
         },
 
         defaults = {

@@ -27,7 +27,6 @@ tables.lspfiles = {
     "lua",
     "make",
     "markdown",
-    "supercollider",
     "org",
     "python",
     "vim",
@@ -56,6 +55,7 @@ tables.ignoreFiles = {
     "packer",
     "Outline",
     "lspinfo",
+    "NodeTree",
     "WhichKey",
     "checkhealth",
     "TelescopePrompt",
@@ -266,6 +266,7 @@ tables.ts_parsers = {
     "lua",
     "make",
     "markdown",
+    "org",
     "python",
     "query",
     "regex",
@@ -274,7 +275,6 @@ tables.ts_parsers = {
     "toml",
     "vim",
     "yaml",
-    "org",
 }
 
 return tables

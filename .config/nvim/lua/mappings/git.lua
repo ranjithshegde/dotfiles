@@ -3,7 +3,7 @@
 ------------------------------------------------------------------------
 
 local function git_command(args)
-    vim.api.nvim_cmd({ cmd = "G", args = args and args, mods = { silent = true } }, {})
+    vim.api.nvim_cmd({ cmd = "G", args = args and args }, {})
 end
 
 local g = {}

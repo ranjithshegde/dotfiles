@@ -38,7 +38,7 @@ aucmd("FileType", {
         end
         vim.opt.relativenumber = true
         vim.opt_local.cursorline = true
-        require("statusline").winbar(vim.api.nvim_get_current_win())
+        vim.wo.winbar = ""
     end,
 })
 aucmd({ "InsertEnter", "WinLeave", "FocusLost", "BufNewFile" }, {
@@ -54,7 +54,10 @@ aucmd({ "InsertEnter", "WinLeave", "FocusLost", "BufNewFile" }, {
 aucmd({ "InsertLeave", "WinEnter", "FocusGained" }, {
     group = "FormatOptions",
     callback = function()
-        if vim.tbl_contains(require("utils.tables").ignoreFiles, vim.bo.filetype) then
+        if
+            vim.tbl_contains(require("utils.tables").ignoreFiles, vim.bo.filetype)
+            or vim.api.nvim_win_get_height(vim.api.nvim_get_current_win()) <= 15
+        then
             return
         end
         vim.opt.relativenumber = true
@@ -64,11 +67,14 @@ aucmd({ "InsertLeave", "WinEnter", "FocusGained" }, {
 aucmd({ "FocusGained", "WinEnter" }, {
     group = "FormatOptions",
     callback = function()
-        if vim.tbl_contains(require("utils.tables").ignoreFiles, vim.bo.filetype) then
+        require("statusline").winbar(vim.api.nvim_get_current_win())
+        if
+            vim.tbl_contains(require("utils.tables").ignoreFiles, vim.bo.filetype)
+            or vim.api.nvim_win_get_height(vim.api.nvim_get_current_win()) <= 15
+        then
             return
         end
         vim.opt_local.cursorline = true
-        require("statusline").winbar(vim.api.nvim_get_current_win())
     end,
     desc = "use cursorline only on active buffers && Winbar on tabpages with more than one window",
 })
@@ -196,10 +202,7 @@ augroup("ProjectDrawer", opts)
 aucmd("WinEnter", {
     group = "ProjectDrawer",
     callback = function()
-        if
-            vim.fn.winnr "$" == 1
-            and vim.api.nvim_buf_get_option(vim.fn.winbufnr(vim.fn.winnr()), "filetype") == "netrw"
-        then
+        if vim.fn.winnr "$" == 1 and vim.bo.filetype == "netrw" then
             vim.cmd "q"
         end
     end,

@@ -1,7 +1,7 @@
 local plugins = {}
 
 ------------------------------------------------------------------------
---                      Config for varios plugins                     --
+--                      Config for various plugins                    --
 ------------------------------------------------------------------------
 
 ---SuperCollider
@@ -93,4 +93,5 @@ function plugins.indent()
         vim.cmd("let g:indent_blankline_context_patterns+=['" .. v .. "']")
     end
 end
+
 return plugins

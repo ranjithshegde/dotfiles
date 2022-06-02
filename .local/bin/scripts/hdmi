@@ -3,9 +3,23 @@ intern=eDP-1
 extern=HDMI-1-0
 
 if xrandr | grep "$extern disconnected"; then
-	xrandr --output "$extern" --off --output "$intern" --mode 1920x1080 --rate 144 --dpi 96 &
-	nitrogen --force-setter=xinerama --restore
+    xrandr --output "$extern" --off --output "$intern" --mode 1920x1080 --rate 144 --dpi 96 &
 else
-	xrandr --output "$intern" --primary --mode 1920x1080 --rate 144 --dpi 96 --output "$extern" --right-of "$intern" --mode 1920x1080 --rate 60 --dpi 96 &
-	nitrogen --force-setter=xinerama --restore
+    declare options=("Left
+    Right")
+
+    choice=$(echo -e "${options[@]}" | dmenu -i -p 'Choose HDMI screen position: ')
+    case "$choice" in
+        Left) position='--left-of'
+            ;;
+        Right) position='--right-of'
+            ;;
+        *) position='--right-of'
+            ;;
+    esac
+
+    xrandr --output "$intern" --primary --mode 1920x1080 --rate 144 --dpi 96 --output "$extern" "$position" "$intern" --mode 1920x1080 --rate 60 --dpi 96 &
 fi
+
+nitrogen --force-setter=xinerama --restore
+launch-polybar

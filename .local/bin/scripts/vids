@@ -1,4 +1,3 @@
 #!/bin/sh
 
-# mpv "$(find ~/Videos/. -name "*.*"| dmenu -l 30)"
-vlc "$(find ~/Videos/. -name "*.*"| dmenu -l 30)"
+vlc "$(find ~/Videos/. -name "*.*" | dmenu -l 30)"

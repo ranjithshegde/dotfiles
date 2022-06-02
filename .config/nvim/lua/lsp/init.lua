@@ -14,16 +14,8 @@ local nofmt = {
     "jsonls",
 }
 
-local function filterfmt(clients)
-    return vim.tbl_filter(function(client)
-        if client.name == "efm" then
-            return true
-        elseif vim.tbl_contains(nofmt, client.name) then
-            return false
-        else
-            return true
-        end
-    end, clients)
+local function filterfmt(client)
+    return not vim.tbl_contains(nofmt, client)
 end
 
 ---**************************** LSP AuGroups and Handlers
@@ -83,6 +75,7 @@ function lsp.attach(client, bufnr)
         return
     end
 
+    vim.bo[bufnr].formatexpr = filterfmt(client) and "v:lua.vim.lsp.formatexpr()"
     -- if client.name == "supercollider" then
     --     sc.completionProvider = false
     --     sc.hoverProvider = false
@@ -125,7 +118,6 @@ function lsp.servers()
     local configs = {
         jsonls = {},
         yamlls = {},
-        supercollider = {},
         html = { capabilities = lsp.capabilities() },
         cssls = { capabilities = lsp.capabilities() },
         cmake = { capabilities = lsp.capabilities() },
@@ -151,7 +143,7 @@ function lsp.servers()
             },
         },
         texlab = {
-            -- capabilities = lsp.capabilities,
+            capabilities = lsp.capabilities(),
             settings = {
                 texlab = {
                     build = {
@@ -206,11 +198,6 @@ function lsp.lintFormat()
         lintStdin = true,
         lintFormats = { "%f:%l %m", "%f:%l:%c %m", "%f: %l: %m" },
     }
-    local mypy = {
-        lintCommand = "mypy --show-column-numbers",
-        lintFormats = { "%f:%l:%c: %trror: %m", "%f:%l:%c: %tarning: %m", "%f:%l:%c: %tote: %m" },
-        lintSource = "mypy",
-    }
     local shellcheck = {
         lintCommand = "shellcheck -f gcc -x -",
         lintStdin = true,
@@ -242,7 +229,7 @@ function lsp.lintFormat()
         markdown = { prettier, markdownlint },
         sh = { shellcheck, shfmt },
         zsh = { shellcheck, shfmt },
-        python = { flake8, isort, black, mypy },
+        python = { flake8, isort, black },
     }
     lspconfig.efm.setup {
         filetypes = vim.tbl_keys(languages),

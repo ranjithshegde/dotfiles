@@ -9,6 +9,7 @@ function servers.sumneko()
         library = {
             plugins = { "plenary.nvim", "express_line.nvim", "nvim-lspconfig", "nvim-treesitter" },
         },
+        runtime_path = true,
         lspconfig = {
             capabilities = require("lsp").capabilities(),
             settings = { Lua = { diagnostics = { globals = { "vim", "pd" } } } },

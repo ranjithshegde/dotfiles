@@ -60,7 +60,6 @@ function settings.options()
     vim.g.markdown_folding = 1
     vim.g.fold_preview = true
     vim.g.tex_conceal = "abdmgs"
-    vim.g.netrw_browsex_viewer = "xdg-open"
     vim.g.symbols_outline = { auto_preview = false, width = 40 }
 
     -- ************** Disable builtin plugins ---------------------------------------------------------

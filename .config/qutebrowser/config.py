@@ -1,8 +1,12 @@
-import os
-import subprocess
-import sys
-
+# pylint: disable=C0111
 from qutebrowser.api import interceptor
+from qutebrowser.config.config import ConfigContainer  # noqa: F401
+from qutebrowser.config.configfiles import ConfigAPI  # noqa: F401
+
+config: ConfigAPI = config  # noqa: F821 pylint: disable=E0602,C0103
+c: ConfigContainer = c  # noqa: F821 pylint: disable=E0602,C0103
+
+config.load_autoconfig(False)
 
 
 def filter_yt(info: interceptor.Request):
@@ -17,12 +21,7 @@ def filter_yt(info: interceptor.Request):
 
 interceptor.register(filter_yt)
 
-
-config.load_autoconfig(True)
-
-# QtWebEngine, some Chromium arguments (see
 # https://peter.sh/experiments/chromium-command-line-switches/)
-# Type: List of String
 c.qt.args = [
     "enable-gpu-rasterization",
     "enable-accelerated-video-decode",
@@ -38,7 +37,7 @@ c.auto_save.session = True
 # Valid values:
 #   - all: Accept all cookies.
 #   - no-3rdparty: Accept cookies from the same origin only. This is known to break some sites, such as GMail.
-#   - no-unknown-3rdparty: Accept cookies from the same origin only, unless a cookie is already set for the domain. On QtWebEngine, this is the same as no-3rdparty.
+#   - no-unknown-3rdparty: Accept cookies from the same origin only, unless a cookie is already set for the domain.
 #   - never: Don't accept cookies at all.
 config.set("content.cookies.accept", "all", "chrome-devtools://*")
 
@@ -46,9 +45,16 @@ config.set("content.cookies.accept", "all", "devtools://*")
 
 c.content.prefers_reduced_motion = True
 
-# default_editor = ["st -e nvim", "{file}"]
+default_editor = ["st", "-e", "nvim", "{}"]
+c.editor.command = default_editor
 
-# c.editor.command = default_editor
+default_dir_selector = ["st", "-e", "ranger", "--choosedir={}"]
+default_single_file = ["st", "-e", "ranger", "--choosefile={}"]
+default_multi_file = ["st", "-e", "ranger", "--choosefiles={}"]
+
+c.fileselect.folder.command = default_dir_selector
+c.fileselect.single_file.command = default_dir_selector
+c.fileselect.multiple_files.command = default_dir_selector
 
 # User agent to send.  The following placeholders are defined:  *
 # `{os_info}`: Something like "X11; Linux x86_64". * `{webkit_version}`:
@@ -92,32 +98,12 @@ c.content.blocking.adblock.lists = [
     "https://secure.fanboy.co.nz/fanboy-cookiemonster.txt",
 ]
 
-# Load images automatically in web pages.
-# Type: Bool
 config.set("content.images", True, "chrome-devtools://*")
-
-# Load images automatically in web pages.
-# Type: Bool
 config.set("content.images", True, "devtools://*")
-
-# Enable JavaScript.
-# Type: Bool
 c.content.javascript.enabled = True
-
-# Enable JavaScript.
-# Type: Bool
 config.set("content.javascript.enabled", True, "chrome-devtools://*")
-
-# Enable JavaScript.
-# Type: Bool
 config.set("content.javascript.enabled", True, "devtools://*")
-
-# Enable JavaScript.
-# Type: Bool
 config.set("content.javascript.enabled", True, "chrome://*/*")
-
-# Enable JavaScript.
-# Type: Bool
 config.set("content.javascript.enabled", True, "qute://*/*")
 
 # Allow websites to show notifications.
@@ -303,23 +289,7 @@ c.colors.tabs.pinned.selected.even.bg = "#282c34"
 # either a float value with a "pt" suffix, or an integer value with a
 # "px" suffix.
 # Type: String
-# c.fonts.default_size = "11pt"
-
-# Font used in the completion widget.
-# Type: Font
-# c.fonts.completion.entry = '11pt "SauceCodePro Nerd Font"'
-
-# Font used for the debugging console.
-# Type: Font
-# c.fonts.debug_console = '11pt "SauceCodePro Nerd Font"'
-
-# Font used for prompts.
-# Type: Font
-# c.fonts.prompts = "default_size sans-serif"
-
-# Font used in the statusbar.
-# Type: Font
-# c.fonts.statusbar = '11pt "SauceCodePro Nerd Font"'
+c.fonts.default_size = "10pt"
 
 
 # Page(s) to open at the start.

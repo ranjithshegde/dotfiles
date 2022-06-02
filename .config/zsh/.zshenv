@@ -37,8 +37,8 @@ export RUSTUP_HOME="$XDG_DATA_HOME"/rustup
 export SSB_HOME="$XDG_DATA_HOME"/zoom
 export TERMINFO="$XDG_DATA_HOME"/terminfo
 export WGETRC="$XDG_CONFIG_HOME/wgetrc"
-export WINEPREFIX="$XDG_DATA_HOME"/wineprefixes/default
-# export WINEPREFIX=/storage/Wine32
+# export WINEPREFIX="$XDG_DATA_HOME"/wineprefixes/default
+export WINEPREFIX=/storage/Games/Wine/default/
 # export WINEARCH=win32
 export ZPLUG_BIN="$XDG_DATA_HOME"/bin
 export ZPLUG_HOME="$XDG_DATA_HOME"/zsh/zplug
@@ -46,6 +46,19 @@ export _JAVA_OPTIONS=-Djava.util.prefs.userRoot="$XDG_CONFIG_HOME"/java
 export OPENCV_OPENCL_DEVICE=NVIDIA:GPU:0
 export OCTAVE_HISTFILE="$XDG_CACHE_HOME/octave-hsts"
 export OCTAVE_SITE_INITFILE="$XDG_CONFIG_HOME/octave/octaverc"
+
+# GLOBALS
+export CHROME_EXECUTABLE=/usr/bin/brave
+export EMSDK=/usr/lib/emsdk
+export EM_CONFIG=/usr/lib/emsdk/.emscripten
+export EM_CACHE=/usr/lib/emsdk/upstream/emscripten/cache
+export EMSDK_NODE=/usr/lib/emsdk/node/14.18.2_64bit/bin/node
+export ANDROID_NDK=/opt/android-ndk
+export ANDROID_SDK_ROOT=/opt/android-sdk
+export ANDROID_NDK_HOME=/opt/android-ndk
+export AWT_TOOLKIT=MToolkit
+export GST_VAAPI_ALL_DRIVERS=1
+export QT_STYLE_OVERRIDE=kvantum
 
 # CUSTOM PATH ENVS
 export CWORK="$HOME"/Software/Workspaces/cpp
@@ -70,7 +83,6 @@ appendpath '/home/ranjith/.local/share/npm/bin'
 appendpath '/home/ranjith/.local/share/go/bin'
 appendpath '/home/ranjith/.local/share/gem/bin'
 appendpath '/home/ranjith/.local/share/gem/ruby/3.0.0/bin'
-# appendpath '/usr/lib/emsdk/upstream/bin/'
-# appendpath '/usr/lib/emsdk/node/12.18.1_64bit/bin'
+
 unset -f appendpath
 export PATH

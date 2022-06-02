@@ -21,6 +21,9 @@ full = #ffffff
 
 [bar/main]
 
+monitor = ${env:MONITOR:}
+monitor-fallback = eDP-1
+
 width = 100%
 height = 27
 ; offset-x = 1%
@@ -52,7 +55,7 @@ font-4 = Hack:size=10:pixelsize=10
 
 modules-left = dwm xwindow
 modules-center = date 
-modules-right = backlight alsa wlan battery 
+modules-right = backlight temperature alsa wlan battery 
 
 tray-position = right
 tray-padding = 2
@@ -172,13 +175,13 @@ label-empty =
 [module/backlight]
 type = internal/backlight
 card = intel_backlight
-format = <ramp><label> 
+format =<ramp><label>
 label = %percentage%%
-ramp-0 = 🌕
-ramp-1 = 🌔
+ramp-0 = 🌑
+ramp-1 = 🌒
 ramp-2 = 🌓
-ramp-3 = 🌒
-ramp-4 = 🌑
+ramp-3 = 🌔
+ramp-4 = 🌕
 
 ;==================================================================================================
 
@@ -226,14 +229,15 @@ label-foreground = ${colors.foreground}
 [module/alsa]
 type = internal/pulseaudio
 
-format-volume = %{A3:pavucontrol:}<ramp-volume> <label-volume>%{A}
+format-volume = <ramp-volume> <label-volume>
 label-volume-foreground = ${root.foreground}
 
 label-muted = 🔇
 ramp-volume-0 = 🔈
 ramp-volume-1 = 🔉
 ramp-volume-2 = 🔊
-; format-muted-foreground = ${colors.foreground}
+
+click-right = pavucontrol
 
 ;==================================================================================================
 
@@ -310,7 +314,7 @@ type = internal/temperature
 thermal-zone = 0
 warn-temperature = 60
 
-format = <label>
+format = %{A1:st -e btop:}<label>%{A} 
 ; format-underline = #f50a4d
 format-warn = <label-warn>
 ; format-warn-underline = ${self.format-underline}
