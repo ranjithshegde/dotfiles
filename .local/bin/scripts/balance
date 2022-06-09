@@ -1,7 +1,0 @@
-#!/bin/sh
-
-echo default >/sys/module/pcie_aspm/parameters/policy
-x86_energy_perf_policy balance-performance
-asusctl profile -P Balanced
-
-echo "all performance governers turned to on-demand"

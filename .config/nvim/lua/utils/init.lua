@@ -81,6 +81,7 @@ utils.ranger = function(path, edit_cmd)
             os.remove(cpath)
         end
     end
+
     vim.cmd "enew"
     if vim.fn.isdirectory(currentPath) then
         vim.fn.termopen("ranger --choosefiles=" .. cpath .. ' "' .. currentPath .. '"', rc)

@@ -116,7 +116,6 @@ function telescope.telescope()
             lsp_document_symbols = { theme = "ivy" },
             lsp_references = { theme = "cursor" },
         },
-
         defaults = {
             vimgrep_arguments = {
                 "rg",

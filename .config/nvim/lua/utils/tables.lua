@@ -25,7 +25,6 @@ tables.lspfiles = {
     "json",
     "jsonc",
     "lua",
-    "make",
     "markdown",
     "org",
     "python",

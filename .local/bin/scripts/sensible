@@ -1,8 +1,0 @@
-#!/bin/sh
-
-echo powersave >/sys/module/pcie_aspm/parameters/policy &
-echo 'on' >/sys/bus/usb/devices/1-8/power/control &
-x86_energy_perf_policy balance-power &
-asusctl profile -P Balanced &
-
-echo "Conservative but sensible savings"

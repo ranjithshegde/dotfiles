@@ -12,12 +12,14 @@ end
 
 -- set default make to Dispatch Make
 local function make(args)
-    vim.api.nvim_cmd({ cmd = "Make", args = args, mods = { silent = true } }, {})
+    -- vim.api.nvim_cmd({ cmd = "Make", args = args, mods = { silent = true } }, {})
+    vim.api.nvim_cmd({ cmd = "Make", args = args }, {})
 end
 
 -- set default terminal to Dispatch
 local function terminal(args)
-    vim.api.nvim_cmd({ cmd = "Dispatch", args = args, mods = { silent = true } }, {})
+    -- vim.api.nvim_cmd({ cmd = "Dispatch", args = args, mods = { silent = true } }, {})
+    vim.api.nvim_cmd({ cmd = "Dispatch", args = args }, {})
 end
 
 ------------------------------------------------------------------------
@@ -140,24 +142,24 @@ function Compiler.renderOffload(dispatch, cmd, toSave)
         end
     )
 end
+
 ------------------------------------------------------------------------
 --                                CMake 	                          --
 ------------------------------------------------------------------------
 
 -- Variables
-vim.g.extra_cmake_flags = "-DCMAKE_EXPORT_COMPILE_COMMANDS=ON"
+vim.g.cmake_flags_extra = "-DCMAKE_EXPORT_COMPILE_COMMANDS=ON"
+vim.g.cmake_vcpkg_args = "-DCMAKE_TOOLCHAIN_FILE='/opt/vcpkg/scripts/buildsystems/vcpkg.cmake'"
 vim.g.cmake_build_dir = "build"
 vim.g.compiledb = { "ln", "-s", "build/compile_commands.json", "." }
 
 -- Cmake generate
 function Compiler.cmake_gen()
     terminal {
-        "mkdir",
-        "build",
-        ";",
         "cmake",
-        "-DCMAKE_BUILD_TYPE='Release'",
-        vim.g.extra_cmake_flags,
+        "-DCMAKE_BUILD_TYPE=Release",
+        vim.g.cmake_flags_extra,
+        vim.g.cmake_vcpkg_args,
         "-B",
         vim.g.cmake_build_dir,
         "-S",
@@ -170,12 +172,10 @@ end
 -- Cmake generate debug
 function Compiler.cmake_gen_debug()
     terminal {
-        "mkdir",
-        "build",
-        ";",
         "cmake",
-        "-DCMAKE_BUILD_TYPE='Debug'",
-        vim.g.extra_cmake_flags,
+        "-DCMAKE_BUILD_TYPE=Debug",
+        vim.g.cmake_flags_extra,
+        vim.g.cmake_vcpkg_args,
         "-B",
         vim.g.cmake_build_dir,
         "-S",

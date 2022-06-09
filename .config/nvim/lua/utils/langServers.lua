@@ -17,9 +17,17 @@ end
 langSettings.lsp_capabilities = function()
     local init_buf = vim.api.nvim_get_current_buf()
     local buf_clients = vim.lsp.get_active_clients { bufnr = init_buf }
-    local windows = require "lspconfig/ui/windows"
-    local win_info = windows.percentage_range_window(0.8, 0.7)
-    local bufnr = win_info.bufnr
+    local bufnr = vim.api.nvim_create_buf(false, true)
+
+    local config = {
+        relative = "editor",
+        style = "minimal",
+        width = 50,
+        height = 20,
+        row = 0,
+        col = 0,
+        border = "double",
+    }
 
     local buf_lines = {}
 
@@ -99,6 +107,7 @@ langSettings.lsp_capabilities = function()
     vim.bo[bufnr].filetype = "markdown"
     vim.keymap.set("n", "<esc>", "<cmd>bd<CR>", { buffer = bufnr })
     vim.keymap.set("n", "q", "<cmd>bd<CR>", { buffer = bufnr })
+    vim.api.nvim_open_win(bufnr, true, config)
 end
 
 ------------------------------------------------------------------------

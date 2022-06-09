@@ -211,6 +211,7 @@ return require("packer").startup {
             },
             {
                 "j-hui/fidget.nvim",
+                branch = "fidget-framework",
                 opt = true,
                 config = function()
                     require("fidget").setup {

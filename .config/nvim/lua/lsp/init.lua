@@ -125,6 +125,7 @@ function lsp.servers()
         dartls = { capabilities = lsp.capabilities() },
         pyright = { capabilities = lsp.capabilities() },
         tsserver = { capabilities = lsp.capabilities() },
+        marksman = { capabilities = lsp.capabilities() },
         bashls = { capabilities = lsp.capabilities(), filetypes = { "sh", "zsh" } },
         ltex = {
             autostart = false,
@@ -185,7 +186,6 @@ function lsp.lintFormat()
     end
     local rootMarker = { vim.fn.getcwd() or { ".git/" } }
 
-    local checkmake = { lintCommand = "checkmake", lintStdin = true }
     local black = { formatCommand = "black --fast -", formatStdin = true }
     local shfmt = { formatCommand = "shfmt -ci -s -bn", formatStdin = true }
     local yamllint = { lintCommand = "yamllint -f parsable -", lintStdin = true }
@@ -193,11 +193,6 @@ function lsp.lintFormat()
     local isort = { formatCommand = "isort --stdout --profile black -", formatStdin = true }
     local stylua = { formatCommand = "stylua --search-parent-directories -", formatStdin = true }
     local prettier = { formatCommand = "prettier --stdin --stdin-filepath ${INPUT}", formatStdin = true }
-    local markdownlint = {
-        lintCommand = "markdownlint -f ${INPUT}",
-        lintStdin = true,
-        lintFormats = { "%f:%l %m", "%f:%l:%c %m", "%f: %l: %m" },
-    }
     local shellcheck = {
         lintCommand = "shellcheck -f gcc -x -",
         lintStdin = true,
@@ -225,8 +220,7 @@ function lsp.lintFormat()
         toml = { prettier },
         lua = { stylua },
         glsl = { clang_format },
-        make = { checkmake },
-        markdown = { prettier, markdownlint },
+        markdown = { prettier },
         sh = { shellcheck, shfmt },
         zsh = { shellcheck, shfmt },
         python = { flake8, isort, black },

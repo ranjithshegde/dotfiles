@@ -43,3 +43,5 @@ ranger-cd() {
 
 
 alias config='/usr/bin/git --git-dir=/home/ranjith/Software/Workspaces/Repos/dotfiles --work-tree=/home/ranjith'
+
+source /opt/vcpkg/scripts/vcpkg_completion.bash

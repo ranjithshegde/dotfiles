@@ -122,8 +122,6 @@ electronics() {
 
 	pio run -t compiledb
 
-	ln -s .pio/build/"$board_name"/compile_commands.json .
-
 	(
 		echo 'build/*'
 		echo 'compile_commands.json'
@@ -184,27 +182,27 @@ cpp_init() {
 
 	(
 		echo "#!/bin/sh"
-		echo 'if [[ -z $1 ]]; then'
-		echo 'mkdir -p build'
-		echo 'cd build'
-		echo 'cmake ..'
-		echo 'make'
+		echo "if [[ -z $1 ]]; then"
+		echo "mkdir -p build"
+		echo "cd build"
+		echo "cmake .."
+		echo "make"
 		echo 'elif [[ "$1" == "install" ]]; then'
-		echo 'mkdir -p build'
-		echo 'cd build'
-		echo 'cmake ..'
-		echo 'sudo make install'
+		echo "mkdir -p build"
+		echo "cd build"
+		echo 'cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=1 -DCMAKE_TOOLCHAIN_FILE="/opt/vcpkg/scripts/buildsystems/vcpkg.cmake" ..'
+		echo "sudo make install"
 		echo 'elif [[ "$1" == "debug" ]]; then'
-		echo 'mkdir -p build'
-		echo 'cd build'
-		echo 'cmake -DCMAKE_BUILD_TYPE=Debug ..'
-		echo 'make'
+		echo "mkdir -p build"
+		echo "cd build"
+		echo 'cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_EXPORT_COMPILE_COMMANDS=1 -DCMAKE_TOOLCHAIN_FILE="/opt/vcpkg/scripts/buildsystems/vcpkg.cmake" ..'
+		echo "make"
 		echo 'elif [[ "$1" == "project" ]]; then'
-		echo 'mkdir -p build'
-		echo 'cd build'
-		echo 'cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=1 ..'
-		echo 'cp compile_commands.json ..'
-		echo 'fi'
+		echo "mkdir -p build"
+		echo "cd build"
+		echo 'cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=1 -DCMAKE_TOOLCHAIN_FILE="/opt/vcpkg/scripts/buildsystems/vcpkg.cmake" ..'
+		echo "cp compile_commands.json .."
+		echo "fi"
 	) >"$project_name"/autoBuild
 
 	chmod u+x "$project_name"/autoBuild

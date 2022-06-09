@@ -115,9 +115,12 @@ bashcompinit
 eval "$(register-python-argcomplete pipx)"
 eval "$(pip completion --zsh)"
 eval "$(_PIO_COMPLETE=zsh_source pio)"
+source /opt/vcpkg/scripts/vcpkg_completion.zsh
 
 # Bindins --------------------------------------------------------------------------------------
 bindkey '^[[A' history-substring-search-up
 bindkey '^[[B' history-substring-search-down
+
+source "$ZDOTDIR/functions/fuzzy.sh"
 
 [[ ! -f $ZDOTDIR/p10k.zsh ]] || source $ZDOTDIR/p10k.zsh
