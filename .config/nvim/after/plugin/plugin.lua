@@ -36,6 +36,7 @@ cmd("Su", "w !sudo tee %", {})
 require("mappings.util").ranger()
 require("mappings.util").orgWiki()
 require("mappings.util").misc()
+
 vim.keymap.set("n", "<Space>", function()
     vim.keymap.del("n", "<Space>")
     require "mappings.telescope"

@@ -39,6 +39,8 @@ function lsp.settings()
         vim.lsp.handlers.signature_help,
         { border = "rounded" }
     )
+    require("packer").loader "nvim-notify"
+    require("utils.langServers").lsp_messages()
 end
 
 ---**************************** Snippet capabilities
@@ -52,7 +54,7 @@ function lsp.attach(client, bufnr)
     require("mappings.lsp").lsp(bufnr)
     vim.b.hasLsp = true
 
-    require("packer").loader "fidget.nvim"
+    require("utils.langServers").lsp_progress()
     require("utils.diagnostics").attach({ all = false, underline = false, update_in_insert = false }, client)
 
     local sc = client.server_capabilities

@@ -127,6 +127,7 @@ function mappings.configFiles()
                     c = { open "lua/settings/completion.lua", "Completion" },
                     p = { open "lua/settings/plugin.lua", "Settings for plugins" },
                     a = { open "lua/settings/autocmds.lua", "Autocmds" },
+                    n = { open "lua/settings/notify.lua", "Nvim Notify init settings" },
                 },
                 l = {
                     name = "Lsp",

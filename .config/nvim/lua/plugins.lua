@@ -189,7 +189,7 @@ return require("packer").startup {
         use {
             { "neovim/nvim-lspconfig", branch = "feat/0_7_goodies" },
             {
-                "/home/ranjith/Software/Workspaces/Repos/vim-ccls",
+                "m-pilia/vim-ccls",
                 ft = { "c", "cpp", "opencl" },
                 config = function()
                     require("lsp.clangd").ccls()
@@ -209,18 +209,7 @@ return require("packer").startup {
                     require("lsp.clangd").clangd()
                 end,
             },
-            {
-                "j-hui/fidget.nvim",
-                branch = "fidget-framework",
-                opt = true,
-                config = function()
-                    require("fidget").setup {
-                        text = { spinner = "moon" },
-                        align = { bottom = true },
-                        window = { relative = "editor", blend = 0 },
-                    }
-                end,
-            },
+            { "rcarriga/nvim-notify", opt = true },
         }
 
         -- completion and snippets

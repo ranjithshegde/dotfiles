@@ -224,6 +224,44 @@ local function signs()
     vim.fn.sign_define("DapStopped", { text = "⭐️" })
 end
 
+local function notify()
+    local dap = require "dap"
+    local note = require "settings.notify"
+
+    dap.listeners.before["event_progressStart"]["progress-notifications"] = function(session, body)
+        local notif_data = note.get_notif_data("dap", body.progressId)
+
+        local message = note.format_message(body.message, body.percentage)
+        notif_data.notification = vim.notify(message, "info", {
+            title = note.format_title(body.title, session.config.type),
+            icon = note.spinner_frames[1],
+            timeout = false,
+            hide_from_history = false,
+        })
+
+        notif_data.notification.spinner = 1, note.update_spinner("dap", body.progressId)
+    end
+
+    dap.listeners.before["event_progressUpdate"]["progress-notifications"] = function(session, body)
+        local notif_data = note.get_notif_data("dap", body.progressId)
+        notif_data.notification = vim.notify(note.format_message(body.message, body.percentage), "info", {
+            replace = notif_data.notification,
+            hide_from_history = false,
+        })
+    end
+
+    dap.listeners.before["event_progressEnd"]["progress-notifications"] = function(session, body)
+        local notif_data = note.client_notifs["dap"][body.progressId]
+        notif_data.notification = vim.notify(body.message and note.format_message(body.message) or "Complete", "info",
+            {
+                icon = "",
+                replace = notif_data.notification,
+                timeout = 3000,
+            })
+        notif_data.spinner = nil
+    end
+end
+
 local Debugger = {}
 
 function Debugger.init()
@@ -254,6 +292,8 @@ function Debugger.setup()
     dap.listeners.before.event_exited["dapui_config"] = function()
         require("dapui").close()
     end
+
+    notify()
 end
 
 function Debugger.scopes()

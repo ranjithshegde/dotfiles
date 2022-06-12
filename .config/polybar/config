@@ -316,8 +316,7 @@ warn-temperature = 60
 
 format = %{A1:st -e btop:}<label>%{A} 
 ; format-underline = #f50a4d
-format-warn = <label-warn>
-; format-warn-underline = ${self.format-underline}
+format-warn = %{A1:st -e btop:}<label-warn>%{A} 
 
 label = "󰈸%temperature-c%"
 label-foreground = ${colors.temp}

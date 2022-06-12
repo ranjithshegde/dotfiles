@@ -3,11 +3,7 @@ local Compiler = {}
 local exec = vim.api.nvim_command
 
 local function isFile(file)
-    if vim.loop.fs_stat(file) ~= nil then
-        return true
-    else
-        return false
-    end
+    return vim.loop.fs_stat(file) ~= nil
 end
 
 -- set default make to Dispatch Make
@@ -57,7 +53,7 @@ function Compiler.set_ctype()
 end
 
 function Compiler.set_type()
-    if isFile "Makefile" then
+    if isFile "Makefile.pdlibbuilder" then
         require("mappings.clang").pdc()
     else
         vim.opt.makeprg = "gcc"
@@ -80,10 +76,6 @@ end
 function Compiler.glRef(cmd)
     local url = "https://docs.gl/gl4/" .. cmd
     require("utils").open_in_browser(url)
-end
-
-function Compiler.has_pd()
-    return isFile "Makefile.pdlibbuilder"
 end
 
 -- open Makefile
@@ -154,26 +146,13 @@ vim.g.cmake_build_dir = "build"
 vim.g.compiledb = { "ln", "-s", "build/compile_commands.json", "." }
 
 -- Cmake generate
-function Compiler.cmake_gen()
+function Compiler.cmake_gen(type)
+    if not type then
+        type = "Release"
+    end
     terminal {
         "cmake",
-        "-DCMAKE_BUILD_TYPE=Release",
-        vim.g.cmake_flags_extra,
-        vim.g.cmake_vcpkg_args,
-        "-B",
-        vim.g.cmake_build_dir,
-        "-S",
-        ".",
-        ";",
-        unpack(vim.g.compiledb),
-    }
-end
-
--- Cmake generate debug
-function Compiler.cmake_gen_debug()
-    terminal {
-        "cmake",
-        "-DCMAKE_BUILD_TYPE=Debug",
+        "-DCMAKE_BUILD_TYPE=" .. type,
         vim.g.cmake_flags_extra,
         vim.g.cmake_vcpkg_args,
         "-B",
@@ -187,21 +166,20 @@ end
 
 -- Clean amd remove build dir
 function Compiler.cmake_clean()
-    local args = { "rm", "-r", vim.g.cmake_build_dir }
-    require("utils").silent_shell(args)
+    require("utils").silent_shell { "rm", "-r", vim.g.cmake_build_dir }
     require("utils").silent_shell { "rm", "compile_commands.json" }
 end
 
 -- Clean and rebuild Release
 function Compiler.cmake_clean_gen()
     Compiler.cmake_clean()
-    Compiler.cmake_gen()
+    Compiler.cmake_gen "Release"
 end
 
 -- Clean and rebuild debug
 function Compiler.cmake_clean_gen_debug()
     Compiler.cmake_clean()
-    Compiler.cmake_gen_debug()
+    Compiler.cmake_gen "Debug"
 end
 
 -- Run the binary

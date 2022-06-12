@@ -46,6 +46,7 @@ export _JAVA_OPTIONS=-Djava.util.prefs.userRoot="$XDG_CONFIG_HOME"/java
 export OPENCV_OPENCL_DEVICE=NVIDIA:GPU:0
 export OCTAVE_HISTFILE="$XDG_CACHE_HOME/octave-hsts"
 export OCTAVE_SITE_INITFILE="$XDG_CONFIG_HOME/octave/octaverc"
+export ANDROID_DATA="$XDG_DATA_HOME/android"
 
 # GLOBALS
 export CHROME_EXECUTABLE=/usr/bin/brave

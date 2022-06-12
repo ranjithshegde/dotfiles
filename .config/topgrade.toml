@@ -1,0 +1,67 @@
+# Don't ask for confirmations
+#assume_yes = true
+
+# Disable specific steps - same options as the command line flag
+disable = ["vim"]
+
+# Ignore failures for these steps
+ignore_failures = ["shell"]
+
+# Run specific steps - same options as the command line flag
+#only = ["system", "emacs"]
+
+# Do not ask to retry failed steps (default: false)
+#no_retry = true
+
+# Run inside tmux
+#run_in_tmux = true
+
+# List of remote machines with Topgrade installed on them
+#remote_topgrades = ["toothless", "pi", "parnas"]
+
+# Arguments to pass SSH when upgrading remote systems
+#ssh_arguments = "-o ConnectTimeout=2"
+
+# Path to Topgrade executable on remote machines
+#remote_topgrade_path = ".cargo/bin/topgrade"
+
+# Arguments to pass tmux when pulling Repositories
+#tmux_arguments = "-S /var/tmux.sock"
+
+# Do not set the terminal title
+#set_title = false
+
+# Cleanup temporary or old files
+#cleanup = true
+
+[git]
+#max_concurrency = 5
+# Additional git repositories to pull
+#repos = [
+#    "~/src/*/",
+#    "~/.config/something"
+#]
+
+# Don't pull the predefined git repos
+#predefined_repos = false
+
+# Arguments to pass Git when pulling Repositories
+#arguments = "--rebase --autostash"
+
+[composer]
+#self_update = true
+
+# Commands to run before anything
+[pre_commands]
+#"Emacs Snapshot" = "rm -rf ~/.emacs.d/elpa.bak && cp -rl ~/.emacs.d/elpa ~/.emacs.d/elpa.bak"
+
+# Custom commands
+[commands]
+"perl" = "sudo cpan -u"
+"platform-io" = "pio pkg update -g"
+
+[linux]
+# Arguments to pass yay when updating packages
+#yay_arguments = "--nodevel"
+#trizen_arguments = "--devel"
+enable_tlmgr = true

@@ -103,6 +103,8 @@ zplug 'romkatv/powerlevel10k', as:theme, depth:1
 
 zplug "wfxr/forgit"
 
+zplug "lincheney/fzf-tab-completion"
+
 zplug load 
 
 # Custom completion scripts ---------------------------------------------------------------------
@@ -120,6 +122,9 @@ source /opt/vcpkg/scripts/vcpkg_completion.zsh
 # Bindins --------------------------------------------------------------------------------------
 bindkey '^[[A' history-substring-search-up
 bindkey '^[[B' history-substring-search-down
+
+source "$ZPLUG_HOME"/repos/lincheney/fzf-tab-completion/zsh/fzf-zsh-completion.sh
+bindkey '^I' fzf_completion
 
 source "$ZDOTDIR/functions/fuzzy.sh"
 

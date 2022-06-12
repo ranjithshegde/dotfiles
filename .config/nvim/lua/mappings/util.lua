@@ -1,3 +1,4 @@
+---@diagnostic disable: missing-parameter
 local utilmaps = {}
 local wk = require "which-key"
 local map = vim.keymap.set

@@ -160,11 +160,11 @@ function cmaps.cmake()
     map("n", "<F2>", require("utils.compiler").cmake_clean, { buffer = true, desc = "Clean cmake" })
     map("n", "<F3>", function()
         vim.cmd "w | redraw"
-        require("utils.compiler").cmake_gen_debug()
+        require("utils.compiler").cmake_gen "Debug"
     end, { buffer = true, desc = "Generate Cmake Debug" })
     map("n", "<F4>", function()
         vim.cmd "w | redraw"
-        require("utils.compiler").cmake_gen()
+        require("utils.compiler").cmake_gen "Release"
     end, { buffer = true, desc = "Generate Cmake Release" })
     map("n", "<F5>", function()
         vim.cmd "w"
