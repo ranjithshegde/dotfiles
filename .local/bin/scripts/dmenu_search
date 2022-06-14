@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 declare options=("brave
 ddg 
@@ -39,4 +39,3 @@ QUERY=$(echo '' | dmenu -p "Search:")
 if [ -n "$QUERY" ]; then
 echo "open ${URL}${QUERY}" >> "$QUTE_FIFO" || qutebrowser "${URL}${QUERY}"
 fi
-

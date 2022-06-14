@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/usr/bin/env zsh
 
 # NOTE:
 # This doesn't work as is on Windows. You'll need to create an equivalent `.bat` file instead

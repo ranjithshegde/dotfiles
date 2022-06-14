@@ -24,6 +24,7 @@ function lsp.settings()
     augroup("LspHighlightSymbols", opts)
     augroup("LspAutoFormat", opts)
     augroup("LspCodeLens", opts)
+    -- augroup("SC_LSP", opts)
 
     aucmd({ "DiagnosticChanged" }, {
         group = "SetDiagnosticFuncs",
@@ -176,6 +177,20 @@ function lsp.servers()
     for ls, cfg in pairs(configs) do
         lspconfig[ls].setup(cfg)
     end
+
+    -- aucmd("FileType", {
+    --     group = "SC_LSP",
+    --     pattern = "supercollider",
+    --         callback = function()
+    --         vim.lsp.start {
+    --             name = "SuperCollider",
+    --             cmd = { "sclang-lsp-stdio.mjs", "sclang" },
+    --             filetypes = { "supercollider" },
+    --             root_dir = vim.fs.dirname(vim.fs.find({ ".git" }, { upward = true })[1]) or vim.loop.cwd(),
+    --             single_file_support = true,
+    --         }
+    --         end,
+    -- })
 end
 
 ------------------------------------------------------------------------

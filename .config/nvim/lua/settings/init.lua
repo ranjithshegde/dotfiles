@@ -19,6 +19,7 @@ function settings.options()
     o.tabstop = tab
     o.shiftwidth = tab
     o.softtabstop = tab
+    o.cmdheight = 0
     o.scrolloff = 10
     o.updatetime = 300
     o.timeoutlen = 100

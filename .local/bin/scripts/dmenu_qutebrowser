@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/usr/bin/env zsh
 
 # Copyright 2015-2021 Florian Bruhin (The Compiler) <mail@qutebrowser.org>
 # Copyright 2015 Zach-Button <zachrey.button@gmail.com>
@@ -44,6 +44,6 @@
 url=$(printf "%s\n%s" "$QUTE_URL" "$(sqlite3 -separator ' ' "$XDG_DATA_HOME/qutebrowser/history.sqlite" 'select title, url from CompletionHistory')" | cat "$XDG_CONFIG_HOME/qutebrowser/quickmarks" - | dmenu -l 15 -p qutebrowser)
 url=$(echo "$url" | sed -E 's/[^ ]+ +//g' | grep -E "https?:" || echo "$url")
 
-[ -z "${url// }" ] && exit
+[ -z "${url// /}" ] && exit
 
-echo "open $url" >> "$QUTE_FIFO" || qutebrowser "$url"
+echo "open $url" >>"$QUTE_FIFO" || qutebrowser "$url"

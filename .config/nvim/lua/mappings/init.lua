@@ -10,6 +10,7 @@ function mappings.init()
     mappings.configFiles()
 
     local opts = { nowait = true, silent = true }
+    -- map("n", ":", "q:")
     map("n", "<C-;>", ";")
     map("n", "<C-,>", ",")
     map("n", "<C-i>", "<C-i>", { desc = "Dont map C-i to Tab" })
@@ -52,7 +53,7 @@ function mappings.init()
         vim.fn.cursor { 0, virt }
     end, { desc = "Move cursor to middle of the line" })
     map("n", "<leader>S", function()
-        require "utils.scratchpad"(_, "tab")
+        require "utils.scratchpad" (_, "tab")
     end, { desc = "Open ScratchPad" })
 
     -- Terminals
