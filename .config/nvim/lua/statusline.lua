@@ -60,9 +60,9 @@ local function mode()
         t = colors.purple,
     }
     -- Text for mode
-    local current_mode = alias[vim.fn.mode()]
+    local current_mode = alias[vim.api.nvim_get_mode().mode]
     -- Get color for mode
-    local current_bg = mode_color[vim.fn.mode()]
+    local current_bg = mode_color[vim.api.nvim_get_mode().mode]
     local current_fg = colors.white
     -- Set color
     vim.api.nvim_set_hl(0, "ElViMode", { fg = current_fg, bg = current_bg })

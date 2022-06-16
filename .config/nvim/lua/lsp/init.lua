@@ -15,7 +15,7 @@ local nofmt = {
 }
 
 local function filterfmt(client)
-    return not vim.tbl_contains(nofmt, client)
+    return not vim.tbl_contains(nofmt, client.name)
 end
 
 ---**************************** LSP AuGroups and Handlers
@@ -24,7 +24,6 @@ function lsp.settings()
     augroup("LspHighlightSymbols", opts)
     augroup("LspAutoFormat", opts)
     augroup("LspCodeLens", opts)
-    -- augroup("SC_LSP", opts)
 
     aucmd({ "DiagnosticChanged" }, {
         group = "SetDiagnosticFuncs",
@@ -34,12 +33,32 @@ function lsp.settings()
         end,
     })
 
+    -- Signature help always on top
+    local function signature(_, result, ctx, config)
+        local bufnr, winner = vim.lsp.handlers.signature_help(_, result, ctx, config)
+        local current_cursor_line = vim.api.nvim_win_get_cursor(0)[1]
+
+        if winner then
+            if current_cursor_line > 3 then
+                vim.api.nvim_win_set_config(winner, {
+                    anchor = "SW",
+                    relative = "cursor",
+                    row = 0,
+                    col = -1,
+                    border = "rounded",
+                })
+            end
+        end
+
+        if bufnr and winner then
+            return bufnr, winner
+        end
+    end
+
     -- borders for floating windows
     vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, { border = "double" })
-    vim.lsp.handlers["textDocument/signatureHelp"] = vim.lsp.with(
-        vim.lsp.handlers.signature_help,
-        { border = "rounded" }
-    )
+    vim.lsp.handlers["textDocument/signatureHelp"] = vim.lsp.with(signature, {})
+
     require("packer").loader "nvim-notify"
     require("utils.langServers").lsp_messages()
 end
@@ -78,12 +97,6 @@ function lsp.attach(client, bufnr)
         return
     end
 
-    vim.bo[bufnr].formatexpr = filterfmt(client) and "v:lua.vim.lsp.formatexpr()"
-    -- if client.name == "supercollider" then
-    --     sc.completionProvider = false
-    --     sc.hoverProvider = false
-    -- end
-
     if sc.documentHighlightProvider then
         aucmd("CursorHold", {
             group = "LspHighlightSymbols",
@@ -98,6 +111,7 @@ function lsp.attach(client, bufnr)
     end
 
     if sc.documentFormattingProvider or sc.rangeFormattingProvider then
+        vim.bo[bufnr].formatexpr = filterfmt(client) and [[v:lua.vim.lsp.formatexpr()]] or ""
         aucmd("BufWrite", {
             group = "LspAutoFormat",
             buffer = bufnr,
@@ -108,6 +122,10 @@ function lsp.attach(client, bufnr)
         vim.keymap.set({ "n", "v" }, ",f", function()
             vim.lsp.buf.format { filter = filterfmt, timeout_ms = 2000 }
         end, { buffer = bufnr })
+    end
+
+    if sc.signatureHelpProvider then
+        require("lsp.signature").attach(client, bufnr)
     end
     vim.api.nvim_create_user_command("LspCapabilities", require("utils.langServers").lsp_capabilities, {})
 end
@@ -177,20 +195,6 @@ function lsp.servers()
     for ls, cfg in pairs(configs) do
         lspconfig[ls].setup(cfg)
     end
-
-    -- aucmd("FileType", {
-    --     group = "SC_LSP",
-    --     pattern = "supercollider",
-    --         callback = function()
-    --         vim.lsp.start {
-    --             name = "SuperCollider",
-    --             cmd = { "sclang-lsp-stdio.mjs", "sclang" },
-    --             filetypes = { "supercollider" },
-    --             root_dir = vim.fs.dirname(vim.fs.find({ ".git" }, { upward = true })[1]) or vim.loop.cwd(),
-    --             single_file_support = true,
-    --         }
-    --         end,
-    -- })
 end
 
 ------------------------------------------------------------------------
@@ -199,9 +203,9 @@ end
 
 function lsp.lintFormat()
     local rootDir = function()
-        return vim.fn.getcwd() or lspconfig.util.root_pattern ".git/"
+        return vim.fs.dirname(vim.fs.find({ ".git" }, { upward = true })[1]) or vim.loop.cwd()
     end
-    local rootMarker = { vim.fn.getcwd() or { ".git/" } }
+    local rootMarker = { vim.loop.cwd() or { ".git/" } }
 
     local black = { formatCommand = "black --fast -", formatStdin = true }
     local shfmt = { formatCommand = "shfmt -ci -s -bn", formatStdin = true }

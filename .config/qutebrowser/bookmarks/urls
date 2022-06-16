@@ -49,3 +49,4 @@ https://thevaluable.dev/vim-create-text-objects/ How to Create Vim Text-Objects 
 https://yszheda.github.io/lua-table-talk/#/3 reveal.js
 https://github.com/vim/vim/issues/812 Loss of scope data when using nested partials/funcref · Issue #812 · vim/vim
 https://embeddedartistry.com/blog/2017/05/17/creating-a-circular-buffer-in-c-and-c/ Creating a Circular Buffer in C and C++ - Embedded Artistry
+https://unix.stackexchange.com/questions/317687/command-not-found-when-sudoing-function-from-zshrc zsh - "command not found" when sudo'ing function from ~/.zshrc - Unix & Linux Stack Exchange

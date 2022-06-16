@@ -46,7 +46,7 @@ end
 function autoload.CamelCase()
     local map = vim.keymap.set
     local umap = vim.keymap.del
-    require("packer").loader "CamelCaseMotion"
+    require("utils.camel").init()
 
     map("", "w", "<Plug>CamelCaseMotion_w")
     map("", "b", "<Plug>CamelCaseMotion_b")

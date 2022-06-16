@@ -175,7 +175,7 @@ local function configs()
 
             program = "${file}",
             pythonPath = function()
-                local cwd = vim.fn.getcwd()
+                local cwd = vim.loop.cwd()
                 if vim.fn.executable(cwd .. "/venv/bin/python") == 1 then
                     return cwd .. "/venv/bin/python"
                 elseif vim.fn.executable(cwd .. "/.venv/bin/python") == 1 then
@@ -192,7 +192,7 @@ local function configs()
             type = "node2",
             request = "launch",
             program = "${file}",
-            cwd = vim.fn.getcwd(),
+            cwd = vim.loop.cwd(),
             sourceMaps = true,
             protocol = "inspector",
             console = "integratedTerminal",
@@ -252,12 +252,11 @@ local function notify()
 
     dap.listeners.before["event_progressEnd"]["progress-notifications"] = function(session, body)
         local notif_data = note.client_notifs["dap"][body.progressId]
-        notif_data.notification = vim.notify(body.message and note.format_message(body.message) or "Complete", "info",
-            {
-                icon = "",
-                replace = notif_data.notification,
-                timeout = 3000,
-            })
+        notif_data.notification = vim.notify(body.message and note.format_message(body.message) or "Complete", "info", {
+            icon = "",
+            replace = notif_data.notification,
+            timeout = 3000,
+        })
         notif_data.spinner = nil
     end
 end

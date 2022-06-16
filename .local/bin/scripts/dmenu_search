@@ -9,7 +9,7 @@ hub
 lab
 yt")
 
-choice=$(echo -e "${options}"| dmenu -i -p 'Pick engine: ')
+choice=$(echo -e "${options}"| dmenu -i -c -l 10 -p 'Pick engine: ')
 
 case "$choice" in
 	brave)URL='https://search.brave.com/search?q='
@@ -35,7 +35,7 @@ case "$choice" in
 		;;
 	esac
 
-QUERY=$(echo '' | dmenu -p "Search:")
+QUERY=$(echo '' | dmenu -c -p "Search:")
 if [ -n "$QUERY" ]; then
 echo "open ${URL}${QUERY}" >> "$QUTE_FIFO" || qutebrowser "${URL}${QUERY}"
 fi

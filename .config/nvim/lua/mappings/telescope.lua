@@ -38,6 +38,7 @@ return require("which-key").register {
         l = { tele "loclist", "local quickfix list" },
         m = { tele "symbols", "Unicode characters" },
         o = { cd_files("Org files", "~/Documents/Orgs"), "Org files" },
+        O = { tele "vim_options", "Vim options" },
         q = { tele "quickfix", "Quickfix list" },
         r = { tele "lsp_references", "Lsp References" },
         s = { tele "lsp_document_symbols", "Lsp symbols in buffer" },

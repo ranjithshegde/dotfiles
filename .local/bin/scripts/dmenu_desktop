@@ -1,0 +1,9 @@
+#!/bin/sh
+run=$(
+	(
+        find -L /usr/share/applications/ -type f -name '*.desktop' -printf '%f\n' | sort -r | awk -F '.desktop' ' { print $1}' -
+        find -L ~/.local/share/applications/ -type f -name '*.desktop'  -printf '%f\n'| sort -r | awk -F '.desktop' ' { print $1}' -
+        find -L ~/Desktop -type f -name '*.desktop'  -printf '%f\n'| sort -r | awk -F '.desktop' ' { print $1}' -
+	) | dmenu -c -l 20 
+)
+gtk-launch $run

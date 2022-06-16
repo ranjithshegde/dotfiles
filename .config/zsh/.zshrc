@@ -71,15 +71,6 @@ hcd() {
 	dir=$(find ${1:-.} -type d 2> /dev/null | fzf +m --reverse --prompt='Enter Directory> ') && cd "$dir"
 }
 
-# SSH with GNUPG -----------------------------------------------------------------------------
-unset SSH_AGENT_PID
-if [ "${gnupg_SSH_AUTH_SOCK_by:-0}" -ne $$ ]; then
-	export SSH_AUTH_SOCK="$(gpgconf --list-dirs agent-ssh-socket)"
-fi
-export GPG_TTY=$(tty)
-gpg-connect-agent updatestartuptty /bye >/dev/null
-export GPG_AGENT_INFO
-
 
 # Zplug-------------------------------------------------------------------------------
 
@@ -125,7 +116,5 @@ bindkey '^[[B' history-substring-search-down
 
 source "$ZPLUG_HOME"/repos/lincheney/fzf-tab-completion/zsh/fzf-zsh-completion.sh
 bindkey '^I' fzf_completion
-
-source "$ZDOTDIR/functions/fuzzy.sh"
 
 [[ ! -f $ZDOTDIR/p10k.zsh ]] || source $ZDOTDIR/p10k.zsh

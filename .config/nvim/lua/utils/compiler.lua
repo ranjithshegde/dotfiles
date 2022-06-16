@@ -94,7 +94,7 @@ function Compiler.ctags(files)
 end
 
 function Compiler.pdBuild()
-    local bin = vim.fn.fnamemodify(vim.fn.getcwd(), ":t") .. ".pd_linux"
+    local bin = vim.fn.fnamemodify(vim.loop.cwd(), ":t") .. ".pd_linux"
     local dest = "~/.local/lib/pd/extra/"
     terminal { "cp", bin, dest }
 end

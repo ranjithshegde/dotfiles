@@ -3,7 +3,7 @@
 local packer_path = vim.fn.stdpath "data" .. "/site/pack/packer/start/packer.nvim"
 
 -- selfmanage packer
-if vim.fn.empty(vim.fn.glob(packer_path)) > 0 then
+if not vim.loop.fs_stat(vim.fs.normalize(packer_path)) then
     ---@diagnostic disable-next-line: lowercase-global
     packer_bootstrap = vim.fn.system {
         "git",
@@ -15,8 +15,14 @@ if vim.fn.empty(vim.fn.glob(packer_path)) > 0 then
     }
 end
 
-local wikiP = vim.env.WORKSPACE and vim.env.WORKSPACE .. "Repos/orgWiki.nvim"
-local wiki = vim.env.WORKSPACE and vim.loop.fs_stat(wikiP) and wikiP or "ranjithshegde/orgWiki.nvim"
+local function is_custom(env, path, plugin)
+    local check_path = vim.env[env] and vim.env[env] .. path
+    if check_path and vim.loop.fs_stat(check_path) then
+        return check_path
+    else
+        return plugin
+    end
+end
 
 --------------------------------------------------------------------------------------------------------
 --				 Plugins                                            							      --
@@ -28,8 +34,6 @@ return require("packer").startup {
         use "lewis6991/impatient.nvim"
 
         use "EdenEast/nightfox.nvim"
-
-        use { "bkad/CamelCaseMotion", opt = true }
 
         -- Taglist and sidebars
         use { "simrat39/symbols-outline.nvim", module = "symbols-outline" }
@@ -128,7 +132,7 @@ return require("packer").startup {
 
         -- OrgWiki
         use {
-            wiki,
+            is_custom("WORKSPACE", "Repos/orgWiki.nvim", "ranjithshegde/orgWiki.nvim"),
             module = "orgWiki",
             config = function()
                 require("orgWiki").setup {
@@ -176,6 +180,7 @@ return require("packer").startup {
             },
             {
                 "nvim-telescope/telescope.nvim",
+                branch = "dev",
                 module = "telescope",
                 cmd = "Telescope",
                 config = function()
@@ -244,15 +249,6 @@ return require("packer").startup {
                 after = "LuaSnip",
                 config = function()
                     require("luasnip.loaders.from_vscode").load()
-                end,
-            },
-            {
-                "ray-x/lsp_signature.nvim",
-                event = "InsertEnter",
-                config = function()
-                    require("lsp_signature").setup {
-                        hint_enable = false,
-                    }
                 end,
             },
         }

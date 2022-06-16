@@ -1,0 +1,90 @@
+#!/bin/env sh
+
+# INIT
+printf "$$" >~/.cache/pidofbar
+sec=0
+
+update_time() {
+	time=$(
+		case "$(date '+%I')" in
+			"00") icon="🕛" ;;
+			"01") icon="🕐" ;;
+			"02") icon="🕑" ;;
+			"03") icon="🕒" ;;
+			"04") icon="🕓" ;;
+			"05") icon="🕔" ;;
+			"06") icon="🕕" ;;
+			"07") icon="🕖" ;;
+			"08") icon="🕗" ;;
+			"09") icon="🕘" ;;
+			"10") icon="🕙" ;;
+			"11") icon="🕚" ;;
+			"12") icon="🕛" ;;
+		esac
+		printf '%s %s %s\n' "$icon" "$(date '+%I:%M%p')" "$(date '+%b %d (%a)') "
+	)
+
+}
+
+update_bat() {
+	batt="$(for battery in /sys/class/power_supply/BAT?; do
+		capacity=$(cat "$battery"/capacity) || exit
+		status=$(cat "$battery"/status)
+
+		if [ "$capacity" -ge 75 ]; then
+			color="#00ff00"
+		elif [ "$capacity" -ge 50 ]; then
+			color="#ffffff"
+		elif [ "$capacity" -ge 25 ]; then
+			color="#ffff00"
+		else
+			color="#ff0000"
+			warn="❗"
+		fi
+
+		[ -z $warn ] && warn=" "
+
+		[ "$status" = "Charging" ] && color="#ffffff"
+
+		printf "%s%s%s\n" "$(echo "$status" | sed "s/,//;s/Discharging/🔋/;s/Not charging/🛑/;s/Charging/🔌/;s/Unknown/♻️/;s/Full/⚡/;s/ 0*/ /g;s/ :/ /g")" "$warn" "$(echo "$capacity" | sed -e 's/$/%/') "
+	done)"
+}
+
+update_vol() {
+	vol="$([ "$(pamixer --get-mute)" = "false" ] && printf '🔊 ' || printf '🔇 ')$(pamixer --get-volume) "
+}
+
+update_backlight() {
+	backlight=☀"$(/usr/bin/light -G) "
+}
+
+# modules that don't update on their own need to be run at the start for getting their initial value
+update_vol
+update_backlight
+
+display() {
+	xsetroot -name " $backlight | $vol | $batt | $time "
+}
+
+# SIGNALLING
+# trap	"<function>;display"		"RTMIN+n"
+trap "update_vol;display" "RTMIN"
+trap "update_backlight;display" "RTMIN+1"
+trap "update_bat;display" "RTMIN+2"
+# to update it from external commands
+## kill -m "$(cat ~/.cache/pidofbar)"
+# where m = 34 + n
+
+while true; do
+	sleep 1 &
+	wait && {
+		# to update item ever n seconds with a offset of m
+		## [ $((sec % n)) -eq m ] && udpate_item
+		[ $((sec % 5)) -eq 0 ] && update_time # update time every 5 seconds
+		[ $((sec % 60)) -eq 0 ] && update_bat
+
+		# how often the display updates ( 5 seconds )
+		[ $((sec % 5)) -eq 0 ] && display
+		sec=$((sec + 1))
+	}
+done

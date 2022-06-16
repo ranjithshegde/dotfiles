@@ -1,3 +1,3 @@
 #!/bin/sh
 
-vlc "$(find ~/Videos/. -name "*.*" | dmenu -l 30)"
+vlc "$(find ~/Videos/. -name "*.*" | dmenu -l 30 -i -p 'Select video: ')"

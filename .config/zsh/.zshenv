@@ -1,8 +1,16 @@
 #!/bin/sh
 
-# [ [ -f ~/.config/env] ]&& source ~/.config/env
+if [[ -z "${XDG_CONFIG_HOME}" ]]; then
+	XDG_CONFIG_HOME="$HOME"/.config
+fi
 
-# Cleaning from HOME
+if [[ -z "${XDG_CACHE_HOME}" ]]; then
+	XDG_CACHE_HOME="$HOME"/.cache
+fi
+
+if [[ -z "${XDG_DATA_HOME}" ]]; then
+	XDG_DATA_HOME="$HOME"/.local/share
+fi
 
 # CONFIG & PATHS
 export HISTFILE="$XDG_DATA_HOME"/zsh/history
@@ -42,6 +50,7 @@ export WINEPREFIX=/storage/Games/Wine/default/
 # export WINEARCH=win32
 export ZPLUG_BIN="$XDG_DATA_HOME"/bin
 export ZPLUG_HOME="$XDG_DATA_HOME"/zsh/zplug
+# export ZPLUG_HOME="$HOME"/.local/share/zsh/zplug
 export _JAVA_OPTIONS=-Djava.util.prefs.userRoot="$XDG_CONFIG_HOME"/java
 export OPENCV_OPENCL_DEVICE=NVIDIA:GPU:0
 export OCTAVE_HISTFILE="$XDG_CACHE_HOME/octave-hsts"
@@ -87,3 +96,11 @@ appendpath '/home/ranjith/.local/share/gem/ruby/3.0.0/bin'
 
 unset -f appendpath
 export PATH
+
+sdo() {
+	sudo zsh -c "$functions[$1]" "$@"
+}
+
+source "$ZDOTDIR/functions/fuzzy.sh"
+source "$ZDOTDIR/functions/power_profiles.sh"
+source "$ZDOTDIR/functions/dmenus.sh"

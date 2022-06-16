@@ -11,12 +11,12 @@ sldowm() {
 }
 
 svolup() {
-	pamixer --increase 5 &
+	pactl set-sink-volume @DEFAULT_SINK@ +5% &
 	kill -34 "$(cat ~/.cache/pidofbar)"
 }
 
 svoldown() {
-	pamixer --decrease 5 &
+	pactl set-sink-volume @DEFAULT_SINK@ -5% &
 	kill -34 "$(cat ~/.cache/pidofbar)"
 }
 

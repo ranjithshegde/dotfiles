@@ -41,7 +41,7 @@
 # [-z "$QUTE_DATA_DIR"] && QUTE_DATA_DIR = $XDG_DATA_HOME/qutebrowser
 [ -z "$QUTE_URL" ] && QUTE_URL='https://duckduckgo.com'
 
-url=$(printf "%s\n%s" "$QUTE_URL" "$(sqlite3 -separator ' ' "$XDG_DATA_HOME/qutebrowser/history.sqlite" 'select title, url from CompletionHistory')" | cat "$XDG_CONFIG_HOME/qutebrowser/quickmarks" - | dmenu -l 15 -p qutebrowser)
+url=$(printf "%s\n%s" "$QUTE_URL" "$(sqlite3 -separator ' ' "$XDG_DATA_HOME/qutebrowser/history.sqlite" 'select title, url from CompletionHistory')" | cat "$XDG_CONFIG_HOME/qutebrowser/quickmarks" - | dmenu -l 30 -i -p qutebrowser)
 url=$(echo "$url" | sed -E 's/[^ ]+ +//g' | grep -E "https?:" || echo "$url")
 
 [ -z "${url// /}" ] && exit

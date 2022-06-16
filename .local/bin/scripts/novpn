@@ -1,4 +1,0 @@
-#!/bin/sh
-
-nordvpn disconnect
-sudo systemctl stop nordvpnd.service

@@ -198,26 +198,6 @@ aucmd("TermClose", {
     end,
 })
 
---[[ aucmd("CmdwinEnter", {
-    pattern = "[:>?=@-]",
-    group = "TermInsertModes",
-    callback = function()
-        vim.cmd "startinsert"
-        -- vim.b.cpt_save = vim.opt_local.cpt
-        -- vim.opt_local.cpt = "."
-        vim.keymap.del("n", ":")
-    end,
-})
-aucmd("CmdwinLeave", {
-    pattern = "[:>?=@-]",
-    group = "TermInsertModes",
-    callback = function()
-        -- vim.b.cpt_save = vim.opt_local.cpt
-        -- vim.opt_local.cpt = "."
-        vim.keymap.set("n", ":", "q:")
-    end,
-}) ]]
-
 augroup("ProjectDrawer", opts)
 aucmd("WinEnter", {
     group = "ProjectDrawer",

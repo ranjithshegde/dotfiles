@@ -1,8 +1,8 @@
 #!/bin/sh
 
-DR=$(echo -e '' | dmenu -p "Enter directory: ")
-AD=$(echo -e '' | dmenu -p "Addons, comma separated: ")
-PN=$(echo -e '' | dmenu -p "Project name: ")
+DR=$(echo -e '' | dmenu -c -p "Enter directory: ")
+AD=$(echo -e '' | dmenu -c -p "Addons, comma separated: ")
+PN=$(echo -e '' | dmenu -c -p "Project name: ")
 
 mkdir -p $PG_OF_PATH/${DR} && cd $PG_OF_PATH/${DR}
 

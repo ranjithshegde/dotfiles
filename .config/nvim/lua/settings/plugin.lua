@@ -20,12 +20,6 @@ function plugins.scnvim()
             ["<M-L>"] = scnvim.map.postwin_clear { "n", "i" },
             [",s"] = scnvim.map.show_signature { "n", "i" },
         },
-        -- postwin = {
-        --     float = {
-        --         enabled = true,
-        --         config = { border = "single" },
-        --     },
-        -- },
         completion = { signature = { config = { border = "rounded" } } },
     }
     vim.api.nvim_create_autocmd("FileType", {

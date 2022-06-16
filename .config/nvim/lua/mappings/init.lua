@@ -10,9 +10,9 @@ function mappings.init()
     mappings.configFiles()
 
     local opts = { nowait = true, silent = true }
-    -- map("n", ":", "q:")
     map("n", "<C-;>", ";")
     map("n", "<C-,>", ",")
+    map("i", "<C-o>", "<C-o>:")
     map("n", "<C-i>", "<C-i>", { desc = "Dont map C-i to Tab" })
     map({ "n", "i", "s" }, "<BS>", "<BS>", { desc = "Dont map C-h to backspace" })
     --line movement
@@ -53,7 +53,7 @@ function mappings.init()
         vim.fn.cursor { 0, virt }
     end, { desc = "Move cursor to middle of the line" })
     map("n", "<leader>S", function()
-        require "utils.scratchpad" (_, "tab")
+        require "utils.scratchpad"(_, "tab")
     end, { desc = "Open ScratchPad" })
 
     -- Terminals
@@ -134,7 +134,7 @@ function mappings.configFiles()
                     name = "Lsp",
                     s = { open "lua/lsp/init.lua", "Functions and Inits" },
                     l = { open "lua/lsp/sumneko.lua", "Sumneko" },
-                    j = { open "lua/lsp/jdtls.lua", "Jdt LS" },
+                    j = { open "lua/lsp/signature.lua", "Signature auto Popup" },
                     c = { open "lua/lsp/clangd.lua", "Clangd" },
                 },
                 u = {
@@ -146,7 +146,7 @@ function mappings.configFiles()
                     q = { open "lua/utils/qf.lua", "Quickfix and Loclist" },
                     p = { open "lua/utils/preview.lua", "Fold preview" },
                     a = { open "lua/utils/autoload.lua", "Autoload functions" },
-                    s = { open "lua/utils/scratchpad.lua", "Filter tables" },
+                    s = { open "lua/utils/scratchpad.lua", "ScratchPad" },
                     t = { open "lua/utils/tables.lua", "Filter tables" },
                 },
                 f = {

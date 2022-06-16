@@ -28,7 +28,6 @@ tables.lspfiles = {
     "markdown",
     "org",
     "python",
-    -- "supercollider",
     "vim",
     "yaml",
 }
