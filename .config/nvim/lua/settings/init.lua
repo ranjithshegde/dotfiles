@@ -19,20 +19,24 @@ function settings.options()
     o.tabstop = tab
     o.shiftwidth = tab
     o.softtabstop = tab
-    o.cmdheight = 0
+    -- o.cmdheight = 0
     o.scrolloff = 10
     o.updatetime = 300
     o.timeoutlen = 100
     o.conceallevel = 1
     o.laststatus = 3
-    o.foldmethod = "expr"
     o.inccommand = "split"
+    o.foldmethod = "expr"
+    o.foldcolumn = "1"
     o.spelloptions = "camel"
     o.grepformat = "%f:%l:%c:%m"
     o.grepprg = "rg --vimgrep --smart-case --hidden"
+    o.completeopt = "menu,menuone,noinsert,noselect"
     o.spellfile = vim.fn.stdpath "config" .. "/spell/en.utf-8.add"
     o.fillchars = {
         fold = ".",
+        foldopen = "v",
+        foldclose = ">",
         horiz = "━",
         horizup = "┻",
         horizdown = "┳",
@@ -47,7 +51,6 @@ function settings.options()
     o.clipboard:append "unnamedplus"
     o.sessionoptions:append "terminal,tabpages"
     o.foldexpr = "nvim_treesitter#foldexpr()"
-    o.completeopt = "menu,menuone,noinsert,noselect"
     o.foldtext = [[luaeval('require("settings").foldText()')]]
     o.tabline = [[%!luaeval('require("statusline").tabs()')]]
     o.dictionary = { "/usr/share/dict/us", "/usr/share/dict/british" }

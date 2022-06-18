@@ -106,15 +106,17 @@ end
 function telescope.telescope()
     require("telescope").setup {
         pickers = {
-            find_files = { follow = true, attach_mappings = foldMaps },
-            git_files = { attach_mappings = foldMaps },
-            grep_string = { attach_mappings = foldMaps },
-            live_grep = { attach_mappings = foldMaps },
-            oldfiles = { attach_mappings = foldMaps },
             buffers = bufferPicker,
-            current_buffer_fuzzy_find = { theme = "ivy" },
+            loclist = { theme = "ivy" },
+            quickfix = { theme = "ivy" },
             lsp_document_symbols = { theme = "ivy" },
+            current_buffer_fuzzy_find = { theme = "ivy" },
             lsp_references = { theme = "cursor" },
+            oldfiles = { attach_mappings = foldMaps },
+            git_files = { attach_mappings = foldMaps },
+            live_grep = { attach_mappings = foldMaps },
+            grep_string = { attach_mappings = foldMaps },
+            find_files = { follow = true, attach_mappings = foldMaps },
         },
         defaults = {
             vimgrep_arguments = {
@@ -144,6 +146,10 @@ function telescope.telescope()
             },
         },
     }
+
+    if package.loaded.notify then
+        require("telescope").load_extension "notify"
+    end
 end
 
 return telescope

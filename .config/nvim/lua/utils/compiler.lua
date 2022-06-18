@@ -34,6 +34,7 @@ function Compiler.set_ctype()
     elseif isFile "Makefile" then
         require("mappings.clang").makeC()
         vim.g.makeFile = "Makefile"
+        vim.opt.makeprg = "make"
         vim.g.debugBin = "bin/" .. vim.fn.fnamemodify(vim.fn.getcwd(), ":t") .. "_debug"
         vim.g.cfiles = "src/*"
     elseif isFile "platformio.ini" then
@@ -55,6 +56,10 @@ end
 function Compiler.set_type()
     if isFile "Makefile.pdlibbuilder" then
         require("mappings.clang").pdc()
+    elseif isFile "Makefile" then
+        require("mappings.clang").makeC()
+        vim.opt.makeprg = "make"
+        vim.g.makeFile = "Makefile"
     else
         vim.opt.makeprg = "gcc"
         require("mappings.clang").ctests()

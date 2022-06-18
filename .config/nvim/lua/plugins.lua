@@ -130,6 +130,16 @@ return require("packer").startup {
             opt = true,
         }
 
+        -- Fancy folds
+        use {
+            "kevinhwang91/nvim-ufo",
+            rocks = { "promise-async" },
+            opt = true,
+            config = function()
+                require("settings.folds").init()
+            end,
+        }
+
         -- OrgWiki
         use {
             is_custom("WORKSPACE", "Repos/orgWiki.nvim", "ranjithshegde/orgWiki.nvim"),

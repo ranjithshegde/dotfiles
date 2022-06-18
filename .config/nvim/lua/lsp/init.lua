@@ -48,6 +48,8 @@ function lsp.settings()
                     border = "rounded",
                 })
             end
+        else
+            vim.notify "No signature help available"
         end
 
         if bufnr and winner then
@@ -61,12 +63,18 @@ function lsp.settings()
 
     require("packer").loader "nvim-notify"
     require("utils.langServers").lsp_messages()
+    require("packer").loader "nvim-ufo"
 end
 
 ---**************************** Snippet capabilities
 function lsp.capabilities()
     require("packer").loader "cmp-nvim-lsp"
-    return require("cmp_nvim_lsp").update_capabilities(vim.lsp.protocol.make_client_capabilities())
+    local caps = vim.lsp.protocol.make_client_capabilities()
+    caps.textDocument.foldingRange = {
+        dynamicRegistration = false,
+        lineFoldingOnly = true,
+    }
+    return require("cmp_nvim_lsp").update_capabilities(caps)
 end
 
 ---**************************** Global attach function
@@ -78,6 +86,14 @@ function lsp.attach(client, bufnr)
     require("utils.diagnostics").attach({ all = false, underline = false, update_in_insert = false }, client)
 
     local sc = client.server_capabilities
+
+    if sc.foldingRangeProvider then
+        vim.keymap.set("n", "<S-Tab>", function()
+            require("settings.folds").toggle_all()
+        end, { desc = "Toggle fold All", buffer = bufnr })
+        require("ufo").attach(bufnr)
+    end
+
     if client.name == "ccls" then
         sc.completionProvider = false
         sc.documentFormattingProvider = false

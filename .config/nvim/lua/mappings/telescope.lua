@@ -153,6 +153,10 @@ return require("which-key").register {
                 end,
                 "Choose directory",
             },
+            ["."] = {
+                telargs("find_files", { cwd = "~/.config/nvim", prompt_title = "Neovim configuration files" }),
+                "Neovim config files",
+            },
         },
     },
 }

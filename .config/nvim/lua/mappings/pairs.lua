@@ -4,7 +4,6 @@ local function exec_move(cmd)
         vim.opt_local.foldmethod = "manual"
     end
     vim.cmd "normal! m`"
-    vim.pretty_print(cmd)
     vim.cmd(cmd)
     vim.cmd "normal! ``"
     if old_fold ~= "manual" then
@@ -29,10 +28,13 @@ end
 local function call_cmd(cmd)
     return function()
         if vim.v.count > 1 then
-            print(tostring(vim.v.count1) .. cmd)
-            vim.cmd(tostring(vim.v.count1) .. cmd)
+            if not pcall(vim.cmd, tostring(vim.v.count1) .. cmd) then
+                print "No more results"
+            end
         else
-            vim.cmd(cmd)
+            if not pcall(vim.cmd, cmd) then
+                print "No more results"
+            end
         end
     end
 end

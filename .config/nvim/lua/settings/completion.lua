@@ -142,7 +142,7 @@ function completion.luasnip()
     local types = require "luasnip.util.types"
     require("luasnip").config.set_config {
         history = true,
-        updateevents = "TextChanged, TextChangedI",
+        update_events = "InsertLeave, TextChanged, TextChangedI",
         ext_opts = {
             [types.choiceNode] = {
                 active = {

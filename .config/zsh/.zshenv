@@ -56,6 +56,7 @@ export OPENCV_OPENCL_DEVICE=NVIDIA:GPU:0
 export OCTAVE_HISTFILE="$XDG_CACHE_HOME/octave-hsts"
 export OCTAVE_SITE_INITFILE="$XDG_CONFIG_HOME/octave/octaverc"
 export ANDROID_DATA="$XDG_DATA_HOME/android"
+export CONAN_USER_HOME="$XDG_DATA_HOME/conan"
 
 # GLOBALS
 export CHROME_EXECUTABLE=/usr/bin/brave
