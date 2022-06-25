@@ -132,6 +132,7 @@ function telescope.telescope()
             prompt_prefix = "❯ ",
             selection_caret = "❯ ",
             file_ignore_patterns = require("utils.tables").ignore_binaries,
+            mappings = { i = { ["<C-h>"] = "which_key" } },
         },
         extensions = {
             project = {

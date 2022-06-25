@@ -36,11 +36,10 @@ ignore_failures = ["shell"]
 
 [git]
 #max_concurrency = 5
-# Additional git repositories to pull
-#repos = [
+repos = [
+    "/opt/vcpkg"
 #    "~/src/*/",
-#    "~/.config/something"
-#]
+]
 
 # Don't pull the predefined git repos
 #predefined_repos = false

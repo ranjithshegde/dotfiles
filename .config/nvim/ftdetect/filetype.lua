@@ -11,4 +11,11 @@ vim.filetype.add {
         cl = "opencl",
         make = "make",
     },
+    filename = {
+        ["/etc/mkinitcpio.conf"] = "confini",
+        ["/etc/environment"] = "confini",
+    },
+    pattern = {
+        [vim.env.XDG_CONFIG_HOME .. "/udev/rules.d/.*%.rules"] = "udevrules",
+    },
 }

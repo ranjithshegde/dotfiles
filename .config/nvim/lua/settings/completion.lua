@@ -124,10 +124,7 @@ function completion.pairs()
         Rule('"', '",', "lua"):with_pair(ts_conds.is_ts_node "table_constructor"),
     }
 
-    require("cmp").event:on(
-        "confirm_done",
-        require("nvim-autopairs.completion.cmp").on_confirm_done { map_char = { tex = "" } }
-    )
+    require("cmp").event:on("confirm_done", require("nvim-autopairs.completion.cmp").on_confirm_done())
 end
 
 function completion.luasnip()

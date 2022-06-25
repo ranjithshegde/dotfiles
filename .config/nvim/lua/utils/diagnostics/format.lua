@@ -9,6 +9,7 @@ local highlights = {
     info = "",
     hint = "",
 }
+
 function format.sethl(error, warn, hint, info)
     if error then
         highlights.error = "%#" .. error .. "#"
@@ -53,4 +54,5 @@ function format.formatter(_, _, counts)
     end
     return table.concat(items, " ") .. " %##"
 end
+
 return format

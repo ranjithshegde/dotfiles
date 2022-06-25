@@ -65,7 +65,7 @@ return require("packer").startup {
 
         -- Colorizer
         use {
-            "afonsocraposo/nvim-colorizer.lua",
+            "xiyaowong/nvim-colorizer.lua",
             config = function()
                 require("settings.plugin").color()
             end,
@@ -90,6 +90,15 @@ return require("packer").startup {
             end,
         }
 
+        -- SuperCollider
+        use {
+            "davidgranstrom/scnvim",
+            ft = "supercollider",
+            config = function()
+                require("settings.plugin").scnvim()
+            end,
+        }
+
         -- TreeSitter
         use {
             { "nvim-treesitter/nvim-treesitter", run = ":TSUpdate" },
@@ -98,16 +107,6 @@ return require("packer").startup {
             { "nvim-treesitter/nvim-treesitter-refactor", after = "scnvim" },
             { "nvim-treesitter/playground", module = "nvim-treesitter-playground" },
             { "Badhi/nvim-treesitter-cpp-tools", ft = { "c", "cpp", "opencl" } },
-        }
-
-        -- SuperCollider
-        use {
-            "davidgranstrom/scnvim",
-            branch = "topic/lua-config",
-            ft = "supercollider",
-            config = function()
-                require("settings.plugin").scnvim()
-            end,
         }
 
         -- WhichKey
@@ -128,16 +127,6 @@ return require("packer").startup {
                 require("settings.plugin").gitsigns()
             end,
             opt = true,
-        }
-
-        -- Fancy folds
-        use {
-            "kevinhwang91/nvim-ufo",
-            rocks = { "promise-async" },
-            opt = true,
-            config = function()
-                require("settings.folds").init()
-            end,
         }
 
         -- OrgWiki
@@ -214,7 +203,7 @@ return require("packer").startup {
                 "folke/lua-dev.nvim",
                 ft = "lua",
                 config = function()
-                    require("lsp.sumneko").sumneko()
+                    require "lsp.sumneko"()
                 end,
             },
             {

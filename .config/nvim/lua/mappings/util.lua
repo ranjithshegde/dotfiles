@@ -122,10 +122,6 @@ end
 
 -- ******************************* Misc -------------------------------
 function utilmaps.misc()
-    vim.keymap.set("n", "<leader>e", function()
-        vim.cmd "Lex"
-    end, { desc = "Toggle Netrw" })
-
     vim.g.fold_preview = true
     vim.keymap.set("n", "l", function()
         require("utils.preview").keymap_open_close "l"

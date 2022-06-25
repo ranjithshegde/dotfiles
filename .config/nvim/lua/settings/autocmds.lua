@@ -122,15 +122,6 @@ aucmd("LspAttach", {
     desc = "Call attach function on event LspAttach",
 })
 
--- ************** Treesitter --------------------------------------
-augroup("TreeSitter", opts)
-aucmd("BufReadPost", {
-    group = "TreeSitter",
-    callback = function()
-        require "mappings.treesitter"
-    end,
-})
-
 -- ************** Compilers and REPL  ------------------------------
 augroup("MakeDispatch", opts)
 aucmd("FileType", {
@@ -151,6 +142,7 @@ aucmd("FileType", {
     desc = "set compiler and toggleable REPL for capable filetypes",
 })
 
+-- ************** Load plugins and mappings ------------------------------
 -- Compile packer after writing plugins.lua
 augroup("PluginLoad", opts)
 aucmd("BufWritePost", {
@@ -166,8 +158,10 @@ aucmd("BufReadPost", {
     group = "PluginLoad",
     callback = function()
         require "mappings.pairs"
+        require "mappings.treesitter"
+        require("mappings.util").misc()
     end,
-    desc = "Load unimpaired mappings after reading buffer",
+    desc = "Load mappings for unimparied, folds and treesiiter after reading buffer",
 })
 aucmd("BufReadPost", { group = "PluginLoad", command = "packadd matchit", once = true })
 aucmd("User", { pattern = "PackerComplete", group = "PluginLoad", command = "LuaCacheClear" })

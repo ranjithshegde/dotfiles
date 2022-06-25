@@ -29,7 +29,6 @@ function lsp.settings()
         group = "SetDiagnosticFuncs",
         callback = function()
             vim.diagnostic.setloclist { open = false }
-            require("utils.autoload").commands()
         end,
     })
 
@@ -63,37 +62,21 @@ function lsp.settings()
 
     require("packer").loader "nvim-notify"
     require("utils.langServers").lsp_messages()
-    require("packer").loader "nvim-ufo"
 end
 
 ---**************************** Snippet capabilities
 function lsp.capabilities()
     require("packer").loader "cmp-nvim-lsp"
-    local caps = vim.lsp.protocol.make_client_capabilities()
-    caps.textDocument.foldingRange = {
-        dynamicRegistration = false,
-        lineFoldingOnly = true,
-    }
-    return require("cmp_nvim_lsp").update_capabilities(caps)
+    return require("cmp_nvim_lsp").update_capabilities(vim.lsp.protocol.make_client_capabilities())
 end
 
 ---**************************** Global attach function
 function lsp.attach(client, bufnr)
+    require("utils.langServers").lsp_progress()
     require("mappings.lsp").lsp(bufnr)
     vim.b.hasLsp = true
 
-    require("utils.langServers").lsp_progress()
-    require("utils.diagnostics").attach({ all = false, underline = false, update_in_insert = false }, client)
-
     local sc = client.server_capabilities
-
-    if sc.foldingRangeProvider then
-        vim.keymap.set("n", "<S-Tab>", function()
-            require("settings.folds").toggle_all()
-        end, { desc = "Toggle fold All", buffer = bufnr })
-        require("ufo").attach(bufnr)
-    end
-
     if client.name == "ccls" then
         sc.completionProvider = false
         sc.documentFormattingProvider = false
@@ -112,6 +95,9 @@ function lsp.attach(client, bufnr)
         vim.lsp.codelens.refresh()
         return
     end
+
+    require("utils.diagnostics").attach({ all = false, underline = false, update_in_insert = false }, client)
+    require("utils.autoload").diagnostics(bufnr)
 
     if sc.documentHighlightProvider then
         aucmd("CursorHold", {
@@ -143,7 +129,16 @@ function lsp.attach(client, bufnr)
     if sc.signatureHelpProvider then
         require("lsp.signature").attach(client, bufnr)
     end
-    vim.api.nvim_create_user_command("LspCapabilities", require("utils.langServers").lsp_capabilities, {})
+
+    if sc.renameProvider then
+        require("lsp.rename").attach()
+
+        vim.keymap.set("n", ",R", function()
+            return ":IncRename " .. vim.fn.expand "<cword>"
+        end, { expr = true, buffer = bufnr, desc = "Incremental rename" })
+    end
+
+    vim.api.nvim_buf_create_user_command(bufnr, "LspCapabilities", require("utils.langServers").lsp_capabilities, {})
 end
 
 ------------------------------------------------------------------------
@@ -155,6 +150,7 @@ function lsp.servers()
     local configs = {
         jsonls = {},
         yamlls = {},
+        perlls = {},
         html = { capabilities = lsp.capabilities() },
         cssls = { capabilities = lsp.capabilities() },
         cmake = { capabilities = lsp.capabilities() },
@@ -181,6 +177,7 @@ function lsp.servers()
             },
         },
         texlab = {
+            cmd = { "texlab", "--log-file", "./texlab-log", "-vvvv" },
             capabilities = lsp.capabilities(),
             settings = {
                 texlab = {
@@ -241,10 +238,10 @@ function lsp.lintFormat()
         lintFormats = { "%f:%l:%c: %m" },
     }
     local flake8 = {
-        lintCommand = "flake8 --max-line-length 160 --format '%(path)s:%(row)d:%(col)d: %(code)s %(code)s %(text)s' --stdin-display-name ${INPUT} -",
+        lintCommand = "flake8  --max-line-length 160 --stdin-display-name ${INPUT} -",
         lintStdin = true,
         lintIgnoreExitCode = true,
-        lintFormats = { "%f:%l:%c: %t%n%n%n %m" },
+        lintFormats = { "%f:%l:%c: %m" },
         lintSource = "flake8",
     }
 

@@ -3,40 +3,57 @@ local autoload = {}
 --                          User commands                             --
 ------------------------------------------------------------------------
 
-function autoload.commands()
-    require("mappings.lsp").diagnostic()
-    local cmd = vim.api.nvim_create_user_command
+function autoload.diagnostics(bufnr)
+    require("mappings.lsp").diagnostic(bufnr)
+    local cmd = vim.api.nvim_buf_create_user_command
     local complete = function()
         return require("utils.langServers").getClientNames()
     end
 
-    cmd("ToggleVirtual", function(opts)
+    cmd(bufnr, "ToggleVirtual", function(opts)
         require("utils.diagnostics").toggle_virtual_text(opts.args)
     end, { nargs = 1, complete = complete })
 
-    cmd("ToggleSigns", function(opts)
+    cmd(bufnr, "ToggleSigns", function(opts)
         require("utils.diagnostics").toggle_signs(opts.args)
     end, { nargs = 1, complete = complete })
 
-    cmd("ToggleUnderline", function(opts)
+    cmd(bufnr, "ToggleUnderline", function(opts)
         require("utils.diagnostics").toggle_underline(opts.args)
     end, { nargs = 1, complete = complete })
 
-    cmd("ToggleAllDiagnostics", function(opts)
+    cmd(bufnr, "ToggleAllDiagnostics", function(opts)
         require("utils.diagnostics").toggle_all_diagnostics(opts.args)
     end, { nargs = 1, complete = complete })
 
-    cmd("DisableDiagnostics", function(opts)
+    cmd(bufnr, "DisableDiagnostics", function(opts)
         require("utils.diagnostics").turn_off_diagnostics(opts.args)
     end, { nargs = 1, complete = complete })
 
-    cmd("EnableDiagnostics", function(opts)
+    cmd(bufnr, "EnableDiagnostics", function(opts)
         require("utils.diagnostics").turn_on_diagnostics(opts.args)
     end, { nargs = 1, complete = complete })
 
-    cmd("DefaultDiagnostics", function(opts)
+    cmd(bufnr, "DefaultDiagnostics", function(opts)
         require("utils.diagnostics").turn_on_diagnostics_default(opts.args)
     end, { nargs = 1, complete = complete })
+end
+
+local transparent = false
+---Toggle background transparency for dark colorschemes
+function autoload.trans()
+    local colo = vim.api.nvim_exec("colo", true)
+    if colo == "dayfox" or colo == "dawnfox" then
+        print "Error: Transparent background does not work with a light colorscheme!"
+        return
+    end
+    transparent = not transparent
+    require("nightfox").setup {
+        options = {
+            transparent = transparent,
+        },
+    }
+    vim.cmd("colo " .. colo)
 end
 
 ------------------------------------------------------------------------

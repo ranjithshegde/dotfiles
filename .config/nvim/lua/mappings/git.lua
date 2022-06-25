@@ -14,7 +14,7 @@ function g.fugitive()
             name = "git functions",
             L = {
                 function()
-                    require("utils").ex_cmd("Gclog", _, { silent = true })
+                    require("utils").ex_cmd("Gclog", {}, { silent = true })
                 end,
                 "commit CLog",
             },

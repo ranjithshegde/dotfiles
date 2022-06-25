@@ -14,32 +14,32 @@ end
 --                              Capabilities                          --
 ------------------------------------------------------------------------
 
+local config = {
+    relative = "editor",
+    style = "minimal",
+    width = 70,
+    height = 25,
+    row = 0,
+    col = 0,
+    border = "double",
+}
+
+local function available_capabilities(server_capabilities)
+    return vim.tbl_filter(function(key)
+        if type(server_capabilities[key]) == "table" then
+            return not vim.tbl_isempty(server_capabilities[key])
+        else
+            return server_capabilities[key] == true
+        end
+    end, vim.tbl_keys(server_capabilities))
+end
+
 langSettings.lsp_capabilities = function()
     local init_buf = vim.api.nvim_get_current_buf()
     local buf_clients = vim.lsp.get_active_clients { bufnr = init_buf }
     local bufnr = vim.api.nvim_create_buf(false, true)
 
-    local config = {
-        relative = "editor",
-        style = "minimal",
-        width = 50,
-        height = 20,
-        row = 0,
-        col = 0,
-        border = "double",
-    }
-
     local buf_lines = {}
-
-    local function available_capabilities(server_capabilities)
-        return vim.tbl_filter(function(key)
-            if type(server_capabilities[key]) == "table" then
-                return not vim.tbl_isempty(server_capabilities[key])
-            else
-                return server_capabilities[key] == true
-            end
-        end, vim.tbl_keys(server_capabilities))
-    end
 
     local function make_client_info(client)
         local info = client.name .. " (id " .. tostring(client.id) .. ")"
@@ -104,10 +104,10 @@ langSettings.lsp_capabilities = function()
 
     vim.api.nvim_buf_set_lines(bufnr, 0, -1, true, buf_lines)
     vim.bo[bufnr].modifiable = false
-    vim.bo[bufnr].filetype = "markdown"
     vim.keymap.set("n", "<esc>", "<cmd>bd<CR>", { buffer = bufnr })
     vim.keymap.set("n", "q", "<cmd>bd<CR>", { buffer = bufnr })
     vim.api.nvim_open_win(bufnr, true, config)
+    vim.bo[bufnr].filetype = "markdown"
 end
 
 ------------------------------------------------------------------------

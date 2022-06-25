@@ -7,18 +7,19 @@ local plugins = {}
 ---SuperCollider
 function plugins.scnvim()
     local scnvim = require "scnvim"
+    local map = scnvim.map
     scnvim.setup {
-        mapping = {
-            ["<F6>"] = scnvim.map.send_line { "i", "n" },
+        keymaps = {
+            ["<F6>"] = map("editor.send_line", { "i", "n" }),
             ["<F5>"] = {
-                scnvim.map.send_block { "i", "n" },
-                scnvim.map.send_selection "x",
+                map("editor.send_block", { "i", "n" }),
+                map("editor.send_selection", "x"),
             },
-            ["<F12>"] = scnvim.map.hard_stop { "n", "x", "i" },
-            ["<CR>"] = scnvim.map.postwin_toggle "n",
-            ["<C-CR>"] = scnvim.map.postwin_toggle "i",
-            ["<M-L>"] = scnvim.map.postwin_clear { "n", "i" },
-            [",s"] = scnvim.map.show_signature { "n", "i" },
+            ["<F12>"] = map("sclang.hard_stop", { "n", "x", "i" }),
+            ["<CR>"] = map("postwin.toggle", "n"),
+            ["<C-CR>"] = map("postwin.toggle", "i"),
+            ["<M-L>"] = map("postwin.clear", { "n", "i" }),
+            [",s"] = map("signature.show", { "n", "i" }),
         },
         completion = { signature = { config = { border = "rounded" } } },
     }
@@ -77,7 +78,6 @@ end
 
 ---IndentBlankline
 function plugins.indent()
-    vim.g.indent_blankline_char = "┊"
     require("indent_blankline").setup {
         show_current_context = true,
         show_end_of_line = true,

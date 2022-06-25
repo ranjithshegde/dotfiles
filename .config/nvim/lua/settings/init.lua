@@ -6,7 +6,7 @@ local o = vim.opt
 ------------------------------------------------------------------------
 
 function settings.options()
-    vim.cmd "colo duskfox"
+    vim.cmd "colo nightfox"
     local tab = 4
     o.number = true
     o.expandtab = true
@@ -25,18 +25,17 @@ function settings.options()
     o.timeoutlen = 100
     o.conceallevel = 1
     o.laststatus = 3
-    o.inccommand = "split"
+    o.jumpoptions = "view"
     o.foldmethod = "expr"
-    o.foldcolumn = "1"
+    o.inccommand = "split"
     o.spelloptions = "camel"
     o.grepformat = "%f:%l:%c:%m"
     o.grepprg = "rg --vimgrep --smart-case --hidden"
-    o.completeopt = "menu,menuone,noinsert,noselect"
     o.spellfile = vim.fn.stdpath "config" .. "/spell/en.utf-8.add"
+
+    o.completeopt = { "menu", "menuone", "noinsert", "noselect" }
     o.fillchars = {
         fold = ".",
-        foldopen = "v",
-        foldclose = ">",
         horiz = "━",
         horizup = "┻",
         horizdown = "┳",
@@ -46,14 +45,17 @@ function settings.options()
         vertright = "┣",
         verthoriz = "╋",
     }
+    o.dictionary = {
+        "/usr/share/dict/us",
+        "/usr/share/dict/british",
+    }
+
     o.shortmess:append "c"
-    o.listchars:append "eol:↲"
     o.clipboard:append "unnamedplus"
     o.sessionoptions:append "terminal,tabpages"
     o.foldexpr = "nvim_treesitter#foldexpr()"
     o.foldtext = [[luaeval('require("settings").foldText()')]]
     o.tabline = [[%!luaeval('require("statusline").tabs()')]]
-    o.dictionary = { "/usr/share/dict/us", "/usr/share/dict/british" }
 
     vim.g.netrw_altv = 1
     vim.g.netrw_winsize = 15
@@ -79,6 +81,10 @@ function settings.options()
         end,
     })
 end
+
+------------------------------------------------------------------------
+--                              FoldText                              --
+------------------------------------------------------------------------
 
 function settings.foldText()
     local foldlines = vim.api.nvim_buf_get_lines(0, vim.v.foldstart - 1, vim.v.foldend, true)

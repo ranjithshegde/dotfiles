@@ -102,7 +102,7 @@ return require("which-key").register {
                 "ofWorkspace",
             },
             d = {
-                telargs("live_grep", { cwd = "~/.config", prompt_title = "Dotfiles grep" }),
+                telargs("live_grep", { cwd = "~/.config", prompt_title = "Dotfiles" }),
                 "grep dotfiles",
             },
             ["?"] = {
@@ -112,6 +112,14 @@ return require("which-key").register {
                     }
                 end,
                 "Choose directory",
+            },
+            ["."] = {
+                telargs("live_grep", {
+                    cwd = "~/.config/nvim",
+                    search_dirs = { "init.lua", "lua", "after", "plugin", "ftdetect" },
+                    prompt_title = "vim config",
+                }),
+                "grep dotfiles",
             },
         },
         F = { tele "find_files", "Current directory" },

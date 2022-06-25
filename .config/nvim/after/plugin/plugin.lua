@@ -19,7 +19,7 @@ cmd("Agenda", function()
 end, {})
 
 cmd("ToggleTransparency", function()
-    require("utils").trans()
+    require("utils.autoload").trans()
 end, {})
 
 cmd("Gram", function()
@@ -33,15 +33,28 @@ end, {})
 cmd("Su", "w !sudo tee %", {})
 
 -- ******************* Plugin mappings --------------------------------------------
-require("mappings.util").ranger()
-require("mappings.util").orgWiki()
-require("mappings.util").misc()
 
 vim.keymap.set("n", "<Space>", function()
     vim.keymap.del("n", "<Space>")
     require "mappings.telescope"
     vim.api.nvim_input "<Space>"
-end)
+end, { desc = "Telescope" })
+
+vim.keymap.set("n", "<leader>r", function()
+    require("mappings.util").ranger()
+    vim.keymap.del("n", "<leader>r")
+    vim.api.nvim_input "\\r"
+end, { desc = "Ranger file picker" })
+
+vim.keymap.set("n", "<leader>w", function()
+    vim.keymap.del("n", "<leader>w")
+    require("mappings.util").orgWiki()
+    vim.api.nvim_input "\\w"
+end, { desc = "OrgWiki" })
+
+vim.keymap.set("n", "<leader>e", function()
+    vim.cmd "Lex"
+end, { desc = "Toggle Netrw" })
 
 -- ******************* Global functions --------------------------------------------
 

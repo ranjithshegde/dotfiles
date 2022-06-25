@@ -64,8 +64,8 @@ function cmaps.ctests()
 
     map("n", "<F5>", function()
         vim.cmd "w"
-        require("utils").ex_cmd("Make", { "-g", "%", "-o", "%<" }, { silent = true }, { file = true })
-    end, { buffer = true, desc = "Make" })
+        require("utils").ex_cmd("Make", { "-g", "%", "-o", "%<", "&&", "./%<" }, { silent = true }, { file = true })
+    end, { buffer = true, desc = "Make & launch" })
 
     map("n", "<F6>", function()
         require("utils.compiler").renderOffload { "./%<" }

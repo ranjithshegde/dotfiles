@@ -66,7 +66,7 @@ end
 ---Use ranger as file picker
 ---@param path string Patht open ranger from
 ---@param edit_cmd string Ranger window position - e: open over current buffer - vs: Vertical split - tab drop: in new or existing tab window
-utils.ranger = function(path, edit_cmd)
+function utils.ranger(path, edit_cmd)
     local cpath = "/tmp/chosenfile"
     local currentPath = vim.fn.expand(path)
     local rc = { name = "ranger", edit_cmd = edit_cmd }
@@ -135,23 +135,6 @@ end
 function utils.dictionary(cmd)
     local url = "https://en.wiktionary.org/wiki/" .. cmd
     utils.open_in_browser(url)
-end
-
-local transparent = false
----Toggle background transparency for dark colorschemes
-function utils.trans()
-    local colo = vim.api.nvim_exec("colo", true)
-    if colo == "dayfox" or colo == "dawnfox" then
-        print "Error: Transparent background does not work with a light colorscheme!"
-        return
-    end
-    transparent = not transparent
-    require("nightfox").setup {
-        options = {
-            transparent = transparent,
-        },
-    }
-    vim.cmd("colo " .. colo)
 end
 
 ---Execute ex-command through nvim_cmd

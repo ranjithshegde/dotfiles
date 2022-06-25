@@ -11,7 +11,7 @@
  (#set! conceal "✸")
  )
 (
- ((stars) @stars (#eq? @stars "****")) @OrgTSHeadlineLevel4 
+ ((stars) @stars (#eq? @stars "****")) @OrgTSHeadlineLevel4
  (#set! conceal "✿")
  )
 (expr

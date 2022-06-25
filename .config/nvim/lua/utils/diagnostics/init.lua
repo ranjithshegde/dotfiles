@@ -57,8 +57,11 @@ local function tableHasKey(table, key)
     end
 end
 
-local function returinID(client)
+local function returnID(client)
     local lang_server = util.get_active_client_by_name(0, client)
+    if not lang_server then
+        return error "Requested clients attached, failed"
+    end
     return lang_server.id
 end
 
@@ -87,7 +90,7 @@ local function configure(settings, client)
                 vim.lsp.diagnostic.on_publish_diagnostics,
                 conf
             )
-            local client_id = returinID(id)
+            local client_id = returnID(id)
             local buffers = lsp.get_buffers_by_client_id(client_id)
             for _, buffer_id in ipairs(buffers) do
                 show(buffer_id, client_id, conf)
@@ -99,7 +102,7 @@ local function configure(settings, client)
             vim.lsp.diagnostic.on_publish_diagnostics,
             conf
         )
-        local client_id = returinID(client)
+        local client_id = returnID(client)
         local buffers = lsp.get_buffers_by_client_id(client_id)
         for _, buffer_id in ipairs(buffers) do
             show(buffer_id, client_id, conf)

@@ -28,6 +28,7 @@ tables.lspfiles = {
     "markdown",
     "org",
     "python",
+    "perl",
     "vim",
     "yaml",
 }
@@ -251,6 +252,7 @@ tables.disabled_builtins = {
 tables.ts_parsers = {
     "bash",
     "bibtex",
+    "c",
     "cmake",
     "cpp",
     "comment",
@@ -266,6 +268,7 @@ tables.ts_parsers = {
     "lua",
     "make",
     "markdown",
+    "markdown_inline",
     "org",
     "python",
     "query",

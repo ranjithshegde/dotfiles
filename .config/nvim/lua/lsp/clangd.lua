@@ -67,7 +67,6 @@ function servers.ccls()
         root_dir = lspconfig.util.root_pattern("compile_commands.json", "compile_flags.txt", ".git"),
     }
     require("lspconfig").ccls.setup(ccls)
-    vim.g.lspconfig = 1
 end
 
 return servers

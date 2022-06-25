@@ -1,13 +1,11 @@
-local servers = {}
-
 -----------------------------------------------------------------------
 --                       Sumneko lua development 	                  --
 ------------------------------------------------------------------------
 
-function servers.sumneko()
+return function()
     local luadev = require("lua-dev").setup {
         library = {
-            plugins = { "plenary.nvim", "express_line.nvim", "nvim-lspconfig", "nvim-treesitter" },
+            plugins = {},
         },
         runtime_path = true,
         lspconfig = {
@@ -21,5 +19,3 @@ function servers.sumneko()
     end
     require("lspconfig").sumneko_lua.setup(luadev)
 end
-
-return servers

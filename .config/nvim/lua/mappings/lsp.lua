@@ -11,7 +11,6 @@ function lspmap.lsp(bufnr)
         ["<F7>"] = { require("debugger").init, "Initialize Debugger adapter" },
         [","] = {
             name = "Lsp functions",
-            R = { vim.lsp.buf.rename, "Rename symbol" },
             s = { vim.lsp.buf.signature_help, "Show signature" },
             a = { vim.lsp.buf.code_action, "Code actions for buffer" },
             i = { vim.lsp.buf.implementation, "Jump to Implementation" },
@@ -79,10 +78,10 @@ end
 
 -- ******************************** Diagnostics------------------------
 
-function lspmap.diagnostic()
-    map("n", ",ld", vim.diagnostic.open_float, { desc = "Show line diagnostics" })
-    map("n", "[d", vim.diagnostic.goto_prev, { desc = "Show previous diagnostics" })
-    map("n", "]d", vim.diagnostic.goto_next, { desc = "Show next diagnostics" })
+function lspmap.diagnostic(bufnr)
+    map("n", ",ld", vim.diagnostic.open_float, { desc = "Show line diagnostics", buffer = bufnr })
+    map("n", "[d", vim.diagnostic.goto_prev, { desc = "Show previous diagnostics", buffer = bufnr })
+    map("n", "]d", vim.diagnostic.goto_next, { desc = "Show next diagnostics", buffer = bufnr })
 end
 
 ------------------------------------------------------------------------
@@ -120,7 +119,7 @@ function lspmap.debug()
     wk.register {
         ["<leader>d"] = {
             name = "debug",
-            ["."] = { require("dap").close, "End" },
+            ["."] = { require("dap").terminate, "End" },
             ["?"] = { require("debugger").frames, "Frames" },
             ["/"] = { require("debugger").scopes, "Scopes" },
             t = { require("debugger").threads, "threads" },
