@@ -10,6 +10,7 @@ local function generate_signature_help_autocmd(bufnr, client)
         callback = function()
             require("lsp.signature")._TriggerCharEvent(client_id)
         end,
+        desc = "Trigger signature help on lsp-characters",
     })
 end
 
@@ -25,6 +26,7 @@ local function generate_signature_snippet_autocmd(bufnr, client)
                 end
             end
         end,
+        desc = "Trigger signature help in relevant luasnip nodes",
     })
 end
 

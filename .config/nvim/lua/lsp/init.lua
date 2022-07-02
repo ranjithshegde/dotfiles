@@ -30,6 +30,7 @@ function lsp.settings()
         callback = function()
             vim.diagnostic.setloclist { open = false }
         end,
+        desc = "Send diagnostics to loclist on new errors",
     })
 
     -- Signature help always on top
@@ -91,6 +92,7 @@ function lsp.attach(client, bufnr)
             buffer = bufnr,
             group = "LspCodeLens",
             callback = vim.lsp.codelens.refresh,
+            desc = "Refresh codelens on save",
         })
         vim.lsp.codelens.refresh()
         return
@@ -104,11 +106,13 @@ function lsp.attach(client, bufnr)
             group = "LspHighlightSymbols",
             buffer = bufnr,
             callback = vim.lsp.buf.document_highlight,
+            desc = "highlight Lsp cword on CursorHold",
         })
         aucmd("CursorMoved, CursorMovedI", {
             group = "LspHighlightSymbols",
             buffer = bufnr,
             callback = vim.lsp.buf.clear_references,
+            desc = "clear Lsp cword highlights on CursorMove",
         })
     end
 
@@ -120,6 +124,7 @@ function lsp.attach(client, bufnr)
             callback = function()
                 vim.lsp.buf.format { filter = filterfmt }
             end,
+            desc = "let LSP format the buffer on save",
         })
         vim.keymap.set({ "n", "v" }, ",f", function()
             vim.lsp.buf.format { filter = filterfmt, timeout_ms = 2000 }
@@ -138,7 +143,12 @@ function lsp.attach(client, bufnr)
         end, { expr = true, buffer = bufnr, desc = "Incremental rename" })
     end
 
-    vim.api.nvim_buf_create_user_command(bufnr, "LspCapabilities", require("utils.langServers").lsp_capabilities, {})
+    vim.api.nvim_buf_create_user_command(
+        bufnr,
+        "LspCapabilities",
+        require("utils.langServers").lsp_capabilities,
+        { desc = "Display Language Server capabilities" }
+    )
 end
 
 ------------------------------------------------------------------------

@@ -10,7 +10,12 @@ return function()
         runtime_path = true,
         lspconfig = {
             capabilities = require("lsp").capabilities(),
-            settings = { Lua = { diagnostics = { globals = { "vim", "pd" } } } },
+            settings = {
+                Lua = {
+                    diagnostics = { globals = { "vim", "pd" } },
+                    hint = { enable = true },
+                },
+            },
         },
     }
     table.insert(luadev.settings.Lua.workspace.library, vim.fs.normalize "~/.config/nvim")

@@ -79,6 +79,7 @@ function settings.options()
         callback = function()
             vim.highlight.on_yank { higroup = "IncSearch", timeout = 200 }
         end,
+        desc = "Highlight yanked text",
     })
 end
 

@@ -149,6 +149,7 @@ function mappings.configFiles()
                     a = { open "lua/utils/autoload.lua", "Autoload functions" },
                     s = { open "lua/utils/scratchpad.lua", "ScratchPad" },
                     t = { open "lua/utils/tables.lua", "Filter tables" },
+                    r = { open "lua/utils/repeat.lua", "dot-repeat" },
                 },
                 f = {
                     name = "Filetype Plugins",

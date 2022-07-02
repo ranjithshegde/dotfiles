@@ -7,28 +7,28 @@ cmd("Scratch", function(opts)
     else
         require "utils.scratchpad"()
     end
-end, {})
+end, { desc = "Open scratchpad for a filetype" })
 
 cmd("WordCount", function()
     require("utils.langServers").TexWordCount()
-end, {})
+end, { desc = "Display text word count in the buffer" })
 
 cmd("Agenda", function()
     require("packer").loader "orgmode"
     require("orgmode").action "agenda.prompt"
-end, {})
+end, { desc = "Open Orgmode agenda" })
 
 cmd("ToggleTransparency", function()
     require("utils.autoload").trans()
-end, {})
+end, { desc = "Toggle background transpparency for dark scheme" })
 
 cmd("Gram", function()
     require("utils.autoload").WordProcessor()
-end, {})
+end, { desc = "Turn on WordProcessor mode" })
 
 cmd("Cam", function()
     require("utils.autoload").CamelCase()
-end, {})
+end, { desc = "Turn word and motion operators into camelcase" })
 
 cmd("Su", "w !sudo tee %", {})
 

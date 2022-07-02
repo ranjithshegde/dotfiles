@@ -179,7 +179,6 @@ return require("packer").startup {
             },
             {
                 "nvim-telescope/telescope.nvim",
-                branch = "dev",
                 module = "telescope",
                 cmd = "Telescope",
                 config = function()

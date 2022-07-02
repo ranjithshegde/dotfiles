@@ -315,8 +315,6 @@ function rename.attach(config)
     state.preview_strategy = config.multi_files and multi_file_strategy or single_file_strategy
 
     local id = vim.api.nvim_create_augroup("inc_rename", { clear = true })
-    -- We need to be able to tell when the command was cancelled to refetch the references.
-    -- Otherwise the same variable would be renamed every time.
     vim.api.nvim_create_autocmd({ "CmdLineLeave" }, {
         group = id,
         callback = vim.schedule_wrap(function()
@@ -324,12 +322,13 @@ function rename.attach(config)
                 state.preview_strategy.restore_buffer_state(state.cached_lines)
             end
         end),
+        desc = "check if the command was cancelled to refetch the references.",
     })
 
     vim.api.nvim_create_user_command(
         "IncRename",
         vim.schedule_wrap(incremental_rename_execute),
-        { nargs = 1, addr = "lines", preview = incremental_rename_preview }
+        { nargs = 1, addr = "lines", preview = incremental_rename_preview, desc = "Incremental Lsp rename" }
     )
 end
 

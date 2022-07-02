@@ -34,6 +34,7 @@ function plugins.scnvim()
                 vim.api.nvim_input "<CR>"
             end
         end,
+        desc = "Load SCNvim settings and launch interpreter on filetype",
     })
 end
 

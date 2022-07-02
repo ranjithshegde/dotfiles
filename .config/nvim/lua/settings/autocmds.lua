@@ -40,6 +40,7 @@ aucmd("FileType", {
         vim.opt_local.cursorline = true
         vim.wo.winbar = ""
     end,
+    desc = "Disable all custom decoration rules for non-language filetypes",
 })
 aucmd({ "InsertEnter", "WinLeave", "FocusLost", "BufNewFile" }, {
     group = "FormatOptions",
@@ -86,7 +87,7 @@ aucmd({ "FocusLost", "WinLeave" }, {
         end
         vim.opt_local.cursorline = false
     end,
-    desc = "dont use cursorline only on inactive buffers",
+    desc = "dont use cursorline on inactive buffers",
 })
 
 -- ************** Lsp Configuration loading  ------------------------------
@@ -163,8 +164,16 @@ aucmd("BufReadPost", {
     end,
     desc = "Load mappings for unimparied, folds and treesiiter after reading buffer",
 })
-aucmd("BufReadPost", { group = "PluginLoad", command = "packadd matchit", once = true })
-aucmd("User", { pattern = "PackerComplete", group = "PluginLoad", command = "LuaCacheClear" })
+aucmd(
+    "BufReadPost",
+    { group = "PluginLoad", command = "packadd matchit", once = true, desc = "Conditionally load matchit" }
+)
+aucmd("User", {
+    pattern = "PackerComplete",
+    group = "PluginLoad",
+    command = "LuaCacheClear",
+    desc = "Clear cache after compiling packer",
+})
 
 -- ************************ Terminal management --------------------
 
@@ -184,12 +193,14 @@ aucmd("TermEnter", {
             vim.keymap.set("t", "<Esc>", "<C-\\><C-n>", { buffer = true, desc = "Escape Insert" })
         end
     end,
+    desc = "Especial insertexit for ranger windows",
 })
 aucmd("TermClose", {
     group = "TermInsertModes",
     callback = function()
         vim.api.nvim_input "<CR>"
     end,
+    desc = "Remove the annoying [exited] termexit prompt",
 })
 
 augroup("ProjectDrawer", opts)
@@ -200,6 +211,7 @@ aucmd("WinEnter", {
             vim.cmd "q"
         end
     end,
+    desc = "Autoclose NetRW if its the last buffer",
 })
 aucmd("FileType", {
     pattern = "netrw",

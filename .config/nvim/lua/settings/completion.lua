@@ -135,7 +135,9 @@ function completion.luasnip()
             require("luasnip").add_snippets("supercollider", require("scnvim/utils").get_snippets())
         end,
         once = true,
+        desc = "Lazy load supercollider snippets on filetype",
     })
+
     local types = require "luasnip.util.types"
     require("luasnip").config.set_config {
         history = true,

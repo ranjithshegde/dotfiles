@@ -112,6 +112,7 @@ function M.show_preview()
             fold_preview[curbufnr].close()
         end,
         once = true,
+        desc = "Close preview when on any cursor change",
     })
     vim.api.nvim_create_autocmd("WinScrolled", {
         group = auid,
@@ -119,6 +120,7 @@ function M.show_preview()
         callback = function()
             fold_preview[curbufnr].scroll()
         end,
+        desc = "scroll preview window when main window scrolls",
     })
     vim.api.nvim_create_autocmd("VimResized", {
         group = auid,
@@ -126,6 +128,7 @@ function M.show_preview()
         callback = function()
             fold_preview[curbufnr].resize()
         end,
+        desc = "Resize preview window when main window resizes",
     })
 end
 
