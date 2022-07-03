@@ -34,6 +34,7 @@ aucmd("FileType", {
         if vim.tbl_contains(require("utils.tables").ignoreFiles, args.match) then
             vim.opt.relativenumber = false
             vim.opt_local.cursorline = false
+            vim.wo.foldcolumn = "0"
             return
         end
         vim.opt.relativenumber = true
@@ -76,6 +77,7 @@ aucmd({ "FocusGained", "WinEnter" }, {
             return
         end
         vim.opt_local.cursorline = true
+        vim.wo.foldcolumn = "auto:1"
     end,
     desc = "use cursorline only on active buffers && Winbar on tabpages with more than one window",
 })
@@ -86,6 +88,7 @@ aucmd({ "FocusLost", "WinLeave" }, {
             return
         end
         vim.opt_local.cursorline = false
+        vim.wo.foldcolumn = "0"
     end,
     desc = "dont use cursorline on inactive buffers",
 })
@@ -160,9 +163,8 @@ aucmd("BufReadPost", {
     callback = function()
         require "mappings.pairs"
         require "mappings.treesitter"
-        require("mappings.util").misc()
     end,
-    desc = "Load mappings for unimparied, folds and treesiiter after reading buffer",
+    desc = "Load mappings for unimparied and treesiiter after reading buffer",
 })
 aucmd(
     "BufReadPost",

@@ -78,6 +78,7 @@ function lsp.attach(client, bufnr)
     vim.b.hasLsp = true
 
     local sc = client.server_capabilities
+
     if client.name == "ccls" then
         sc.completionProvider = false
         sc.documentFormattingProvider = false

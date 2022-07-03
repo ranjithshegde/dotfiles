@@ -129,6 +129,15 @@ return require("packer").startup {
             opt = true,
         }
 
+        -- Fancy folds
+        use {
+            "kevinhwang91/nvim-ufo",
+            event = "BufReadPost",
+            config = function()
+                require "settings.folds"()
+            end,
+        }
+
         -- OrgWiki
         use {
             is_custom("WORKSPACE", "Repos/orgWiki.nvim", "ranjithshegde/orgWiki.nvim"),

@@ -1,11 +1,10 @@
-local settings = {}
 local o = vim.opt
 
 ------------------------------------------------------------------------
 --                              General                               --
 ------------------------------------------------------------------------
 
-function settings.options()
+return function()
     vim.cmd "colo nightfox"
     local tab = 4
     o.number = true
@@ -19,12 +18,12 @@ function settings.options()
     o.tabstop = tab
     o.shiftwidth = tab
     o.softtabstop = tab
-    -- o.cmdheight = 0
+    o.cmdheight = 0
+    o.laststatus = 3
     o.scrolloff = 10
     o.updatetime = 300
     o.timeoutlen = 100
     o.conceallevel = 1
-    o.laststatus = 3
     o.jumpoptions = "view"
     o.foldmethod = "expr"
     o.inccommand = "split"
@@ -35,7 +34,10 @@ function settings.options()
 
     o.completeopt = { "menu", "menuone", "noinsert", "noselect" }
     o.fillchars = {
-        fold = ".",
+        fold = " ",
+        foldopen = "▾",
+        foldsep = "│",
+        foldclose = "▸",
         horiz = "━",
         horizup = "┻",
         horizdown = "┳",
@@ -54,7 +56,6 @@ function settings.options()
     o.clipboard:append "unnamedplus"
     o.sessionoptions:append "terminal,tabpages"
     o.foldexpr = "nvim_treesitter#foldexpr()"
-    o.foldtext = [[luaeval('require("settings").foldText()')]]
     o.tabline = [[%!luaeval('require("statusline").tabs()')]]
 
     vim.g.netrw_altv = 1
@@ -64,7 +65,6 @@ function settings.options()
     vim.g.loaded_ruby_provider = 0
     vim.g.loaded_perl_provider = 0
     vim.g.markdown_folding = 1
-    vim.g.fold_preview = true
     vim.g.tex_conceal = "abdmgs"
     vim.g.symbols_outline = { auto_preview = false, width = 40 }
 
@@ -82,21 +82,3 @@ function settings.options()
         desc = "Highlight yanked text",
     })
 end
-
-------------------------------------------------------------------------
---                              FoldText                              --
-------------------------------------------------------------------------
-
-function settings.foldText()
-    local foldlines = vim.api.nvim_buf_get_lines(0, vim.v.foldstart - 1, vim.v.foldend, true)
-    local text = string.format(
-        "%s%s%s",
-        string.gsub(foldlines[1], "\\t", string.rep(" ", vim.api.nvim_get_option "tabstop")),
-        "    +    (" .. (vim.v.foldend - vim.v.foldstart - 1) .. " lines)    +    ",
-        vim.fn.trim(foldlines[#foldlines])
-    )
-
-    return text
-end
-
-return settings

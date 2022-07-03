@@ -71,7 +71,6 @@ function vim_repeat.enable()
         end,
         desc = "Set repeaat tick for vim-repeat",
     })
-
     vim.api.nvim_create_autocmd({ "BufEnter", "BufWritePost" }, {
         group = "repeatPlugin",
         callback = function()
@@ -159,9 +158,11 @@ end
 function vim_repeat.wrap(command, count)
     local preserve = vim.g.repeat_tick == vim.b.changedtick
     vim.api.nvim_feedkeys((count and count or "") .. command, "n", false)
-    if vim.opt.foldopen:get() == [[undo|all]] then
+
+    if vim.tbl_contains(vim.opt.foldopen:get(), "undo") or vim.tbl_contains(vim.opt.foldopen:get(), "all") then
         vim.cmd "norm! zv"
     end
+
     if preserve then
         vim.g.repeat_tick = vim.b.changedtick
     end
