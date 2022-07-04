@@ -18,10 +18,6 @@ cmd("Agenda", function()
     require("orgmode").action "agenda.prompt"
 end, { desc = "Open Orgmode agenda" })
 
-cmd("ToggleTransparency", function()
-    require("utils.autoload").trans()
-end, { desc = "Toggle background transpparency for dark scheme" })
-
 cmd("Gram", function()
     require("utils.autoload").WordProcessor()
 end, { desc = "Turn on WordProcessor mode" })

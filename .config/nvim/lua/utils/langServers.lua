@@ -116,7 +116,6 @@ end
 
 function langSettings.lsp_progress()
     local notify = require "settings.notify"
-    vim.notify = require "notify"
 
     vim.lsp.handlers["$/progress"] = function(_, result, ctx)
         local client_id = ctx.client_id
@@ -171,8 +170,8 @@ local severity = {
 }
 
 function langSettings.lsp_messages()
+    vim.notify = require "notify"
     vim.lsp.handlers["window/showMessage"] = function(err, method, params, client_id)
-        vim.notify = require "notify"
         vim.notify(method.message, severity[params.type])
     end
 end

@@ -8,8 +8,13 @@ local plugins = {}
 function plugins.scnvim()
     local scnvim = require "scnvim"
     local map = scnvim.map
+    local map_expr = scnvim.map_expr
     scnvim.setup {
         keymaps = {
+            ["<F1>"] = map "sclang.start",
+            ["<F2>"] = map "sclang.poll_server_status",
+            ["<F3>"] = map_expr "Server.local.boot",
+            ["<F4>"] = map_expr "WFS.startup",
             ["<F6>"] = map("editor.send_line", { "i", "n" }),
             ["<F5>"] = {
                 map("editor.send_block", { "i", "n" }),
@@ -26,8 +31,20 @@ function plugins.scnvim()
     vim.api.nvim_create_autocmd("FileType", {
         group = "LspSettings",
         pattern = "supercollider",
-        callback = function()
-            require("mappings.filetypes").scnvim()
+        callback = function(args)
+            vim.keymap.set(
+                "n",
+                "<leader>s",
+                "<cmd>tab drop ~/.config/SuperCollider/startup.scd<CR>",
+                { buffer = args.buf, desc = "open startup file" }
+            )
+            vim.keymap.set("n", "K", function()
+                local winid = require("ufo").peekFoldedLinesUnderCursor()
+                if not winid then
+                    require("scnvim.help").open_help_for(vim.fn.expand "<cword>")
+                end
+            end, { desc = "Hover or peek-fold", buffer = args.buf })
+
             vim.opt_local.wrap = true
             if not require("scnvim").is_running() then
                 require("scnvim").start()

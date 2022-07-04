@@ -116,6 +116,21 @@ aucmd("FileType", {
     end,
     desc = "OpenCL filetype to handle C++ lsp",
 })
+aucmd("FileType", {
+    group = "LspSettings",
+    pattern = "cmake",
+    callback = function()
+        vim.lsp.start {
+            name = "neocmake",
+            cmd = { "neocmakelsp" },
+            filetypes = "cmake",
+            root_dir = vim.fs.dirname(vim.fs.find({ ".git" }, { upward = true })[1]),
+            -- autostart = true,
+            capabilities = require("lsp").capabilities(),
+        }
+    end,
+})
+
 aucmd("LspAttach", {
     group = "LspSettings",
     callback = function(args)

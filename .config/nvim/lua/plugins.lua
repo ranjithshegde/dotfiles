@@ -33,8 +33,6 @@ return require("packer").startup {
 
         use "lewis6991/impatient.nvim"
 
-        use "EdenEast/nightfox.nvim"
-
         -- Taglist and sidebars
         use { "simrat39/symbols-outline.nvim", module = "symbols-outline" }
 
@@ -99,6 +97,15 @@ return require("packer").startup {
             end,
         }
 
+        --notify
+        use {
+            "rcarriga/nvim-notify",
+            module = "notify",
+            config = function()
+                require("notify").setup { timeout = 1000, stages = "static" }
+            end,
+        }
+
         -- TreeSitter
         use {
             { "nvim-treesitter/nvim-treesitter", run = ":TSUpdate" },
@@ -132,9 +139,22 @@ return require("packer").startup {
         -- Fancy folds
         use {
             "kevinhwang91/nvim-ufo",
+            rocks = "promise-async",
             event = "BufReadPost",
             config = function()
                 require "settings.folds"()
+            end,
+        }
+
+        --- Colorschemes
+        use {
+            -- "EdenEast/nightfox.nvim"
+            --  "VonHeikemen/little-wonder"
+            -- "folke/tokyonight.nvim"
+            "catppuccin/nvim",
+            as = "catppuccin",
+            config = function()
+                require("catppuccin").setup { integrations = { which_key = true, gitgutter = true } }
             end,
         }
 
@@ -171,35 +191,9 @@ return require("packer").startup {
             },
         }
 
-        -- Telescope
-        use {
-            { "nvim-telescope/telescope-file-browser.nvim", after = "telescope-project.nvim" },
-            {
-                "nvim-telescope/telescope-project.nvim",
-                after = "telescope-fzf-native.nvim",
-            },
-            {
-                "nvim-telescope/telescope-fzf-native.nvim",
-                after = "telescope.nvim",
-                run = "make",
-                config = function()
-                    require("telescope").load_extension "fzf"
-                end,
-            },
-            {
-                "nvim-telescope/telescope.nvim",
-                module = "telescope",
-                cmd = "Telescope",
-                config = function()
-                    require("settings.telescope").telescope()
-                end,
-                requires = "nvim-lua/plenary.nvim",
-            },
-        }
-
         --Lsp config and companions
         use {
-            { "neovim/nvim-lspconfig", branch = "feat/0_7_goodies" },
+            { "/home/ranjith/Software/Workspaces/Repos/nvim-lspconfig", branch = "0.7" },
             {
                 "m-pilia/vim-ccls",
                 ft = { "c", "cpp", "opencl" },
@@ -221,7 +215,36 @@ return require("packer").startup {
                     require("lsp.clangd").clangd()
                 end,
             },
-            { "rcarriga/nvim-notify", opt = true },
+        }
+
+        -- Telescope
+        use {
+            { "nvim-telescope/telescope-file-browser.nvim", after = "telescope-project.nvim" },
+            {
+                "nvim-telescope/telescope-ui-select.nvim",
+                after = "telescope-file-browser.nvim",
+                config = function()
+                    require("telescope").load_extension "ui-select"
+                end,
+            },
+            { "nvim-telescope/telescope-project.nvim", after = "telescope-fzf-native.nvim" },
+            {
+                "nvim-telescope/telescope-fzf-native.nvim",
+                after = "telescope.nvim",
+                run = "make",
+                config = function()
+                    require("telescope").load_extension "fzf"
+                end,
+            },
+            {
+                "nvim-telescope/telescope.nvim",
+                module = "telescope",
+                requires = "nvim-lua/plenary.nvim",
+                cmd = "Telescope",
+                config = function()
+                    require("settings.telescope").telescope()
+                end,
+            },
         }
 
         -- completion and snippets

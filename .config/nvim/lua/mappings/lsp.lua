@@ -6,8 +6,14 @@ local map = vim.keymap.set
 ------------------------------------------------------------------------
 
 function lspmap.lsp(bufnr)
+    vim.keymap.set("n", "K", function()
+        local winid = require("ufo").peekFoldedLinesUnderCursor()
+        if not winid then
+            vim.lsp.buf.hover()
+        end
+    end, { desc = "Hover or peek-fold", buffer = bufnr })
+
     wk.register({
-        K = { vim.lsp.buf.hover, "Hover" },
         ["<F7>"] = { require("debugger").init, "Initialize Debugger adapter" },
         [","] = {
             name = "Lsp functions",

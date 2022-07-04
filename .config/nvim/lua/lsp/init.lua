@@ -46,6 +46,7 @@ function lsp.settings()
                     row = 0,
                     col = -1,
                     border = "rounded",
+                    focusable = false,
                 })
             end
         else
@@ -61,7 +62,6 @@ function lsp.settings()
     vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, { border = "double" })
     vim.lsp.handlers["textDocument/signatureHelp"] = vim.lsp.with(signature, {})
 
-    require("packer").loader "nvim-notify"
     require("utils.langServers").lsp_messages()
 end
 
@@ -164,7 +164,7 @@ function lsp.servers()
         perlls = {},
         html = { capabilities = lsp.capabilities() },
         cssls = { capabilities = lsp.capabilities() },
-        cmake = { capabilities = lsp.capabilities() },
+        -- cmake = { capabilities = lsp.capabilities() },
         vimls = { capabilities = lsp.capabilities() },
         dartls = { capabilities = lsp.capabilities() },
         pyright = { capabilities = lsp.capabilities() },

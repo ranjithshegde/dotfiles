@@ -112,7 +112,6 @@ function mappings.configFiles()
                     name = "Mappings",
                     m = { open "lua/mappings/init.lua", "Common" },
                     l = { open "lua/mappings/lsp.lua", "Lsp" },
-                    f = { open "lua/mappings/filetypes.lua", "FT specific" },
                     c = { open "lua/mappings/clang.lua", "C/C++" },
                     u = { open "lua/mappings/util.lua", "Misc" },
                     t = { open "lua/mappings/telescope.lua", "Telescope" },
@@ -159,6 +158,7 @@ function mappings.configFiles()
                     l = { open "after/ftplugin/lua.lua", "Lua" },
                     o = { open "after/ftplugin/org.lua", "Orgmode" },
                     t = { open "after/ftplugin/tex.lua", "Latex" },
+                    f = { open "filetype.lua", "Ftdetect" },
                 },
                 q = {
                     name = "Treesitter queries",

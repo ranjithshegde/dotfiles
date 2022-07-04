@@ -1,13 +1,5 @@
 local qf = {}
 
-local function tablelength(T)
-    local count = 0
-    for _ in pairs(T) do
-        count = count + 1
-    end
-    return count
-end
-
 -- 'q': find the quickfix window
 -- 'l': find all loclist windows
 local function find_qf(type)
@@ -31,45 +23,29 @@ end
 
 -- open quickfix if not empty
 local function open_qf()
-    local qf_name = "quickfix"
-    local qf_empty = function()
-        return vim.tbl_isempty(vim.fn.getqflist())
-    end
-    if not qf_empty() then
+    if not vim.tbl_isempty(vim.fn.getqflist()) then
         vim.cmd "copen"
         vim.cmd "wincmd J"
     else
-        print(string.format("%s is empty.", qf_name))
+        vim.notify "qflist is empty."
     end
 end
 
--- enum all non-qf windows and open
--- loclist on all windows where not empty
-local function open_loclist_all()
-    local wininfo = vim.fn.getwininfo()
-    local qf_name = "loclist"
-    local qf_empty = function(winnr)
-        return vim.tbl_isempty(vim.fn.getloclist(winnr))
-    end
-    for _, win in pairs(wininfo) do
-        if win["quickfix"] == 0 then
-            if not qf_empty(win["winnr"]) then
-                -- switch active window before ':lopen'
-                vim.api.nvim_set_current_win(win["winid"])
-                vim.cmd "lopen"
-            else
-                print(string.format("%s is empty.", qf_name))
-            end
-        end
+-- loclist on current window where not empty
+local function open_loclist()
+    if not vim.tbl_isempty(vim.fn.getloclist(0)) then
+        vim.cmd "lopen"
+    else
+        vim.notify "loclist is empty."
     end
 end
 
--- type='*': qf toggle and send to bottom
--- type='l': loclist toggle (all windows)
--- map to ":lua require'utils'.toggle_qf('l')"
+--- type='*': qf toggle and send to bottom
+--- type='l': loclist toggle (all windows)
+--- map to ":lua require'utils'.toggle_qf('l')"
 function qf.toggle_qf(type)
     local windows = find_qf(type)
-    if tablelength(windows) > 0 then
+    if not vim.tbl_isempty(windows) then
         -- hide all visible windows
         for _, win in pairs(windows) do
             vim.api.nvim_win_hide(win.winid)
@@ -77,7 +53,7 @@ function qf.toggle_qf(type)
     else
         -- no windows are visible, attempt to open
         if type == "l" then
-            open_loclist_all()
+            open_loclist()
         else
             open_qf()
         end

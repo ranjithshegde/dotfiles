@@ -39,8 +39,8 @@ function autoload.diagnostics(bufnr)
     end, { nargs = 1, complete = complete, desc = "Enable default diagnostic options for a client" })
 end
 
-local transparent = false
 ---Toggle background transparency for dark colorschemes
+--[[ local transparent = false
 function autoload.trans()
     local colo = vim.api.nvim_exec("colo", true)
     if colo == "dayfox" or colo == "dawnfox" then
@@ -54,7 +54,30 @@ function autoload.trans()
         },
     }
     vim.cmd("colo " .. colo)
-end
+end ]]
+
+--[[ function autoload.colorscheme_utils()
+    local cmd = vim.api.nvim_creat_user_command
+
+    cmd("ToggleTransparency", function()
+        require("utils.autoload").trans()
+    end, { desc = "Toggle background transpparency for dark scheme" })
+
+    cmd("Night", function()
+        vim.g.tokyonight_style = "night"
+        vim.cmd "colo tokyonight"
+    end, { desc = "Set tokyonight colorscheme with Night style" })
+
+    cmd("Day", function()
+        vim.g.tokyonight_style = "day"
+        vim.cmd "colo tokyonight"
+    end, { desc = "Set tokyonight colorscheme with day style" })
+
+    cmd("Storm", function()
+        vim.g.tokyonight_style = "storm"
+        vim.cmd "colo tokyonight"
+    end, { desc = "Set tokyonight colorscheme with storm style" })
+end ]]
 
 ------------------------------------------------------------------------
 --                          Camel case                                --

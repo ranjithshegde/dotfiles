@@ -58,6 +58,8 @@ export OCTAVE_HISTFILE="$XDG_CACHE_HOME/octave-hsts"
 export OCTAVE_SITE_INITFILE="$XDG_CONFIG_HOME/octave/octaverc"
 export ANDROID_DATA="$XDG_DATA_HOME/android"
 export CONAN_USER_HOME="$XDG_DATA_HOME/conan"
+export DOCKER_CONFIG="$XDG_CONFIG_HOME"/docker
+export MACHINE_STORAGE_PATH="$XDG_DATA_HOME"/docker-machine
 
 # GLOBALS
 export CHROME_EXECUTABLE=/usr/bin/brave

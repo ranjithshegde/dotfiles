@@ -103,7 +103,7 @@ end
 --*********************************** SuperCollider ---------------------
 local function scnvim(_, buffer)
     if vim.bo[buffer.bufnr].filetype == "supercollider" then
-        local scstatus = vim.fn["scnvim#statusline#server_status"]()
+        local scstatus = require("scnvim.statusline").get_server_status()
         if scstatus ~= "" then
             return "📡 [" .. scstatus .. "]"
         end
@@ -308,11 +308,21 @@ function Statusline.winbar(n)
 
     local winbar
     vim.api.nvim_set_hl(0, "WinBar" .. n, { fg = label.color, cterm = { bold = true } })
-    if label.icon then
-        winbar = "%=" .. "%#WinBar" .. n .. "#" .. space .. label.icon .. "%## " .. label.tail .. "%="
+
+    if vim.fn.getwininfo(n).quickfix == 1 then
+        local title = vim.fn.getqflist({ title = true }).title
+        winbar = "%=" .. title .. "%="
+    elseif vim.fn.getwininfo(n).loclist == 1 then
+        local title = vim.fn.getloclist({ title = true }).title
+        winbar = "%=" .. title .. "%="
     else
-        winbar = "%=" .. label.tail .. "%="
+        if label.icon then
+            winbar = "%=" .. "%#WinBar" .. n .. "#" .. space .. label.icon .. "%## " .. label.tail .. "%="
+        else
+            winbar = "%=" .. label.tail .. "%="
+        end
     end
+
     vim.wo[n].winbar = winbar
 end
 

@@ -135,6 +135,9 @@ function telescope.telescope()
             mappings = { i = { ["<C-h>"] = "which_key" } },
         },
         extensions = {
+            ["ui-select"] = {
+                require("telescope.themes").get_dropdown {},
+            },
             project = {
                 base_dirs = {
                     { "~/Documents/LaTeX", max_depth = 3 },

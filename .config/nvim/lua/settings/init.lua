@@ -5,7 +5,7 @@ local o = vim.opt
 ------------------------------------------------------------------------
 
 return function()
-    vim.cmd "colo nightfox"
+    vim.cmd "colo catppuccin"
     local tab = 4
     o.number = true
     o.expandtab = true
@@ -24,6 +24,7 @@ return function()
     o.updatetime = 300
     o.timeoutlen = 100
     o.conceallevel = 1
+    o.foldcolumn = "auto:1"
     o.jumpoptions = "view"
     o.foldmethod = "expr"
     o.inccommand = "split"
@@ -53,6 +54,7 @@ return function()
     }
 
     o.shortmess:append "c"
+    o.foldopen:append "jump"
     o.clipboard:append "unnamedplus"
     o.sessionoptions:append "terminal,tabpages"
     o.foldexpr = "nvim_treesitter#foldexpr()"
