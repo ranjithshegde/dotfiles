@@ -79,15 +79,6 @@ return require("packer").startup {
             end,
         }
 
-        -- Orgmode
-        use {
-            "nvim-orgmode/orgmode",
-            ft = "org",
-            config = function()
-                require("settings.plugin").org()
-            end,
-        }
-
         -- SuperCollider
         use {
             "davidgranstrom/scnvim",
@@ -104,16 +95,6 @@ return require("packer").startup {
             config = function()
                 require("notify").setup { timeout = 1000, stages = "static" }
             end,
-        }
-
-        -- TreeSitter
-        use {
-            { "nvim-treesitter/nvim-treesitter", run = ":TSUpdate" },
-            { "p00f/nvim-ts-rainbow", event = "BufReadPre" },
-            { "nvim-treesitter/nvim-treesitter-textobjects", event = "BufReadPost" },
-            { "nvim-treesitter/nvim-treesitter-refactor", after = "scnvim" },
-            { "nvim-treesitter/playground", module = "nvim-treesitter-playground" },
-            { "Badhi/nvim-treesitter-cpp-tools", ft = { "c", "cpp", "opencl" } },
         }
 
         -- WhichKey
@@ -150,7 +131,6 @@ return require("packer").startup {
         use {
             -- "EdenEast/nightfox.nvim"
             --  "VonHeikemen/little-wonder"
-            -- "folke/tokyonight.nvim"
             "catppuccin/nvim",
             as = "catppuccin",
             config = function()
@@ -158,17 +138,17 @@ return require("packer").startup {
             end,
         }
 
-        -- OrgWiki
+        -- TreeSitter
         use {
-            is_custom("WORKSPACE", "Repos/orgWiki.nvim", "ranjithshegde/orgWiki.nvim"),
-            module = "orgWiki",
-            config = function()
-                require("orgWiki").setup {
-                    disable_mappings = true,
-                    wiki_path = { "~/Documents/Orgs/", "~/Documents/Projects/" },
-                    diary_path = "~/Documents/Orgs/diary/",
-                }
-            end,
+            "nvim-treesitter/nvim-treesitter",
+            run = ":TSUpdate",
+            requires = {
+                { "p00f/nvim-ts-rainbow", event = "BufReadPre" },
+                { "nvim-treesitter/nvim-treesitter-textobjects", event = "BufReadPost" },
+                { "nvim-treesitter/nvim-treesitter-refactor", after = "scnvim" },
+                { "nvim-treesitter/playground", module = "nvim-treesitter-playground" },
+                { "Badhi/nvim-treesitter-cpp-tools", ft = { "c", "cpp", "opencl" } },
+            },
         }
 
         -- Debugger adapter protocol
@@ -191,74 +171,113 @@ return require("packer").startup {
             },
         }
 
+        -- Orgmode
+        use {
+            "nvim-orgmode/orgmode",
+            ft = "org",
+            config = function()
+                require("settings.plugin").org()
+            end,
+            requires = {
+                {
+                    is_custom("WORKSPACE", "Repos/orgWiki.nvim", "ranjithshegde/orgWiki.nvim"),
+                    module = "orgWiki",
+                    config = function()
+                        require("orgWiki").setup {
+                            disable_mappings = true,
+                            wiki_path = { "~/Documents/Orgs/", "~/Documents/Projects/" },
+                            diary_path = "~/Documents/Orgs/diary/",
+                        }
+                    end,
+                },
+            },
+        }
+
         --Lsp config and companions
         use {
-            { "/home/ranjith/Software/Workspaces/Repos/nvim-lspconfig", branch = "0.7" },
-            {
-                "m-pilia/vim-ccls",
-                ft = { "c", "cpp", "opencl" },
-                config = function()
-                    require("lsp.clangd").ccls()
-                end,
-            },
-            {
-                "folke/lua-dev.nvim",
-                ft = "lua",
-                config = function()
-                    require "lsp.sumneko"()
-                end,
-            },
-            {
-                "p00f/clangd_extensions.nvim",
-                ft = { "c", "cpp", "opencl" },
-                config = function()
-                    require("lsp.clangd").clangd()
-                end,
+            "/home/ranjith/Software/Workspaces/Repos/nvim-lspconfig",
+            branch = "0.7",
+            requires = {
+                {
+                    "m-pilia/vim-ccls",
+                    ft = { "c", "cpp", "opencl" },
+                    config = function()
+                        require("lsp.clangd").ccls()
+                    end,
+                },
+                {
+                    "folke/lua-dev.nvim",
+                    ft = "lua",
+                    config = function()
+                        require "lsp.sumneko"()
+                    end,
+                },
+                {
+                    "p00f/clangd_extensions.nvim",
+                    ft = { "c", "cpp", "opencl" },
+                    config = function()
+                        require("lsp.clangd").clangd()
+                    end,
+                },
             },
         }
 
         -- Telescope
         use {
-            { "nvim-telescope/telescope-file-browser.nvim", after = "telescope-project.nvim" },
-            {
-                "nvim-telescope/telescope-ui-select.nvim",
-                after = "telescope-file-browser.nvim",
-                config = function()
-                    require("telescope").load_extension "ui-select"
-                end,
-            },
-            { "nvim-telescope/telescope-project.nvim", after = "telescope-fzf-native.nvim" },
-            {
-                "nvim-telescope/telescope-fzf-native.nvim",
-                after = "telescope.nvim",
-                run = "make",
-                config = function()
-                    require("telescope").load_extension "fzf"
-                end,
-            },
-            {
-                "nvim-telescope/telescope.nvim",
-                module = "telescope",
-                requires = "nvim-lua/plenary.nvim",
-                cmd = "Telescope",
-                config = function()
-                    require("settings.telescope").telescope()
-                end,
+            "nvim-telescope/telescope.nvim",
+            module = "telescope",
+            cmd = "Telescope",
+            config = function()
+                require("settings.telescope").telescope()
+            end,
+            requires = {
+                "nvim-lua/plenary.nvim",
+                { "nvim-telescope/telescope-project.nvim", after = "telescope-smart-history.nvim" },
+                { "nvim-telescope/telescope-file-browser.nvim", after = "telescope-project.nvim" },
+                {
+                    "nvim-telescope/telescope-ui-select.nvim",
+                    after = "telescope-file-browser.nvim",
+                    config = function()
+                        require("telescope").load_extension "ui-select"
+                    end,
+                },
+                {
+                    "nvim-telescope/telescope-fzf-native.nvim",
+                    after = "telescope.nvim",
+                    run = "make",
+                    config = function()
+                        require("telescope").load_extension "fzf"
+                    end,
+                },
+                {
+                    "nvim-telescope/telescope-smart-history.nvim",
+                    requires = { { "kkharji/sqlite.lua", module = "sqlite", rocks = "sqlite" } },
+                    after = "telescope-fzf-native.nvim",
+                    config = function()
+                        require("telescope").load_extension "smart_history"
+                    end,
+                },
             },
         }
 
         -- completion and snippets
         use {
             { "hrsh7th/cmp-nvim-lsp", opt = "true" },
-            { "hrsh7th/cmp-path", after = "nvim-cmp" },
-            { "hrsh7th/cmp-buffer", after = "nvim-cmp" },
-            { "saadparwaiz1/cmp_luasnip", after = "nvim-cmp" },
             {
                 "L3MON4D3/LuaSnip",
                 event = "InsertEnter",
                 config = function()
                     require("settings.completion").luasnip()
                 end,
+                requires = {
+                    {
+                        "rafamadriz/friendly-snippets",
+                        after = "LuaSnip",
+                        config = function()
+                            require("luasnip.loaders.from_vscode").load()
+                        end,
+                    },
+                },
             },
             {
                 "hrsh7th/nvim-cmp",
@@ -266,20 +285,18 @@ return require("packer").startup {
                 config = function()
                     require("settings.completion").init()
                 end,
-            },
-            {
-                "windwp/nvim-autopairs",
-                after = "nvim-cmp",
-                config = function()
-                    require("settings.completion").pairs()
-                end,
-            },
-            {
-                "rafamadriz/friendly-snippets",
-                after = "LuaSnip",
-                config = function()
-                    require("luasnip.loaders.from_vscode").load()
-                end,
+                requires = {
+                    { "hrsh7th/cmp-path", after = "nvim-cmp" },
+                    { "hrsh7th/cmp-buffer", after = "nvim-cmp" },
+                    { "saadparwaiz1/cmp_luasnip", after = "nvim-cmp" },
+                    {
+                        "windwp/nvim-autopairs",
+                        after = "nvim-cmp",
+                        config = function()
+                            require("settings.completion").pairs()
+                        end,
+                    },
+                },
             },
         }
 

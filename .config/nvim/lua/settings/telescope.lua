@@ -1,4 +1,4 @@
-local foldMaps = function(_)
+local foldMaps = function(_, _)
     require("telescope.actions.set").select:enhance {
         post = function()
             vim.cmd ":normal! zx"
@@ -30,10 +30,8 @@ local bufferPicker = {
                     local tabwins = vim.api.nvim_tabpage_list_wins(0)
                     for _, winid in ipairs(winids) do
                         if vim.tbl_contains(tabwins, winid) then
-                            local new_buf = vim.F.if_nil(
-                                table.remove(replacement_buffers),
-                                vim.api.nvim_create_buf(false, true)
-                            )
+                            local new_buf =
+                                vim.F.if_nil(table.remove(replacement_buffers), vim.api.nvim_create_buf(false, true))
                             vim.api.nvim_win_set_buf(winid, new_buf)
                         end
                     end
@@ -104,6 +102,7 @@ function telescope.cdFiles(prompt, cwd)
 end
 
 function telescope.telescope()
+    local layout_actions = require "telescope.actions.layout"
     require("telescope").setup {
         pickers = {
             buffers = bufferPicker,
@@ -131,8 +130,19 @@ function telescope.telescope()
             },
             prompt_prefix = "❯ ",
             selection_caret = "❯ ",
+            dynamic_preview_title = true,
+            cycle_layout_list = { "flex", "horizontal", "vertical", "bottom_pane", "center" },
             file_ignore_patterns = require("utils.tables").ignore_binaries,
-            mappings = { i = { ["<C-h>"] = "which_key" } },
+            history = {
+                path = vim.fn.stdpath "data" .. "/telescope_history.sqlite3",
+            },
+            mappings = {
+                i = {
+                    ["<C-h>"] = "which_key",
+                    ["<c-e>"] = layout_actions.toggle_preview,
+                    ["<c-l>"] = layout_actions.cycle_layout_next,
+                },
+            },
         },
         extensions = {
             ["ui-select"] = {

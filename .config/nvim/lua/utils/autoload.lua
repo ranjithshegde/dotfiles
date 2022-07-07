@@ -41,7 +41,7 @@ end
 
 ---Toggle background transparency for dark colorschemes
 --[[ local transparent = false
-function autoload.trans()
+local function transparency()
     local colo = vim.api.nvim_exec("colo", true)
     if colo == "dayfox" or colo == "dawnfox" then
         print "Error: Transparent background does not work with a light colorscheme!"
@@ -60,23 +60,9 @@ end ]]
     local cmd = vim.api.nvim_creat_user_command
 
     cmd("ToggleTransparency", function()
-        require("utils.autoload").trans()
+        transparency()
     end, { desc = "Toggle background transpparency for dark scheme" })
 
-    cmd("Night", function()
-        vim.g.tokyonight_style = "night"
-        vim.cmd "colo tokyonight"
-    end, { desc = "Set tokyonight colorscheme with Night style" })
-
-    cmd("Day", function()
-        vim.g.tokyonight_style = "day"
-        vim.cmd "colo tokyonight"
-    end, { desc = "Set tokyonight colorscheme with day style" })
-
-    cmd("Storm", function()
-        vim.g.tokyonight_style = "storm"
-        vim.cmd "colo tokyonight"
-    end, { desc = "Set tokyonight colorscheme with storm style" })
 end ]]
 
 ------------------------------------------------------------------------

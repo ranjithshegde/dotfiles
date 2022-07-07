@@ -19,7 +19,7 @@ function mappings.init()
     map("x", "K", ":move '<-2<CR>gv", { desc = "Move line up" })
     map("x", "J", ":move '>+1<CR>gv", { desc = "Move line down" })
     -- visual cut for replase
-    map({ "v", "s" }, "<leader>p", '"_dP', opts)
+    map({ "v", "s" }, "P", '"_dP', opts)
     -- Indent
     map("v", "<", "<gv", opts)
     map("v", ">", ">gv", opts)

@@ -151,6 +151,13 @@ function ts.init()
                 quit = "Q",
                 accept = "<leader><cr>",
             },
+            header_extension = "h",
+            source_extension = "cxx",
+            custom_define_class_function_commands = {
+                TSCppImplWrite = {
+                    output_handle = pcall(require, '("nvim-treesitter.nt-cpp-tools.output_handlers").get_add_to_cpp()'),
+                },
+            },
         },
     }
 end
