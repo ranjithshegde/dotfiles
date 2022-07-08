@@ -51,3 +51,4 @@ https://github.com/vim/vim/issues/812 Loss of scope data when using nested parti
 https://embeddedartistry.com/blog/2017/05/17/creating-a-circular-buffer-in-c-and-c/ Creating a Circular Buffer in C and C++ - Embedded Artistry
 https://unix.stackexchange.com/questions/317687/command-not-found-when-sudoing-function-from-zshrc zsh - "command not found" when sudo'ing function from ~/.zshrc - Unix & Linux Stack Exchange
 https://www.facebook.com/messages/t/1317706047 (7) Messenger | Facebook
+https://github.com/Valodim/vim-zsh-completion/blob/master/plugin/zsh_completion.vim vim-zsh-completion/zsh_completion.vim at master · Valodim/vim-zsh-completion

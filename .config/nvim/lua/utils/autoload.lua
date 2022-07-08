@@ -40,8 +40,8 @@ function autoload.diagnostics(bufnr)
 end
 
 ---Toggle background transparency for dark colorschemes
---[[ local transparent = false
-local function transparency()
+local transparent = false
+function autoload.trans_background()
     local colo = vim.api.nvim_exec("colo", true)
     if colo == "dayfox" or colo == "dawnfox" then
         print "Error: Transparent background does not work with a light colorscheme!"
@@ -54,16 +54,7 @@ local function transparency()
         },
     }
     vim.cmd("colo " .. colo)
-end ]]
-
---[[ function autoload.colorscheme_utils()
-    local cmd = vim.api.nvim_creat_user_command
-
-    cmd("ToggleTransparency", function()
-        transparency()
-    end, { desc = "Toggle background transpparency for dark scheme" })
-
-end ]]
+end
 
 ------------------------------------------------------------------------
 --                          Camel case                                --

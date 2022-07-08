@@ -133,9 +133,6 @@ function telescope.telescope()
             dynamic_preview_title = true,
             cycle_layout_list = { "flex", "horizontal", "vertical", "bottom_pane", "center" },
             file_ignore_patterns = require("utils.tables").ignore_binaries,
-            history = {
-                path = vim.fn.stdpath "data" .. "/telescope_history.sqlite3",
-            },
             mappings = {
                 i = {
                     ["<C-h>"] = "which_key",

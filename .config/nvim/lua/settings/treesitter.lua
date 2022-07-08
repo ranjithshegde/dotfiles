@@ -11,6 +11,7 @@ function ts.init()
     ft_to_parser.opencl = "c"
     require("nvim-treesitter.configs").setup {
         ensure_installed = require("utils.tables").ts_parsers,
+        auto_install = true,
         highlight = {
             enable = true,
             additional_vim_regex_highlighting = { "latex", "org" },

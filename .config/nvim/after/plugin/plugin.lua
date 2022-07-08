@@ -26,6 +26,10 @@ cmd("Cam", function()
     require("utils.autoload").CamelCase()
 end, { desc = "Turn word and motion operators into camelcase" })
 
+cmd("ToggleTransparency", function()
+    require("utils.autoload").trans_background()
+end, { desc = "Toggle background transpparency for dark scheme" })
+
 cmd("Su", "w !sudo tee %", {})
 
 -- ******************* Plugin mappings --------------------------------------------
@@ -47,6 +51,35 @@ vim.keymap.set("n", "<leader>w", function()
     require("mappings.util").orgWiki()
     vim.api.nvim_input "\\w"
 end, { desc = "OrgWiki" })
+
+vim.keymap.set("n", "ys", function()
+    vim.keymap.del("n", "ys")
+    require("packer").loader "nvim-surround"
+    vim.api.nvim_input "ys"
+end, { desc = "add surround" })
+
+vim.keymap.set("n", "cs", function()
+    vim.keymap.del("n", "cs")
+    require("packer").loader "nvim-surround"
+    vim.api.nvim_input "cs"
+end, { desc = "change surround" })
+
+vim.keymap.set("n", "ds", function()
+    vim.keymap.del("n", "ds")
+    require("packer").loader "nvim-surround"
+    vim.api.nvim_input "ds"
+end, { desc = "delete surround" })
+
+vim.keymap.set("v", "S", function()
+    vim.keymap.del("v", "S")
+    require("packer").loader "nvim-surround"
+    vim.api.nvim_input "S"
+end, { desc = "change surround" })
+
+vim.keymap.set("n", "yss", function()
+    require("packer").loader "nvim-surround"
+    vim.api.nvim_input "^ysg_"
+end, { remap = true, desc = "surround entire line" })
 
 vim.keymap.set("n", "<leader>e", function()
     vim.cmd "Lex"

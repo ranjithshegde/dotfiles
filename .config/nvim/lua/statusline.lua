@@ -1,4 +1,4 @@
-local Statusline = {}
+local statusline = {}
 
 -- Blank Between Components
 local space = " "
@@ -31,7 +31,7 @@ local subscribe = require "el.subscribe"
 local file_icon = subscribe.buf_autocmd("el_file_icon", "BufRead", function(_, buffer)
     local icon, color = require("nvim-web-devicons").get_icon_color(buffer.name, buffer.extension)
     if icon then
-        local table = vim.api.nvim_get_hl_by_name("Statusline", true)
+        local table = vim.api.nvim_get_hl_by_name("statusline", true)
         vim.api.nvim_set_hl(0, "FileIcon", { bg = table["background"], fg = color, cterm = { bold = true } })
         return icon .. space
     end
@@ -164,7 +164,7 @@ local function gps(_, buffer)
 end
 
 --*********************************** Status config ---------------------
-Statusline.el = function()
+statusline.el = function()
     require("el").reset_windows()
     require("utils.diagnostics.format").sethl("DiagnosticError", "DiagnosticWarn", "DiagnosticHint", "DiagnosticInfo")
     require("el").setup {
@@ -178,7 +178,7 @@ Statusline.el = function()
                 sections.collapse_builtin { scnvim, space, gps },
                 sections.split,
                 sections.highlight("FileIcon", file_icon),
-                sections.highlight("Statusline", builtin.tail_file),
+                sections.highlight("statusline", builtin.tail_file),
                 sections.collapse_builtin {
                     space,
                     builtin.modified_flag,
@@ -258,7 +258,7 @@ local function rootDir()
 end
 
 --*********************************** Tabline module -------------------
-function Statusline.tabs()
+function statusline.tabs()
     local tabline = ""
     local tab_list = vim.api.nvim_list_tabpages()
     local current_tab = vim.api.nvim_get_current_tabpage()
@@ -279,7 +279,7 @@ function Statusline.tabs()
     return tabline
 end
 
-function Statusline.winbar(n)
+function statusline.winbar(n)
     local label = getTabLabel(n, false)
     if label.tail:match "Empty" then
         vim.wo[n].winbar = ""
@@ -309,21 +309,13 @@ function Statusline.winbar(n)
     local winbar
     vim.api.nvim_set_hl(0, "WinBar" .. n, { fg = label.color, cterm = { bold = true } })
 
-    if vim.fn.getwininfo(n).quickfix == 1 then
-        local title = vim.fn.getqflist({ title = true }).title
-        winbar = "%=" .. title .. "%="
-    elseif vim.fn.getwininfo(n).loclist == 1 then
-        local title = vim.fn.getloclist({ title = true }).title
-        winbar = "%=" .. title .. "%="
+    if label.icon then
+        winbar = "%=" .. "%#WinBar" .. n .. "#" .. space .. label.icon .. "%## " .. label.tail .. "%="
     else
-        if label.icon then
-            winbar = "%=" .. "%#WinBar" .. n .. "#" .. space .. label.icon .. "%## " .. label.tail .. "%="
-        else
-            winbar = "%=" .. label.tail .. "%="
-        end
+        winbar = "%=" .. label.tail .. "%="
     end
 
     vim.wo[n].winbar = winbar
 end
 
-return Statusline
+return statusline

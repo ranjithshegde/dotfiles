@@ -31,6 +31,8 @@ return require("packer").startup {
     function(use)
         use "wbthomason/packer.nvim"
 
+        use "EdenEast/nightfox.nvim"
+
         use "lewis6991/impatient.nvim"
 
         -- Taglist and sidebars
@@ -38,7 +40,6 @@ return require("packer").startup {
 
         -- Tim pope
         use {
-            { "tpope/vim-surround", event = "BufReadPost" },
             { "tpope/vim-dispatch", cmd = { "Make", "Dispatch", "Start" } },
             { "tpope/vim-fugitive", cmd = { "G", "Git", "Gclog" } },
         }
@@ -52,6 +53,15 @@ return require("packer").startup {
             end,
         }
 
+        -- surround
+        use {
+            "kylechui/nvim-surround",
+            opt = true,
+            config = function()
+                require("nvim-surround").setup {}
+            end,
+        }
+
         -- StatusLine
         use {
             "tjdevries/express_line.nvim",
@@ -59,15 +69,6 @@ return require("packer").startup {
             config = function()
                 require("statusline").el()
             end,
-        }
-
-        -- Colorizer
-        use {
-            "xiyaowong/nvim-colorizer.lua",
-            config = function()
-                require("settings.plugin").color()
-            end,
-            cmd = { "ColorizerAttachToBuffer", "ColorizerToggle" },
         }
 
         -- Indents and chars
@@ -97,6 +98,15 @@ return require("packer").startup {
             end,
         }
 
+        -- Colorizer
+        use {
+            "xiyaowong/nvim-colorizer.lua",
+            config = function()
+                require("settings.plugin").color()
+            end,
+            cmd = { "ColorizerAttachToBuffer", "ColorizerToggle" },
+        }
+
         -- WhichKey
         use {
             "folke/which-key.nvim",
@@ -124,17 +134,6 @@ return require("packer").startup {
             event = "BufReadPost",
             config = function()
                 require "settings.folds"()
-            end,
-        }
-
-        --- Colorschemes
-        use {
-            -- "EdenEast/nightfox.nvim"
-            --  "VonHeikemen/little-wonder"
-            "catppuccin/nvim",
-            as = "catppuccin",
-            config = function()
-                require("catppuccin").setup { integrations = { which_key = true, gitgutter = true } }
             end,
         }
 
@@ -193,35 +192,6 @@ return require("packer").startup {
             },
         }
 
-        --Lsp config and companions
-        use {
-            "/home/ranjith/Software/Workspaces/Repos/nvim-lspconfig",
-            branch = "0.7",
-            requires = {
-                {
-                    "m-pilia/vim-ccls",
-                    ft = { "c", "cpp", "opencl" },
-                    config = function()
-                        require("lsp.clangd").ccls()
-                    end,
-                },
-                {
-                    "folke/lua-dev.nvim",
-                    ft = "lua",
-                    config = function()
-                        require "lsp.sumneko"()
-                    end,
-                },
-                {
-                    "p00f/clangd_extensions.nvim",
-                    ft = { "c", "cpp", "opencl" },
-                    config = function()
-                        require("lsp.clangd").clangd()
-                    end,
-                },
-            },
-        }
-
         -- Telescope
         use {
             "nvim-telescope/telescope.nvim",
@@ -232,15 +202,8 @@ return require("packer").startup {
             end,
             requires = {
                 "nvim-lua/plenary.nvim",
-                { "nvim-telescope/telescope-project.nvim", after = "telescope-smart-history.nvim" },
+                { "nvim-telescope/telescope-project.nvim", after = "telescope-fzf-native.nvim" },
                 { "nvim-telescope/telescope-file-browser.nvim", after = "telescope-project.nvim" },
-                {
-                    "nvim-telescope/telescope-ui-select.nvim",
-                    after = "telescope-file-browser.nvim",
-                    config = function()
-                        require("telescope").load_extension "ui-select"
-                    end,
-                },
                 {
                     "nvim-telescope/telescope-fzf-native.nvim",
                     after = "telescope.nvim",
@@ -249,12 +212,32 @@ return require("packer").startup {
                         require("telescope").load_extension "fzf"
                     end,
                 },
+            },
+        }
+
+        --Lsp config and companions
+        use {
+            is_custom("WORKSPACE", "Repos/nvim-lspconfig", "neovim/nvim-lspconfig"),
+            requires = {
                 {
-                    "nvim-telescope/telescope-smart-history.nvim",
-                    requires = { { "kkharji/sqlite.lua", module = "sqlite", rocks = "sqlite" } },
-                    after = "telescope-fzf-native.nvim",
+                    "m-pilia/vim-ccls",
+                    ft = { "c", "cpp", "opencl" },
                     config = function()
-                        require("telescope").load_extension "smart_history"
+                        require("lsp.clangd").ccls()
+                    end,
+                },
+                {
+                    is_custom("WORKSPACE", "Repos/lua-dev.nvim", "folke/lua-dev.nvim"),
+                    ft = "lua",
+                    config = function()
+                        require "lsp.sumneko"()
+                    end,
+                },
+                {
+                    "p00f/clangd_extensions.nvim",
+                    ft = { "c", "cpp", "opencl" },
+                    config = function()
+                        require("lsp.clangd").clangd()
                     end,
                 },
             },

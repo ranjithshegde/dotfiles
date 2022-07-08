@@ -60,5 +60,9 @@ return function()
         end,
         enable_fold_end_virt_text = true,
     }
-    -- vim.api.nvim_set_hl(0, "FoldColumn", { fg = "red" })
+    vim.api.nvim_set_hl(0, "Folded", { bg = "#45475A" })
+
+    -- local	surface1 = "#51576D",
+    -- 	local surface2 = "#494D64",
+    -- surface1 = "#45475A",
 end

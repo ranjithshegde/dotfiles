@@ -5,7 +5,7 @@ local o = vim.opt
 ------------------------------------------------------------------------
 
 return function()
-    vim.cmd "colo catppuccin"
+    vim.cmd "colo nightfox"
     local tab = 4
     o.number = true
     o.expandtab = true
