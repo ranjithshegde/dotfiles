@@ -13,7 +13,6 @@ return function()
             settings = {
                 Lua = {
                     diagnostics = { globals = { "vim", "pd" } },
-                    hint = { enable = true },
                 },
             },
         },

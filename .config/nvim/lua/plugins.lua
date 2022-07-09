@@ -74,7 +74,7 @@ return require("packer").startup {
         -- Indents and chars
         use {
             "lukas-reineke/indent-blankline.nvim",
-            event = "BufReadPost",
+            opt = true,
             config = function()
                 require("settings.plugin").indent()
             end,
@@ -95,6 +95,15 @@ return require("packer").startup {
             module = "notify",
             config = function()
                 require("notify").setup { timeout = 1000, stages = "static" }
+            end,
+        }
+
+        -- Fancy UI
+        use {
+            "stevearc/dressing.nvim",
+            module_pattern = "vim.ui.*",
+            config = function()
+                require("dressing").setup { input = { prompt_align = "right" } }
             end,
         }
 
@@ -131,10 +140,20 @@ return require("packer").startup {
         use {
             "kevinhwang91/nvim-ufo",
             rocks = "promise-async",
-            event = "BufReadPost",
+            opt = true,
             config = function()
                 require "settings.folds"()
             end,
+        }
+
+        -- Debugger adapter protocol
+        use {
+            "mfussenegger/nvim-dap",
+            config = function()
+                require("debugger").setup()
+            end,
+            opt = true,
+            requires = "rcarriga/nvim-dap-ui",
         }
 
         -- TreeSitter
@@ -143,31 +162,27 @@ return require("packer").startup {
             run = ":TSUpdate",
             requires = {
                 { "p00f/nvim-ts-rainbow", event = "BufReadPre" },
-                { "nvim-treesitter/nvim-treesitter-textobjects", event = "BufReadPost" },
+                { "nvim-treesitter/nvim-treesitter-textobjects", module = "nvim-treesitter.textobjects" },
                 { "nvim-treesitter/nvim-treesitter-refactor", after = "scnvim" },
                 { "nvim-treesitter/playground", module = "nvim-treesitter-playground" },
                 { "Badhi/nvim-treesitter-cpp-tools", ft = { "c", "cpp", "opencl" } },
             },
         }
 
-        -- Debugger adapter protocol
+        -- Telescope
         use {
             {
-                "mfussenegger/nvim-dap",
+                "nvim-telescope/telescope.nvim",
+                module = "telescope",
+                cmd = "Telescope",
                 config = function()
-                    require("debugger").setup()
+                    require("settings.telescope").telescope()
                 end,
-                opt = true,
+                requires = "nvim-lua/plenary.nvim",
             },
-            {
-                "rcarriga/nvim-dap-ui",
-                config = function()
-                    require("dapui").setup {
-                        sidebar = { size = 80 },
-                    }
-                end,
-                after = "nvim-dap",
-            },
+            { "nvim-telescope/telescope-fzf-native.nvim", opt = true, run = "make" },
+            { "nvim-telescope/telescope-project.nvim", after = "telescope.nvim" },
+            { "nvim-telescope/telescope-file-browser.nvim", module_pattern = ".*.extensions.file_browser.*" },
         }
 
         -- Orgmode
@@ -187,29 +202,6 @@ return require("packer").startup {
                             wiki_path = { "~/Documents/Orgs/", "~/Documents/Projects/" },
                             diary_path = "~/Documents/Orgs/diary/",
                         }
-                    end,
-                },
-            },
-        }
-
-        -- Telescope
-        use {
-            "nvim-telescope/telescope.nvim",
-            module = "telescope",
-            cmd = "Telescope",
-            config = function()
-                require("settings.telescope").telescope()
-            end,
-            requires = {
-                "nvim-lua/plenary.nvim",
-                { "nvim-telescope/telescope-project.nvim", after = "telescope-fzf-native.nvim" },
-                { "nvim-telescope/telescope-file-browser.nvim", after = "telescope-project.nvim" },
-                {
-                    "nvim-telescope/telescope-fzf-native.nvim",
-                    after = "telescope.nvim",
-                    run = "make",
-                    config = function()
-                        require("telescope").load_extension "fzf"
                     end,
                 },
             },

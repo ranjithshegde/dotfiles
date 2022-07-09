@@ -34,56 +34,34 @@ cmd("Su", "w !sudo tee %", {})
 
 -- ******************* Plugin mappings --------------------------------------------
 
-vim.keymap.set("n", "<Space>", function()
-    vim.keymap.del("n", "<Space>")
-    require "mappings.telescope"
-    vim.api.nvim_input "<Space>"
-end, { desc = "Telescope" })
-
-vim.keymap.set("n", "<leader>r", function()
-    require("mappings.util").ranger()
-    vim.keymap.del("n", "<leader>r")
-    vim.api.nvim_input "\\r"
-end, { desc = "Ranger file picker" })
-
-vim.keymap.set("n", "<leader>w", function()
-    vim.keymap.del("n", "<leader>w")
-    require("mappings.util").orgWiki()
-    vim.api.nvim_input "\\w"
-end, { desc = "OrgWiki" })
-
-vim.keymap.set("n", "ys", function()
-    vim.keymap.del("n", "ys")
-    require("packer").loader "nvim-surround"
-    vim.api.nvim_input "ys"
-end, { desc = "add surround" })
-
-vim.keymap.set("n", "cs", function()
-    vim.keymap.del("n", "cs")
-    require("packer").loader "nvim-surround"
-    vim.api.nvim_input "cs"
-end, { desc = "change surround" })
-
-vim.keymap.set("n", "ds", function()
-    vim.keymap.del("n", "ds")
-    require("packer").loader "nvim-surround"
-    vim.api.nvim_input "ds"
-end, { desc = "delete surround" })
-
-vim.keymap.set("v", "S", function()
-    vim.keymap.del("v", "S")
-    require("packer").loader "nvim-surround"
-    vim.api.nvim_input "S"
-end, { desc = "change surround" })
-
-vim.keymap.set("n", "yss", function()
-    require("packer").loader "nvim-surround"
-    vim.api.nvim_input "^ysg_"
-end, { remap = true, desc = "surround entire line" })
-
 vim.keymap.set("n", "<leader>e", function()
     vim.cmd "Lex"
 end, { desc = "Toggle Netrw" })
+
+local function load_plugin_on_key(mode, key, desc, callback, args)
+    vim.keymap.set(mode, key, function()
+        vim.keymap.del(mode, key)
+        callback(args)
+        key = string.gsub(key, "<leader>", "\\")
+        vim.api.nvim_input(key)
+    end, { desc = desc })
+end
+
+load_plugin_on_key("n", "<Space>", "Telescope", require, "mappings.telescope")
+
+load_plugin_on_key("n", "<leader>r", "Ranger file picker", require("mappings.util").ranger)
+
+load_plugin_on_key("n", "<leader>w", "OrgWiki", require("mappings.util").orgWiki)
+
+load_plugin_on_key("n", "ys", "add surround", require("packer").loader, "nvim-surround")
+
+load_plugin_on_key("n", "yss", "add line surround", require("packer").loader, "nvim-surround")
+
+load_plugin_on_key("v", "S", "change surround", require("packer").loader, "nvim-surround")
+
+load_plugin_on_key("n", "cs", "change surround", require("packer").loader, "nvim-surround")
+
+load_plugin_on_key("n", "ds", "delete surround", require("packer").loader, "nvim-surround")
 
 -- ******************* Global functions --------------------------------------------
 

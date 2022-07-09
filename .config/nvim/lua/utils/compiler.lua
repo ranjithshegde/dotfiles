@@ -105,16 +105,19 @@ function Compiler.pdBuild()
 end
 
 function Compiler.with_flags()
-    local flags = vim.fn.input "Enter compiler flags: "
-    local cmd = { "-g", "-o", "%<", "%" }
-    flags = vim.split(flags, " ")
-
-    local i = 4
-    for _, value in ipairs(flags) do
-        table.insert(cmd, i, value)
-        i = i + 1
-    end
-    make(cmd)
+    vim.ui.input({
+        prompt = "Enter compiler flags: ",
+    }, function(input)
+        local cmd = { "-g", "-o", "%<", "%" }
+        if input and input ~= "" then
+            local flags = vim.split(input, " ")
+            for i, v in ipairs(flags) do
+                flags[i] = "-l" .. v
+            end
+            vim.list_extend(cmd, flags)
+        end
+        make(cmd)
+    end)
 end
 
 function Compiler.renderOffload(dispatch, cmd, toSave)
@@ -140,6 +143,34 @@ function Compiler.renderOffload(dispatch, cmd, toSave)
     )
 end
 
+-- Get gcc libs for completion
+function Compiler.gcc_libs(arg)
+    local comp = {}
+
+    for _, v in ipairs(vim.split(tostring(vim.env.LIBRARY_PATH), ":")) do
+        local files = vim.split(vim.fn.system("ls " .. v), "\n")
+        local libs = {}
+        for _, c in ipairs(files) do
+            if string.find(c, "%.so.*") then
+                local temp = string.gsub(c, "lib", ""):gsub("%..*", "")
+                table.insert(libs, temp)
+            end
+        end
+        vim.list_extend(comp, libs)
+    end
+
+    local arg_comp = {}
+    for _, v in ipairs(comp) do
+        if string.match(v, arg) then
+            table.insert(arg_comp, v)
+        end
+    end
+
+    if vim.tbl_isempty(arg_comp) then
+        return arg_comp
+    end
+    return comp
+end
 ------------------------------------------------------------------------
 --                                CMake 	                          --
 ------------------------------------------------------------------------

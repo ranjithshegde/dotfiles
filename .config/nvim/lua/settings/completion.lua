@@ -68,11 +68,8 @@ function completion.init()
         }),
         formatting = {
             format = function(entry, vim_item)
-                vim_item.kind = string.format(
-                    "%s %s",
-                    require("utils.tables").kindSymbols[vim_item.kind],
-                    vim_item.kind
-                )
+                vim_item.kind =
+                    string.format("%s %s", require("utils.tables").kindSymbols[vim_item.kind], vim_item.kind)
                 vim_item.menu = ({
                     nvim_lsp = "[LSP]",
                     luasnip = "[LuaSnip]",
@@ -91,6 +88,7 @@ function completion.init()
                 border = "double",
             },
         },
+        experimental = { ghost_text = true },
     }
     require("luasnip.loaders.from_vscode").lazy_load()
 

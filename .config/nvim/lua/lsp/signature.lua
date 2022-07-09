@@ -17,7 +17,7 @@ end
 local function generate_signature_snippet_autocmd(bufnr, client)
     local client_id = client.id
     vim.api.nvim_create_autocmd("ModeChanged", {
-        group = vim.api.nvim_create_augroup("lsp_signature_help_" .. client_id .. "_" .. bufnr, { clear = true }),
+        group = vim.api.nvim_create_augroup("lsp_signature_help_" .. bufnr, { clear = true }),
         pattern = { "n:v", "i:v" },
         callback = function()
             if package.loaded.luasnip then

@@ -235,6 +235,7 @@ tables.disabled_builtins = {
     "tarPlugin",
     "vimball",
     "vimballPlugin",
+    "matchit",
     "shada",
     "logipat",
     "rrhelper",

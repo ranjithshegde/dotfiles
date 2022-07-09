@@ -15,7 +15,7 @@ end
 ------------------------------------------------------------------------
 
 local config = {
-    relative = "editor",
+    relative = "cursor",
     style = "minimal",
     width = 70,
     height = 25,
@@ -146,15 +146,12 @@ function langSettings.lsp_progress()
                 hide_from_history = false,
             })
         elseif val.kind == "end" and notif_data then
-            notif_data.notification = vim.notify(
-                val.message and notify.format_message(val.message) or "Complete",
-                "info",
-                {
+            notif_data.notification =
+                vim.notify(val.message and notify.format_message(val.message) or "Complete", "info", {
                     icon = "",
                     replace = notif_data.notification,
                     timeout = 3000,
-                }
-            )
+                })
 
             notif_data.spinner = nil
         end

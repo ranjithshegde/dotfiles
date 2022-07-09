@@ -3,8 +3,14 @@ local wk = require "which-key"
 local map = vim.keymap.set
 
 ------------------------------------------------------------------------
---                              General functions                     --
+--                              General mappings                      --
 ------------------------------------------------------------------------
+
+local function open_term(split, mods)
+    return function()
+        require("utils").ex_cmd(split, { "term://zsh" }, mods, { file = true, bar = true })
+    end
+end
 
 function mappings.init()
     mappings.configFiles()
@@ -60,29 +66,9 @@ function mappings.init()
     wk.register {
         ["<leader>t"] = {
             name = "Launch terminal in split",
-            h = {
-                function()
-                    require("utils").ex_cmd("vsplit", { "term://zsh" }, { silent = true }, { file = true, bar = true })
-                end,
-                "Horizontal",
-            },
-            v = {
-                function()
-                    require("utils").ex_cmd("vsplit", { "term://zsh" }, { silent = true }, { file = true, bar = true })
-                end,
-                "Vertical",
-            },
-            t = {
-                function()
-                    require("utils").ex_cmd(
-                        "drop",
-                        { "term://zsh" },
-                        { silent = true, tab = 2 },
-                        { file = true, bar = true }
-                    )
-                end,
-                "New tab",
-            },
+            h = { open_term("split", { silent = true }), "Horizontal" },
+            v = { open_term("vsplit", { silent = true }), "Vertical" },
+            t = { open_term("drop", { silent = true, tab = 2 }), "New tab" },
         },
     }
 end

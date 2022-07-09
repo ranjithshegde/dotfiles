@@ -3,7 +3,9 @@
 ------------------------------------------------------------------------
 
 local function git_command(args)
-    vim.api.nvim_cmd({ cmd = "G", args = args and args }, {})
+    return function()
+        vim.api.nvim_cmd({ cmd = "G", args = args and args }, {})
+    end
 end
 
 local g = {}
@@ -18,55 +20,15 @@ function g.fugitive()
                 end,
                 "commit CLog",
             },
-            g = { git_command, "Git window" },
-            c = {
-                function()
-                    git_command { "commit" }
-                end,
-                "commit changes",
-            },
-            C = {
-                function()
-                    git_command { "commit %" }
-                end,
-                "commit current buffer",
-            },
-            a = {
-                function()
-                    git_command { "add %" }
-                end,
-                "add current buffer",
-            },
-            d = {
-                function()
-                    git_command { "difftool" }
-                end,
-                "launch difftool",
-            },
-            b = {
-                function()
-                    git_command { "blame" }
-                end,
-                "toggle blame",
-            },
-            p = {
-                function()
-                    git_command { "push" }
-                end,
-                "push commits",
-            },
-            P = {
-                function()
-                    git_command { "push -f" }
-                end,
-                "force push commits",
-            },
-            l = {
-                function()
-                    git_command { "log" }
-                end,
-                "commit history",
-            },
+            g = { git_command(), "Git window" },
+            c = { git_command { "commit" }, "commit changes" },
+            C = { git_command { "commit %" }, "commit current buffer" },
+            a = { git_command { "add %" }, "add current buffer" },
+            d = { git_command { "difftool" }, "launch difftool" },
+            b = { git_command { "blame" }, "toggle blame" },
+            p = { git_command { "push" }, "push commits" },
+            P = { git_command { "push -f" }, "force push commits" },
+            l = { git_command { "log" }, "commit history" },
         },
     }
 end

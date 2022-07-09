@@ -1,9 +1,9 @@
 local function makeSidebar(func)
     local widgets = require "dap.ui.widgets"
     if func == "scopes" then
-        return widgets.sidebar(widgets.scopes, { width = 40 })
+        return widgets.sidebar(widgets.scopes, { width = 60 })
     elseif func == "frames" then
-        return widgets.sidebar(widgets.frames, { width = 40 })
+        return widgets.sidebar(widgets.frames, { width = 70 })
     elseif func == "threads" then
         return widgets.sidebar(widgets.threads, { width = 40 })
     elseif func == "exp" then
@@ -89,6 +89,7 @@ end
 local function configs()
     local dap = require "dap"
     dap.configurations.cpp = {
+        -- cpptools with gdb
         {
             name = "Launch vscode-gdb",
             type = "cppdbg",
@@ -111,6 +112,7 @@ local function configs()
                 { text = "-enable-pretty-printing", description = "enable pretty printing", ignoreFailures = true },
             },
         },
+        -- cpptools with gdb on nVidia
         {
             name = "Launch vscode-gdb on Nvidia",
             type = "cppdbg",
@@ -133,6 +135,7 @@ local function configs()
                 { text = "-enable-pretty-printing", description = "enable pretty printing", ignoreFailures = true },
             },
         },
+        -- lldb-native
         {
             name = "Launch lldb",
             type = "lldb",
@@ -156,6 +159,7 @@ local function configs()
             end,
             runInTerminal = false,
         },
+        -- lldb-vscode
         {
             name = "codelldb",
             type = "codelldb",
@@ -266,13 +270,34 @@ local Debugger = {}
 function Debugger.init()
     require("packer").loader "nvim-dap"
     signs()
+
+    require("dapui").setup {
+        layouts = {
+            {
+                elements = { "scopes", "breakpoints", "stacks", "watches" },
+                size = 70,
+                position = "left",
+            },
+            {
+                elements = { "repl", "console" },
+                size = 0.25,
+                position = "bottom",
+            },
+        },
+    }
+
     require("mappings.lsp").debug()
     require("dap.ext.vscode").load_launchjs "launch.json"
-    print "Loaded nvim-dap. Bound keymaps"
+    vim.notify "Loaded nvim-dap. Bound keymaps"
 end
 
 function Debugger.setup()
     local dap = require "dap"
+
+    Debugger.frames = makeSidebar "frames"
+    Debugger.scopes = makeSidebar "scopes"
+    Debugger.exp = makeSidebar "exp"
+    Debugger.threads = makeSidebar "threads"
 
     dap.defaults.fallback.terminal_win_cmd = "tabnew"
     dap.defaults.fallback.external_terminal = {
@@ -293,58 +318,15 @@ function Debugger.setup()
     end
 
     notify()
-end
 
-function Debugger.scopes()
-    if not Sscope then
-        Sscope = makeSidebar "scopes"
-    end
-    if not Bscope then
-        Sscope.open()
-        Bscope = true
-    else
-        Sscope.close()
-        Bscope = false
-    end
-end
-
-function Debugger.frames()
-    if not Sframe then
-        Sframe = makeSidebar "frames"
-    end
-    if not Bframe then
-        Sframe.open()
-        Bframe = true
-    else
-        Sframe.close()
-        Bframe = false
-    end
-end
-
-function Debugger.threads()
-    if not Sthread then
-        Sthread = makeSidebar "threads"
-    end
-    if not Bthread then
-        Sthread.open()
-        Bthread = true
-    else
-        Sthread.close()
-        Bthread = false
-    end
-end
-
-function Debugger.exp()
-    if not Sexp then
-        Sexp = makeSidebar "exp"
-    end
-    if not Bexp then
-        Sexp.open()
-        Bexp = true
-    else
-        Sexp.close()
-        Bexp = false
-    end
+    Debugger.au_id = vim.api.nvim_create_augroup("dap-repl", { clear = true })
+    vim.api.nvim_create_autocmd("FileType", {
+        group = Debugger.au_id,
+        pattern = "dap-repl",
+        callback = function()
+            require("dap.ext.autocompl").attach()
+        end,
+    })
 end
 
 function Debugger.fscopes()

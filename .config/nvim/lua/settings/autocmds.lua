@@ -66,7 +66,7 @@ aucmd({ "InsertLeave", "WinEnter", "FocusGained" }, {
     end,
     desc = "use relativenumber conditionally",
 })
-aucmd({ "FocusGained", "WinEnter" }, {
+aucmd({ "FocusGained", "WinEnter", "BufEnter" }, {
     group = "FormatOptions",
     callback = function()
         require("statusline").winbar(vim.api.nvim_get_current_win())
@@ -177,7 +177,7 @@ aucmd("BufReadPost", {
     group = "PluginLoad",
     callback = function()
         require "mappings.pairs"
-        require "mappings.treesitter"
+        require "mappings.treesitter"()
     end,
     desc = "Load mappings for unimparied and treesiiter after reading buffer",
 })
@@ -190,6 +190,19 @@ aucmd("User", {
     group = "PluginLoad",
     command = "LuaCacheClear",
     desc = "Clear cache after compiling packer",
+})
+aucmd("FileType", {
+    group = "PluginLoad",
+    callback = function()
+        if
+            not require("nvim-treesitter.parsers").has_parser()
+            or (package.loaded.ufo and package.loaded.indent_blankline)
+        then
+            return
+        end
+        require("packer").loader "nvim-ufo"
+        require("packer").loader "indent-blankline.nvim"
+    end,
 })
 
 -- ************************ Terminal management --------------------

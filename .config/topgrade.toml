@@ -56,7 +56,7 @@ repos = [
 
 # Custom commands
 [commands]
-"perl" = "sudo cpan -u"
+"perl" = "cpan -u"
 "platform-io" = "pio pkg update -g"
 
 [linux]

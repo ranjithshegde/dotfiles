@@ -24,6 +24,7 @@ return function()
     o.updatetime = 300
     o.timeoutlen = 100
     o.conceallevel = 1
+    o.mouse = "n"
     o.foldcolumn = "auto:1"
     o.jumpoptions = "view"
     o.foldmethod = "expr"

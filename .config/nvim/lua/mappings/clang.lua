@@ -57,6 +57,7 @@ function cmaps.ctests()
         vim.cmd "w"
         require("utils").ex_cmd("Dispatch", { "gcc", "%", "-lm", "-o", "%<" }, { silent = true }, { file = true })
     end, { buffer = true, desc = "Use gcc" })
+
     map("n", "<F4>", function()
         vim.cmd "w | redraw"
         require("utils.compiler").with_flags()

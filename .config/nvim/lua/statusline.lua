@@ -222,8 +222,15 @@ local function getTabLabel(n, tab)
         color = nil,
     }
     if tail == "" then
-        result.tail = "Empty Buffer"
-        return result
+        if vim.fn.getwininfo(current_win)[1].quickfix == 1 then
+            tail = vim.fn.getqflist({ title = true }).title
+        end
+        if tail == "" then
+            result.tail = "Empty Buffer"
+            return result
+        else
+            result.tail = tail
+        end
     end
 
     local ext = nil
@@ -280,33 +287,43 @@ function statusline.tabs()
 end
 
 function statusline.winbar(n)
-    local label = getTabLabel(n, false)
-    if label.tail:match "Empty" then
-        vim.wo[n].winbar = ""
+    local win_config = vim.api.nvim_win_get_config(n)
+    local win_info = vim.fn.getwininfo(n)[1]
+
+    if win_config.relative ~= "" or win_info.quickfix ~= 0 or win_info.terminal ~= 0 then
+        vim.wo[n].winbar = nil
         return
     end
+
     local tabpage = vim.api.nvim_win_get_tabpage(n)
     local list = vim.api.nvim_tabpage_list_wins(tabpage)
 
-    if not list[2] then
-        vim.wo[n].winbar = ""
+    if #list <= 1 then
+        vim.wo[n].winbar = nil
         return
     end
 
     local i = #list
     for _, v in ipairs(list) do
         local b = vim.api.nvim_win_get_buf(v)
-        if vim.tbl_contains(require("utils.tables").ignoreFiles, vim.bo[b].filetype) then
+        if vim.tbl_contains(require("utils.tables").ignoreFiles, vim.bo[b].filetype) or vim.bo[b].buftype ~= "" then
             i = i - 1
         end
     end
 
     if i <= 1 then
-        vim.wo[n].winbar = ""
+        vim.wo[n].winbar = nil
         return
     end
 
     local winbar
+
+    local label = getTabLabel(n, false)
+    if label.tail:match "Empty" then
+        vim.wo[n].winbar = ""
+        return
+    end
+
     vim.api.nvim_set_hl(0, "WinBar" .. n, { fg = label.color, cterm = { bold = true } })
 
     if label.icon then
@@ -316,6 +333,7 @@ function statusline.winbar(n)
     end
 
     vim.wo[n].winbar = winbar
+    vim.cmd "redrawstatus"
 end
 
 return statusline

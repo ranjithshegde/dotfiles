@@ -102,6 +102,7 @@ function telescope.cdFiles(prompt, cwd)
 end
 
 function telescope.telescope()
+    require("packer").loader "telescope-fzf-native.nvim"
     local layout_actions = require "telescope.actions.layout"
     require("telescope").setup {
         pickers = {
@@ -128,10 +129,11 @@ function telescope.telescope()
                 "--smart-case",
                 "-L",
             },
+            layout_strategy = "flex",
             prompt_prefix = "❯ ",
             selection_caret = "❯ ",
             dynamic_preview_title = true,
-            cycle_layout_list = { "flex", "horizontal", "vertical", "bottom_pane", "center" },
+            cycle_layout_list = { "vertical", "bottom_pane", "center", "flex" },
             file_ignore_patterns = require("utils.tables").ignore_binaries,
             mappings = {
                 i = {
@@ -157,7 +159,7 @@ function telescope.telescope()
             },
         },
     }
-
+    require("telescope").load_extension "fzf"
     if package.loaded.notify then
         require("telescope").load_extension "notify"
     end

@@ -28,6 +28,12 @@ local telargs = function(name, args)
     end
 end
 
+local tel_ext = function(name, args)
+    return function()
+        require("telescope").extensions[name][name](args)
+    end
+end
+
 return require("which-key").register {
     ["<Space>"] = {
         name = "Telescope",
@@ -51,30 +57,10 @@ return require("which-key").register {
         ["/"] = { tele "grep_string", "Grep CWORD in directory" },
         ["]"] = { tele "tags", "Lsp Ctags" },
         ["<Space>"] = { tele "builtin", "Builtin Searchers" },
-        k = {
-            function()
-                require("telescope.builtin").lsp_workspace_symbols { query = vim.fn.expand "<cword>" }
-            end,
-            "Search lsp workspace symbol",
-        },
-        p = {
-            function()
-                require("telescope").extensions.project.project { display_type = "full" }
-            end,
-            "Projects",
-        },
-        e = {
-            function()
-                require("telescope").extensions.file_browser.file_browser { files = false }
-            end,
-            "Folder browser",
-        },
-        E = {
-            function()
-                require("telescope").extensions.file_browser.file_browser()
-            end,
-            "File browser",
-        },
+        k = { telargs("lsp_workspace_symbols", { query = vim.fn.expand "<cword>" }), "Search lsp workspace symbol" },
+        p = { tel_ext("project", { display_type = "full" }), "Projects" },
+        e = { tel_ext("file_browser", { files = false }), "Folder browser" },
+        E = { tel_ext "file_browser", "File browser" },
         d = {
             name = "diagnostics",
             b = { tele "diagnostics", "buffer diagnostics" },

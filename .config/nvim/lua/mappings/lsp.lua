@@ -77,6 +77,7 @@ function lspmap.lsp(bufnr)
             a = { vim.lsp.buf.range_code_action, "Code actions for range" },
         },
     }, { mode = "v", buffer = bufnr })
+
     map("n", "<F11>", function()
         require("symbols-outline").toggle_outline()
     end, { desc = "Toggle Symbolsbar" })
@@ -126,9 +127,9 @@ function lspmap.debug()
         ["<leader>d"] = {
             name = "debug",
             ["."] = { require("dap").terminate, "End" },
-            ["?"] = { require("debugger").frames, "Frames" },
-            ["/"] = { require("debugger").scopes, "Scopes" },
-            t = { require("debugger").threads, "threads" },
+            ["?"] = { require("debugger").frames.toggle, "Frames" },
+            ["/"] = { require("debugger").scopes.toggle, "Scopes" },
+            t = { require("debugger").threads.toggle, "threads" },
             u = { require("dapui").toggle, "Toggle all UI" },
             c = { require("dap").continue, "continue to next breakpoint" },
             n = { require("dap").step_over, "step over" },
@@ -147,8 +148,10 @@ function lspmap.debug()
         require("dapui").eval()
         require("dapui").eval()
     end, { buffer = true, desc = "Evaluate Hover " })
+
     map({ "n", "v" }, "<leader>do", require("dapui").float_element, { buffer = true, desc = "Open floating elements" })
-    map({ "n", "v", "s" }, "<leader>dE", require("debugger").exp, { buffer = true, desc = "Expressions" })
+
+    map({ "n", "v", "s" }, "<leader>dE", require("debugger").exp.toggle, { buffer = true, desc = "Expressions" })
 end
 
 return lspmap
