@@ -25,7 +25,7 @@ return function()
     o.timeoutlen = 100
     o.conceallevel = 1
     o.mouse = "n"
-    o.foldcolumn = "auto:1"
+    o.foldcolumn = "auto"
     o.jumpoptions = "view"
     o.foldmethod = "expr"
     o.inccommand = "split"
@@ -59,7 +59,6 @@ return function()
     o.clipboard:append "unnamedplus"
     o.sessionoptions:append "terminal,tabpages"
     o.foldexpr = "nvim_treesitter#foldexpr()"
-    o.tabline = [[%!luaeval('require("statusline").tabs()')]]
 
     vim.g.netrw_altv = 1
     vim.g.netrw_winsize = 15

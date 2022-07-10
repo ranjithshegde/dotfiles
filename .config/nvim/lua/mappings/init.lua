@@ -1,77 +1,5 @@
-local mappings = {}
 local wk = require "which-key"
 local map = vim.keymap.set
-
-------------------------------------------------------------------------
---                              General mappings                      --
-------------------------------------------------------------------------
-
-local function open_term(split, mods)
-    return function()
-        require("utils").ex_cmd(split, { "term://zsh" }, mods, { file = true, bar = true })
-    end
-end
-
-function mappings.init()
-    mappings.configFiles()
-
-    local opts = { nowait = true, silent = true }
-    map("n", "<C-;>", ";")
-    map("n", "<C-,>", ",")
-    map("i", "<C-o>", "<C-o>:")
-    map("n", "<C-i>", "<C-i>", { desc = "Dont map C-i to Tab" })
-    map({ "n", "i", "s" }, "<BS>", "<BS>", { desc = "Dont map C-h to backspace" })
-    --line movement
-    map("x", "K", ":move '<-2<CR>gv", { desc = "Move line up" })
-    map("x", "J", ":move '>+1<CR>gv", { desc = "Move line down" })
-    -- visual cut for replase
-    map({ "v", "s" }, "P", '"_dP', opts)
-    -- Indent
-    map("v", "<", "<gv", opts)
-    map("v", ">", ">gv", opts)
-    -- Terminal
-    map({ "n", "t" }, "<F9>", function()
-        vim.cmd "stopinsert"
-        require("utils").toggleTerm("zsh", "shell", 1)
-    end, {
-        desc = "Toggle current/default terminal",
-    })
-    --Quickfix
-    map("n", "-", function()
-        require("utils.qf").toggle_qf "q"
-    end, { desc = "Toggle quickfix" })
-    map("n", "_", function()
-        require("utils.qf").toggle_qf "l"
-    end, { desc = "Toggle loclist" })
-    -- Toggle folds
-    map("n", "<Tab>", "za", { desc = "Toggle fold current" })
-    map("n", "<S-Tab>", "zA", { desc = "Toggle fold All" })
-    -- open folds when searching
-    map("n", "n", "nzzzv", { desc = "jump to next search result" })
-    map("n", "N", "Nzzzv", { desc = "jump to previous search result" })
-    map("n", "J", "mzJ`z", { desc = "Adjoin next line" })
-    map("n", "gx", function()
-        require("utils").open_in_browser(vim.fn.expand "<cWORD>")
-    end, { desc = "exec word under cursor" })
-    map("n", "gm", function()
-        local virt = vim.fn.virtcol "$"
-        virt = virt / 2
-        vim.fn.cursor { 0, virt }
-    end, { desc = "Move cursor to middle of the line" })
-    map("n", "<leader>S", function()
-        require "utils.scratchpad"(_, "tab")
-    end, { desc = "Open ScratchPad" })
-
-    -- Terminals
-    wk.register {
-        ["<leader>t"] = {
-            name = "Launch terminal in split",
-            h = { open_term("split", { silent = true }), "Horizontal" },
-            v = { open_term("vsplit", { silent = true }), "Vertical" },
-            t = { open_term("drop", { silent = true, tab = 2 }), "New tab" },
-        },
-    }
-end
 
 ------------------------------------------------------------------------
 --                              Vim config files                      --
@@ -88,7 +16,13 @@ local open = function(path)
     end
 end
 
-function mappings.configFiles()
+local function open_term(split, mods)
+    return function()
+        require("utils").ex_cmd(split, { "term://zsh" }, mods, { file = true, bar = true })
+    end
+end
+
+local function config_files()
     wk.register {
         ["<leader>"] = {
             a = {
@@ -115,6 +49,9 @@ function mappings.configFiles()
                     p = { open "lua/settings/plugin.lua", "Settings for plugins" },
                     a = { open "lua/settings/autocmds.lua", "Autocmds" },
                     n = { open "lua/settings/notify.lua", "Nvim Notify init settings" },
+                    e = { open "lua/settings/statusline.lua", "Express statusline and Tabline" },
+                    l = { open "lua/settings/tabline.lua", "Tabline" },
+                    w = { open "lua/settings/winbar.lua", "Winbar" },
                 },
                 l = {
                     name = "Lsp",
@@ -152,7 +89,6 @@ function mappings.configFiles()
                     o = { open "after/queries/org/highlights.scm", "Org" },
                 },
                 d = { open "lua/debugger.lua", "Debug adapter protocol" },
-                s = { open "lua/statusline.lua", "Statusline and Tabline" },
                 c = { open "after/plugin/plugin.lua", "User defined commands" },
                 r = { open "init.lua", "VimRC" },
                 P = { require("packer").sync, "Update packages" },
@@ -162,4 +98,72 @@ function mappings.configFiles()
     }
 end
 
-return mappings
+------------------------------------------------------------------------
+--                              General mappings                      --
+------------------------------------------------------------------------
+
+return function()
+    config_files()
+
+    local opts = { nowait = true, silent = true }
+    -- Extend C-keys
+    map("n", "<C-;>", ";")
+    map("n", "<C-,>", ",")
+    map("i", "<C-o>", "<C-o>:")
+    map("n", "<C-i>", "<C-i>", { desc = "Dont map C-i to Tab" })
+    map({ "n", "i", "s" }, "<BS>", "<BS>", { desc = "Dont map C-h to backspace" })
+
+    --line movement
+    map("x", "K", ":move '<-2<CR>gv", { desc = "Move line up" })
+    map("x", "J", ":move '>+1<CR>gv", { desc = "Move line down" })
+    -- visual cut for replase
+    map({ "v", "s" }, "P", '"_dP', opts)
+    -- Indent
+    map("v", "<", "<gv", opts)
+    map("v", ">", ">gv", opts)
+
+    -- Toggle folds
+    map("n", "<Tab>", "za", { desc = "Toggle fold current" })
+    map("n", "<S-Tab>", "zA", { desc = "Toggle fold All" })
+    -- open folds when searching
+    map("n", "n", "nzzzv", { desc = "jump to next search result" })
+    map("n", "N", "Nzzzv", { desc = "jump to previous search result" })
+    map("n", "J", "mzJ`z", { desc = "Adjoin next line" })
+
+    --Quickfix
+    map("n", "-", function()
+        require("utils.qf").toggle_qf "q"
+    end, { desc = "Toggle quickfix" })
+    map("n", "_", function()
+        require("utils.qf").toggle_qf "l"
+    end, { desc = "Toggle loclist" })
+    -- ScratchPad
+    map("n", "<leader>S", function()
+        require "utils.scratchpad"(_, "tab")
+    end, { desc = "Open ScratchPad" })
+    -- Misc
+    map("n", "gx", function()
+        require("utils").open_in_browser(vim.fn.expand "<cWORD>")
+    end, { desc = "exec word under cursor" })
+    map("n", "gm", function()
+        local virt = vim.fn.virtcol "$"
+        virt = virt / 2
+        vim.fn.cursor { 0, virt }
+    end, { desc = "Move cursor to middle of the line" })
+
+    -- Terminals
+    map({ "n", "t" }, "<F9>", function()
+        vim.cmd "stopinsert"
+        require("utils").toggleTerm("zsh", "shell", 1)
+    end, {
+        desc = "Toggle current/default terminal",
+    })
+    wk.register {
+        ["<leader>t"] = {
+            name = "Launch terminal in split",
+            h = { open_term("split", { silent = true }), "Horizontal" },
+            v = { open_term("vsplit", { silent = true }), "Vertical" },
+            t = { open_term("drop", { silent = true, tab = 2 }), "New tab" },
+        },
+    }
+end

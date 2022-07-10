@@ -60,7 +60,7 @@ function lsp.settings()
 
     -- borders for floating windows
     vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, { border = "double" })
-    vim.lsp.handlers["textDocument/signatureHelp"] = vim.lsp.with(signature, {})
+    vim.lsp.handlers["textDocument/signatureHelp"] = vim.lsp.with(signature, { focusable = false })
 
     require("utils.langServers").lsp_messages()
 end
@@ -96,6 +96,7 @@ function lsp.attach(client, bufnr)
             desc = "Refresh codelens on save",
         })
         vim.lsp.codelens.refresh()
+        vim.bo[bufnr].tagfunc = ""
         return
     end
 
@@ -150,6 +151,10 @@ function lsp.attach(client, bufnr)
         require("utils.langServers").lsp_capabilities,
         { desc = "Display Language Server capabilities" }
     )
+
+    if client.name == "clangd" then
+        vim.bo[bufnr].tagfunc = ""
+    end
 end
 
 ------------------------------------------------------------------------
@@ -161,12 +166,11 @@ function lsp.servers()
     local configs = {
         jsonls = {},
         yamlls = {},
-        perlls = {},
         html = { capabilities = lsp.capabilities() },
         cssls = { capabilities = lsp.capabilities() },
-        -- cmake = { capabilities = lsp.capabilities() },
         vimls = { capabilities = lsp.capabilities() },
         dartls = { capabilities = lsp.capabilities() },
+        perlpls = { capabilities = lsp.capabilities() },
         pyright = { capabilities = lsp.capabilities() },
         tsserver = { capabilities = lsp.capabilities() },
         marksman = { capabilities = lsp.capabilities() },

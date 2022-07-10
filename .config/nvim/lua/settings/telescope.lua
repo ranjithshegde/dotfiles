@@ -110,6 +110,7 @@ function telescope.telescope()
             loclist = { theme = "ivy" },
             quickfix = { theme = "ivy" },
             lsp_document_symbols = { theme = "ivy" },
+            lsp_workspace_symbols = { theme = "cursor" },
             current_buffer_fuzzy_find = { theme = "ivy" },
             lsp_references = { theme = "cursor" },
             oldfiles = { attach_mappings = foldMaps },
@@ -144,9 +145,6 @@ function telescope.telescope()
             },
         },
         extensions = {
-            ["ui-select"] = {
-                require("telescope.themes").get_dropdown {},
-            },
             project = {
                 base_dirs = {
                     { "~/Documents/LaTeX", max_depth = 3 },

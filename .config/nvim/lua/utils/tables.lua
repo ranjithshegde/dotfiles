@@ -79,6 +79,19 @@ tables.ignore_binaries = {
     "%.au",
 }
 
+tables.ignore_binaries_regex = {
+    "*.png",
+    "*.PNG",
+    "*.jpg",
+    "*.pdf",
+    "*.gif",
+    "*.jpeg",
+    "*.svg",
+    "*.odt",
+    "*.doc*",
+    "*.rtf",
+}
+
 ------------------------------------------------------------------------
 --                              Symbols                               --
 ------------------------------------------------------------------------
@@ -271,6 +284,7 @@ tables.ts_parsers = {
     "markdown",
     "markdown_inline",
     "org",
+    "perl",
     "python",
     "query",
     "regex",

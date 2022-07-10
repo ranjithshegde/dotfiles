@@ -9,6 +9,9 @@ function servers.clangd()
         server = {
             capabilities = require("lsp").capabilities(),
             filetypes = { "c", "cpp", "opencl" },
+            init_options = {
+                clangdFileStatus = true,
+            },
             cmd = {
                 "clangd",
                 "--clang-tidy",

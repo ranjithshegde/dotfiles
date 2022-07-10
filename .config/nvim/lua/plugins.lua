@@ -3,9 +3,10 @@
 local packer_path = vim.fn.stdpath "data" .. "/site/pack/packer/start/packer.nvim"
 
 -- selfmanage packer
+local packer_bootstrap = false
 if not vim.loop.fs_stat(vim.fs.normalize(packer_path)) then
-    ---@diagnostic disable-next-line: lowercase-global
-    packer_bootstrap = vim.fn.system {
+    packer_bootstrap = true
+    vim.fn.system {
         "git",
         "clone",
         "--depth",
@@ -32,8 +33,6 @@ return require("packer").startup {
         use "wbthomason/packer.nvim"
 
         use "EdenEast/nightfox.nvim"
-
-        use "lewis6991/impatient.nvim"
 
         -- Taglist and sidebars
         use { "simrat39/symbols-outline.nvim", module = "symbols-outline" }
@@ -67,7 +66,7 @@ return require("packer").startup {
             "tjdevries/express_line.nvim",
             requires = { "kyazdani42/nvim-web-devicons", "nvim-lua/plenary.nvim" },
             config = function()
-                require("statusline").el()
+                require "settings.statusline"()
             end,
         }
 

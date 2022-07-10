@@ -6,12 +6,11 @@ local exec = vim.api.nvim_command
 local opts = { clear = true }
 
 ------------------------------------------------------------------------
---                              AutoCommands                          --
+--                              Formatting and UI                     --
 ------------------------------------------------------------------------
 
--- ************** Format handling  ---------------------------------------
-
 augroup("FormatOptions", opts)
+-- ************** Format options  --------------------------------------
 aucmd("FileType", {
     group = "FormatOptions",
     callback = function()
@@ -28,6 +27,8 @@ aucmd("FileType", {
     end,
     desc = "Custom formatoptions",
 })
+
+-- ************** Decoration defaults  ---------------------------------
 aucmd("FileType", {
     group = "FormatOptions",
     callback = function(args)
@@ -35,14 +36,16 @@ aucmd("FileType", {
             vim.opt.relativenumber = false
             vim.opt_local.cursorline = false
             vim.wo.foldcolumn = "0"
+            vim.wo.winbar = nil
             return
         end
         vim.opt.relativenumber = true
         vim.opt_local.cursorline = true
-        vim.wo.winbar = ""
     end,
     desc = "Disable all custom decoration rules for non-language filetypes",
 })
+
+-- ************** Selective numbering  ---------------------------------
 aucmd({ "InsertEnter", "WinLeave", "FocusLost", "BufNewFile" }, {
     group = "FormatOptions",
     callback = function()
@@ -66,10 +69,11 @@ aucmd({ "InsertLeave", "WinEnter", "FocusGained" }, {
     end,
     desc = "use relativenumber conditionally",
 })
+
+-- ************** Selective cursorline  ----------------------------------
 aucmd({ "FocusGained", "WinEnter", "BufEnter" }, {
     group = "FormatOptions",
     callback = function()
-        require("statusline").winbar(vim.api.nvim_get_current_win())
         if
             vim.tbl_contains(require("utils.tables").ignoreFiles, vim.bo.filetype)
             or vim.api.nvim_win_get_height(vim.api.nvim_get_current_win()) <= 15
@@ -77,9 +81,9 @@ aucmd({ "FocusGained", "WinEnter", "BufEnter" }, {
             return
         end
         vim.opt_local.cursorline = true
-        vim.wo.foldcolumn = "auto:1"
+        vim.wo.foldcolumn = "auto"
     end,
-    desc = "use cursorline only on active buffers && Winbar on tabpages with more than one window",
+    desc = "use cursorline only on active buffers",
 })
 aucmd({ "FocusLost", "WinLeave" }, {
     group = "FormatOptions",
@@ -93,9 +97,32 @@ aucmd({ "FocusLost", "WinLeave" }, {
     desc = "dont use cursorline on inactive buffers",
 })
 
--- ************** Lsp Configuration loading  ------------------------------
+-- ************** Winbar -----------------------------------------------
+aucmd({ "BufEnter", "WinEnter" }, {
+    group = "FormatOptions",
+    callback = function(args)
+        if args.match == "" or args.file == "" then
+            return
+        end
+        require "settings.winbar"(vim.api.nvim_get_current_win())
+    end,
+    desc = "Winbar on tabpages with more than one window",
+})
+
+-- ************** Tabline ----------------------------------------------
+aucmd({ "TabEnter", "WinLeave", "WinEnter" }, {
+    group = "FormatOptions",
+    callback = function()
+        vim.opt.tabline = require "settings.tabline"()
+    end,
+    desc = "use cursorline only on active buffers && Winbar on tabpages with more than one window",
+})
+------------------------------------------------------------------------
+--                              LSP                                   --
+------------------------------------------------------------------------
 
 augroup("LspSettings", opts)
+-- ************** Lsp Configuration loading  ----------------------------
 aucmd("FileType", {
     group = "LspSettings",
     pattern = require("utils.tables").lspfiles,
@@ -116,6 +143,8 @@ aucmd("FileType", {
     end,
     desc = "OpenCL filetype to handle C++ lsp",
 })
+
+-- ************** New Cmake lsp -----------------------------------------
 aucmd("FileType", {
     group = "LspSettings",
     pattern = "cmake",
@@ -131,6 +160,7 @@ aucmd("FileType", {
     end,
 })
 
+-- ************** Lsp attach --------------------------------------------
 aucmd("LspAttach", {
     group = "LspSettings",
     callback = function(args)
@@ -141,7 +171,7 @@ aucmd("LspAttach", {
     desc = "Call attach function on event LspAttach",
 })
 
--- ************** Compilers and REPL  ------------------------------
+-- ************** Compilers and REPL  ----------------------------------
 augroup("MakeDispatch", opts)
 aucmd("FileType", {
     group = "MakeDispatch",
@@ -161,9 +191,11 @@ aucmd("FileType", {
     desc = "set compiler and toggleable REPL for capable filetypes",
 })
 
--- ************** Load plugins and mappings ------------------------------
--- Compile packer after writing plugins.lua
+------------------------------------------------------------------------
+--                              Plugin loading                        --
+------------------------------------------------------------------------
 augroup("PluginLoad", opts)
+-- ************** Packer compile ---------------------------------------
 aucmd("BufWritePost", {
     group = "PluginLoad",
     pattern = "plugins.lua",
@@ -173,6 +205,8 @@ aucmd("BufWritePost", {
     end,
     desc = "Autocompile packer",
 })
+
+-- ************** Load mappings  ---------------------------------------
 aucmd("BufReadPost", {
     group = "PluginLoad",
     callback = function()
@@ -181,16 +215,13 @@ aucmd("BufReadPost", {
     end,
     desc = "Load mappings for unimparied and treesiiter after reading buffer",
 })
+
+-- ************** Load matchit  ----------------------------------------
 aucmd(
     "BufReadPost",
     { group = "PluginLoad", command = "packadd matchit", once = true, desc = "Conditionally load matchit" }
 )
-aucmd("User", {
-    pattern = "PackerComplete",
-    group = "PluginLoad",
-    command = "LuaCacheClear",
-    desc = "Clear cache after compiling packer",
-})
+-- ************** Load decoration plugins ------------------------------
 aucmd("FileType", {
     group = "PluginLoad",
     callback = function()
@@ -205,14 +236,19 @@ aucmd("FileType", {
     end,
 })
 
--- ************************ Terminal management --------------------
+------------------------------------------------------------------------
+--                              Terminal management                   --
+------------------------------------------------------------------------
 
 augroup("TermInsertModes", opts)
+-- ************************ Terminal autinsert--------------------------
 aucmd(
     { "BufEnter", "BufWinEnter", "TermOpen" },
     { group = "TermInsertModes", pattern = { "term://*", "shell" }, command = "startinsert" }
 )
 aucmd("TermEnter", { group = "TermInsertModes", command = "startinsert" })
+
+-- ************************ Terminal autoecape --------------------------
 aucmd("TermEnter", {
     group = "TermInsertModes",
     callback = function()
@@ -233,7 +269,11 @@ aucmd("TermClose", {
     desc = "Remove the annoying [exited] termexit prompt",
 })
 
+------------------------------------------------------------------------
+--                              Misc                                  --
+------------------------------------------------------------------------
 augroup("ProjectDrawer", opts)
+-- ************************ Handle netrw -------------------------------
 aucmd("WinEnter", {
     group = "ProjectDrawer",
     callback = function()
@@ -256,8 +296,9 @@ aucmd("FileType", {
 })
 
 augroup("NoVim", opts)
-aucmd("BufRead", {
-    pattern = { "*.png", "*.PNG", "*.jpg", "*.pdf", "*.gif", "*.jpeg", "*.svg", "*.odt", "*.doc*", "*.rtf" },
+-- ************************ Handle binaries ----------------------------
+aucmd("BufEnter", {
+    pattern = require("utils.tables").ignore_binaries_regex,
     group = "NoVim",
     callback = function()
         vim.loop.spawn("xdg-open", { args = { vim.fn.expand "%:p" } })

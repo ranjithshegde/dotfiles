@@ -162,4 +162,52 @@ function utils.get_visual_selection(bufnr)
     }
 end
 
+---Get a table for filename, icon and hl_group
+---@param n number window ID
+---@param tab boolean True for tabline, false for winbar
+---@return table {file_tail, file_icon, icon_highlight}
+function utils.get_file_label(n, tab)
+    local current_win = tab and vim.api.nvim_tabpage_get_win(n) or n
+    local current_buf = vim.api.nvim_win_get_buf(current_win)
+    local file_name = vim.api.nvim_buf_get_name(current_buf)
+
+    local tail = vim.fn.fnamemodify(file_name, ":p:t")
+
+    local result = {
+        tail = tail,
+        icon = nil,
+        color = nil,
+    }
+    if tail == "" then
+        if vim.fn.getwininfo(current_win)[1].quickfix == 1 then
+            tail = vim.fn.getqflist({ title = true }).title
+        end
+        if tail == "" then
+            result.tail = "Empty Buffer"
+            return result
+        else
+            result.tail = tail
+        end
+    end
+
+    local ext = nil
+    if string.find(file_name, "term://") ~= nil then
+        ext = "terminal"
+    else
+        ext = vim.fn.fnamemodify(tail, ":e")
+    end
+
+    local icon, color = require("nvim-web-devicons").get_icon_color(tail, ext)
+
+    if icon ~= nil then
+        local table = vim.api.nvim_get_hl_by_name("TablineSel", true)
+        if tab then
+            vim.api.nvim_set_hl(0, "IconColor", { bg = table["background"], fg = color, cterm = { bold = true } })
+        end
+        result.icon = icon
+        result.color = color
+    end
+    return result
+end
+
 return utils
