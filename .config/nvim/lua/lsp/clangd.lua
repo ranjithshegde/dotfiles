@@ -58,7 +58,7 @@ function servers.ccls()
     local nilfunc = function(...)
         return nil
     end
-    vim.cmd "let g:ccls_log_file = expand('~/.cache/ccls.txt')"
+    vim.g.ccls_log_file = vim.fs.normalize "~/.cache/ccls.txt"
 
     local lspconfig = require "lspconfig"
     local ccls = {

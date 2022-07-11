@@ -20,3 +20,7 @@ fparu() {
 rpac() {
 	paru -Qq | fzf -q "$1" -m --preview 'paru -Qi {1} && paru -Ql {1}' | xargs -ro paru -Rcnsu
 }
+
+sc() {
+	du -a ~/.config/ ~/.local/bin/scripts/ ~/.local/share/nvim/ | awk '{print $2}' | fzf --preview 'bat --style=numbers --color=always --line-range :500 {}' | xargs -r "$EDITOR"
+}

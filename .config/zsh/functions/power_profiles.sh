@@ -47,6 +47,5 @@ beast() {
 	echo performance >/sys/module/pcie_aspm/parameters/policy
 	x86_energy_perf_policy performance
 	asusctl profile -P Performance
-	# asusctl profile -P Performance -f boost -t true
 	echo "boost on, cpu & pci-e ports on performance mode"
 }

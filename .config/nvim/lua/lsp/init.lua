@@ -172,6 +172,7 @@ function lsp.servers()
         dartls = { capabilities = lsp.capabilities() },
         perlpls = { capabilities = lsp.capabilities() },
         pyright = { capabilities = lsp.capabilities() },
+        dockerls = { capabilities = lsp.capabilities() },
         tsserver = { capabilities = lsp.capabilities() },
         marksman = { capabilities = lsp.capabilities() },
         bashls = { capabilities = lsp.capabilities(), filetypes = { "sh", "zsh" } },

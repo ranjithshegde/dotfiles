@@ -8,13 +8,11 @@ end
 
 -- set default make to Dispatch Make
 local function make(args)
-    -- vim.api.nvim_cmd({ cmd = "Make", args = args, mods = { silent = true } }, {})
     vim.api.nvim_cmd({ cmd = "Make", args = args }, {})
 end
 
 -- set default terminal to Dispatch
 local function terminal(args)
-    -- vim.api.nvim_cmd({ cmd = "Dispatch", args = args, mods = { silent = true } }, {})
     vim.api.nvim_cmd({ cmd = "Dispatch", args = args }, {})
 end
 

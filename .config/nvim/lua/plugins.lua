@@ -6,14 +6,7 @@ local packer_path = vim.fn.stdpath "data" .. "/site/pack/packer/start/packer.nvi
 local packer_bootstrap = false
 if not vim.loop.fs_stat(vim.fs.normalize(packer_path)) then
     packer_bootstrap = true
-    vim.fn.system {
-        "git",
-        "clone",
-        "--depth",
-        "1",
-        "https://github.com/wbthomason/packer.nvim",
-        packer_path,
-    }
+    vim.fn.execute("!git clone https://github.com/wbthomason/packer.nvim " .. packer_path)
 end
 
 local function is_custom(env, path, plugin)

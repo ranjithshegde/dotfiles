@@ -1,3 +1,0 @@
-#!/bin/sh
-
-du -a ~/.config/ ~/.local/bin/scripts/ ~/.local/share/nvim/ | awk '{print $2}' | fzf --preview 'bat --style=numbers --color=always --line-range :500 {}' | xargs -r "$EDITOR"

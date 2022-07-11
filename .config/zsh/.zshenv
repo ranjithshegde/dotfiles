@@ -51,7 +51,6 @@ export WINEPREFIX=/storage/Games/Wine/default/
 # export WINEARCH=win32
 export ZPLUG_BIN="$XDG_DATA_HOME"/bin
 export ZPLUG_HOME="$XDG_DATA_HOME"/zsh/zplug
-# export ZPLUG_HOME="$HOME"/.local/share/zsh/zplug
 export _JAVA_OPTIONS=-Djava.util.prefs.userRoot="$XDG_CONFIG_HOME"/java
 export OPENCV_OPENCL_DEVICE=NVIDIA:GPU:0
 export OCTAVE_HISTFILE="$XDG_CACHE_HOME/octave-hsts"
@@ -60,6 +59,15 @@ export ANDROID_DATA="$XDG_DATA_HOME/android"
 export CONAN_USER_HOME="$XDG_DATA_HOME/conan"
 export DOCKER_CONFIG="$XDG_CONFIG_HOME"/docker
 export MACHINE_STORAGE_PATH="$XDG_DATA_HOME"/docker-machine
+export PERL_CPANM_HOME="$XDG_DATA_HOME/cpan"
+PERL5LIB="$XDG_DATA_HOME/perl/lib/perl5${PERL5LIB+:}${PERL5LIB}"
+export PERL5LIB
+PERL_LOCAL_LIB_ROOT="$XDG_DATA_HOME/perl${PERL_LOCAL_LIB_ROOT+:}${PERL_LOCAL_LIB_ROOT}"
+export PERL_LOCAL_LIB_ROOT
+PERL_MB_OPT='--install_base /home/ranjith/.local/share/perl'
+export PERL_MB_OPT
+PERL_MM_OPT='INSTALL_BASE=/home/ranjith/.local/share/perl'
+export PERL_MM_OPT
 
 # GLOBALS
 export CHROME_EXECUTABLE=/usr/bin/brave
@@ -97,6 +105,7 @@ appendpath '/home/ranjith/.local/share/npm/bin'
 appendpath '/home/ranjith/.local/share/go/bin'
 appendpath '/home/ranjith/.local/share/gem/bin'
 appendpath '/home/ranjith/.local/share/gem/ruby/3.0.0/bin'
+appendpath '/home/ranjith/.local/share/perl/bin/'
 
 unset -f appendpath
 export PATH
@@ -108,3 +117,4 @@ sdo() {
 source "$ZDOTDIR/functions/fuzzy.sh"
 source "$ZDOTDIR/functions/power_profiles.sh"
 source "$ZDOTDIR/functions/dmenus.sh"
+source "$ZDOTDIR/functions/scripts.sh"

@@ -55,7 +55,7 @@ load_plugin_on_key("n", "<leader>w", "OrgWiki", require("mappings.util").orgWiki
 
 load_plugin_on_key("n", "ys", "add surround", require("packer").loader, "nvim-surround")
 
-load_plugin_on_key("n", "yss", "add line surround", require("packer").loader, "nvim-surround")
+-- load_plugin_on_key("n", "yss", "add line surround", require("packer").loader, "nvim-surround")
 
 load_plugin_on_key("v", "S", "change surround", require("packer").loader, "nvim-surround")
 

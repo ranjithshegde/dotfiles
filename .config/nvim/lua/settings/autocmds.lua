@@ -175,7 +175,7 @@ aucmd("LspAttach", {
 augroup("MakeDispatch", opts)
 aucmd("FileType", {
     group = "MakeDispatch",
-    pattern = { "java", "lua", "python", "javascript" },
+    pattern = { "java", "lua", "python", "javascript", "perl" },
     nested = true,
     callback = function()
         vim.keymap.set("n", "<F5>", function()
@@ -301,8 +301,12 @@ aucmd("BufEnter", {
     pattern = require("utils.tables").ignore_binaries_regex,
     group = "NoVim",
     callback = function()
-        vim.loop.spawn("xdg-open", { args = { vim.fn.expand "%:p" } })
+        local handle
+        handle = vim.loop.spawn("xdg-open", { args = { vim.fn.expand "%:p" } }, function()
+            handle:close()
+        end)
         vim.api.nvim_buf_delete(vim.api.nvim_get_current_buf(), { force = true })
+        --TODO
         vim.cmd "let &ft = &ft"
     end,
     desc = "Open non text files with MIME",

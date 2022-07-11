@@ -95,14 +95,12 @@ end
 --                          Plugin functions                          --
 ------------------------------------------------------------------------
 
--- set browser
-local browser = "qutebrowser"
 function utils.open_in_browser(url)
-    if type(url) == "table" then
-        vim.loop.spawn(browser, { args = url })
-    else
-        vim.loop.spawn(browser, { args = { url } })
-    end
+    local handle
+    local args = type(url) == "table" and url or { url }
+    handle = vim.loop.spawn("qutebrowser", { args = args }, function()
+        handle:close()
+    end)
 end
 
 ---Concat all lines from a file into a table
@@ -147,11 +145,10 @@ function utils.ex_cmd(cmd, args, mods, magic)
 end
 
 function utils.get_visual_selection(bufnr)
-    vim.api.nvim_input "<Esc>"
-    vim.api.nvim_input "gv"
+    vim.api.nvim_input "<Esc>gv"
     local first = vim.api.nvim_buf_get_mark(bufnr, "<")
     local last = vim.api.nvim_buf_get_mark(bufnr, ">")
-    local lines = vim.api.nvim_buf_get_lines(bufnr, first[1], last[1], true)
+    local lines = vim.api.nvim_buf_get_lines(bufnr, first[1] - 1, last[1], true)
 
     return {
         lines = lines,
