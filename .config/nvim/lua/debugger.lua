@@ -1,13 +1,13 @@
-local function makeSidebar(func)
+local function makeSidebar(element, width)
     local widgets = require "dap.ui.widgets"
-    if func == "scopes" then
-        return widgets.sidebar(widgets.scopes, { width = 60 })
-    elseif func == "frames" then
-        return widgets.sidebar(widgets.frames, { width = 70 })
-    elseif func == "threads" then
-        return widgets.sidebar(widgets.threads, { width = 40 })
-    elseif func == "exp" then
-        return widgets.sidebar(widgets.expression, { width = 40 })
+    if element == "scopes" then
+        return widgets.sidebar(widgets.scopes, { width = width })
+    elseif element == "frames" then
+        return widgets.sidebar(widgets.frames, { width = width })
+    elseif element == "threads" then
+        return widgets.sidebar(widgets.threads, { width = width })
+    elseif element == "exp" then
+        return widgets.sidebar(widgets.expression, { width = width })
     end
 end
 
@@ -294,10 +294,10 @@ end
 function Debugger.setup()
     local dap = require "dap"
 
-    Debugger.frames = makeSidebar "frames"
-    Debugger.scopes = makeSidebar "scopes"
-    Debugger.exp = makeSidebar "exp"
-    Debugger.threads = makeSidebar "threads"
+    Debugger.frames = makeSidebar("frames", 70)
+    Debugger.scopes = makeSidebar("scopes", 60)
+    Debugger.exp = makeSidebar("exp", 40)
+    Debugger.threads = makeSidebar("threads", 40)
 
     dap.defaults.fallback.terminal_win_cmd = "tabnew"
     dap.defaults.fallback.external_terminal = {

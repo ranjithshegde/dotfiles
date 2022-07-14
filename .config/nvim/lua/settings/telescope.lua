@@ -153,6 +153,7 @@ function telescope.telescope()
                     { "~/Software/Workspaces/Repos", max_depth = 4 },
                     { "~/Software/Workspaces/electronics", max_depth = 4 },
                     { "~/Software/Workspaces/openFrameworks", max_depth = 5 },
+                    { "~/Software/Workspaces/websites/", max_depth = 3 },
                 },
             },
         },

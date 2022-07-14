@@ -84,7 +84,10 @@ return require("which-key").register {
                 "grep SuperCollider",
             },
             o = {
-                telargs("live_grep", { cwd = "~/Documents/ofWorkspace/", prompt_title = "oF Workspace grep" }),
+                telargs(
+                    "live_grep",
+                    { cwd = "~/Software/Workspaces/openFrameworks/", prompt_title = "oF Workspace grep" }
+                ),
                 "ofWorkspace",
             },
             d = {
@@ -136,7 +139,10 @@ return require("which-key").register {
                 "Vim plugin Directory",
             },
             o = {
-                telargs("find_files", { cwd = "~/Documents/ofWorkspace/", prompt_title = "oF Workspace files" }),
+                telargs(
+                    "find_files",
+                    { cwd = "~/Software/Workspaces/openFrameworks/", prompt_title = "oF Workspace files" }
+                ),
                 "OfWorkspace",
             },
             ["?"] = {

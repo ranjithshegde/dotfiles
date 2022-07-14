@@ -36,6 +36,8 @@ end
 ------------------------------------------------------------------------
 
 function cmaps.makeC()
+    map("n", "<F2>", require("utils.compiler").emmake, { buffer = true, desc = "Compile Emscripten" })
+    map("n", "<F3>", require("utils.compiler").emrun, { buffer = true, desc = "Run Emscripten" })
     map("n", "<F4>", function()
         vim.cmd "w | Make Debug -j12"
     end, { buffer = true, desc = "Compile Debug" })

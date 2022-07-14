@@ -151,10 +151,6 @@ function lsp.attach(client, bufnr)
         require("utils.langServers").lsp_capabilities,
         { desc = "Display Language Server capabilities" }
     )
-
-    if client.name == "clangd" then
-        vim.bo[bufnr].tagfunc = ""
-    end
 end
 
 ------------------------------------------------------------------------

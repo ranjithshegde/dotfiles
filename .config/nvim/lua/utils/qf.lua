@@ -65,20 +65,7 @@ function qf.delete(bufnr)
     local qfl = vim.fn.getqflist()
     local line = unpack(vim.api.nvim_win_get_cursor(0))
 
-    local mode = vim.api.nvim_get_mode().mode
-    if mode == "v" or mode == "V" then
-        local startline = unpack(vim.api.nvim_buf_get_mark(0, "<"))
-        local endline = unpack(vim.api.nvim_buf_get_mark(0, ">"))
-        local result = {}
-        for i, item in ipairs(qfl) do
-            if i < startline or i > endline then
-                table.insert(result, item)
-            end
-        end
-        qfl = result
-    else
-        table.remove(qfl, line)
-    end
+    table.remove(qfl, line)
 
     vim.fn.setqflist({}, "r", { items = qfl })
     vim.fn.setpos(".", { bufnr, line, 1, 0 })

@@ -20,7 +20,6 @@ else
     esac
 
     xrandr --output "$intern" --primary --mode 1920x1080 --rate 144 --dpi 96 --output "$extern" "$position" "$intern" --mode 1920x1080 --rate 60 --dpi 96 &
-    sudo -A practical &
 fi
 
 nitrogen --force-setter=xinerama --restore

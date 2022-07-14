@@ -34,6 +34,7 @@ function Compiler.set_ctype()
         vim.g.makeFile = "Makefile"
         vim.opt.makeprg = "make"
         vim.g.debugBin = "bin/" .. vim.fn.fnamemodify(vim.fn.getcwd(), ":t") .. "_debug"
+        vim.g.embin = "bin/" .. vim.fn.fnamemodify(vim.fn.getcwd(), ":t") .. ".html"
         vim.g.cfiles = "src/*"
     elseif isFile "platformio.ini" then
         vim.opt.makeprg = "pio run"
@@ -168,6 +169,14 @@ function Compiler.gcc_libs(arg)
         return arg_comp
     end
     return comp
+end
+
+function Compiler.emmake()
+    terminal { "emmake", "make", "-j12" }
+end
+
+function Compiler.emrun()
+    terminal { "emrun", "--browser", "brave", vim.g.embin }
 end
 ------------------------------------------------------------------------
 --                                CMake 	                          --

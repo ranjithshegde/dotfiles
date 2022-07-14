@@ -28,3 +28,23 @@ netS() {
 netR() {
 	netcat -l -p 7000 | pv | tar x
 }
+
+# Ranger change directory on exit-----------------------------------------------------------
+ranger_cd() {
+	temp_file="$(mktemp -t "ranger_cd.XXXXXXXXXX")"
+	ranger --choosedir="$temp_file" -- "${@:-$PWD}"
+	if chosen_dir="$(cat -- "$temp_file")" && [ -n "$chosen_dir" ] && [ "$chosen_dir" != "$PWD" ]; then
+		cd -- "$chosen_dir"
+	fi
+	rm -f -- "$temp_file"
+}
+
+# FZF dotfiles -------------------------------------------------------------------------------
+hcd() {
+	dir=$(find ${1:-.} -type d 2>/dev/null | fzf +m --reverse --prompt='Enter Directory> ') && cd "$dir"
+}
+
+zle -N hcd
+bindkey -M emacs '\eD' hcd
+bindkey -M vicmd '\eD' hcd
+bindkey -M viins '\eD' hcd

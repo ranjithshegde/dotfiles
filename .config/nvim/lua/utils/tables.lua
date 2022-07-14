@@ -77,12 +77,14 @@ tables.ignore_binaries = {
     "%.mp3",
     "%.m4a",
     "%.png",
+    "%.svg",
     "%.jpg",
     "%.au",
 }
 
 tables.ignore_binaries_regex = {
     "*.png",
+    "*.svg",
     "*.PNG",
     "*.jpg",
     "*.pdf",

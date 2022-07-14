@@ -201,7 +201,8 @@ return require("packer").startup {
 
         --Lsp config and companions
         use {
-            is_custom("WORKSPACE", "Repos/nvim-lspconfig", "neovim/nvim-lspconfig"),
+            is_custom("WORKSPACE", "Repos/nvim-lspconfig", "ranjithshegde/nvim-lspconfig"),
+            branch = "0.7",
             requires = {
                 {
                     "m-pilia/vim-ccls",

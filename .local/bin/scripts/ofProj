@@ -12,23 +12,21 @@ git init
 
 compiledb -n make
 
-ctags -R -c++-kinds=+p --fields=+iaS --extras+q .
-
 clang-format -style=webkit -dump-config >.clang-format
 
 {
 	echo .cache/
 	echo .ccls-cache/
-    echo .clang-format
+	echo .clang-format
 	echo tags
 	echo compile_commands.json
-    echo *.qbs
+	echo *.qbs
 	echo obj/
-    echo bin/*
-    echo !bin/data
-    echo bin/data/*
-    echo !bin/data/*.vert
-    echo !bin/data/*.frag
+	echo bin/*
+	echo !bin/data
+	echo bin/data/*
+	echo !bin/data/*.vert
+	echo !bin/data/*.frag
 } >>.gitignore
 
 st -e nvim src/ofApp.h
