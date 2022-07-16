@@ -1,6 +1,6 @@
-require "plugins"
-pcall(require, "packer_compiled")
-require "settings"()
-require("settings.treesitter").init()
-require "mappings"()
-require "settings.autocmds"
+require "r.plugins"
+pcall(require, "r.packer_compiled")
+require "r.settings"()
+require("r.settings.treesitter").init()
+require "r.mappings"()
+require "r.settings.autocmds"
