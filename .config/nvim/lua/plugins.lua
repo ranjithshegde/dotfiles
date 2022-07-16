@@ -204,6 +204,7 @@ return require("packer").startup {
             is_custom("WORKSPACE", "Repos/nvim-lspconfig", "ranjithshegde/nvim-lspconfig"),
             branch = "0.7",
             requires = {
+                { "jose-elias-alvarez/null-ls.nvim", opt = true },
                 {
                     "m-pilia/vim-ccls",
                     ft = { "c", "cpp", "opencl" },

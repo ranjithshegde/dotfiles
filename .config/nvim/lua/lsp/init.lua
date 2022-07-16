@@ -227,56 +227,64 @@ end
 ------------------------------------------------------------------------
 
 function lsp.lintFormat()
-    local rootDir = function()
-        return vim.fs.dirname(vim.fs.find({ ".git" }, { upward = true })[1]) or vim.loop.cwd()
-    end
-    local rootMarker = { vim.loop.cwd() or { ".git/" } }
+    require("packer").loader "null-ls.nvim"
+    local null_ls = require "null-ls"
+    local sources = {
+        null_ls.builtins.completion.tags,
+        null_ls.builtins.code_actions.shellcheck,
 
-    local black = { formatCommand = "black --fast -", formatStdin = true }
-    local shfmt = { formatCommand = "shfmt -ci -s -bn", formatStdin = true }
-    local yamllint = { lintCommand = "yamllint -f parsable -", lintStdin = true }
-    local clang_format = { formatCommand = "clang-format -", formatStdin = true }
-    local isort = { formatCommand = "isort --stdout --profile black -", formatStdin = true }
-    local stylua = { formatCommand = "stylua --search-parent-directories -", formatStdin = true }
-    local prettier = { formatCommand = "prettier --stdin --stdin-filepath ${INPUT}", formatStdin = true }
-    local shellcheck = {
-        lintCommand = "shellcheck -f gcc -x -",
-        lintStdin = true,
-        lintFormats = { "%f:%l:%c: %trror: %m", "%f:%l:%c: %tarning: %m", "%f:%l:%c: %tote: %m" },
-    }
-    local vint = {
-        lintCommand = "vint -f '{file_path}:{line_number}:{column_number}: {severity}: {description} (see: {reference})' --enable-neovim",
-        lintStdin = false,
-        lintFormats = { "%f:%l:%c: %m" },
-    }
-    local flake8 = {
-        lintCommand = "flake8  --max-line-length 160 --stdin-display-name ${INPUT} -",
-        lintStdin = true,
-        lintIgnoreExitCode = true,
-        lintFormats = { "%f:%l:%c: %m" },
-        lintSource = "flake8",
+        null_ls.builtins.diagnostics.checkmake,
+        null_ls.builtins.diagnostics.flake8,
+        null_ls.builtins.diagnostics.shellcheck,
+        null_ls.builtins.diagnostics.vint,
+
+        null_ls.builtins.formatting.black,
+        null_ls.builtins.formatting.isort,
+        null_ls.builtins.formatting.prettier,
+        null_ls.builtins.formatting.shfmt,
+        null_ls.builtins.formatting.stylua,
+        null_ls.builtins.formatting.clang_format.with {
+            filetypes = { "glsl" },
+        },
     }
 
-    local languages = {
-        vim = { vint },
-        yaml = { yamllint },
-        json = { prettier },
-        html = { prettier },
-        css = { prettier },
-        toml = { prettier },
-        lua = { stylua },
-        glsl = { clang_format },
-        markdown = { prettier },
-        sh = { shellcheck, shfmt },
-        zsh = { shellcheck, shfmt },
-        python = { flake8, isort, black },
+    null_ls.setup { sources = sources }
+
+    local helpers = require "null-ls.helpers"
+    local glslang = {
+        method = null_ls.methods.DIAGNOSTICS,
+        filetypes = { "glsl" },
+        generator = null_ls.generator {
+            command = "glslangValidator",
+            args = { "--stdin", "-S", "$FILEEXT" },
+            to_stdin = true,
+            from_stderr = true,
+            format = "raw",
+            check_exit_code = function(code, stderr)
+                local success = code <= 1
+                if not success then
+                    print(stderr)
+                end
+
+                return success
+            end,
+            on_output = function(params)
+                vim.pretty_print(params.output, "\n")
+                helpers.diagnostics.from_patterns {
+                    {
+                        pattern = [[:(%d+):(%d+) [%w-/]+ (.*)]],
+                        groups = { "row", "col", "message" },
+                    },
+                    {
+                        pattern = [[:(%d+) [%w-/]+ (.*)]],
+                        groups = { "row", "message" },
+                    },
+                }
+            end,
+        },
     }
-    lspconfig.efm.setup {
-        filetypes = vim.tbl_keys(languages),
-        root_dir = rootDir,
-        init_options = { documentFormatting = true, codeAction = true },
-        settings = { rootMarkers = rootMarker, languages = languages },
-    }
+
+    null_ls.register(glslang)
 end
 
 ------------------------------------------------------------------------

@@ -7,6 +7,7 @@ local o = vim.opt
 return function()
     vim.cmd "colo nightfox"
     local tab = 4
+    o.title = true
     o.number = true
     o.expandtab = true
     o.shiftround = true
