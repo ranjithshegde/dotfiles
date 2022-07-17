@@ -1,9 +1,10 @@
-local autoload = {}
+local extensions = {}
+local exec = vim.api.nvim_command
 ------------------------------------------------------------------------
 --                          User commands                             --
 ------------------------------------------------------------------------
 
-function autoload.diagnostics(bufnr)
+function extensions.diagnostics(bufnr)
     require("r.mappings.lsp").diagnostic(bufnr)
     local cmd = vim.api.nvim_buf_create_user_command
     local complete = function()
@@ -41,7 +42,7 @@ end
 
 ---Toggle background transparency for dark colorschemes
 local transparent = false
-function autoload.trans_background()
+function extensions.trans_background()
     local colo = vim.api.nvim_exec("colo", true)
     if colo == "dayfox" or colo == "dawnfox" then
         print "Error: Transparent background does not work with a light colorscheme!"
@@ -60,7 +61,7 @@ end
 --                          Camel case                                --
 ------------------------------------------------------------------------
 
-function autoload.CamelCase()
+function extensions.CamelCase()
     local map = vim.keymap.set
     local umap = vim.keymap.del
     require("r.utils.camel").init()
@@ -86,7 +87,7 @@ end
 --                          Word Processor                            --
 ------------------------------------------------------------------------
 
-function autoload.WordProcessor()
+function extensions.WordProcessor()
     vim.opt_local.wrap = true
     vim.opt_local.linebreak = true
     vim.opt_local.expandtab = true
@@ -97,4 +98,57 @@ function autoload.WordProcessor()
     require("r.mappings.util").wordProcessor()
 end
 
-return autoload
+------------------------------------------------------------------------
+--                              Terminal                              --
+------------------------------------------------------------------------
+
+-- Toggleable terminal
+---@param cmd string launch the shell with
+---@param name string name/ID for the terminal window
+---@param spl number 0 = horizontal split, 1 = vertical split
+function extensions.toggleTerm(cmd, name, spl)
+    local win = vim.fn.bufwinnr(name)
+    local buf = vim.fn.bufexists(name)
+    local split = spl and "belowright vnew" or "belowright new"
+    if win > 0 then
+        exec(win .. " wincmd c")
+    elseif buf > 0 then
+        exec(split)
+        exec("buffer " .. name)
+        exec "startinsert"
+    else
+        exec(split)
+        vim.fn.termopen(cmd)
+        exec "startinsert"
+        exec("f " .. name)
+    end
+end
+
+---Use ranger as file picker
+---@param path string Patht open ranger from
+---@param edit_cmd string Ranger window position - e: open over current buffer - vs: Vertical split - tab drop: in new or existing tab window
+function extensions.ranger(path, edit_cmd)
+    local cpath = "/tmp/chosenfile"
+    local currentPath = vim.fn.expand(path)
+    local rc = { name = "ranger", edit_cmd = edit_cmd }
+    function rc.on_exit(_, code, _)
+        if not code then
+            vim.api.nvim_buf_delete(0, { force = true })
+        end
+        if io.open(cpath, "r") then
+            for f in io.lines(cpath) do
+                vim.fn.execute(edit_cmd .. f)
+            end
+            os.remove(cpath)
+        end
+    end
+
+    vim.cmd "enew"
+    if vim.fn.isdirectory(currentPath) then
+        vim.fn.termopen("ranger --choosefiles=" .. cpath .. ' "' .. currentPath .. '"', rc)
+    else
+        vim.fn.termopen("ranger --choosefiles=" .. cpath .. ' --selectfile="' .. currentPath .. '"', rc)
+    end
+    vim.cmd "startinsert"
+end
+return extensions

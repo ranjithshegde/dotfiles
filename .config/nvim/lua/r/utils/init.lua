@@ -1,4 +1,3 @@
-local exec = vim.api.nvim_command
 local auexec = vim.api.nvim_exec_autocmds
 local utils = {}
 
@@ -14,67 +13,13 @@ function utils.restart()
 end
 
 ------------------------------------------------------------------------
---                              Terminal                              --
+--                          Plugin functions                          --
 ------------------------------------------------------------------------
 
 -- set silent exec option
 function utils.silent_shell(args)
     vim.api.nvim_cmd({ cmd = "!", args = args, mods = { silent = true } }, {})
 end
-
--- Toggleable terminal
----@param cmd string launch the shell with
----@param name string name/ID for the terminal window
----@param spl number 0 = horizontal split, 1 = vertical split
-function utils.toggleTerm(cmd, name, spl)
-    local win = vim.fn.bufwinnr(name)
-    local buf = vim.fn.bufexists(name)
-    local split = spl and "belowright vnew" or "belowright new"
-    if win > 0 then
-        exec(win .. " wincmd c")
-    elseif buf > 0 then
-        exec(split)
-        exec("buffer " .. name)
-        exec "startinsert"
-    else
-        exec(split)
-        vim.fn.termopen(cmd)
-        exec "startinsert"
-        exec("f " .. name)
-    end
-end
-
----Use ranger as file picker
----@param path string Patht open ranger from
----@param edit_cmd string Ranger window position - e: open over current buffer - vs: Vertical split - tab drop: in new or existing tab window
-function utils.ranger(path, edit_cmd)
-    local cpath = "/tmp/chosenfile"
-    local currentPath = vim.fn.expand(path)
-    local rc = { name = "ranger", edit_cmd = edit_cmd }
-    function rc.on_exit(_, code, _)
-        if not code then
-            vim.api.nvim_buf_delete(0, { force = true })
-        end
-        if io.open(cpath, "r") then
-            for f in io.lines(cpath) do
-                vim.fn.execute(edit_cmd .. f)
-            end
-            os.remove(cpath)
-        end
-    end
-
-    vim.cmd "enew"
-    if vim.fn.isdirectory(currentPath) then
-        vim.fn.termopen("ranger --choosefiles=" .. cpath .. ' "' .. currentPath .. '"', rc)
-    else
-        vim.fn.termopen("ranger --choosefiles=" .. cpath .. ' --selectfile="' .. currentPath .. '"', rc)
-    end
-    vim.cmd "startinsert"
-end
-
-------------------------------------------------------------------------
---                          Plugin functions                          --
-------------------------------------------------------------------------
 
 function utils.open_in_browser(url)
     local handle
@@ -123,21 +68,6 @@ end
 ---@param magic table whether the command contains magic expansion chars (%) or seperators (|)
 function utils.ex_cmd(cmd, args, mods, magic)
     vim.api.nvim_cmd({ cmd = cmd, args = args and args, mods = mods and mods, magic = magic and magic }, {})
-end
-
-function utils.get_visual_selection(bufnr)
-    vim.api.nvim_input "<Esc>gv"
-    local first = vim.api.nvim_buf_get_mark(bufnr, "<")
-    local last = vim.api.nvim_buf_get_mark(bufnr, ">")
-    local lines = vim.api.nvim_buf_get_lines(bufnr, first[1] - 1, last[1], true)
-
-    return {
-        lines = lines,
-        line_start = first[1],
-        line_end = last[1],
-        col_start = first[2],
-        col_end = last[2],
-    }
 end
 
 ---Get a table for filename, icon and hl_group

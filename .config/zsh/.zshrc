@@ -35,7 +35,6 @@ alias yarn='yarn --use-yarnrc "$XDG_CONFIG_HOME"/yarn/config'
 alias wget '--hsts-file="$XDG_CACHE_HOME"/wget-hsts'
 alias config='/usr/bin/git --git-dir=/home/ranjith/Software/Workspaces/Repos/dotfiles --work-tree=/home/ranjith'
 alias cvim='GIT_DIR=/home/ranjith/Software/Workspaces/Repos/dotfiles GIT_WORK_TREE=$HOME vim'
-alias bs='browser-sync start --server --files "*.js, *.html, *.css"'
 alias paclist="expac --timefmt='%Y-%m-%d %T' '%l\t%n' | sort | tail -n 100"
 alias ydl='youtube-dl --external-downloader aria2c --external-downloader-args "-c -j 3 -x 3 -s 3 -k 1M"'
 

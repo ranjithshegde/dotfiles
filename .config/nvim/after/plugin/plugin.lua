@@ -18,16 +18,16 @@ cmd("Agenda", function()
     require("orgmode").action "agenda.prompt"
 end, { desc = "Open Orgmode agenda" })
 
-cmd("Gram", function()
-    require("r.utils.autoload").WordProcessor()
+cmd("Word", function()
+    require("r.utils.extensions").WordProcessor()
 end, { desc = "Turn on WordProcessor mode" })
 
-cmd("Cam", function()
-    require("r.utils.autoload").CamelCase()
+cmd("Camel", function()
+    require("r.utils.extensions").CamelCase()
 end, { desc = "Turn word and motion operators into camelcase" })
 
 cmd("ToggleTransparency", function()
-    require("r.utils.autoload").trans_background()
+    require("r.utils.extensions").trans_background()
 end, { desc = "Toggle background transpparency for dark scheme" })
 
 cmd("Su", "w !sudo tee %", {})
@@ -54,8 +54,6 @@ load_plugin_on_key("n", "<leader>r", "Ranger file picker", require("r.mappings.u
 load_plugin_on_key("n", "<leader>w", "OrgWiki", require("r.mappings.util").orgWiki)
 
 load_plugin_on_key("n", "ys", "add surround", require("packer").loader, "nvim-surround")
-
--- load_plugin_on_key("n", "yss", "add line surround", require("packer").loader, "nvim-surround")
 
 load_plugin_on_key("v", "S", "change surround", require("packer").loader, "nvim-surround")
 

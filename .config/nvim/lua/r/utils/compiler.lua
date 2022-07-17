@@ -289,7 +289,7 @@ end
 -- print serial monitor
 function Compiler.monitor()
     local cmd = "pio device monitor"
-    require("r.utils").toggleTerm(cmd, "pio")
+    require("r.utils.extensions").toggleTerm(cmd, "pio")
 end
 
 -- Clean directory

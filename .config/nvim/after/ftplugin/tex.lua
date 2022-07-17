@@ -7,4 +7,4 @@ map("n", "<F6>", "<cmd>TexlabForward<CR>", { buffer = true, desc = "Launch zathu
 vim.opt.makeprg = "latexmk"
 vim.b.gps = 75
 vim.opt_local.tw = 150
-require("r.utils.autoload").WordProcessor()
+require("r.utils.extensions").WordProcessor()

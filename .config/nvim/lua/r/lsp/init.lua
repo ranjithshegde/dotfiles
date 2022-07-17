@@ -101,7 +101,7 @@ function lsp.attach(client, bufnr)
     end
 
     require("r.utils.diagnostics").attach({ all = false, underline = false, update_in_insert = false }, client)
-    require("r.utils.autoload").diagnostics(bufnr)
+    require("r.utils.extensions").diagnostics(bufnr)
 
     if sc.documentHighlightProvider then
         aucmd("CursorHold", {

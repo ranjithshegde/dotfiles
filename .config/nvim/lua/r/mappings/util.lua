@@ -12,7 +12,7 @@ local function ranger(path, cmd, spl)
         if spl then
             vim.cmd(spl)
         end
-        require("r.utils").ranger(path, cmd)
+        require("r.utils.extensions").ranger(path, cmd)
     end
 end
 

@@ -68,7 +68,7 @@ local function config_files()
                     d = { open "lua/r/utils/diagnostics/init.lua", "Diagnostic extensions" },
                     l = { open "lua/r/utils/ls.lua", "Langauge Server extensions" },
                     q = { open "lua/r/utils/qf.lua", "Quickfix and Loclist" },
-                    a = { open "lua/r/utils/autoload.lua", "Autoload functions" },
+                    f = { open "lua/r/utils/extensions.lua", "Function extensions" },
                     s = { open "lua/r/utils/scratchpad.lua", "ScratchPad" },
                     t = { open "lua/r/utils/tables.lua", "Filter tables" },
                     m = { open "lua/r/utils/camel.lua", "CamelCaseMotion" },
@@ -154,7 +154,7 @@ return function()
     -- Terminals
     map({ "n", "t" }, "<F9>", function()
         vim.cmd "stopinsert"
-        require("r.utils").toggleTerm("zsh", "shell", 1)
+        require("r.utils.extensions").toggleTerm("zsh", "shell", 1)
     end, {
         desc = "Toggle current/default terminal",
     })

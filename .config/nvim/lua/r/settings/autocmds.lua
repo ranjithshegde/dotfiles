@@ -169,7 +169,7 @@ aucmd("FileType", {
 
         vim.keymap.set({ "n", "t" }, "<F10>", function()
             vim.cmd "stopinsert"
-            require("r.utils").toggleTerm(vim.g.repl, "repl")
+            require("r.utils.extensions").toggleTerm(vim.g.repl, "repl")
         end, { desc = "Toggle REPL" })
     end,
     desc = "set compiler and toggleable REPL for capable filetypes",
