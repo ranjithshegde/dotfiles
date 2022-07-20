@@ -2,7 +2,6 @@
 local aucmd = vim.api.nvim_create_autocmd
 local augroup = vim.api.nvim_create_augroup
 local auexec = vim.api.nvim_exec_autocmds
-local exec = vim.api.nvim_command
 local opts = { clear = true }
 
 ------------------------------------------------------------------------
@@ -163,12 +162,13 @@ aucmd("FileType", {
     nested = true,
     callback = function()
         vim.keymap.set("n", "<F5>", function()
-            vim.cmd "w | redraw"
-            vim.cmd "Dispatch"
+            vim.cmd.w()
+            vim.cmd.redraw()
+            vim.cmd.Dispatch()
         end, { buffer = true, desc = "Call native compile Dispatch command" })
 
         vim.keymap.set({ "n", "t" }, "<F10>", function()
-            vim.cmd "stopinsert"
+            vim.cmd.stopinsert()
             require("r.utils.extensions").toggleTerm(vim.g.repl, "repl")
         end, { desc = "Toggle REPL" })
     end,
@@ -184,7 +184,7 @@ aucmd("BufWritePost", {
     group = "PluginLoad",
     pattern = "plugins.lua",
     callback = function()
-        exec "source <afile>"
+        vim.cmd "source <afile>"
         require("packer").compile()
     end,
     desc = "Autocompile packer",
@@ -261,7 +261,7 @@ aucmd("WinEnter", {
     group = "ProjectDrawer",
     callback = function()
         if vim.fn.winnr "$" == 1 and vim.bo.filetype == "netrw" then
-            vim.cmd "q"
+            vim.cmd.q()
         end
     end,
     desc = "Autoclose NetRW if its the last buffer",
@@ -272,8 +272,8 @@ aucmd("FileType", {
     callback = function()
         vim.opt_local.fillchars:append "vert:║"
         vim.keymap.set("n", "cd", function()
-            exec("cd " .. vim.b.netrw_curdir)
-            exec "pwd"
+            vim.cmd.cd(vim.b.netrw_curdir)
+            vim.cmd.pwd()
         end, { buffer = true, desc = "CD directory under cursor" })
     end,
 })

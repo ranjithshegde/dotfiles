@@ -9,6 +9,16 @@ local ts = {}
 function ts.init()
     local ft_to_parser = parsers.filetype_to_parsername
     ft_to_parser.opencl = "c"
+
+    local parser_config = require("nvim-treesitter.parsers").get_parser_configs()
+    parser_config.org = {
+        install_info = {
+            url = "https://github.com/milisims/tree-sitter-org",
+            revision = "f78edf1ab65c854ef25356c2a96222e87d15c5c5",
+            files = { "src/parser.c", "src/scanner.cc" },
+        },
+        filetype = "org",
+    }
     require("nvim-treesitter.configs").setup {
         ensure_installed = require("r.utils.tables").ts_parsers,
         auto_install = true,

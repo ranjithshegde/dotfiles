@@ -154,7 +154,7 @@ return function()
 
     -- Terminals
     map({ "n", "t" }, "<F9>", function()
-        vim.cmd "stopinsert"
+        vim.cmd.stopinsert()
         require("r.utils.extensions").toggleTerm("zsh", "shell", 1)
     end, {
         desc = "Toggle current/default terminal",

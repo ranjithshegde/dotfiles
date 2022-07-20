@@ -108,7 +108,7 @@ end
 local function exec_sync(cmd, file)
     vim.fn.jobstart(cmd, {
         on_exit = function()
-            vim.cmd("e " .. file)
+            vim.cmd.edit(file)
         end,
     })
 end
@@ -212,7 +212,7 @@ function projects.micro()
             require("r.utils").silent_shell { "clang-format", "--style=webkit", "-dump-config", ">", ".clang_format" }
 
             vim.defer_fn(function()
-                vim.cmd "e src/main.cpp"
+                vim.cmd.edit "src/main.cpp"
             end, 1000)
         end)
     end)
@@ -314,7 +314,7 @@ function projects.webdev()
             { vim.fs.normalize "~/.config/stylelintrc.js", ".stylelintrc.js" }
         )
 
-        vim.cmd "e index.html"
+        vim.cmd.edit "index.html"
     end)
 end
 

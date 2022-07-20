@@ -24,8 +24,8 @@ end
 -- open quickfix if not empty
 local function open_qf()
     if not vim.tbl_isempty(vim.fn.getqflist()) then
-        vim.cmd "copen"
-        vim.cmd "wincmd J"
+        vim.cmd.copen()
+        vim.cmd.wincmd "J"
     else
         vim.notify "qflist is empty."
     end
@@ -34,7 +34,7 @@ end
 -- loclist on current window where not empty
 local function open_loclist()
     if not vim.tbl_isempty(vim.fn.getloclist(0)) then
-        vim.cmd "lopen"
+        vim.cmd.lopen()
     else
         vim.notify "loclist is empty."
     end

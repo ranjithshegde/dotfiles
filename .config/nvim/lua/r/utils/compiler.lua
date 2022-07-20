@@ -1,6 +1,5 @@
 ---@diagnostic disable: missing-parameter
 local Compiler = {}
-local exec = vim.api.nvim_command
 
 local function isFile(file)
     return vim.loop.fs_stat(file) ~= nil
@@ -8,12 +7,12 @@ end
 
 -- set default make to Dispatch Make
 local function make(args)
-    vim.api.nvim_cmd({ cmd = "Make", args = args }, {})
+    vim.cmd.Make { args = args }
 end
 
 -- set default terminal to Dispatch
 local function terminal(args)
-    vim.api.nvim_cmd({ cmd = "Dispatch", args = args }, {})
+    vim.cmd.Dispatch { args = args }
 end
 
 ------------------------------------------------------------------------
@@ -84,7 +83,7 @@ end
 
 -- open Makefile
 function Compiler.makefile(file)
-    exec("tabnew " .. file)
+    vim.cmd.tabnew(file)
 end
 
 -- Launch debuger
@@ -121,8 +120,8 @@ end
 
 function Compiler.renderOffload(dispatch, cmd, toSave)
     if toSave then
-        vim.cmd "redraw"
-        vim.cmd "w"
+        vim.cmd.redraw()
+        vim.cmd.write()
     end
     vim.ui.select(
         { "Integrated graphics", "Dedicated (Nvidia) Graphics" },

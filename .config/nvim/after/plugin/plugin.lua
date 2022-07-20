@@ -42,9 +42,7 @@ cmd("Su", "w !sudo tee %", {})
 
 -- ******************* Plugin mappings --------------------------------------------
 
-vim.keymap.set("n", "<leader>e", function()
-    vim.cmd "Lex"
-end, { desc = "Toggle Netrw" })
+vim.keymap.set("n", "<leader>e", vim.cmd.Lex, { desc = "Toggle Netrw" })
 
 local function load_plugin_on_key(mode, key, desc, callback, args)
     vim.keymap.set(mode, key, function()
@@ -57,9 +55,13 @@ end
 
 load_plugin_on_key("n", "<Space>", "Telescope", require, "r.mappings.telescope")
 
-load_plugin_on_key("n", "<leader>r", "Ranger file picker", require("r.mappings.util").ranger)
+load_plugin_on_key("n", "<leader>r", "Ranger file picker", function()
+    require("r.mappings.util").ranger()
+end)
 
-load_plugin_on_key("n", "<leader>w", "OrgWiki", require("r.mappings.util").orgWiki)
+load_plugin_on_key("n", "<leader>w", "OrgWiki", function()
+    require("r.mappings.util").orgWiki()
+end)
 
 load_plugin_on_key("n", "ys", "add surround", require("packer").loader, "nvim-surround")
 

@@ -1,8 +1,10 @@
 local map = vim.keymap.set
-map("n", "<F3>", "<cmd>TexWordCount<CR>", { buffer = true, desc = "Word count" })
-map("n", "<F4>", "<cmd>Make -C<CR>", { buffer = true, desc = "Clean tex files" })
-map("n", "<F5>", "<cmd>TexlabBuild<CR>", { buffer = true, desc = "Compile tex document" })
-map("n", "<F6>", "<cmd>TexlabForward<CR>", { buffer = true, desc = "Launch zathura" })
+map("n", "<F3>", vim.cmd.TexWordCount, { buffer = true, desc = "Word count" })
+map("n", "<F4>", function()
+    vim.cmd.Make "-C"
+end, { buffer = true, desc = "Clean tex files" })
+map("n", "<F5>", vim.cmd.TexlabBuild, { buffer = true, desc = "Compile tex document" })
+map("n", "<F6>", vim.cmd.TexlabForward, { buffer = true, desc = "Launch zathura" })
 
 vim.opt.makeprg = "latexmk"
 vim.b.gps = 75

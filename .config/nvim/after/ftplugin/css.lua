@@ -3,9 +3,9 @@ local open_cmd = vim.loop.fs_stat(vim.fn.glob "css/*.css") and vim.fn.glob "css/
 
 vim.keymap.set("n", "<leader>s", function()
     if vim.fn.expand "%:e" == "html" then
-        vim.cmd("e " .. open_cmd)
+        vim.cmd.edit(open_cmd)
     else
-        vim.cmd("e " .. "index.html")
+        vim.cmd.edit "index.html"
     end
 end, { buffer = 0, silent = true, desc = "Open alternate shader file" })
 

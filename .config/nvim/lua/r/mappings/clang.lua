@@ -8,17 +8,18 @@ local map = vim.keymap.set
 
 function cmaps.micro()
     map({ "n", "t" }, "<F8>", function()
-        vim.cmd "stopinsert"
+        vim.cmd.stopinsert()
         require("r.utils.compiler").monitor()
     end, { desc = "Serial monitor toggle" })
     map("n", "<F2>", require("r.utils.compiler").pio_clean, { buffer = true, desc = "Regenerate tags" })
     map("n", "<F3>", require("r.utils.compiler").pio_check, { buffer = true, desc = "Verify code" })
     map("n", "<F5>", function()
-        vim.cmd "w | Make"
+        vim.cmd.w()
+        vim.cmd.Make()
     end, { buffer = true, desc = "Build" })
     map("n", "<F6>", function()
-        vim.cmd "w"
-        vim.cmd "Make --target upload"
+        vim.cmd.w()
+        vim.cmd.Make "--target upload"
     end, { buffer = true, desc = "Upload" })
     map("n", ",ka", function()
         require("r.utils.compiler").ardRef(vim.fn.expand "<cword>")
@@ -39,7 +40,8 @@ function cmaps.makeC()
     map("n", "<F2>", require("r.utils.compiler").emmake, { buffer = true, desc = "Compile Emscripten" })
     map("n", "<F3>", require("r.utils.compiler").emrun, { buffer = true, desc = "Run Emscripten" })
     map("n", "<F4>", function()
-        vim.cmd "w | Make Debug -j12"
+        vim.cmd.w()
+        vim.cmd.Make "Debug -j12"
     end, { buffer = true, desc = "Compile Debug" })
     map("n", "<F5>", function()
         require("r.utils.compiler").renderOffload({ "make", "RunRelease" }, "-j12", true)
@@ -56,17 +58,18 @@ end
 -- ******************************** C files ----------------------------
 function cmaps.ctests()
     map("n", "<F3>", function()
-        vim.cmd "w"
+        vim.cmd.w()
         require("r.utils").ex_cmd("Dispatch", { "gcc", "%", "-lm", "-o", "%<" }, { silent = true }, { file = true })
     end, { buffer = true, desc = "Use gcc" })
 
     map("n", "<F4>", function()
-        vim.cmd "w | redraw"
+        vim.cmd.w()
+        vim.cmd.redraw()
         require("r.utils.compiler").with_flags()
     end, { buffer = true, desc = "Make with defined flags" })
 
     map("n", "<F5>", function()
-        vim.cmd "w"
+        vim.cmd.w()
         require("r.utils").ex_cmd("Make", { "-g", "%", "-o", "%<", "&&", "./%<" }, { silent = true }, { file = true })
     end, { buffer = true, desc = "Make & launch" })
 
@@ -78,10 +81,12 @@ end
 -- ******************************** Pd externals ------------------------
 function cmaps.pdc()
     map("n", "<F5>", function()
-        vim.cmd "w | Make"
+        vim.cmd.w()
+        vim.cmd.Make()
     end, { buffer = true, desc = "Build Pd external" })
     map("n", "<F6>", function()
-        vim.cmd "w | redraw"
+        vim.cmd.w()
+        vim.cmd.redraw()
         require("r.utils.compiler").pdBuild()
     end, { buffer = true, desc = "Copy external to PD directory" })
 end
@@ -91,14 +96,14 @@ end
 function cmaps.clang()
     wk.register({
         [";"] = {
-            b = { "<cmd>CclsBase<CR>", "Base function" },
-            c = { "<cmd>CclsCallers<CR>", "Callers" },
-            C = { "<cmd>CclsCallees<CR>", "Callees" },
-            d = { "<cmd>CclsDerived<CR>", "Derived functions" },
+            b = { vim.cmd.CclsBase, "Base function" },
+            c = { vim.cmd.CclsCallers, "Callers" },
+            C = { vim.cmd.CclsCallees, "Callees" },
+            d = { vim.cmd.CclsDerived, "Derived functions" },
             m = { "<cmd>CclsMemberHierarchy -float<CR>", "Member variables" },
             f = { "<cmd>CclsMemberFunctionHierarchy -float<CR>", "Member functions" },
             t = { "<cmd>CclsMemberTypeHierarchy -float<CR>", "Member classes" },
-            v = { "<cmd>CclsVars<CR>", "Variables in function" },
+            v = { vim.cmd.CclsVars, "Variables in function" },
             h = {
                 name = "heirarchy",
                 b = { "<cmd>CclsBaseHierarchy -float<CR>", "Base function" },
@@ -138,7 +143,7 @@ function cmaps.clang()
             },
         },
         ["<leader>"] = {
-            s = { "<cmd>ClangdSwitchSourceHeader<cr>", "Switch to Header/Source" },
+            s = { vim.cmd.ClangdSwitchSourceHeader, "Switch to Header/Source" },
             m = {
                 function()
                     require("r.utils.compiler").makefile(vim.g.makeFile)
@@ -162,15 +167,17 @@ end
 function cmaps.cmake()
     map("n", "<F2>", require("r.utils.compiler").cmake_clean, { buffer = true, desc = "Clean cmake" })
     map("n", "<F3>", function()
-        vim.cmd "w | redraw"
+        vim.cmd.w()
+        vim.cmd.redraw()
         require("r.utils.compiler").cmake_gen "Debug"
     end, { buffer = true, desc = "Generate Cmake Debug" })
     map("n", "<F4>", function()
-        vim.cmd "w | redraw"
+        vim.cmd.w()
+        vim.cmd.redraw()
         require("r.utils.compiler").cmake_gen "Release"
     end, { buffer = true, desc = "Generate Cmake Release" })
     map("n", "<F5>", function()
-        vim.cmd "w"
+        vim.cmd.w()
         require("r.utils").ex_cmd("Make", { "-j12", "-C", "build" }, { silent = true })
     end, { buffer = true, desc = "Make" })
     map("n", "<F6>", function()

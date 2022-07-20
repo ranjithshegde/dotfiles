@@ -9,6 +9,4 @@ vim.keymap.set("n", "<F6>", function()
     vim.cmd { cmd = "Dispatch", args = { "flutter", "run" } }
 end, { desc = "Run Flutter", buffer = true })
 
-vim.keymap.set("n", "<F4>", function()
-    vim.cmd "Dispatch"
-end, { desc = "Run single file Dart", buffer = true })
+vim.keymap.set("n", "<F4>", vim.cmd.Dispatch, { desc = "Run single file Dart", buffer = true })

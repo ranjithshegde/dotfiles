@@ -54,7 +54,7 @@ function extensions.trans_background()
             transparent = transparent,
         },
     }
-    vim.cmd("colo " .. colo)
+    vim.cmd.colorscheme(colo)
 end
 
 ------------------------------------------------------------------------
@@ -114,13 +114,13 @@ function extensions.toggleTerm(cmd, name, spl)
         exec(win .. " wincmd c")
     elseif buf > 0 then
         exec(split)
-        exec("buffer " .. name)
-        exec "startinsert"
+        vim.cmd.buffer(name)
+        vim.cmd.startinsert()
     else
         exec(split)
         vim.fn.termopen(cmd)
-        exec "startinsert"
-        exec("f " .. name)
+        vim.cmd.startinsert()
+        vim.cmd.f(name)
     end
 end
 
@@ -143,12 +143,12 @@ function extensions.ranger(path, edit_cmd)
         end
     end
 
-    vim.cmd "enew"
+    vim.cmd.enew()
     if vim.fn.isdirectory(currentPath) then
         vim.fn.termopen("ranger --choosefiles=" .. cpath .. ' "' .. currentPath .. '"', rc)
     else
         vim.fn.termopen("ranger --choosefiles=" .. cpath .. ' --selectfile="' .. currentPath .. '"', rc)
     end
-    vim.cmd "startinsert"
+    vim.cmd.startinsert()
 end
 return extensions

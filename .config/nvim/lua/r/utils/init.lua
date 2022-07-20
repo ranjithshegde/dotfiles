@@ -7,7 +7,7 @@ local utils = {}
 ---Restart Vim without having to close and run again
 function utils.restart()
     require("plenary.reload").reload_module "r"
-    vim.cmd "source $MYVIMRC"
+    vim.cmd.source "$MYVIMRC"
     vim.api.nvim_exec_autocmds("VimEnter", {})
 end
 
