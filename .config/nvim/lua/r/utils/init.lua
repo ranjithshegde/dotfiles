@@ -1,4 +1,3 @@
-local auexec = vim.api.nvim_exec_autocmds
 local utils = {}
 
 ------------------------------------------------------------------------
@@ -9,14 +8,15 @@ local utils = {}
 function utils.restart()
     require("plenary.reload").reload_module "r"
     vim.cmd "source $MYVIMRC"
-    auexec("VimEnter", {})
+    vim.api.nvim_exec_autocmds("VimEnter", {})
 end
 
 ------------------------------------------------------------------------
 --                          Plugin functions                          --
 ------------------------------------------------------------------------
 
--- set silent exec option
+---Programatically build a shell command to execute
+---@param args table table of shell command and args, separated by word
 function utils.silent_shell(args)
     vim.api.nvim_cmd({ cmd = "!", args = args, mods = { silent = true } }, {})
 end

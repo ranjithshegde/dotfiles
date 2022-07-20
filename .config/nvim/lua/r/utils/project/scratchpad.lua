@@ -33,7 +33,7 @@ end
 local function openScratch(type)
     local dir = vim.env.WORKSPACE .. type .. "/Scratch"
     if not vim.loop.fs_stat(dir).type == "directory" then
-        vim.cmd { cmd = "!", args = { "mkdir", "-p", dir }, mods = { silent = true } }
+        require("r.utils").silent_shell { "mkdir", "-p", dir }
     end
     vim.cmd("lcd " .. dir)
 

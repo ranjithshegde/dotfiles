@@ -151,9 +151,10 @@ end
 local diagnostics = require("el.diagnostic").make_buffer(require("r.utils.diagnostics.format").formatter)
 
 local tsNodes = require("r.utils.tables").tsNodes
+
 local function gps(_, buffer)
     local fs = vim.bo[buffer.bufnr].filetype
-    local context = require("settings.treesitter").statusline {
+    local context = require("r.settings.treesitter").statusline {
         indicator_size = vim.b.gps or 35,
         type_patterns = tsNodes.filetype[fs] or tsNodes.default,
         bufnr = buffer.bufnr,

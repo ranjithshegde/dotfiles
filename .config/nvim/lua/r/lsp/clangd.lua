@@ -68,6 +68,9 @@ function servers.ccls()
             ["textDocument/signatureHelp"] = nilfunc,
         },
         root_dir = lspconfig.util.root_pattern("compile_commands.json", "compile_flags.txt", ".git"),
+        init_options = { cache = {
+            directory = vim.fs.normalize "~/.cache/ccls/",
+        } },
     }
     require("lspconfig").ccls.setup(ccls)
 end

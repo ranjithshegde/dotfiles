@@ -52,3 +52,6 @@ https://embeddedartistry.com/blog/2017/05/17/creating-a-circular-buffer-in-c-and
 https://unix.stackexchange.com/questions/317687/command-not-found-when-sudoing-function-from-zshrc zsh - "command not found" when sudo'ing function from ~/.zshrc - Unix & Linux Stack Exchange
 https://www.facebook.com/messages/t/1317706047 (7) Messenger | Facebook
 https://github.com/Valodim/vim-zsh-completion/blob/master/plugin/zsh_completion.vim vim-zsh-completion/zsh_completion.vim at master · Valodim/vim-zsh-completion
+https://www.reddit.com/r/neovim/comments/vwiqy2/is_it_possible_to_wait_for_vimuiselect_to_return/ Is it possible to wait for vim.ui.select to return rather than using a callback? : neovim
+https://www.esoui.com/forums/showthread.php?t=2213 Wait for a function to end before continue - ESOUI
+https://stackoverflow.com/questions/44429394/x11-forwarding-of-a-gui-app-running-in-docker authentication - X11 forwarding of a GUI app running in docker - Stack Overflow

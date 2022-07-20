@@ -189,7 +189,6 @@ aucmd("BufWritePost", {
     end,
     desc = "Autocompile packer",
 })
-
 -- ************** Load mappings  ---------------------------------------
 aucmd("BufReadPost", {
     group = "PluginLoad",

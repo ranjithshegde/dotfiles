@@ -254,6 +254,7 @@ function lsp.lintFormat()
         null_ls.builtins.diagnostics.shellcheck,
         null_ls.builtins.diagnostics.vint,
         null_ls.builtins.diagnostics.zsh,
+        null_ls.builtins.diagnostics.stylelint,
 
         null_ls.builtins.formatting.black,
         null_ls.builtins.formatting.isort,

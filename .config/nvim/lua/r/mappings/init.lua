@@ -69,7 +69,8 @@ local function config_files()
                     l = { open "lua/r/utils/ls.lua", "Langauge Server extensions" },
                     q = { open "lua/r/utils/qf.lua", "Quickfix and Loclist" },
                     f = { open "lua/r/utils/extensions.lua", "Function extensions" },
-                    s = { open "lua/r/utils/scratchpad.lua", "ScratchPad" },
+                    s = { open "lua/r/utils/project/scratchpad.lua", "ScratchPad" },
+                    p = { open "lua/r/utils/project/init.lua", "Initiate project" },
                     t = { open "lua/r/utils/tables.lua", "Filter tables" },
                     m = { open "lua/r/utils/camel.lua", "CamelCaseMotion" },
                 },
@@ -139,7 +140,7 @@ return function()
     end, { desc = "Toggle loclist" })
     -- ScratchPad
     map("n", "<leader>S", function()
-        require "r.utils.scratchpad"(_, "tab")
+        require "r.utils.project.scratchpad"(_, "tab")
     end, { desc = "Open ScratchPad" })
     -- Misc
     map("n", "gx", function()
