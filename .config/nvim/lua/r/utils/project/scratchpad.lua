@@ -31,7 +31,7 @@ end
 
 local function openScratch(type)
     local dir = vim.env.WORKSPACE .. type .. "/Scratch"
-    if not vim.loop.fs_stat(dir).type == "directory" then
+    if vim.loop.fs_stat(dir).type ~= "directory" then
         require("r.utils").silent_shell { "mkdir", "-p", dir }
     end
     vim.cmd.lcd(dir)
@@ -54,7 +54,7 @@ local function openScratch(type)
     end)
 end
 
-return function(type, split)
+return function(split, type)
     if not type then
         type = vim.bo.filetype
     end

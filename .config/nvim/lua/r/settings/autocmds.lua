@@ -257,25 +257,22 @@ aucmd("TermClose", {
 ------------------------------------------------------------------------
 augroup("ProjectDrawer", opts)
 -- ************************ Handle netrw -------------------------------
-aucmd("WinEnter", {
+aucmd("BufEnter", {
     group = "ProjectDrawer",
-    callback = function()
-        if vim.fn.winnr "$" == 1 and vim.bo.filetype == "netrw" then
-            vim.cmd.q()
+    callback = function(args)
+        local fs = vim.loop.fs_stat(args.file)
+        if not fs then
+            return
+        end
+        if fs.type == "directory" then
+            if package.loaded.telescope and package.loaded.telescope.extensions.file_browser then
+                return
+            end
+            vim.cmd.bd()
+            require("r.utils.extensions").ranger(args.file, "e ")
         end
     end,
-    desc = "Autoclose NetRW if its the last buffer",
-})
-aucmd("FileType", {
-    pattern = "netrw",
-    group = "ProjectDrawer",
-    callback = function()
-        vim.opt_local.fillchars:append "vert:║"
-        vim.keymap.set("n", "cd", function()
-            vim.cmd.cd(vim.b.netrw_curdir)
-            vim.cmd.pwd()
-        end, { buffer = true, desc = "CD directory under cursor" })
-    end,
+    desc = "Hijack netrw with ranger or telescope",
 })
 
 augroup("NoVim", opts)

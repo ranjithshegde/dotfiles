@@ -61,10 +61,6 @@ return function()
     o.sessionoptions:append "terminal,tabpages"
     o.foldexpr = "nvim_treesitter#foldexpr()"
 
-    vim.g.netrw_altv = 1
-    vim.g.netrw_winsize = 15
-    vim.g.netrw_liststyle = 3
-    vim.g.netrw_browse_split = 4
     vim.g.loaded_ruby_provider = 0
     vim.g.loaded_perl_provider = 0
     vim.g.markdown_folding = 1

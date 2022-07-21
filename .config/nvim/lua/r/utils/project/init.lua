@@ -116,7 +116,7 @@ end
 local projects = {}
 
 function projects.create(type)
-    if type then
+    if type and type ~= "" then
         projects[type]()
         return
     end

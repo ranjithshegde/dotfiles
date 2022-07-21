@@ -13,31 +13,31 @@ function extensions.diagnostics(bufnr)
 
     cmd(bufnr, "ToggleVirtual", function(opts)
         require("r.utils.diagnostics").toggle_virtual_text(opts.args)
-    end, { nargs = 1, complete = complete, desc = "Toggle diagnostic virtual text for a client" })
+    end, { nargs = "*", complete = complete, desc = "Toggle diagnostic virtual text for a client" })
 
     cmd(bufnr, "ToggleSigns", function(opts)
         require("r.utils.diagnostics").toggle_signs(opts.args)
-    end, { nargs = 1, complete = complete, desc = "Toggle diagnostic signs for a client" })
+    end, { nargs = "*", complete = complete, desc = "Toggle diagnostic signs for a client" })
 
     cmd(bufnr, "ToggleUnderline", function(opts)
         require("r.utils.diagnostics").toggle_underline(opts.args)
-    end, { nargs = 1, complete = complete, desc = "Toggle diagnostic underlines for a client" })
+    end, { nargs = "*", complete = complete, desc = "Toggle diagnostic underlines for a client" })
 
     cmd(bufnr, "ToggleAllDiagnostics", function(opts)
         require("r.utils.diagnostics").toggle_all_diagnostics(opts.args)
-    end, { nargs = 1, complete = complete, desc = "Toggle all diagnostic options for a client" })
+    end, { nargs = "*", complete = complete, desc = "Toggle all diagnostic options for a client" })
 
     cmd(bufnr, "DisableDiagnostics", function(opts)
         require("r.utils.diagnostics").turn_off_diagnostics(opts.args)
-    end, { nargs = 1, complete = complete, desc = "Disable all diagnostic options for a client" })
+    end, { nargs = "*", complete = complete, desc = "Disable all diagnostic options for a client" })
 
     cmd(bufnr, "EnableDiagnostics", function(opts)
         require("r.utils.diagnostics").turn_on_diagnostics(opts.args)
-    end, { nargs = 1, complete = complete, desc = "Enable all diagnostic options for a client" })
+    end, { nargs = "*", complete = complete, desc = "Enable all diagnostic options for a client" })
 
     cmd(bufnr, "DefaultDiagnostics", function(opts)
         require("r.utils.diagnostics").turn_on_diagnostics_default(opts.args)
-    end, { nargs = 1, complete = complete, desc = "Enable default diagnostic options for a client" })
+    end, { nargs = "*", complete = complete, desc = "Enable default diagnostic options for a client" })
 end
 
 ---Toggle background transparency for dark colorschemes

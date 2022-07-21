@@ -140,7 +140,7 @@ return function()
     end, { desc = "Toggle loclist" })
     -- ScratchPad
     map("n", "<leader>S", function()
-        require "r.utils.project.scratchpad"(_, "tab")
+        require "r.utils.project.scratchpad" "tab"
     end, { desc = "Open ScratchPad" })
     -- Misc
     map("n", "gx", function()

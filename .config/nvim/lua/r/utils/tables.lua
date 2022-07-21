@@ -264,6 +264,8 @@ tables.disabled_builtins = {
     "getscriptPlugin",
     "2html_plugin",
     "spellfile_plugin",
+    "netrw",
+    "netrwPlugin",
     "netrwFileHandlers",
 }
 

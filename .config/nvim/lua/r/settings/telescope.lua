@@ -156,6 +156,7 @@ function telescope.telescope()
                     { "~/Software/Workspaces/websites/", max_depth = 3 },
                 },
             },
+            file_browser = { hijack_netrw = true },
         },
     }
     require("telescope").load_extension "fzf"

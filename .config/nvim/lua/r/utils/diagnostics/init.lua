@@ -86,10 +86,8 @@ local function configure(settings, client)
     if not client then
         for id, _ in pairs(current_diagnostics) do
             local conf = currentSettings(settings, id)
-            vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
-                vim.lsp.diagnostic.on_publish_diagnostics,
-                conf
-            )
+            vim.lsp.handlers["textDocument/publishDiagnostics"] =
+                vim.lsp.with(vim.lsp.diagnostic.on_publish_diagnostics, conf)
             local client_id = returnID(id)
             local buffers = lsp.get_buffers_by_client_id(client_id)
             for _, buffer_id in ipairs(buffers) do
@@ -98,10 +96,8 @@ local function configure(settings, client)
         end
     else
         local conf = currentSettings(settings, client)
-        vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
-            vim.lsp.diagnostic.on_publish_diagnostics,
-            conf
-        )
+        vim.lsp.handlers["textDocument/publishDiagnostics"] =
+            vim.lsp.with(vim.lsp.diagnostic.on_publish_diagnostics, conf)
         local client_id = returnID(client)
         local buffers = lsp.get_buffers_by_client_id(client_id)
         for _, buffer_id in ipairs(buffers) do
@@ -299,7 +295,7 @@ function Diagnostics.toggle_diagnostic(name, client)
 end
 
 function Diagnostics.toggle_underline(client)
-    if client then
+    if client and client ~= "" then
         Diagnostics.toggle_diagnostic("underline", client)
     else
         Diagnostics.toggle_diagnostic "underline"
@@ -307,7 +303,7 @@ function Diagnostics.toggle_underline(client)
 end
 
 function Diagnostics.toggle_signs(client)
-    if client then
+    if client and client ~= "" then
         Diagnostics.toggle_diagnostic("signs", client)
     else
         Diagnostics.toggle_diagnostic "signs"
@@ -315,7 +311,7 @@ function Diagnostics.toggle_signs(client)
 end
 
 function Diagnostics.toggle_virtual_text(client)
-    if client then
+    if client and client ~= "" then
         Diagnostics.toggle_diagnostic("virtual_text", client)
     else
         Diagnostics.toggle_diagnostic "virtual_text"
@@ -323,7 +319,7 @@ function Diagnostics.toggle_virtual_text(client)
 end
 
 function Diagnostics.toggle_update_in_insert(client)
-    if client then
+    if client and client ~= "" then
         Diagnostics.toggle_diagnostic("update_in_insert", client)
     else
         Diagnostics.toggle_diagnostic "update_in_insert"

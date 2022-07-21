@@ -2,20 +2,12 @@
 local cmd = vim.api.nvim_create_user_command
 
 cmd("Scratch", function(opts)
-    if opts.args ~= "" then
-        require "r.utils.project.scratchpad"(_, string.gsub(opts.args, [["]], ""))
-    else
-        require "r.utils.project.scratchpad"()
-    end
-end, { desc = "Open scratchpad for a filetype" })
+    require "r.utils.project.scratchpad"(opts.args)
+end, { nargs = "*", desc = "Open scratchpad for a filetype" })
 
 cmd("Project", function(opts)
-    if opts.args ~= "" then
-        require("r.utils.project").create(string.gsub(opts.args, [["]], ""))
-    else
-        require("r.utils.project").create()
-    end
-end, { desc = "Create a project" })
+    require("r.utils.project").create(opts.args)
+end, { nargs = "*", desc = "Create a project" })
 
 cmd("WordCount", function()
     require("r.utils.ls").TexWordCount()
@@ -41,8 +33,6 @@ end, { desc = "Toggle background transpparency for dark scheme" })
 cmd("Su", "w !sudo tee %", {})
 
 -- ******************* Plugin mappings --------------------------------------------
-
-vim.keymap.set("n", "<leader>e", vim.cmd.Lex, { desc = "Toggle Netrw" })
 
 local function load_plugin_on_key(mode, key, desc, callback, args)
     vim.keymap.set(mode, key, function()
