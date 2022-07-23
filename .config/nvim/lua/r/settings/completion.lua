@@ -115,14 +115,27 @@ function completion.pairs()
     npairs.setup { check_ts = true }
 
     local Rule = require "nvim-autopairs.rule"
-    local ts_conds = require "nvim-autopairs.ts-conds"
     npairs.add_rules {
         Rule("|", "|", "supercollider"),
-        Rule("{", "},", "lua"):with_pair(ts_conds.is_ts_node "table_constructor"),
-        Rule('"', '",', "lua"):with_pair(ts_conds.is_ts_node "table_constructor"),
+        Rule("$", "$", "tex"),
+        Rule("`", "'", "tex"),
     }
 
-    require("cmp").event:on("confirm_done", require("nvim-autopairs.completion.cmp").on_confirm_done())
+    require("cmp").event:on(
+        "confirm_done",
+        require("nvim-autopairs.completion.cmp").on_confirm_done {
+            filetypes = {
+                tex = {
+                    ["{"] = {
+                        kind = {
+                            require("cmp").lsp.CompletionItemKind.Function,
+                        },
+                        handler = require("nvim-autopairs.completion.handlers")["*"],
+                    },
+                },
+            },
+        }
+    )
 end
 
 function completion.luasnip()

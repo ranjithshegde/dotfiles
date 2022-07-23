@@ -18,6 +18,16 @@ local function filterfmt(client)
     return not vim.tbl_contains(nofmt, client.name)
 end
 
+local nofmttex = {
+    "sumneko_lua",
+    "jsonls",
+    "texlab",
+}
+
+local function filterfmtex(client)
+    return not vim.tbl_contains(nofmttex, client.name)
+end
+
 ---**************************** LSP AuGroups and Handlers
 function lsp.settings()
     augroup("SetDiagnosticFuncs", opts)
@@ -119,12 +129,13 @@ function lsp.attach(client, bufnr)
     end
 
     if sc.documentFormattingProvider or sc.rangeFormattingProvider then
-        vim.bo[bufnr].formatexpr = filterfmt(client) and [[v:lua.vim.lsp.formatexpr()]] or ""
+        vim.bo[bufnr].formatexpr = filterfmtex(client) and [[v:lua.vim.lsp.formatexpr()]] or ""
+
         aucmd("BufWrite", {
             group = "LspAutoFormat",
             buffer = bufnr,
             callback = function()
-                vim.lsp.buf.format { filter = filterfmt }
+                vim.lsp.buf.format { filter = filterfmtex }
             end,
             desc = "let LSP format the buffer on save",
         })
@@ -205,7 +216,7 @@ function lsp.servers()
             },
         },
         texlab = {
-            cmd = { "texlab", "--log-file", "./texlab-log", "-vvvv" },
+            cmd = { "texlab", "--log-file", "./aux/texlab-log", "-vvvv" },
             capabilities = lsp.capabilities(),
             settings = {
                 texlab = {
@@ -217,13 +228,17 @@ function lsp.servers()
                             "-synctex=1",
                             "-interaction=nonstopmode",
                             "-shell-escape",
+                            "-outdir=aux",
                             "%f",
                         },
                         executable = "latexmk",
                         forwardSearchAfter = true,
                     },
+                    bibtexFormatter = "latexindent",
                     lint = { onSave = true, onChange = true },
                     chktex = { onOpenAndSave = true },
+                    auxDirectory = "aux",
+                    latexindent = { modifyLineBreaks = true },
                     forwardSearch = {
                         args = { "--synctex-forward", "%l:1:%f", "%p" },
                         executable = "zathura",

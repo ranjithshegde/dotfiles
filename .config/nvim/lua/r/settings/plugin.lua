@@ -54,6 +54,25 @@ function plugins.org()
     }
 end
 
+--ZenMode
+function plugins.zenmode()
+    require("packer").loader "twilight.nvim"
+    require("twilight").setup {}
+    require("zen-mode").setup {
+        plugins = { kitty = { enabled = true } },
+        window = {
+            options = {
+                number = false,
+                relativenumber = false,
+                cursorline = false,
+                cursorcolumn = false,
+                foldcolumn = "0",
+                signcolumn = "no",
+            },
+        },
+    }
+end
+
 ---SuperCollider
 function plugins.scnvim()
     local scnvim = require "scnvim"

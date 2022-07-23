@@ -1,7 +1,7 @@
 local foldMaps = function(_, _)
     require("telescope.actions.set").select:enhance {
         post = function()
-            vim.cmd ":normal! zx"
+            vim.cmd.normal { args = { "zx" }, bang = true }
         end,
     }
     return true

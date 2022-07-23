@@ -48,7 +48,10 @@ aucmd("FileType", {
 aucmd({ "InsertEnter", "WinLeave", "FocusLost", "BufNewFile" }, {
     group = "FormatOptions",
     callback = function()
-        if vim.tbl_contains(require("r.utils.tables").ignoreFiles, vim.bo.filetype) then
+        if
+            vim.tbl_contains(require("r.utils.tables").ignoreFiles, vim.bo.filetype)
+            or vim.fn.win_gettype() == "popup"
+        then
             return
         end
         vim.opt.relativenumber = false
@@ -61,6 +64,7 @@ aucmd({ "InsertLeave", "WinEnter", "FocusGained" }, {
         if
             vim.tbl_contains(require("r.utils.tables").ignoreFiles, vim.bo.filetype)
             or vim.api.nvim_win_get_height(vim.api.nvim_get_current_win()) <= 15
+            or vim.fn.win_gettype() == "popup"
         then
             return
         end
@@ -76,6 +80,7 @@ aucmd({ "FocusGained", "WinEnter", "BufEnter" }, {
         if
             vim.tbl_contains(require("r.utils.tables").ignoreFiles, vim.bo.filetype)
             or vim.api.nvim_win_get_height(vim.api.nvim_get_current_win()) <= 15
+            or vim.fn.win_gettype() == "popup"
         then
             return
         end
@@ -87,7 +92,10 @@ aucmd({ "FocusGained", "WinEnter", "BufEnter" }, {
 aucmd({ "FocusLost", "WinLeave" }, {
     group = "FormatOptions",
     callback = function()
-        if vim.tbl_contains(require("r.utils.tables").ignoreFiles, vim.bo.filetype) then
+        if
+            vim.tbl_contains(require("r.utils.tables").ignoreFiles, vim.bo.filetype)
+            or vim.fn.win_gettype() == "popup"
+        then
             return
         end
         vim.opt_local.cursorline = false

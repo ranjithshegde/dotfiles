@@ -27,9 +27,6 @@ return require("packer").startup {
 
         use "EdenEast/nightfox.nvim"
 
-        -- Taglist and sidebars
-        use { "simrat39/symbols-outline.nvim", module = "symbols-outline" }
-
         -- Tim pope
         use {
             { "tpope/vim-dispatch", cmd = { "Make", "Dispatch", "Start" } },
@@ -148,6 +145,16 @@ return require("packer").startup {
             requires = "rcarriga/nvim-dap-ui",
         }
 
+        -- ZenMode
+        use {
+            "folke/zen-mode.nvim",
+            requires = { { "folke/twilight.nvim", opt = true } },
+            cmd = "ZenMode",
+            config = function()
+                require("r.settings.plugin").zenmode()
+            end,
+        }
+
         -- TreeSitter
         use {
             "nvim-treesitter/nvim-treesitter",
@@ -205,6 +212,7 @@ return require("packer").startup {
             branch = "0.7",
             requires = {
                 { "jose-elias-alvarez/null-ls.nvim", opt = true },
+                { "simrat39/symbols-outline.nvim", module = "symbols-outline" },
                 {
                     "m-pilia/vim-ccls",
                     ft = { "c", "cpp", "opencl" },
