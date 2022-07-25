@@ -319,14 +319,16 @@ function Debugger.setup()
 
     notify()
 
-    Debugger.au_id = vim.api.nvim_create_augroup("dap-repl", { clear = true })
+    local dap_repl = vim.api.nvim_create_augroup("dap-repl", { clear = true })
     vim.api.nvim_create_autocmd("FileType", {
-        group = Debugger.au_id,
+        group = dap_repl,
         pattern = "dap-repl",
         callback = function()
             require("dap.ext.autocompl").attach()
         end,
     })
+
+    require("r.utils").register_au_id(dap_repl)
 end
 
 function Debugger.fscopes()

@@ -98,7 +98,7 @@ function plugins.scnvim()
         completion = { signature = { config = { border = "rounded" } } },
     }
     vim.api.nvim_create_autocmd("FileType", {
-        group = "LspSettings",
+        group = vim.g.au_id.LspSettngs,
         pattern = "supercollider",
         callback = function(args)
             vim.keymap.set(

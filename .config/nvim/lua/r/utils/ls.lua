@@ -183,8 +183,15 @@ end
 
 ---Return word count for the tex document
 function ls.TexWordCount()
-    local count = vim.api.nvim_exec([[silent !texcount -inc -sum -1 %]], true)
-    print(count)
+    local Job = require "plenary.job"
+    Job:new({
+        command = "texcount",
+        args = { "-inc", "-sum", "-1", vim.fn.expand "%" },
+        on_exit = function(j, return_val)
+            vim.pretty_print(return_val)
+            vim.pretty_print(j:result())
+        end,
+    }):sync()
 end
 
 ------------------------------------------------------------------------

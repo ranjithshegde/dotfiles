@@ -11,6 +11,18 @@ function utils.restart()
     vim.api.nvim_exec_autocmds("VimEnter", {})
 end
 
+function utils.register_au_id(id)
+    if not type(id) == "table" then
+        id = { id }
+    end
+    if not vim.g.au_id then
+        vim.g.au_id = id
+    else
+        local temp = vim.g.au_id
+        vim.g.au_id = vim.tbl_extend("keep", temp, id)
+    end
+end
+
 ------------------------------------------------------------------------
 --                          Plugin functions                          --
 ------------------------------------------------------------------------

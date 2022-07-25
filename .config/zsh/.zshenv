@@ -77,9 +77,9 @@ PERL5LIB="$XDG_DATA_HOME/perl/lib/perl5${PERL5LIB+:}${PERL5LIB}"
 export PERL5LIB
 PERL_LOCAL_LIB_ROOT="$XDG_DATA_HOME/perl${PERL_LOCAL_LIB_ROOT+:}${PERL_LOCAL_LIB_ROOT}"
 export PERL_LOCAL_LIB_ROOT
-PERL_MB_OPT='--install_base /home/ranjith/.local/share/perl'
+PERL_MB_OPT='--install_base ~/.local/share/perl'
 export PERL_MB_OPT
-PERL_MM_OPT='INSTALL_BASE=/home/ranjith/.local/share/perl'
+PERL_MM_OPT='INSTALL_BASE=~/.local/share/perl'
 export PERL_MM_OPT
 
 # GLOBALS
@@ -98,7 +98,7 @@ export QT_STYLE_OVERRIDE=kvantum
 # CUSTOM PATH ENVS
 export CWORK="$HOME"/Software/Workspaces/cpp
 export WORKSPACE="$HOME"/Software/Workspaces/
-export PG_OF_PATH="$WORKSPACE"openFrameworks
+export PG_OF_PATH="$HOME"/Software/sources/Gits/openFrameworks
 
 # Addition to path...
 appendpath() {
@@ -111,14 +111,14 @@ appendpath() {
 	esac
 }
 
-appendpath '/home/ranjith/.local/bin'
-appendpath '/home/ranjith/.local/bin/scripts'
-appendpath '/home/ranjith/.local/share/cargo/bin'
-appendpath '/home/ranjith/.local/share/npm/bin'
-appendpath '/home/ranjith/.local/share/go/bin'
-appendpath '/home/ranjith/.local/share/gem/bin'
-appendpath '/home/ranjith/.local/share/gem/ruby/3.0.0/bin'
-appendpath '/home/ranjith/.local/share/perl/bin/'
+appendpath ${HOME}/.local/bin
+appendpath ${HOME}/.local/bin/scripts
+appendpath ${XDG_DATA_HOME}/cargo/bin
+appendpath ${XDG_DATA_HOME}/npm/bin
+appendpath ${XDG_DATA_HOME}/go/bin
+appendpath ${XDG_DATA_HOME}/gem/bin
+appendpath ${XDG_DATA_HOME}/gem/ruby/3.0.0/bin
+appendpath ${XDG_DATA_HOME}/perl/bin
 
 unset -f appendpath
 export PATH

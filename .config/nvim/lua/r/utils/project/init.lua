@@ -178,7 +178,7 @@ local function select_addons(addon, list)
 end
 
 function projects.oF()
-    require("r.utils").ex_cmd("cd", { vim.env.PG_OF_PATH .. "/apps" })
+    require("r.utils").ex_cmd("cd", { vim.env.WORKSPACE .. "/openFrameworks" })
     vim.ui.input({ prompt = "Enter filename or directory : ", completion = "file" }, function(input)
         require("r.utils").silent_shell { "mkdir", "-p", input }
         require("r.utils").ex_cmd("cd", { input })

@@ -14,12 +14,7 @@ function g.fugitive()
     require("which-key").register {
         ["<leader>g"] = {
             name = "git functions",
-            L = {
-                function()
-                    require("r.utils").ex_cmd("Gclog", {}, { silent = true })
-                end,
-                "commit CLog",
-            },
+            L = { vim.cmd.Gclog, "commit CLog" },
             g = { git_command(), "Git window" },
             c = { git_command { "commit" }, "commit changes" },
             C = { git_command { "commit %" }, "commit current buffer" },
@@ -56,7 +51,7 @@ function g.signs(bufnr, gs)
                 end
                 vim.schedule(function()
                     gs.next_hunk()
-                    vim.wait(10, gs.preview_hunk)
+                    vim.wait(50, gs.preview_hunk)
                 end)
                 return "<Ignore>"
             end,
@@ -70,7 +65,7 @@ function g.signs(bufnr, gs)
                 end
                 vim.schedule(function()
                     gs.prev_hunk()
-                    vim.wait(10, gs.preview_hunk)
+                    vim.wait(50, gs.preview_hunk)
                 end)
                 return "<Ignore>"
             end,

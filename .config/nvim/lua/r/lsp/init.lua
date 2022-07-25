@@ -30,13 +30,15 @@ end
 
 ---**************************** LSP AuGroups and Handlers
 function lsp.settings()
-    augroup("SetDiagnosticFuncs", opts)
-    augroup("LspHighlightSymbols", opts)
-    augroup("LspAutoFormat", opts)
-    augroup("LspCodeLens", opts)
+    local id = {}
+    id.SetDiagnosticFuncs = augroup("SetDiagnosticFuncs", opts)
+    id.LspHighlightSymbols = augroup("LspHighlightSymbols", opts)
+    id.LspAutoFormat = augroup("LspAutoFormat", opts)
+    id.LspCodeLens = augroup("LspCodeLens", opts)
+    require("r.utils").register_au_id(id)
 
     aucmd({ "DiagnosticChanged" }, {
-        group = "SetDiagnosticFuncs",
+        group = id.SetDiagnosticFuncs,
         callback = function()
             vim.diagnostic.setloclist { open = false }
         end,
@@ -101,7 +103,7 @@ function lsp.attach(client, bufnr)
         sc.codeActionProvider = false
         aucmd("BufWritePost", {
             buffer = bufnr,
-            group = "LspCodeLens",
+            group = vim.g.au_id.LspCodeLens,
             callback = vim.lsp.codelens.refresh,
             desc = "Refresh codelens on save",
         })
@@ -115,13 +117,13 @@ function lsp.attach(client, bufnr)
 
     if sc.documentHighlightProvider then
         aucmd("CursorHold", {
-            group = "LspHighlightSymbols",
+            group = vim.g.au_id.LspHighlightSymbols,
             buffer = bufnr,
             callback = vim.lsp.buf.document_highlight,
             desc = "highlight Lsp cword on CursorHold",
         })
         aucmd("CursorMoved, CursorMovedI", {
-            group = "LspHighlightSymbols",
+            group = vim.g.au_id.LspHighlightSymbols,
             buffer = bufnr,
             callback = vim.lsp.buf.clear_references,
             desc = "clear Lsp cword highlights on CursorMove",
@@ -132,7 +134,7 @@ function lsp.attach(client, bufnr)
         vim.bo[bufnr].formatexpr = filterfmtex(client) and [[v:lua.vim.lsp.formatexpr()]] or ""
 
         aucmd("BufWrite", {
-            group = "LspAutoFormat",
+            group = vim.g.au_id.LspAutoFormat,
             buffer = bufnr,
             callback = function()
                 vim.lsp.buf.format { filter = filterfmtex }
@@ -262,7 +264,6 @@ function lsp.lintFormat()
     local null_ls = require "null-ls"
     local sources = {
         null_ls.builtins.code_actions.shellcheck,
-        null_ls.builtins.hover.dictionary,
 
         null_ls.builtins.diagnostics.checkmake,
         null_ls.builtins.diagnostics.flake8,

@@ -1,5 +1,5 @@
 local map = vim.keymap.set
-map("n", "<F3>", vim.cmd.TexWordCount, { buffer = true, desc = "Word count" })
+map("n", "<F3>", vim.cmd.WordCount, { buffer = true, desc = "Word count" })
 map("n", "<F4>", function()
     vim.cmd.Make "-C -outdir=aux"
 end, { buffer = true, desc = "Clean tex files" })
