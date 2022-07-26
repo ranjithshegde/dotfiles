@@ -38,7 +38,8 @@ ignore_failures = ["shell"]
 #max_concurrency = 5
 repos = [
     "/opt/vcpkg",
-    "~/Software/sources/Gits/openFrameworks/",
+    "~/Software/libraries/openFrameworks/",
+    "~/Software/libraries/emsdk/",
 #    "~/src/*/",
 ]
 

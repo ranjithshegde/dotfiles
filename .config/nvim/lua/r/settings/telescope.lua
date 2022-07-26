@@ -148,6 +148,7 @@ function telescope.telescope()
             project = {
                 base_dirs = {
                     { "~/Documents/LaTeX", max_depth = 3 },
+                    { "~/Software/libraries/", max_depth = 2 },
                     { "~/Software/Workspaces/lua", max_depth = 4 },
                     { "~/Software/Workspaces/cpp", max_depth = 4 },
                     { "~/Software/Workspaces/Repos", max_depth = 4 },

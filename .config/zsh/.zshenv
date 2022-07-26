@@ -30,9 +30,9 @@ export LESS_TERMCAP_us=$'\e[1;4;31m'
 export HISTFILE="$XDG_DATA_HOME"/zsh/history
 export CARGO_HOME="$XDG_DATA_HOME"/cargo
 export CUDA_CACHE_PATH="$XDG_CACHE_HOME"/nv
-export EM_CACHE="$XDG_CACHE_HOME"/emscripten/cache
-export EM_CONFIG="$XDG_CONFIG_HOME"/emscripten/config
-export EM_PORTS="$XDG_DATA_HOME"/emscripten/cache
+export EMSDK="$HOME"/Software/libraries/emsdk
+export EM_CONFIG="$EMSDK"/.emscripten
+export EM_NODE="${EMSDK}/node/14.8.2_64bit/bin/node"
 export GDBHISTFILE="$XDG_DATA_HOME"/gdb/history
 export GEM_HOME="$XDG_DATA_HOME"/gem
 export GEM_SPEC_CACHE="$XDG_CACHE_HOME"/gem
@@ -59,8 +59,8 @@ export RUSTUP_HOME="$XDG_DATA_HOME"/rustup
 export SSB_HOME="$XDG_DATA_HOME"/zoom
 export TERMINFO="$XDG_DATA_HOME"/terminfo
 export WGETRC="$XDG_CONFIG_HOME/wgetrc"
-# export WINEPREFIX="$XDG_DATA_HOME"/wineprefixes/default
 export WINEPREFIX=/storage/Games/Wine/default/
+# export WINEPREFIX="$XDG_DATA_HOME"/wineprefixes/default
 # export WINEARCH=win32
 export ZPLUG_BIN="$XDG_DATA_HOME"/bin
 export ZPLUG_HOME="$XDG_DATA_HOME"/zsh/zplug
@@ -77,17 +77,11 @@ PERL5LIB="$XDG_DATA_HOME/perl/lib/perl5${PERL5LIB+:}${PERL5LIB}"
 export PERL5LIB
 PERL_LOCAL_LIB_ROOT="$XDG_DATA_HOME/perl${PERL_LOCAL_LIB_ROOT+:}${PERL_LOCAL_LIB_ROOT}"
 export PERL_LOCAL_LIB_ROOT
-PERL_MB_OPT='--install_base ~/.local/share/perl'
-export PERL_MB_OPT
-PERL_MM_OPT='INSTALL_BASE=~/.local/share/perl'
-export PERL_MM_OPT
+export PERL_MB_OPT='--install_base ~/.local/share/perl'
+export PERL_MM_OPT='INSTALL_BASE=~/.local/share/perl'
 
 # GLOBALS
 export CHROME_EXECUTABLE=/usr/bin/brave
-export EMSDK=/usr/lib/emsdk
-export EM_CONFIG=/usr/lib/emsdk/.emscripten
-export EM_CACHE=/usr/lib/emsdk/upstream/emscripten/cache
-export EMSDK_NODE=/usr/lib/emsdk/node/14.18.2_64bit/bin/node
 export ANDROID_NDK=/opt/android-ndk
 export ANDROID_SDK_ROOT=/opt/android-sdk
 export ANDROID_NDK_HOME=/opt/android-ndk
@@ -98,7 +92,7 @@ export QT_STYLE_OVERRIDE=kvantum
 # CUSTOM PATH ENVS
 export CWORK="$HOME"/Software/Workspaces/cpp
 export WORKSPACE="$HOME"/Software/Workspaces/
-export PG_OF_PATH="$HOME"/Software/sources/Gits/openFrameworks
+export PG_OF_PATH="$HOME"/Software/libraries/openFrameworks
 
 # Addition to path...
 appendpath() {
@@ -119,6 +113,8 @@ appendpath ${XDG_DATA_HOME}/go/bin
 appendpath ${XDG_DATA_HOME}/gem/bin
 appendpath ${XDG_DATA_HOME}/gem/ruby/3.0.0/bin
 appendpath ${XDG_DATA_HOME}/perl/bin
+appendpath ${EMSDK}
+appendpath ${EMSDK}/upstream/emscripten
 
 unset -f appendpath
 export PATH

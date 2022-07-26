@@ -152,6 +152,16 @@ aucmd("FileType", {
     end,
     desc = "OpenCL filetype to handle C++ lsp",
 })
+aucmd("BufEnter", {
+    group = id.LspSettings,
+    pattern = "*.lua",
+    callback = function(args)
+        if string.find(args.file, "config/nvim") then
+            vim.cmd.tcd "~/.config/nvim"
+        end
+    end,
+    desc = "Set working directory to ~/.config/nvim when editing lua configurations",
+})
 
 -- ************** Lsp attach --------------------------------------------
 aucmd("LspAttach", {

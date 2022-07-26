@@ -7,7 +7,7 @@ local map = vim.keymap.set
 
 function lspmap.lsp(bufnr)
     vim.keymap.set("n", "K", function()
-        local winid = require("ufo").peekFoldedLinesUnderCursor()
+        local winid = package.loaded.ufo and require("ufo").peekFoldedLinesUnderCursor()
         if not winid then
             vim.lsp.buf.hover()
         end
