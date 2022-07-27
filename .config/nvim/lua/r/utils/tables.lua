@@ -14,11 +14,11 @@ tables.lspfiles = {
     "cmake",
     "c",
     "cpp",
-    "dockerfile",
+    "glsl",
     "objc",
     "opencl",
     "dart",
-    "glsl",
+    "dockerfile",
     "html",
     "javascript",
     "typescript",
@@ -57,6 +57,7 @@ tables.ignoreFiles = {
     "packer",
     "notify",
     "scnvim",
+    "startup",
     "Outline",
     "lspinfo",
     "NodeTree",
@@ -149,10 +150,6 @@ tables.tsNodeSymbols = {
     ["linkage_specification"] = " ",
 }
 
-------------------------------------------------------------------------
---                              File association settins              --
-------------------------------------------------------------------------
-
 ---TreeSitter nodes selection
 tables.tsNodes = {
     --- Default fallback
@@ -208,10 +205,6 @@ tables.tsNodes = {
         },
     },
 }
-
-------------------------------------------------------------------------
---                              Properties                            --
-------------------------------------------------------------------------
 
 ------------------------------------------------------------------------
 --                              Plugin lists                          --

@@ -33,6 +33,14 @@ return require("packer").startup {
             { "tpope/vim-fugitive", cmd = { "G", "Git", "Gclog" } },
         }
 
+        -- StartPage
+        use {
+            "startup-nvim/startup.nvim",
+            config = function()
+                require("startup").setup(require "r.startup")
+            end,
+        }
+
         -- Comment with TreeSitter
         use {
             "numToStr/Comment.nvim",
@@ -209,7 +217,7 @@ return require("packer").startup {
         --Lsp config and companions
         use {
             is_custom("WORKSPACE", "Repos/nvim-lspconfig", "ranjithshegde/nvim-lspconfig"),
-            branch = "0.7",
+            branch = "0.8",
             requires = {
                 { "jose-elias-alvarez/null-ls.nvim", opt = true },
                 { "simrat39/symbols-outline.nvim", module = "symbols-outline" },

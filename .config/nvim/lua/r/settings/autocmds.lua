@@ -107,16 +107,16 @@ aucmd({ "FocusLost", "WinLeave" }, {
 })
 
 -- ************** Winbar -----------------------------------------------
-aucmd({ "BufEnter", "WinEnter" }, {
-    group = id.FormatOptions,
-    callback = function(args)
-        if args.match == "" or args.file == "" then
-            return
-        end
-        -- require "r.settings.winbar"(vim.api.nvim_get_current_win())
-    end,
-    desc = "Winbar on tabpages with more than one window",
-})
+-- aucmd({ "BufEnter", "WinEnter" }, {
+--     group = id.FormatOptions,
+--     callback = function(args)
+--         if args.match == "" or args.file == "" then
+--             return
+--         end
+--         require "r.settings.winbar"(vim.api.nvim_get_current_win())
+--     end,
+--     desc = "Winbar on tabpages with more than one window",
+-- })
 
 -- ************** Tabline ----------------------------------------------
 aucmd({ "TabEnter", "WinLeave", "WinEnter" }, {
@@ -151,16 +151,6 @@ aucmd("FileType", {
         require("r.mappings.clang").clang()
     end,
     desc = "OpenCL filetype to handle C++ lsp",
-})
-aucmd("BufEnter", {
-    group = id.LspSettings,
-    pattern = "*.lua",
-    callback = function(args)
-        if string.find(args.file, "config/nvim") then
-            vim.cmd.tcd "~/.config/nvim"
-        end
-    end,
-    desc = "Set working directory to ~/.config/nvim when editing lua configurations",
 })
 
 -- ************** Lsp attach --------------------------------------------

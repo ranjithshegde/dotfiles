@@ -1,5 +1,7 @@
 ---@diagnostic disable: missing-parameter
 local uv = vim.loop
+local shell = require("r.utils").silent_shell
+local ex_cmd = require("r.utils").ex_cmd
 
 local boilerplate = {
     webdev = { js = { "{}" } },
@@ -156,8 +158,9 @@ local function create_of(add)
         end
 
         table.insert(args, 1, "projectGenerator")
-        require("r.utils").silent_shell(args)
-        require("r.utils").ex_cmd("cd", { i })
+        shell(args)
+        ex_cmd("cd", { i })
+        shell { "clang-format", "--style=webkit", "-dump-config", ">", ".clang_format" }
         exec_sync("compiledb -n make", "src/ofApp.h")
         exec_async("git", { "init" }, write_file, ".gitignore", boilerplate.cpp.of.gitignore)
     end)
@@ -178,10 +181,10 @@ local function select_addons(addon, list)
 end
 
 function projects.oF()
-    require("r.utils").ex_cmd("cd", { vim.env.WORKSPACE .. "/openFrameworks" })
+    ex_cmd("cd", { vim.env.WORKSPACE .. "/openFrameworks" })
     vim.ui.input({ prompt = "Enter filename or directory : ", completion = "file" }, function(input)
-        require("r.utils").silent_shell { "mkdir", "-p", input }
-        require("r.utils").ex_cmd("cd", { input })
+        shell { "mkdir", "-p", input }
+        ex_cmd("cd", { input })
         vim.ui.select({ "true", "false" }, { prompt = "Using addons?" }, function(choice)
             if choice == "true" then
                 select_addons(get_addons(), "")
@@ -197,19 +200,19 @@ end
 ------------------------------------------------------------------------
 
 function projects.micro()
-    require("r.utils").ex_cmd("cd", { vim.env.WORKSPACE .. "/electronics" })
+    ex_cmd("cd", { vim.env.WORKSPACE .. "/electronics" })
     vim.ui.input({ prompt = "Enter project name", completion = "file" }, function(input)
-        require("r.utils").silent_shell { "mkdir", "-p", input }
-        require("r.utils").ex_cmd("cd", { input })
+        shell { "mkdir", "-p", input }
+        ex_cmd("cd", { input })
 
         vim.ui.input({ prompt = "Enter board name" }, function(board)
-            require("r.utils").silent_shell { "pio", "project", "init", "--board", board }
+            shell { "pio", "project", "init", "--board", board }
 
             exec_async("pio", { "run", "-t", "compiledb" }, write_file, "src/main.cpp", boilerplate.cpp.micro.cpp)
 
             exec_async("git", { "init" }, write_file, ".gitignore", boilerplate.cpp.micro.gitignore)
 
-            require("r.utils").silent_shell { "clang-format", "--style=webkit", "-dump-config", ">", ".clang_format" }
+            shell { "clang-format", "--style=webkit", "-dump-config", ">", ".clang_format" }
 
             vim.defer_fn(function()
                 vim.cmd.edit "src/main.cpp"
@@ -257,14 +260,14 @@ local function create_cmake_list(project_name, libs)
 end
 
 function projects.cmake()
-    require("r.utils").ex_cmd("cd", { vim.env.WORKSPACE .. "/cpp/Projects" })
+    ex_cmd("cd", { vim.env.WORKSPACE .. "/cpp/Projects" })
     vim.ui.input({ prompt = "Enter project name", completion = "file" }, function(input)
-        require("r.utils").silent_shell { "mkdir", "-p", input }
-        require("r.utils").ex_cmd("cd", { input })
+        shell { "mkdir", "-p", input }
+        ex_cmd("cd", { input })
 
-        require("r.utils").silent_shell { "mkdir", "src" }
-        require("r.utils").silent_shell { "mkdir", "include" }
-        require("r.utils").silent_shell { "mkdir", "build" }
+        shell { "mkdir", "src" }
+        shell { "mkdir", "include" }
+        shell { "mkdir", "build" }
 
         write_file("src/main.cpp", boilerplate.cpp.cmake.cpp)
         write_file("autoBuild", boilerplate.cpp.cmake.autoBuild)
@@ -279,8 +282,8 @@ function projects.cmake()
 
             exec_async("git", { "init" }, write_file, ".gitignore", boilerplate.cpp.cmake.gitignore)
 
-            require("r.utils").silent_shell { "clang-format", "--style=webkit", "-dump-config", ">", ".clang_format" }
-            require("r.utils").silent_shell { "chmod", "u+x", "autoBuild" }
+            shell { "clang-format", "--style=webkit", "-dump-config", ">", ".clang_format" }
+            shell { "chmod", "u+x", "autoBuild" }
             exec_sync("autoBuild project", "src/main.cpp")
         end)
     end)
@@ -291,10 +294,10 @@ end
 ------------------------------------------------------------------------
 
 function projects.webdev()
-    require("r.utils").ex_cmd("cd", { vim.env.WORKSPACE .. "/websites/" })
+    ex_cmd("cd", { vim.env.WORKSPACE .. "/websites/" })
     vim.ui.input({ prompt = "Enter project name", completion = "file" }, function(input)
-        require("r.utils").silent_shell { "mkdir", "-p", input }
-        require("r.utils").ex_cmd("cd", { input })
+        shell { "mkdir", "-p", input }
+        ex_cmd("cd", { input })
 
         exec_async(
             "cp",

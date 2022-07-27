@@ -5,7 +5,7 @@ Note: Until comprehensive documentation is in-place, explore the config source c
 ## Features
 
 - Modularized lua configuration
-- On-demand (lazy) load#
+- On-demand (lazy) load:
   - plugins (Packer + internal autocmds)
   - internal modules (keymaps + autocmds)
 - Basic documentation (To be extended later)
@@ -62,78 +62,77 @@ Note: Until comprehensive documentation is in-place, explore the config source c
 
 ### LSP
 
-- nvim-lspconfig - Quick-start configurations for built-in LSP
-- null-ls - Wrapper and quickstart configurations for cmdline linters/formatters
-- vim-ccls - Extends CCLS language server for custom requests
-- clangd_extensions - Same for clangd
-- lua-dev - Integrate nvim lua directories to LSP + EmmyLua annotations
-- symbols-outline - A sidebar with LSP document symbols
+- [nvim-lspconfig](https://github.com/ranjithshegde/nvim-lspconfig/tree/0.7) - Quick-start configurations for built-in LSP
+- [null-ls](https://github.com/jose-elias-alvarez/null-ls.nvim) - Wrapper and quickstart configurations for cmdline linters/formatters
+- [vim-ccls](https://github.com/m-pilia/vim-ccls) - Extends CCLS language server for custom requests
+- [clangd_extensions](https://github.com/p00f/clangd_extensions.nvim) - Same for clangd
+- [lua-dev](https://github.com/folke/lua-dev.nvim) - Integrate nvim lua directories to LSP + EmmyLua annotations
+- [symbols-outline](https://github.com/simrat39/symbols-outline.nvim) - A sidebar with LSP document symbols
 
 ### TreeSitter
 
-- nvim-treesitter - Basic modules and parser collection for tree-sitter
-- nvim-treesitter-textobjects - vim textobjects support for tree-sitter nodes
-- nvim-treesitter-refactor - basic refactor support for tree-sitter nodes
-- nvim-treesitter-playground - Interactively explore ts queries and highlights
-- nvim-ts-rainbow - rainbow colorize parens using tree-sitter hierarchy
-- nvim-treesitter-cpp-tools - Cpp specific refactoring using tree-sitter
+- [nvim-treesitter](https://github.com/nvim-treesitter/nvim-treesitter) - Basic modules and parser collection for tree-sitter
+- [nvim-treesitter-textobjects](https://github.com/nvim-treesitter/nvim-treesitter-textobjects) - vim textobjects support for tree-sitter nodes
+- [nvim-treesitter-refactor](https://github.com/nvim-treesitter/nvim-treesitter-refactor) - basic refactor support for tree-sitter nodes
+- [nvim-treesitter-playground](https://github.com/nvim-treesitter/playground) - Interactively explore ts queries and highlights
+- [nvim-ts-rainbow](https://github.com/p00f/nvim-ts-rainbow) - rainbow colorize parens using tree-sitter hierarchy
+- [nvim-treesitter-cpp-tools](https://github.com/Badhi/nvim-treesitter-cpp-tools) - Cpp specific refactoring using tree-sitter
 
 ### Autocomeletion + Snippets
 
-- nvim-cmp Async Autocomeletion framework
-- LuaSnip - Versatile and extensible snippets engine
-- friendly-snippets - Collection of quickstart snippets for common languages
-- cmp_luasnip - LuaSnip completion source for nvim-cmp
-- cmp-nvim-lsp - LSP completion source for nvim-cmp
-- cmp-buffer - buffer words completion source for nvim-cmp
-- cmp-path - system path completion source for nvim-cmp
-- nvim-autopairs - Extensible bracket and htag completion engine
+- [nvim-cmp](https://github.com/hrsh7th/nvim-cmp) Async Autocomeletion framework
+- [LuaSnip](https://github.com/L3MON4D3/LuaSnip) - Versatile and extensible snippets engine
+- [friendly-snippets](https://github.com/rafamadriz/friendly-snippets) - Collection of quickstart snippets for common languages
+- [cmp_luasnip](https://github.com/saadparwaiz1/cmp_luasnip) - LuaSnip completion source for nvim-cmp
+- [cmp-nvim-lsp](https://github.com/hrsh7th/cmp-nvim-lsp) - LSP completion source for nvim-cmp
+- [cmp-buffer](https://github.com/hrsh7th/cmp-buffer) - buffer words completion source for nvim-cmp
+- [cmp-path](https://github.com/hrsh7th/cmp-path) - system path completion source for nvim-cmp
+- [nvim-autopairs](https://github.com/windwp/nvim-autopairs) - Extensible bracket and htag completion engine
 
 ### Debug adapter protocol
 
-- nvim-dap - Leverage DAP framework and make nvim a DAP client
-- nvim-dap-ui - Extend and customize DAP output windows to interact with
+- [nvim-dap](https://github.com/mfussenegger/nvim-dap) - Leverage DAP framework and make nvim a DAP client
+- [nvim-dap-ui](https://github.com/rcarriga/nvim-dap-ui) - Extend and customize DAP output windows to interact with
 
 ### Filetype extensions
 
-- scnvim - Turn vim into SuperCollider IDE
-- orgmode.nvim - Emacs' orgmode extension for nvim
-
-- orgWiki - Extend journaling and note-taking features of orgmode (vimWiki)
+- [scnvim](https://github.com/davidgranstrom/scnvim) - Turn vim into SuperCollider IDE
+- [orgmode.nvim](https://github.com/nvim-orgmode/orgmode) - Emacs' orgmode extension for nvim
+- [orgWiki](https://github.com/ranjithshegde/orgWiki.nvim/tree/refactor) - Extend journaling and note-taking features of orgmode (vimWiki)
 
 ### Fuzzy search and navigation
 
-- telescope-nvim - Highly extensible fzf framework + picker-sorter collection
-- telescope-fzf-native - fzf C binary for telescope-nvim
-- telescope-project - Git/LSP recognized projects picker for telescope
-- telescope-file-browser - Telescope picker to view and interact with folders
+- [telescope-nvim](https://github.com/nvim-telescope/telescope.nvim) - Highly extensible fzf framework + picker-sorter collection
+- [telescope-fzf-native](https://github.com/nvim-telescope/telescope-fzf-native.nvim) - fzf C binary for telescope-nvim
+- [telescope-project](https://github.com/nvim-telescope/telescope-project.nvim) - Git/LSP recognized projects picker for telescope
+- [telescope-file-browser](https://github.com/nvim-telescope/telescope-file-browser.nvim) - Telescope picker to view and interact with folders
 
 ### Tooling enhancements
 
-- packer.nvim - Programatically extends native package management
-- vim-fugitive - Magical integration with Git tooling
-- gitsigns - Async display of git-gutter and change-highlights
-- vim-dispatch -Async and Programatically extend `#compiler`
-- plenary.nvim - Libuv shorthands + other LuaJIT features
-- which-key - Programtically configure keybindings with incremental descriptions
+- [packer.nvim](https://github.com/wbthomason/packer.nvim) - Programatically extends native package management
+- [vim-fugitive](https://github.com/tpope/vim-fugitive) - Magical integration with Git tooling
+- [gitsigns](https://github.com/lewis6991/gitsigns.nvim) - Async display of git-gutter and change-highlights
+- [vim-dispatch](https://github.com/tpope/vim-dispatch) -Async and Programatically extend `#compiler`
+- [plenary.nvim](https://github.com/nvim-lua/plenary.nvim) - Libuv shorthands + other LuaJIT features
+- [which-key](https://github.com/folke/which-key.nvim) - Programtically configure keybindings with incremental descriptions
 
 ### Editor enhancements
 
-- Comments.nvim - Add/remove/manipulate commentstrings using tree-sitter
-- nvim-surround - Add/remove/manipulate surrounding pairs with tree-sitter
-- express_line.nvim - Adds libuv and subscription model to built-in statusline
-- nvim-colorizer - Attach colors as highlights for RGB/HEX text
+- [Comments.nvim](https://github.com/numToStr/Comment.nvim) - Add/remove/manipulate commentstrings using tree-sitter
+- [nvim-surround](https://github.com/kylechui/nvim-surround) - Add/remove/manipulate surrounding pairs with tree-sitter
+- [express_line.nvim](https://github.com/tjdevries/express_line.nvim/) - Adds libuv and subscription model to built-in statusline
+- [nvim-colorizer](https://github.com/xiyaowong/nvim-colorizer.lua) - Attach colors as highlights for RGB/HEX text
 
 ### UI customization
 
-- nvim-notify - Extend `vim.notify` with configurations and floating UI
-- dressing.nvim - turn `vim.ui.` calls into Popups
+- [nvim-notify](https://github.com/rcarriga/nvim-notify) - Extend `vim.notify` with configurations and floating UI
+- [dressing.nvim](https://github.com/stevearc/dressing.nvim) - turn `vim.ui.` calls into Popups
 
 ### Eye candy
 
-- nightfox.nvim - Highly customizable colorscheme collection
-- nvim-ufo - Turn foldtext into extmarks + Popup fold-preview
-- indent-blankline - Add Extmark indent guides with tree-sitter context
-- twilight.nvim - "Dim" inactive parts of the buffer using tree-sitter context
-- zen-mode - Clean text-only popup for distraction free editing
-- nvim-web-devicons - Fancy icons for filetype and LSP
+- [nightfox.nvim](https://github.com/EdenEast/nightfox.nvim) - Highly customizable colorscheme collection
+- [nvim-ufo](https://github.com/kevinhwang91/nvim-ufo) - Turn foldtext into extmarks + Popup fold-preview
+- [indent-blankline](https://github.com/lukas-reineke/indent-blankline.nvim) - Add Extmark indent guides with tree-sitter context
+- [twilight.nvim](https://github.com/folke/twilight.nvim) - "Dim" inactive parts of the buffer using tree-sitter context
+- [zen-mode](https://github.com/folke/zen-mode.nvim) - Clean text-only popup for distraction free editing
+- [nvim-web-devicons](https://github.com/kyazdani42/nvim-web-devicons) - Fancy icons for filetype and LSP

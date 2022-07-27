@@ -21,6 +21,7 @@ zstyle ':completion:*' menu select
 zmodload zsh/complist
 compinit -d "$XDG_CACHE_HOME/zsh/zcompdump-$ZSH_VERSION"
 _comp_options+=(globdots)
+bashcompinit
 
 # Aliases--------------------------------------------------------------------------------
 
@@ -29,7 +30,8 @@ alias python=python3
 alias grep='grep --color=auto'
 alias weather='curl wttr.in/"rotterdam"'
 alias cat=bat
-alias pd='/usr/bin/pdl'
+alias pd='/usr/local/bin/pdl'
+alias rfetch='rsfetch -PdehHklrNstU@'
 alias nv-settings='nvidia-settings --config="$XDG_CONFIG_HOME"/nvidia/settings'
 alias yarn='yarn --use-yarnrc "$XDG_CONFIG_HOME"/yarn/config'
 alias wget '--hsts-file="$XDG_CACHE_HOME"/wget-hsts'
@@ -42,7 +44,7 @@ alias ydl='youtube-dl --external-downloader aria2c --external-downloader-args "-
 
 # Zplug-------------------------------------------------------------------------------
 
-source $ZPLUG_HOME/init.zsh
+source "${ZPLUG_HOME}/init.zsh"
 
 zplug 'zplug/zplug', hook-build:'zplug --self-manage'
 
@@ -64,26 +66,28 @@ zplug "wfxr/forgit"
 
 zplug "lincheney/fzf-tab-completion"
 
+
 zplug load 
 
 # Custom completion scripts ---------------------------------------------------------------------
-source "$ZPLUG_HOME"/repos/agura-lex/find-the-command/usr/share/doc/find-the-command/ftc.zsh
-source "$ZPLUG_HOME"/repos/zsh-users/zsh-history-substring-search/zsh-history-substring-search.zsh
+source "${ZPLUG_HOME}/repos/agura-lex/find-the-command/usr/share/doc/find-the-command/ftc.zsh"
+source "${ZPLUG_HOME}/repos/zsh-users/zsh-history-substring-search/zsh-history-substring-search.zsh"
+source "${ZPLUG_HOME}/repos/lincheney/fzf-tab-completion/zsh/fzf-zsh-completion.sh"
+
 source /usr/share/fzf/key-bindings.zsh
 source /usr/share/fzf/completion.zsh
+source /opt/vcpkg/scripts/vcpkg_completion.zsh
 
-bashcompinit
 eval "$(register-python-argcomplete pipx)"
 eval "$(pip completion --zsh)"
 eval "$(_PIO_COMPLETE=zsh_source pio)"
-source /opt/vcpkg/scripts/vcpkg_completion.zsh
+eval "$(zoxide init zsh)"
+
 
 # Bindins --------------------------------------------------------------------------------------
 bindkey '^[[A' history-substring-search-up
 bindkey '^[[B' history-substring-search-down
-
-
-source "$ZPLUG_HOME"/repos/lincheney/fzf-tab-completion/zsh/fzf-zsh-completion.sh
-bindkey '^I' fzf_completion
+# bindkey '^I' fzf_completion
+# bindkey '^[[Z' fzf_completion
 
 [[ ! -f $ZDOTDIR/p10k.zsh ]] || source $ZDOTDIR/p10k.zsh

@@ -28,6 +28,7 @@ local function config_files()
             a = {
                 name = "vimrc files",
                 p = { open "lua/r/plugins.lua", "Packer config" },
+                s = { open "lua/r/startup.lua", "StartupFile" },
                 m = {
                     name = "Mappings",
                     m = { open "lua/r/mappings/init.lua", "Common" },

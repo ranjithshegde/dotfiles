@@ -55,9 +55,6 @@ local function openScratch(type)
 end
 
 return function(split, type)
-    if not type then
-        type = vim.bo.filetype
-    end
     local opencmd
     if split then
         if split == "tab" then
@@ -70,7 +67,12 @@ return function(split, type)
         vim.cmd(opencmd)
     end
 
-    if type ~= "" then
+    local ft = vim.bo.filetype
+    if not type and not vim.tbl_contains(require("r.utils.tables").ignoreFiles, ft) then
+        type = ft
+    end
+
+    if type then
         openScratch(type)
     else
         vim.ui.select(

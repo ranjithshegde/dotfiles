@@ -115,6 +115,7 @@ return require("which-key").register {
         f = {
             name = "find files in",
             f = { tele "find_files", "Current directory" },
+            F = { telargs("find_files", { cwd = vim.fn.expand "%:p:h" }), "Home directory" },
             h = { telargs("find_files", { cwd = "~" }), "Home directory" },
             r = { tele "oldfiles", "Vim recent files" },
             R = { telargs("find_files", { cwd = "/usr/share/nvim/runtime/" }), "Vim runtime files" },
