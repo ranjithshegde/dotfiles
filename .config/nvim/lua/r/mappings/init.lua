@@ -28,7 +28,6 @@ local function config_files()
             a = {
                 name = "vimrc files",
                 p = { open "lua/r/plugins.lua", "Packer config" },
-                s = { open "lua/r/startup.lua", "StartupFile" },
                 m = {
                     name = "Mappings",
                     m = { open "lua/r/mappings/init.lua", "Common" },
@@ -42,15 +41,15 @@ local function config_files()
                 },
                 o = {
                     name = "Options",
-                    o = { open "lua/r/settings/init.lua", "vim" },
+                    o = { open "lua/r/settings/init.lua", "vim options" },
                     t = { open "lua/r/settings/telescope.lua", "Telescope" },
                     s = { open "lua/r/settings/treesitter.lua", "Treesitter" },
                     f = { open "lua/r/settings/folds.lua", "Foldtext" },
                     c = { open "lua/r/settings/completion.lua", "Completion" },
                     p = { open "lua/r/settings/plugin.lua", "Settings for plugins" },
                     a = { open "lua/r/settings/autocmds.lua", "Autocmds" },
-                    n = { open "lua/r/settings/notify.lua", "Nvim Notify init settings" },
-                    e = { open "lua/r/settings/statusline.lua", "Express statusline and Tabline" },
+                    n = { open "lua/r/settings/notify.lua", "Nvim Notify settings" },
+                    e = { open "lua/r/settings/statusline.lua", "Express statusline" },
                     l = { open "lua/r/settings/tabline.lua", "Tabline" },
                     w = { open "lua/r/settings/winbar.lua", "Winbar" },
                 },

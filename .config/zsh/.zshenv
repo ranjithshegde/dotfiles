@@ -86,6 +86,8 @@ export ANDROID_NDK_HOME=/opt/android-ndk
 export AWT_TOOLKIT=MToolkit
 export GST_VAAPI_ALL_DRIVERS=1
 export QT_STYLE_OVERRIDE=kvantum
+export DEBUGINFOD_URLS="https://debuginfod.archlinux.org"
+export MANPAGER="nvim +Man!"
 
 # CUSTOM PATH ENVS
 export CWORK="${HOME}/Software/Workspaces/cpp"

@@ -231,7 +231,7 @@ local function create_cmake_list(project_name, libs)
         "\n",
         "project( " .. project_name .. ")\n",
         "\n",
-        libs and "find_package(" .. libs .. " REQUIRED)\n" or "\n",
+        libs and "find_package(" .. libs .. " REQUIRED)\n",
         "\n",
         "file(GLOB_RECURSE SOURCES\n",
         "src/*.cpp\n",
@@ -253,7 +253,7 @@ local function create_cmake_list(project_name, libs)
             ]],
             project_name,
             libs
-        ) or "\n",
+        ),
         "\n",
         "install(TARGETS " .. project_name .. " DESTINATION /usr/local/bin)\n",
     }

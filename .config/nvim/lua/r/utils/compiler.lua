@@ -32,6 +32,7 @@ function Compiler.set_ctype()
         require("r.mappings.clang").makeC()
         vim.g.makeFile = "Makefile"
         vim.opt.makeprg = "make"
+        vim.g.makeBin = "bin/" .. vim.fn.fnamemodify(vim.fn.getcwd(), ":t")
         vim.g.debugBin = "bin/" .. vim.fn.fnamemodify(vim.fn.getcwd(), ":t") .. "_debug"
         vim.g.embin = "bin/" .. vim.fn.fnamemodify(vim.fn.getcwd(), ":t") .. ".html"
         vim.g.cfiles = "src/*"
@@ -90,6 +91,10 @@ end
 function Compiler.termdebug()
     require("r.debugger").init()
     require("dap").continue()
+end
+
+function Compiler.valgrind()
+    terminal { "valgrind", "--leak-check=full", vim.g.debugBin }
 end
 
 function Compiler.ctags(files)

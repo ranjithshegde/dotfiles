@@ -208,7 +208,6 @@ aucmd("BufReadPost", {
     end,
     desc = "Load mappings for unimparied and treesiiter after reading buffer",
 })
-
 -- ************** Load matchit  ----------------------------------------
 aucmd(
     "BufReadPost",

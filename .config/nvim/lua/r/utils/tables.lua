@@ -57,7 +57,6 @@ tables.ignoreFiles = {
     "packer",
     "notify",
     "scnvim",
-    "startup",
     "Outline",
     "lspinfo",
     "NodeTree",

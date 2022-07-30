@@ -39,6 +39,19 @@ function plugins.color()
     }
 end
 
+--ZenMode
+function plugins.zenmode()
+    require("packer").loader "twilight.nvim"
+    require("twilight").setup {}
+    require("true-zen").setup {
+        integrations = {
+            kitty = { enabled = true },
+            twilight = true,
+        },
+        modes = { minimilast = { options = { cmdheight = 0 } } },
+    }
+end
+
 ---OrgMode
 function plugins.org()
     require("orgmode").setup_ts_grammar()
@@ -54,24 +67,25 @@ function plugins.org()
     }
 end
 
---ZenMode
-function plugins.zenmode()
-    require("packer").loader "twilight.nvim"
-    require("twilight").setup {}
-    require("zen-mode").setup {
-        plugins = { kitty = { enabled = true } },
-        window = {
-            options = {
-                number = false,
-                relativenumber = false,
-                cursorline = false,
-                cursorcolumn = false,
-                foldcolumn = "0",
-                signcolumn = "no",
-            },
-        },
-    }
-end
+-- nvim-comment
+plugins.comment = {
+    keys = {
+        { "n", "gc", "Single Comment" },
+        { "n", "gb", "Block Comment" },
+        { "n", "g>", "Partial Comment right" },
+        { "n", "g<", "Partial Comment left" },
+        { "v", "gc", "Single Comment" },
+        { "v", "gb", "Block Comment" },
+        { "v", "g>", "Partial Comment right" },
+        { "v", "g<", "Partial Comment left" },
+    },
+    config = function()
+        require("Comment").setup {
+            mappings = { extended = true },
+            ignore = "^$",
+        }
+    end,
+}
 
 ---SuperCollider
 function plugins.scnvim()

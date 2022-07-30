@@ -120,7 +120,7 @@ function ls.lsp_progress()
     vim.lsp.handlers["$/progress"] = function(_, result, ctx)
         local client_id = ctx.client_id
         local name = vim.lsp.get_client_by_id(client_id).name
-        if name == "null-ls" then
+        if name == "null-ls" or name == "ltex" then
             return
         end
 

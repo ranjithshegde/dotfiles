@@ -130,4 +130,32 @@ function utils.get_file_label(n, tab)
     return result
 end
 
+local vi = false
+function utils.toggle_vi()
+    if vi then
+        vim.o.number = true
+        vim.o.relativenumber = true
+        vim.o.signcolumn = "auto"
+        vim.o.foldcolumn = "auto:1"
+        vim.o.laststatus = 3
+        if vim.b.hasLsp then
+            vim.cmd.DefaultDiagnostics()
+        end
+        vim.cmd.IndentBlanklineToggle()
+
+        vi = false
+    else
+        vim.o.number = false
+        vim.o.relativenumber = false
+        vim.o.signcolumn = "no"
+        vim.o.foldcolumn = "0"
+        vim.o.laststatus = 0
+        if vim.b.hasLsp then
+            vim.cmd.DisableDiagnostics()
+        end
+        vim.cmd.IndentBlanklineToggle()
+        vi = true
+    end
+end
+
 return utils

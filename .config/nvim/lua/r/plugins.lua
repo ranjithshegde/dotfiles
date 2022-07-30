@@ -33,23 +33,6 @@ return require("packer").startup {
             { "tpope/vim-fugitive", cmd = { "G", "Git", "Gclog" } },
         }
 
-        -- StartPage
-        use {
-            "startup-nvim/startup.nvim",
-            config = function()
-                require("startup").setup(require "r.startup")
-            end,
-        }
-
-        -- Comment with TreeSitter
-        use {
-            "numToStr/Comment.nvim",
-            keys = { "gc", "gb", "g>", "g<", { "v", "gc", "g<" }, { "v", "gb", "g>" } },
-            config = function()
-                require("Comment").setup { ignore = "^$", mappings = { extended = true } }
-            end,
-        }
-
         -- surround
         use {
             "kylechui/nvim-surround",
@@ -155,11 +138,22 @@ return require("packer").startup {
 
         -- ZenMode
         use {
-            "folke/zen-mode.nvim",
+            "Pocco81/true-zen.nvim",
             requires = { { "folke/twilight.nvim", opt = true } },
-            cmd = "ZenMode",
+            cmd = "TZAtaraxis",
             config = function()
                 require("r.settings.plugin").zenmode()
+            end,
+        }
+
+        -- Tasks
+        use {
+            "stevearc/overseer.nvim",
+            branch = "stevearc-quickfix",
+            opt = true,
+            config = function()
+                require("overseer").setup()
+                require "r.settings.build"()
             end,
         }
 
@@ -190,6 +184,15 @@ return require("packer").startup {
             { "nvim-telescope/telescope-fzf-native.nvim", opt = true, run = "make" },
             { "nvim-telescope/telescope-project.nvim", after = "telescope.nvim" },
             { "nvim-telescope/telescope-file-browser.nvim", module_pattern = ".*.extensions.file_browser.*" },
+        }
+
+        -- Comment with TreeSitter
+        use {
+            "numToStr/Comment.nvim",
+            keys = require("r.settings.plugin").comment.keys,
+            config = function()
+                require("r.settings.plugin").comment.config()
+            end,
         }
 
         -- Orgmode

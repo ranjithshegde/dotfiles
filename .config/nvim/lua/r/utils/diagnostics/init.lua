@@ -28,6 +28,7 @@ local float_conf = {
         source = "always",
     },
     float = {
+        show_header = true,
         source = "always",
         border = "double",
         format = fmt,
@@ -155,17 +156,7 @@ function Diagnostics.attach(user_settings, client)
 end
 
 function Diagnostics.turn_off_diagnostics(client)
-    if not client then
-        for id, _ in pairs(current_diagnostics) do
-            configure {
-                underline = false,
-                virtual_text = false,
-                signs = false,
-                update_in_insert = false,
-            }
-            current_diagnostics[id].settings.all = false
-        end
-    else
+    if client and client ~= "" then
         local name = util.get_active_client_by_name(0, client)
         if name then
             configure({
@@ -178,21 +169,22 @@ function Diagnostics.turn_off_diagnostics(client)
         else
             print(string.format("The language server %s is not active on this buffer", client))
         end
+    else
+        for id, _ in pairs(current_diagnostics) do
+            configure {
+                underline = false,
+                virtual_text = false,
+                signs = false,
+                update_in_insert = false,
+            }
+            current_diagnostics[id].settings.all = false
+        end
     end
 end
 
 function Diagnostics.turn_on_diagnostics_default(client)
     local settings = {}
-    if not client then
-        for id, _ in pairs(current_diagnostics) do
-            for _, setting in ipairs(TABLE) do
-                settings[setting] = current_diagnostics[id].settings[setting].default
-            end
-            configure(settings)
-            current_diagnostics[id].settings.all = true
-        end
-        vim.api.nvim_echo({ { "diagnostics for all attached servers are at default" } }, false, {})
-    else
+    if client and client ~= "" then
         local name = util.get_active_client_by_name(0, client)
         if name then
             for _, setting in ipairs(TABLE) do
@@ -204,21 +196,20 @@ function Diagnostics.turn_on_diagnostics_default(client)
         else
             print(string.format("The language server %s is not active on this buffer", client))
         end
+    else
+        for id, _ in pairs(current_diagnostics) do
+            for _, setting in ipairs(TABLE) do
+                settings[setting] = current_diagnostics[id].settings[setting].default
+            end
+            configure(settings)
+            current_diagnostics[id].settings.all = true
+        end
+        vim.api.nvim_echo({ { "diagnostics for all attached servers are at default" } }, false, {})
     end
 end
 
 function Diagnostics.turn_on_diagnostics(client)
-    if not client then
-        for id, _ in pairs(current_diagnostics) do
-            configure {
-                underline = true,
-                virtual_text = true,
-                signs = true,
-                update_in_insert = true,
-            }
-            current_diagnostics[id].settings.all = true
-        end
-    else
+    if client and client ~= "" then
         local name = util.get_active_client_by_name(0, client)
         if name then
             configure({
@@ -231,20 +222,21 @@ function Diagnostics.turn_on_diagnostics(client)
         else
             print(string.format("The language server %s is not active on this buffer", client))
         end
+    else
+        for id, _ in pairs(current_diagnostics) do
+            configure {
+                underline = true,
+                virtual_text = true,
+                signs = true,
+                update_in_insert = true,
+            }
+            current_diagnostics[id].settings.all = true
+        end
     end
 end
 
 function Diagnostics.toggle_all_diagnostics(client)
-    if not client then
-        for id, _ in pairs(current_diagnostics) do
-            if current_diagnostics[id].settings.all then
-                Diagnostics.turn_off_diagnostics()
-            else
-                Diagnostics.turn_on_diagnostics()
-            end
-            displayStatus("all diagnostics for attached servers are", current_diagnostics[id].settings.all)
-        end
-    else
+    if client and client ~= "" then
         local name = util.get_active_client_by_name(0, client)
         if name then
             if current_diagnostics[name.id].settings.all then
@@ -255,6 +247,15 @@ function Diagnostics.toggle_all_diagnostics(client)
             displayStatus("all diagnostics are", current_diagnostics[client].settings.all, client)
         else
             print(string.format("The language server %s is not active on this buffer", client))
+        end
+    else
+        for id, _ in pairs(current_diagnostics) do
+            if current_diagnostics[id].settings.all then
+                Diagnostics.turn_off_diagnostics()
+            else
+                Diagnostics.turn_on_diagnostics()
+            end
+            displayStatus("all diagnostics for attached servers are", current_diagnostics[id].settings.all)
         end
     end
 end

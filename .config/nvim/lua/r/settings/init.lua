@@ -9,6 +9,7 @@ return function()
     local tab = 4
     o.title = true
     o.number = true
+    o.showmatch = true
     o.expandtab = true
     o.shiftround = true
     o.splitbelow = true
@@ -19,7 +20,7 @@ return function()
     o.tabstop = tab
     o.shiftwidth = tab
     o.softtabstop = tab
-    -- o.cmdheight = 0
+    o.cmdheight = 0
     o.laststatus = 3
     o.scrolloff = 10
     o.updatetime = 300
