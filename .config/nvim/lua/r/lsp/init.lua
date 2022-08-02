@@ -158,6 +158,19 @@ function lsp.attach(client, bufnr)
         end, { expr = true, buffer = bufnr, desc = "Incremental rename" })
     end
 
+    if client.name == "ltex" then
+        vim.lsp.commands["_ltex.addToDictionary"] = require("r.utils.ls").ltex_add_to_dict
+        vim.lsp.commands["_ltex.disableRules"] = require("r.utils.ls").ltex_disable_rule
+        vim.lsp.commands["_ltex.hideFalsePositives"] = require("r.utils.ls").ltex_false_positive
+    end
+
+    if client.name == "sqls" then
+        require("packer").loader "sqls.nvim"
+        require("sqls").on_attach(client, bufnr)
+        sc.documentFormattingProvider = false
+        sc.documentRangeFormattingProvider = false
+    end
+
     vim.api.nvim_buf_create_user_command(
         bufnr,
         "LspCapabilities",
@@ -188,19 +201,29 @@ function lsp.servers()
     end
 
     local configs = {
-        jsonls = {},
         yamlls = {},
-        neocmake = { capabilities = lsp.capabilities() },
         html = { capabilities = lsp.capabilities() },
         cssls = { capabilities = lsp.capabilities() },
         vimls = { capabilities = lsp.capabilities() },
         dartls = { capabilities = lsp.capabilities() },
+        jsonls = { capabilities = lsp.capabilities() },
         perlpls = { capabilities = lsp.capabilities() },
         pyright = { capabilities = lsp.capabilities() },
+        neocmake = { capabilities = lsp.capabilities() },
         dockerls = { capabilities = lsp.capabilities() },
         tsserver = { capabilities = lsp.capabilities() },
         marksman = { capabilities = lsp.capabilities() },
         bashls = { capabilities = lsp.capabilities(), filetypes = { "sh", "zsh" } },
+        sqls = {
+            capabilities = lsp.capabilities(),
+            on_new_config = function(new_config, new_rootdir)
+                new_config.cmd = {
+                    "sqls",
+                    "-config",
+                    new_rootdir .. "/config.yml",
+                }
+            end,
+        },
         ltex = {
             autostart = false,
             filetypes = { "bib", "markdown", "org", "tex" },

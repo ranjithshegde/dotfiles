@@ -77,6 +77,7 @@ PERL_LOCAL_LIB_ROOT="${XDG_DATA_HOME}/perl${PERL_LOCAL_LIB_ROOT+:}${PERL_LOCAL_L
 export PERL_LOCAL_LIB_ROOT
 export PERL_MB_OPT='--install_base ~/.local/share/perl'
 export PERL_MM_OPT='INSTALL_BASE=~/.local/share/perl'
+export MYSQL_HISTFILE="${XDG_DATA_HOME}"/mysql_history
 
 # GLOBALS
 export CHROME_EXECUTABLE=/usr/bin/brave

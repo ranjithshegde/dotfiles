@@ -139,9 +139,9 @@ return function()
         require("r.utils.qf").toggle_qf "l"
     end, { desc = "Toggle loclist" })
     -- ScratchPad
-    map("n", "<leader>S", function()
-        require "r.utils.project.scratchpad" "tab"
-    end, { desc = "Open ScratchPad" })
+    -- map("n", "<leader>S", function()
+    --     require "r.utils.project.scratchpad" "tab"
+    -- end, { desc = "Open ScratchPad" })
     -- Misc
     map("n", "gx", function()
         require("r.utils").open_in_browser(vim.fn.expand "<cWORD>")

@@ -31,6 +31,8 @@ tables.lspfiles = {
     "org",
     "python",
     "perl",
+    "sql",
+    "mysql",
     "vim",
     "yaml",
 }

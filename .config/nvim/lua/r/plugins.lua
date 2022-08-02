@@ -33,6 +33,14 @@ return require("packer").startup {
             { "tpope/vim-fugitive", cmd = { "G", "Git", "Gclog" } },
         }
 
+        -- Databases
+        use {
+            "kristijanhusak/vim-dadbod-ui",
+            cmd = "DBUI",
+            opt = true,
+            requires = { "tpope/vim-dadbod", "nanotee/sqls.nvim" },
+        }
+
         -- surround
         use {
             "kylechui/nvim-surround",
