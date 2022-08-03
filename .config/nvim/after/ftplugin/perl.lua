@@ -1,2 +1,2 @@
-vim.b.dispatch = "perl %"
-vim.g.repl = "re.pl"
+vim.b.make = "perl"
+vim.b.repl = "re.pl"

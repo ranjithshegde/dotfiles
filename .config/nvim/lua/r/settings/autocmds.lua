@@ -165,21 +165,19 @@ aucmd("LspAttach", {
 })
 
 -- ************** Compilers and REPL  ----------------------------------
-id.MakeDispatch = augroup("MakeDispatch", opts)
+id.Compiler = augroup("Compiler", opts)
 aucmd("FileType", {
-    group = id.MakeDispatch,
+    group = id.Compiler,
     pattern = { "java", "lua", "python", "javascript", "perl" },
     nested = true,
     callback = function()
         vim.keymap.set("n", "<F5>", function()
-            vim.cmd.w()
-            vim.cmd.redraw()
-            vim.cmd.Dispatch()
-        end, { buffer = true, desc = "Call native compile Dispatch command" })
+            require("overseer").run_template { name = "Run Single" }
+        end, { buffer = true, desc = "Call native compile command" })
 
         vim.keymap.set({ "n", "t" }, "<F10>", function()
             vim.cmd.stopinsert()
-            require("r.utils.extensions").toggleTerm(vim.g.repl, "repl")
+            require("r.utils.extensions").toggleTerm(vim.b.repl, "repl")
         end, { desc = "Toggle REPL" })
     end,
     desc = "set compiler and toggleable REPL for capable filetypes",

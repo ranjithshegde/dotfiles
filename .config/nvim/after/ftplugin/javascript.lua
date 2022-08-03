@@ -1,10 +1,6 @@
-vim.b.dispatch = "node %"
-vim.g.repl = "node"
+vim.b.repl = "node"
+vim.b.make = "node"
 
 vim.keymap.set("n", "<F6>", function()
-    vim.api.nvim_cmd({
-        cmd = "Dispatch",
-        args = {"live-server", "."},
-        magic = { file = true },
-    }, {})
+    require("overseer").run_template { name = "Live server" }
 end, { buffer = true, desc = "Launch in browser" })

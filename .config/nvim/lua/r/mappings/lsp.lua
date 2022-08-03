@@ -14,6 +14,12 @@ function lspmap.lsp(bufnr)
     end, { desc = "Hover or peek-fold", buffer = bufnr })
 
     wk.register({
+        ["<F1>"] = {
+            function()
+                require("overseer").window.toggle { enter = false }
+            end,
+            "Open Task panel",
+        },
         ["<F7>"] = { require("r.debugger").init, "Initialize Debugger adapter" },
         [","] = {
             name = "Lsp functions",

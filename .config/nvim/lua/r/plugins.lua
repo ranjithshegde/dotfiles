@@ -27,12 +27,6 @@ return require("packer").startup {
 
         use "EdenEast/nightfox.nvim"
 
-        -- Tim pope
-        use {
-            { "tpope/vim-dispatch", cmd = { "Make", "Dispatch", "Start" } },
-            { "tpope/vim-fugitive", cmd = { "G", "Git", "Gclog" } },
-        }
-
         -- Databases
         use {
             "kristijanhusak/vim-dadbod-ui",
@@ -114,16 +108,6 @@ return require("packer").startup {
             end,
         }
 
-        -- Git Signs
-        use {
-            "lewis6991/gitsigns.nvim",
-            requires = "nvim-lua/plenary.nvim",
-            config = function()
-                require("r.settings.plugin").gitsigns()
-            end,
-            opt = true,
-        }
-
         -- Fancy folds
         use {
             "kevinhwang91/nvim-ufo",
@@ -157,12 +141,24 @@ return require("packer").startup {
         -- Tasks
         use {
             "stevearc/overseer.nvim",
-            branch = "stevearc-quickfix",
-            opt = true,
+            module = "overseer",
+            cmd = "OverseerRunCmd",
             config = function()
-                require("overseer").setup()
-                require "r.settings.build"()
+                require("overseer").setup { templates = { "builtin", "r" } }
             end,
+        }
+
+        -- Git integration
+        use {
+            {
+                "lewis6991/gitsigns.nvim",
+                requires = "nvim-lua/plenary.nvim",
+                config = function()
+                    require("r.settings.plugin").gitsigns()
+                end,
+                opt = true,
+            },
+            { "tpope/vim-fugitive", cmd = { "G", "Git", "Gclog" } },
         }
 
         -- TreeSitter

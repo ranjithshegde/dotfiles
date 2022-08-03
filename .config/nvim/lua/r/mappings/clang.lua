@@ -11,19 +11,25 @@ function cmaps.micro()
         vim.cmd.stopinsert()
         require("r.utils.compiler").monitor()
     end, { desc = "Serial monitor toggle" })
+
     map("n", "<F2>", require("r.utils.compiler").pio_clean, { buffer = true, desc = "Regenerate tags" })
-    map("n", "<F3>", require("r.utils.compiler").pio_check, { buffer = true, desc = "Verify code" })
+
+    map("n", "<F3>", function()
+        require("overseer").run_template { name = "pio check --skip-packages" }
+    end, { buffer = true, desc = "Verify code" })
+
     map("n", "<F5>", function()
-        vim.cmd.w()
-        vim.cmd.Make()
+        require("overseer").run_template { name = "pio run" }
     end, { buffer = true, desc = "Build" })
+
     map("n", "<F6>", function()
-        vim.cmd.w()
-        vim.cmd.Make "--target upload"
+        require("overseer").run_template { name = "pio upload" }
     end, { buffer = true, desc = "Upload" })
+
     map("n", ",ka", function()
         require("r.utils.compiler").ardRef(vim.fn.expand "<cword>")
     end, { buffer = true, desc = "Arduino" })
+
     map("n", ",kt", require("r.utils.compiler").teensypins, { buffer = true, desc = "teensy pins" })
     map("n", ",kT", require("r.utils.compiler").teensyspecs, { buffer = true, desc = "teensy specs" })
 
@@ -37,17 +43,24 @@ end
 ------------------------------------------------------------------------
 
 function cmaps.makeC()
-    map("n", "<F2>", require("r.utils.compiler").emmake, { buffer = true, desc = "Compile Emscripten" })
-    map("n", "<F3>", require("r.utils.compiler").emrun, { buffer = true, desc = "Run Emscripten" })
+    map("n", "<F2>", function()
+        require("overseer").run_template { name = [[Build wasm]] }
+    end, { buffer = true, desc = "Compile Emscripten" })
+
+    map("n", "<F3>", function()
+        require("overseer").run_template { name = [[Deploy wasm]] }
+    end, { buffer = true, desc = "Run Emscripten" })
+
     map("n", "<F4>", function()
-        vim.cmd.w()
-        vim.cmd.Make "Debug -j12"
+        require("overseer").run_template { name = [[oF Build]], params = { type = "Debug" } }
     end, { buffer = true, desc = "Compile Debug" })
+
     map("n", "<F5>", function()
-        require("r.utils.compiler").renderOffload({ "make", "RunRelease" }, "-j12", true)
+        require("r.utils.compiler").renderOffload(true)
     end, { buffer = true, desc = "Compile and Run Release" })
+
     map("n", "<F6>", function()
-        require("r.utils.compiler").renderOffload { "make", "RunRelease" }
+        require("r.utils.compiler").renderOffload()
     end, { buffer = true, desc = "Run Release" })
 end
 
@@ -57,38 +70,26 @@ end
 
 -- ******************************** C files ----------------------------
 function cmaps.ctests()
-    map("n", "<F3>", function()
-        vim.cmd.w()
-        require("r.utils").ex_cmd("Dispatch", { "gcc", "%", "-lm", "-o", "%<" }, { silent = true }, { file = true })
-    end, { buffer = true, desc = "Use gcc" })
-
     map("n", "<F4>", function()
-        vim.cmd.w()
-        vim.cmd.redraw()
         require("r.utils.compiler").with_flags()
     end, { buffer = true, desc = "Make with defined flags" })
 
     map("n", "<F5>", function()
-        vim.cmd.w()
-        require("r.utils").ex_cmd("Make", { "-g", "%", "-o", "%<", "&&", "./%<" }, { silent = true }, { file = true })
+        require("overseer").run_template { name = "Compile" }
     end, { buffer = true, desc = "Make & launch" })
 
     map("n", "<F6>", function()
-        require("r.utils.compiler").renderOffload { "./%<" }
+        require("overseer").run_template { name = "Run" }
     end, { buffer = true, desc = "Launch binary" })
 end
 
 -- ******************************** Pd externals ------------------------
 function cmaps.pdc()
     map("n", "<F5>", function()
-        vim.cmd.w()
-        vim.cmd.Make()
+        vim.cmd.OverseerRunCmd "make"
     end, { buffer = true, desc = "Build Pd external" })
-    map("n", "<F6>", function()
-        vim.cmd.w()
-        vim.cmd.redraw()
-        require("r.utils.compiler").pdBuild()
-    end, { buffer = true, desc = "Copy external to PD directory" })
+
+    map("n", "<F6>", require("r.utils.compiler").pdBuild, { buffer = true, desc = "Copy external to PD directory" })
 end
 
 -- ******************************** Clang Lsp----------------------------
@@ -146,15 +147,9 @@ function cmaps.clang()
             s = { vim.cmd.ClangdSwitchSourceHeader, "Switch to Header/Source" },
             m = {
                 function()
-                    require("r.utils.compiler").makefile(vim.g.makeFile)
+                    require("r.utils.compiler").makefile(vim.b.makeFile)
                 end,
                 "Open Makefile",
-            },
-            c = {
-                function()
-                    require("r.utils.compiler").ctags(vim.g.cfiles)
-                end,
-                "generate Ctags with includes",
             },
         },
     }, { buffer = 0 })
@@ -165,23 +160,24 @@ end
 ------------------------------------------------------------------------
 
 function cmaps.cmake()
-    map("n", "<F2>", require("r.utils.compiler").cmake_clean, { buffer = true, desc = "Clean cmake" })
+    map("n", "<F2>", function()
+        require("overseer").run_template { name = "Cmake clean" }
+    end, { buffer = true, desc = "Clean cmake" })
+
     map("n", "<F3>", function()
-        vim.cmd.w()
-        vim.cmd.redraw()
-        require("r.utils.compiler").cmake_gen "Debug"
+        require("overseer").run_template { name = "Cmake configure", params = { type = "Debug" } }
     end, { buffer = true, desc = "Generate Cmake Debug" })
+
     map("n", "<F4>", function()
-        vim.cmd.w()
-        vim.cmd.redraw()
-        require("r.utils.compiler").cmake_gen "Release"
+        require("overseer").run_template { name = "Cmake configure", params = { type = "Release" } }
     end, { buffer = true, desc = "Generate Cmake Release" })
+
     map("n", "<F5>", function()
-        vim.cmd.w()
-        require("r.utils").ex_cmd("Make", { "-j12", "-C", "build" }, { silent = true })
+        require("overseer").run_template { name = "Cmake Build" }
     end, { buffer = true, desc = "Make" })
+
     map("n", "<F6>", function()
-        require("r.utils.compiler").renderOffload { vim.g.cmakeBin }
+        require("overseer").run_template { name = "Cmake Run" }
     end, { buffer = true, desc = "Launch binary" })
 end
 

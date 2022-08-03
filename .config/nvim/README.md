@@ -34,7 +34,7 @@ Note: Until comprehensive documentation is in-place, explore the config source c
 ### Project management
 
 - [Projects](lua/r/utils/project/init.lua) Create and access project system for some languages
-- [Compiler](lua/r/utils/compiler.lua) Extend `vim-dispatch` into complete build swite for supported languages
+- [Compiler](lua/r/utils/compiler.lua) `overseer.nvim` to a full compile suite
 - [Scratchpad](lua/r/utils/project/scratchpad.lua) Quick and saveable scratchpad for some languages
 
 ### Editor extensions
@@ -112,7 +112,7 @@ Note: Until comprehensive documentation is in-place, explore the config source c
 - [packer.nvim](https://github.com/wbthomason/packer.nvim) - Programatically extends native package management
 - [vim-fugitive](https://github.com/tpope/vim-fugitive) - Magical integration with Git tooling
 - [gitsigns](https://github.com/lewis6991/gitsigns.nvim) - Async display of git-gutter and change-highlights
-- [vim-dispatch](https://github.com/tpope/vim-dispatch) -Async and Programatically extend `#compiler`
+- [overseer.nvim](https://github.com/stevearc/overseer.nvim) -Async and Programatically extend `#compiler`
 - [plenary.nvim](https://github.com/nvim-lua/plenary.nvim) - Libuv shorthands + other LuaJIT features
 - [which-key](https://github.com/folke/which-key.nvim) - Programtically configure keybindings with incremental descriptions
 

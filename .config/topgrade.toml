@@ -2,7 +2,7 @@
 #assume_yes = true
 
 # Disable specific steps - same options as the command line flag
-disable = ["vim"]
+disable = ["vim", "containers"]
 
 # Ignore failures for these steps
 ignore_failures = ["shell"]
@@ -54,14 +54,12 @@ repos = [
 
 # Commands to run before anything
 [pre_commands]
-"Enable Docker" = "sudo systemctl start docker.socket"
 #"Emacs Snapshot" = "rm -rf ~/.emacs.d/elpa.bak && cp -rl ~/.emacs.d/elpa ~/.emacs.d/elpa.bak"
 
 # Custom commands
 [commands]
 "perl" = "ucpan"
 "platform-io" = "pio pkg update -g"
-"post-hook" = "sudo systemctl stop docker.socket"
 
 [linux]
 # Arguments to pass yay when updating packages

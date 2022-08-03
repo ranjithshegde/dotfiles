@@ -95,8 +95,8 @@ local function configs()
             type = "cppdbg",
             request = "launch",
             program = function()
-                if vim.g.debugBin then
-                    return vim.g.debugBin
+                if vim.b.debugBin then
+                    return vim.b.debugBin
                 else
                     return vim.fn.input("Path to executable: ", vim.fn.getcwd() .. "/", "file")
                 end
@@ -118,8 +118,8 @@ local function configs()
             type = "cppdbg",
             request = "launch",
             program = function()
-                if vim.g.debugBin then
-                    return vim.g.debugBin
+                if vim.b.debugBin then
+                    return vim.b.debugBin
                 else
                     return vim.fn.input("Path to executable: ", vim.fn.getcwd() .. "/", "file")
                 end
@@ -141,8 +141,8 @@ local function configs()
             type = "lldb",
             request = "launch",
             program = function()
-                if vim.g.debugBin then
-                    return vim.g.debugBin
+                if vim.b.debugBin then
+                    return vim.b.debugBin
                 else
                     return vim.fn.input("Path to executable: ", vim.fn.getcwd() .. "/", "file")
                 end

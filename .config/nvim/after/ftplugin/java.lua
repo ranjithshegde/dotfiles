@@ -1,2 +1,2 @@
-vim.b.dispatch = "javac %"
-vim.g.repl = "javac"
+vim.b.repl = "javac"
+vim.b.make = "javac"

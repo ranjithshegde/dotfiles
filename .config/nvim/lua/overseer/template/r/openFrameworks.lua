@@ -1,0 +1,70 @@
+local constants = require "overseer.constants"
+local overseer = require "overseer"
+local TAG = constants.TAG
+
+local tmpl = {
+    params = {
+        args = { type = "list", delimiter = " " },
+        type = { type = "string", default = "Release" },
+        dGPU = { type = "boolean", optional = true },
+        save = { type = "boolean", optional = true },
+    },
+    builder = function(params)
+        local cmd = {}
+        if params.args then
+            cmd = vim.list_extend(cmd, params.args)
+        end
+        if params.type then
+            if vim.tbl_contains(cmd, "-j12") then
+                table.insert(cmd, params.type)
+            else
+                table.insert(cmd, "Run" .. params.type)
+            end
+        end
+        if params.dGPU then
+            table.insert(cmd, 1, "prime-run")
+        end
+        local components = { "default", "r.on_output_parse_errors" }
+        if params.save then
+            table.insert(components, "r.save")
+        end
+        return { cmd = cmd, components = components }
+    end,
+}
+
+return {
+    condition = {
+        filetype = { "c", "cpp" },
+        callback = function()
+            return vim.b.makeFile == "Makefile"
+        end,
+    },
+    generator = function(_)
+        local commands = {
+            { args = { "make" }, tags = { TAG.TEST }, priority = 10 },
+            { args = { "make", "-j12" }, tags = { TAG.BUILD }, priority = 20, save = true },
+        }
+        local ret = {}
+        for _, command in ipairs(commands) do
+            local name = "oF"
+            local desc
+            if vim.tbl_contains(command.args, "-j12") then
+                name = name .. " Build"
+                desc = "Compile openFrameworks binary"
+            else
+                name = name .. " Run"
+                desc = "Run openFrameworks binary"
+            end
+            table.insert(
+                ret,
+                overseer.wrap_template(tmpl, {
+                    name = name,
+                    desc = desc,
+                    tags = command.tags,
+                    priority = command.priority,
+                }, { args = command.args, save = command.save })
+            )
+        end
+        return ret
+    end,
+}

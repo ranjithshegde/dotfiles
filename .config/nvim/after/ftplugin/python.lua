@@ -1,2 +1,2 @@
-vim.b.dispatch = "python %"
-vim.g.repl = "ipython"
+vim.b.repl = "ipython"
+vim.b.make = "python"

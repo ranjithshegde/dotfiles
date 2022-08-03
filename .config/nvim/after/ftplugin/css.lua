@@ -10,9 +10,5 @@ vim.keymap.set("n", "<leader>s", function()
 end, { buffer = 0, silent = true, desc = "Open alternate shader file" })
 
 vim.keymap.set("n", "<F6>", function()
-    vim.api.nvim_cmd({
-        cmd = "Dispatch",
-        args = { "live-server", "." },
-        magic = { file = true },
-    }, {})
+    require("overseer").run_template { name = "Live server" }
 end, { buffer = true, desc = "Launch in browser" })

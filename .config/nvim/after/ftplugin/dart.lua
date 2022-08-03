@@ -1,12 +1,15 @@
-vim.b.dispatch = "dart %"
+vim.b.make = "dart"
+
 vim.keymap.set("n", "<F5>", function()
     vim.ui.select({ "aar", "apk", "appbundle", "bundle", "web" }, { prompt = "Compile flutter for: " }, function(choice)
-        vim.cmd { cmd = "Dispatch", args = { "flutter", "build", choice } }
+        require("overseer").run_template { name = "Flutter build", params = { env = choice } }
     end)
 end, { desc = "Build Flutter", buffer = true })
 
 vim.keymap.set("n", "<F6>", function()
-    vim.cmd { cmd = "Dispatch", args = { "flutter", "run" } }
+    require("overseer").run_template { name = "Flutter run" }
 end, { desc = "Run Flutter", buffer = true })
 
-vim.keymap.set("n", "<F4>", vim.cmd.Dispatch, { desc = "Run single file Dart", buffer = true })
+vim.keymap.set("n", "<F4>", function()
+    require("overseer").run_template { name = "Run Single" }
+end, { desc = "Run single file", buffer = true })
