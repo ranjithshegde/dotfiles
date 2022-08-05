@@ -18,7 +18,6 @@ end
 function plugins.indent()
     require("indent_blankline").setup {
         show_current_context = true,
-        show_end_of_line = true,
         use_treesitter = true,
     }
     for _, v in pairs(require("r.utils.tables").indentContext) do
@@ -36,19 +35,6 @@ function plugins.color()
         yaml = { rgb_0x = true },
         "javascript",
         "conf",
-    }
-end
-
---ZenMode
-function plugins.zenmode()
-    require("packer").loader "twilight.nvim"
-    require("twilight").setup {}
-    require("true-zen").setup {
-        integrations = {
-            kitty = { enabled = true },
-            twilight = true,
-        },
-        modes = { minimilast = { options = { cmdheight = 0 } } },
     }
 end
 

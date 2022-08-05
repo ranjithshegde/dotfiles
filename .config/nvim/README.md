@@ -112,7 +112,7 @@ Note: Until comprehensive documentation is in-place, explore the config source c
 - [packer.nvim](https://github.com/wbthomason/packer.nvim) - Programatically extends native package management
 - [vim-fugitive](https://github.com/tpope/vim-fugitive) - Magical integration with Git tooling
 - [gitsigns](https://github.com/lewis6991/gitsigns.nvim) - Async display of git-gutter and change-highlights
-- [overseer.nvim](https://github.com/stevearc/overseer.nvim) -Async and Programatically extend `#compiler`
+- [overseer.nvim](https://github.com/stevearc/overseer.nvim) -Async and Programatically extend `:compiler`
 - [plenary.nvim](https://github.com/nvim-lua/plenary.nvim) - Libuv shorthands + other LuaJIT features
 - [which-key](https://github.com/folke/which-key.nvim) - Programtically configure keybindings with incremental descriptions
 
@@ -122,6 +122,12 @@ Note: Until comprehensive documentation is in-place, explore the config source c
 - [nvim-surround](https://github.com/kylechui/nvim-surround) - Add/remove/manipulate surrounding pairs with tree-sitter
 - [express_line.nvim](https://github.com/tjdevries/express_line.nvim/) - Adds libuv and subscription model to built-in statusline
 - [nvim-colorizer](https://github.com/xiyaowong/nvim-colorizer.lua) - Attach colors as highlights for RGB/HEX text
+
+### Database management
+
+- [vim-dadbod](https://github.com/tpope/vim-dadbod) - Interactit with `MySQL`, `Postgre` and other databases
+- [vim-dadbod-ui](https://github.com/kristijanhusak/vim-dadbod-ui) - Interactive UI for query tasks
+- [sqls.nvim](https://github.com/nanotee/sqls.nvim/) - Extensions for SQL language server
 
 ### UI customization
 
@@ -133,6 +139,4 @@ Note: Until comprehensive documentation is in-place, explore the config source c
 - [nightfox.nvim](https://github.com/EdenEast/nightfox.nvim) - Highly customizable colorscheme collection
 - [nvim-ufo](https://github.com/kevinhwang91/nvim-ufo) - Turn foldtext into extmarks + Popup fold-preview
 - [indent-blankline](https://github.com/lukas-reineke/indent-blankline.nvim) - Add Extmark indent guides with tree-sitter context
-- [twilight.nvim](https://github.com/folke/twilight.nvim) - "Dim" inactive parts of the buffer using tree-sitter context
-- [zen-mode](https://github.com/folke/zen-mode.nvim) - Clean text-only popup for distraction free editing
 - [nvim-web-devicons](https://github.com/kyazdani42/nvim-web-devicons) - Fancy icons for filetype and LSP

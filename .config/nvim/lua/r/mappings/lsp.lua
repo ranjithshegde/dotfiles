@@ -14,12 +14,6 @@ function lspmap.lsp(bufnr)
     end, { desc = "Hover or peek-fold", buffer = bufnr })
 
     wk.register({
-        ["<F1>"] = {
-            function()
-                require("overseer").window.toggle { enter = false }
-            end,
-            "Open Task panel",
-        },
         ["<F7>"] = { require("r.debugger").init, "Initialize Debugger adapter" },
         [","] = {
             name = "Lsp functions",
@@ -83,6 +77,10 @@ function lspmap.lsp(bufnr)
             a = { vim.lsp.buf.range_code_action, "Code actions for range" },
         },
     }, { mode = "v", buffer = bufnr })
+
+    map("n", "<F1>", function()
+        require("overseer").window.toggle { enter = false }
+    end, { desc = "Open Task panel" })
 
     map("n", "<F11>", function()
         require("symbols-outline").toggle_outline()

@@ -18,11 +18,7 @@ local tmpl = {
             vim.list_extend(cmd, params.flags)
         end
 
-        local components = { "default", "r.on_output_parse_errors" }
-        if params.save then
-            table.insert(components, "r.save")
-        end
-        return { cmd = cmd, components = components }
+        return { cmd = cmd, components = { "default", { "r.dispatch", save = params.save } } }
     end,
 }
 

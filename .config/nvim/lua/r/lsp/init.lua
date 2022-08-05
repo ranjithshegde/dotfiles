@@ -1,3 +1,4 @@
+---@diagnostic disable: missing-parameter
 local lsp = {}
 local aucmd = vim.api.nvim_create_autocmd
 local augroup = vim.api.nvim_create_augroup
@@ -6,7 +7,6 @@ local augroup = vim.api.nvim_create_augroup
 --                             Lsp settings                           --
 ------------------------------------------------------------------------
 
-local lspconfig = require "lspconfig"
 local opts = { clear = true }
 
 local nofmt = {
@@ -186,9 +186,9 @@ end
 function lsp.servers()
     local dict = vim.api.nvim_get_option "spellfile"
 
-    local ls_conf = require "lspconfig.configs"
-    if not ls_conf.neocmake then
-        ls_conf.neocmake = {
+    local lspconf = require "lspconfig.configs"
+    if not lspconf.neocmake then
+        lspconf.neocmake = {
             default_config = {
                 cmd = { "neocmakelsp" },
                 filetypes = { "cmake" },
@@ -274,7 +274,7 @@ function lsp.servers()
     }
 
     for ls, cfg in pairs(configs) do
-        lspconfig[ls].setup(cfg)
+        require("lspconfig")[ls].setup(cfg)
     end
 end
 

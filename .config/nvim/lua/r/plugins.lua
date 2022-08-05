@@ -35,15 +35,6 @@ return require("packer").startup {
             requires = { "tpope/vim-dadbod", "nanotee/sqls.nvim" },
         }
 
-        -- surround
-        use {
-            "kylechui/nvim-surround",
-            opt = true,
-            config = function()
-                require("nvim-surround").setup {}
-            end,
-        }
-
         -- StatusLine
         use {
             "tjdevries/express_line.nvim",
@@ -53,21 +44,30 @@ return require("packer").startup {
             end,
         }
 
-        -- Indents and chars
-        use {
-            "lukas-reineke/indent-blankline.nvim",
-            opt = true,
-            config = function()
-                require("r.settings.plugin").indent()
-            end,
-        }
-
         -- SuperCollider
         use {
             "davidgranstrom/scnvim",
             ft = "supercollider",
             config = function()
                 require("r.settings.plugin").scnvim()
+            end,
+        }
+
+        -- Comment with TreeSitter
+        use {
+            "numToStr/Comment.nvim",
+            keys = require("r.settings.plugin").comment.keys,
+            config = function()
+                require("r.settings.plugin").comment.config()
+            end,
+        }
+
+        -- Indents and chars
+        use {
+            "lukas-reineke/indent-blankline.nvim",
+            opt = true,
+            config = function()
+                require("r.settings.plugin").indent()
             end,
         }
 
@@ -91,7 +91,7 @@ return require("packer").startup {
 
         -- Colorizer
         use {
-            "xiyaowong/nvim-colorizer.lua",
+            "NvChad/nvim-colorizer.lua",
             config = function()
                 require("r.settings.plugin").color()
             end,
@@ -126,16 +126,6 @@ return require("packer").startup {
             end,
             opt = true,
             requires = "rcarriga/nvim-dap-ui",
-        }
-
-        -- ZenMode
-        use {
-            "Pocco81/true-zen.nvim",
-            requires = { { "folke/twilight.nvim", opt = true } },
-            cmd = "TZAtaraxis",
-            config = function()
-                require("r.settings.plugin").zenmode()
-            end,
         }
 
         -- Tasks
@@ -190,12 +180,22 @@ return require("packer").startup {
             { "nvim-telescope/telescope-file-browser.nvim", module_pattern = ".*.extensions.file_browser.*" },
         }
 
-        -- Comment with TreeSitter
+        -- surround
         use {
-            "numToStr/Comment.nvim",
-            keys = require("r.settings.plugin").comment.keys,
+            "kylechui/nvim-surround",
+            opt = true,
+            keys = {
+                { "n", "ys", "Add surround" },
+                { "n", "ds", "Delete surround" },
+                { "n", "cs", "Change surround" },
+                { "v", "S", "Add surround" },
+                { "n", "yS", "Add surround line" },
+                { "v", "gS", "Add surround line" },
+                { "n", "yss", "Add surround  current line" },
+                { "n", "ySS", "Add surround  current line" },
+            },
             config = function()
-                require("r.settings.plugin").comment.config()
+                require("nvim-surround").setup {}
             end,
         }
 

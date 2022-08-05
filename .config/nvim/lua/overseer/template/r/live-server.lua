@@ -3,11 +3,11 @@ return {
     name = "Live server",
     desc = "Launch web application in browser",
     tags = { overseer.TAG.TEST },
-    params = {},
-    builder = function()
+    params = { save = { type = "boolean", default = true } },
+    builder = function(params)
         return {
             cmd = { "live-server", "." },
-            components = { "default", "r.save", "r.on_output_parse_errors" },
+            components = { "default", { "r.dispatch", save = params.save } },
         }
     end,
     condition = {

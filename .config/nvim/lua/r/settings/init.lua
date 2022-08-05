@@ -20,6 +20,7 @@ return function()
     o.tabstop = tab
     o.shiftwidth = tab
     o.softtabstop = tab
+    o.cmdheight = 0
     o.laststatus = 3
     o.scrolloff = 10
     o.updatetime = 300
@@ -36,6 +37,14 @@ return function()
     o.spellfile = vim.fn.stdpath "config" .. "/spell/en.utf-8.add"
 
     o.completeopt = { "menu", "menuone", "noinsert", "noselect" }
+    o.guifont = {
+        "FiraCode Nerd Font:style=Medium",
+        "Noto Sans Devanagari:style=Medium",
+        "JoyPixels",
+        "Hack Nerd Font",
+        "Noto Sans Mono:style=Regular",
+        "DejaVuSansMono Nerd Font:style=book",
+    }
     o.fillchars = {
         fold = " ",
         foldopen = "▾",

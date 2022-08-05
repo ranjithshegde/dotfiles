@@ -20,18 +20,6 @@ local function sequencer(name_1, params, name_2)
     end)
 end
 
--- get all lines from a file, returns an empty
--- list/table if the file does not exist
-local function lines_from(file)
-    if not isFile(file) then
-        return {}
-    end
-    local lines = {}
-    for line in io.lines(file) do
-        lines[#lines + 1] = line
-    end
-    return lines
-end
 ------------------------------------------------------------------------
 --                                Env Setup	                          --
 ------------------------------------------------------------------------
@@ -95,11 +83,6 @@ function Compiler.glRef(cmd)
     require("r.utils").open_in_browser(url)
 end
 
--- open Makefile
-function Compiler.makefile(file)
-    vim.cmd.tabnew(file)
-end
-
 -- Launch debuger
 function Compiler.termdebug()
     require("r.debugger").init()
@@ -155,34 +138,6 @@ end
 -----------------------------------------------------------------------
 --                    MicroControllers  	                          --
 ------------------------------------------------------------------------
-
--- Found out which controllers are defined in the pio file
-function Compiler.pio_env()
-    local search_pattern = "%[env:%w*%]"
-    local result = {}
-    if Compiler.has_pio_file() then
-        local lines = lines_from "platformio.ini"
-        for i = 1, #lines do
-            local search = lines[i]:match(search_pattern)
-            if search ~= nil then
-                search = string.gsub(search, "%[env:", "")
-                search = string.gsub(search, "%]", "")
-                result[#result + 1] = search
-            end
-        end
-
-        return result
-    end
-end
-
--- print the board being compiled for
-function Compiler.print_env()
-    local env = Compiler.pio_env()
-    print "Controllers defined in this platformio project:"
-    for name = 1, #env do
-        print(env[name])
-    end
-end
 
 -- print serial monitor
 function Compiler.monitor()

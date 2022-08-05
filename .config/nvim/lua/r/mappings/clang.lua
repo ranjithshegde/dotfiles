@@ -147,7 +147,7 @@ function cmaps.clang()
             s = { vim.cmd.ClangdSwitchSourceHeader, "Switch to Header/Source" },
             m = {
                 function()
-                    require("r.utils.compiler").makefile(vim.b.makeFile)
+                    vim.cmd.tabnew(vim.b.makeFile)
                 end,
                 "Open Makefile",
             },
@@ -177,7 +177,7 @@ function cmaps.cmake()
     end, { buffer = true, desc = "Make" })
 
     map("n", "<F6>", function()
-        require("overseer").run_template { name = "Cmake Run" }
+        require("overseer").run_template { name = "Cmake Run", params = { dGPU = false } }
     end, { buffer = true, desc = "Launch binary" })
 end
 

@@ -290,6 +290,7 @@ tables.ts_parsers = {
     "query",
     "regex",
     "scheme",
+    "sql",
     "supercollider",
     "toml",
     "vim",

@@ -6,7 +6,7 @@ local tmpl = {
     params = {
         args = { type = "list", delimiter = " " },
         type = { type = "string", optional = true },
-        dGPU = { type = "boolean", optional = true },
+        dGPU = { type = "boolean" },
         save = { type = "boolean", optional = true },
     },
     builder = function(params)
@@ -21,11 +21,7 @@ local tmpl = {
             table.insert(cmd, 1, "prime-run")
         end
 
-        local components = { "default", "r.on_output_parse_errors" }
-        if params.save then
-            table.insert(components, "r.save")
-        end
-        return { cmd = cmd, components = components }
+        return { cmd = cmd, components = { "default", { "r.dispatch", save = params.save } } }
     end,
 }
 
@@ -38,9 +34,21 @@ return {
     },
     generator = function(_)
         local commands = {
-            { args = { "make", "-C", "build", "clean" }, tags = { TAG.CLEAN }, priority = 70 },
-            { args = { "cmake", "-B", "build", "-S", "." }, tags = { TAG.BUILD }, priority = 20, save = true },
-            { args = { "make", "-j12", "-C", "build" }, tags = { TAG.BUILD }, priority = 20, save = true },
+            { args = { "make", "-C", "build", "clean" }, tags = { TAG.CLEAN }, priority = 70, dGPU = false },
+            {
+                args = { "cmake", "-B", "build", "-S", "." },
+                tags = { TAG.BUILD },
+                priority = 20,
+                save = true,
+                dGPU = false,
+            },
+            {
+                args = { "make", "-j12", "-C", "build" },
+                tags = { TAG.BUILD },
+                priority = 20,
+                save = true,
+                dGPU = false,
+            },
             {
                 args = { "./build/" .. vim.fn.fnamemodify(vim.fn.getcwd(), ":t") },
                 tags = { TAG.TEST },
@@ -50,6 +58,7 @@ return {
                 args = { "cmake", "--build", "build", "--config", "Release", "--target", "install" },
                 tags = { TAG.TEST },
                 priority = 20,
+                dGPU = false,
             },
         }
         local ret = {}
@@ -72,6 +81,9 @@ return {
                 name = name .. " Run"
                 desc = "Run binary for testing"
             end
+            if not command.save then
+                command.save = false
+            end
             table.insert(
                 ret,
                 overseer.wrap_template(tmpl, {
@@ -79,7 +91,7 @@ return {
                     desc = desc,
                     tags = command.tags,
                     priority = command.priority,
-                }, { args = command.args, save = command.save })
+                }, { args = command.args, save = command.save, dGPU = command.dGPU })
             )
         end
         return ret

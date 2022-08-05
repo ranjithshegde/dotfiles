@@ -2,10 +2,6 @@
   (enum_item ["\\item"] @emphasis)
   (#set! conceal "•")
   )
-; (generic_environment
-;   (enum_item ["\\dots"] @emphasis)
-;   (#set! conceal "…")
-; )
 
 (displayed_equation ["\\["] @emphasis
                     (#set! conceal "⟦")
@@ -26,6 +22,10 @@
   )
 
 
+; (generic_environment
+;   (enum_item ["\\dots"] @emphasis)
+;   (#set! conceal "…")
+; )
 
 ; M.sym.latex["\\delta"]    = {"δ"}
 ; M.sym.latex["\\chi"]      = {"χ"}

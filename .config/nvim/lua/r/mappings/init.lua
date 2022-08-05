@@ -143,22 +143,46 @@ return function()
     --     require "r.utils.project.scratchpad" "tab"
     -- end, { desc = "Open ScratchPad" })
     -- Misc
+
     map("n", "gx", function()
-        require("r.utils").open_in_browser(vim.fn.expand "<cWORD>")
+        local word = vim.fn.expand "<cWORD>"
+        local begin = word:find "%("
+        if begin then
+            word = word:sub(begin + 1):gsub("%)", "")
+        else
+            begin = word:find "%["
+            if begin then
+                word = word:gsub("%[", "")
+                local ends = word:find "%]"
+                if ends then
+                    word = word:sub(begin, ends - 1)
+                end
+            end
+        end
+
+        require("r.utils").open_in_browser(word)
     end, { desc = "exec word under cursor" })
+
     map("n", "gm", function()
         local virt = vim.fn.virtcol "$"
         virt = virt / 2
         vim.fn.cursor { 0, virt }
     end, { desc = "Move cursor to middle of the line" })
 
-    -- Terminals
+    -- Terminals and Jobs
+    map("n", "<leader>C", vim.cmd.OverseerRunCmd, { desc = "Run quick command with Overseer" })
+
+    map("n", "<leader>c", function()
+        require("overseer").run_template()
+    end, { desc = "Run task  with Overseer" })
+
     map({ "n", "t" }, "<F9>", function()
         vim.cmd.stopinsert()
         require("r.utils.extensions").toggleTerm("zsh", "shell", 1)
     end, {
         desc = "Toggle current/default terminal",
     })
+
     wk.register {
         ["<leader>t"] = {
             name = "Launch terminal in split",

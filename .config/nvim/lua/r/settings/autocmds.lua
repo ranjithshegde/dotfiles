@@ -232,18 +232,22 @@ aucmd("FileType", {
 
 id.TermInsertModes = augroup("TermInsertModes", opts)
 -- ************************ Terminal autinsert--------------------------
-aucmd(
-    { "BufEnter", "BufWinEnter", "TermOpen" },
-    { group = id.TermInsertModes, pattern = { "term://*", "shell" }, command = "startinsert" }
-)
+aucmd({ "BufEnter", "BufWinEnter", "TermOpen" }, {
+    group = id.TermInsertModes,
+    pattern = { "term://*", "shell" },
+    callback = function(args)
+        if args.file:match "zsh" or args.file:match "ranger" or args.file:match "shell" then
+            vim.cmd.startinsert()
+        end
+    end,
+})
 aucmd("TermEnter", { group = "TermInsertModes", command = "startinsert" })
 
 -- ************************ Terminal autoecape --------------------------
 aucmd("TermEnter", {
     group = id.TermInsertModes,
-    callback = function()
-        local fs = vim.fn.expand "%"
-        if fs:match "ranger" then
+    callback = function(args)
+        if args.file:match "ranger" then
             vim.keymap.set("t", "<S-Esc>", "<C-\\><C-n>", { buffer = true, desc = "Escape Insert" })
         else
             vim.keymap.set("t", "<Esc>", "<C-\\><C-n>", { buffer = true, desc = "Escape Insert" })
