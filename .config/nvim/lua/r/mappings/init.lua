@@ -1,3 +1,4 @@
+---@diagnostic disable: missing-parameter, need-check-nil
 local wk = require "which-key"
 local map = vim.keymap.set
 
@@ -139,11 +140,11 @@ return function()
         require("r.utils.qf").toggle_qf "l"
     end, { desc = "Toggle loclist" })
     -- ScratchPad
-    -- map("n", "<leader>S", function()
-    --     require "r.utils.project.scratchpad" "tab"
-    -- end, { desc = "Open ScratchPad" })
-    -- Misc
+    map("n", "<leader>S", function()
+        require "r.utils.project.scratchpad" "tab"
+    end, { desc = "Open ScratchPad" })
 
+    -- Misc
     map("n", "gx", function()
         local word = vim.fn.expand "<cWORD>"
         local begin = word:find "%("

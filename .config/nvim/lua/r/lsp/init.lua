@@ -18,16 +18,6 @@ local function filterfmt(client)
     return not vim.tbl_contains(nofmt, client.name)
 end
 
-local nofmttex = {
-    "sumneko_lua",
-    "jsonls",
-    "texlab",
-}
-
-local function filterfmtex(client)
-    return not vim.tbl_contains(nofmttex, client.name)
-end
-
 ---**************************** LSP AuGroups and Handlers
 function lsp.settings()
     local id = {}
@@ -131,13 +121,11 @@ function lsp.attach(client, bufnr)
     end
 
     if sc.documentFormattingProvider or sc.rangeFormattingProvider then
-        vim.bo[bufnr].formatexpr = filterfmtex(client) and [[v:lua.vim.lsp.formatexpr()]] or ""
-
         aucmd("BufWrite", {
             group = vim.g.au_id.LspAutoFormat,
             buffer = bufnr,
             callback = function()
-                vim.lsp.buf.format { filter = filterfmtex }
+                vim.lsp.buf.format { filter = filterfmt }
             end,
             desc = "let LSP format the buffer on save",
         })

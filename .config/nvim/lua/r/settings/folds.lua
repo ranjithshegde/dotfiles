@@ -60,5 +60,4 @@ return function()
         end,
         enable_fold_end_virt_text = true,
     }
-    vim.api.nvim_set_hl(0, "Folded", { bg = "#45475A" })
 end

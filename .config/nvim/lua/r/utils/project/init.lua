@@ -123,9 +123,6 @@ function projects.create(type)
         return
     end
 
-    -- local plist = vim.tbl_keys(require "r.utils.project")
-    -- table.remove(plist, vim.tbl_get(plist, "create"))
-
     vim.ui.select({ "oF", "micro", "cmake", "webdev" }, { prompt = "Select type" }, function(choice)
         projects[choice]()
     end)

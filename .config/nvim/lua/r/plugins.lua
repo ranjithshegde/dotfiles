@@ -25,6 +25,7 @@ return require("packer").startup {
     function(use)
         use "wbthomason/packer.nvim"
 
+        -- Colorscheme
         use "EdenEast/nightfox.nvim"
 
         -- Databases
@@ -93,7 +94,7 @@ return require("packer").startup {
         use {
             "NvChad/nvim-colorizer.lua",
             config = function()
-                require("r.settings.plugin").color()
+                require("r.settings.plugin").colorizer()
             end,
             cmd = { "ColorizerAttachToBuffer", "ColorizerToggle" },
         }

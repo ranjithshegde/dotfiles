@@ -26,7 +26,7 @@ function plugins.indent()
 end
 
 ---nvim-colorizer
-function plugins.color()
+function plugins.colorizer()
     require("colorizer").setup {
         "*",
         cpp = { rgb_0x = true },
@@ -36,6 +36,21 @@ function plugins.color()
         "javascript",
         "conf",
     }
+end
+
+---Customize nightfox colorscheme
+function plugins.colorscheme()
+    local Tabline = require("nightfox.group").load("carbonfox").TabLine
+    local TablineSel = require("nightfox.group").load("carbonfox").TabLineSel
+    vim.pretty_print(Tabline, TablineSel)
+    local groups = {
+        carbonfox = {
+            TabLine = { fg = Tabline.bg, bg = Tabline.fg },
+            TabLineSel = { fg = TablineSel.bg, bg = TablineSel.fg },
+        },
+    }
+    require("nightfox").setup { groups = groups }
+    vim.cmd.colorscheme "carbonfox"
 end
 
 ---OrgMode

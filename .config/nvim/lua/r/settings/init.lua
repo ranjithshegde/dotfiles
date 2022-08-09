@@ -5,7 +5,7 @@ local o = vim.opt
 ------------------------------------------------------------------------
 
 return function()
-    vim.cmd.colorscheme "nightfox"
+    vim.cmd.colorscheme "carbonfox"
     local tab = 4
     o.title = true
     o.number = true
@@ -38,12 +38,9 @@ return function()
 
     o.completeopt = { "menu", "menuone", "noinsert", "noselect" }
     o.guifont = {
-        "FiraCode Nerd Font:style=Medium",
-        "Noto Sans Devanagari:style=Medium",
-        "JoyPixels",
-        "Hack Nerd Font",
-        "Noto Sans Mono:style=Regular",
-        "DejaVuSansMono Nerd Font:style=book",
+        "FiraCode Nerd Font:style=Medium:h12",
+        "Noto Sans Devanagari:style=Medium:h10",
+        "JoyPixels:h12",
     }
     o.fillchars = {
         fold = " ",
@@ -74,6 +71,7 @@ return function()
     vim.g.loaded_perl_provider = 0
     vim.g.markdown_folding = 1
     vim.g.tex_conceal = "abdmgs"
+    vim.g.tex_flavor = "latex"
     vim.g.symbols_outline = { auto_preview = false, width = 40 }
 
     -- ************** Disable builtin plugins ---------------------------------------------------------

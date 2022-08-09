@@ -1,20 +1,8 @@
 -- Blank Between Components
 local space = " "
 
-local colors = {
-    bg = "#32302f",
-    bg2 = "#008080",
-    bg3 = "#d79921",
-    white = "#fbf1c7",
-    yellow = "#d79921",
-    cyan = "#008080",
-    grey = "#928374",
-    green = "#98971a",
-    purple = "#b16286",
-    orange = "#d65d0e",
-    blue = "#458588",
-    red = "#cc241d",
-}
+local right = ""
+local left = " "
 
 ------------------------------------------------------------------------
 --                              statusline                            --
@@ -37,34 +25,77 @@ local file_icon = subscribe.buf_autocmd("el_file_icon", "BufRead", function(_, b
 end)
 
 --*********************************** Vim Mode --------------------------
-local function mode()
-    local alias = {
-        n = " ☉ ",
-        i = " ✎ ",
-        c = " ⌨ ",
-        v = " ✄ ",
-        V = " ✄ ",
-        [""] = " ✄ ",
-        t = "zsh ▧ ",
-    }
 
-    local mode_color = {
-        n = colors.blue,
-        i = colors.orange,
-        c = colors.yellow,
-        v = colors.cyan,
-        V = colors.cyan,
-        [""] = colors.cyan,
-        t = colors.purple,
-    }
-    -- Text for mode
-    local current_mode = alias[vim.api.nvim_get_mode().mode]
-    -- Get color for mode
-    local current_bg = mode_color[vim.api.nvim_get_mode().mode]
-    local current_fg = colors.white
-    -- Set color
-    vim.api.nvim_set_hl(0, "ElViMode", { fg = current_fg, bg = current_bg })
-    return current_mode
+local map = {
+    ["n"] = "NORMAL",
+    ["no"] = "O-PENDING",
+    ["nov"] = "O-PENDING",
+    ["noV"] = "O-PENDING",
+    ["no\22"] = "O-PENDING",
+    ["niI"] = "NORMAL",
+    ["niR"] = "NORMAL",
+    ["niV"] = "NORMAL",
+    ["nt"] = "NORMAL",
+    ["ntT"] = "NORMAL",
+    ["v"] = "VISUAL",
+    ["vs"] = "VISUAL",
+    ["V"] = "V-LINE",
+    ["Vs"] = "V-LINE",
+    ["\22"] = "V-BLOCK",
+    ["\22s"] = "V-BLOCK",
+    ["s"] = "SELECT",
+    ["S"] = "S-LINE",
+    ["\19"] = "S-BLOCK",
+    ["i"] = "INSERT",
+    ["ic"] = "INSERT",
+    ["ix"] = "INSERT",
+    ["R"] = "REPLACE",
+    ["Rc"] = "REPLACE",
+    ["Rx"] = "REPLACE",
+    ["Rv"] = "V-REPLACE",
+    ["Rvc"] = "V-REPLACE",
+    ["Rvx"] = "V-REPLACE",
+    ["c"] = "COMMAND",
+    ["cv"] = "EX",
+    ["ce"] = "EX",
+    ["r"] = "REPLACE",
+    ["rm"] = "MORE",
+    ["r?"] = "CONFIRM",
+    ["!"] = "SHELL",
+    ["t"] = "TERMINAL",
+}
+
+---@return string current mode name
+local function get_mode()
+    local mode_code = vim.api.nvim_get_mode().mode
+    if map[mode_code] == nil then
+        return mode_code
+    end
+    return map[mode_code]
+end
+
+local mode_to_highlight = {
+    ["VISUAL"] = "MiniStatuslineModeVisual",
+    ["V-BLOCK"] = "MiniStatuslineModeVisual",
+    ["V-LINE"] = "MiniStatuslineModeVisual",
+    ["SELECT"] = "MiniStatuslineModeVisual",
+    ["S-LINE"] = "MiniStatuslineModeVisual",
+    ["S-BLOCK"] = "MiniStatuslineModeVisual",
+    ["REPLACE"] = "MiniStatuslineModeReplace",
+    ["V-REPLACE"] = "MiniStatuslineModeReplace",
+    ["INSERT"] = "MiniStatuslineModeInsert",
+    ["COMMAND"] = "MiniStatuslineModeCommand",
+    ["EX"] = "MiniStatuslineModeCommand",
+    ["MORE"] = "MiniStatuslineModeCommand",
+    ["CONFIRM"] = "MiniStatuslineModeCommand",
+    ["TERMINAL"] = "MiniStatuslineModeOther",
+    ["NORMAL"] = "MiniStatuslineModeNormal",
+}
+
+local function mode()
+    local current_mode = get_mode()
+    local current_hl = "%#" .. mode_to_highlight[current_mode] .. "# "
+    return current_hl .. current_mode .. left .. " %##"
 end
 
 --*********************************** Scroll position -------------------
@@ -159,7 +190,11 @@ local function gps(_, buffer)
         type_patterns = tsNodes.filetype[fs] or tsNodes.default,
         bufnr = buffer.bufnr,
     }
-    return context ~= "" and "🇻  " .. context or context
+    if context == "" then
+        return ""
+    end
+    context = "🇻  " .. context
+    return context
 end
 
 --*********************************** Status config ---------------------
@@ -169,7 +204,7 @@ return function()
     require("el").setup {
         generator = function(_, _)
             return {
-                sections.highlight("ElViMode", mode),
+                mode,
                 sections.highlight("DiagnosticWarn", git_branch),
                 git_changes,
                 sections.split,
@@ -198,6 +233,8 @@ return function()
                 },
                 sections.highlight("DiagnosticWarn", builtin.percentage_through_file),
                 sections.highlight("DiagnosticWarn", scroll),
+                space,
+                space,
             }
         end,
     }
