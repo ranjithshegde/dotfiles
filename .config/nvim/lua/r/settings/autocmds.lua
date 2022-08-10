@@ -123,6 +123,15 @@ aucmd({ "FocusLost", "WinLeave" }, {
     desc = "dont use cursorline on inactive buffers",
 })
 
+id.Statusline = augroup("Statusline", opts)
+aucmd("BufEnter", {
+    group = id.Statusline,
+    callback = function()
+        auexec("User", { pattern = "ScStatus" })
+    end,
+    desc = "Load ScStatus only for supercollider",
+})
+
 -- ************** Winbar -----------------------------------------------
 -- aucmd({ "BufEnter", "WinEnter" }, {
 --     group = id.FormatOptions,

@@ -46,6 +46,7 @@ Note: Until comprehensive documentation is in-place, explore the config source c
 
 ### LSP extensions
 
+- [Ltex extensions](lua/r/utils/ls.lua#282) out-of-spec code actions for ltex LSP
 - [Lsp Rename](lua/r/lsp/rename.lua) Incremental and previewable
 - [signature help](lua/r/lsp/signature.lua) Auto-popup with snippet support
 - [Diagnostics](lua/r/utils/diagnostics/init.lua) Configuire and toggle
@@ -53,6 +54,7 @@ Note: Until comprehensive documentation is in-place, explore the config source c
 
 ### Eye candy extensions
 
+- [Statusline](lua/r/settings/statusline.lua) Event based subscription model for every component
 - [Toggle](lua/r/utils/extensions.lua#45) transparent background
 - [Context](lua/r/settings/statusline.lua#155) nvim-gps like treesitter statusline
 - [winbar](lua/r/settings/winbar.lua) only when it makes sense

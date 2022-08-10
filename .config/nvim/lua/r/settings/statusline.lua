@@ -13,11 +13,24 @@ local extensions = require "el.extensions"
 local sections = require "el.sections"
 local subscribe = require "el.subscribe"
 
+--*********************************** Basics ----------------------------
+local modified = subscribe.buf_autocmd("el_mod", "BufModifiedSet", function(_, _)
+    return "%m"
+end)
+
+local help = subscribe.buf_autocmd("el_help", "BufRead", function(_, _)
+    return "%H"
+end)
+
+local readonly = subscribe.buf_autocmd("el_read", "BufRead", function(_, _)
+    return "%r"
+end)
+
 --*********************************** File Icon -------------------------
 local file_icon = subscribe.buf_autocmd("el_file_icon", "BufRead", function(_, buffer)
     local icon, color = require("nvim-web-devicons").get_icon_color(buffer.name, buffer.extension)
     if icon then
-        local table = vim.api.nvim_get_hl_by_name("statusline", true)
+        local table = vim.api.nvim_get_hl_by_name("StatusLine", true)
         vim.api.nvim_set_hl(0, "FileIcon", { bg = table["background"], fg = color, cterm = { bold = true } })
         return icon .. space
     end
@@ -92,15 +105,18 @@ local mode_to_highlight = {
     ["NORMAL"] = "MiniStatuslineModeNormal",
 }
 
-local function mode()
+local mode = subscribe.buf_autocmd("el_mode", "BufEnter,ModeChanged", function()
     local current_mode = get_mode()
-    local current_hl = "%#" .. mode_to_highlight[current_mode] .. "# "
-    return current_hl .. current_mode .. left .. " %##"
-end
+    local current_hl = mode_to_highlight[current_mode]
+    if current_hl then
+        current_hl = "%#" .. current_hl .. "# "
+        return current_hl .. current_mode .. left .. " %##"
+    end
+end)
 
---*********************************** Scroll position -------------------
-local function scroll()
-    local current_line = vim.fn.line "."
+--*********************************** Scroll & position -------------------
+local scroll = subscribe.buf_autocmd("el_scroll", "CursorMoved,CursorMovedI", function(_, _)
+    local current_line = vim.api.nvim_win_get_cursor(0)[1]
     local total_lines = vim.fn.line "$"
     local chars = {
         "_",
@@ -126,19 +142,26 @@ local function scroll()
             index = 1
         end
     end
-    return chars[index]
-end
+    return "%3p" .. chars[index]
+end)
+
+local cursor = subscribe.buf_autocmd("el_cursor", "CursorMoved,CursorMovedI", function(_, _)
+    local line = "%-03l"
+    local column = "%-03c"
+    return "[" .. line .. ":" .. column .. "]"
+end)
 
 --*********************************** SuperCollider ---------------------
-local function scnvim(_, buffer)
-    if vim.bo[buffer.bufnr].filetype == "supercollider" then
+local scnvim = subscribe.user_autocmd("el_scnvim", "ScStatus", function(_, buffer)
+    local ft = vim.bo.filetype
+    if ft == "supercollider" then
         local scstatus = require("scnvim.statusline").get_server_status()
         if scstatus ~= "" then
             return "📡 [" .. scstatus .. "]"
         end
     end
     return ""
-end
+end)
 
 --*********************************** Git branch ------------------------
 local git_branch = subscribe.buf_autocmd("el_git_branch", "BufReadPre", function(window, buffer)
@@ -183,19 +206,33 @@ local diagnostics = require("el.diagnostic").make_buffer(require("r.utils.diagno
 
 local tsNodes = require("r.utils.tables").tsNodes
 
-local function gps(_, buffer)
+local gps = subscribe.buf_autocmd("el_gps", "CursorMoved,CursorMovedI,BufEnter", function(window, buffer)
     local fs = vim.bo[buffer.bufnr].filetype
+    if vim.tbl_contains(require("r.utils.tables").ignoreFiles, fs) then
+        return ""
+    end
+
+    local max_width = math.ceil(0.35 * vim.api.nvim_win_get_width(window and window.win_id or 0))
+
+    if not vim.b.gps then
+        vim.b.gps = 35
+    end
+
+    if vim.b.gps > max_width then
+        vim.b.gps = max_width
+    end
+
     local context = require("r.settings.treesitter").statusline {
-        indicator_size = vim.b.gps or 35,
+        indicator_size = vim.b.gps,
         type_patterns = tsNodes.filetype[fs] or tsNodes.default,
         bufnr = buffer.bufnr,
     }
-    if context == "" then
+    if not context or context == "" then
         return ""
     end
     context = "🇻  " .. context
     return context
-end
+end)
 
 --*********************************** Status config ---------------------
 return function()
@@ -212,26 +249,21 @@ return function()
                 sections.collapse_builtin { scnvim, space, gps },
                 sections.split,
                 sections.highlight("FileIcon", file_icon),
-                sections.highlight("statusline", builtin.tail_file),
+                sections.highlight("StatusLine", builtin.tail_file),
                 sections.collapse_builtin {
                     space,
-                    builtin.modified_flag,
+                    modified,
                     space,
                     space,
-                    "[",
-                    builtin.line_with_width(3),
-                    ":",
-                    builtin.column_with_width(2),
-                    "]",
+                    cursor,
                 },
                 space,
                 sections.collapse_builtin {
                     "[ ",
-                    builtin.help_list,
-                    builtin.readonly_list,
+                    help,
+                    readonly,
                     " ]",
                 },
-                sections.highlight("DiagnosticWarn", builtin.percentage_through_file),
                 sections.highlight("DiagnosticWarn", scroll),
                 space,
                 space,

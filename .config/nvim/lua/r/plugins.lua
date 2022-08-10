@@ -36,15 +36,6 @@ return require("packer").startup {
             requires = { "tpope/vim-dadbod", "nanotee/sqls.nvim" },
         }
 
-        -- StatusLine
-        use {
-            "tjdevries/express_line.nvim",
-            requires = { "kyazdani42/nvim-web-devicons", "nvim-lua/plenary.nvim" },
-            config = function()
-                require "r.settings.statusline"()
-            end,
-        }
-
         -- SuperCollider
         use {
             "davidgranstrom/scnvim",
@@ -97,6 +88,16 @@ return require("packer").startup {
                 require("r.settings.plugin").colorizer()
             end,
             cmd = { "ColorizerAttachToBuffer", "ColorizerToggle" },
+        }
+
+        -- StatusLine
+        use {
+            is_custom("WORKSPACE", "Repos/express_line.nvim", "ranjithshegde/express_line.nvim"),
+            branch = "0.7",
+            requires = { "kyazdani42/nvim-web-devicons", "nvim-lua/plenary.nvim" },
+            config = function()
+                require "r.settings.statusline"()
+            end,
         }
 
         -- WhichKey

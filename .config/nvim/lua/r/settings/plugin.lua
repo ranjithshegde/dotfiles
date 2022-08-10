@@ -97,7 +97,6 @@ function plugins.scnvim()
         keymaps = {
             ["<F1>"] = map "sclang.start",
             ["<F2>"] = map "sclang.poll_server_status",
-            ["<F3>"] = map_expr "Server.local.boot",
             ["<F4>"] = map_expr "WFS.startup",
             ["<F6>"] = map("editor.send_line", { "i", "n" }),
             ["<F5>"] = {
@@ -128,6 +127,13 @@ function plugins.scnvim()
                     require("scnvim.help").open_help_for(vim.fn.expand "<cword>")
                 end
             end, { desc = "Hover or peek-fold", buffer = args.buf })
+
+            vim.keymap.set("n", "<F3>", function()
+                require("scnvim.sclang").send "Server.local.boot"
+                vim.defer_fn(function()
+                    vim.api.nvim_exec_autocmds("User", { pattern = "ScStatus" })
+                end, 4000)
+            end, { buffer = args.buf, desc = "Boot local server" })
 
             vim.opt_local.wrap = true
             if not require("scnvim").is_running() then

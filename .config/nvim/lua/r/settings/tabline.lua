@@ -1,3 +1,4 @@
+---@diagnostic disable: missing-parameter, cast-local-type
 local space = " "
 
 --*********************************** File path ------------------------
