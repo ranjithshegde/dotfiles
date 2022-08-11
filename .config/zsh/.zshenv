@@ -28,6 +28,7 @@ export LESS_TERMCAP_us=$'\e[1;4;31m'
 export HISTFILE="${XDG_DATA_HOME}/zsh/history"
 export CARGO_HOME="${XDG_DATA_HOME}/cargo"
 export CUDA_CACHE_PATH="${XDG_CACHE_HOME}/nv"
+export VSCODE_PORTABLE="${XDG_DATA_HOME}/vscode"
 export EMSDK="${HOME}/Software/libraries/emsdk"
 export EM_CONFIG="${EMSDK}/.emscripten"
 export EM_NODE="${EMSDK}/node/14.8.2_64bit/bin/node"

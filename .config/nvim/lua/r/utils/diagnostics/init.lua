@@ -26,6 +26,7 @@ end
 local float_conf = {
     virtual_text = {
         source = "always",
+        severity = vim.diagnostic.severity.ERROR,
     },
     float = {
         show_header = true,
@@ -90,6 +91,9 @@ local function configure(settings, client)
             vim.lsp.handlers["textDocument/publishDiagnostics"] =
                 vim.lsp.with(vim.lsp.diagnostic.on_publish_diagnostics, conf)
             local client_id = returnID(id)
+            if not client_id then
+                return
+            end
             local buffers = lsp.get_buffers_by_client_id(client_id)
             for _, buffer_id in ipairs(buffers) do
                 show(buffer_id, client_id, conf)
@@ -100,6 +104,9 @@ local function configure(settings, client)
         vim.lsp.handlers["textDocument/publishDiagnostics"] =
             vim.lsp.with(vim.lsp.diagnostic.on_publish_diagnostics, conf)
         local client_id = returnID(client)
+        if not client_id then
+            return
+        end
         local buffers = lsp.get_buffers_by_client_id(client_id)
         for _, buffer_id in ipairs(buffers) do
             show(buffer_id, client_id, conf)

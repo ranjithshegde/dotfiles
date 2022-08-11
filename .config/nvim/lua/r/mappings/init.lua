@@ -8,12 +8,12 @@ local map = vim.keymap.set
 
 local open = function(path)
     return function()
-        require("r.utils").ex_cmd(
-            "drop",
-            { "~/.config/nvim/" .. path },
-            { tab = 2, silent = true },
-            { file = true, bar = true }
-        )
+        local bufinfo = vim.fn.getbufinfo(vim.api.nvim_get_current_buf())[1]
+        local cmd = "edit"
+        if bufinfo.name ~= "" then
+            cmd = "tabnew"
+        end
+        require("r.utils").ex_cmd(cmd, { "~/.config/nvim/" .. path }, { silent = true }, { file = true, bar = true })
     end
 end
 

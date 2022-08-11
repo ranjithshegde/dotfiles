@@ -21,6 +21,7 @@ end
 ---**************************** LSP AuGroups and Handlers
 function lsp.settings()
     local id = {}
+    vim.g.lspconfig = true
     id.SetDiagnosticFuncs = augroup("SetDiagnosticFuncs", opts)
     id.LspHighlightSymbols = augroup("LspHighlightSymbols", opts)
     id.LspAutoFormat = augroup("LspAutoFormat", opts)
@@ -165,6 +166,14 @@ function lsp.attach(client, bufnr)
         require("r.utils.ls").lsp_capabilities,
         { desc = "Display Language Server capabilities" }
     )
+
+    if client.name == "texlab" then
+        local cwd = vim.loop.cwd()
+        if vim.loop.fs_stat(cwd .. "/aux") then
+            client.cmd = { "texlab", "--log-file", "./aux/texlab-log", "-vvvv" }
+            return client.notify("workspace/didChangeConfiguration", client.cmd)
+        end
+    end
 end
 
 ------------------------------------------------------------------------
@@ -213,7 +222,6 @@ function lsp.servers()
             end,
         },
         ltex = {
-            autostart = false,
             filetypes = { "bib", "markdown", "org", "tex" },
             capabilities = lsp.capabilities(),
             settings = {
@@ -225,11 +233,20 @@ function lsp.servers()
                     },
                     language = "en-GB",
                     dictionary = { ["en-GB"] = require("r.utils").concat_fileLines(dict) },
+                    hiddenFalsePositives = {
+                        ["en-GB"] = vim.loop.fs_stat(vim.loop.cwd() .. "/.ltex_false_positive")
+                                and require("r.utils").concat_fileLines(vim.loop.cwd() .. "/.ltex_false_positive")
+                            or {},
+                    },
+                    disabledRules = {
+                        ["en-GB"] = vim.loop.fs_stat(vim.loop.cwd() .. "/.ltex_rules")
+                                and require("r.utils").concat_fileLines(vim.loop.cwd() .. "/.ltex_rules")
+                            or {},
+                    },
                 },
             },
         },
         texlab = {
-            cmd = { "texlab", "--log-file", "./aux/texlab-log", "-vvvv" },
             capabilities = lsp.capabilities(),
             settings = {
                 texlab = {

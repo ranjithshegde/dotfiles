@@ -13,12 +13,13 @@ function lspmap.lsp(bufnr)
         end
     end, { desc = "Hover or peek-fold", buffer = bufnr })
 
+    vim.keymap.set({ "n", "v" }, ",a", vim.lsp.buf.code_action, { desc = "Code actions for buffer", buffer = bufnr })
+
     wk.register({
         ["<F7>"] = { require("r.debugger").init, "Initialize Debugger adapter" },
         [","] = {
             name = "Lsp functions",
             s = { vim.lsp.buf.signature_help, "Show signature" },
-            a = { vim.lsp.buf.code_action, "Code actions for buffer" },
             i = { vim.lsp.buf.implementation, "Jump to Implementation" },
             D = {
                 function()
@@ -70,13 +71,6 @@ function lspmap.lsp(bufnr)
             },
         },
     }, { buffer = bufnr })
-
-    wk.register({
-        [","] = {
-            name = "Lsp visual mode",
-            a = { vim.lsp.buf.range_code_action, "Code actions for range" },
-        },
-    }, { mode = "v", buffer = bufnr })
 
     map("n", "<F1>", function()
         require("overseer").window.toggle { enter = false }

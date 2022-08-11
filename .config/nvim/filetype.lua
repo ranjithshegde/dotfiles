@@ -14,6 +14,7 @@ vim.filetype.add {
     filename = {
         ["/etc/mkinitcpio.conf"] = "confini",
         ["/etc/environment"] = "confini",
+        [".clang-tidy"] = "yaml",
     },
     pattern = {
         [vim.env.XDG_CONFIG_HOME .. "/udev/rules.d/.*%.rules"] = "udevrules",
