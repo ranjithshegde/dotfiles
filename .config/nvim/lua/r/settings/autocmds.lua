@@ -133,16 +133,16 @@ aucmd("BufEnter", {
 })
 
 -- ************** Winbar -----------------------------------------------
--- aucmd({ "BufEnter", "WinEnter" }, {
---     group = id.FormatOptions,
---     callback = function(args)
---         if args.match == "" or args.file == "" then
---             return
---         end
---         require "r.settings.winbar"(vim.api.nvim_get_current_win())
---     end,
---     desc = "Winbar on tabpages with more than one window",
--- })
+aucmd({ "BufEnter", "WinEnter" }, {
+    group = id.FormatOptions,
+    callback = function(args)
+        if args.match == "" or args.file == "" then
+            return
+        end
+        require "r.settings.winbar"(vim.api.nvim_get_current_win())
+    end,
+    desc = "Winbar on tabpages with more than one window",
+})
 
 -- ************** Tabline ----------------------------------------------
 aucmd({ "TabEnter", "WinLeave", "WinEnter" }, {

@@ -164,6 +164,9 @@ function telescope.telescope()
     if package.loaded.notify then
         require("telescope").load_extension "notify"
     end
+    if package.loaded.refactoring then
+        require("telescope").load_extension "refactoring"
+    end
 end
 
 return telescope

@@ -45,15 +45,6 @@ return require("packer").startup {
             end,
         }
 
-        -- Comment with TreeSitter
-        use {
-            "numToStr/Comment.nvim",
-            keys = require("r.settings.plugin").comment.keys,
-            config = function()
-                require("r.settings.plugin").comment.config()
-            end,
-        }
-
         -- Indents and chars
         use {
             "lukas-reineke/indent-blankline.nvim",
@@ -153,19 +144,6 @@ return require("packer").startup {
             { "tpope/vim-fugitive", cmd = { "G", "Git", "Gclog" } },
         }
 
-        -- TreeSitter
-        use {
-            "nvim-treesitter/nvim-treesitter",
-            run = ":TSUpdate",
-            requires = {
-                { "p00f/nvim-ts-rainbow", event = "BufReadPre" },
-                { "nvim-treesitter/nvim-treesitter-textobjects", module = "nvim-treesitter.textobjects" },
-                { "nvim-treesitter/nvim-treesitter-refactor", after = "scnvim" },
-                { "nvim-treesitter/playground", module = "nvim-treesitter-playground" },
-                { "Badhi/nvim-treesitter-cpp-tools", ft = { "c", "cpp", "opencl" } },
-            },
-        }
-
         -- Telescope
         use {
             {
@@ -185,7 +163,6 @@ return require("packer").startup {
         -- surround
         use {
             "kylechui/nvim-surround",
-            opt = true,
             keys = {
                 { "n", "ys", "Add surround" },
                 { "n", "ds", "Delete surround" },
@@ -197,7 +174,48 @@ return require("packer").startup {
                 { "n", "ySS", "Add surround  current line" },
             },
             config = function()
-                require("nvim-surround").setup {}
+                require("r.settings.plugin").surround()
+            end,
+        }
+
+        -- TreeSitter
+        use {
+            "nvim-treesitter/nvim-treesitter",
+            run = ":TSUpdate",
+            requires = {
+                { "p00f/nvim-ts-rainbow", event = "BufReadPre" },
+                { "nvim-treesitter/nvim-treesitter-textobjects", module = "nvim-treesitter.textobjects" },
+                { "nvim-treesitter/nvim-treesitter-refactor", after = "scnvim" },
+                { "nvim-treesitter/playground", module = "nvim-treesitter-playground" },
+                { "Badhi/nvim-treesitter-cpp-tools", ft = { "c", "cpp", "opencl" } },
+                {
+                    "ThePrimeagen/refactoring.nvim",
+                    module = "refactoring",
+                    config = function()
+                        require("r.settings.treesitter").refactoring()
+                    end,
+                },
+            },
+        }
+
+        -- Comment with TreeSitter
+        use {
+            "numToStr/Comment.nvim",
+            keys = {
+                { "n", "gc", "Single Comment" },
+                { "n", "gb", "Block Comment" },
+                { "n", "g>", "Partial Comment right" },
+                { "n", "g<", "Partial Comment left" },
+                { "v", "gc", "Single Comment" },
+                { "v", "gb", "Block Comment" },
+                { "v", "g>", "Partial Comment right" },
+                { "v", "g<", "Partial Comment left" },
+            },
+            config = function()
+                require("Comment").setup {
+                    mappings = { extended = true },
+                    ignore = "^$",
+                }
             end,
         }
 
@@ -259,6 +277,7 @@ return require("packer").startup {
             { "hrsh7th/cmp-nvim-lsp", opt = "true" },
             {
                 "L3MON4D3/LuaSnip",
+                branch = "parse_from_ast",
                 event = "InsertEnter",
                 config = function()
                     require("r.settings.completion").luasnip()

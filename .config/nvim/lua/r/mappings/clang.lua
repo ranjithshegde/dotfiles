@@ -114,10 +114,10 @@ function cmaps.clang()
             },
             r = {
                 name = "Refactor Cpp",
-                f = { "<cmd>TSCppDefineClassFunc<CR>", "function definition from declaration", mode = "v" },
-                c = { "<cmd>TSCppMakeConcreteClass<CR>", "Convert virtual class to concrete class", mode = "v" },
-                C = { "<cmd>TSCppRuleOf3<CR>", "Add Constructor, destructor and copy", mode = "v" },
-                m = { "<cmd>TSCppRuleOf5<CR>", "Add move Constructor", mode = "v" },
+                f = { vim.cmd.TSCppDefineClassFunc, "function definition from declaration", mode = "v" },
+                c = { vim.cmd.TSCppMakeConcreteClass, "Convert virtual class to concrete class", mode = "v" },
+                C = { vim.cmd.TSCppRuleOf3, "Add Constructor, destructor and copy", mode = "v" },
+                m = { vim.cmd.TSCppRuleOf5, "Add move Constructor", mode = "v" },
             },
         },
         [","] = {

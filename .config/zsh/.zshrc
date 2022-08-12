@@ -41,6 +41,9 @@ alias paclist="expac --timefmt='%Y-%m-%d %T' '%l\t%n' | sort | tail -n 100"
 alias ydl='youtube-dl --external-downloader aria2c --external-downloader-args "-c -j 3 -x 3 -s 3 -k 1M"'
 alias PG="projectGenerator"
 alias CM="compiledb -n make"
+alias nc="nordvpn connect"
+alias nd="nordvpn disconnect"
+alias pqi="pacman -Qii"
 
 
 

@@ -34,6 +34,20 @@ function to.peek(query)
     end
 end
 
+local refac = {}
+
+function refac.refac(args)
+    return function()
+        require("refactoring").refactor(args)
+    end
+end
+
+function refac.debug(func, args)
+    return function()
+        require("refactoring").debug[func](args)
+    end
+end
+
 return function()
     require("which-key").register {
         [";"] = {
@@ -53,7 +67,7 @@ return function()
             },
             --Refactor
             d = "Jump to node definition",
-            f = { "gg=G<C-o>zz", "indent" },
+            i = { "gg=G<C-o>zz", "indent" },
             l = {
                 name = "List functions/symbols",
                 l = "local",
@@ -74,6 +88,22 @@ return function()
                 i = { "Increment nodes", mode = "v" },
                 s = { "Increment Scope", mode = "v" },
                 r = { "Decrememnt nodes", mode = "v" },
+            },
+            f = {
+                name = "Refactoring tools",
+                i = { refac.refac "Inline Variable", "Inline Variable" },
+                e = {
+                    name = "Extract",
+                    b = { refac.refac "Extract Block", "extract block" },
+                    B = { refac.refac "Extract Block To File", "extract block to file" },
+                },
+                d = {
+                    name = "print debug information",
+                    p = { refac.debug("printf", { below = true }), "Printf below" },
+                    P = { refac.debug("printf", { below = false }), "Printf above" },
+                    v = { refac.debug("print_var", { normal = true }), "Printf variable" },
+                    c = { refac.debug("cleanup", {}), "Cleanup prints" },
+                },
             },
         },
         -- Refactor
@@ -147,6 +177,38 @@ return function()
         ["<Up>"] = { to.move("goto_previous_start", "@block.outer"), "Move to previous outer code block start" },
         ["<Left>"] = { to.move("goto_previous_start", "@block.inner"), "Move to previous inner code block start" },
     }
+
+    require("which-key").register({
+        [";f"] = {
+            name = "Refactoring tools",
+            i = {
+                [[<Esc><Cmd>lua require('refactoring').refactor('Inline Variable')<CR>]],
+                "Inline Variable",
+            },
+            e = {
+                name = "Extract",
+                v = {
+                    [[<Esc><Cmd>lua require('refactoring').refactor('Extract Variable')<CR>]],
+                    "Extract Variable",
+                },
+                f = {
+                    [[<Esc><Cmd>lua require('refactoring').refactor('Extract Function')<CR>]],
+                    "Extract function",
+                },
+                F = {
+                    [[<Esc><Cmd>lua require('refactoring').refactor('Extract Function To File')<CR>]],
+                    "Extract function To File",
+                },
+            },
+            d = {
+                name = "print debug information",
+                v = {
+                    [[:lua require("refactoring").debug.print_var ({})<CR>]],
+                    "Printf variable",
+                },
+            },
+        },
+    }, { mode = "v" })
 
     require("which-key").register({
         a = {

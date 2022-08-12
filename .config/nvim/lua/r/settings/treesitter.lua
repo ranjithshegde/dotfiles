@@ -97,6 +97,37 @@ function ts.init()
     }
 end
 
+function ts.refactoring()
+    require("refactoring").setup {
+        prompt_func_return_type = {
+            cpp = true,
+            c = true,
+            h = true,
+            hpp = true,
+            cxx = true,
+        },
+        prompt_func_param_type = {
+            cpp = true,
+            c = true,
+            h = true,
+            hpp = true,
+            cxx = true,
+        },
+        printf_statements = {
+            cpp = {
+                'std::cout << "%s" << std::endl;',
+            },
+            lua = {
+                'vim.pretty_print("%s")',
+            },
+        },
+        print_var_statements = {},
+    }
+    if package.loaded.telescope then
+        require("telescope").load_extension "refactoring"
+    end
+end
+
 ------------------------------------------------------------------------
 --                             Treesitter Statusline                  --
 ------------------------------------------------------------------------

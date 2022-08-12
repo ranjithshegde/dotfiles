@@ -49,8 +49,16 @@ return require("which-key").register {
         r = { tele "lsp_references", "Lsp References" },
         s = { tele "lsp_document_symbols", "Lsp symbols in buffer" },
         S = { tele "lsp_dynamic_workspace_symbols", "Grep lsp workspace symbols" },
-        t = { tele "tagstack", "Lsp Ctags" },
-        T = { tele "treesitter", "TreeSitter nodes in buffer" },
+        t = {
+            name = "Treesitter",
+            n = { tele "treesitter", "TreeSitter nodes in buffer" },
+            f = {
+                "<Esc><cmd>lua require('telescope').extensions.refactoring.refactors()<CR>",
+                "Treesitter Refactoring options",
+                mode = "v",
+            },
+        },
+        T = { tele "tagstack", "Lsp Ctags" },
         z = { tele "current_buffer_fuzzy_find", "Fuzzy find in buffer" },
         ["'"] = { tele "marks", "Marks" },
         ['"'] = { tele "registers", "Registers" },
