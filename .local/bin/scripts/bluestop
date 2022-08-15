@@ -1,9 +1,13 @@
 #!/bin/sh
 
+rfkill block bluetooth
 systemctl stop bluetooth
 rmmod btusb
-rmmod bluetooth
 rmmod btrtl
 rmmod btintel
 rmmod btbcm
 rmmod btnep
+rmmod btmtk
+rmmod bnep
+rmmod rfcomm
+rmmod bluetooth

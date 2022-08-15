@@ -18,6 +18,7 @@ function servers.clangd()
                 "--background-index",
                 "--all-scopes-completion",
                 "--header-insertion=iwyu",
+                "--header-insertion-decorators",
                 "--completion-style=detailed",
                 "--suggest-missing-includes",
                 "--fallback-style=webkit",

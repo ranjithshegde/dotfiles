@@ -102,7 +102,7 @@ function cmaps.clang()
             C = { vim.cmd.CclsCallees, "Callees" },
             d = { vim.cmd.CclsDerived, "Derived functions" },
             m = { "<cmd>CclsMemberHierarchy -float<CR>", "Member variables" },
-            f = { "<cmd>CclsMemberFunctionHierarchy -float<CR>", "Member functions" },
+            F = { "<cmd>CclsMemberFunctionHierarchy -float<CR>", "Member functions" },
             t = { "<cmd>CclsMemberTypeHierarchy -float<CR>", "Member classes" },
             v = { vim.cmd.CclsVars, "Variables in function" },
             h = {
