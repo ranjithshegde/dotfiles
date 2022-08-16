@@ -17,9 +17,9 @@ aucmd("FileType", {
     callback = function()
         vim.opt.formatoptions = vim.opt.formatoptions
             - "a" -- Dont format pasted code
-            - "t" -- Delegate to linter prgs/LSP
             - "o" -- O and o don't continue comments
             - "r" -- Return does not continue comments
+            + "t" -- Autowrap respecting textwidth
             + "c" -- comments respect textwidth
             + "q" -- Allow formatting comments w/ gq
             + "n" -- Recognize numbered lists
@@ -37,7 +37,7 @@ aucmd("FileType", {
             vim.opt.relativenumber = false
             vim.opt_local.cursorline = false
             vim.wo.foldcolumn = "0"
-            -- vim.wo.winbar = nil
+            vim.wo.winbar = nil
             return
         elseif args.file:find "Leela.tex" then
             vim.opt.relativenumber = true
@@ -123,18 +123,14 @@ aucmd({ "FocusLost", "WinLeave" }, {
     desc = "dont use cursorline on inactive buffers",
 })
 
-id.Statusline = augroup("Statusline", opts)
-aucmd("BufEnter", {
-    group = id.Statusline,
-    callback = function()
-        auexec("User", { pattern = "ScStatus" })
-    end,
-    desc = "Load ScStatus only for supercollider",
-})
+------------------------------------------------------------------------
+--                  Statusline Winbar Tabline                         --
+------------------------------------------------------------------------
+id.Decorations = augroup("Decorations", opts)
 
 -- ************** Winbar -----------------------------------------------
 aucmd({ "BufEnter", "WinEnter" }, {
-    group = id.FormatOptions,
+    group = id.Decorations,
     callback = function(args)
         if args.match == "" or args.file == "" then
             return
@@ -145,13 +141,40 @@ aucmd({ "BufEnter", "WinEnter" }, {
 })
 
 -- ************** Tabline ----------------------------------------------
-aucmd({ "TabEnter", "WinLeave", "WinEnter" }, {
-    group = id.FormatOptions,
+aucmd({ "TabNewEntered", "TabEnter" }, {
+    group = id.Decorations,
     callback = function()
         vim.opt.tabline = require "r.settings.tabline"()
     end,
     desc = "Dynamically set tablines",
 })
+aucmd({ "WinEnter", "BufEnter" }, {
+    group = id.Decorations,
+    callback = function(args)
+        if args.match == "" or args.file == "" then
+            return
+        end
+        local tabline = vim.opt.tabline:get()
+        if not tabline or tabline == "" then
+            return
+        end
+        vim.opt.tabline = require "r.settings.tabline"()
+    end,
+    desc = "Update Tabline on WinChange or BufChange",
+})
+
+id.Statusline = augroup("Statusline", opts)
+aucmd("BufEnter", {
+    group = id.Statusline,
+    callback = function(args)
+        if args.match == "" or args.file == "" then
+            return
+        end
+        auexec("User", { pattern = "ScStatus" })
+    end,
+    desc = "Load ScStatus only for supercollider",
+})
+
 ------------------------------------------------------------------------
 --                              LSP                                   --
 ------------------------------------------------------------------------
@@ -230,13 +253,18 @@ aucmd("BufReadPost", {
         require "r.mappings.pairs"
         require "r.mappings.treesitter"()
     end,
+    once = true,
     desc = "Load mappings for unimparied and treesiiter after reading buffer",
 })
 -- ************** Load matchit  ----------------------------------------
-aucmd(
-    "BufReadPost",
-    { group = id.PluginLoad, command = "packadd matchit", once = true, desc = "Conditionally load matchit" }
-)
+aucmd("BufReadPost", {
+    group = id.PluginLoad,
+    callback = function()
+        vim.cmd.packadd "matchit"
+    end,
+    once = true,
+    desc = "Conditionally load matchit",
+})
 -- ************** Load decoration plugins ------------------------------
 aucmd("FileType", {
     group = id.PluginLoad,
@@ -249,6 +277,27 @@ aucmd("FileType", {
         end
         require("packer").loader("nvim-ufo", "indent-blankline.nvim")
     end,
+})
+-- ************** Load harpoon maps ------------------------------------
+vim.api.nvim_create_autocmd("FileType", {
+    pattern = "harpoon",
+    group = id.PluginLoad,
+    callback = function()
+        vim.keymap.set("n", "<C-v>", function()
+            local curline = vim.api.nvim_get_current_line()
+            local working_directory = vim.fn.getcwd() .. "/"
+            vim.cmd "vs"
+            vim.cmd("e " .. working_directory .. curline)
+        end, { noremap = true, silent = true })
+
+        vim.keymap.set("n", "<C-t>", function()
+            local curline = vim.api.nvim_get_current_line()
+            local working_directory = vim.fn.getcwd() .. "/"
+            vim.cmd "tabnew"
+            vim.cmd("e " .. working_directory .. curline)
+        end, { noremap = true, silent = true })
+    end,
+    desc = "Make harpoon open in splits",
 })
 
 ------------------------------------------------------------------------

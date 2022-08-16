@@ -1,5 +1,5 @@
 ﻿###
-###  vlc 3.0.16
+###  vlc 3.0.17.4
 ###
 
 ###
@@ -1106,20 +1106,26 @@
 
 [access_output_srt] # SRT stream output
 
-# SRT chunk size (bytes) (integer)
-#chunk-size=1316
-
 # Return poll wait after timeout milliseconds (-1 = infinite) (integer)
-#poll-timeout=100
+#poll-timeout=-1
 
 # SRT latency (ms) (integer)
-#latency=125
+#latency=120
 
 # Password for stream encryption (string)
 #passphrase=
 
+# SRT maximum payload size (bytes) (integer)
+#payload-size=1316
+
+# SRT maximum bandwidth ceiling (bytes) (integer)
+#bandwidth-overhead-limit=25
+
 # Crypto key length in bytes (integer)
 #key-length=16
+
+#  SRT Stream ID (string)
+#streamid=
 
 [swscale] # Video scaling filter
 
@@ -1129,7 +1135,7 @@
 [freetype] # Freetype2 font renderer
 
 # Font (string)
-#freetype-font=Serif Bold
+freetype-font=Noto Sans
 
 # Monospace Font (string)
 #freetype-monofont=Monospace
@@ -1294,20 +1300,20 @@
 
 [access_srt] # SRT input
 
-# SRT chunk size (bytes) (integer)
-#chunk-size=1316
-
 # Return poll wait after timeout milliseconds (-1 = infinite) (integer)
 #poll-timeout=-1
 
 # SRT latency (ms) (integer)
-#latency=125
+#latency=120
 
 # Password for stream encryption (string)
 #passphrase=
 
 # Crypto key length in bytes (integer)
 #key-length=16
+
+#  SRT Stream ID (string)
+#streamid=
 
 [shm] # Shared memory framebuffer
 
@@ -1799,6 +1805,9 @@
 # Audio CD device (string)
 #cd-audio=/dev/sr0
 
+# Musicbrainz Server (string)
+#musicbrainz-server=musicbrainz.org
+
 # CDDB Server (string)
 #cddb-server=freedb.videolan.org
 
@@ -1933,7 +1942,7 @@
 #sout-avi-subject=
 
 # Encoder (string)
-#sout-avi-encoder=VLC Media Player - 3.0.16 Vetinari
+#sout-avi-encoder=VLC Media Player - 3.0.17.4 Vetinari
 
 # Keywords (string)
 #sout-avi-keywords=
@@ -2543,10 +2552,7 @@ qt-privacy-ask=0
 [dav1d] # Dav1d video decoder
 
 # Frames Threads (integer)
-#dav1d-thread-frames=0
-
-# Tiles Threads (integer)
-#dav1d-thread-tiles=0
+dav1d-thread-frames=4
 
 [a52] # ATSC A/52 (AC-3) audio decoder
 
@@ -2602,6 +2608,14 @@ qt-privacy-ask=0
 # DTS dynamic range compression (boolean)
 #dts-dynrng=1
 
+[aribsub] # ARIB subtitles decoder
+
+# Ignore ruby (furigana) (boolean)
+#aribsub-ignore-ruby=0
+
+# Use Core Text renderer (boolean)
+#aribsub-use-coretext=0
+
 [subsusf] # USF subtitles decoder
 
 # Formatted Subtitles (boolean)
@@ -2653,7 +2667,7 @@ qt-privacy-ask=0
 #avcodec-codec=
 
 # Hardware decoding (string)
-#avcodec-hw=any
+avcodec-hw=vaapi_drm
 
 # Threads (integer)
 #avcodec-threads=0
@@ -3037,10 +3051,10 @@ qt-privacy-ask=0
 #sout-x264-stats=x264_2pass.log
 
 # Default preset setting used (string)
-#sout-x264-preset=
+sout-x264-preset=ultrafast
 
 # Default tune setting used (string)
-#sout-x264-tune=
+sout-x264-tune=film
 
 # x264 advanced options (string)
 #sout-x264-options=
@@ -3672,6 +3686,47 @@ qt-privacy-ask=0
 # Force index creation (integer)
 #avi-index=0
 
+[ts] # MPEG Transport Stream demuxer
+
+# Digital TV Standard (string)
+#ts-standard=auto
+
+# Extra PMT (string)
+#ts-extra-pmt=
+
+# Trust in-stream PCR (boolean)
+#ts-trust-pcr=1
+
+# Set id of ES to PID (boolean)
+#ts-es-id-pid=1
+
+# CSA Key (string)
+#ts-csa-ck=
+
+# Second CSA Key (string)
+#ts-csa2-ck=
+
+# Packet size in bytes to decrypt (integer)
+#ts-csa-pkt=188
+
+# Separate sub-streams (boolean)
+#ts-split-es=1
+
+# Seek based on percent not time (boolean)
+#ts-seek-percent=0
+
+# Check packets continuity counter (boolean)
+#ts-cc-check=1
+
+# Only create ES on program sending data (boolean)
+#ts-pmtfix-waitdata=1
+
+# Try to generate PAT/PMT if missing (boolean)
+#ts-patfix=1
+
+# Try to fix too early PCR (or late DTS) (boolean)
+#ts-pcr-offsetfix=1
+
 [mp4] # MP4 stream demuxer
 
 # M4A audio only (boolean)
@@ -3954,7 +4009,7 @@ qt-privacy-ask=0
 #deinterlace-mode=auto
 
 # Video output module (string)
-#vout=
+vout=any
 
 # Video filter module (string)
 #video-filter=
@@ -4038,7 +4093,7 @@ qt-privacy-ask=0
 #run-time=0.000000
 
 # Fast seek (boolean)
-#input-fast-seek=0
+input-fast-seek=1
 
 # Playback speed (float)
 #rate=1.000000

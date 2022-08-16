@@ -5,7 +5,10 @@ local map = vim.keymap.set
 --                              Language servers                      --
 ------------------------------------------------------------------------
 
-function lspmap.lsp(bufnr)
+function lspmap.lsp(client, bufnr)
+    if client.name == "ltex" then
+        return
+    end
     vim.keymap.set("n", "K", function()
         local winid = package.loaded.ufo and require("ufo").peekFoldedLinesUnderCursor()
         if not winid then

@@ -65,6 +65,7 @@ return require("which-key").register {
         ["/"] = { tele "grep_string", "Grep CWORD in directory" },
         ["]"] = { tele "tags", "Lsp Ctags" },
         ["<Space>"] = { tele "builtin", "Builtin Searchers" },
+        ["<CR>"] = { tele "resume", "Resume last picker" },
         k = { telargs("lsp_workspace_symbols", { query = vim.fn.expand "<cword>" }), "Search lsp workspace symbol" },
         p = { tel_ext("project", { display_type = "full" }), "Projects" },
         e = { tel_ext("file_browser", { files = false }), "Folder browser" },

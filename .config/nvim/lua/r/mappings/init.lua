@@ -17,9 +17,14 @@ local open = function(path)
     end
 end
 
-local function open_term(split, mods)
+local function open_term(split)
     return function()
-        require("r.utils").ex_cmd(split, { "term://zsh" }, mods, { file = true, bar = true })
+        if not split then
+            require("harpoon.term").gotoTerminal(1)
+            return
+        end
+        vim.cmd[split]()
+        require("harpoon.term").gotoTerminal(1)
     end
 end
 
@@ -114,6 +119,12 @@ return function()
     map("i", "<C-o>", "<C-o>:")
     map("n", "<C-i>", "<C-i>", { desc = "Dont map C-i to Tab" })
     map({ "n", "i", "s" }, "<BS>", "<BS>", { desc = "Dont map C-h to backspace" })
+    map("n", "<leader>p", function()
+        vim.cmd.vs()
+        vim.cmd.enew()
+        vim.cmd "put =execute('messages')"
+        vim.cmd.messages "clear"
+    end, { desc = "Save messages in a new buffer" })
 
     --line movement
     map("x", "K", ":move '<-2<CR>gv", { desc = "Move line up" })
@@ -187,9 +198,27 @@ return function()
     wk.register {
         ["<leader>t"] = {
             name = "Launch terminal in split",
-            h = { open_term("split", { silent = true }), "Horizontal" },
-            v = { open_term("vsplit", { silent = true }), "Vertical" },
-            t = { open_term("drop", { silent = true, tab = 2 }), "New tab" },
+            h = { open_term "split", "Horizontal" },
+            v = { open_term "vsplit", "Vertical" },
+            t = { open_term "tabnew", "New tab" },
         },
     }
+
+    map("n", "<leader>'", function()
+        require("harpoon.ui").nav_next()
+    end, { desc = "Navigate to next harpooned file" })
+
+    map("n", "<leader>`", function()
+        require("harpoon.ui").nav_prev()
+    end, { desc = "Navigate to previous harpooned file" })
+
+    map("n", "<leader><Tab>", open_term(), { desc = "Navigate to harpooned terminal" })
+
+    map("n", "<leader><leader>", function()
+        require("harpoon.ui").toggle_quick_menu()
+    end, { desc = "Open harpoon list" })
+
+    map("n", "<leader><Space>", function()
+        require("harpoon.mark").add_file()
+    end, { desc = "Harpoon current file" })
 end

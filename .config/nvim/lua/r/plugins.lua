@@ -28,6 +28,9 @@ return require("packer").startup {
         -- Colorscheme
         use "EdenEast/nightfox.nvim"
 
+        -- Better marks
+        use { "ThePrimeagen/harpoon", module = "harpoon" }
+
         -- Databases
         use {
             "kristijanhusak/vim-dadbod-ui",
@@ -247,13 +250,25 @@ return require("packer").startup {
             branch = "0.8",
             requires = {
                 { "jose-elias-alvarez/null-ls.nvim", opt = true },
-                { "simrat39/symbols-outline.nvim", module = "symbols-outline" },
+                {
+                    "simrat39/symbols-outline.nvim",
+                    module = "symbols-outline",
+                    config = function()
+                        require("symbols-outline").setup()
+                    end,
+                },
                 {
                     "m-pilia/vim-ccls",
                     ft = { "c", "cpp", "opencl" },
                     config = function()
                         require("r.lsp.clangd").ccls()
                     end,
+                    requires = {
+                        {
+                            is_custom("WORKSPACE", "Repos/ccls.nvim", "ranjithshegde/ccls.nvim"),
+                            ft = { "c", "cpp", "opencl" },
+                        },
+                    },
                 },
                 {
                     is_custom("WORKSPACE", "Repos/lua-dev.nvim", "folke/lua-dev.nvim"),
@@ -277,7 +292,6 @@ return require("packer").startup {
             { "hrsh7th/cmp-nvim-lsp", opt = "true" },
             {
                 "L3MON4D3/LuaSnip",
-                branch = "parse_from_ast",
                 event = "InsertEnter",
                 config = function()
                     require("r.settings.completion").luasnip()

@@ -189,7 +189,7 @@ function ls.TexWordCount()
         args = { "-inc", "-sum", "-1", vim.fn.expand "%" },
         on_exit = function(j, return_val)
             vim.pretty_print(return_val)
-            vim.pretty_print(j:result())
+            vim.notify(j:result(), nil, { title = "Current document word count" })
         end,
     }):sync()
 end

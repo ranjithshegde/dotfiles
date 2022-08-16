@@ -43,8 +43,8 @@ alias PG="projectGenerator"
 alias CM="compiledb -n make"
 alias nc="nordvpn connect"
 alias nd="nordvpn disconnect"
+alias ns="nordvpn status"
 alias pqi="pacman -Qii"
-
 
 
 # Zplug-------------------------------------------------------------------------------

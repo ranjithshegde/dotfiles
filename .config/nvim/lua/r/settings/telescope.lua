@@ -167,6 +167,9 @@ function telescope.telescope()
     if package.loaded.refactoring then
         require("telescope").load_extension "refactoring"
     end
+    if package.loaded.harpoon then
+        require("telescope").load_extension "harpoon"
+    end
 end
 
 return telescope

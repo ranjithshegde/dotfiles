@@ -105,7 +105,7 @@ local mode_to_highlight = {
     ["NORMAL"] = "MiniStatuslineModeNormal",
 }
 
-local mode = subscribe.buf_autocmd("el_mode", "BufEnter,ModeChanged", function()
+local mode = subscribe.buf_autocmd("el_mode", "ModeChanged", function()
     local current_mode = get_mode()
     local current_hl = mode_to_highlight[current_mode]
     if current_hl then
@@ -152,7 +152,7 @@ local cursor = subscribe.buf_autocmd("el_cursor", "CursorMoved,CursorMovedI", fu
 end)
 
 --*********************************** SuperCollider ---------------------
-local scnvim = subscribe.user_autocmd("el_scnvim", "ScStatus", function(_, buffer)
+local scnvim = subscribe.user_autocmd("el_scnvim", "ScStatus", function(_)
     local ft = vim.bo.filetype
     if ft == "supercollider" then
         local scstatus = require("scnvim.statusline").get_server_status()

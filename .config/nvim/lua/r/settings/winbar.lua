@@ -49,5 +49,4 @@ return function(n)
     end
 
     vim.wo[n].winbar = winbar
-    vim.cmd.redrawstatus()
 end

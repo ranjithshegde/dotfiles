@@ -38,19 +38,19 @@ function plugins.colorizer()
     }
 end
 
----Customize nightfox colorscheme
-function plugins.colorscheme()
-    local Tabline = require("nightfox.group").load("carbonfox").TabLine
-    local TablineSel = require("nightfox.group").load("carbonfox").TabLineSel
-    vim.pretty_print(Tabline, TablineSel)
-    local groups = {
-        carbonfox = {
-            TabLine = { fg = Tabline.bg, bg = Tabline.fg },
-            TabLineSel = { fg = TablineSel.bg, bg = TablineSel.fg },
+---OrgMode
+function plugins.org()
+    require("orgmode").setup_ts_grammar()
+    require("orgmode").setup {
+        org_agenda_files = {
+            "~/Documents/Orgs/*",
+            "~/Documents/Orgs/*/*",
+            "~/Documents/Orgs/*/*/*",
+            "~/Documents/Orgs/*/*/*/*",
         },
+        org_highlight_latex_and_related = "entities",
+        emacs_config = { config_path = "$XDG_CONFIG_HOME/emacs/init.el" },
     }
-    require("nightfox").setup { groups = groups }
-    vim.cmd.colorscheme "carbonfox"
 end
 
 ---nvim-surround local and global config
@@ -85,21 +85,6 @@ function plugins.surround()
     end
 end
 
----OrgMode
-function plugins.org()
-    require("orgmode").setup_ts_grammar()
-    require("orgmode").setup {
-        org_agenda_files = {
-            "~/Documents/Orgs/*",
-            "~/Documents/Orgs/*/*",
-            "~/Documents/Orgs/*/*/*",
-            "~/Documents/Orgs/*/*/*/*",
-        },
-        org_highlight_latex_and_related = "entities",
-        emacs_config = { config_path = "$XDG_CONFIG_HOME/emacs/init.el" },
-    }
-end
-
 ---SuperCollider
 function plugins.scnvim()
     local scnvim = require "scnvim"
@@ -119,7 +104,7 @@ function plugins.scnvim()
             ["<CR>"] = map("postwin.toggle", "n"),
             ["<C-CR>"] = map("postwin.toggle", "i"),
             ["<M-L>"] = map("postwin.clear", { "n", "i" }),
-            [",s"] = map("signature.show", { "n", "i" }),
+            [",s"] = map("signature.show", "n"),
         },
         completion = { signature = { config = { border = "rounded" } } },
     }

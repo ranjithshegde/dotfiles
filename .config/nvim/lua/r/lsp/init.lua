@@ -77,7 +77,7 @@ end
 ---**************************** Global attach function
 function lsp.attach(client, bufnr)
     require("r.utils.ls").lsp_progress()
-    require("r.mappings.lsp").lsp(bufnr)
+    require("r.mappings.lsp").lsp(client, bufnr)
     vim.b.hasLsp = true
 
     local sc = client.server_capabilities
@@ -296,7 +296,6 @@ function lsp.lintFormat()
         null_ls.builtins.diagnostics.checkmake,
         null_ls.builtins.diagnostics.flake8,
         null_ls.builtins.diagnostics.shellcheck,
-        null_ls.builtins.diagnostics.vint,
         null_ls.builtins.diagnostics.zsh,
         null_ls.builtins.diagnostics.stylelint,
 
