@@ -98,19 +98,54 @@ function cmaps.clang()
     wk.register({
         [";"] = {
             b = { vim.cmd.CclsBase, "Base function" },
-            c = { vim.cmd.CclsCallers, "Callers" },
-            C = { vim.cmd.CclsCallees, "Callees" },
+            c = { vim.cmd.CclsIncomingCalls, "Callers" },
+            C = { vim.cmd.CclsOutgoingCalls, "Callees" },
             d = { vim.cmd.CclsDerived, "Derived functions" },
-            m = { "<cmd>CclsMemberHierarchy -float<CR>", "Member variables" },
-            F = { "<cmd>CclsMemberFunctionHierarchy -float<CR>", "Member functions" },
-            t = { "<cmd>CclsMemberTypeHierarchy -float<CR>", "Member classes" },
+            m = {
+                function()
+                    vim.cmd.CclsMemberHierarchy { args = { "float" } }
+                end,
+                "Member variables",
+            },
+            F = {
+                function()
+                    vim.cmd.CclsMemberFunctionHierarchy { args = { "float" } }
+                end,
+                "Member functions",
+            },
+            t = {
+                function()
+                    vim.cmd.CclsMemberTypeHierarchy { args = { "float" } }
+                end,
+                "Member classes",
+            },
             v = { vim.cmd.CclsVars, "Variables in function" },
             h = {
-                name = "heirarchy",
-                b = { "<cmd>CclsBaseHierarchy -float<CR>", "Base function" },
-                c = { "<cmd>CclsCallHierarchy -float<CR>", "Caller" },
-                C = { "<cmd>CclsCalleeHierarchy -float<CR>", "Callee" },
-                d = { "<cmd>CclsDerivedHierarchy -float<CR>", "Derived functions" },
+                name = "hierarchy",
+                b = {
+                    function()
+                        vim.cmd.CclsBaseHierarchy { args = { "float" } }
+                    end,
+                    "Base function",
+                },
+                c = {
+                    function()
+                        vim.cmd.CclsIncomingCallsHierarchy { args = { "float" } }
+                    end,
+                    "Caller",
+                },
+                C = {
+                    function()
+                        vim.cmd.CclsOutgoingCallsHierarchy { args = { "float" } }
+                    end,
+                    "Callee",
+                },
+                d = {
+                    function()
+                        vim.cmd.CclsDerivedHierarchy { args = { "float" } }
+                    end,
+                    "Derived functions",
+                },
             },
             r = {
                 name = "Refactor Cpp",

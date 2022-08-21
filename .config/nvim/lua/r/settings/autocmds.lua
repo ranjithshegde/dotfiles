@@ -58,6 +58,7 @@ aucmd("BufEnter", {
         vim.opt_local.cursorline = false
         vim.opt_local.cmdheight = 1
     end,
+    desc = "Temporary workaround for files with Indian script",
 })
 
 -- ************** Selective numbering  ---------------------------------
@@ -277,6 +278,7 @@ aucmd("FileType", {
         end
         require("packer").loader("nvim-ufo", "indent-blankline.nvim")
     end,
+    desc = "Load nvim-ufo and indent_blankline on relevant filetypes",
 })
 -- ************** Load harpoon maps ------------------------------------
 vim.api.nvim_create_autocmd("FileType", {
@@ -314,8 +316,9 @@ aucmd({ "BufEnter", "BufWinEnter", "TermOpen" }, {
             vim.cmd.startinsert()
         end
     end,
+    desc = "Start terminals in insert mode",
 })
-aucmd("TermEnter", { group = "TermInsertModes", command = "startinsert" })
+aucmd("TermEnter", { group = "TermInsertModes", command = "startinsert", desc = "Start terminals in insert mode" })
 
 -- ************************ Terminal autoecape --------------------------
 aucmd("TermEnter", {

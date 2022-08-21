@@ -55,25 +55,36 @@ function servers.clangCmp()
 end
 
 function servers.ccls()
-    ---@diagnostic disable-next-line: unused-vararg
-    local nilfunc = function(...)
-        return nil
-    end
-    vim.g.ccls_log_file = vim.fs.normalize "~/.cache/ccls.txt"
-
-    local lspconfig = require "lspconfig"
-    local ccls = {
-        filetypes = { "c", "cpp", "objc", "objcpp", "opencl" },
-        handlers = {
-            ["textDocument/publishDiagnostics"] = nilfunc,
-            ["textDocument/signatureHelp"] = nilfunc,
+    local filetypes = { "c", "cpp", "objc", "objcpp", "opencl" }
+    local server_config = {
+        filetypes = filetypes,
+        init_options = {
+            cache = {
+                -- directory = vim.env.XDG_CACHE_HOME .. "/ccls/",
+                directory = vim.fs.normalize "~/.cache/ccls/",
+            },
         },
-        root_dir = lspconfig.util.root_pattern("compile_commands.json", "compile_flags.txt", ".git"),
-        init_options = { cache = {
-            directory = vim.fs.normalize "~/.cache/ccls/",
-        } },
     }
-    require("lspconfig").ccls.setup(ccls)
+    require("ccls").setup {
+        filetypes = filetypes,
+        lsp = {
+            server = server_config,
+            disable_capabilities = {
+                completionProvider = true,
+                documentFormattingProvider = true,
+                documentRangeFormattingProvider = true,
+                documentHighlightProvider = true,
+                documentSymbolProvider = true,
+                workspaceSymbolProvider = true,
+                renameProvider = true,
+                hoverProvider = true,
+                codeActionProvider = true,
+            },
+            disable_diagnostics = true,
+            disable_signature = true,
+        },
+    }
+    -- require("ccls").setup { filetypes = filetypes, lsp = { use_defaults = true } }
 end
 
 return servers

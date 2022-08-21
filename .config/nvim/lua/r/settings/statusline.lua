@@ -8,7 +8,6 @@ local left = " "
 --                              statusline                            --
 ------------------------------------------------------------------------
 
-local builtin = require "el.builtin"
 local extensions = require "el.extensions"
 local sections = require "el.sections"
 local subscribe = require "el.subscribe"
@@ -27,7 +26,7 @@ local readonly = subscribe.buf_autocmd("el_read", "BufRead", function(_, _)
 end)
 
 --*********************************** File Icon -------------------------
-local file_icon = subscribe.buf_autocmd("el_file_icon", "BufRead", function(_, buffer)
+local file_icon = subscribe.buf_autocmd("el_file_icon", "BufRead,BufWritePost", function(_, buffer)
     local icon, color = require("nvim-web-devicons").get_icon_color(buffer.name, buffer.extension)
     if icon then
         local table = vim.api.nvim_get_hl_by_name("StatusLine", true)
@@ -35,6 +34,10 @@ local file_icon = subscribe.buf_autocmd("el_file_icon", "BufRead", function(_, b
         return icon .. space
     end
     return ""
+end)
+
+local file_name = subscribe.buf_autocmd("el_file_name", "BufRead,BufWritePost", function(_, buffer)
+    return vim.fn.fnamemodify(buffer.name, ":t")
 end)
 
 --*********************************** Vim Mode --------------------------
@@ -249,7 +252,7 @@ return function()
                 sections.collapse_builtin { scnvim, space, gps },
                 sections.split,
                 sections.highlight("FileIcon", file_icon),
-                sections.highlight("StatusLine", builtin.tail_file),
+                sections.highlight("StatusLine", file_name),
                 sections.collapse_builtin {
                     space,
                     modified,

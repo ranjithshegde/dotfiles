@@ -5,7 +5,7 @@ local o = vim.opt
 ------------------------------------------------------------------------
 
 return function()
-    vim.cmd.colorscheme "carbonfox"
+    vim.cmd.colorscheme "duskfox"
     local tab = 4
     o.title = true
     o.number = true
@@ -23,7 +23,7 @@ return function()
     o.cmdheight = 0
     o.laststatus = 3
     o.scrolloff = 10
-    o.updatetime = 300
+    o.updatetime = 1000
     o.timeoutlen = 100
     o.conceallevel = 1
     o.mouse = "n"

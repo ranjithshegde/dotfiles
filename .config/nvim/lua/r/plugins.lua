@@ -23,6 +23,7 @@ end
 --------------------------------------------------------------------------------------------------------
 return require("packer").startup {
     function(use)
+        -- manage self
         use "wbthomason/packer.nvim"
 
         -- Colorscheme
@@ -94,16 +95,6 @@ return require("packer").startup {
             end,
         }
 
-        -- WhichKey
-        use {
-            "folke/which-key.nvim",
-            config = function()
-                require("which-key").setup {
-                    layout = { width = { max = 80 }, { spacing = 10 } },
-                }
-            end,
-        }
-
         -- Fancy folds
         use {
             "kevinhwang91/nvim-ufo",
@@ -131,6 +122,17 @@ return require("packer").startup {
             cmd = "OverseerRunCmd",
             config = function()
                 require("overseer").setup { templates = { "builtin", "r" } }
+            end,
+        }
+
+        -- WhichKey
+        use {
+            "folke/which-key.nvim",
+            config = function()
+                require("which-key").setup {
+                    layout = { layout = { spacing = 15 } },
+                    window = { border = "single" },
+                }
             end,
         }
 
@@ -188,7 +190,6 @@ return require("packer").startup {
             requires = {
                 { "p00f/nvim-ts-rainbow", event = "BufReadPre" },
                 { "nvim-treesitter/nvim-treesitter-textobjects", module = "nvim-treesitter.textobjects" },
-                { "nvim-treesitter/nvim-treesitter-refactor", after = "scnvim" },
                 { "nvim-treesitter/playground", module = "nvim-treesitter-playground" },
                 { "Badhi/nvim-treesitter-cpp-tools", ft = { "c", "cpp", "opencl" } },
                 {
@@ -258,17 +259,11 @@ return require("packer").startup {
                     end,
                 },
                 {
-                    "m-pilia/vim-ccls",
+                    is_custom("WORKSPACE", "Repos/ccls.nvim", "ranjithshegde/ccls.nvim"),
                     ft = { "c", "cpp", "opencl" },
                     config = function()
                         require("r.lsp.clangd").ccls()
                     end,
-                    requires = {
-                        {
-                            is_custom("WORKSPACE", "Repos/ccls.nvim", "ranjithshegde/ccls.nvim"),
-                            ft = { "c", "cpp", "opencl" },
-                        },
-                    },
                 },
                 {
                     is_custom("WORKSPACE", "Repos/lua-dev.nvim", "folke/lua-dev.nvim"),

@@ -8,7 +8,7 @@ return {
         },
         save = { type = "boolean", default = false, description = "Save current file before executing task" },
         use_qf = {
-            "tyoe = boolean",
+            type = "boolean",
             default = true,
             desc = "Parse task output using 'errorformat', set outout to qflist or dignostics",
         },

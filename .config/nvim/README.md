@@ -66,7 +66,7 @@ Note: Until comprehensive documentation is in-place, explore the config source c
 
 - [nvim-lspconfig](https://github.com/ranjithshegde/nvim-lspconfig/tree/0.7) - Quick-start configurations for built-in LSP
 - [null-ls](https://github.com/jose-elias-alvarez/null-ls.nvim) - Wrapper and quickstart configurations for cmdline linters/formatters
-- [vim-ccls](https://github.com/m-pilia/vim-ccls) - Extends CCLS language server for custom requests
+- [ccls.nvim](https://github.com/ranjithshegde/ccls.nvim) - Leverage off-spec ccls features with AST browser
 - [clangd_extensions](https://github.com/p00f/clangd_extensions.nvim) - Same for clangd
 - [lua-dev](https://github.com/folke/lua-dev.nvim) - Integrate nvim lua directories to LSP + EmmyLua annotations
 - [symbols-outline](https://github.com/simrat39/symbols-outline.nvim) - A sidebar with LSP document symbols
@@ -75,10 +75,10 @@ Note: Until comprehensive documentation is in-place, explore the config source c
 
 - [nvim-treesitter](https://github.com/nvim-treesitter/nvim-treesitter) - Basic modules and parser collection for tree-sitter
 - [nvim-treesitter-textobjects](https://github.com/nvim-treesitter/nvim-treesitter-textobjects) - vim textobjects support for tree-sitter nodes
-- [nvim-treesitter-refactor](https://github.com/nvim-treesitter/nvim-treesitter-refactor) - basic refactor support for tree-sitter nodes
 - [nvim-treesitter-playground](https://github.com/nvim-treesitter/playground) - Interactively explore ts queries and highlights
 - [nvim-ts-rainbow](https://github.com/p00f/nvim-ts-rainbow) - rainbow colorize parens using tree-sitter hierarchy
 - [nvim-treesitter-cpp-tools](https://github.com/Badhi/nvim-treesitter-cpp-tools) - Cpp specific refactoring using tree-sitter
+- [refactoring.nvim](https://github.com/ThePrimeagen/refactoring.nvim) - Extract/inline functions, variables or blocks using tree-sitter
 
 ### Autocomeletion + Snippets
 
@@ -124,6 +124,7 @@ Note: Until comprehensive documentation is in-place, explore the config source c
 - [nvim-surround](https://github.com/kylechui/nvim-surround) - Add/remove/manipulate surrounding pairs with tree-sitter
 - [express_line.nvim](https://github.com/tjdevries/express_line.nvim/) - Adds libuv and subscription model to built-in statusline
 - [nvim-colorizer](https://github.com/xiyaowong/nvim-colorizer.lua) - Attach colors as highlights for RGB/HEX text
+- [harpoon](https://github.com/ThePrimeagen/harpoon) - Customizable, per-project marks, termianls tmux
 
 ### Database management
 

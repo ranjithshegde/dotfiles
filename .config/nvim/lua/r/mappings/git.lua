@@ -32,18 +32,11 @@ function g.signs(bufnr, gs)
     require("which-key").register({
         ["<leader>g"] = {
             name = "git functions",
-            r = {
-                gs.reset_hunk,
-                "reset hunk under cursor",
-            },
-            R = {
-                gs.reset_buffer,
-                "reset current buffer",
-            },
-            s = {
-                gs.stage_hunk,
-                "stage hunk under cursor",
-            },
+            r = { gs.reset_hunk, "reset hunk under cursor" },
+            R = { gs.reset_buffer, "reset current buffer" },
+            s = { gs.stage_hunk, "stage hunk under cursor" },
+            S = { gs.stage_buffer, "stage current buffer" },
+            x = { gs.toggle_deleted, "Toggle deleted" },
             h = {
                 function()
                     gs.toggle_linehl()
@@ -81,6 +74,8 @@ function g.signs(bufnr, gs)
             expr = true,
         },
     }, { buffer = bufnr })
+
+    vim.keymap.set({ "o", "x" }, "ih", ":<C-U>Gitsigns select_hunk<CR>", { buffer = bufnr, desc = "select git hunk" })
 end
 
 return g

@@ -40,6 +40,7 @@ return require("which-key").register {
         b = { tele "buffers", "Buffers" },
         c = { tele "commands", "Vim commands" },
         C = { tele "command_history", "Command history" },
+        h = { tele "highlight", "Highlights" },
         j = { tele "jumplist", "Jump history" },
         l = { tele "loclist", "local quickfix list" },
         m = { tele "symbols", "Unicode characters" },
@@ -47,6 +48,7 @@ return require("which-key").register {
         O = { tele "vim_options", "Vim options" },
         q = { tele "quickfix", "Quickfix list" },
         r = { tele "lsp_references", "Lsp References" },
+        R = { tele "reloader", "Reload lua modules" },
         s = { tele "lsp_document_symbols", "Lsp symbols in buffer" },
         S = { tele "lsp_dynamic_workspace_symbols", "Grep lsp workspace symbols" },
         t = {
@@ -62,6 +64,7 @@ return require("which-key").register {
         z = { tele "current_buffer_fuzzy_find", "Fuzzy find in buffer" },
         ["'"] = { tele "marks", "Marks" },
         ['"'] = { tele "registers", "Registers" },
+        ["="] = { tele "spell_suggest", "Spell suggest" },
         ["/"] = { tele "grep_string", "Grep CWORD in directory" },
         ["]"] = { tele "tags", "Lsp Ctags" },
         ["<Space>"] = { tele "builtin", "Builtin Searchers" },
@@ -168,5 +171,6 @@ return require("which-key").register {
                 "Neovim config files",
             },
         },
+        a = { vim.cmd.OverseerQuickAction, "Action list" },
     },
 }

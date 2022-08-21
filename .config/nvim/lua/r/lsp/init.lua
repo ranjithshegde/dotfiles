@@ -83,16 +83,7 @@ function lsp.attach(client, bufnr)
     local sc = client.server_capabilities
 
     if client.name == "ccls" then
-        sc.completionProvider = false
-        sc.documentFormattingProvider = false
-        sc.documentRangeFormattingProvider = false
-        sc.documentHighlightProvider = false
-        sc.documentSymbolProvider = false
-        sc.workspaceSymbolProvider = false
-        sc.renameProvider = false
-        sc.hoverProvider = false
-        sc.codeActionProvider = false
-        aucmd("BufWritePost", {
+        aucmd({ "BufEnter", "BufWritePost" }, {
             buffer = bufnr,
             group = vim.g.au_id.LspCodeLens,
             callback = vim.lsp.codelens.refresh,
@@ -221,31 +212,6 @@ function lsp.servers()
                 }
             end,
         },
-        ltex = {
-            filetypes = { "bib", "markdown", "org", "tex" },
-            capabilities = lsp.capabilities(),
-            settings = {
-                ltex = {
-                    additionalRules = {
-                        enablePickyRules = true,
-                        motherTongue = "en",
-                        languageModel = "/usr/share/Ngrams/",
-                    },
-                    language = "en-GB",
-                    dictionary = { ["en-GB"] = require("r.utils").concat_fileLines(dict) },
-                    hiddenFalsePositives = {
-                        ["en-GB"] = vim.loop.fs_stat(vim.loop.cwd() .. "/.ltex_false_positive")
-                                and require("r.utils").concat_fileLines(vim.loop.cwd() .. "/.ltex_false_positive")
-                            or {},
-                    },
-                    disabledRules = {
-                        ["en-GB"] = vim.loop.fs_stat(vim.loop.cwd() .. "/.ltex_rules")
-                                and require("r.utils").concat_fileLines(vim.loop.cwd() .. "/.ltex_rules")
-                            or {},
-                    },
-                },
-            },
-        },
         texlab = {
             capabilities = lsp.capabilities(),
             settings = {
@@ -272,6 +238,44 @@ function lsp.servers()
                     forwardSearch = {
                         args = { "--synctex-forward", "%l:1:%f", "%p" },
                         executable = "zathura",
+                    },
+                },
+            },
+        },
+        ltex = {
+            filetypes = { "bib", "markdown", "org", "tex" },
+            capabilities = lsp.capabilities(),
+            settings = {
+                ltex = {
+                    completionEnabled = true,
+                    additionalRules = {
+                        enablePickyRules = true,
+                        motherTongue = "en",
+                        languageModel = "/usr/share/Ngrams/",
+                    },
+                    bibtex = {
+                        fields = { address = false, author = false, title = true, description = true, url = false },
+                    },
+                    latex = {
+                        commands = {
+                            ["\\label{}"] = "ignore",
+                            ["\\textcite{}"] = "ignore",
+                            ["\\parencite{}"] = "ignore",
+                            ["\\documentClass{}"] = "ignore",
+                        },
+                        environments = { lstlisting = "ignore", verbatim = "ignore" },
+                    },
+                    language = "en-GB",
+                    dictionary = { ["en-GB"] = require("r.utils").concat_fileLines(dict) },
+                    hiddenFalsePositives = {
+                        ["en-GB"] = vim.loop.fs_stat(vim.loop.cwd() .. "/.ltex_false_positive")
+                                and require("r.utils").concat_fileLines(vim.loop.cwd() .. "/.ltex_false_positive")
+                            or {},
+                    },
+                    disabledRules = {
+                        ["en-GB"] = vim.loop.fs_stat(vim.loop.cwd() .. "/.ltex_rules")
+                                and require("r.utils").concat_fileLines(vim.loop.cwd() .. "/.ltex_rules")
+                            or {},
                     },
                 },
             },

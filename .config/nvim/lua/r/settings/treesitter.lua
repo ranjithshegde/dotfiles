@@ -56,25 +56,6 @@ function ts.init()
             use_virtual_text = true,
             lint_events = { "BufWrite", "CursorHold" },
         },
-        refactor = {
-            highlight_definitions = { enable = true },
-            navigation = {
-                enable = true,
-                keymaps = {
-                    goto_definition = ";d",
-                    list_definitions = ";lg",
-                    list_definitions_toc = ";ll",
-                    goto_next_usage = ";*",
-                    goto_previous_usage = ";#",
-                },
-            },
-            smart_rename = {
-                enable = true,
-                keymaps = {
-                    smart_rename = ";R",
-                },
-            },
-        },
         rainbow = {
             enable = true,
             extended_mode = true,
