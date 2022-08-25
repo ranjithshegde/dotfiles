@@ -107,7 +107,8 @@ ls.lsp_capabilities = function()
     vim.keymap.set("n", "<esc>", "<cmd>bd<CR>", { buffer = bufnr })
     vim.keymap.set("n", "q", "<cmd>bd<CR>", { buffer = bufnr })
     vim.api.nvim_open_win(bufnr, true, config)
-    vim.bo[bufnr].filetype = "markdown"
+    vim.bo[bufnr].filetype = "LspCapabilities"
+    vim.cmd.normal { args = { "zx" }, bang = true }
 end
 
 ------------------------------------------------------------------------
@@ -303,6 +304,31 @@ function ls.ltex_false_positive(command)
         write_file(file, rules)
     end
     ltex_hidden(file)
+end
+
+------------------------------------------------------------------------
+--                              Texlabs                               --
+------------------------------------------------------------------------
+
+function ls.tex_clean()
+    local bufnr = vim.api.nvim_get_current_buf()
+    local texlab_client = require("lspconfig.util").get_active_client_by_name(bufnr, "texlab")
+    local params = {
+        command = "texlab.cleanArtifacts",
+        arguments = { vim.lsp.util.make_text_document_params(bufnr) },
+    }
+    if texlab_client then
+        texlab_client.request("workspace/executeCommand", params, function(err, result)
+            if err then
+                error(tostring(err))
+            end
+            if result then
+                vim.pretty_print(result)
+            end
+        end, bufnr)
+    else
+        print "method texlab.cleanArtifacts is not supported by any servers active on the current buffer"
+    end
 end
 
 return ls

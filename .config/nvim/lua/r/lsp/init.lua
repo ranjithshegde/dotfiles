@@ -19,16 +19,10 @@ local function filterfmt(client)
 end
 
 ---**************************** LSP AuGroups and Handlers
+local id = {}
 function lsp.settings()
-    local id = {}
-    vim.g.lspconfig = true
     id.SetDiagnosticFuncs = augroup("SetDiagnosticFuncs", opts)
-    id.LspHighlightSymbols = augroup("LspHighlightSymbols", opts)
-    id.LspAutoFormat = augroup("LspAutoFormat", opts)
-    id.LspCodeLens = augroup("LspCodeLens", opts)
-    require("r.utils").register_au_id(id)
-
-    aucmd({ "DiagnosticChanged" }, {
+    aucmd("DiagnosticChanged", {
         group = id.SetDiagnosticFuncs,
         callback = function()
             vim.diagnostic.setloclist { open = false }
@@ -83,12 +77,14 @@ function lsp.attach(client, bufnr)
     local sc = client.server_capabilities
 
     if client.name == "ccls" then
+        id["LspCodeLens_" .. client.id] = augroup("LspCodeLens_" .. client.id, opts)
         aucmd({ "BufEnter", "BufWritePost" }, {
             buffer = bufnr,
-            group = vim.g.au_id.LspCodeLens,
+            group = id["LspCodeLens_" .. client.id],
             callback = vim.lsp.codelens.refresh,
             desc = "Refresh codelens on save",
         })
+        require("r.utils").register_au_id(id)
         vim.lsp.codelens.refresh()
         vim.bo[bufnr].tagfunc = ""
         return
@@ -98,14 +94,15 @@ function lsp.attach(client, bufnr)
     require("r.utils.extensions").diagnostics(bufnr)
 
     if sc.documentHighlightProvider then
+        id["LspHighlightSymbols_" .. client.id] = augroup("LspHighlightSymbols_" .. client.id, opts)
         aucmd("CursorHold", {
-            group = vim.g.au_id.LspHighlightSymbols,
+            group = id["LspHighlightSymbols_" .. client.id],
             buffer = bufnr,
             callback = vim.lsp.buf.document_highlight,
             desc = "highlight Lsp cword on CursorHold",
         })
         aucmd("CursorMoved, CursorMovedI", {
-            group = vim.g.au_id.LspHighlightSymbols,
+            group = id["LspHighlightSymbols_" .. client.id],
             buffer = bufnr,
             callback = vim.lsp.buf.clear_references,
             desc = "clear Lsp cword highlights on CursorMove",
@@ -113,8 +110,9 @@ function lsp.attach(client, bufnr)
     end
 
     if sc.documentFormattingProvider or sc.rangeFormattingProvider then
+        id["LspAutoFormat_" .. client.id] = augroup("LspAutoFormat_" .. client.id, opts)
         aucmd("BufWrite", {
-            group = vim.g.au_id.LspAutoFormat,
+            group = id["LspAutoFormat_" .. client.id],
             buffer = bufnr,
             callback = function()
                 vim.lsp.buf.format { filter = filterfmt }
@@ -125,6 +123,7 @@ function lsp.attach(client, bufnr)
             vim.lsp.buf.format { filter = filterfmt, timeout_ms = 2000 }
         end, { buffer = bufnr })
     end
+    require("r.utils").register_au_id(id)
 
     if sc.signatureHelpProvider then
         require("r.lsp.signature").attach(client, bufnr)
@@ -218,7 +217,8 @@ function lsp.servers()
                 texlab = {
                     build = {
                         args = {
-                            "-xelatex",
+                            -- "-xelatex",
+                            "-lualatex",
                             "-verbose",
                             "-file-line-error",
                             "-synctex=1",
@@ -247,7 +247,6 @@ function lsp.servers()
             capabilities = lsp.capabilities(),
             settings = {
                 ltex = {
-                    completionEnabled = true,
                     additionalRules = {
                         enablePickyRules = true,
                         motherTongue = "en",

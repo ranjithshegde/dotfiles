@@ -213,6 +213,17 @@ aucmd("LspAttach", {
     end,
     desc = "Call attach function on event LspAttach",
 })
+aucmd("LspDetach", {
+    group = id.LspSettings,
+    callback = function(args)
+        vim.notify(string.format("Client with id %d detached", args.data.client_id))
+        vim.api.nvim_clear_autocmds { group = vim.g.au_id["LspAutoFormat_" .. args.data.client_id], buffer = args.buf }
+        vim.api.nvim_clear_autocmds {
+            group = vim.g.au_id["LspHighlightSymbols_" .. args.data.client_id],
+            buffer = args.buf,
+        }
+    end,
+})
 
 -- ************** Compilers and REPL  ----------------------------------
 id.Compiler = augroup("Compiler", opts)

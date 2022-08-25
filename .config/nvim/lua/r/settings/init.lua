@@ -9,7 +9,6 @@ return function()
     local tab = 4
     o.title = true
     o.number = true
-    o.showmatch = true
     o.expandtab = true
     o.shiftround = true
     o.splitbelow = true

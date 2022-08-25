@@ -4,6 +4,9 @@
 
 local to = { swap = {} }
 
+local id = {}
+id.Treesitter_local = vim.api.nvim_create_augroup("Treesitter_local", { clear = true })
+
 function to.select(query, mode)
     return function()
         require("nvim-treesitter.textobjects.select").select_textobject(query, mode)
@@ -156,27 +159,103 @@ return function()
                 v = { to.swap.previous "@variable.inner", "variable" },
             },
         },
-        -- Motions
-        ["]"] = {
-            n = { to.move("goto_next_start", "@function.outer"), "Move to next outer function start" },
-            i = { to.move("goto_next_start", "@function.inner"), "Move to next inner function start" },
-            ["="] = { to.move("goto_next_start", "@class.outer"), "Move to next outer class start" },
-            N = { to.move("goto_next_end", "@function.outer"), "Move to next function outer end" },
-            I = { to.move("goto_next_end", "@function.inner"), "Move to next function inner end" },
-        },
-        ["<Down>"] = { to.move("goto_next_start", "@block.outer"), "Move to next outer code block start" },
-        ["<Right>"] = { to.move("goto_next_start", "@block.inner"), "Move to next inner code block start" },
-        ["["] = {
-            n = { to.move("goto_previous_start", "@function.outer"), "Move to previous outer function start" },
-            i = { to.move("goto_previous_start", "@function.inner"), "Move to previous inner function start" },
-            ["="] = { to.move("goto_previous_start", "@class.outer"), "Move to previous outer class start" },
-            N = { to.move("goto_previous_end", "@function.outer"), "Move to previous function outer end" },
-            I = { to.move("goto_previous_end", "@function.inner"), "Move to previous function inner end" },
-        },
-
-        ["<Up>"] = { to.move("goto_previous_start", "@block.outer"), "Move to previous outer code block start" },
-        ["<Left>"] = { to.move("goto_previous_start", "@block.inner"), "Move to previous inner code block start" },
     }
+
+    vim.api.nvim_create_autocmd("FileType", {
+        group = id.Treesitter_local,
+        callback = function(args)
+            if vim.tbl_contains(require("r.utils.tables").ignoreFiles, args.match) then
+                return
+            end
+            if args.match == "tex" then
+                require("which-key").register({
+                    -- Motions
+                    ["]"] = {
+                        n = { to.move("goto_next_start", "@block.outer"), "Move to next outer TeX environment start" },
+                        i = { to.move("goto_next_start", "@block.inner"), "Move to next inner TeX environment start" },
+                        N = { to.move("goto_next_end", "@block.outer"), "Move to next TeX environment outer end" },
+                        I = { to.move("goto_next_end", "@block.inner"), "Move to next TeX environment inner end" },
+                    },
+                    ["<Down>"] = {
+                        to.move("goto_next_start", "@class.outer"),
+                        "Move to next chapter or section start",
+                    },
+                    ["<Right>"] = {
+                        [[<Cmd>execute "keepjumps norm! " . v:count1 . ")"<CR>]],
+                        "Move to next sentence start",
+                    },
+                    ["["] = {
+                        n = {
+                            to.move("goto_previous_start", "@block.outer"),
+                            "Move to previous outer TeX environment start",
+                        },
+                        i = {
+                            to.move("goto_previous_start", "@block.inner"),
+                            "Move to previous inner TeX environment start",
+                        },
+                        N = {
+                            to.move("goto_previous_end", "@block.outer"),
+                            "Move to previous TeX environment outer end",
+                        },
+                        I = {
+                            to.move("goto_previous_end", "@block.inner"),
+                            "Move to previous TeX environment inner end",
+                        },
+                    },
+                    ["<Up>"] = {
+                        to.move("goto_previous_start", "@class.outer"),
+                        "Move to previous chapter/section start",
+                    },
+                    ["<Left>"] = {
+                        [[<Cmd>execute "keepjumps norm! " . v:count1 . "("<CR>]],
+                        "Move to previous sentence start",
+                    },
+                }, { buffer = args.buf })
+            else
+                require("which-key").register({
+                    -- Motions
+                    ["]"] = {
+                        n = { to.move("goto_next_start", "@function.outer"), "Move to next outer function start" },
+                        i = { to.move("goto_next_start", "@function.inner"), "Move to next inner function start" },
+                        ["="] = { to.move("goto_next_start", "@class.outer"), "Move to next outer class start" },
+                        N = { to.move("goto_next_end", "@function.outer"), "Move to next function outer end" },
+                        I = { to.move("goto_next_end", "@function.inner"), "Move to next function inner end" },
+                    },
+                    ["<Down>"] = { to.move("goto_next_start", "@block.outer"), "Move to next outer code block start" },
+                    ["<Right>"] = {
+                        to.move("goto_next_start", "@block.inner"),
+                        "Move to next inner code block start",
+                    },
+                    ["["] = {
+                        n = {
+                            to.move("goto_previous_start", "@function.outer"),
+                            "Move to previous outer function start",
+                        },
+                        i = {
+                            to.move("goto_previous_start", "@function.inner"),
+                            "Move to previous inner function start",
+                        },
+                        ["="] = {
+                            to.move("goto_previous_start", "@class.outer"),
+                            "Move to previous outer class start",
+                        },
+                        N = { to.move("goto_previous_end", "@function.outer"), "Move to previous function outer end" },
+                        I = { to.move("goto_previous_end", "@function.inner"), "Move to previous function inner end" },
+                    },
+
+                    ["<Up>"] = {
+                        to.move("goto_previous_start", "@block.outer"),
+                        "Move to previous outer code block start",
+                    },
+                    ["<Left>"] = {
+                        to.move("goto_previous_start", "@block.inner"),
+                        "Move to previous inner code block start",
+                    },
+                }, { buffer = args.buf })
+            end
+        end,
+        require("r.utils").register_au_id(id),
+    })
 
     require("which-key").register({
         [";f"] = {

@@ -247,8 +247,7 @@ return require("packer").startup {
 
         --Lsp config and companions
         use {
-            is_custom("WORKSPACE", "Repos/nvim-lspconfig", "ranjithshegde/nvim-lspconfig"),
-            branch = "0.8",
+            "neovim/nvim-lspconfig",
             requires = {
                 { "jose-elias-alvarez/null-ls.nvim", opt = true },
                 {

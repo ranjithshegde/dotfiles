@@ -102,6 +102,7 @@ return require("which-key").register {
                 ),
                 "ofWorkspace",
             },
+            w = { telargs("live_grep", { cwd = "~/Documents/Orgs/", prompt_title = "Org Wiki" }), "Org Grep" },
             d = {
                 telargs("live_grep", { cwd = "~/.config", prompt_title = "Dotfiles" }),
                 "grep dotfiles",
