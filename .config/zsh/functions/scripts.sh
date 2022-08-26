@@ -17,12 +17,12 @@ pacelist() {
 }
 
 netS() {
-	DT=$(echo -e '' | dmenu -c -p "File or directory: ")
-	IT=$(echo -e '' | dmenu -c -p "ip extension 192.168.: ")
+	DT=$(echo | dmenu -c -p "File or directory: ")
+	IT=$(echo | dmenu -c -p "ip extension 192.168.: ")
 
 	echo "Exporting file ${DT} to ip 192.168.${IT}"
 
-	tar cf - ${DT} | pv | netcat 192.168.${IT} 7000
+	tar cf - "${DT}" | pv | netcat 192.168."${IT}" 7000
 }
 
 netR() {
@@ -34,14 +34,14 @@ ranger_cd() {
 	temp_file="$(mktemp -t "ranger_cd.XXXXXXXXXX")"
 	ranger --choosedir="$temp_file" -- "${@:-$PWD}"
 	if chosen_dir="$(cat -- "$temp_file")" && [ -n "$chosen_dir" ] && [ "$chosen_dir" != "$PWD" ]; then
-		cd -- "$chosen_dir"
+		cd -- "$chosen_dir" || exit
 	fi
 	rm -f -- "$temp_file"
 }
 
 # FZF dotfiles -------------------------------------------------------------------------------
 hcd() {
-	dir=$(find ${1:-.} -type d 2>/dev/null | fzf +m --reverse --prompt='Enter Directory> ') && cd "$dir"
+	dir=$(find "${1:-.}" -type d 2>/dev/null | fzf +m --reverse --prompt='Enter Directory> ') && cd "$dir" || exit
 }
 
 zle -N hcd

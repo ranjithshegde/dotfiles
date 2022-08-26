@@ -15,7 +15,7 @@ end
 ------------------------------------------------------------------------
 
 local config = {
-    relative = "cursor",
+    relative = "editor",
     style = "minimal",
     width = 70,
     height = 25,

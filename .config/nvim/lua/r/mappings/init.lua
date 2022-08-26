@@ -182,7 +182,9 @@ return function()
     end, { desc = "Move cursor to middle of the line" })
 
     -- Terminals and Jobs
-    map("n", "<leader>C", vim.cmd.OverseerRunCmd, { desc = "Run quick command with Overseer" })
+    map("n", "<leader>C", function()
+        require("overseer").run_template { name = "shell" }
+    end, { desc = "Run quick command with Overseer" })
 
     map("n", "<leader>c", function()
         require("overseer").run_template()
@@ -203,6 +205,12 @@ return function()
             t = { open_term "tabnew", "New tab" },
         },
     }
+
+    -- map("n", "<leader>tl", function()
+    --     vim.cmd.tabnew()
+    --     require("harpoon.term").gotoTerminal(1)
+    --     require("harpoon.term").sendCommand(1, "lazygit\r")
+    -- end, { desc = "open lazygit in new tab" })
 
     map("n", "<leader>'", function()
         require("harpoon.ui").nav_next()

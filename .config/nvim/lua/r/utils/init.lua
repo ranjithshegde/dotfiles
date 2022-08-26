@@ -12,8 +12,13 @@ function utils.restart()
 end
 
 function utils.register_au_id(id)
-    if not type(id) == "table" then
-        id = { id }
+    if type(id) ~= "table" then
+        vim.notify(
+            string.format("autocmd id %s not supplied as list, regitartion failed", vim.inspect(id)),
+            vim.log.levels.WARN,
+            { title = "autocmd creation" }
+        )
+        return
     end
     if not vim.g.au_id then
         vim.g.au_id = id

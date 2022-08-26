@@ -1,3 +1,4 @@
+local auid = {}
 local function makeSidebar(element, width)
     local widgets = require "dap.ui.widgets"
     if element == "scopes" then
@@ -243,10 +244,11 @@ local function notify()
             hide_from_history = false,
         })
 
-        notif_data.notification.spinner = 1, note.update_spinner("dap", body.progressId)
+        notif_data.notification.spinner = note.update_spinner("dap", body.progressId)
+        -- notif_data.notification.spinner = 1, note.update_spinner("dap", body.progressId)
     end
 
-    dap.listeners.before["event_progressUpdate"]["progress-notifications"] = function(session, body)
+    dap.listeners.before["event_progressUpdate"]["progress-notifications"] = function(_, body)
         local notif_data = note.get_notif_data("dap", body.progressId)
         notif_data.notification = vim.notify(note.format_message(body.message, body.percentage), "info", {
             replace = notif_data.notification,
@@ -254,7 +256,7 @@ local function notify()
         })
     end
 
-    dap.listeners.before["event_progressEnd"]["progress-notifications"] = function(session, body)
+    dap.listeners.before["event_progressEnd"]["progress-notifications"] = function(_, body)
         local notif_data = note.client_notifs["dap"][body.progressId]
         notif_data.notification = vim.notify(body.message and note.format_message(body.message) or "Complete", "info", {
             icon = "",
@@ -319,16 +321,15 @@ function Debugger.setup()
 
     notify()
 
-    local dap_repl = vim.api.nvim_create_augroup("dap-repl", { clear = true })
+    auid.dap_repl = vim.api.nvim_create_augroup("dap_repl", { clear = true })
     vim.api.nvim_create_autocmd("FileType", {
-        group = dap_repl,
+        group = auid.dap_repl,
         pattern = "dap-repl",
         callback = function()
             require("dap.ext.autocompl").attach()
         end,
     })
-
-    require("r.utils").register_au_id(dap_repl)
+    require("r.utils").register_au_id(auid)
 end
 
 function Debugger.fscopes()

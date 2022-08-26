@@ -78,7 +78,11 @@ end
 local function returnID(client)
     local lang_server = util.get_active_client_by_name(0, client)
     if not lang_server then
-        return error "Requested clients attached, failed"
+        vim.notify(
+            string.format("The language server %s is not active on this buffer", vim.log.levels.WARN, client),
+            client_opts(client)
+        )
+        return
     end
     return lang_server.id
 end

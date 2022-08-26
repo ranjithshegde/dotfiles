@@ -92,6 +92,9 @@ end
 function Compiler.pdBuild()
     local bin = vim.fn.fnamemodify(vim.loop.cwd(), ":t") .. ".pd_linux"
     local dest = "~/.local/lib/pd/extra/"
+    if not package.loaded.overseer then
+        require("packer").loader "overseer.nvim"
+    end
     vim.cmd.OverseerRunCmd { args = { "cp", bin, dest } }
 end
 

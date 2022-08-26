@@ -156,14 +156,6 @@ function lsp.attach(client, bufnr)
         require("r.utils.ls").lsp_capabilities,
         { desc = "Display Language Server capabilities" }
     )
-
-    if client.name == "texlab" then
-        local cwd = vim.loop.cwd()
-        if vim.loop.fs_stat(cwd .. "/aux") then
-            client.cmd = { "texlab", "--log-file", "./aux/texlab-log", "-vvvv" }
-            return client.notify("workspace/didChangeConfiguration", client.cmd)
-        end
-    end
 end
 
 ------------------------------------------------------------------------
@@ -213,6 +205,12 @@ function lsp.servers()
         },
         texlab = {
             capabilities = lsp.capabilities(),
+            cmd = { "texlab", "--log-file", "./aux/texlab-log", "-vvvv" },
+            before_init = function(_, _)
+                if vim.fn.isdirectory "aux" ~= 1 then
+                    vim.fn.mkdir "aux"
+                end
+            end,
             settings = {
                 texlab = {
                     build = {
@@ -284,6 +282,7 @@ function lsp.servers()
     for ls, cfg in pairs(configs) do
         require("lspconfig")[ls].setup(cfg)
     end
+    require("lspconfig.ui.windows").default_options.border = "single"
 end
 
 ------------------------------------------------------------------------

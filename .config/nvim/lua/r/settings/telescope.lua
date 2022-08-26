@@ -75,6 +75,8 @@ local function navigate(prompt_bufnr, maps, cwd, files)
     return true
 end
 
+local cursor_layout = { width = 0.8, height = 0.6 }
+
 ------------------------------------------------------------------------
 --                       Telescope 									  --
 ------------------------------------------------------------------------
@@ -110,9 +112,9 @@ function telescope.telescope()
             loclist = { theme = "ivy" },
             quickfix = { theme = "ivy" },
             lsp_document_symbols = { theme = "ivy" },
-            lsp_workspace_symbols = { theme = "cursor" },
+            lsp_workspace_symbols = { theme = "cursor", layout_config = cursor_layout },
             current_buffer_fuzzy_find = { theme = "ivy" },
-            lsp_references = { theme = "cursor" },
+            lsp_references = { theme = "cursor", layout_config = cursor_layout },
             oldfiles = { attach_mappings = foldMaps },
             git_files = { attach_mappings = foldMaps },
             live_grep = { attach_mappings = foldMaps },

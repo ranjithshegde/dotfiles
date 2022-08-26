@@ -86,7 +86,7 @@ end
 -- ******************************** Pd externals ------------------------
 function cmaps.pdc()
     map("n", "<F5>", function()
-        vim.cmd.OverseerRunCmd "make"
+        require("overseer").run_template { name = "make" }
     end, { buffer = true, desc = "Build Pd external" })
 
     map("n", "<F6>", require("r.utils.compiler").pdBuild, { buffer = true, desc = "Copy external to PD directory" })

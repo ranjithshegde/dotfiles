@@ -1,8 +1,7 @@
 -- Blank Between Components
 local space = " "
-
-local right = ""
-local left = " "
+local left_separator = ""
+local right_separator = ""
 
 ------------------------------------------------------------------------
 --                              statusline                            --
@@ -11,18 +10,35 @@ local left = " "
 local extensions = require "el.extensions"
 local sections = require "el.sections"
 local subscribe = require "el.subscribe"
+local id = {}
+id.StatusLineSetup = vim.api.nvim_create_augroup("StatusLineSetup", { clear = true })
+
+local function set_hls()
+    local cursor_hl = vim.api.nvim_get_hl_by_name("MiniStatuslineModeVisual", true)
+    vim.api.nvim_set_hl(0, "ScrollSep", { fg = cursor_hl.background, bg = cursor_hl.foreground })
+end
 
 --*********************************** Basics ----------------------------
 local modified = subscribe.buf_autocmd("el_mod", "BufModifiedSet", function(_, _)
-    return "%m"
+    local status = vim.api.nvim_eval_statusline("%m", {}).str
+    if status:find "-" then
+        return ""
+    elseif status:find "+" then
+        return ""
+    end
 end)
 
 local help = subscribe.buf_autocmd("el_help", "BufRead", function(_, _)
-    return "%H"
+    local value = vim.api.nvim_eval_statusline("%H", {}).str
+    if value ~= "" then
+        return require("nvim-web-devicons").get_icon "h"
+    end
 end)
 
-local readonly = subscribe.buf_autocmd("el_read", "BufRead", function(_, _)
-    return "%r"
+local readonly = subscribe.buf_autocmd("el_read", "BufRead", function(_, buffer)
+    if vim.bo[buffer.bufnr].readonly then
+        return require("nvim-web-devicons").get_icon "lock"
+    end
 end)
 
 --*********************************** File Icon -------------------------
@@ -112,8 +128,10 @@ local mode = subscribe.buf_autocmd("el_mode", "ModeChanged", function()
     local current_mode = get_mode()
     local current_hl = mode_to_highlight[current_mode]
     if current_hl then
+        local current_hl_state = vim.api.nvim_get_hl_by_name(current_hl, true)
+        vim.api.nvim_set_hl(0, "ModeSep", { fg = current_hl_state.background, bg = current_hl_state.foreground })
         current_hl = "%#" .. current_hl .. "# "
-        return current_hl .. current_mode .. left .. " %##"
+        return current_hl .. current_mode .. " %#ModeSep#" .. right_separator .. " %##"
     end
 end)
 
@@ -149,9 +167,9 @@ local scroll = subscribe.buf_autocmd("el_scroll", "CursorMoved,CursorMovedI", fu
 end)
 
 local cursor = subscribe.buf_autocmd("el_cursor", "CursorMoved,CursorMovedI", function(_, _)
-    local line = "%-03l"
-    local column = "%-03c"
-    return "[" .. line .. ":" .. column .. "]"
+    local line = "%-l"
+    local column = "%-c"
+    return "%#ScrollSep#" .. left_separator .. "%#MiniStatuslineModeVisual#" .. line .. ":" .. column .. space .. "%##"
 end)
 
 --*********************************** SuperCollider ---------------------
@@ -241,6 +259,16 @@ end)
 return function()
     require("el").reset_windows()
     require("r.utils.diagnostics.format").sethl("DiagnosticError", "DiagnosticWarn", "DiagnosticHint", "DiagnosticInfo")
+
+    vim.api.nvim_create_autocmd("ColorScheme", {
+        group = id.StatusLineSetup,
+        callback = function()
+            set_hls()
+            require("el").reset_windows()
+        end,
+    })
+    require("r.utils").register_au_id(id)
+
     require("el").setup {
         generator = function(_, _)
             return {
@@ -251,22 +279,19 @@ return function()
                 diagnostics,
                 sections.collapse_builtin { scnvim, space, gps },
                 sections.split,
-                sections.highlight("FileIcon", file_icon),
-                sections.highlight("StatusLine", file_name),
                 sections.collapse_builtin {
+                    sections.highlight("DevIconHtml", readonly),
+                    space,
+                    sections.highlight("DevIconMarkdown", help),
+                    space,
+                    sections.highlight("FileIcon", file_icon),
+                    sections.highlight("StatusLine", file_name),
                     space,
                     modified,
-                    space,
                     space,
                     cursor,
                 },
                 space,
-                sections.collapse_builtin {
-                    "[ ",
-                    help,
-                    readonly,
-                    " ]",
-                },
                 sections.highlight("DiagnosticWarn", scroll),
                 space,
                 space,

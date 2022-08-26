@@ -40,6 +40,15 @@ return require("packer").startup {
             requires = { "tpope/vim-dadbod", "nanotee/sqls.nvim" },
         }
 
+        -- Tasks
+        use {
+            "stevearc/overseer.nvim",
+            module = "overseer",
+            config = function()
+                require("overseer").setup { templates = { "builtin", "r" } }
+            end,
+        }
+
         -- SuperCollider
         use {
             "davidgranstrom/scnvim",
@@ -115,16 +124,6 @@ return require("packer").startup {
             requires = "rcarriga/nvim-dap-ui",
         }
 
-        -- Tasks
-        use {
-            "stevearc/overseer.nvim",
-            module = "overseer",
-            cmd = "OverseerRunCmd",
-            config = function()
-                require("overseer").setup { templates = { "builtin", "r" } }
-            end,
-        }
-
         -- WhichKey
         use {
             "folke/which-key.nvim",
@@ -165,7 +164,7 @@ return require("packer").startup {
             { "nvim-telescope/telescope-file-browser.nvim", module_pattern = ".*.extensions.file_browser.*" },
         }
 
-        -- surround
+        -- Surround
         use {
             "kylechui/nvim-surround",
             keys = {
@@ -286,6 +285,7 @@ return require("packer").startup {
             { "hrsh7th/cmp-nvim-lsp", opt = "true" },
             {
                 "L3MON4D3/LuaSnip",
+                run = "make install_jsregexp",
                 event = "InsertEnter",
                 config = function()
                     require("r.settings.completion").luasnip()
