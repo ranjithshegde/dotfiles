@@ -39,26 +39,11 @@ aucmd("FileType", {
             vim.wo.foldcolumn = "0"
             vim.wo.winbar = nil
             return
-        elseif args.file:find "Leela.tex" then
-            vim.opt.relativenumber = true
-            vim.opt_local.cursorline = false
-            return
         end
         vim.opt.relativenumber = true
         vim.opt_local.cursorline = true
     end,
     desc = "Disable all custom decoration rules for non-language filetypes",
-})
-
-aucmd("BufEnter", {
-    group = id.FormatOptions,
-    pattern = "Leela.tex",
-    callback = function()
-        vim.opt_local.foldmethod = "manual"
-        vim.opt_local.cursorline = false
-        vim.opt_local.cmdheight = 1
-    end,
-    desc = "Temporary workaround for files with Indian script",
 })
 
 -- ************** Selective numbering  ---------------------------------
@@ -93,15 +78,12 @@ aucmd({ "InsertLeave", "WinEnter", "FocusGained" }, {
 -- ************** Selective cursorline  ----------------------------------
 aucmd({ "FocusGained", "WinEnter", "BufEnter" }, {
     group = id.FormatOptions,
-    callback = function(args)
+    callback = function()
         if
             vim.tbl_contains(require("r.utils.tables").ignoreFiles, vim.bo.filetype)
             or vim.api.nvim_win_get_height(vim.api.nvim_get_current_win()) <= 15
             or vim.fn.win_gettype() == "popup"
         then
-            return
-        elseif args.match:find "Leela.tex" then
-            vim.opt_local.cursorline = false
             return
         end
         vim.opt_local.cursorline = true

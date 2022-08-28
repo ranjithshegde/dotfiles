@@ -81,7 +81,7 @@ return require("packer").startup {
             "stevearc/dressing.nvim",
             module_pattern = "vim.ui.*",
             config = function()
-                require("dressing").setup { input = { prompt_align = "right" } }
+                require("dressing").setup { input = { relative = "editor" } }
             end,
         }
 

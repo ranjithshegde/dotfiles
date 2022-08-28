@@ -294,7 +294,6 @@ return function()
                 space,
                 sections.highlight("DiagnosticWarn", scroll),
                 space,
-                space,
             }
         end,
     }
