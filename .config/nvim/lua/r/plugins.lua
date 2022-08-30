@@ -146,6 +146,14 @@ return require("packer").startup {
                 opt = true,
             },
             { "tpope/vim-fugitive", cmd = { "G", "Git", "Gclog" } },
+            {
+                "TimUntersberger/neogit",
+                requires = "nvim-lua/plenary.nvim",
+                module = "neogit",
+                config = function()
+                    require("neogit").setup { kind = "split" }
+                end,
+            },
         }
 
         -- Telescope
