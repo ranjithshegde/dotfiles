@@ -58,6 +58,11 @@ return require("which-key").register({
             end,
             "Add [count] spaces below current line",
         },
+        o = {
+            name = "Vim options",
+            c = { require("r.utils").cycle_colors, "Cycle nightfox colorschemes" },
+            v = { require("r.utils").toggle_vi, "Toggle vi decoration mode" },
+        },
     },
     ["["] = {
         name = "Unimpaired previous",

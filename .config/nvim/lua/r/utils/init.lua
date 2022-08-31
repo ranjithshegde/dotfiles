@@ -163,4 +163,16 @@ function utils.toggle_vi()
     end
 end
 
+local colors = { "dawnfox", "dayfox", "carbonfox", "terafox", "duskfox", "nordfox", "nightfox" }
+local color = vim.api.nvim_exec("colo", true)
+local counter = vim.fn.index(colors, color)
+
+function utils.cycle_colors()
+    counter = counter + 1
+    if counter >= #vim.tbl_keys(colors) then
+        counter = 1
+    end
+    vim.cmd.colorscheme(colors[counter])
+end
+
 return utils
