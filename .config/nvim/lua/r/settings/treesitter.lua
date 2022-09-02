@@ -38,7 +38,8 @@ function ts.init()
             },
         },
         textobjects = {
-            select = { enable = true },
+            select = { enable = true, lookahead = true },
+
             move = {
                 enable = true,
                 set_jumps = false,

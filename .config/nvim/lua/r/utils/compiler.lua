@@ -20,6 +20,12 @@ local function sequencer(name_1, params, name_2)
     end)
 end
 
+local function loader(callback, args)
+    if not package.loaded.overseer then
+        callback(args)
+    end
+end
+
 ------------------------------------------------------------------------
 --                                Env Setup	                          --
 ------------------------------------------------------------------------

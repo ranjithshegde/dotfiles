@@ -2,6 +2,7 @@
 local aucmd = vim.api.nvim_create_autocmd
 local augroup = vim.api.nvim_create_augroup
 local auexec = vim.api.nvim_exec_autocmds
+local auclear = vim.api.nvim_clear_autocmds
 local opts = { clear = true }
 
 local id = {}
@@ -199,12 +200,15 @@ aucmd("LspDetach", {
     group = id.LspSettings,
     callback = function(args)
         vim.notify(string.format("Client with id %d detached", args.data.client_id))
-        vim.api.nvim_clear_autocmds { group = vim.g.au_id["LspAutoFormat_" .. args.data.client_id], buffer = args.buf }
-        vim.api.nvim_clear_autocmds {
+        auclear { group = vim.g.au_id["LspAutoFormat_" .. args.data.client_id], buffer = args.buf }
+        auclear { group = vim.g.au_id["lsp_signature_help_" .. args.data.client_id .. "_" .. args.buf] }
+        auclear { group = vim.g.au_id["lsp_signature_snip_" .. args.data.client_id .. "_" .. args.buf] }
+        auclear {
             group = vim.g.au_id["LspHighlightSymbols_" .. args.data.client_id],
             buffer = args.buf,
         }
     end,
+    desc = "Clear AUGroups when LSP detaches",
 })
 
 -- ************** Compilers and REPL  ----------------------------------
@@ -299,10 +303,10 @@ vim.api.nvim_create_autocmd("FileType", {
 --                              Terminal management                   --
 ------------------------------------------------------------------------
 
-id.TermInsertModes = augroup("TermInsertModes", opts)
+id.TermOptions = augroup("TermOptions", opts)
 -- ************************ Terminal autinsert--------------------------
 aucmd({ "BufEnter", "BufWinEnter", "TermOpen" }, {
-    group = id.TermInsertModes,
+    group = id.TermOptions,
     pattern = { "term://*", "shell" },
     callback = function(args)
         if args.file:match "zsh" or args.file:match "ranger" or args.file:match "shell" then
@@ -311,11 +315,11 @@ aucmd({ "BufEnter", "BufWinEnter", "TermOpen" }, {
     end,
     desc = "Start terminals in insert mode",
 })
-aucmd("TermEnter", { group = "TermInsertModes", command = "startinsert", desc = "Start terminals in insert mode" })
+aucmd("TermEnter", { group = id.TermOptions, command = "startinsert", desc = "Start terminals in insert mode" })
 
 -- ************************ Terminal autoecape --------------------------
 aucmd("TermEnter", {
-    group = id.TermInsertModes,
+    group = id.TermOptions,
     callback = function(args)
         if args.file:match "ranger" then
             vim.keymap.set("t", "<S-Esc>", "<C-\\><C-n>", { buffer = true, desc = "Escape Insert" })
@@ -326,11 +330,31 @@ aucmd("TermEnter", {
     desc = "Especial insertexit for ranger windows",
 })
 aucmd("TermClose", {
-    group = id.TermInsertModes,
-    callback = function()
-        vim.api.nvim_input "<CR>"
+    group = id.TermOptions,
+    callback = function(args)
+        if args.file:match "zsh" or args.file:match "ranger" or args.file:match "shell" then
+            if vim.fn.mode() == "t" then
+                vim.api.nvim_input "<CR>"
+            end
+        end
     end,
     desc = "Remove the annoying [exited] termexit prompt",
+})
+aucmd("CmdlineEnter", {
+    pattern = [[/,\?]],
+    group = id.TermOptions,
+    callback = function()
+        vim.o.hlsearch = true
+    end,
+    desc = "Use hlsearch when searching",
+})
+aucmd("CmdlineLeave", {
+    pattern = [[/,\?]],
+    group = id.TermOptions,
+    callback = function()
+        vim.o.hlsearch = false
+    end,
+    desc = "Disable hlsearch on search exit",
 })
 
 ------------------------------------------------------------------------

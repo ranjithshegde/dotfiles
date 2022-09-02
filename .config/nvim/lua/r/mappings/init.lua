@@ -206,12 +206,6 @@ return function()
         },
     }
 
-    -- map("n", "<leader>tl", function()
-    --     vim.cmd.tabnew()
-    --     require("harpoon.term").gotoTerminal(1)
-    --     require("harpoon.term").sendCommand(1, "lazygit\r")
-    -- end, { desc = "open lazygit in new tab" })
-
     map("n", "<leader>'", function()
         require("harpoon.ui").nav_next()
     end, { desc = "Navigate to next harpooned file" })

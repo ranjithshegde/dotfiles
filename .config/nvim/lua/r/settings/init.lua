@@ -10,6 +10,8 @@ return function()
     o.title = true
     o.number = true
     o.expandtab = true
+    o.smartcase = true
+    o.ignorecase = true
     o.shiftround = true
     o.splitbelow = true
     o.splitright = true

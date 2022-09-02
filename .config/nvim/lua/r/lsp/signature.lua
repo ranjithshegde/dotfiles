@@ -2,23 +2,24 @@ local signature = {}
 
 local triggers_by_buf = {}
 
+local id = {}
+local au_sig, au_snip
+
 local function generate_signature_help_autocmd(bufnr, client)
-    local client_id = client.id
     vim.api.nvim_create_autocmd("InsertCharPre", {
-        group = vim.api.nvim_create_augroup("lsp_signature_help_" .. client_id .. "_" .. bufnr, { clear = true }),
+        group = id[au_sig],
         buffer = bufnr,
         callback = function()
-            require("r.lsp.signature")._TriggerCharEvent(client_id)
+            require("r.lsp.signature")._TriggerCharEvent(client.id)
         end,
         desc = "Trigger signature help on lsp-characters",
     })
 end
 
-local function generate_signature_snippet_autocmd(bufnr, client)
-    local client_id = client.id
+local function generate_signature_snippet_autocmd()
     vim.api.nvim_create_autocmd("ModeChanged", {
-        group = vim.api.nvim_create_augroup("lsp_signature_snip_" .. client_id .. "_" .. bufnr, { clear = true }),
         pattern = { "n:v", "i:v" },
+        group = id[au_snip],
         callback = function()
             if package.loaded.luasnip then
                 if require("luasnip").in_snippet() then
@@ -55,8 +56,16 @@ function signature.attach(client, bufnr)
         table.insert(triggers, { signature_triggers, vim.lsp.buf.signature_help })
     end
 
+    au_sig = "lsp_signature_help_" .. client.id .. "_" .. bufnr
+    id[au_sig] = vim.api.nvim_create_augroup(au_sig, { clear = true })
+
+    au_snip = "lsp_signature_snip_" .. client.id .. "_" .. bufnr
+    id[au_snip] = vim.api.nvim_create_augroup(au_snip, { clear = true })
+
     generate_signature_help_autocmd(bufnr, client)
-    generate_signature_snippet_autocmd(bufnr, client)
+    generate_signature_snippet_autocmd()
+
+    require("r.utils").register_au_id(id)
 end
 
 return signature

@@ -264,7 +264,7 @@ return require("packer").startup {
                     end,
                 },
                 {
-                    is_custom("WORKSPACE", "Repos/lua-dev.nvim", "folke/lua-dev.nvim"),
+                    "folke/lua-dev.nvim",
                     ft = "lua",
                     config = function()
                         require "r.lsp.sumneko"()

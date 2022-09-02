@@ -75,7 +75,7 @@ return require("which-key").register {
         E = { tel_ext "file_browser", "File browser" },
         d = {
             name = "diagnostics",
-            b = { tele "diagnostics", "buffer diagnostics" },
+            b = { telargs("diagnostics", { bufnr = 0 }), "buffer diagnostics" },
             w = { tele "diagnostics", "Workspace diagnostics" },
         },
         G = {

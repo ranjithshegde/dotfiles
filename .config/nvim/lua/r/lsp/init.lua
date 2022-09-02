@@ -192,6 +192,8 @@ function lsp.servers()
         dockerls = { capabilities = lsp.capabilities() },
         tsserver = { capabilities = lsp.capabilities() },
         marksman = { capabilities = lsp.capabilities() },
+        rust_analyzer = { capabilities = lsp.capabilities() },
+        supercollider = { capabilities = lsp.capabilities() },
         bashls = { capabilities = lsp.capabilities(), filetypes = { "sh", "zsh" } },
         sqls = {
             capabilities = lsp.capabilities(),

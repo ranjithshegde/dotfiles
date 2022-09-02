@@ -2667,7 +2667,7 @@ dav1d-thread-frames=4
 #avcodec-codec=
 
 # Hardware decoding (string)
-avcodec-hw=vaapi_drm
+#avcodec-hw=any
 
 # Threads (integer)
 #avcodec-threads=0
@@ -3871,7 +3871,7 @@ sout-x264-tune=film
 #audio-time-stretch=1
 
 # Audio output module (string)
-#aout=
+aout=any
 
 # Media role (string)
 #role=video
