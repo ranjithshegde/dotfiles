@@ -1,3 +1,4 @@
+---@diagnostic disable: missing-parameter
 ------------------------------------------------------------------------
 --                              Telescope                             --
 ------------------------------------------------------------------------
@@ -69,10 +70,15 @@ return require("which-key").register {
         ["/"] = { tele "grep_string", "Grep CWORD in directory" },
         ["<Space>"] = { tele "builtin", "Builtin Searchers" },
         ["<CR>"] = { tele "resume", "Resume last picker" },
-        k = { telargs("lsp_workspace_symbols", { query = vim.fn.expand "<cword>" }), "Search lsp workspace symbol" },
         p = { tel_ext("project", { display_type = "full" }), "Projects" },
         e = { tel_ext("file_browser", { files = false }), "Folder browser" },
         E = { tel_ext "file_browser", "File browser" },
+        k = {
+            function()
+                require("telescope.builtin").lsp_workspace_symbols { query = vim.fn.expand "<cword>" }
+            end,
+            "Search lsp workspace symbol",
+        },
         d = {
             name = "diagnostics",
             b = { telargs("diagnostics", { bufnr = 0 }), "buffer diagnostics" },
@@ -124,11 +130,9 @@ return require("which-key").register {
                 "grep dotfiles",
             },
         },
-        F = { tele "find_files", "Current directory" },
         f = {
             name = "find files in",
             f = { tele "find_files", "Current directory" },
-            F = { telargs("find_files", { cwd = vim.fn.expand "%:p:h" }), "Home directory" },
             h = { telargs("find_files", { cwd = "~" }), "Home directory" },
             r = { tele "oldfiles", "Vim recent files" },
             R = { telargs("find_files", { cwd = "/usr/share/nvim/runtime/" }), "Vim runtime files" },

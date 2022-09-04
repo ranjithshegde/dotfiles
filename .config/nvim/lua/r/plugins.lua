@@ -72,7 +72,7 @@ return require("packer").startup {
             "rcarriga/nvim-notify",
             module = "notify",
             config = function()
-                require("notify").setup { timeout = 1000, stages = "static" }
+                require("notify").setup { top_down = false, timeout = 2000, stages = "static" }
             end,
         }
 

@@ -194,7 +194,10 @@ function lsp.servers()
         marksman = { capabilities = lsp.capabilities() },
         rust_analyzer = { capabilities = lsp.capabilities() },
         supercollider = { capabilities = lsp.capabilities() },
-        bashls = { capabilities = lsp.capabilities(), filetypes = { "sh", "zsh" } },
+        bashls = {
+            capabilities = lsp.capabilities(),
+            filetypes = { "sh", "zsh" },
+        },
         sqls = {
             capabilities = lsp.capabilities(),
             on_new_config = function(new_config, new_rootdir)
@@ -205,45 +208,9 @@ function lsp.servers()
                 }
             end,
         },
-        texlab = {
-            capabilities = lsp.capabilities(),
-            cmd = { "texlab", "--log-file", "./aux/texlab-log", "-vvvv" },
-            before_init = function(_, _)
-                if vim.fn.isdirectory "aux" ~= 1 then
-                    vim.fn.mkdir "aux"
-                end
-            end,
-            settings = {
-                texlab = {
-                    build = {
-                        args = {
-                            -- "-xelatex",
-                            "-lualatex",
-                            "-verbose",
-                            "-file-line-error",
-                            "-synctex=1",
-                            "-interaction=nonstopmode",
-                            "-shell-escape",
-                            "-outdir=aux",
-                            "%f",
-                        },
-                        executable = "latexmk",
-                        forwardSearchAfter = true,
-                    },
-                    bibtexFormatter = "latexindent",
-                    lint = { onSave = true, onChange = true },
-                    chktex = { onOpenAndSave = true },
-                    auxDirectory = "aux",
-                    latexindent = { modifyLineBreaks = true },
-                    forwardSearch = {
-                        args = { "--synctex-forward", "%l:1:%f", "%p" },
-                        executable = "zathura",
-                    },
-                },
-            },
-        },
         ltex = {
             filetypes = { "bib", "markdown", "org", "tex" },
+            autostart = false,
             capabilities = lsp.capabilities(),
             settings = {
                 ltex = {
@@ -275,6 +242,49 @@ function lsp.servers()
                         ["en-GB"] = vim.loop.fs_stat(vim.loop.cwd() .. "/.ltex_rules")
                                 and require("r.utils").concat_fileLines(vim.loop.cwd() .. "/.ltex_rules")
                             or {},
+                    },
+                },
+            },
+        },
+        texlab = {
+            capabilities = lsp.capabilities(),
+            cmd = { "texlab", "--log-file", "./aux/texlab-log", "-vvvv" },
+            before_init = function(_, _)
+                if vim.fn.isdirectory "aux" ~= 1 then
+                    vim.fn.mkdir "aux"
+                end
+            end,
+            settings = {
+                texlab = {
+                    build = {
+                        args = {
+                            "-lualatex",
+                            "-verbose",
+                            "-file-line-error",
+                            "-synctex=1",
+                            "-interaction=nonstopmode",
+                            "-shell-escape",
+                            "-outdir=aux",
+                            "%f",
+                        },
+                        executable = "latexmk",
+                        forwardSearchAfter = true,
+                    },
+                    bibtexFormatter = "latexindent",
+                    lint = { onSave = true, onChange = true },
+                    chktex = { onOpenAndSave = true },
+                    auxDirectory = "aux",
+                    latexindent = { modifyLineBreaks = true },
+                    forwardSearch = {
+                        args = {
+                            "--reuse-instance",
+                            "%p",
+                            "--forward-search-file",
+                            "%f",
+                            "--forward-search-line",
+                            "%l",
+                        },
+                        executable = "sioyek",
                     },
                 },
             },
