@@ -5,47 +5,47 @@ local servers = {}
 ------------------------------------------------------------------------
 
 function servers.clangd()
-    require("clangd_extensions").setup {
+    require('clangd_extensions').setup {
         server = {
-            capabilities = require("r.lsp").capabilities(),
-            filetypes = { "c", "cpp", "opencl" },
+            capabilities = require('r.lsp').capabilities(),
+            filetypes = { 'c', 'cpp', 'opencl' },
             init_options = {
                 clangdFileStatus = true,
             },
             cmd = {
-                "clangd",
-                "--clang-tidy",
-                "--background-index",
-                "--all-scopes-completion",
-                "--header-insertion=iwyu",
-                "--header-insertion-decorators",
-                "--completion-style=detailed",
-                "--suggest-missing-includes",
-                "--fallback-style=webkit",
-                "--cross-file-rename",
-                "--offset-encoding=utf-32",
+                'clangd',
+                '--clang-tidy',
+                '--background-index',
+                '--all-scopes-completion',
+                '--header-insertion=iwyu',
+                '--header-insertion-decorators',
+                '--completion-style=detailed',
+                '--suggest-missing-includes',
+                '--fallback-style=webkit',
+                '--cross-file-rename',
+                '--offset-encoding=utf-32',
             },
         },
         extensions = {
             autoSetHints = false,
             memory_usage = {
-                border = "rounded",
+                border = 'rounded',
             },
             symbol_info = {
-                border = "rounded",
+                border = 'rounded',
             },
         },
     }
 end
 
 function servers.clangCmp()
-    local cmp = require "cmp"
+    local cmp = require 'cmp'
     cmp.setup.sorting = {
         comparators = {
             cmp.config.compare.offset,
             cmp.config.compare.exact,
             cmp.config.compare.recently_used,
-            require "clangd_extensions.cmp_scores",
+            require 'clangd_extensions.cmp_scores',
             cmp.config.compare.kind,
             cmp.config.compare.sort_text,
             cmp.config.compare.length,
@@ -55,17 +55,17 @@ function servers.clangCmp()
 end
 
 function servers.ccls()
-    local filetypes = { "c", "cpp", "objc", "objcpp", "opencl" }
+    local filetypes = { 'c', 'cpp', 'objc', 'objcpp', 'opencl' }
     local server_config = {
         filetypes = filetypes,
         init_options = {
             cache = {
                 -- directory = vim.env.XDG_CACHE_HOME .. "/ccls/",
-                directory = vim.fs.normalize "~/.cache/ccls/",
+                directory = vim.fs.normalize '~/.cache/ccls/',
             },
         },
     }
-    require("ccls").setup {
+    require('ccls').setup {
         filetypes = filetypes,
         lsp = {
             server = server_config,

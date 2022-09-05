@@ -14,7 +14,7 @@ function notify.get_notif_data(client_id, token)
     return notify.client_notifs[client_id][token]
 end
 
-notify.spinner_frames = { "⣾", "⣽", "⣻", "⢿", "⡿", "⣟", "⣯", "⣷" }
+notify.spinner_frames = { '⣾', '⣽', '⣻', '⢿', '⡿', '⣟', '⣯', '⣷' }
 
 function notify.update_spinner(client_id, token)
     local notif_data = notify.get_notif_data(client_id, token)
@@ -36,11 +36,11 @@ function notify.update_spinner(client_id, token)
 end
 
 function notify.format_title(title, client_name)
-    return client_name .. (#title > 0 and ": " .. title or "")
+    return client_name .. (#title > 0 and ': ' .. title or '')
 end
 
 function notify.format_message(message, percentage)
-    return (percentage and percentage .. "%\t" or "") .. (message or "")
+    return (percentage and percentage .. '%\t' or '') .. (message or '')
 end
 
 return notify

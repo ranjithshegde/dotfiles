@@ -1,16 +1,16 @@
-local overseer = require "overseer"
+local overseer = require 'overseer'
 
 return {
-    name = "Run Single",
-    desc = "Build and run single file",
+    name = 'Run Single',
+    desc = 'Build and run single file',
     tags = { overseer.TAG.BUILD },
-    params = { save = { type = "boolean", default = true } },
+    params = { save = { type = 'boolean', default = true } },
     builder = function(params)
         return {
-            cmd = { vim.b.make, vim.fn.expand "%" },
-            { "r.dispatch", save = params.save },
+            cmd = { vim.b.make, vim.fn.expand '%' },
+            { 'r.dispatch', save = params.save },
         }
     end,
-    condition = { filetype = { "java", "lua", "python", "javascript", "perl", "dart" } },
+    condition = { filetype = { 'java', 'lua', 'python', 'javascript', 'perl', 'dart' } },
     priority = 20,
 }

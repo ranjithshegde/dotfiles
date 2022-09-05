@@ -5,9 +5,9 @@
 local function handler(virt_text, lnum, end_lnum, width, truncate, ctx)
     local result = {}
 
-    local counts = ("    %d    "):format(end_lnum - lnum)
-    local suffix = " ⋯⋯  "
-    local padding = ""
+    local counts = ('    %d    '):format(end_lnum - lnum)
+    local suffix = ' ⋯⋯  '
+    local padding = ''
 
     local end_virt_text = ctx.end_virt_text
 
@@ -29,7 +29,7 @@ local function handler(virt_text, lnum, end_lnum, width, truncate, ctx)
             chunk_width = vim.api.nvim_strwidth(chunk_text)
 
             if cur_width + chunk_width < target_width then
-                padding = padding .. (" "):rep(target_width - cur_width - chunk_width)
+                padding = padding .. (' '):rep(target_width - cur_width - chunk_width)
             end
             break
         end
@@ -37,26 +37,26 @@ local function handler(virt_text, lnum, end_lnum, width, truncate, ctx)
     end
 
     if end_virt_text[1] and end_virt_text[1][1] then
-        end_virt_text[1][1] = end_virt_text[1][1]:gsub("[%s\t]+", "")
+        end_virt_text[1][1] = end_virt_text[1][1]:gsub('[%s\t]+', '')
     end
 
-    table.insert(result, { suffix, "UfoFoldedEllipsis" })
-    table.insert(result, { counts, "MoreMsg" })
-    table.insert(result, { suffix, "UfoFoldedEllipsis" })
+    table.insert(result, { suffix, 'UfoFoldedEllipsis' })
+    table.insert(result, { counts, 'MoreMsg' })
+    table.insert(result, { suffix, 'UfoFoldedEllipsis' })
 
     vim.list_extend(result, end_virt_text)
-    table.insert(result, { padding, "" })
+    table.insert(result, { padding, '' })
 
     return result
 end
 
 return function()
-    require("ufo").setup {
+    require('ufo').setup {
         open_fold_hl_timeout = 0,
         fold_virt_text_handler = handler,
 
         provider_selector = function(_, _)
-            return ""
+            return ''
         end,
         enable_fold_end_virt_text = true,
     }

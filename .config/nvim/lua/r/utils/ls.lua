@@ -15,18 +15,18 @@ end
 ------------------------------------------------------------------------
 
 local config = {
-    relative = "editor",
-    style = "minimal",
+    relative = 'editor',
+    style = 'minimal',
     width = 70,
     height = 25,
     row = 0,
     col = 0,
-    border = "double",
+    border = 'double',
 }
 
 local function available_capabilities(server_capabilities)
     return vim.tbl_filter(function(key)
-        if type(server_capabilities[key]) == "table" then
+        if type(server_capabilities[key]) == 'table' then
             return not vim.tbl_isempty(server_capabilities[key])
         else
             return server_capabilities[key] == true
@@ -42,8 +42,8 @@ ls.lsp_capabilities = function()
     local buf_lines = {}
 
     local function make_client_info(client)
-        local info = client.name .. " (id " .. tostring(client.id) .. ")"
-        local capabils = { "## Capabilities:", "```json" }
+        local info = client.name .. ' (id ' .. tostring(client.id) .. ')'
+        local capabils = { '## Capabilities:', '```json' }
         if client.server_capabilities then
             local all = client.server_capabilities
             local cap_resolved = available_capabilities(client.server_capabilities)
@@ -51,46 +51,46 @@ ls.lsp_capabilities = function()
 
             for _, value in ipairs(cap_raw) do
                 if vim.tbl_contains(cap_resolved, value) then
-                    if type(all[value]) == "table" then
+                    if type(all[value]) == 'table' then
                         local k1 = vim.tbl_keys(all[value])
-                        table.insert(capabils, "\t " .. value .. " = {")
+                        table.insert(capabils, '\t ' .. value .. ' = {')
                         for _, val in pairs(k1) do
-                            if type(all[value][val]) == "table" then
+                            if type(all[value][val]) == 'table' then
                                 local k2 = vim.tbl_keys(all[value][val])
-                                table.insert(capabils, "\t\t " .. val .. " = {")
+                                table.insert(capabils, '\t\t ' .. val .. ' = {')
                                 local sub = {}
                                 for _, v in pairs(k2) do
                                     local s = all[value][val][v]
                                     if s then
-                                        if type(s) == "table" then
-                                            table.insert(capabils, "\t\t\t " .. table.concat(s, ", "))
-                                        elseif type(s) == "string" then
-                                            local ss = string.gsub(s, "\n", "\\n")
+                                        if type(s) == 'table' then
+                                            table.insert(capabils, '\t\t\t ' .. table.concat(s, ', '))
+                                        elseif type(s) == 'string' then
+                                            local ss = string.gsub(s, '\n', '\\n')
                                             table.insert(sub, ss)
                                         else
-                                            table.insert(capabils, "\t\t\t " .. tostring(s))
+                                            table.insert(capabils, '\t\t\t ' .. tostring(s))
                                         end
                                     end
                                 end
                                 if not vim.tbl_isempty(sub) then
-                                    table.insert(capabils, "\t\t\t " .. table.concat(sub, ", "))
+                                    table.insert(capabils, '\t\t\t ' .. table.concat(sub, ', '))
                                 end
-                                table.insert(capabils, "\t\t }")
+                                table.insert(capabils, '\t\t }')
                             else
-                                table.insert(capabils, "\t\t " .. val .. [[ = "true",]])
+                                table.insert(capabils, '\t\t ' .. val .. [[ = "true",]])
                             end
                         end
-                        table.insert(capabils, "\t },")
+                        table.insert(capabils, '\t },')
                     else
-                        table.insert(capabils, "\t " .. value .. [[ = "true",]])
+                        table.insert(capabils, '\t ' .. value .. [[ = "true",]])
                     end
                 else
-                    table.insert(capabils, "\t " .. value .. [[ = "false",]])
+                    table.insert(capabils, '\t ' .. value .. [[ = "false",]])
                 end
             end
         end
         return {
-            "# Client: " .. info,
+            '# Client: ' .. info,
             capabils,
         }
     end
@@ -99,16 +99,16 @@ ls.lsp_capabilities = function()
         local newlines = make_client_info(client)
         vim.list_extend(buf_lines, { newlines[1] })
         vim.list_extend(buf_lines, newlines[2])
-        vim.list_extend(buf_lines, { "```" })
+        vim.list_extend(buf_lines, { '```' })
     end
 
     vim.api.nvim_buf_set_lines(bufnr, 0, -1, true, buf_lines)
     vim.bo[bufnr].modifiable = false
-    vim.keymap.set("n", "<esc>", "<cmd>bd<CR>", { buffer = bufnr })
-    vim.keymap.set("n", "q", "<cmd>bd<CR>", { buffer = bufnr })
+    vim.keymap.set('n', '<esc>', '<cmd>bd<CR>', { buffer = bufnr })
+    vim.keymap.set('n', 'q', '<cmd>bd<CR>', { buffer = bufnr })
     vim.api.nvim_open_win(bufnr, true, config)
-    vim.bo[bufnr].filetype = "LspCapabilities"
-    vim.cmd.normal { args = { "zx" }, bang = true }
+    vim.bo[bufnr].filetype = 'LspCapabilities'
+    vim.cmd.normal { args = { 'zx' }, bang = true }
 end
 
 ------------------------------------------------------------------------
@@ -118,26 +118,26 @@ end
 local null_ls_token = nil
 local ltex_token = nil
 function ls.lsp_progress()
-    local notice = require "r.settings.notify"
+    local notice = require 'r.settings.notify'
 
-    vim.lsp.handlers["$/progress"] = function(_, result, ctx)
+    vim.lsp.handlers['$/progress'] = function(_, result, ctx)
         local client_id = ctx.client_id
         local name = vim.lsp.get_client_by_id(client_id).name
-        if name == "null-ls" then
+        if name == 'null-ls' then
             if result.token == null_ls_token then
                 return
             end
-            if result.value.title == "formatting" then
+            if result.value.title == 'formatting' then
                 null_ls_token = result.token
                 return
             end
         end
 
-        if name == "ltex" then
+        if name == 'ltex' then
             if result.token == ltex_token then
                 return
             end
-            if result.value.title == "Checking document" then
+            if result.value.title == 'Checking document' then
                 ltex_token = result.token
                 return
             end
@@ -151,10 +151,10 @@ function ls.lsp_progress()
 
         local notif_data = notice.get_notif_data(client_id, result.token)
 
-        if val.kind == "begin" then
+        if val.kind == 'begin' then
             local message = notice.format_message(val.message, val.percentage)
 
-            notif_data.notification = vim.notify(message, "info", {
+            notif_data.notification = vim.notify(message, 'info', {
                 title = notice.format_title(val.title, name),
                 icon = notice.spinner_frames[1],
                 timeout = false,
@@ -163,15 +163,15 @@ function ls.lsp_progress()
 
             notif_data.spinner = 1
             notice.update_spinner(client_id, result.token)
-        elseif val.kind == "report" and notif_data then
-            notif_data.notification = vim.notify(notice.format_message(val.message, val.percentage), "info", {
+        elseif val.kind == 'report' and notif_data then
+            notif_data.notification = vim.notify(notice.format_message(val.message, val.percentage), 'info', {
                 replace = notif_data.notification,
                 hide_from_history = false,
             })
-        elseif val.kind == "end" and notif_data then
+        elseif val.kind == 'end' and notif_data then
             notif_data.notification =
-                vim.notify(val.message and notice.format_message(val.message) or "Complete", "info", {
-                    icon = "",
+                vim.notify(val.message and notice.format_message(val.message) or 'Complete', 'info', {
+                    icon = '',
                     replace = notif_data.notification,
                     timeout = 3000,
                 })
@@ -183,15 +183,15 @@ end
 
 -- table from lsp severity to vim severity.
 local severity = {
-    "error",
-    "warn",
-    "info",
-    "info", -- map both hint and info to info?
+    'error',
+    'warn',
+    'info',
+    'info', -- map both hint and info to info?
 }
 
 function ls.lsp_messages()
-    vim.notify = require "notify"
-    vim.lsp.handlers["window/showMessage"] = function(_, method, params, _)
+    vim.notify = require 'notify'
+    vim.lsp.handlers['window/showMessage'] = function(_, method, params, _)
         vim.notify(method.message, severity[params.type])
     end
 end
@@ -202,13 +202,13 @@ end
 
 ---Return word count for the tex document
 function ls.TexWordCount()
-    local Job = require "plenary.job"
+    local Job = require 'plenary.job'
     Job:new({
-        command = "texcount",
-        args = { "-inc", "-sum", "-1", vim.fn.expand "%" },
+        command = 'texcount',
+        args = { '-inc', '-sum', '-1', vim.fn.expand '%' },
         on_exit = function(j, return_val)
             vim.pretty_print(return_val)
-            vim.notify(j:result(), nil, { title = "Current document word count" })
+            vim.notify(j:result(), nil, { title = 'Current document word count' })
         end,
     }):sync()
 end
@@ -218,17 +218,17 @@ end
 ------------------------------------------------------------------------
 
 function ls.glsl()
-    local null_ls = require "null-ls"
+    local null_ls = require 'null-ls'
 
     return {
         method = null_ls.methods.DIAGNOSTICS,
-        filetypes = { "glsl" },
+        filetypes = { 'glsl' },
         generator = null_ls.generator {
-            command = "glslangValidator",
-            args = { "--stdin", "-S", "$FILEEXT" },
+            command = 'glslangValidator',
+            args = { '--stdin', '-S', '$FILEEXT' },
             to_stdin = true,
             from_stderr = true,
-            format = "raw",
+            format = 'raw',
             check_exit_code = function(code, stderr)
                 local success = code <= 1
                 if not success then
@@ -240,16 +240,16 @@ function ls.glsl()
             on_output = function(params, done)
                 if params and params.output then
                     local diagnostics = {}
-                    local lines = vim.split(params.output, "\n")
-                    local sever, col, row, message = string.match(lines[2], "(%u+):%s(%d+):(%d+):.*:%s+(.*)")
+                    local lines = vim.split(params.output, '\n')
+                    local sever, col, row, message = string.match(lines[2], '(%u+):%s(%d+):(%d+):.*:%s+(.*)')
 
                     table.insert(diagnostics, {
                         row = row,
                         col = col + 1,
                         end_col = col + 2,
-                        source = "GLSLang",
+                        source = 'GLSLang',
                         message = message,
-                        severity = require("null-ls.helpers").diagnostics.severities[vim.fn.tolower(sever)],
+                        severity = require('null-ls.helpers').diagnostics.severities[vim.fn.tolower(sever)],
                     })
                     done(diagnostics)
                 else
@@ -265,50 +265,50 @@ end
 ------------------------------------------------------------------------
 
 local function write_file(path, data)
-    local file = io.open(path, "a+")
+    local file = io.open(path, 'a+')
     io.output(file)
     for _, line in ipairs(data) do
-        io.write(line .. "\n")
+        io.write(line .. '\n')
     end
     io.close(file)
 end
 
 local function ltex_update_dict()
-    local client = vim.lsp.get_active_clients({ name = "ltex" })[1]
-    client.config.settings.ltex.dictionary["en-GB"] =
-        require("r.utils").concat_fileLines(vim.api.nvim_get_option "spellfile")
-    return client.notify("workspace/didChangeConfiguration", client.config.settings)
+    local client = vim.lsp.get_active_clients({ name = 'ltex' })[1]
+    client.config.settings.ltex.dictionary['en-GB'] =
+        require('r.utils').concat_fileLines(vim.api.nvim_get_option 'spellfile')
+    return client.notify('workspace/didChangeConfiguration', client.config.settings)
 end
 
 local function ltex_update_rule(file)
-    local client = vim.lsp.get_active_clients({ name = "ltex" })[1]
+    local client = vim.lsp.get_active_clients({ name = 'ltex' })[1]
     if not client.config.settings.ltex.disabledRules then
         client.config.settings.ltex.disabledRules = {}
     end
-    client.config.settings.ltex.disabledRules["en-GB"] = require("r.utils").concat_fileLines(file)
-    return client.notify("workspace/didChangeConfiguration", client.config.settings)
+    client.config.settings.ltex.disabledRules['en-GB'] = require('r.utils').concat_fileLines(file)
+    return client.notify('workspace/didChangeConfiguration', client.config.settings)
 end
 
 local function ltex_hidden(file)
-    local client = vim.lsp.get_active_clients({ name = "ltex" })[1]
+    local client = vim.lsp.get_active_clients({ name = 'ltex' })[1]
     if not client.config.settings.ltex.hiddenFalsePositives then
         client.config.settings.ltex.hiddenFalsePositives = {}
     end
-    client.config.settings.ltex.hiddenFalsePositives["en-GB"] = require("r.utils").concat_fileLines(file)
-    return client.notify("workspace/didChangeConfiguration", client.config.settings)
+    client.config.settings.ltex.hiddenFalsePositives['en-GB'] = require('r.utils').concat_fileLines(file)
+    return client.notify('workspace/didChangeConfiguration', client.config.settings)
 end
 
 function ls.ltex_add_to_dict(command)
     local args = command.arguments[1].words
     for _, words in pairs(args) do
-        write_file(vim.api.nvim_get_option "spellfile", words)
+        write_file(vim.api.nvim_get_option 'spellfile', words)
     end
     ltex_update_dict()
 end
 
 function ls.ltex_disable_rule(command)
     local args = command.arguments[1].ruleIds
-    local file = ".ltex_rules"
+    local file = '.ltex_rules'
     for _, rules in pairs(args) do
         write_file(file, rules)
     end
@@ -317,7 +317,7 @@ end
 
 function ls.ltex_false_positive(command)
     local args = command.arguments[1].falsePositives
-    local file = ".ltex_false_positive"
+    local file = '.ltex_false_positive'
     for _, rules in pairs(args) do
         write_file(file, rules)
     end
@@ -330,13 +330,13 @@ end
 
 function ls.tex_clean()
     local bufnr = vim.api.nvim_get_current_buf()
-    local texlab_client = require("lspconfig.util").get_active_client_by_name(bufnr, "texlab")
+    local texlab_client = require('lspconfig.util').get_active_client_by_name(bufnr, 'texlab')
     local params = {
-        command = "texlab.cleanArtifacts",
+        command = 'texlab.cleanArtifacts',
         arguments = { vim.lsp.util.make_text_document_params(bufnr) },
     }
     if texlab_client then
-        texlab_client.request("workspace/executeCommand", params, function(err, result)
+        texlab_client.request('workspace/executeCommand', params, function(err, result)
             if err then
                 error(tostring(err))
             end
@@ -345,7 +345,7 @@ function ls.tex_clean()
             end
         end, bufnr)
     else
-        print "method texlab.cleanArtifacts is not supported by any servers active on the current buffer"
+        print 'method texlab.cleanArtifacts is not supported by any servers active on the current buffer'
     end
 end
 

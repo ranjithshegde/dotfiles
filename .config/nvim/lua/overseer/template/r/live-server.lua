@@ -1,17 +1,17 @@
-local overseer = require "overseer"
+local overseer = require 'overseer'
 return {
-    name = "Live server",
-    desc = "Launch web application in browser",
+    name = 'Live server',
+    desc = 'Launch web application in browser',
     tags = { overseer.TAG.TEST },
-    params = { save = { type = "boolean", default = true } },
+    params = { save = { type = 'boolean', default = true } },
     builder = function(params)
         return {
-            cmd = { "live-server", "." },
-            components = { "default", { "r.dispatch", save = params.save } },
+            cmd = { 'live-server', '.' },
+            components = { 'default', { 'r.dispatch', save = params.save } },
         }
     end,
     condition = {
-        filetype = { "javascript", "typescript", "html", "css" },
+        filetype = { 'javascript', 'typescript', 'html', 'css' },
     },
     priority = 10,
 }

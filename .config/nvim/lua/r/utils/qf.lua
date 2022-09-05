@@ -7,15 +7,15 @@ local function find_qf(type)
     local win_tbl = {}
     for _, win in pairs(wininfo) do
         local found = false
-        if type == "l" and win["loclist"] == 1 then
+        if type == 'l' and win['loclist'] == 1 then
             found = true
         end
         -- loclist window has 'quickfix' set, eliminate those
-        if type == "q" and win["quickfix"] == 1 and win["loclist"] == 0 then
+        if type == 'q' and win['quickfix'] == 1 and win['loclist'] == 0 then
             found = true
         end
         if found then
-            table.insert(win_tbl, { winid = win["winid"], bufnr = win["bufnr"] })
+            table.insert(win_tbl, { winid = win['winid'], bufnr = win['bufnr'] })
         end
     end
     return win_tbl
@@ -25,9 +25,9 @@ end
 local function open_qf()
     if not vim.tbl_isempty(vim.fn.getqflist()) then
         vim.cmd.copen()
-        vim.cmd.wincmd "J"
+        vim.cmd.wincmd 'J'
     else
-        vim.notify "qflist is empty."
+        vim.notify 'qflist is empty.'
     end
 end
 
@@ -36,7 +36,7 @@ local function open_loclist()
     if not vim.tbl_isempty(vim.fn.getloclist(0)) then
         vim.cmd.lopen()
     else
-        vim.notify "loclist is empty."
+        vim.notify 'loclist is empty.'
     end
 end
 
@@ -52,7 +52,7 @@ function qf.toggle_qf(type)
         end
     else
         -- no windows are visible, attempt to open
-        if type == "l" then
+        if type == 'l' then
             open_loclist()
         else
             open_qf()
@@ -67,8 +67,8 @@ function qf.delete(bufnr)
 
     table.remove(qfl, line)
 
-    vim.fn.setqflist({}, "r", { items = qfl })
-    vim.fn.setpos(".", { bufnr, line, 1, 0 })
+    vim.fn.setqflist({}, 'r', { items = qfl })
+    vim.fn.setpos('.', { bufnr, line, 1, 0 })
 end
 
 return qf

@@ -1,2 +1,2 @@
-vim.b.repl = "ipython"
-vim.b.make = "python"
+vim.b.repl = 'ipython'
+vim.b.make = 'python'

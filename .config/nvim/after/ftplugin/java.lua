@@ -1,2 +1,2 @@
-vim.b.repl = "javac"
-vim.b.make = "javac"
+vim.b.repl = 'javac'
+vim.b.make = 'javac'

@@ -6,17 +6,17 @@ local utils = {}
 
 ---Restart Vim without having to close and run again
 function utils.restart()
-    require("plenary.reload").reload_module "r"
-    vim.cmd.source "$MYVIMRC"
-    vim.api.nvim_exec_autocmds("VimEnter", {})
+    require('plenary.reload').reload_module 'r'
+    vim.cmd.source '$MYVIMRC'
+    vim.api.nvim_exec_autocmds('VimEnter', {})
 end
 
 function utils.register_au_id(id)
-    if type(id) ~= "table" then
+    if type(id) ~= 'table' then
         vim.notify(
-            string.format("autocmd id %s not supplied as list, regitartion failed", vim.inspect(id)),
+            string.format('autocmd id %s not supplied as list, regitartion failed', vim.inspect(id)),
             vim.log.levels.WARN,
-            { title = "autocmd creation" }
+            { title = 'autocmd creation' }
         )
         return
     end
@@ -24,7 +24,7 @@ function utils.register_au_id(id)
         vim.g.au_id = id
     else
         local temp = vim.g.au_id
-        vim.g.au_id = vim.tbl_extend("keep", temp, id)
+        vim.g.au_id = vim.tbl_extend('keep', temp, id)
     end
 end
 
@@ -35,13 +35,13 @@ end
 ---Programatically build a shell command to execute
 ---@param args table table of shell command and args, separated by word
 function utils.silent_shell(args)
-    vim.api.nvim_cmd({ cmd = "!", args = args, mods = { silent = true } }, {})
+    vim.api.nvim_cmd({ cmd = '!', args = args, mods = { silent = true } }, {})
 end
 
 function utils.open_in_browser(url)
     local handle
-    local args = type(url) == "table" and url or { url }
-    handle = vim.loop.spawn("qutebrowser", { args = args }, function()
+    local args = type(url) == 'table' and url or { url }
+    handle = vim.loop.spawn('qutebrowser', { args = args }, function()
         handle:close()
     end)
 end
@@ -67,14 +67,14 @@ end
 ---Open thesaurus for the word online
 ---@param cmd string Word to search
 function utils.thesaurus(cmd)
-    local url = "https://www.thesaurus.com/browse/" .. cmd
+    local url = 'https://www.thesaurus.com/browse/' .. cmd
     utils.open_in_browser(url)
 end
 
 ---Open wiktionary for the word online
 ---@param cmd string Word to search
 function utils.dictionary(cmd)
-    local url = "https://en.wiktionary.org/wiki/" .. cmd
+    local url = 'https://en.wiktionary.org/wiki/' .. cmd
     utils.open_in_browser(url)
 end
 
@@ -96,19 +96,19 @@ function utils.get_file_label(n, tab)
     local current_buf = vim.api.nvim_win_get_buf(current_win)
     local file_name = vim.api.nvim_buf_get_name(current_buf)
 
-    local tail = vim.fn.fnamemodify(file_name, ":p:t")
+    local tail = vim.fn.fnamemodify(file_name, ':p:t')
 
     local result = {
         tail = tail,
         icon = nil,
         color = nil,
     }
-    if tail == "" then
+    if tail == '' then
         if vim.fn.getwininfo(current_win)[1].quickfix == 1 then
             tail = vim.fn.getqflist({ title = true }).title
         end
-        if tail == "" then
-            result.tail = "Empty Buffer"
+        if tail == '' then
+            result.tail = 'Empty Buffer'
             return result
         else
             result.tail = tail
@@ -116,18 +116,18 @@ function utils.get_file_label(n, tab)
     end
 
     local ext = nil
-    if string.find(file_name, "term://") ~= nil then
-        ext = "terminal"
+    if string.find(file_name, 'term://') ~= nil then
+        ext = 'terminal'
     else
-        ext = vim.fn.fnamemodify(tail, ":e")
+        ext = vim.fn.fnamemodify(tail, ':e')
     end
 
-    local icon, color = require("nvim-web-devicons").get_icon_color(tail, ext)
+    local icon, color = require('nvim-web-devicons').get_icon_color(tail, ext)
 
     if icon ~= nil then
-        local table = vim.api.nvim_get_hl_by_name("TablineSel", true)
+        local table = vim.api.nvim_get_hl_by_name('TablineSel', true)
         if tab then
-            vim.api.nvim_set_hl(0, "IconColor", { bg = table["background"], fg = color, cterm = { bold = true } })
+            vim.api.nvim_set_hl(0, 'IconColor', { bg = table['background'], fg = color, cterm = { bold = true } })
         end
         result.icon = icon
         result.color = color
@@ -140,8 +140,8 @@ function utils.toggle_vi()
     if vi then
         vim.o.number = true
         vim.o.relativenumber = true
-        vim.o.signcolumn = "auto"
-        vim.o.foldcolumn = "auto:1"
+        vim.o.signcolumn = 'auto'
+        vim.o.foldcolumn = 'auto:1'
         vim.o.laststatus = 3
         if vim.b.hasLsp then
             vim.cmd.DefaultDiagnostics()
@@ -152,8 +152,8 @@ function utils.toggle_vi()
     else
         vim.o.number = false
         vim.o.relativenumber = false
-        vim.o.signcolumn = "no"
-        vim.o.foldcolumn = "0"
+        vim.o.signcolumn = 'no'
+        vim.o.foldcolumn = '0'
         vim.o.laststatus = 0
         if vim.b.hasLsp then
             vim.cmd.DisableDiagnostics()
@@ -163,8 +163,8 @@ function utils.toggle_vi()
     end
 end
 
-local colors = { "dawnfox", "dayfox", "terafox", "duskfox", "nordfox", "nightfox", "carbonfox" }
-local color = vim.api.nvim_exec("colo", true)
+local colors = { 'dawnfox', 'dayfox', 'terafox', 'duskfox', 'nordfox', 'nightfox', 'carbonfox' }
+local color = vim.api.nvim_exec('colo', true)
 local counter = vim.fn.index(colors, color)
 
 function utils.cycle_colors()

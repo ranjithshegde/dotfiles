@@ -8,7 +8,6 @@ local state = {
     should_fetch_references = true,
     preview_strategy = nil,
     cached_lines = nil,
-    -- Contains created namespace (used in multifile-strategy)
     preview_ns = nil,
     err = nil,
 }
@@ -27,17 +26,16 @@ local single_file_strategy = {
                 return item.range
             end,
             vim.tbl_filter(function(item)
-                -- Only include references from current file
                 return item.uri == uri
             end, result)
         )
 
         for _, range in ipairs(lsp_ranges) do
             -- E.g. sumneko_lua sends ranges across multiple lines when a table value is a function, skip this range.
-            if range.start.line == range["end"].line then
+            if range.start.line == range['end'].line then
                 local line_nr = range.start.line
-                local line = vim.api.nvim_buf_get_lines(0, line_nr, line_nr + 1, false)[1]
-                local start_col, end_col = range.start.character, range["end"].character
+                local line = vim.api.nvim_buf_get_lines(bufnr, line_nr, line_nr + 1, false)[1]
+                local start_col, end_col = range.start.character, range['end'].character
                 local line_item = { text = line, start_col = start_col, end_col = end_col }
                 -- Same line was already seen
                 if cached_lines[line_nr] then
@@ -60,8 +58,20 @@ local single_file_strategy = {
             apply_highlights_fn(0, line_nr, line_info)
         end
     end,
-    restore_buffer_state = function(_)
-        state.should_fetch_references = true
+    restore_buffer_state = function(should_fetch_references, opts)
+        opts = opts or {}
+        -- Only clear highlights when bufnr is explicitly passed, if not passed
+        -- buffer will be cleared by command preview automatically
+        if opts.bufnr and state.cached_lines then
+            vim.api.nvim_buf_clear_namespace(opts.bufnr, opts.preview_ns, 0, -1)
+            for line_nr, line_info in pairs(state.cached_lines) do
+                for _, inter_line_info in ipairs(line_info) do
+                    vim.api.nvim_buf_set_lines(opts.bufnr, line_nr, line_nr + 1, true, { inter_line_info.text })
+                end
+            end
+        end
+        state.cached_lines = nil
+        state.should_fetch_references = should_fetch_references
     end,
 }
 
@@ -70,8 +80,7 @@ local multi_file_strategy = {
         local cached_lines = {}
         for _, res in ipairs(result) do
             local range = res.range
-            -- E.g. sumneko_lua sends ranges across multiple lines when a table value is a function, skip this range.
-            if range.start.line == range["end"].line then
+            if range.start.line == range['end'].line then
                 local bufnr = vim.uri_to_bufnr(res.uri)
                 -- Only need to highlight loaded buffers
                 if vim.api.nvim_buf_is_loaded(bufnr) then
@@ -81,7 +90,7 @@ local multi_file_strategy = {
 
                     local line_nr = range.start.line
                     local line = vim.api.nvim_buf_get_lines(bufnr, line_nr, line_nr + 1, false)[1]
-                    local start_col, end_col = range.start.character, range["end"].character
+                    local start_col, end_col = range.start.character, range['end'].character
                     local line_info = { text = line, start_col = start_col, end_col = end_col }
                     -- Same line was already seen
                     if cached_lines[bufnr][line_nr] then
@@ -109,13 +118,15 @@ local multi_file_strategy = {
             end
         end
     end,
-    restore_buffer_state = function(cached_lines)
-        if cached_lines then
-            local cur_bufnr = vim.api.nvim_get_current_buf()
+    restore_buffer_state = function(should_fetch_references, opts)
+        if state.cached_lines then
+            opts = opts or {}
+            local cur_bufnr = opts.bufnr or vim.api.nvim_get_current_buf()
             -- Reset highlights and buffer lines
-            for bufnr, line_info_per_bufnr in pairs(cached_lines) do
-                if bufnr ~= cur_bufnr then
-                    vim.api.nvim_buf_clear_namespace(bufnr, state.preview_ns, 0, -1)
+            for bufnr, line_info_per_bufnr in pairs(state.cached_lines) do
+                -- Clear highlights when buffer is explicitly passed
+                if cur_bufnr or bufnr ~= cur_bufnr then
+                    vim.api.nvim_buf_clear_namespace(bufnr, opts.preview_ns or state.preview_ns, 0, -1)
                     for line_nr, line_info in pairs(line_info_per_bufnr) do
                         for _, inter_line_info in ipairs(line_info) do
                             vim.api.nvim_buf_set_lines(bufnr, line_nr, line_nr + 1, true, { inter_line_info.text })
@@ -123,34 +134,35 @@ local multi_file_strategy = {
                     end
                 end
             end
+            state.cached_lines = nil
         end
-        state.should_fetch_references = true
+        state.should_fetch_references = should_fetch_references
     end,
 }
 
----Get positions of LSP reference symbols
-local function fetch_lsp_references(bufnr)
+-- Get positions of LSP reference symbols
+local function fetch_lsp_references(bufnr, lsp_params)
     local clients = vim.lsp.get_active_clients {
         bufnr = bufnr,
     }
     clients = vim.tbl_filter(function(client)
-        return client.supports_method "textDocument/rename"
+        return client.supports_method 'textDocument/rename'
     end, clients)
 
     if #clients == 0 then
-        set_error "[inc-rename] No active language server with rename capability"
+        set_error '[inc-rename] No active language server with rename capability'
         return
     end
 
-    local params = vim.lsp.util.make_position_params()
+    local params = lsp_params or vim.lsp.util.make_position_params()
     params.context = { includeDeclaration = true }
-    vim.lsp.buf_request(bufnr, "textDocument/references", params, function(err, result, _, _)
+    vim.lsp.buf_request(bufnr, 'textDocument/references', params, function(err, result, _, _)
         if err then
-            set_error("[inc-rename] Error while finding references: " .. err.message, vim.lsp.log_levels.ERROR)
+            set_error('[inc-rename] Error while finding references: ' .. err.message, vim.lsp.log_levels.ERROR)
             return
         end
         if not result or vim.tbl_isempty(result) then
-            set_error("[inc-rename] Nothing to rename", vim.lsp.log_levels.WARN)
+            set_error('[inc-rename] Nothing to rename', vim.lsp.log_levels.WARN)
             return
         end
 
@@ -180,16 +192,15 @@ local function fetch_lsp_references(bufnr)
     end)
 end
 
----Called when the user is still typing the command or the command arguments
+-- Called when the user is still typing the command or the command arguments
 local function incremental_rename_preview(opts, preview_ns, preview_buf)
-    vim.v.errmsg = ""
+    vim.v.errmsg = ''
     -- Store the lines of the buffer at the first invocation.
     -- should_fetch_references will be reset when the command is cancelled (see setup function).
     if state.should_fetch_references then
         state.should_fetch_references = false
         state.err = nil
-        fetch_lsp_references(vim.api.nvim_get_current_buf())
-        return
+        fetch_lsp_references(opts.bufnr or vim.api.nvim_get_current_buf(), opts.lsp_params)
     end
 
     -- Started fetching references but the results did not arrive yet
@@ -200,7 +211,7 @@ local function incremental_rename_preview(opts, preview_ns, preview_buf)
 
     local new_name = opts.args
     -- Ignore whitespace-only name (abort highlighting)
-    if new_name:match "^%s*$" then
+    if new_name:match '^%s*$' then
         return
     end
 
@@ -222,18 +233,25 @@ local function incremental_rename_preview(opts, preview_ns, preview_buf)
             offset = offset + #new_name - (info.end_col - info.start_col)
         end
 
-        vim.api.nvim_buf_set_lines(bufnr, line_nr, line_nr + 1, false, { updated_line })
+        vim.api.nvim_buf_set_lines(bufnr or opts.bufnr, line_nr, line_nr + 1, false, { updated_line })
         if preview_buf then
             vim.api.nvim_buf_set_lines(preview_buf, line_nr, line_nr + 1, false, { updated_line })
         end
 
         for _, hl_pos in ipairs(highlight_positions) do
-            vim.api.nvim_buf_add_highlight(bufnr, preview_ns, "Substitute", line_nr, hl_pos.start_col, hl_pos.end_col)
+            vim.api.nvim_buf_add_highlight(
+                bufnr or opts.bufnr,
+                preview_ns,
+                'Substitute',
+                line_nr,
+                hl_pos.start_col,
+                hl_pos.end_col
+            )
             if preview_buf then
                 vim.api.nvim_buf_add_highlight(
                     preview_buf,
                     preview_ns,
-                    "Substitute",
+                    'Substitute',
                     line_nr,
                     hl_pos.start_col,
                     hl_pos.end_col
@@ -247,20 +265,20 @@ local function incremental_rename_preview(opts, preview_ns, preview_buf)
     return 2
 end
 
----Sends a LSP rename request and optionally displays a message to the user showing
----how many instances were renamed in how many files
+-- Sends a LSP rename request and optionally displays a message to the user showing
+-- how many instances were renamed in how many files
 local function perform_lsp_rename(new_name)
     local params = vim.lsp.util.make_position_params()
     params.newName = new_name
 
-    vim.lsp.buf_request(0, "textDocument/rename", params, function(err, result, ctx, _)
+    vim.lsp.buf_request(0, 'textDocument/rename', params, function(err, result, ctx, _)
         if err and err.message then
-            vim.notify("[inc-rename] Error while renaming: " .. err.message, vim.lsp.log_levels.ERROR)
+            vim.notify('[inc-rename] Error while renaming: ' .. err.message, vim.lsp.log_levels.ERROR)
             return
         end
 
         if not result or vim.tbl_isempty(result) then
-            set_error("[inc-rename] Nothing renamed", vim.lsp.log_levels.WARN)
+            set_error('[inc-rename] Nothing renamed', vim.lsp.log_levels.WARN)
             return
         end
 
@@ -277,32 +295,31 @@ local function perform_lsp_rename(new_name)
         end
 
         local message = string.format(
-            "Renamed %s instance%s in %s file%s",
+            'Renamed %s instance%s in %s file%s',
             changed_instances,
-            changed_instances == 1 and "" or "s",
+            changed_instances == 1 and '' or 's',
             changed_files,
-            changed_files == 1 and "" or "s"
+            changed_files == 1 and '' or 's'
         )
         vim.notify(message)
     end)
 end
 
----Called when the command is executed (user pressed enter)
-local function incremental_rename_execute(opts)
+-- Called when the command is executed (user pressed enter)
+local function incremental_rename_execute(new_name)
     -- Any errors that occur in the preview function are not directly shown to the user but are stored in vim.v.errmsg.
     -- For more info, see https://github.com/neovim/neovim/issues/18910.
-    if vim.v.errmsg ~= "" then
+    if vim.v.errmsg ~= '' then
         vim.notify(
-            "[inc-rename] An error occurred in the preview function. Please report this error here: https://github.com/smjonas/inc-rename.nvim/issues:\n"
+            '[inc-rename] An error occurred in the preview function. Please report this error here: https://github.com/smjonas/inc-rename.nvim/issues:\n'
                 .. vim.v.errmsg,
             vim.lsp.log_levels.ERROR
         )
     elseif state.err then
         vim.notify(state.err.msg, state.err.level)
     else
-        perform_lsp_rename(opts.args)
+        perform_lsp_rename(new_name)
     end
-    state.should_fetch_references = true
 end
 
 function rename.attach(config)
@@ -314,21 +331,25 @@ function rename.attach(config)
 
     state.preview_strategy = config.multi_files and multi_file_strategy or single_file_strategy
 
-    local id = vim.api.nvim_create_augroup("inc_rename", { clear = true })
-    vim.api.nvim_create_autocmd({ "CmdLineLeave" }, {
+    local id = vim.api.nvim_create_augroup('inc_rename', { clear = true })
+    vim.api.nvim_create_autocmd({ 'CmdLineLeave' }, {
         group = id,
-        callback = vim.schedule_wrap(function()
-            if not state.should_fetch_references then
-                state.preview_strategy.restore_buffer_state(state.cached_lines)
+        callback = function()
+            if state.preview_ns then
+                state.preview_strategy.restore_buffer_state(true)
             end
-        end),
-        desc = "check if the command was cancelled to refetch the references.",
+        end,
+        desc = 'check if the command was cancelled to refetch the references.',
     })
 
     vim.api.nvim_create_user_command(
-        "IncRename",
-        vim.schedule_wrap(incremental_rename_execute),
-        { nargs = 1, addr = "lines", preview = incremental_rename_preview, desc = "Incremental Lsp rename" }
+        'IncRename',
+        function(opts)
+            state.preview_strategy.restore_buffer_state(true)
+            incremental_rename_execute(opts.args)
+        end,
+        -- vim.schedule_wrap(incremental_rename_execute),
+        { nargs = 1, addr = 'lines', preview = incremental_rename_preview, desc = 'Incremental Lsp rename' }
     )
 end
 

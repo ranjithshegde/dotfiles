@@ -1,4 +1,4 @@
-local util = require "lspconfig.util"
+local util = require 'lspconfig.util'
 
 ------------------------------------------------------------------------
 --                              General functions                     --
@@ -6,26 +6,26 @@ local util = require "lspconfig.util"
 
 local current_diagnostics = {}
 
-local TABLE = { "underline", "virtual_text", "signs", "update_in_insert", "float" }
+local TABLE = { 'underline', 'virtual_text', 'signs', 'update_in_insert', 'float' }
 
 local function signs()
-    vim.fn.sign_define("DiagnosticSignError", { text = "", texthl = "DiagnosticSignError" })
-    vim.fn.sign_define("DiagnosticSignWarn", { text = "", texthl = "DiagnosticSignWarn" })
-    vim.fn.sign_define("DiagnosticSignInfo", { text = "", texthl = "DiagnosticSignInfo" })
-    vim.fn.sign_define("DiagnosticSignHint", { text = "", texthl = "DiagnosticSignHint" })
+    vim.fn.sign_define('DiagnosticSignError', { text = '', texthl = 'DiagnosticSignError' })
+    vim.fn.sign_define('DiagnosticSignWarn', { text = '', texthl = 'DiagnosticSignWarn' })
+    vim.fn.sign_define('DiagnosticSignInfo', { text = '', texthl = 'DiagnosticSignInfo' })
+    vim.fn.sign_define('DiagnosticSignHint', { text = '', texthl = 'DiagnosticSignHint' })
 end
 
 local function fmt(diagnostic)
     if diagnostic.code then
-        return ("[%s] %s"):format(diagnostic.code, diagnostic.message)
+        return ('[%s] %s'):format(diagnostic.code, diagnostic.message)
     end
     return diagnostic.message
 end
 
 local float_conf = {
     show_header = true,
-    source = "always",
-    border = "double",
+    source = 'always',
+    border = 'double',
     format = fmt,
 }
 
@@ -33,40 +33,40 @@ local ns = {}
 
 local virt_text_conf = {
     default = {
-        source = "always",
+        source = 'always',
     },
     clangd = {
-        source = "always",
+        source = 'always',
         severity = vim.diagnostic.severity.ERROR,
     },
     ltex = {
-        source = "always",
+        source = 'always',
         severity = { min = vim.diagnostic.severity.WARN },
     },
 }
 
 local default_opts = {
-    title = "Diagnostics",
+    title = 'Diagnostics',
 }
 
 local function client_opts(client)
     return {
-        title = "Diagnostics: " .. client,
+        title = 'Diagnostics: ' .. client,
     }
 end
 
 local function displayStatus(msg, val, client)
     if not client then
         if val == false then
-            vim.notify(string.format("%s off", msg), nil, default_opts)
+            vim.notify(string.format('%s off', msg), nil, default_opts)
         else
-            vim.notify(string.format("%s on", msg), nil, default_opts)
+            vim.notify(string.format('%s on', msg), nil, default_opts)
         end
     else
         if val == false then
-            vim.notify(string.format("%s off for %s", msg, client), nil, client_opts(client))
+            vim.notify(string.format('%s off for %s', msg, client), nil, client_opts(client))
         else
-            vim.notify(string.format("%s on for %s", msg, client), nil, client_opts(client))
+            vim.notify(string.format('%s on for %s', msg, client), nil, client_opts(client))
         end
     end
 end
@@ -79,7 +79,7 @@ local function returnID(client)
     local lang_server = util.get_active_client_by_name(0, client)
     if not lang_server then
         vim.notify(
-            string.format("The language server %s is not active on this buffer", vim.log.levels.WARN, client),
+            string.format('The language server %s is not active on this buffer', vim.log.levels.WARN, client),
             client_opts(client)
         )
         return
@@ -107,7 +107,7 @@ local function configure(settings, client)
             if conf.virtual_text then
                 conf.virtual_text = virt_text_conf[client] and virt_text_conf[client] or virt_text_conf.default
             end
-            vim.lsp.handlers["textDocument/publishDiagnostics"] =
+            vim.lsp.handlers['textDocument/publishDiagnostics'] =
                 vim.lsp.with(vim.lsp.diagnostic.on_publish_diagnostics, conf)
             local client_id = returnID(id)
             if not client_id then
@@ -128,7 +128,7 @@ local function configure(settings, client)
         if conf.virtual_text then
             conf.virtual_text = virt_text_conf[client] and virt_text_conf[client] or virt_text_conf.default
         end
-        vim.lsp.handlers["textDocument/publishDiagnostics"] =
+        vim.lsp.handlers['textDocument/publishDiagnostics'] =
             vim.lsp.with(vim.lsp.diagnostic.on_publish_diagnostics, conf)
         local client_id = returnID(client)
         if not client_id then
@@ -161,7 +161,7 @@ local function init(settings, client, config)
         end
         config.settings[setting].value = config.settings[setting].default
     end
-    if client_settings["start_on"] ~= nil and not client_settings["start_on"] then
+    if client_settings['start_on'] ~= nil and not client_settings['start_on'] then
         current_diagnostics[client] = config
         Diagnostics.turn_off_diagnostics(client)
     else
@@ -208,7 +208,7 @@ function Diagnostics.attach(user_settings, client)
 end
 
 function Diagnostics.turn_off_diagnostics(client)
-    if client and client ~= "" then
+    if client and client ~= '' then
         local name = util.get_active_client_by_name(0, client)
         if name then
             configure({
@@ -218,10 +218,10 @@ function Diagnostics.turn_off_diagnostics(client)
                 update_in_insert = false,
             }, client)
             current_diagnostics[client].settings.all = false
-            vim.notify(string.format("all diagnostics for %s are defabled", client), nil, client_opts(client))
+            vim.notify(string.format('all diagnostics for %s are defabled', client), nil, client_opts(client))
         else
             vim.notify(
-                string.format("The language server %s is not active on this buffer", vim.log.levels.WARN, client),
+                string.format('The language server %s is not active on this buffer', vim.log.levels.WARN, client),
                 client_opts(client)
             )
         end
@@ -235,13 +235,13 @@ function Diagnostics.turn_off_diagnostics(client)
             }
             current_diagnostics[id].settings.all = false
         end
-        vim.notify("diagnostics for all attached servers are at disabled", nil, default_opts)
+        vim.notify('diagnostics for all attached servers are at disabled', nil, default_opts)
     end
 end
 
 function Diagnostics.turn_on_diagnostics_default(client)
     local settings = {}
-    if client and client ~= "" then
+    if client and client ~= '' then
         local name = util.get_active_client_by_name(0, client)
         if name then
             for _, setting in ipairs(TABLE) do
@@ -249,10 +249,10 @@ function Diagnostics.turn_on_diagnostics_default(client)
             end
             configure(settings, client)
             current_diagnostics[client].settings.all = true
-            vim.notify(string.format("all diagnostics for %s are at default", client), nil, client_opts(client))
+            vim.notify(string.format('all diagnostics for %s are at default', client), nil, client_opts(client))
         else
             vim.notify(
-                string.format("The language server %s is not active on this buffer", client),
+                string.format('The language server %s is not active on this buffer', client),
                 vim.log.levels.WARN,
                 default_opts
             )
@@ -265,12 +265,12 @@ function Diagnostics.turn_on_diagnostics_default(client)
             configure(settings)
             current_diagnostics[id].settings.all = true
         end
-        vim.notify("diagnostics for all attached servers are at default", nil, default_opts)
+        vim.notify('diagnostics for all attached servers are at default', nil, default_opts)
     end
 end
 
 function Diagnostics.turn_on_diagnostics(client)
-    if client and client ~= "" then
+    if client and client ~= '' then
         local name = util.get_active_client_by_name(0, client)
         if name then
             configure({
@@ -280,12 +280,12 @@ function Diagnostics.turn_on_diagnostics(client)
                 update_in_insert = true,
             }, client)
             current_diagnostics[client].settings.all = true
-            vim.notify(string.format("all diagnostics for %s are at enabled", client), nil, client_opts(client))
+            vim.notify(string.format('all diagnostics for %s are at enabled', client), nil, client_opts(client))
         else
             vim.notify(
-                string.format("The language server %s is not active on this buffer", client),
+                string.format('The language server %s is not active on this buffer', client),
                 vim.log.levels.WARN,
-                { title = "Diagnostics" }
+                { title = 'Diagnostics' }
             )
         end
     else
@@ -297,13 +297,13 @@ function Diagnostics.turn_on_diagnostics(client)
                 update_in_insert = true,
             }
             current_diagnostics[id].settings.all = true
-            vim.notify("diagnostics for all attached servers are enabled", nil, default_opts)
+            vim.notify('diagnostics for all attached servers are enabled', nil, default_opts)
         end
     end
 end
 
 function Diagnostics.toggle_all_diagnostics(client)
-    if client and client ~= "" then
+    if client and client ~= '' then
         local name = util.get_active_client_by_name(0, client)
         if name then
             if current_diagnostics[name.id].settings.all then
@@ -311,9 +311,9 @@ function Diagnostics.toggle_all_diagnostics(client)
             else
                 Diagnostics.turn_on_diagnostics(client)
             end
-            displayStatus("all diagnostics are", current_diagnostics[client].settings.all, client)
+            displayStatus('all diagnostics are', current_diagnostics[client].settings.all, client)
         else
-            print(string.format("The language server %s is not active on this buffer", client))
+            print(string.format('The language server %s is not active on this buffer', client))
         end
     else
         for id, _ in pairs(current_diagnostics) do
@@ -322,7 +322,7 @@ function Diagnostics.toggle_all_diagnostics(client)
             else
                 Diagnostics.turn_on_diagnostics()
             end
-            displayStatus("all diagnostics for attached servers are", current_diagnostics[id].settings.all)
+            displayStatus('all diagnostics for attached servers are', current_diagnostics[id].settings.all)
         end
     end
 end
@@ -330,35 +330,35 @@ end
 function Diagnostics.toggle_diagnostic(name, client)
     if not client then
         for id, _ in pairs(current_diagnostics) do
-            if type(current_diagnostics[id].settings[name].default) == "boolean" then
+            if type(current_diagnostics[id].settings[name].default) == 'boolean' then
                 current_diagnostics[id].settings[name].value = not current_diagnostics[id].settings[name].value
             elseif current_diagnostics[id].settings[name].value == false then
                 current_diagnostics[id].settings[name].value = current_diagnostics[id].settings[name].default
             else
                 current_diagnostics[id].settings[name].value = false
             end
-            displayStatus(name .. " is", current_diagnostics[id].settings[name].value)
+            displayStatus(name .. ' is', current_diagnostics[id].settings[name].value)
             configure { [name] = current_diagnostics[id].settings[name].value }
             return current_diagnostics[id].settings[name].value
         end
     else
         local cname = util.get_active_client_by_name(0, client)
         if cname then
-            if type(current_diagnostics[client].settings[name].default) == "boolean" then
+            if type(current_diagnostics[client].settings[name].default) == 'boolean' then
                 current_diagnostics[client].settings[name].value = not current_diagnostics[client].settings[name].value
             elseif current_diagnostics[client].settings[name].value == false then
                 current_diagnostics[client].settings[name].value = current_diagnostics[client].settings[name].default
             else
                 current_diagnostics[client].settings[name].value = false
             end
-            displayStatus(name .. " is", current_diagnostics[client].settings[name].value, client)
+            displayStatus(name .. ' is', current_diagnostics[client].settings[name].value, client)
             configure({
                 [name] = current_diagnostics[client].settings[name].value,
             }, client)
             return current_diagnostics[client].settings[name].value
         else
             vim.notify(
-                string.format("The language server %s is not active on this buffer", client),
+                string.format('The language server %s is not active on this buffer', client),
                 vim.log.levels.WARN,
                 default_opts
             )
@@ -367,34 +367,34 @@ function Diagnostics.toggle_diagnostic(name, client)
 end
 
 function Diagnostics.toggle_underline(client)
-    if client and client ~= "" then
-        Diagnostics.toggle_diagnostic("underline", client)
+    if client and client ~= '' then
+        Diagnostics.toggle_diagnostic('underline', client)
     else
-        Diagnostics.toggle_diagnostic "underline"
+        Diagnostics.toggle_diagnostic 'underline'
     end
 end
 
 function Diagnostics.toggle_signs(client)
-    if client and client ~= "" then
-        Diagnostics.toggle_diagnostic("signs", client)
+    if client and client ~= '' then
+        Diagnostics.toggle_diagnostic('signs', client)
     else
-        Diagnostics.toggle_diagnostic "signs"
+        Diagnostics.toggle_diagnostic 'signs'
     end
 end
 
 function Diagnostics.toggle_virtual_text(client)
-    if client and client ~= "" then
-        Diagnostics.toggle_diagnostic("virtual_text", client)
+    if client and client ~= '' then
+        Diagnostics.toggle_diagnostic('virtual_text', client)
     else
-        Diagnostics.toggle_diagnostic "virtual_text"
+        Diagnostics.toggle_diagnostic 'virtual_text'
     end
 end
 
 function Diagnostics.toggle_update_in_insert(client)
-    if client and client ~= "" then
-        Diagnostics.toggle_diagnostic("update_in_insert", client)
+    if client and client ~= '' then
+        Diagnostics.toggle_diagnostic('update_in_insert', client)
     else
-        Diagnostics.toggle_diagnostic "update_in_insert"
+        Diagnostics.toggle_diagnostic 'update_in_insert'
     end
 end
 
