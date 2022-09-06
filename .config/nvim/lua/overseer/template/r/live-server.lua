@@ -7,7 +7,7 @@ return {
     builder = function(params)
         return {
             cmd = { 'live-server', '.' },
-            components = { 'default', { 'r.dispatch', save = params.save } },
+            components = { 'default', 'unique', { 'r.dispatch', save = params.save } },
         }
     end,
     condition = {

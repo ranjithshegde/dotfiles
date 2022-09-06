@@ -8,12 +8,11 @@ local map = vim.keymap.set
 
 local open = function(path)
     return function()
-        local bufinfo = vim.fn.getbufinfo(vim.api.nvim_get_current_buf())[1]
         local cmd = 'edit'
-        if bufinfo.name ~= '' then
+        if vim.api.nvim_buf_get_name(vim.api.nvim_get_current_buf()) ~= '' then
             cmd = 'tabnew'
         end
-        require('r.utils').ex_cmd(cmd, { '~/.config/nvim/' .. path }, { silent = true }, { file = true, bar = true })
+        vim.cmd[cmd] { args = { '~/.config/nvim/' .. path } }
     end
 end
 

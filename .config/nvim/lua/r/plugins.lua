@@ -32,6 +32,7 @@ return require('packer').startup {
         -- Better marks
         use { 'ThePrimeagen/harpoon', module = 'harpoon' }
 
+        -- Choose compiler and view assembler
         use { 'krady21/compiler-explorer.nvim', opt = true }
 
         -- Databases

@@ -17,7 +17,10 @@ local tmpl = {
             table.insert(cmd, params.env)
         end
 
-        return { cmd = cmd, components = { 'default', { 'r.dispatch', save = params.save } } }
+        return {
+            cmd = cmd,
+            components = { 'default', 'unique', { 'r.dispatch', save = params.save } },
+        }
     end,
 }
 

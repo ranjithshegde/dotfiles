@@ -25,7 +25,10 @@ local tmpl = {
             table.insert(cmd, 1, 'prime-run')
         end
 
-        return { cmd = cmd, components = { 'default', { 'r.dispatch', save = params.save } } }
+        return {
+            cmd = cmd,
+            components = { 'default', 'unique', { 'r.dispatch', save = params.save } },
+        }
     end,
 }
 

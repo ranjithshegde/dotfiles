@@ -18,7 +18,10 @@ local tmpl = {
             vim.list_extend(cmd, params.flags)
         end
 
-        return { cmd = cmd, components = { 'default', { 'r.dispatch', save = params.save } } }
+        return {
+            cmd = cmd,
+            components = { 'default', 'unique', { 'r.dispatch', save = params.save } },
+        }
     end,
 }
 

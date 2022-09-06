@@ -225,46 +225,31 @@ end
 local function create_cmake_list(project_name, libs)
     boilerplate.cpp.cmake.make = {
         'cmake_minimum_required(VERSION 3.2.0)\n',
-        'set (CMAKE_TOOLCHAIN_FILE /opt/vcpkg/scripts/buildsystems/vcpkg.cmake)\n',
+        'set(CMAKE_TOOLCHAIN_FILE /opt/vcpkg/scripts/buildsystems/vcpkg.cmake)\n',
         'set(CMAKE_EXPORT_COMPILE_COMMANDS ON)\n',
         '\n',
         'project( ' .. project_name .. ')\n',
-        '\n',
-        libs and 'find_package(' .. libs .. ' REQUIRED)\n',
-        '\n',
-        'file(GLOB_RECURSE SOURCES\n',
-        'src/*.cpp\n',
+        libs and string.format('find_package(%s REQUIRED)\n\n', libs) or '\n',
+        'file(\n',
+        '\tGLOB_RECURSE SOURCES\n',
+        '\tsrc/*.cpp\n',
         ')\n',
         '\n',
         'add_compile_options (\n',
-        '-Wall\n',
-        '-Wextra\n',
-        '-Wpedantic\n',
+        '\t-Wall\n',
+        '\t-Wextra\n',
+        '\t-Wpedantic\n',
         ')\n',
         '\n',
         'add_executable(' .. project_name .. ' ${SOURCES})\n',
         '\n',
         'execute_process (\n',
-        'COMMAND ${CMAKE_COMMAND} -E create_symlink\n',
-        '${CMAKE_BINARY_DIR}/compile_commands.json\n',
-        '${CMAKE_SOURCE_DIR}/compile_commands.json\n',
-        ')\n',
-        'target_include_directories(\n',
-        '' .. project_name .. ' PUBLIC\n',
-        '${CMAKE_CURRENT_SOURCE_DIR}/include\n',
-        ')\n',
-        '\n',
-        libs and string.format(
-            [[
-        target_link_libraries(\n,
-        %s PUBLIC\n",
-        ${ %s_LIBRARY}\n,
-        ")\n",
-            ]],
-            project_name,
-            libs
-        ),
-        '\n',
+        '\tCOMMAND ${CMAKE_COMMAND} -E create_symlink\n',
+        '\t\t${CMAKE_BINARY_DIR}/compile_commands.json\n',
+        '\t\t${CMAKE_SOURCE_DIR}/compile_commands.json\n',
+        ')\n\n',
+        'target_include_directories(' .. project_name .. ' PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)\n',
+        libs and string.format('target_link_libraries(%s PUBLIC ${%s_LIBRARY})\n\n', project_name, libs) or '\n',
         'install(TARGETS ' .. project_name .. ' DESTINATION /usr/local/bin)\n',
     }
 end
@@ -282,8 +267,8 @@ function projects.cmake()
         write_file('src/main.cpp', boilerplate.cpp.cmake.cpp)
         write_file('autoBuild', boilerplate.cpp.cmake.autoBuild)
 
-        vim.ui.input({ prompt = 'Enter Libraries name', default = '' }, function(lib)
-            if lib ~= '' then
+        vim.ui.input({ prompt = 'Enter Libraries name', default = nil }, function(lib)
+            if lib and lib ~= '' then
                 create_cmake_list(input, lib)
             else
                 create_cmake_list(input)

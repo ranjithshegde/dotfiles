@@ -93,6 +93,7 @@ function extensions.WordProcessor()
     vim.opt_local.expandtab = true
     vim.opt_local.spell = true
     vim.opt_local.spelllang = 'en_us,en_gb'
+    vim.opt_local.spelloptions = 'camel'
     vim.opt_local.complete:append 'k'
     vim.opt.thesaurus = vim.env.XDG_CONFIG_HOME .. '/nvim/thesaurus/mthesaur.txt'
     require('r.mappings.util').wordProcessor()

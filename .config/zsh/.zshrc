@@ -26,6 +26,7 @@ bashcompinit
 # Aliases--------------------------------------------------------------------------------
 
 alias ls=lsd
+alias ll='ls -la'
 alias python=python3
 alias grep='grep --color=auto'
 alias weather='curl wttr.in/"rotterdam"'

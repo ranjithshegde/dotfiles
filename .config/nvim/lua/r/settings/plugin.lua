@@ -28,13 +28,13 @@ end
 ---nvim-colorizer
 function plugins.colorizer()
     require('colorizer').setup {
-        '*',
-        cpp = { rgb_0x = true },
-        html = { mode = 'foreground' },
-        css = { rgb_fn = true, css_fn = true },
-        yaml = { rgb_0x = true },
-        'javascript',
-        'conf',
+        filetypes = {
+            '*',
+            cpp = { AARRGGBB = true },
+            yaml = { AARRGGBB = true },
+            html = { mode = 'foreground' },
+            css = { rgb_fn = true, css_fn = true },
+        },
     }
 end
 

@@ -90,7 +90,7 @@ return function()
                 n = 'Start selection at node',
                 i = { 'Increment nodes', mode = 'v' },
                 s = { 'Increment Scope', mode = 'v' },
-                r = { 'Decrememnt nodes', mode = 'v' },
+                d = { 'Decrememnt nodes', mode = 'v' },
             },
             f = {
                 name = 'Refactoring tools',

@@ -193,7 +193,7 @@ function lsp.servers()
         tsserver = { capabilities = lsp.capabilities() },
         marksman = { capabilities = lsp.capabilities() },
         rust_analyzer = { capabilities = lsp.capabilities() },
-        supercollider = { capabilities = lsp.capabilities() },
+        -- supercollider = { capabilities = lsp.capabilities() },
         bashls = {
             capabilities = lsp.capabilities(),
             filetypes = { 'sh', 'zsh' },
@@ -283,6 +283,8 @@ function lsp.servers()
                             '%f',
                             '--forward-search-line',
                             '%l',
+                            '--inverse-search',
+                            'st -e nvr --remote-tab-silent +%2 %1',
                         },
                         executable = 'sioyek',
                     },
@@ -314,6 +316,7 @@ function lsp.lintFormat()
         null_ls.builtins.diagnostics.stylelint,
 
         null_ls.builtins.formatting.black,
+        null_ls.builtins.formatting.cbfmt,
         null_ls.builtins.formatting.isort,
         null_ls.builtins.formatting.shfmt,
         null_ls.builtins.formatting.stylua,

@@ -13,7 +13,10 @@ local tmpl = {
             cmd = vim.list_extend(cmd, params.args)
         end
 
-        return { cmd = cmd, components = { 'default', { 'r.dispatch', save = params.save } } }
+        return {
+            cmd = cmd,
+            components = { 'default', 'unique', { 'r.dispatch', save = params.save } },
+        }
     end,
 }
 
