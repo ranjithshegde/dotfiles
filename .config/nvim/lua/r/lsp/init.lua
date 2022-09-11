@@ -77,10 +77,10 @@ function lsp.attach(client, bufnr)
     local sc = client.server_capabilities
 
     if client.name == 'ccls' then
-        id['LspCodeLens_' .. client.id] = augroup('LspCodeLens_' .. client.id, opts)
+        id['LspCodeLens_' .. client.name .. '_' .. bufnr] = augroup('LspCodeLens_' .. client.name .. '_' .. bufnr, opts)
         aucmd({ 'BufEnter', 'BufWritePost' }, {
             buffer = bufnr,
-            group = id['LspCodeLens_' .. client.id],
+            group = id['LspCodeLens_' .. client.name .. '_' .. bufnr],
             callback = vim.lsp.codelens.refresh,
             desc = 'Refresh codelens on save',
         })
@@ -94,15 +94,16 @@ function lsp.attach(client, bufnr)
     require('r.utils.extensions').diagnostics(bufnr)
 
     if sc.documentHighlightProvider then
-        id['LspHighlightSymbols_' .. client.id] = augroup('LspHighlightSymbols_' .. client.id, opts)
+        id['LspHighlightSymbols_' .. client.name .. '_' .. bufnr] =
+            augroup('LspHighlightSymbols_' .. client.name .. '_' .. bufnr, opts)
         aucmd('CursorHold', {
-            group = id['LspHighlightSymbols_' .. client.id],
+            group = id['LspHighlightSymbols_' .. client.name .. '_' .. bufnr],
             buffer = bufnr,
             callback = vim.lsp.buf.document_highlight,
             desc = 'highlight Lsp cword on CursorHold',
         })
         aucmd('CursorMoved, CursorMovedI', {
-            group = id['LspHighlightSymbols_' .. client.id],
+            group = id['LspHighlightSymbols_' .. client.name .. '_' .. bufnr],
             buffer = bufnr,
             callback = vim.lsp.buf.clear_references,
             desc = 'clear Lsp cword highlights on CursorMove',
@@ -110,9 +111,10 @@ function lsp.attach(client, bufnr)
     end
 
     if sc.documentFormattingProvider or sc.rangeFormattingProvider then
-        id['LspAutoFormat_' .. client.id] = augroup('LspAutoFormat_' .. client.id, opts)
+        id['LspAutoFormat_' .. client.name .. '_' .. bufnr] =
+            augroup('LspAutoFormat_' .. client.name .. '_' .. bufnr, opts)
         aucmd('BufWrite', {
-            group = id['LspAutoFormat_' .. client.id],
+            group = id['LspAutoFormat_' .. client.name .. '_' .. bufnr],
             buffer = bufnr,
             callback = function()
                 vim.lsp.buf.format { filter = filterfmt }
@@ -208,6 +210,17 @@ function lsp.servers()
                 }
             end,
         },
+        sumneko_lua = {
+            capabilities = lsp.capabilities(),
+            before_init = function(_, config)
+                local file = vim.fn.expand '%:t:r'
+                if vim.loop.fs_stat(file .. '.pd_lua') then
+                    table.insert(config.settings.Lua.workspace.library, '/usr/lib/pd/extra/pdlua')
+                    config.settings.Lua.diagnostics = { globals = { 'pd' } }
+                end
+            end,
+            settings = { Lua = { completion = { callSnippet = 'Replace' } } },
+        },
         ltex = {
             filetypes = { 'bib', 'markdown', 'org', 'tex' },
             autostart = false,
@@ -284,7 +297,7 @@ function lsp.servers()
                             '--forward-search-line',
                             '%l',
                             '--inverse-search',
-                            'st -e nvr --remote-tab-silent +%2 %1',
+                            'nvr --servername ' .. vim.v.servername .. ' --remote-tab-silent +%2 %1',
                         },
                         executable = 'sioyek',
                     },

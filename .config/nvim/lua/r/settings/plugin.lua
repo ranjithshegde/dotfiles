@@ -4,6 +4,16 @@ local plugins = {}
 --                      Config for various plugins                    --
 ------------------------------------------------------------------------
 
+---lua-dev
+function plugins.lua_dev()
+    require('lua-dev').setup {
+        library = { plugins = false },
+        override = function(_, library)
+            library.enabled = true
+        end,
+    }
+end
+
 ---Gitsigns
 function plugins.gitsigns()
     require('gitsigns').setup {

@@ -270,7 +270,7 @@ return require('packer').startup {
                     'folke/lua-dev.nvim',
                     ft = 'lua',
                     config = function()
-                        require 'r.lsp.sumneko'()
+                        require('r.settings.plugin').lua_dev()
                     end,
                 },
                 {

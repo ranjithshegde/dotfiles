@@ -56,10 +56,10 @@ function signature.attach(client, bufnr)
         table.insert(triggers, { signature_triggers, vim.lsp.buf.signature_help })
     end
 
-    au_sig = 'lsp_signature_help_' .. client.id .. '_' .. bufnr
+    au_sig = 'lsp_signature_help_' .. client.name .. '_' .. bufnr
     id[au_sig] = vim.api.nvim_create_augroup(au_sig, { clear = true })
 
-    au_snip = 'lsp_signature_snip_' .. client.id .. '_' .. bufnr
+    au_snip = 'lsp_signature_snip_' .. client.name .. '_' .. bufnr
     id[au_snip] = vim.api.nvim_create_augroup(au_snip, { clear = true })
 
     generate_signature_help_autocmd(bufnr, client)

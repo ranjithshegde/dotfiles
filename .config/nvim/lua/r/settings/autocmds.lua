@@ -190,21 +190,21 @@ aucmd('FileType', {
 aucmd('LspAttach', {
     group = id.LspSettings,
     callback = function(args)
-        local bufnr = args.buf
         local client = vim.lsp.get_client_by_id(args.data.client_id)
-        require('r.lsp').attach(client, bufnr)
+        require('r.lsp').attach(client, args.buf)
     end,
     desc = 'Call attach function on event LspAttach',
 })
 aucmd('LspDetach', {
     group = id.LspSettings,
     callback = function(args)
-        vim.notify(string.format('Client with id %d detached', args.data.client_id))
-        auclear { group = vim.g.au_id['LspAutoFormat_' .. args.data.client_id], buffer = args.buf }
-        auclear { group = vim.g.au_id['lsp_signature_help_' .. args.data.client_id .. '_' .. args.buf] }
-        auclear { group = vim.g.au_id['lsp_signature_snip_' .. args.data.client_id .. '_' .. args.buf] }
+        local client = vim.lsp.get_client_by_id(args.data.client_id)
+        vim.notify(string.format('Server %s detached from %d', client.name, args.buf))
+        auclear { group = vim.g.au_id['LspAutoFormat_' .. client.name .. '_' .. args.buf], buffer = args.buf }
+        auclear { group = vim.g.au_id['lsp_signature_help_' .. client.name .. '_' .. args.buf] }
+        auclear { group = vim.g.au_id['lsp_signature_snip_' .. client.name .. '_' .. args.buf] }
         auclear {
-            group = vim.g.au_id['LspHighlightSymbols_' .. args.data.client_id],
+            group = vim.g.au_id['LspHighlightSymbols_' .. client.name .. '_' .. args.buf],
             buffer = args.buf,
         }
     end,

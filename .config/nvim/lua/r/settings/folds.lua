@@ -9,7 +9,7 @@ local function handler(virt_text, lnum, end_lnum, width, truncate, ctx)
     local suffix = ' ⋯⋯  '
     local padding = ''
 
-    local end_virt_text = ctx.end_virt_text
+    local end_virt_text = ctx.get_fold_virt_text(end_lnum)
 
     local sufWidth = (2 * vim.api.nvim_strwidth(suffix)) + vim.api.nvim_strwidth(counts)
 
@@ -53,11 +53,12 @@ end
 return function()
     require('ufo').setup {
         open_fold_hl_timeout = 0,
-        fold_virt_text_handler = handler,
 
         provider_selector = function(_, _)
             return ''
         end,
-        enable_fold_end_virt_text = true,
+
+        enable_get_fold_virt_text = true,
+        fold_virt_text_handler = handler,
     }
 end
