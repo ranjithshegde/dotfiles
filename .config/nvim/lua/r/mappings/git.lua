@@ -52,8 +52,7 @@ function g.signs(bufnr, gs)
                     return ']c'
                 end
                 vim.schedule(function()
-                    gs.next_hunk()
-                    vim.wait(50, gs.preview_hunk)
+                    gs.next_hunk { preview = true }
                 end)
                 return '<Ignore>'
             end,
@@ -66,8 +65,7 @@ function g.signs(bufnr, gs)
                     return '[c'
                 end
                 vim.schedule(function()
-                    gs.prev_hunk()
-                    vim.wait(50, gs.preview_hunk)
+                    gs.prev_hunk { preview = true }
                 end)
                 return '<Ignore>'
             end,

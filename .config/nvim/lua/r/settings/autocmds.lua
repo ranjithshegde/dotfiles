@@ -35,14 +35,14 @@ aucmd('FileType', {
     group = id.FormatOptions,
     callback = function(args)
         if vim.tbl_contains(require('r.utils.tables').ignoreFiles, args.match) then
-            vim.opt.relativenumber = false
-            vim.opt_local.cursorline = false
+            vim.o.relativenumber = false
+            vim.wo.cursorline = false
             vim.wo.foldcolumn = '0'
             vim.wo.winbar = nil
             return
         end
-        vim.opt.relativenumber = true
-        vim.opt_local.cursorline = true
+        vim.o.relativenumber = true
+        vim.wo.cursorline = true
     end,
     desc = 'Disable all custom decoration rules for non-language filetypes',
 })
@@ -57,7 +57,7 @@ aucmd({ 'InsertEnter', 'WinLeave', 'FocusLost', 'BufNewFile' }, {
         then
             return
         end
-        vim.opt.relativenumber = false
+        vim.o.relativenumber = false
     end,
     desc = 'Dont use relativenumber where it makes no sense',
 })
@@ -71,7 +71,7 @@ aucmd({ 'InsertLeave', 'WinEnter', 'FocusGained' }, {
         then
             return
         end
-        vim.opt.relativenumber = true
+        vim.o.relativenumber = true
     end,
     desc = 'use relativenumber conditionally',
 })
@@ -87,7 +87,7 @@ aucmd({ 'FocusGained', 'WinEnter', 'BufEnter' }, {
         then
             return
         end
-        vim.opt_local.cursorline = true
+        vim.wo.cursorline = true
         vim.wo.foldcolumn = 'auto'
     end,
     desc = 'use cursorline only on active buffers',
@@ -101,7 +101,7 @@ aucmd({ 'FocusLost', 'WinLeave' }, {
         then
             return
         end
-        vim.opt_local.cursorline = false
+        vim.wo.cursorline = false
         vim.wo.foldcolumn = '0'
     end,
     desc = 'dont use cursorline on inactive buffers',
@@ -128,7 +128,7 @@ aucmd({ 'BufEnter', 'WinEnter' }, {
 aucmd({ 'TabNewEntered', 'TabEnter' }, {
     group = id.Decorations,
     callback = function()
-        vim.opt.tabline = require 'r.settings.tabline'()
+        vim.o.tabline = require 'r.settings.tabline'()
     end,
     desc = 'Dynamically set tablines',
 })
@@ -138,11 +138,11 @@ aucmd({ 'WinEnter', 'BufEnter' }, {
         if args.match == '' or args.file == '' then
             return
         end
-        local tabline = vim.opt.tabline:get()
+        local tabline = vim.o.tabline
         if not tabline or tabline == '' then
             return
         end
-        vim.opt.tabline = require 'r.settings.tabline'()
+        vim.o.tabline = require 'r.settings.tabline'()
     end,
     desc = 'Update Tabline on WinChange or BufChange',
 })

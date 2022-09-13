@@ -1,13 +1,13 @@
 local function exec_move(cmd)
-    local old_fold = vim.opt_local.foldmethod:get()
+    local old_fold = vim.wo.foldmethod
     if old_fold ~= 'manual' then
-        vim.opt_local.foldmethod = 'manual'
+        vim.wo.foldmethod = 'manual'
     end
     vim.cmd.normal { args = { 'm`' }, bang = true }
     vim.cmd(cmd)
     vim.cmd.normal { args = { '``' }, bang = true }
     if old_fold ~= 'manual' then
-        vim.opt_local.foldmethod = old_fold
+        vim.wo.foldmethod = old_fold
     end
 end
 

@@ -34,10 +34,10 @@ local function move(direction, count, mode)
             direction = direction == 'e' and direction or 'be'
             vim.fn.search(forward_to_end, 'W' .. direction)
             if mode == 'o' then
-                local save_ww = vim.opt.whichwrap
+                local save_ww = vim.o.whichwrap
                 vim.opt.whichwrap:append 'l'
                 vim.api.nvim_feedkeys('l', 'n', false)
-                vim.opt.whichwrap = save_ww
+                vim.o.whichwrap = save_ww
             end
         else
             direction = direction == 'w' and '' or direction
@@ -55,7 +55,7 @@ function camelCase.Motion(direction, count, mode)
     end
 
     if mode == 'v' or mode == 'iv' then
-        if vim.opt.selection ~= 'exclusive' and direction == 'w' then
+        if vim.o.selection ~= 'exclusive' and direction == 'w' then
             vim.api.nvim_feedkeys('l', 'n', false)
         end
     end
@@ -64,14 +64,14 @@ function camelCase.Motion(direction, count, mode)
 
     if mode == 'v' or mode == 'iv' then
         if
-            vim.opt.selection == 'exclusive'
+            vim.o.selection == 'exclusive'
             and function()
                 return direction == 'e' or direction == 'ge'
             end
         then
             vim.api.nvim_feedkeys('l', 'n', false)
         elseif
-            vim.opt.selection ~= 'exclusive'
+            vim.o.selection ~= 'exclusive'
             and function()
                 return direction ~= 'e' and direction == 'ge' or mode == 'iv' and direction == 'w'
             end
@@ -79,7 +79,7 @@ function camelCase.Motion(direction, count, mode)
             vim.api.nvim_feedkeys('h', 'n', false)
         end
     end
-    if vim.opt.foldopen == [[hor|all]] then
+    if vim.o.foldopen == [[hor|all]] then
         vim.api.nvim_feedkeys('zv', 'n', false)
     end
 end
@@ -96,7 +96,7 @@ function camelCase.InnerMotion(direction, count)
         camelCase.Motion(direction, count, 'iv')
     end
 
-    if vim.opt.foldopen == [[hor|all]] then
+    if vim.o.foldopen == [[hor|all]] then
         vim.api.nvim_feedkeys('zv', 'n', false)
     end
 end
@@ -119,7 +119,7 @@ function camelCase.CreateMotionMappings(leader)
         end
     end
 
-    if vim.opt.foldopen == [[hor|all]] then
+    if vim.o.foldopen == [[hor|all]] then
         vim.api.nvim_feedkeys('zv', 'n', false)
     end
 end

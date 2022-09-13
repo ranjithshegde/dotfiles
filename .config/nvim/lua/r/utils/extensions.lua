@@ -88,14 +88,14 @@ end
 ------------------------------------------------------------------------
 
 function extensions.WordProcessor()
-    vim.opt_local.wrap = true
-    vim.opt_local.linebreak = true
-    vim.opt_local.expandtab = true
-    vim.opt_local.spell = true
-    vim.opt_local.spelllang = 'en_us,en_gb'
-    vim.opt_local.spelloptions = 'camel'
+    vim.wo.wrap = true
+    vim.wo.linebreak = true
+    vim.bo.expandtab = true
+    vim.wo.spell = true
+    vim.bo.spelloptions = 'camel'
     vim.opt_local.complete:append 'k'
-    vim.opt.thesaurus = vim.env.XDG_CONFIG_HOME .. '/nvim/thesaurus/mthesaur.txt'
+    vim.opt_local.spelllang = { 'en_us', 'en_gb' }
+    vim.o.thesaurus = vim.env.XDG_CONFIG_HOME .. '/nvim/thesaurus/mthesaur.txt'
     require('r.mappings.util').wordProcessor()
 end
 

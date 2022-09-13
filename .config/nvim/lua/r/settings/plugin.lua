@@ -20,6 +20,7 @@ function plugins.gitsigns()
         on_attach = function(bufnr)
             require('r.mappings.git').signs(bufnr, package.loaded.gitsigns)
         end,
+        preview_config = { focusable = false },
     }
     require('r.mappings.git').fugitive()
 end
@@ -65,7 +66,7 @@ end
 
 ---nvim-surround local and global config
 function plugins.surround()
-    local ft = vim.opt_local.filetype:get()
+    local ft = vim.bo.filetype
     require('nvim-surround').setup {}
     if ft == 'tex' then
         local get_input = require('nvim-surround.config').get_input
@@ -142,7 +143,7 @@ function plugins.scnvim()
                 end, 4000)
             end, { buffer = args.buf, desc = 'Boot local server' })
 
-            vim.opt_local.wrap = true
+            vim.wo.wrap = true
             if not require('scnvim').is_running() then
                 require('scnvim').start()
                 vim.api.nvim_input '<CR>'

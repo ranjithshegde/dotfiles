@@ -34,26 +34,26 @@ end
 function Compiler.set_ctype()
     if isFile 'CMakeLists.txt' then
         require('r.mappings.clang').cmake()
-        vim.opt.makeprg = 'make'
+        vim.bo.makeprg = 'make'
         vim.b.makeFile = 'CMakeLists.txt'
         vim.b.debugBin = 'build/' .. vim.fn.fnamemodify(vim.fn.getcwd(), ':t')
     elseif isFile 'Makefile' then
         require('r.mappings.clang').makeC()
         vim.b.makeFile = 'Makefile'
-        vim.opt.makeprg = 'make'
+        vim.bo.makeprg = 'make'
         vim.b.makeBin = 'bin/' .. vim.fn.fnamemodify(vim.fn.getcwd(), ':t')
         vim.b.debugBin = 'bin/' .. vim.fn.fnamemodify(vim.fn.getcwd(), ':t') .. '_debug'
         vim.b.wasm = 'bin/' .. vim.fn.fnamemodify(vim.fn.getcwd(), ':t') .. '.html'
     elseif isFile 'platformio.ini' then
-        vim.opt.makeprg = 'pio run'
+        vim.bo.makeprg = 'pio run'
         require('r.mappings.clang').micro()
         vim.b.makeFile = 'platformio.ini'
     elseif isFile 'build.gradle' then
         require('r.mappings.clang').makeGradle()
         vim.b.makeFile = 'build.gradle'
-        vim.opt.makeprg = './gradlew'
+        vim.bo.makeprg = './gradlew'
     else
-        vim.opt.makeprg = 'g++'
+        vim.bo.makeprg = 'g++'
         require('r.mappings.clang').ctests()
         vim.b.debugBin = vim.fn.expand '%<'
     end
@@ -64,10 +64,10 @@ function Compiler.set_type()
         require('r.mappings.clang').pdc()
     elseif isFile 'Makefile' then
         require('r.mappings.clang').makeC()
-        vim.opt.makeprg = 'make'
+        vim.bo.makeprg = 'make'
         vim.b.makeFile = 'Makefile'
     else
-        vim.opt.makeprg = 'gcc'
+        vim.bo.makeprg = 'gcc'
         require('r.mappings.clang').ctests()
         vim.b.debugBin = vim.fn.expand '%<'
     end

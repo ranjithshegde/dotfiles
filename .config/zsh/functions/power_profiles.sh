@@ -17,6 +17,7 @@ minimum() {
 	xrandr --rate 144
 	x86_energy_perf_policy power &
 	asusctl profile -P Quiet &
+	asusctl bios -O false &
 	rfkill unblock wlan
 	echo "Powersave mode with unmonitored N-key"
 }
@@ -26,6 +27,7 @@ practical() {
 	echo 'on' >/sys/bus/usb/devices/1-8/power/control &
 	x86_energy_perf_policy balance-power &
 	asusctl profile -P Balanced &
+	asusctl bios -O false &
 	echo "Conservative but sensible savings"
 }
 
@@ -40,6 +42,7 @@ performance() {
 	echo performance >/sys/module/pcie_aspm/parameters/policy
 	x86_energy_perf_policy balance-performance
 	asusctl profile -P Performance
+	asusctl bios -O false
 	echo "all performance governers turned to high-performance"
 }
 
@@ -47,5 +50,6 @@ beast() {
 	echo performance >/sys/module/pcie_aspm/parameters/policy
 	x86_energy_perf_policy performance
 	asusctl profile -P Performance
+	asusctl bios -O true
 	echo "boost on, cpu & pci-e ports on performance mode"
 }

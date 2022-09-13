@@ -8,7 +8,7 @@ end, { buffer = true, desc = 'Clean tex files' })
 map('n', '<F5>', vim.cmd.TexlabBuild, { buffer = true, desc = 'Compile tex document' })
 map('n', '<F6>', vim.cmd.TexlabForward, { buffer = true, desc = 'Launch zathura' })
 
-vim.opt.makeprg = 'latexmk'
+vim.bo.makeprg = 'latexmk'
 vim.b.gps = 75
-vim.opt_local.tw = 148
+vim.bo.textwidth = 148
 require('r.utils.extensions').WordProcessor()

@@ -142,6 +142,7 @@ return require('packer').startup {
         use {
             {
                 'lewis6991/gitsigns.nvim',
+                commit = 'c8b3d7968921b64532fa778f869509621d762f21',
                 requires = 'nvim-lua/plenary.nvim',
                 config = function()
                     require('r.settings.plugin').gitsigns()
@@ -293,15 +294,13 @@ return require('packer').startup {
                 config = function()
                     require('r.settings.completion').luasnip()
                 end,
-                requires = {
-                    {
-                        'rafamadriz/friendly-snippets',
-                        after = 'LuaSnip',
-                        config = function()
-                            require('luasnip.loaders.from_vscode').load()
-                        end,
-                    },
-                },
+            },
+            {
+                'rafamadriz/friendly-snippets',
+                after = 'LuaSnip',
+                config = function()
+                    require('luasnip.loaders.from_vscode').load()
+                end,
             },
             {
                 'hrsh7th/nvim-cmp',
