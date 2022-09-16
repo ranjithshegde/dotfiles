@@ -8,7 +8,7 @@ return {
     params = {},
     builder = function(_)
         return {
-            cmd = { 'valgrind', '--leak-check=full', vim.b.debugBin },
+            cmd = { 'valgrind', '--leak-check=full', '--track-origins=yes', vim.b.debugBin },
             components = { 'default', 'unique', 'r.dispatch' },
         }
     end,

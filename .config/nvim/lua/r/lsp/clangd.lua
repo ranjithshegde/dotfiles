@@ -60,7 +60,6 @@ function servers.ccls()
         filetypes = filetypes,
         init_options = {
             cache = {
-                -- directory = vim.env.XDG_CACHE_HOME .. "/ccls/",
                 directory = vim.fs.normalize '~/.cache/ccls/',
             },
         },
@@ -84,7 +83,6 @@ function servers.ccls()
             disable_signature = true,
         },
     }
-    -- require("ccls").setup { filetypes = filetypes, lsp = { use_defaults = true } }
 end
 
 return servers

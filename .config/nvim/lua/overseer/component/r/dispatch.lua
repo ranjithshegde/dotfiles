@@ -27,6 +27,8 @@ return {
                     if qf then
                         vim.fn.setqflist({}, ' ', { title = task.name, context = task.name })
                     end
+                    vim.cmd.copen()
+                    vim.cmd.wincmd 'p'
                 end
             end,
             on_reset = function(self)
@@ -42,8 +44,6 @@ return {
                         vim.list_extend(self.items, qf.items)
                     end
                     vim.fn.setqflist({}, 'r', { items = self.items })
-                    vim.cmd.copen()
-                    vim.cmd.wincmd 'p'
                 end
             end,
             on_pre_result = function(self, task)

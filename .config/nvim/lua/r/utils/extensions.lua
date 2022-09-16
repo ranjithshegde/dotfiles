@@ -1,3 +1,4 @@
+---@diagnostic disable: missing-parameter
 local extensions = {}
 local exec = vim.api.nvim_command
 ------------------------------------------------------------------------
@@ -91,8 +92,7 @@ function extensions.WordProcessor()
     vim.wo.wrap = true
     vim.wo.linebreak = true
     vim.bo.expandtab = true
-    vim.wo.spell = true
-    vim.bo.spelloptions = 'camel'
+    vim.opt_local.spell = true
     vim.opt_local.complete:append 'k'
     vim.opt_local.spelllang = { 'en_us', 'en_gb' }
     vim.o.thesaurus = vim.env.XDG_CONFIG_HOME .. '/nvim/thesaurus/mthesaur.txt'

@@ -32,9 +32,6 @@ return require('packer').startup {
         -- Better marks
         use { 'ThePrimeagen/harpoon', module = 'harpoon' }
 
-        -- Choose compiler and view assembler
-        use { 'krady21/compiler-explorer.nvim', opt = true }
-
         -- Databases
         use {
             'kristijanhusak/vim-dadbod-ui',
@@ -75,7 +72,7 @@ return require('packer').startup {
             'rcarriga/nvim-notify',
             module = 'notify',
             config = function()
-                require('notify').setup { top_down = false, timeout = 2000, stages = 'static' }
+                require('r.settings.notify').setup()
             end,
         }
 
@@ -142,7 +139,6 @@ return require('packer').startup {
         use {
             {
                 'lewis6991/gitsigns.nvim',
-                commit = 'c8b3d7968921b64532fa778f869509621d762f21',
                 requires = 'nvim-lua/plenary.nvim',
                 config = function()
                     require('r.settings.plugin').gitsigns()
@@ -168,6 +164,22 @@ return require('packer').startup {
             { 'nvim-telescope/telescope-file-browser.nvim', module_pattern = '.*.extensions.file_browser.*' },
         }
 
+        -- TreeSitter
+        use {
+            { 'nvim-treesitter/nvim-treesitter', run = ':TSUpdate' },
+            { 'p00f/nvim-ts-rainbow', event = 'BufReadPre' },
+            { 'nvim-treesitter/nvim-treesitter-textobjects', module = 'nvim-treesitter.textobjects' },
+            { 'nvim-treesitter/playground', module = 'nvim-treesitter-playground' },
+            { 'Badhi/nvim-treesitter-cpp-tools', ft = { 'c', 'cpp', 'opencl' } },
+            {
+                'ThePrimeagen/refactoring.nvim',
+                module = 'refactoring',
+                config = function()
+                    require('r.settings.treesitter').refactoring()
+                end,
+            },
+        }
+
         -- Surround
         use {
             'kylechui/nvim-surround',
@@ -184,25 +196,6 @@ return require('packer').startup {
             config = function()
                 require('r.settings.plugin').surround()
             end,
-        }
-
-        -- TreeSitter
-        use {
-            'nvim-treesitter/nvim-treesitter',
-            run = ':TSUpdate',
-            requires = {
-                { 'p00f/nvim-ts-rainbow', event = 'BufReadPre' },
-                { 'nvim-treesitter/nvim-treesitter-textobjects', module = 'nvim-treesitter.textobjects' },
-                { 'nvim-treesitter/playground', module = 'nvim-treesitter-playground' },
-                { 'Badhi/nvim-treesitter-cpp-tools', ft = { 'c', 'cpp', 'opencl' } },
-                {
-                    'ThePrimeagen/refactoring.nvim',
-                    module = 'refactoring',
-                    config = function()
-                        require('r.settings.treesitter').refactoring()
-                    end,
-                },
-            },
         }
 
         -- Comment with TreeSitter
@@ -228,65 +221,66 @@ return require('packer').startup {
 
         -- Orgmode
         use {
-            'nvim-orgmode/orgmode',
-            ft = 'org',
-            config = function()
-                require('r.settings.plugin').org()
-            end,
-            requires = {
-                {
-                    is_custom('WORKSPACE', 'Repos/orgWiki.nvim', 'ranjithshegde/orgWiki.nvim'),
-                    module = 'orgWiki',
-                    config = function()
-                        require('orgWiki').setup {
-                            disable_mappings = true,
-                            wiki_path = { '~/Documents/Orgs/', '~/Documents/Projects/' },
-                            diary_path = '~/Documents/Orgs/diary/',
-                        }
-                    end,
-                },
+            {
+                'nvim-orgmode/orgmode',
+                ft = 'org',
+                config = function()
+                    require('r.settings.plugin').org()
+                end,
+            },
+            {
+                is_custom('WORKSPACE', 'Repos/orgWiki.nvim', 'ranjithshegde/orgWiki.nvim'),
+                module = 'orgWiki',
+                config = function()
+                    require('orgWiki').setup {
+                        disable_mappings = true,
+                        wiki_path = { '~/Documents/Orgs/', '~/Documents/Projects/' },
+                        diary_path = '~/Documents/Orgs/diary/',
+                    }
+                end,
             },
         }
 
         --Lsp config and companions
         use {
             'neovim/nvim-lspconfig',
-            requires = {
-                { 'jose-elias-alvarez/null-ls.nvim', opt = true },
-                {
-                    'simrat39/symbols-outline.nvim',
-                    module = 'symbols-outline',
-                    config = function()
-                        require('symbols-outline').setup()
-                    end,
-                },
-                {
-                    is_custom('WORKSPACE', 'Repos/ccls.nvim', 'ranjithshegde/ccls.nvim'),
-                    ft = { 'c', 'cpp', 'opencl' },
-                    config = function()
-                        require('r.lsp.clangd').ccls()
-                    end,
-                },
-                {
-                    'folke/lua-dev.nvim',
-                    ft = 'lua',
-                    config = function()
-                        require('r.settings.plugin').lua_dev()
-                    end,
-                },
-                {
-                    'p00f/clangd_extensions.nvim',
-                    ft = { 'c', 'cpp', 'opencl' },
-                    config = function()
-                        require('r.lsp.clangd').clangd()
-                    end,
-                },
+            { 'jose-elias-alvarez/null-ls.nvim', opt = true },
+            {
+                'simrat39/symbols-outline.nvim',
+                module = 'symbols-outline',
+                config = function()
+                    require('symbols-outline').setup()
+                end,
+            },
+            {
+                is_custom('WORKSPACE', 'Repos/ccls.nvim', 'ranjithshegde/ccls.nvim'),
+                ft = { 'c', 'cpp', 'opencl' },
+                config = function()
+                    require('r.lsp.clangd').ccls()
+                end,
+            },
+            {
+                'folke/lua-dev.nvim',
+                ft = 'lua',
+                config = function()
+                    require('r.settings.plugin').lua_dev()
+                end,
+            },
+            {
+                'p00f/clangd_extensions.nvim',
+                ft = { 'c', 'cpp', 'opencl' },
+                config = function()
+                    require('r.lsp.clangd').clangd()
+                end,
             },
         }
 
         -- completion and snippets
         use {
             { 'hrsh7th/cmp-nvim-lsp', opt = 'true' },
+            { 'hrsh7th/cmp-path', after = 'nvim-cmp' },
+            { 'hrsh7th/cmp-buffer', after = 'nvim-cmp' },
+            { 'saadparwaiz1/cmp_luasnip', after = 'nvim-cmp' },
             {
                 'L3MON4D3/LuaSnip',
                 run = 'make install_jsregexp',
@@ -308,18 +302,13 @@ return require('packer').startup {
                 config = function()
                     require('r.settings.completion').init()
                 end,
-                requires = {
-                    { 'hrsh7th/cmp-path', after = 'nvim-cmp' },
-                    { 'hrsh7th/cmp-buffer', after = 'nvim-cmp' },
-                    { 'saadparwaiz1/cmp_luasnip', after = 'nvim-cmp' },
-                    {
-                        'windwp/nvim-autopairs',
-                        after = 'nvim-cmp',
-                        config = function()
-                            require('r.settings.completion').pairs()
-                        end,
-                    },
-                },
+            },
+            {
+                'windwp/nvim-autopairs',
+                after = 'nvim-cmp',
+                config = function()
+                    require('r.settings.completion').pairs()
+                end,
             },
         }
 

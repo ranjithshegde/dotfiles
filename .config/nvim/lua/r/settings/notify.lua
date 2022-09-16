@@ -43,4 +43,15 @@ function notify.format_message(message, percentage)
     return (percentage and percentage .. '%\t' or '') .. (message or '')
 end
 
+function notify.setup()
+    require('notify').setup {
+        top_down = false,
+        timeout = 2000,
+        stages = 'fade',
+        on_open = function(win)
+            vim.api.nvim_win_set_config(win, { border = 'none' })
+        end,
+    }
+end
+
 return notify

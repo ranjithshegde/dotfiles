@@ -1,3 +1,4 @@
+---@diagnostic disable: missing-parameter
 local plugins = {}
 
 ------------------------------------------------------------------------
@@ -105,6 +106,12 @@ function plugins.scnvim()
         keymaps = {
             ['<F1>'] = map 'sclang.start',
             ['<F2>'] = map 'sclang.poll_server_status',
+            ['<F3>'] = map(function()
+                require('scnvim.sclang').send 'Server.local.boot'
+                vim.defer_fn(function()
+                    vim.api.nvim_exec_autocmds('User', { pattern = 'ScStatus' })
+                end, 4000)
+            end),
             ['<F4>'] = map_expr 'WFS.startup',
             ['<F6>'] = map('editor.send_line', { 'i', 'n' }),
             ['<F5>'] = {
@@ -116,33 +123,22 @@ function plugins.scnvim()
             ['<C-CR>'] = map('postwin.toggle', 'i'),
             ['<M-L>'] = map('postwin.clear', { 'n', 'i' }),
             [',s'] = map('signature.show', 'n'),
+            ['<leader>s'] = map(function()
+                vim.cmd.drop { args = { '~/.config/SuperCollider/startup.scd' }, mods = { tab = 1 } }
+            end),
+            ['K'] = map(function()
+                local winid = require('ufo').peekFoldedLinesUnderCursor()
+                if not winid then
+                    require('scnvim.help').open_help_for(vim.fn.expand '<cword>')
+                end
+            end),
         },
         completion = { signature = { config = { border = 'rounded' } } },
     }
     vim.api.nvim_create_autocmd('FileType', {
         group = vim.g.au_id.LspSettngs,
         pattern = 'supercollider',
-        callback = function(args)
-            vim.keymap.set(
-                'n',
-                '<leader>s',
-                '<cmd>tab drop ~/.config/SuperCollider/startup.scd<CR>',
-                { buffer = args.buf, desc = 'open startup file' }
-            )
-            vim.keymap.set('n', 'K', function()
-                local winid = require('ufo').peekFoldedLinesUnderCursor()
-                if not winid then
-                    require('scnvim.help').open_help_for(vim.fn.expand '<cword>')
-                end
-            end, { desc = 'Hover or peek-fold', buffer = args.buf })
-
-            vim.keymap.set('n', '<F3>', function()
-                require('scnvim.sclang').send 'Server.local.boot'
-                vim.defer_fn(function()
-                    vim.api.nvim_exec_autocmds('User', { pattern = 'ScStatus' })
-                end, 4000)
-            end, { buffer = args.buf, desc = 'Boot local server' })
-
+        callback = function()
             vim.wo.wrap = true
             if not require('scnvim').is_running() then
                 require('scnvim').start()

@@ -266,9 +266,10 @@ aucmd('BufReadPost', {
 -- ************** Load decoration plugins ------------------------------
 aucmd('FileType', {
     group = id.PluginLoad,
-    callback = function()
+    callback = function(args)
         if
-            not require('nvim-treesitter.parsers').has_parser()
+            vim.tbl_contains(require('r.utils.tables').ignoreFiles, args.match)
+            or not require('nvim-treesitter.parsers').has_parser()
             or (package.loaded.ufo and package.loaded.indent_blankline)
         then
             return
@@ -391,8 +392,6 @@ aucmd('BufEnter', {
             handle:close()
         end)
         vim.api.nvim_buf_delete(vim.api.nvim_get_current_buf(), { force = true })
-        --TODO
-        vim.cmd 'let &ft = &ft'
     end,
     desc = 'Open non text files with MIME',
 })
