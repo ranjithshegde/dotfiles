@@ -1,29 +1,28 @@
-local forward_to_end_list = {}
-
 -- stylua: ignore start
-table.insert(forward_to_end_list, [[\d+]])                                          -- number
-table.insert(forward_to_end_list, [[\u+\ze%(\u\l|\d)]])                             -- ALLCAPS followed by CamelCase or number
-table.insert(forward_to_end_list, [[\l+\ze%(\u|\d)]])                               -- lowercase followed by ALLCAPS
-table.insert(forward_to_end_list, [[\u\l+]])                                        -- CamelCase
-table.insert(forward_to_end_list, [[%(\a|\d)+\ze[\-_] ]])                           -- underscore_notation
-table.insert(forward_to_end_list, [[%(\k@!\S)+]])                                   -- non-keyword
-table.insert(forward_to_end_list, [[%([\-_]@!\k)+>]])                               -- word
+local forward_to_end_list = {
+    [[\d+]],                                          -- numner
+    [[\u+\ze%(\u\l|\d)]],                             -- ALLCAPS followed by CamelCase or number
+    [[\l+\ze%(\u|\d)]],                               -- lowercase followed by ALLCAPS
+    [[\u\l+]],                                        -- CamelCase
+    [[%(\a|\d)+\ze[\-_] ]],                           -- underscore_notation
+    [[%(\k@!\S)+]],                                   -- non-keyword
+    [[%([\-_]@!\k)+>]]                                -- word
+}
 local forward_to_end = [[\v]] .. table.concat(forward_to_end_list, "|")
--- stylua: ignore end
-local forward_to_next_list = {}
 
--- stylua: ignore start
-table.insert(forward_to_next_list, [[<\D]])                                         -- word
-table.insert(forward_to_next_list, [[^$]])                                          -- empty line
-table.insert(forward_to_next_list, [[%(^|\s)+\zs\k@!\S]])                           -- non-keyword after whitespaces
-table.insert(forward_to_next_list, [[><]])                                          -- non-whitespace after word
-table.insert(forward_to_next_list, [[[\{\}\[\]\(\)\<\>\&"'."'".'] ]])               -- brackets, parens, braces, quotes
-table.insert(forward_to_next_list, [[\d+]])                                         -- number
-table.insert(forward_to_next_list, [[\l\+\zs%(\u|\d)]])                             -- lowercase followed by capital letter or number
-table.insert(forward_to_next_list, [[\u+\zs%(\u\l|\d)]])                            -- ALLCAPS followed by CamelCase or number
-table.insert(forward_to_next_list, [[\u\l+]])                                       -- CamelCase
-table.insert(forward_to_next_list, [[\u@<!\u+]])                                    -- ALLCAPS
-table.insert(forward_to_next_list, [[[\-_]\zs%(\u\+|\u\l+|\l+|\d+)]])               -- underscored followed by ALLCAPS, CamelCase, lowercase, or number
+local forward_to_next_list = {
+    [[<\D]],                                         -- word
+    [[^$]],                                          -- empty line
+    [[%(^|\s)+\zs\k@!\S]],                           -- non-keyword after whitespaces
+    [[><]],                                          -- non-whitespace after word
+    [[[\{\}\[\]\(\)\<\>\&"'."'".'] ]],               -- brackets, parens, braces, quotes
+    [[\d+]],                                         -- number
+    [[\l\+\zs%(\u|\d)]],                             -- lowercase followed by capital letter or number
+    [[\u+\zs%(\u\l|\d)]],                            -- ALLCAPS followed by CamelCase or number
+    [[\u\l+]],                                       -- CamelCase
+    [[\u@<!\u+]],                                    -- ALLCAPS
+    [[[\-_]\zs%(\u\+|\u\l+|\l+|\d+)]]                -- underscored followed by ALLCAPS, CamelCase, lowercase, or number
+}
 local forward_to_next = [[\v]] .. table.concat(forward_to_next_list, "|")
 -- stylua: ignore end
 
@@ -125,7 +124,7 @@ function camelCase.CreateMotionMappings(leader)
 end
 
 function camelCase.init()
-    if vim.fn.exists(vim.g.loaded_camelcasemotion) == 1 then
+    if vim.g.loaded_camelcasemotion ~= nil then
         print 'Already loaded'
         return
     end

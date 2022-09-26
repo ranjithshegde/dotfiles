@@ -64,7 +64,7 @@ return function()
         '/usr/share/dict/british',
     }
 
-    opt.shortmess:append 'c'
+    opt.shortmess:append 'cs'
     opt.foldopen:append 'jump'
     opt.clipboard:append 'unnamedplus'
     opt.sessionoptions:append 'terminal,tabpages'

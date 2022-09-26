@@ -132,8 +132,7 @@ local function get_line_for_node(node, type_patterns, transform_fn, bufnr)
     local line = transform_fn(vim.trim(vim.treesitter.query.get_node_text(node, bufnr) or ''))
 
     for index, value in pairs(require('r.utils.tables').tsNodeSymbols) do
-        index = index:gsub('%[', '')
-        index = index:gsub('%]', '')
+        index = index:gsub('%[', ''):gsub('%]', '')
         if index == 'section' and line:find '*' then
             line = line:gsub('*', '')
         end
@@ -152,6 +151,7 @@ local function get_line_for_node(node, type_patterns, transform_fn, bufnr)
     -- Escape % to avoid statusline to evaluate content as expression
     return line:gsub('%%', '%%%%')
 end
+
 -- Trim spaces and opening brackets from end
 local function transform_line(line)
     line = line:sub(1, line:find '\n')
@@ -162,13 +162,6 @@ function ts.statusline(opts)
     if not parsers.has_parser() then
         return
     end
-    local options = opts
-
-    local bufnr = options.bufnr
-    local indicator_size = options.indicator_size
-    local type_patterns = options.type_patterns
-    local transform_fn = transform_line
-    local separator = ' -> '
 
     local current_node = ts_utils.get_node_at_cursor()
     if not current_node then
@@ -176,20 +169,20 @@ function ts.statusline(opts)
     end
 
     local lines = {}
-    local expr = current_node
+    local separator = ' -> '
 
-    while expr do
-        local line = get_line_for_node(expr, type_patterns, transform_fn, bufnr)
+    while current_node do
+        local line = get_line_for_node(current_node, opts.type_patterns, transform_line, opts.bufnr)
         if line ~= '' and not vim.tbl_contains(lines, line) then
             table.insert(lines, 1, line)
         end
-        expr = expr:parent()
+        current_node = current_node:parent()
     end
 
     local text = table.concat(lines, separator)
     local text_len = #text
-    if text_len > indicator_size then
-        text_len = text:find(' ', indicator_size)
+    if text_len > opts.indicator_size then
+        text_len = text:find(' ', opts.indicator_size)
         return text:sub(1, text_len) .. '...'
     end
 

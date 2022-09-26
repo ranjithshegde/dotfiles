@@ -32,6 +32,9 @@ return require('packer').startup {
         -- Better marks
         use { 'ThePrimeagen/harpoon', module = 'harpoon' }
 
+        -- Granular semantic substitution
+        use { 'tpope/vim-abolish', cmd = { 'Subverse', 'Abolish' } }
+
         -- Databases
         use {
             'kristijanhusak/vim-dadbod-ui',
