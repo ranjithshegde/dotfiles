@@ -97,6 +97,16 @@ return require('packer').startup {
             cmd = { 'ColorizerAttachToBuffer', 'ColorizerToggle' },
         }
 
+        -- Fancy folds
+        use {
+            'kevinhwang91/nvim-ufo',
+            opt = true,
+            requires = 'kevinhwang91/promise-async',
+            config = function()
+                require 'r.settings.folds'()
+            end,
+        }
+
         -- StatusLine
         use {
             is_custom('WORKSPACE', 'Repos/express_line.nvim', 'ranjithshegde/express_line.nvim'),
@@ -104,16 +114,6 @@ return require('packer').startup {
             requires = { 'kyazdani42/nvim-web-devicons', 'nvim-lua/plenary.nvim' },
             config = function()
                 require 'r.settings.statusline'()
-            end,
-        }
-
-        -- Fancy folds
-        use {
-            'kevinhwang91/nvim-ufo',
-            rocks = 'promise-async',
-            opt = true,
-            config = function()
-                require 'r.settings.folds'()
             end,
         }
 
@@ -183,7 +183,24 @@ return require('packer').startup {
             },
         }
 
-        -- Surround
+        -- Comment with TreeSitter
+        use {
+            'numToStr/Comment.nvim',
+            keys = {
+                { 'n', 'gc', 'Single Comment' },
+                { 'n', 'gb', 'Block Comment' },
+                { 'v', 'gc', 'Single Comment' },
+                { 'v', 'gb', 'Block Comment' },
+            },
+            config = function()
+                require('Comment').setup {
+                    mappings = { extended = true },
+                    ignore = '^$',
+                }
+            end,
+        }
+
+        -- Surround with TreeSitter
         use {
             'kylechui/nvim-surround',
             keys = {
@@ -198,27 +215,6 @@ return require('packer').startup {
             },
             config = function()
                 require('r.settings.plugin').surround()
-            end,
-        }
-
-        -- Comment with TreeSitter
-        use {
-            'numToStr/Comment.nvim',
-            keys = {
-                { 'n', 'gc', 'Single Comment' },
-                { 'n', 'gb', 'Block Comment' },
-                { 'n', 'g>', 'Partial Comment right' },
-                { 'n', 'g<', 'Partial Comment left' },
-                { 'v', 'gc', 'Single Comment' },
-                { 'v', 'gb', 'Block Comment' },
-                { 'v', 'g>', 'Partial Comment right' },
-                { 'v', 'g<', 'Partial Comment left' },
-            },
-            config = function()
-                require('Comment').setup {
-                    mappings = { extended = true },
-                    ignore = '^$',
-                }
             end,
         }
 

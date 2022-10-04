@@ -171,7 +171,7 @@ function lsp.servers()
     if not lspconf.neocmake then
         lspconf.neocmake = {
             default_config = {
-                cmd = { 'neocmakelsp' },
+                cmd = { 'neocmakelsp', '--stdio' },
                 filetypes = { 'cmake' },
                 root_dir = function()
                     return vim.fs.dirname(vim.fs.find({ '.git' }, { upward = true })[1])

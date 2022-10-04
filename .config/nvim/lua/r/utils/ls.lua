@@ -121,13 +121,18 @@ function ls.lsp_progress()
     local notice = require 'r.settings.notify'
 
     vim.lsp.handlers['$/progress'] = function(_, result, ctx)
+        local val = result.value
+        if not val.kind then
+            return
+        end
+
         local client_id = ctx.client_id
         local name = vim.lsp.get_client_by_id(client_id).name
         if name == 'null-ls' then
             if result.token == null_ls_token then
                 return
             end
-            if result.value.title == 'formatting' then
+            if val.title == 'formatting' then
                 null_ls_token = result.token
                 return
             end
@@ -137,16 +142,10 @@ function ls.lsp_progress()
             if result.token == ltex_token then
                 return
             end
-            if result.value.title == 'Checking document' then
+            if val.title == 'Checking document' then
                 ltex_token = result.token
                 return
             end
-        end
-
-        local val = result.value
-
-        if not val.kind then
-            return
         end
 
         local notif_data = notice.get_notif_data(client_id, result.token)

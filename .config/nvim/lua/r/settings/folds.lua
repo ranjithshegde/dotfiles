@@ -51,6 +51,7 @@ local function handler(virt_text, lnum, end_lnum, width, truncate, ctx)
 end
 
 return function()
+    require('packer').loader 'promise-async'
     require('ufo').setup {
         open_fold_hl_timeout = 0,
 

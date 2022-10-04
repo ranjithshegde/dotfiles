@@ -41,7 +41,7 @@ end
 function utils.open_in_browser(url)
     local handle
     local args = type(url) == 'table' and url or { url }
-    handle = vim.loop.spawn('qutebrowser', { args = args }, function()
+    handle = vim.loop.spawn('xdg-open', { args = args }, function()
         handle:close()
     end)
 end
