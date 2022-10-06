@@ -8,4 +8,5 @@ return {
     'r.wasm',
     'r.cmake',
     'r.openFrameworks',
+    'r.cdox',
 }
