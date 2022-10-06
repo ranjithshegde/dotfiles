@@ -1,4 +1,3 @@
----@diagnostic disable: missing-parameter
 local Compiler = {}
 
 local function isFile(file)

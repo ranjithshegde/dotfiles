@@ -1,4 +1,3 @@
----@diagnostic disable: missing-parameter
 local ls = {}
 
 ls.getClientNames = function()
@@ -117,16 +116,39 @@ end
 ------------------------------------------------------------------------
 
 ---Return word count for the tex document
-function ls.TexWordCount()
-    local Job = require 'plenary.job'
-    Job:new({
-        command = 'texcount',
-        args = { '-inc', '-sum', '-1', vim.fn.expand '%' },
-        on_exit = function(j, return_val)
-            vim.pretty_print(return_val)
-            vim.notify(j:result(), nil, { title = 'Current document word count' })
-        end,
-    }):sync()
+function ls.tex_word_count()
+    local result
+    require('plenary.job')
+        :new({
+            command = 'texcount',
+            args = { '-inc', '-sum', '-1', vim.fn.expand '%' },
+            on_exit = function(j)
+                result = j:result()[1]
+            end,
+        })
+        :sync()
+    vim.notify(result, nil, { title = 'Current document word count' })
+end
+
+function ls.tex_clean()
+    local bufnr = vim.api.nvim_get_current_buf()
+    local texlab_client = require('lspconfig.util').get_active_client_by_name(bufnr, 'texlab')
+    local params = {
+        command = 'texlab.cleanArtifacts',
+        arguments = { vim.lsp.util.make_text_document_params(bufnr) },
+    }
+    if texlab_client then
+        texlab_client.request('workspace/executeCommand', params, function(err, result)
+            if err then
+                error(tostring(err))
+            end
+            if result then
+                vim.pretty_print(result)
+            end
+        end, bufnr)
+    else
+        print 'method texlab.cleanArtifacts is not supported by any servers active on the current buffer'
+    end
 end
 
 ------------------------------------------------------------------------
@@ -238,31 +260,6 @@ function ls.ltex_false_positive(command)
         write_file(file, rules)
     end
     ltex_hidden(file)
-end
-
-------------------------------------------------------------------------
---                              Texlabs                               --
-------------------------------------------------------------------------
-
-function ls.tex_clean()
-    local bufnr = vim.api.nvim_get_current_buf()
-    local texlab_client = require('lspconfig.util').get_active_client_by_name(bufnr, 'texlab')
-    local params = {
-        command = 'texlab.cleanArtifacts',
-        arguments = { vim.lsp.util.make_text_document_params(bufnr) },
-    }
-    if texlab_client then
-        texlab_client.request('workspace/executeCommand', params, function(err, result)
-            if err then
-                error(tostring(err))
-            end
-            if result then
-                vim.pretty_print(result)
-            end
-        end, bufnr)
-    else
-        print 'method texlab.cleanArtifacts is not supported by any servers active on the current buffer'
-    end
 end
 
 return ls

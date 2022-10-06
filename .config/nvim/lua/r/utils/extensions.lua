@@ -1,4 +1,3 @@
----@diagnostic disable: missing-parameter
 local extensions = {}
 local exec = vim.api.nvim_command
 ------------------------------------------------------------------------

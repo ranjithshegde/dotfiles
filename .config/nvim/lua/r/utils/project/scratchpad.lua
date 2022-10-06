@@ -38,7 +38,6 @@ local function openScratch(type)
 
     vim.ui.input({ prompt = 'Enter filename or directory : ', completion = 'file' }, function(input)
         local stat = isFile(input)
-        ---@diagnostic disable-next-line: missing-parameter
         local ext = vim.fn.fnamemodify(input, ':e')
         if stat and stat.type == 'directory' or ext == '' then
             vim.cmd { cmd = '!', args = { 'mkdir', '-p', input }, mods = { silent = true } }

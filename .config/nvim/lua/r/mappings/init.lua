@@ -1,4 +1,3 @@
----@diagnostic disable: missing-parameter, need-check-nil
 local wk = require 'which-key'
 local map = vim.keymap.set
 
@@ -16,14 +15,22 @@ local open = function(path)
     end
 end
 
+local num = 1
 local function open_term(split)
     return function()
+        local open_num = nil
+        if vim.v.count ~= 0 then
+            open_num = vim.v.count
+        else
+            open_num = num
+            num = num + 1
+        end
         if not split then
-            require('harpoon.term').gotoTerminal(1)
+            require('harpoon.term').gotoTerminal(open_num)
             return
         end
         vim.cmd[split]()
-        require('harpoon.term').gotoTerminal(1)
+        require('harpoon.term').gotoTerminal(open_num)
     end
 end
 

@@ -1,4 +1,3 @@
----@diagnostic disable: missing-parameter
 -- -------------------------- Defs **********************************************************************
 local packer_path = vim.fn.stdpath 'data' .. '/site/pack/packer/start/packer.nvim'
 
@@ -47,7 +46,7 @@ return require('packer').startup {
         use {
             'vigoux/notifier.nvim',
             config = function()
-                require('notifier').setup { component_name_recall = true }
+                require('notifier').setup {}
             end,
         }
 
@@ -258,10 +257,10 @@ return require('packer').startup {
                 end,
             },
             {
-                'folke/lua-dev.nvim',
+                'folke/neodev.nvim',
                 ft = 'lua',
                 config = function()
-                    require('r.settings.plugin').lua_dev()
+                    require('r.settings.plugin').neodev()
                 end,
             },
             {

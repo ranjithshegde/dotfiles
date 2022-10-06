@@ -1,4 +1,3 @@
----@diagnostic disable: missing-parameter
 local lsp = {}
 local aucmd = vim.api.nvim_create_autocmd
 local augroup = vim.api.nvim_create_augroup
@@ -62,8 +61,10 @@ end
 
 ---**************************** Snippet capabilities
 function lsp.capabilities()
-    require('packer').loader 'cmp-nvim-lsp'
-    return require('cmp_nvim_lsp').update_capabilities(vim.lsp.protocol.make_client_capabilities())
+    if not package.loaded.cmp_nvim_lsp then
+        require('packer').loader 'cmp-nvim-lsp'
+    end
+    return require('cmp_nvim_lsp').default_capabilities()
 end
 
 ---**************************** Global attach function

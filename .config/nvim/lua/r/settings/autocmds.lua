@@ -1,4 +1,3 @@
----@diagnostic disable: missing-parameter
 local aucmd = vim.api.nvim_create_autocmd
 local augroup = vim.api.nvim_create_augroup
 local auexec = vim.api.nvim_exec_autocmds
@@ -239,7 +238,7 @@ aucmd('BufWritePost', {
     group = id.PluginLoad,
     pattern = 'plugins.lua',
     callback = function()
-        vim.cmd.source '<afile>'
+        vim.cmd.source()
         require('packer').compile()
     end,
     desc = 'Autocompile packer',

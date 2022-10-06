@@ -1,4 +1,3 @@
----@diagnostic disable: missing-parameter
 local uv = vim.loop
 local shell = require('r.utils').silent_shell
 local ex_cmd = require('r.utils').ex_cmd

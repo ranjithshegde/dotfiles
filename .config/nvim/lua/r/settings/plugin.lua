@@ -1,13 +1,12 @@
----@diagnostic disable: missing-parameter
 local plugins = {}
 
 ------------------------------------------------------------------------
 --                      Config for various plugins                    --
 ------------------------------------------------------------------------
 
----lua-dev
-function plugins.lua_dev()
-    require('lua-dev').setup {
+---neodev
+function plugins.neodev()
+    require('neodev').setup {
         library = { plugins = false },
         override = function(_, library)
             library.enabled = true

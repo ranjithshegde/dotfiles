@@ -163,9 +163,6 @@ function telescope.telescope()
         },
     }
     require('telescope').load_extension 'fzf'
-    if package.loaded.notify then
-        require('telescope').load_extension 'notify'
-    end
     if package.loaded.refactoring then
         require('telescope').load_extension 'refactoring'
     end

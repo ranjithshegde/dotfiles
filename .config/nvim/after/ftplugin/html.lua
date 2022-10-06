@@ -1,4 +1,3 @@
----@diagnostic disable: missing-parameter
 local open_cmd = vim.loop.fs_stat(vim.fn.glob 'css/*.css') and vim.fn.glob 'css/*.css' or vim.fn.glob '*.css'
 vim.keymap.set('n', '<leader>s', function()
     if vim.fn.expand '%:e' == 'html' then

@@ -59,7 +59,6 @@ tables.ignoreFiles = {
     'help',
     'netrw',
     'packer',
-    'notify',
     'scnvim',
     'Outline',
     'lspinfo',

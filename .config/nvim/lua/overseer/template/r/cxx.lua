@@ -29,7 +29,7 @@ return {
     condition = {
         filetype = { 'c', 'cpp' },
         callback = function()
-            local makeprg = vim.api.nvim_get_option 'makeprg'
+            local makeprg = vim.bo.makeprg
             return makeprg == 'g++' or makeprg == 'gcc'
         end,
     },

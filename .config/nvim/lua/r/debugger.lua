@@ -172,6 +172,7 @@ local function configs()
             stopOnEntry = false,
         },
     }
+    dap.configurations.c = dap.configurations.cpp
     dap.configurations.python = {
         {
             type = 'python',

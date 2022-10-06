@@ -10,7 +10,7 @@ cmd('Project', function(opts)
 end, { nargs = '*', desc = 'Create a project' })
 
 cmd('WordCount', function()
-    require('r.utils.ls').TexWordCount()
+    require('r.utils.ls').tex_word_count()
 end, { desc = 'Display text word count in the buffer' })
 
 cmd('Agenda', function()

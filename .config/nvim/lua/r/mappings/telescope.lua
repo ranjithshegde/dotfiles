@@ -1,4 +1,3 @@
----@diagnostic disable: missing-parameter
 ------------------------------------------------------------------------
 --                              Telescope                             --
 ------------------------------------------------------------------------
@@ -72,7 +71,6 @@ return require('which-key').register {
         ['<CR>'] = { tele 'resume', 'Resume last picker' },
         p = { tel_ext('project', { display_type = 'full' }), 'Projects' },
         e = { tel_ext('file_browser', { files = false }), 'Folder browser' },
-        n = { tel_ext 'notify', 'Notifications' },
         E = { tel_ext 'file_browser', 'File browser' },
         k = {
             function()
