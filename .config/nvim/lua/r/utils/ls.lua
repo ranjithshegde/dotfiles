@@ -1,3 +1,4 @@
+---@diagnostic disable: missing-parameter
 local ls = {}
 
 ls.getClientNames = function()
@@ -109,90 +110,6 @@ ls.lsp_capabilities = function()
     vim.api.nvim_open_win(bufnr, true, config)
     vim.bo[bufnr].filetype = 'LspCapabilities'
     vim.cmd.normal { args = { 'zx' }, bang = true }
-end
-
-------------------------------------------------------------------------
---                              Notification                          --
-------------------------------------------------------------------------
-
-local null_ls_token = nil
-local ltex_token = nil
-function ls.lsp_progress()
-    local notice = require 'r.settings.notify'
-
-    vim.lsp.handlers['$/progress'] = function(_, result, ctx)
-        local val = result.value
-        if not val.kind then
-            return
-        end
-
-        local client_id = ctx.client_id
-        local name = vim.lsp.get_client_by_id(client_id).name
-        if name == 'null-ls' then
-            if result.token == null_ls_token then
-                return
-            end
-            if val.title == 'formatting' then
-                null_ls_token = result.token
-                return
-            end
-        end
-
-        if name == 'ltex' then
-            if result.token == ltex_token then
-                return
-            end
-            if val.title == 'Checking document' then
-                ltex_token = result.token
-                return
-            end
-        end
-
-        local notif_data = notice.get_notif_data(client_id, result.token)
-
-        if val.kind == 'begin' then
-            local message = notice.format_message(val.message, val.percentage)
-
-            notif_data.notification = vim.notify(message, 'info', {
-                title = notice.format_title(val.title, name),
-                icon = notice.spinner_frames[1],
-                timeout = false,
-                hide_from_history = false,
-            })
-
-            notif_data.spinner = 1
-            notice.update_spinner(client_id, result.token)
-        elseif val.kind == 'report' and notif_data then
-            notif_data.notification = vim.notify(notice.format_message(val.message, val.percentage), 'info', {
-                replace = notif_data.notification,
-                hide_from_history = false,
-            })
-        elseif val.kind == 'end' and notif_data then
-            notif_data.notification =
-                vim.notify(val.message and notice.format_message(val.message) or 'Complete', 'info', {
-                    icon = '',
-                    replace = notif_data.notification,
-                    timeout = 3000,
-                })
-
-            notif_data.spinner = nil
-        end
-    end
-end
-
--- table from lsp severity to vim severity.
-local severity = {
-    'error',
-    'warn',
-    'info',
-    'info', -- map both hint and info to info?
-}
-
-function ls.lsp_messages()
-    vim.notify = require 'notify'
-    vim.lsp.handlers['window/showMessage'] = function(_, method, params, _)
-        vim.notify(method.message, severity[params.type])
-    end
 end
 
 ------------------------------------------------------------------------

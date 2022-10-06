@@ -43,6 +43,14 @@ return require('packer').startup {
             requires = { 'tpope/vim-dadbod', 'nanotee/sqls.nvim' },
         }
 
+        -- vim.notify as virt-text
+        use {
+            'vigoux/notifier.nvim',
+            config = function()
+                require('notifier').setup { component_name_recall = true }
+            end,
+        }
+
         -- Tasks
         use {
             'stevearc/overseer.nvim',
@@ -67,15 +75,6 @@ return require('packer').startup {
             opt = true,
             config = function()
                 require('r.settings.plugin').indent()
-            end,
-        }
-
-        --notify
-        use {
-            'rcarriga/nvim-notify',
-            module = 'notify',
-            config = function()
-                require('r.settings.notify').setup()
             end,
         }
 

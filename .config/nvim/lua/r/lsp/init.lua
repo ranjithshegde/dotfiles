@@ -58,8 +58,6 @@ function lsp.settings()
     -- borders for floating windows
     vim.lsp.handlers['textDocument/hover'] = vim.lsp.with(vim.lsp.handlers.hover, { border = 'double' })
     vim.lsp.handlers['textDocument/signatureHelp'] = vim.lsp.with(signature, { focusable = false })
-
-    require('r.utils.ls').lsp_messages()
 end
 
 ---**************************** Snippet capabilities
@@ -70,7 +68,6 @@ end
 
 ---**************************** Global attach function
 function lsp.attach(client, bufnr)
-    require('r.utils.ls').lsp_progress()
     require('r.mappings.lsp').lsp(client, bufnr)
     vim.b.hasLsp = true
 
