@@ -42,14 +42,6 @@ return require('packer').startup {
             requires = { 'tpope/vim-dadbod', 'nanotee/sqls.nvim' },
         }
 
-        -- vim.notify as virt-text
-        use {
-            'vigoux/notifier.nvim',
-            config = function()
-                require('notifier').setup {}
-            end,
-        }
-
         -- Tasks
         use {
             'stevearc/overseer.nvim',
@@ -95,6 +87,16 @@ return require('packer').startup {
             cmd = { 'ColorizerAttachToBuffer', 'ColorizerToggle' },
         }
 
+        -- Fancy UI
+        use {
+            'folke/noice.nvim',
+            event = 'VimEnter',
+            config = function()
+                require('r.settings.plugin').ui()
+            end,
+            requires = { 'MunifTanjim/nui.nvim', module = 'nui' },
+        }
+
         -- Fancy folds
         use {
             'kevinhwang91/nvim-ufo',
@@ -109,7 +111,7 @@ return require('packer').startup {
         use {
             is_custom('WORKSPACE', 'Repos/express_line.nvim', 'ranjithshegde/express_line.nvim'),
             branch = '0.7',
-            requires = { 'kyazdani42/nvim-web-devicons', 'nvim-lua/plenary.nvim' },
+            requires = { 'nvim-tree/nvim-web-devicons', 'nvim-lua/plenary.nvim' },
             config = function()
                 require 'r.settings.statusline'()
             end,
@@ -130,6 +132,8 @@ return require('packer').startup {
             'folke/which-key.nvim',
             config = function()
                 require('which-key').setup {
+                    show_help = false,
+                    show_keys = false,
                     layout = { layout = { spacing = 15 } },
                     window = { border = 'single' },
                 }
@@ -192,7 +196,6 @@ return require('packer').startup {
             },
             config = function()
                 require('Comment').setup {
-                    mappings = { extended = true },
                     ignore = '^$',
                 }
             end,

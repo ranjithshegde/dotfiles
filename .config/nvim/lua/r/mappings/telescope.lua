@@ -45,6 +45,7 @@ return require('which-key').register {
         j = { tele 'jumplist', 'Jump history' },
         l = { tele 'loclist', 'local quickfix list' },
         m = { tele 'man_pages', 'Man pages' },
+        n = { tel_ext 'noice', 'Notifications' },
         o = { cd_files('Org files', '~/Documents/Orgs'), 'Org files' },
         O = { tele 'vim_options', 'Vim options' },
         q = { tele 'quickfix', 'Quickfix list' },

@@ -33,7 +33,7 @@ aucmd('FileType', {
 aucmd('FileType', {
     group = id.FormatOptions,
     callback = function(args)
-        if vim.tbl_contains(require('r.utils.tables').ignoreFiles, args.match) then
+        if vim.tbl_contains(require('r.utils.tables').ignoreFiles, args.match) or args.file:find 'noice' then
             vim.o.relativenumber = false
             vim.wo.cursorline = false
             vim.wo.foldcolumn = '0'
@@ -41,7 +41,7 @@ aucmd('FileType', {
             return
         end
         vim.o.relativenumber = true
-        vim.wo.cursorline = true
+        vim.wo[vim.fn.bufwinid(args.buf)].cursorline = true
     end,
     desc = 'Disable all custom decoration rules for non-language filetypes',
 })
@@ -49,20 +49,20 @@ aucmd('FileType', {
 -- ************** Selective numbering  ---------------------------------
 aucmd({ 'InsertEnter', 'WinLeave', 'FocusLost', 'BufNewFile' }, {
     group = id.FormatOptions,
-    callback = function()
+    callback = function(args)
         if
             vim.tbl_contains(require('r.utils.tables').ignoreFiles, vim.bo.filetype)
             or vim.fn.win_gettype() == 'popup'
         then
             return
         end
-        vim.o.relativenumber = false
+        vim.wo[vim.fn.bufwinid(args.buf)].relativenumber = false
     end,
     desc = 'Dont use relativenumber where it makes no sense',
 })
 aucmd({ 'InsertLeave', 'WinEnter', 'FocusGained' }, {
     group = id.FormatOptions,
-    callback = function()
+    callback = function(args)
         if
             vim.tbl_contains(require('r.utils.tables').ignoreFiles, vim.bo.filetype)
             or vim.api.nvim_win_get_height(vim.api.nvim_get_current_win()) <= 15
@@ -70,7 +70,7 @@ aucmd({ 'InsertLeave', 'WinEnter', 'FocusGained' }, {
         then
             return
         end
-        vim.o.relativenumber = true
+        vim.wo[vim.fn.bufwinid(args.buf)].relativenumber = true
     end,
     desc = 'use relativenumber conditionally',
 })
@@ -78,7 +78,7 @@ aucmd({ 'InsertLeave', 'WinEnter', 'FocusGained' }, {
 -- ************** Selective cursorline  ----------------------------------
 aucmd({ 'FocusGained', 'WinEnter', 'BufEnter' }, {
     group = id.FormatOptions,
-    callback = function()
+    callback = function(args)
         if
             vim.tbl_contains(require('r.utils.tables').ignoreFiles, vim.bo.filetype)
             or vim.api.nvim_win_get_height(vim.api.nvim_get_current_win()) <= 15
@@ -86,22 +86,22 @@ aucmd({ 'FocusGained', 'WinEnter', 'BufEnter' }, {
         then
             return
         end
-        vim.wo.cursorline = true
-        vim.wo.foldcolumn = 'auto'
+        vim.wo[vim.fn.bufwinid(args.buf)].cursorline = true
+        vim.wo[vim.fn.bufwinid(args.buf)].foldcolumn = 'auto'
     end,
     desc = 'use cursorline only on active buffers',
 })
 aucmd({ 'FocusLost', 'WinLeave' }, {
     group = id.FormatOptions,
-    callback = function()
+    callback = function(args)
         if
             vim.tbl_contains(require('r.utils.tables').ignoreFiles, vim.bo.filetype)
             or vim.fn.win_gettype() == 'popup'
         then
             return
         end
-        vim.wo.cursorline = false
-        vim.wo.foldcolumn = '0'
+        vim.wo[vim.fn.bufwinid(args.buf)].cursorline = false
+        vim.wo[vim.fn.bufwinid(args.buf)].foldcolumn = '0'
     end,
     desc = 'dont use cursorline on inactive buffers',
 })

@@ -9,26 +9,18 @@ c: ConfigContainer = c  # noqa: F821 pylint: disable=E0602,C0103
 config.load_autoconfig(False)
 
 
-def filter_yt(info: interceptor.Request):
-    url = info.request_url
-    if (
-        url.host() == "www.youtube.com"
-        and url.path() == "/get_video_info"
-        and "&adformat=" in url.query()
-    ):
-        info.block()
-
-
-interceptor.register(filter_yt)
-
 # https://peter.sh/experiments/chromium-command-line-switches/)
 c.qt.args = [
     "enable-gpu-rasterization",
     "enable-accelerated-video-decode",
-    "ignore-gpu-blocklist",
+    "enable-zero-copy",
+    "enable-oop-rasterization",
+    "enable-oop-rasterization-ddl",
     "use-gl=egl",
     "enable-native-gpu-memory-buffers",
     "enable-oop-rasterization",
+    "enable-features=VaapiVideoDecoder,VaapiVideoEncoder,CanvasOopRasterization",
+    "disable-features=UseChromeOSDirectVideoDecoder,UseChromeOSDirectVideoEncoder",
 ]
 
 
@@ -98,9 +90,9 @@ c.content.blocking.adblock.lists = [
     "https://secure.fanboy.co.nz/fanboy-cookiemonster.txt",
 ]
 
+c.content.javascript.enabled = True
 config.set("content.images", True, "chrome-devtools://*")
 config.set("content.images", True, "devtools://*")
-c.content.javascript.enabled = True
 config.set("content.javascript.enabled", True, "chrome-devtools://*")
 config.set("content.javascript.enabled", True, "devtools://*")
 config.set("content.javascript.enabled", True, "chrome://*/*")

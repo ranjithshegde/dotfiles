@@ -169,6 +169,9 @@ function telescope.telescope()
     if package.loaded.harpoon then
         require('telescope').load_extension 'harpoon'
     end
+    if package.loaded.noice then
+        require('telescope').load_extension 'noice'
+    end
 end
 
 return telescope

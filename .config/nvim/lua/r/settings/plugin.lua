@@ -36,6 +36,20 @@ function plugins.indent()
     end
 end
 
+---Fancy UI
+function plugins.ui()
+    require('noice').setup {
+        -- debug = true,
+        cmdline = {
+            view = 'cmdline',
+            view_search = 'cmdline',
+            format = {
+                inc_rename = { pattern = '^:%s*IncRename%s+', icon = ' ', ft = 'text' },
+            },
+        },
+    }
+end
+
 ---nvim-colorizer
 function plugins.colorizer()
     require('colorizer').setup {

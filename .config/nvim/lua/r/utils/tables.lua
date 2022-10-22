@@ -57,6 +57,7 @@ tables.ignoreFiles = {
     'qf',
     'man',
     'help',
+    'noice',
     'netrw',
     'packer',
     'scnvim',
