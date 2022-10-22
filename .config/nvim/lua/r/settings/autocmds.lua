@@ -210,95 +210,6 @@ aucmd('LspDetach', {
     desc = 'Clear AUGroups when LSP detaches',
 })
 
--- ************** Compilers and REPL  ----------------------------------
-id.Compiler = augroup('Compiler', opts)
-aucmd('FileType', {
-    group = id.Compiler,
-    pattern = { 'java', 'lua', 'python', 'javascript', 'perl' },
-    nested = true,
-    callback = function()
-        vim.keymap.set('n', '<F5>', function()
-            require('overseer').run_template { name = 'Run Single' }
-        end, { buffer = true, desc = 'Call native compile command' })
-
-        vim.keymap.set({ 'n', 't' }, '<F10>', function()
-            vim.cmd.stopinsert()
-            require('r.extensions').toggleTerm(vim.b.repl, 'repl')
-        end, { desc = 'Toggle REPL' })
-    end,
-    desc = 'set compiler and toggleable REPL for capable filetypes',
-})
-
-------------------------------------------------------------------------
---                              Plugin loading                        --
-------------------------------------------------------------------------
-id.PluginLoad = augroup('PluginLoad', opts)
--- ************** Packer compile ---------------------------------------
-aucmd('BufWritePost', {
-    group = id.PluginLoad,
-    pattern = 'packer.lua',
-    callback = function()
-        vim.cmd.source()
-        require('packer').compile()
-    end,
-    desc = 'Autocompile packer',
-})
--- ************** Load mappings  ---------------------------------------
-aucmd('BufReadPost', {
-    group = id.PluginLoad,
-    callback = function()
-        require 'r.mappings.pairs'
-        require 'r.mappings.treesitter'()
-    end,
-    once = true,
-    desc = 'Load mappings for unimparied and treesiiter after reading buffer',
-})
--- ************** Load matchit  ----------------------------------------
-aucmd('BufReadPost', {
-    group = id.PluginLoad,
-    callback = function()
-        vim.cmd.packadd 'matchit'
-    end,
-    once = true,
-    desc = 'Conditionally load matchit',
-})
--- ************** Load decoration plugins ------------------------------
-aucmd('FileType', {
-    group = id.PluginLoad,
-    callback = function(args)
-        if
-            vim.tbl_contains(require('r.utils.tables').ignoreFiles, args.match)
-            or not require('nvim-treesitter.parsers').has_parser()
-            or (package.loaded.ufo and package.loaded.indent_blankline)
-        then
-            return
-        end
-        require('packer').loader('nvim-ufo', 'indent-blankline.nvim')
-    end,
-    desc = 'Load nvim-ufo and indent_blankline on relevant filetypes',
-})
--- ************** Load harpoon maps ------------------------------------
-vim.api.nvim_create_autocmd('FileType', {
-    pattern = 'harpoon',
-    group = id.PluginLoad,
-    callback = function()
-        vim.keymap.set('n', '<C-v>', function()
-            local curline = vim.api.nvim_get_current_line()
-            local working_directory = vim.fn.getcwd() .. '/'
-            vim.cmd 'vs'
-            vim.cmd('e ' .. working_directory .. curline)
-        end, { noremap = true, silent = true })
-
-        vim.keymap.set('n', '<C-t>', function()
-            local curline = vim.api.nvim_get_current_line()
-            local working_directory = vim.fn.getcwd() .. '/'
-            vim.cmd 'tabnew'
-            vim.cmd('e ' .. working_directory .. curline)
-        end, { noremap = true, silent = true })
-    end,
-    desc = 'Make harpoon open in splits',
-})
-
 ------------------------------------------------------------------------
 --                              Terminal management                   --
 ------------------------------------------------------------------------
@@ -358,8 +269,98 @@ aucmd('CmdlineLeave', {
 })
 
 ------------------------------------------------------------------------
+--                              Plugin loading                        --
+------------------------------------------------------------------------
+id.PluginLoad = augroup('PluginLoad', opts)
+-- ************** Packer compile ---------------------------------------
+aucmd('BufWritePost', {
+    group = id.PluginLoad,
+    pattern = 'packer.lua',
+    callback = function()
+        vim.cmd.source()
+        require('packer').compile()
+    end,
+    desc = 'Autocompile packer',
+})
+-- ************** Load mappings  ---------------------------------------
+aucmd('BufReadPost', {
+    group = id.PluginLoad,
+    callback = function()
+        require 'r.mappings.pairs'
+        require 'r.mappings.treesitter'()
+    end,
+    once = true,
+    desc = 'Load mappings for unimparied and treesiiter after reading buffer',
+})
+-- ************** Load matchit  ----------------------------------------
+aucmd('BufReadPost', {
+    group = id.PluginLoad,
+    callback = function()
+        vim.cmd.packadd 'matchit'
+    end,
+    once = true,
+    desc = 'Conditionally load matchit',
+})
+-- ************** Load decoration plugins ------------------------------
+aucmd('FileType', {
+    group = id.PluginLoad,
+    callback = function(args)
+        if
+            vim.tbl_contains(require('r.utils.tables').ignoreFiles, args.match)
+            or not require('nvim-treesitter.parsers').has_parser()
+            or (package.loaded.ufo and package.loaded.indent_blankline)
+        then
+            return
+        end
+        require('packer').loader('nvim-ufo', 'indent-blankline.nvim')
+    end,
+    desc = 'Load nvim-ufo and indent_blankline on relevant filetypes',
+})
+-- ************** Load harpoon maps ------------------------------------
+aucmd('FileType', {
+    pattern = 'harpoon',
+    group = id.PluginLoad,
+    callback = function()
+        vim.keymap.set('n', '<C-v>', function()
+            local curline = vim.api.nvim_get_current_line()
+            local working_directory = vim.fn.getcwd() .. '/'
+            vim.cmd 'vs'
+            vim.cmd('e ' .. working_directory .. curline)
+        end, { noremap = true, silent = true })
+
+        vim.keymap.set('n', '<C-t>', function()
+            local curline = vim.api.nvim_get_current_line()
+            local working_directory = vim.fn.getcwd() .. '/'
+            vim.cmd 'tabnew'
+            vim.cmd('e ' .. working_directory .. curline)
+        end, { noremap = true, silent = true })
+    end,
+    desc = 'Make harpoon open in splits',
+})
+
+------------------------------------------------------------------------
 --                              Misc                                  --
 ------------------------------------------------------------------------
+
+-- ************** Compilers and REPL  ----------------------------------
+id.Compiler = augroup('Compiler', opts)
+aucmd('FileType', {
+    group = id.Compiler,
+    pattern = { 'java', 'lua', 'python', 'javascript', 'perl' },
+    nested = true,
+    callback = function()
+        vim.keymap.set('n', '<F5>', function()
+            require('overseer').run_template { name = 'Run Single' }
+        end, { buffer = true, desc = 'Call native compile command' })
+
+        vim.keymap.set({ 'n', 't' }, '<F10>', function()
+            vim.cmd.stopinsert()
+            require('r.extensions').toggleTerm(vim.b.repl, 'repl')
+        end, { desc = 'Toggle REPL' })
+    end,
+    desc = 'set compiler and toggleable REPL for capable filetypes',
+})
+
 id.ProjectDrawer = augroup('ProjectDrawer', opts)
 -- ************************ Handle netrw -------------------------------
 aucmd('BufEnter', {

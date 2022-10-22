@@ -1,4 +1,4 @@
-local Compiler = {}
+local clang = {}
 
 local function isFile(file)
     return vim.loop.fs_stat(file) ~= nil
@@ -24,7 +24,7 @@ end
 ------------------------------------------------------------------------
 
 -- Set C environment based on type [with makefile, microcontroller, cmake project or plain c]
-function Compiler.set_ctype()
+function clang.set_ctype()
     if isFile 'CMakeLists.txt' then
         require('r.mappings.clang').cmake()
         vim.bo.makeprg = 'make'
@@ -52,7 +52,7 @@ function Compiler.set_ctype()
     end
 end
 
-function Compiler.set_type()
+function clang.set_type()
     if isFile 'Makefile.pdlibbuilder' then
         require('r.mappings.clang').pdc()
     elseif isFile 'Makefile' then
@@ -71,24 +71,24 @@ end
 ------------------------------------------------------------------------
 
 ---Search Cplusplus.com for symbol
-function Compiler.creference(cmd)
+function clang.creference(cmd)
     local url = 'https://www.cplusplus.com/search.do?q=' .. cmd
     require('r.utils').open_in_browser(url)
 end
 
 ---Search OpenGL reference manual for symbol
-function Compiler.glRef(cmd)
+function clang.glRef(cmd)
     local url = 'https://docs.gl/gl4/' .. cmd
     require('r.utils').open_in_browser(url)
 end
 
 -- Launch debuger
-function Compiler.termdebug()
+function clang.termdebug()
     require('r.debugger').init()
     require('dap').continue()
 end
 
-function Compiler.pdBuild()
+function clang.pdBuild()
     local bin = vim.fn.fnamemodify(vim.loop.cwd(), ':t') .. '.pd_linux'
     local dest = '~/.local/lib/pd/extra/'
     if not package.loaded.overseer then
@@ -97,7 +97,7 @@ function Compiler.pdBuild()
     vim.cmd.OverseerRunCmd { args = { 'cp', bin, dest } }
 end
 
-function Compiler.with_flags()
+function clang.with_flags()
     vim.ui.input({
         prompt = 'Enter compiler flags: ',
     }, function(input)
@@ -105,7 +105,7 @@ function Compiler.with_flags()
     end)
 end
 
-function Compiler.renderOffload(cmd)
+function clang.renderOffload(cmd)
     vim.ui.select(
         { 'Integrated graphics', 'Dedicated (Nvidia) Graphics' },
         { prompt = 'Run the binary on: ' },
@@ -128,12 +128,12 @@ end
 ------------------------------------------------------------------------
 
 -- Clean and rebuild Release
-function Compiler.cmake_clean_gen()
+function clang.cmake_clean_gen()
     sequencer('Cmake Configure', { type = 'Release' }, 'Cmake clean')
 end
 
 -- Clean and rebuild debug
-function Compiler.cmake_clean_gen_debug()
+function clang.cmake_clean_gen_debug()
     sequencer('Cmake Configure', { type = 'Debug' }, 'Cmake clean')
 end
 
@@ -142,34 +142,34 @@ end
 ------------------------------------------------------------------------
 
 -- print serial monitor
-function Compiler.monitor()
+function clang.monitor()
     local cmd = 'pio device monitor'
     require('r.utils.extensions').toggleTerm(cmd, 'pio')
 end
 
 -- Clean directory
-function Compiler.pio_clean()
+function clang.pio_clean()
     sequencer('pio compiledb', {}, 'pio clean')
 end
 
-function Compiler.teensypins()
+function clang.teensypins()
     local url = 'https://www.pjrc.com/teensy/pinout.html'
     require('r.utils').open_in_browser(url)
 end
 
-function Compiler.teensyspecs()
+function clang.teensyspecs()
     local url = 'https://www.pjrc.com/teensy/techspecs.html'
     require('r.utils').open_in_browser(url)
 end
 
-function Compiler.arduinoref()
+function clang.arduinoref()
     local url = 'https://www.arduino.cc/reference/en/'
     require('r.utils').open_in_browser(url)
 end
 
-function Compiler.ardRef(cmd)
+function clang.ardRef(cmd)
     local url = 'https://search.arduino.cc/search?tab=reference&q=' .. cmd
     require('r.utils').open_in_browser(url)
 end
 
-return Compiler
+return clang

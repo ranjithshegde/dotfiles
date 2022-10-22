@@ -9,10 +9,10 @@ local map = vim.keymap.set
 function cmaps.micro()
     map({ 'n', 't' }, '<F8>', function()
         vim.cmd.stopinsert()
-        require('r.utils.compiler').monitor()
+        require('r.extensions.cpp').monitor()
     end, { desc = 'Serial monitor toggle' })
 
-    map('n', '<F2>', require('r.utils.compiler').pio_clean, { buffer = true, desc = 'Regenerate tags' })
+    map('n', '<F2>', require('r.extensions.cpp').pio_clean, { buffer = true, desc = 'Regenerate tags' })
 
     map('n', '<F3>', function()
         require('overseer').run_template { name = 'pio check --skip-packages' }
@@ -27,11 +27,11 @@ function cmaps.micro()
     end, { buffer = true, desc = 'Upload' })
 
     map('n', ',ka', function()
-        require('r.utils.compiler').ardRef(vim.fn.expand '<cword>')
+        require('r.extensions.cpp').ardRef(vim.fn.expand '<cword>')
     end, { buffer = true, desc = 'Arduino' })
 
-    map('n', ',kt', require('r.utils.compiler').teensypins, { buffer = true, desc = 'teensy pins' })
-    map('n', ',kT', require('r.utils.compiler').teensyspecs, { buffer = true, desc = 'teensy specs' })
+    map('n', ',kt', require('r.extensions.cpp').teensypins, { buffer = true, desc = 'teensy pins' })
+    map('n', ',kT', require('r.extensions.cpp').teensyspecs, { buffer = true, desc = 'teensy specs' })
 
     wk.register {
         [','] = { k = { 'Arduino documentation', buffer = 0 } },
@@ -56,11 +56,11 @@ function cmaps.makeC()
     end, { buffer = true, desc = 'Compile Debug' })
 
     map('n', '<F5>', function()
-        require('r.utils.compiler').renderOffload(true)
+        require('r.extensions.cpp').renderOffload(true)
     end, { buffer = true, desc = 'Compile and Run Release' })
 
     map('n', '<F6>', function()
-        require('r.utils.compiler').renderOffload()
+        require('r.extensions.cpp').renderOffload()
     end, { buffer = true, desc = 'Run Release' })
 end
 
@@ -71,7 +71,7 @@ end
 -- ******************************** C files ----------------------------
 function cmaps.ctests()
     map('n', '<F4>', function()
-        require('r.utils.compiler').with_flags()
+        require('r.extensions.cpp').with_flags()
     end, { buffer = true, desc = 'Make with defined flags' })
 
     map('n', '<F5>', function()
@@ -89,7 +89,7 @@ function cmaps.pdc()
         require('overseer').run_template { name = 'make' }
     end, { buffer = true, desc = 'Build Pd external' })
 
-    map('n', '<F6>', require('r.utils.compiler').pdBuild, { buffer = true, desc = 'Copy external to PD directory' })
+    map('n', '<F6>', require('r.extensions.cpp').pdBuild, { buffer = true, desc = 'Copy external to PD directory' })
 end
 
 -- ******************************** Clang Lsp----------------------------
@@ -160,13 +160,13 @@ function cmaps.clang()
                 name = 'Online help',
                 c = {
                     function()
-                        require('r.utils.compiler').creference(vim.fn.expand '<cword>')
+                        require('r.extensions.cpp').creference(vim.fn.expand '<cword>')
                     end,
                     'C++ std reference',
                 },
                 g = {
                     function()
-                        require('r.utils.compiler').glRef(vim.fn.expand '<cword>')
+                        require('r.extensions.cpp').glRef(vim.fn.expand '<cword>')
                     end,
                     'OpenGL reference',
                 },

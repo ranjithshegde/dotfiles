@@ -77,6 +77,7 @@ local function config_files()
                 },
                 e = {
                     name = 'Custom plugins and extensions',
+                    c = { open 'lua/r/extensions/cpp.lua', 'Cpp Workstation' },
                     e = { open 'lua/r/extensions/init.lua', 'General' },
                     d = { open 'lua/r/extensions/diagnostics/init.lua', 'Diagnostic extensions' },
                     q = { open 'lua/r/extensions/qf.lua', 'Quickfix and Loclist' },
@@ -87,7 +88,6 @@ local function config_files()
                 u = {
                     name = 'Common & utility functions',
                     u = { open 'lua/r/utils/init.lua', 'General' },
-                    c = { open 'lua/r/utils/compiler.lua', 'Cpp Workstation' },
                     t = { open 'lua/r/utils/tables.lua', 'Filter tables' },
                 },
                 f = {
