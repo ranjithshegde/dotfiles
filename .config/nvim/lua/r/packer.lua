@@ -56,7 +56,7 @@ return require('packer').startup {
             'davidgranstrom/scnvim',
             ft = 'supercollider',
             config = function()
-                require('r.settings.plugin').scnvim()
+                require('r.plugins').scnvim()
             end,
         }
 
@@ -65,7 +65,7 @@ return require('packer').startup {
             'lukas-reineke/indent-blankline.nvim',
             opt = true,
             config = function()
-                require('r.settings.plugin').indent()
+                require('r.plugins').indent()
             end,
         }
 
@@ -82,7 +82,7 @@ return require('packer').startup {
         use {
             'NvChad/nvim-colorizer.lua',
             config = function()
-                require('r.settings.plugin').colorizer()
+                require('r.plugins').colorizer()
             end,
             cmd = { 'ColorizerAttachToBuffer', 'ColorizerToggle' },
         }
@@ -92,7 +92,7 @@ return require('packer').startup {
             'folke/noice.nvim',
             event = 'VimEnter',
             config = function()
-                require('r.settings.plugin').ui()
+                require('r.plugins').ui()
             end,
             requires = { 'MunifTanjim/nui.nvim', module = 'nui' },
         }
@@ -103,7 +103,7 @@ return require('packer').startup {
             opt = true,
             requires = 'kevinhwang91/promise-async',
             config = function()
-                require 'r.settings.folds'()
+                require 'r.plugins.folds'()
             end,
         }
 
@@ -113,7 +113,7 @@ return require('packer').startup {
             branch = '0.7',
             requires = { 'nvim-tree/nvim-web-devicons', 'nvim-lua/plenary.nvim' },
             config = function()
-                require 'r.settings.statusline'()
+                require 'r.plugins.statusline'()
             end,
         }
 
@@ -146,7 +146,7 @@ return require('packer').startup {
                 'lewis6991/gitsigns.nvim',
                 requires = 'nvim-lua/plenary.nvim',
                 config = function()
-                    require('r.settings.plugin').gitsigns()
+                    require('r.plugins').gitsigns()
                 end,
                 opt = true,
             },
@@ -160,7 +160,7 @@ return require('packer').startup {
                 module = 'telescope',
                 cmd = 'Telescope',
                 config = function()
-                    require('r.settings.telescope').telescope()
+                    require('r.plugins.telescope').telescope()
                 end,
                 requires = 'nvim-lua/plenary.nvim',
             },
@@ -180,7 +180,7 @@ return require('packer').startup {
                 'ThePrimeagen/refactoring.nvim',
                 module = 'refactoring',
                 config = function()
-                    require('r.settings.treesitter').refactoring()
+                    require('r.plugins.treesitter').refactoring()
                 end,
             },
         }
@@ -215,7 +215,7 @@ return require('packer').startup {
                 { 'n', 'ySS', 'Add surround  current line' },
             },
             config = function()
-                require('r.settings.plugin').surround()
+                require('r.plugins').surround()
             end,
         }
 
@@ -225,7 +225,7 @@ return require('packer').startup {
                 'nvim-orgmode/orgmode',
                 ft = 'org',
                 config = function()
-                    require('r.settings.plugin').org()
+                    require('r.plugins').org()
                 end,
             },
             {
@@ -249,7 +249,7 @@ return require('packer').startup {
                 'simrat39/symbols-outline.nvim',
                 module = 'symbols-outline',
                 config = function()
-                    require('symbols-outline').setup()
+                    require('symbols-outline').setup { auto_preview = false, width = 40 }
                 end,
             },
             {
@@ -263,7 +263,7 @@ return require('packer').startup {
                 'folke/neodev.nvim',
                 ft = 'lua',
                 config = function()
-                    require('r.settings.plugin').neodev()
+                    require('r.plugins').neodev()
                 end,
             },
             {
@@ -286,7 +286,7 @@ return require('packer').startup {
                 run = 'make install_jsregexp',
                 event = 'InsertEnter',
                 config = function()
-                    require('r.settings.completion').luasnip()
+                    require('r.plugins.completion').luasnip()
                 end,
             },
             {
@@ -300,14 +300,14 @@ return require('packer').startup {
                 'hrsh7th/nvim-cmp',
                 after = 'friendly-snippets',
                 config = function()
-                    require('r.settings.completion').init()
+                    require('r.plugins.completion').init()
                 end,
             },
             {
                 'windwp/nvim-autopairs',
                 after = 'nvim-cmp',
                 config = function()
-                    require('r.settings.completion').pairs()
+                    require('r.plugins.completion').pairs()
                 end,
             },
         }

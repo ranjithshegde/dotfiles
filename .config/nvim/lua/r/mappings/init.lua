@@ -39,7 +39,7 @@ local function config_files()
         ['<leader>'] = {
             a = {
                 name = 'vimrc files',
-                p = { open 'lua/r/plugins.lua', 'Packer config' },
+                p = { open 'lua/r/packer.lua', 'Packer config' },
                 m = {
                     name = 'Mappings',
                     m = { open 'lua/r/mappings/init.lua', 'Common' },
@@ -51,17 +51,19 @@ local function config_files()
                     g = { open 'lua/r/mappings/git.lua', 'Git' },
                     p = { open 'lua/r/mappings/pairs.lua', 'Unimpaired' },
                 },
+                s = {
+                    name = 'Plugin settings',
+                    t = { open 'lua/r/plugins/telescope.lua', 'Telescope' },
+                    s = { open 'lua/r/plugins/treesitter.lua', 'Treesitter' },
+                    f = { open 'lua/r/plugins/folds.lua', 'Foldtext' },
+                    c = { open 'lua/r/plugins/completion.lua', 'Completion' },
+                    p = { open 'lua/r/plugins/init.lua', 'Small configs' },
+                    e = { open 'lua/r/plugins/statusline.lua', 'Express statusline' },
+                },
                 o = {
                     name = 'Options',
                     o = { open 'lua/r/settings/init.lua', 'vim options' },
-                    t = { open 'lua/r/settings/telescope.lua', 'Telescope' },
-                    s = { open 'lua/r/settings/treesitter.lua', 'Treesitter' },
-                    f = { open 'lua/r/settings/folds.lua', 'Foldtext' },
-                    c = { open 'lua/r/settings/completion.lua', 'Completion' },
-                    p = { open 'lua/r/settings/plugin.lua', 'Settings for plugins' },
                     a = { open 'lua/r/settings/autocmds.lua', 'Autocmds' },
-                    n = { open 'lua/r/settings/notify.lua', 'Nvim Notify settings' },
-                    e = { open 'lua/r/settings/statusline.lua', 'Express statusline' },
                     l = { open 'lua/r/settings/tabline.lua', 'Tabline' },
                     w = { open 'lua/r/settings/winbar.lua', 'Winbar' },
                 },
@@ -83,7 +85,7 @@ local function config_files()
                     m = { open 'lua/r/extensions/camel.lua', 'CamelCaseMotion' },
                 },
                 u = {
-                    name = 'Utilities in lua',
+                    name = 'Common & utility functions',
                     u = { open 'lua/r/utils/init.lua', 'General' },
                     c = { open 'lua/r/utils/compiler.lua', 'Cpp Workstation' },
                     t = { open 'lua/r/utils/tables.lua', 'Filter tables' },

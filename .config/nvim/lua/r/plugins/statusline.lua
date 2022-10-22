@@ -243,7 +243,7 @@ local gps = subscribe.buf_autocmd('el_gps', 'CursorMoved,CursorMovedI,BufEnter',
         vim.b.gps = max_width
     end
 
-    local context = require('r.settings.treesitter').statusline {
+    local context = require('r.plugins.treesitter').statusline {
         indicator_size = vim.b.gps,
         type_patterns = tsNodes.filetype[fs] or tsNodes.default,
         bufnr = buffer.bufnr,

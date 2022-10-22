@@ -76,7 +76,6 @@ return function()
     vim.g.markdown_folding = 1
     vim.g.tex_conceal = 'abdmgs'
     vim.g.tex_flavor = 'latex'
-    vim.g.symbols_outline = { auto_preview = false, width = 40 }
 
     -- ************** Disable builtin plugins ---------------------------------------------------------
     for _, plugin in pairs(require('r.utils.tables').disabled_builtins) do

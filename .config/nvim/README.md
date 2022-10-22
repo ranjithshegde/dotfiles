@@ -27,36 +27,36 @@ Note: Until comprehensive documentation is in-place, explore the config source c
 
 ### Terminal management
 
-- [Ranger](lua/r/utils/extensions.lua#109) integrated as file-picker
-- [Terminal](lua/r/utils/extensions.lua#130) Persistent and toggleable
+- [Ranger](lua/r/extensions/init.lua#109) integrated as file-picker
+- [Terminal](lua/r/extensions/init.lua#130) Persistent and toggleable
 - [REPL](lua/r/settings/autocmds.lua#169) toggleable REPL for supported languages
 
 ### Project management
 
-- [Projects](lua/r/utils/project/init.lua) Create and access project system for some languages
+- [Projects](lua/r/extensions/project/init.lua) Create and access project system for some languages
 - [Compiler](lua/r/utils/compiler.lua) `overseer.nvim` to a full compile suite
-- [Scratchpad](lua/r/utils/project/scratchpad.lua) Quick and saveable scratchpad for some languages
+- [Scratchpad](lua/r/extensions/project/scratchpad.lua) Quick and saveable scratchpad for some languages
 
 ### Editor extensions
 
-- [CamelCase](lua/r/utils/camel.lua) motion
+- [CamelCase](lua/r/extensions/camel.lua) motion
 - [Unimpaired](lua/r/mappings/pairs.lua) keybindings with features
-- [QuickFix](lua/r/utils/qf.lua) management
-- [WordProcessor](lua/r/utils/extensions.lua#90) mode
+- [QuickFix](lua/r/extensions/qf.lua) management
+- [WordProcessor](lua/r/extensions/init.lua#90) mode
 
 ### LSP extensions
 
-- [Ltex extensions](lua/r/utils/ls.lua#282) out-of-spec code actions for ltex LSP
+- [Ltex extensions](lua/r/lsp/ltex.lua) out-of-spec code actions for ltex LSP
 - [Lsp Rename](lua/r/lsp/rename.lua) Incremental and previewable
 - [signature help](lua/r/lsp/signature.lua) Auto-popup with snippet support
-- [Diagnostics](lua/r/utils/diagnostics/init.lua) Configuire and toggle
-- [Lsp Capabilities](lua/r/utils/ls.lua#37) view in md/json popup
+- [Diagnostics](lua/r/extensions/diagnostics/init.lua) Configuire and toggle
+- [Lsp Capabilities](lua/r/lsp/capabilities.lua) view in md/json popup
 
 ### Eye candy extensions
 
-- [Statusline](lua/r/settings/statusline.lua) Event based subscription model for every component
-- [Toggle](lua/r/utils/extensions.lua#45) transparent background
-- [Context](lua/r/settings/statusline.lua#155) nvim-gps like treesitter statusline
+- [Statusline](lua/r/plugins/statusline.lua) Event based subscription model for every component
+- [Toggle](lua/r/extensions/init.lua#45) transparent background
+- [Context](lua/r/plugins/statusline.lua#155) nvim-gps like treesitter statusline
 - [winbar](lua/r/settings/winbar.lua) only when it makes sense
 - [Decorations](lua/r/settings/autocmds.lua#50) relativenumber, cursorline, foldcolumn only when it makes sense
 

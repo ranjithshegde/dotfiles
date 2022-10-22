@@ -236,7 +236,7 @@ id.PluginLoad = augroup('PluginLoad', opts)
 -- ************** Packer compile ---------------------------------------
 aucmd('BufWritePost', {
     group = id.PluginLoad,
-    pattern = 'plugins.lua',
+    pattern = 'packer.lua',
     callback = function()
         vim.cmd.source()
         require('packer').compile()
