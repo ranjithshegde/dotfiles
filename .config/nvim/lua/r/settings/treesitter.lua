@@ -14,7 +14,7 @@ function ts.init()
     parser_config.org = {
         install_info = {
             url = 'https://github.com/milisims/tree-sitter-org',
-            revision = 'eb1e080361ad885e3885d1037d9b57f81b579de8',
+            revision = '081179c52b3e8175af62b9b91dc099d010c38770',
             files = { 'src/parser.c', 'src/scanner.cc' },
         },
         filetype = 'org',

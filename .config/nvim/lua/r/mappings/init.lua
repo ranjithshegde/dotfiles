@@ -73,18 +73,20 @@ local function config_files()
                     c = { open 'lua/r/lsp/clangd.lua', 'Clangd' },
                     r = { open 'lua/r/lsp/rename.lua', 'Incremental rename' },
                 },
+                e = {
+                    name = 'Custom plugins and extensions',
+                    e = { open 'lua/r/extensions/init.lua', 'General' },
+                    d = { open 'lua/r/extensions/diagnostics/init.lua', 'Diagnostic extensions' },
+                    q = { open 'lua/r/extensions/qf.lua', 'Quickfix and Loclist' },
+                    s = { open 'lua/r/extensions/project/scratchpad.lua', 'ScratchPad' },
+                    p = { open 'lua/r/extensions/project/init.lua', 'Initiate project' },
+                    m = { open 'lua/r/extensions/camel.lua', 'CamelCaseMotion' },
+                },
                 u = {
                     name = 'Utilities in lua',
                     u = { open 'lua/r/utils/init.lua', 'General' },
                     c = { open 'lua/r/utils/compiler.lua', 'Cpp Workstation' },
-                    d = { open 'lua/r/utils/diagnostics/init.lua', 'Diagnostic extensions' },
-                    l = { open 'lua/r/utils/ls.lua', 'Langauge Server extensions' },
-                    q = { open 'lua/r/utils/qf.lua', 'Quickfix and Loclist' },
-                    f = { open 'lua/r/utils/extensions.lua', 'Function extensions' },
-                    s = { open 'lua/r/utils/project/scratchpad.lua', 'ScratchPad' },
-                    p = { open 'lua/r/utils/project/init.lua', 'Initiate project' },
                     t = { open 'lua/r/utils/tables.lua', 'Filter tables' },
-                    m = { open 'lua/r/utils/camel.lua', 'CamelCaseMotion' },
                 },
                 f = {
                     name = 'Filetype Plugins',
@@ -150,14 +152,14 @@ return function()
 
     --Quickfix
     map('n', '-', function()
-        require('r.utils.qf').toggle_qf 'q'
+        require('r.extensions.qf').toggle_qf 'q'
     end, { desc = 'Toggle quickfix' })
     map('n', '_', function()
-        require('r.utils.qf').toggle_qf 'l'
+        require('r.extensions.qf').toggle_qf 'l'
     end, { desc = 'Toggle loclist' })
     -- ScratchPad
     map('n', '<leader>S', function()
-        require 'r.utils.project.scratchpad' 'tab'
+        require 'r.extensions.project.scratchpad' 'tab'
     end, { desc = 'Open ScratchPad' })
 
     -- Misc
@@ -197,7 +199,7 @@ return function()
 
     map({ 'n', 't' }, '<F9>', function()
         vim.cmd.stopinsert()
-        require('r.utils.extensions').toggleTerm('zsh', 'shell', 1)
+        require('r.extensions').toggleTerm('zsh', 'shell', 1)
     end, {
         desc = 'Toggle current/default terminal',
     })

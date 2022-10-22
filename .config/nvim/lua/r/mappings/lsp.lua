@@ -61,9 +61,9 @@ function lspmap.lsp(client, bufnr)
             },
             l = {
                 name = 'Toggle diagnostics',
-                v = { require('r.utils.diagnostics').toggle_virtual_text, 'Virtual text' },
-                s = { require('r.utils.diagnostics').toggle_signs, 'Sings' },
-                u = { require('r.utils.diagnostics').toggle_underline, 'Underline' },
+                v = { require('r.extensions.diagnostics').toggle_virtual_text, 'Virtual text' },
+                s = { require('r.extensions.diagnostics').toggle_signs, 'Sings' },
+                u = { require('r.extensions.diagnostics').toggle_underline, 'Underline' },
             },
             w = {
                 name = 'Workspace',

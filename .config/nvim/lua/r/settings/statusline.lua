@@ -223,7 +223,7 @@ local function git_changes(_, _)
 end
 
 --*********************************** Lsp status  -----------------------
-local diagnostics = require('el.diagnostic').make_buffer(require('r.utils.diagnostics.format').formatter)
+local diagnostics = require('el.diagnostic').make_buffer(require('r.extensions.diagnostics.format').formatter)
 
 local tsNodes = require('r.utils.tables').tsNodes
 
@@ -258,7 +258,12 @@ end)
 --*********************************** Status config ---------------------
 return function()
     require('el').reset_windows()
-    require('r.utils.diagnostics.format').sethl('DiagnosticError', 'DiagnosticWarn', 'DiagnosticHint', 'DiagnosticInfo')
+    require('r.extensions.diagnostics.format').sethl(
+        'DiagnosticError',
+        'DiagnosticWarn',
+        'DiagnosticHint',
+        'DiagnosticInfo'
+    )
 
     vim.api.nvim_create_autocmd('ColorScheme', {
         group = id.StatusLineSetup,

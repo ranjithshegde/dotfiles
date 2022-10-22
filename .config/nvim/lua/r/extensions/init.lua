@@ -8,40 +8,41 @@ function extensions.diagnostics(bufnr)
     require('r.mappings.lsp').diagnostic(bufnr)
     local cmd = vim.api.nvim_buf_create_user_command
     local complete = function()
-        return require('r.utils.ls').getClientNames()
+        return require('r.utils').get_client_names()
     end
+    local diagnostics = require 'r.extensions.diagnostics'
 
     cmd(bufnr, 'ToggleVirtual', function(opts)
-        require('r.utils.diagnostics').toggle_virtual_text(opts.args)
+        diagnostics.toggle_virtual_text(opts.args)
     end, { nargs = '*', complete = complete, desc = 'Toggle diagnostic virtual text for a client' })
 
     cmd(bufnr, 'ToggleSigns', function(opts)
-        require('r.utils.diagnostics').toggle_signs(opts.args)
+        diagnostics.toggle_signs(opts.args)
     end, { nargs = '*', complete = complete, desc = 'Toggle diagnostic signs for a client' })
 
     cmd(bufnr, 'ToggleUnderline', function(opts)
-        require('r.utils.diagnostics').toggle_underline(opts.args)
+        diagnostics.toggle_underline(opts.args)
     end, { nargs = '*', complete = complete, desc = 'Toggle diagnostic underlines for a client' })
 
     cmd(bufnr, 'ToggleAllDiagnostics', function(opts)
-        require('r.utils.diagnostics').toggle_all_diagnostics(opts.args)
+        diagnostics.toggle_all_diagnostics(opts.args)
     end, { nargs = '*', complete = complete, desc = 'Toggle all diagnostic options for a client' })
 
     cmd(bufnr, 'DisableDiagnostics', function(opts)
-        require('r.utils.diagnostics').turn_off_diagnostics(opts.args)
+        diagnostics.turn_off_diagnostics(opts.args)
     end, { nargs = '*', complete = complete, desc = 'Disable all diagnostic options for a client' })
 
     cmd(bufnr, 'EnableDiagnostics', function(opts)
-        require('r.utils.diagnostics').turn_on_diagnostics(opts.args)
+        diagnostics.turn_on_diagnostics(opts.args)
     end, { nargs = '*', complete = complete, desc = 'Enable all diagnostic options for a client' })
 
     cmd(bufnr, 'DefaultDiagnostics', function(opts)
-        require('r.utils.diagnostics').turn_on_diagnostics_default(opts.args)
+        diagnostics.turn_on_diagnostics_default(opts.args)
     end, { nargs = '*', complete = complete, desc = 'Enable default diagnostic options for a client' })
 end
 
----Toggle background transparency for dark colorschemes
 local transparent = false
+---Toggle background transparency for dark colorschemes
 function extensions.trans_background()
     local colo = vim.api.nvim_exec('colo', true)
     if colo == 'dayfox' or colo == 'dawnfox' then
@@ -64,7 +65,7 @@ end
 function extensions.CamelCase()
     local map = vim.keymap.set
     local umap = vim.keymap.del
-    require('r.utils.camel').init()
+    require('r.extensions.camel').init()
 
     map('', 'w', '<Plug>CamelCaseMotion_w')
     map('', 'b', '<Plug>CamelCaseMotion_b')

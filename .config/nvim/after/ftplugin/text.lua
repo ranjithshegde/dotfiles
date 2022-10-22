@@ -1,2 +1,2 @@
 vim.bo.textwidth = 130
-require('r.utils.extensions').WordProcessor()
+require('r.extensions').WordProcessor()

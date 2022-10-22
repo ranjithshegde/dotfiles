@@ -175,4 +175,16 @@ function utils.cycle_colors()
     vim.cmd.colorscheme(colors[counter])
 end
 
+---Get a table with names of currnetly active language server names
+---@return table Active clients
+function utils.get_client_names()
+    local buf_clients = vim.lsp.get_active_clients()
+
+    local buf_client_names = {}
+    for _, client in pairs(buf_clients) do
+        table.insert(buf_client_names, client.name)
+    end
+    return buf_client_names
+end
+
 return utils
