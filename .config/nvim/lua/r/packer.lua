@@ -121,7 +121,7 @@ return require('packer').startup {
         use {
             'mfussenegger/nvim-dap',
             config = function()
-                require('r.debugger').setup()
+                require('r.debuggers').setup()
             end,
             opt = true,
             requires = 'rcarriga/nvim-dap-ui',

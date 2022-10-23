@@ -1,0 +1,141 @@
+local configs = {}
+
+configs.cpp = {
+    -- cpptools with gdb
+    {
+        name = 'Launch vscode-gdb',
+        type = 'cppdbg',
+        request = 'launch',
+        program = function()
+            if vim.b.debugBin then
+                return vim.b.debugBin
+            else
+                return vim.fn.input('Path to executable: ', vim.fn.getcwd() .. '/', 'file')
+            end
+        end,
+        -- externalConsole = true,
+        visualizerFile = vim.env.XDG_DATA_HOME .. '/debug-adapters/natvis/concurrency.natvis',
+        cwd = '${workspaceFolder}',
+        stopOnEntry = false,
+        showDisplayString = true,
+        MIMode = 'gdb',
+        miDebuggerPath = '/usr/bin/gdb',
+        setupCommands = {
+            { text = '-enable-pretty-printing', description = 'enable pretty printing', ignoreFailures = true },
+        },
+    },
+    -- cpptools with gdb on nVidia
+    {
+        name = 'Launch vscode-gdb on Nvidia',
+        type = 'cppdbg',
+        request = 'launch',
+        program = function()
+            if vim.b.debugBin then
+                return vim.b.debugBin
+            else
+                return vim.fn.input('Path to executable: ', vim.fn.getcwd() .. '/', 'file')
+            end
+        end,
+        -- externalConsole = true,
+        visualizerFile = vim.env.XDG_DATA_HOME .. '/debug-adapters/natvis/concurrency.natvis',
+        cwd = '${workspaceFolder}',
+        stopOnEntry = false,
+        showDisplayString = true,
+        MIMode = 'gdb',
+        miDebuggerPath = '/usr/local/bin/prime-debug',
+        setupCommands = {
+            { text = '-enable-pretty-printing', description = 'enable pretty printing', ignoreFailures = true },
+        },
+    },
+    -- lldb-native
+    {
+        name = 'Launch lldb',
+        type = 'lldb',
+        request = 'launch',
+        program = function()
+            if vim.b.debugBin then
+                return vim.b.debugBin
+            else
+                return vim.fn.input('Path to executable: ', vim.fn.getcwd() .. '/', 'file')
+            end
+        end,
+        cwd = '${workspaceFolder}',
+        stopOnEntry = false,
+        args = {},
+        env = function()
+            local variables = {}
+            for k, v in pairs(vim.fn.environ()) do
+                table.insert(variables, string.format('%s=%s', k, v))
+            end
+            return variables
+        end,
+        runInTerminal = false,
+    },
+    -- lldb-vscode
+    {
+        name = 'codelldb',
+        type = 'codelldb',
+        request = 'launch',
+        program = function()
+            return vim.fn.input('Path to executable: ', vim.fn.getcwd() .. '/', 'file')
+        end,
+        cwd = '${workspaceFolder}',
+        stopOnEntry = false,
+    },
+}
+
+configs.c = configs.cpp
+
+configs.python = {
+    {
+        type = 'python',
+        request = 'launch',
+        name = 'Launch file',
+
+        program = '${file}',
+        pythonPath = function()
+            local cwd = vim.loop.cwd()
+            if vim.fn.executable(cwd .. '/venv/bin/python') == 1 then
+                return cwd .. '/venv/bin/python'
+            elseif vim.fn.executable(cwd .. '/.venv/bin/python') == 1 then
+                return cwd .. '/.venv/bin/python'
+            else
+                return '/usr/bin/python'
+            end
+        end,
+    },
+}
+
+configs.javascript = {
+    {
+        name = 'Launch',
+        type = 'node2',
+        request = 'launch',
+        program = '${file}',
+        cwd = vim.loop.cwd(),
+        sourceMaps = true,
+        protocol = 'inspector',
+        console = 'integratedTerminal',
+    },
+    {
+        -- For this to work you need to make sure the node process is started with the `--inspect` flag.
+        name = 'Attach to process',
+        type = 'node2',
+        request = 'attach',
+        processId = require('dap.utils').pick_process,
+    },
+}
+
+configs.dart = {
+    {
+        type = 'dart',
+        request = 'launch',
+        name = 'Launch flutter',
+        dartSdkPath = '/opt/flutter/bin/cache/dart-sdk/',
+        flutterSdkPath = '/opt/flutter/',
+        program = '${workspaceFolder}/lib/main.dart',
+        cwd = '${workspaceFolder}',
+    },
+}
+
+return configs

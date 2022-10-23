@@ -39,7 +39,39 @@ local function config_files()
         ['<leader>'] = {
             a = {
                 name = 'vimrc files',
+                -- Update packer plugins
+                P = { require('packer').sync, 'Update packages' },
+                -- Reload config
+                R = { require('r.utils').restart, 'Reload Vim' },
+
+                -- Internal `after/plugin` file
+                c = { open 'after/plugin/plugin.lua', 'User defined commands' },
+                -- Main vimRC
+                r = { open 'init.lua', 'VimRC' },
+                -- Packer config and plugin list
                 p = { open 'lua/r/packer.lua', 'Packer config' },
+
+                -- Vim options
+                o = {
+                    name = 'Options',
+                    o = { open 'lua/r/settings/init.lua', 'vim options' },
+                    a = { open 'lua/r/settings/autocmds.lua', 'Autocmds' },
+                    l = { open 'lua/r/settings/tabline.lua', 'Tabline' },
+                    w = { open 'lua/r/settings/winbar.lua', 'Winbar' },
+                },
+
+                -- Plugin settings and configurations
+                s = {
+                    name = 'Plugin settings',
+                    t = { open 'lua/r/plugins/telescope.lua', 'Telescope' },
+                    s = { open 'lua/r/plugins/treesitter.lua', 'Treesitter' },
+                    f = { open 'lua/r/plugins/folds.lua', 'Foldtext' },
+                    c = { open 'lua/r/plugins/completion.lua', 'Completion' },
+                    p = { open 'lua/r/plugins/init.lua', 'Small configs' },
+                    e = { open 'lua/r/plugins/statusline.lua', 'Express statusline' },
+                },
+
+                -- All keymaps (plugin and internal)
                 m = {
                     name = 'Mappings',
                     m = { open 'lua/r/mappings/init.lua', 'Common' },
@@ -51,22 +83,8 @@ local function config_files()
                     g = { open 'lua/r/mappings/git.lua', 'Git' },
                     p = { open 'lua/r/mappings/pairs.lua', 'Unimpaired' },
                 },
-                s = {
-                    name = 'Plugin settings',
-                    t = { open 'lua/r/plugins/telescope.lua', 'Telescope' },
-                    s = { open 'lua/r/plugins/treesitter.lua', 'Treesitter' },
-                    f = { open 'lua/r/plugins/folds.lua', 'Foldtext' },
-                    c = { open 'lua/r/plugins/completion.lua', 'Completion' },
-                    p = { open 'lua/r/plugins/init.lua', 'Small configs' },
-                    e = { open 'lua/r/plugins/statusline.lua', 'Express statusline' },
-                },
-                o = {
-                    name = 'Options',
-                    o = { open 'lua/r/settings/init.lua', 'vim options' },
-                    a = { open 'lua/r/settings/autocmds.lua', 'Autocmds' },
-                    l = { open 'lua/r/settings/tabline.lua', 'Tabline' },
-                    w = { open 'lua/r/settings/winbar.lua', 'Winbar' },
-                },
+
+                -- LSP settings and extensions
                 l = {
                     name = 'Lsp',
                     s = { open 'lua/r/lsp/init.lua', 'Functions and Inits' },
@@ -75,6 +93,16 @@ local function config_files()
                     c = { open 'lua/r/lsp/clangd.lua', 'Clangd' },
                     r = { open 'lua/r/lsp/rename.lua', 'Incremental rename' },
                 },
+
+                -- Dap configs and tools
+                d = {
+                    name = 'Debug adapter protocol',
+                    a = { open 'lua/r/debuggers/adapters.lua', 'Adapters' },
+                    c = { open 'lua/r/debuggers/configs.lua', 'Configurations' },
+                    d = { open 'lua/r/debuggers/init.lua', 'DAP' },
+                },
+
+                -- Local plugins and extensions
                 e = {
                     name = 'Custom plugins and extensions',
                     c = { open 'lua/r/extensions/cpp.lua', 'Cpp Workstation' },
@@ -85,11 +113,15 @@ local function config_files()
                     p = { open 'lua/r/extensions/project/init.lua', 'Initiate project' },
                     m = { open 'lua/r/extensions/camel.lua', 'CamelCaseMotion' },
                 },
+
+                -- Basic utility functions
                 u = {
                     name = 'Common & utility functions',
                     u = { open 'lua/r/utils/init.lua', 'General' },
                     t = { open 'lua/r/utils/tables.lua', 'Filter tables' },
                 },
+
+                -- Filetype specific configs
                 f = {
                     name = 'Filetype Plugins',
                     c = { open 'after/ftplugin/cpp.lua', 'Cpp' },
@@ -100,16 +132,13 @@ local function config_files()
                     t = { open 'after/ftplugin/tex.lua', 'Latex' },
                     f = { open 'filetype.lua', 'Ftdetect' },
                 },
+
+                -- Treesitter highlight queries
                 q = {
                     name = 'Treesitter queries',
                     m = { open 'after/queries/markdown/highlights.scm', 'Markdown' },
                     o = { open 'after/queries/org/highlights.scm', 'Org' },
                 },
-                d = { open 'lua/r/debugger.lua', 'Debug adapter protocol' },
-                c = { open 'after/plugin/plugin.lua', 'User defined commands' },
-                r = { open 'init.lua', 'VimRC' },
-                P = { require('packer').sync, 'Update packages' },
-                R = { require('r.utils').restart, 'Reload Vim' },
             },
         },
     }

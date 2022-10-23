@@ -84,7 +84,7 @@ end
 
 -- Launch debuger
 function clang.termdebug()
-    require('r.debugger').init()
+    require('r.debuggers').init()
     require('dap').continue()
 end
 

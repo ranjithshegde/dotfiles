@@ -23,7 +23,7 @@ function lspmap.lsp(client, bufnr)
     vim.keymap.set({ 'n', 'v' }, ',a', vim.lsp.buf.code_action, { desc = 'Code actions for buffer', buffer = bufnr })
 
     wk.register({
-        ['<F7>'] = { require('r.debugger').init, 'Initialize Debugger adapter' },
+        ['<F7>'] = { require('r.debuggers').init, 'Initialize debugger adapter' },
         [','] = {
             name = 'Lsp functions',
             s = { vim.lsp.buf.signature_help, 'Show signature' },
@@ -132,9 +132,9 @@ function lspmap.debug()
         ['<leader>d'] = {
             name = 'debug',
             ['.'] = { require('dap').terminate, 'End' },
-            ['?'] = { require('r.debugger').frames.toggle, 'Frames' },
-            ['/'] = { require('r.debugger').scopes.toggle, 'Scopes' },
-            t = { require('r.debugger').threads.toggle, 'threads' },
+            ['?'] = { require('r.debuggers').frames.toggle, 'Frames' },
+            ['/'] = { require('r.debuggers').scopes.toggle, 'Scopes' },
+            t = { require('r.debuggers').threads.toggle, 'threads' },
             u = { require('dapui').toggle, 'Toggle all UI' },
             c = { require('dap').continue, 'continue to next breakpoint' },
             n = { require('dap').step_over, 'step over' },
@@ -156,7 +156,7 @@ function lspmap.debug()
 
     map({ 'n', 'v' }, '<leader>do', require('dapui').float_element, { buffer = true, desc = 'Open floating elements' })
 
-    map({ 'n', 'v', 's' }, '<leader>dE', require('r.debugger').exp.toggle, { buffer = true, desc = 'Expressions' })
+    map({ 'n', 'v', 's' }, '<leader>dE', require('r.debuggers').exp.toggle, { buffer = true, desc = 'Expressions' })
 end
 
 return lspmap
