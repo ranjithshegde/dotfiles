@@ -88,10 +88,11 @@ local function config_files()
                 l = {
                     name = 'Lsp',
                     s = { open 'lua/r/lsp/init.lua', 'Functions and Inits' },
-                    l = { open 'lua/r/lsp/sumneko.lua', 'Sumneko' },
                     j = { open 'lua/r/lsp/signature.lua', 'Signature auto Popup' },
-                    c = { open 'lua/r/lsp/clangd.lua', 'Clangd' },
                     r = { open 'lua/r/lsp/rename.lua', 'Incremental rename' },
+                    c = { open 'lua/r/lsp/clangd.lua', 'Clangd' },
+                    l = { open 'lua/r/lsp/ltex.lua', 'Ltex LS' },
+                    t = { open 'lua/r/lsp/texlab.lua', 'Texlab LSP' },
                 },
 
                 -- Dap configs and tools
@@ -157,12 +158,6 @@ return function()
     map('n', '<C-,>', ',')
     map('n', '<C-i>', '<C-i>', { desc = 'Dont map C-i to Tab' })
     map({ 'n', 'i', 's' }, '<BS>', '<BS>', { desc = 'Dont map C-h to backspace' })
-    map('n', '<leader>p', function()
-        vim.cmd.vs()
-        vim.cmd.enew()
-        vim.cmd "put =execute('messages')"
-        vim.cmd.messages 'clear'
-    end, { desc = 'Save messages in a new buffer' })
 
     --line movement
     map('x', 'K', ":move '<-2<CR>gv", { desc = 'Move line up' })
@@ -215,8 +210,7 @@ return function()
 
     map('n', 'gm', function()
         local virt = vim.fn.virtcol '$'
-        virt = virt / 2
-        vim.fn.cursor { 0, virt }
+        vim.fn.cursor { 0, virt / 2 }
     end, { desc = 'Move cursor to middle of the line' })
 
     -- Terminals and Jobs

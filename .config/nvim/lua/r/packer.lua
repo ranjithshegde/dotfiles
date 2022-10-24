@@ -284,7 +284,7 @@ return require('packer').startup {
             {
                 'L3MON4D3/LuaSnip',
                 run = 'make install_jsregexp',
-                event = 'InsertEnter',
+                opt = true,
                 config = function()
                     require('r.plugins.completion').luasnip()
                 end,

@@ -136,7 +136,9 @@ function completion.luasnip()
         pattern = '*.scd, *.sc, *.sc_help, *.quark',
         group = vim.g.au_id.LspSettngs,
         callback = function()
-            require('luasnip').add_snippets('supercollider', require('scnvim/utils').get_snippets())
+            vim.schedule(function()
+                require('luasnip').add_snippets('supercollider', require('scnvim/utils').get_snippets())
+            end)
         end,
         once = true,
         desc = 'Lazy load supercollider snippets on filetype',

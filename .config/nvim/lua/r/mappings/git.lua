@@ -14,17 +14,17 @@ function g.fugitive()
     require('which-key').register {
         ['<leader>g'] = {
             name = 'git functions',
-            L = { vim.cmd.Gclog, 'commit CLog' },
-            g = { git_command(), 'Git window' },
-            c = { git_command { 'commit' }, 'commit changes' },
-            C = { git_command { 'commit %' }, 'commit current buffer' },
             a = { git_command { 'add %' }, 'add current buffer' },
-            d = { git_command { 'difftool' }, 'launch difftool' },
             b = { git_command { 'branch -a' }, 'branch list' },
             B = { git_command { 'blame' }, 'toggle blame' },
+            c = { git_command { 'commit' }, 'commit changes' },
+            C = { git_command { 'commit %' }, 'commit current buffer' },
+            d = { git_command { 'difftool' }, 'launch difftool' },
+            g = { git_command(), 'Git window' },
+            l = { git_command { 'log' }, 'commit history' },
+            L = { vim.cmd.Gclog, 'commit CLog' },
             p = { git_command { 'push' }, 'push commits' },
             P = { git_command { 'push -f' }, 'force push commits' },
-            l = { git_command { 'log' }, 'commit history' },
         },
     }
 end

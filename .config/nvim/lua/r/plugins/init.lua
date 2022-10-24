@@ -11,6 +11,7 @@ function plugins.neodev()
         override = function(_, library)
             library.enabled = true
         end,
+        lspconfig = false,
     }
 end
 
@@ -39,7 +40,6 @@ end
 ---Fancy UI
 function plugins.ui()
     require('noice').setup {
-        -- debug = true,
         cmdline = {
             view = 'cmdline',
             view_search = 'cmdline',
@@ -156,6 +156,9 @@ function plugins.scnvim()
             if not require('scnvim').is_running() then
                 require('scnvim').start()
                 vim.api.nvim_input '<CR>'
+            end
+            if not package.loaded.luasnip then
+                require('packer').loader 'LuaSnip'
             end
         end,
         desc = 'Load SCNvim settings and launch interpreter on filetype',

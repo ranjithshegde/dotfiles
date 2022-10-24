@@ -202,10 +202,7 @@ aucmd('LspDetach', {
         auclear { group = vim.g.au_id['LspAutoFormat_' .. client.name .. '_' .. args.buf], buffer = args.buf }
         auclear { group = vim.g.au_id['lsp_signature_help_' .. client.name .. '_' .. args.buf] }
         auclear { group = vim.g.au_id['lsp_signature_snip_' .. client.name .. '_' .. args.buf] }
-        auclear {
-            group = vim.g.au_id['LspHighlightSymbols_' .. client.name .. '_' .. args.buf],
-            buffer = args.buf,
-        }
+        auclear { group = vim.g.au_id['LspHighlightSymbols_' .. client.name .. '_' .. args.buf], buffer = args.buf }
     end,
     desc = 'Clear AUGroups when LSP detaches',
 })
@@ -336,6 +333,24 @@ aucmd('FileType', {
         end, { noremap = true, silent = true })
     end,
     desc = 'Make harpoon open in splits',
+})
+-- ************** Load autocompletion
+aucmd('InsertEnter', {
+    group = id.PluginLoad,
+    callback = function(args)
+        if
+            vim.tbl_contains(require('r.utils.tables').ignoreFiles, vim.bo[args.buf].filetype)
+            or vim.fn.win_gettype() == 'popup'
+        then
+            return
+        elseif package.loaded.luasnip then
+            vim.api.nvim_del_autocmd(args.id)
+            return
+        end
+        vim.api.nvim_input '<Esc>'
+        require('packer').loader 'LuaSnip'
+        vim.schedule(vim.cmd.startinsert)
+    end,
 })
 
 ------------------------------------------------------------------------

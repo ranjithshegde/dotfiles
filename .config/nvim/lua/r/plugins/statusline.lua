@@ -13,9 +13,9 @@ local subscribe = require 'el.subscribe'
 local id = {}
 id.StatusLineSetup = vim.api.nvim_create_augroup('StatusLineSetup', { clear = true })
 
-local function set_hls()
-    local cursor_hl = vim.api.nvim_get_hl_by_name('MiniStatuslineModeVisual', true)
-    vim.api.nvim_set_hl(0, 'ScrollSep', { fg = cursor_hl.background, bg = cursor_hl.foreground })
+local function reverse_hls(hl1, hl2)
+    local cursor_hl = vim.api.nvim_get_hl_by_name(hl1, true)
+    vim.api.nvim_set_hl(0, hl2, { fg = cursor_hl.background, bg = cursor_hl.foreground })
 end
 
 --*********************************** Basics ----------------------------
@@ -128,8 +128,7 @@ local mode = subscribe.buf_autocmd('el_mode', 'ModeChanged', function()
     local current_mode = get_mode()
     local current_hl = mode_to_highlight[current_mode]
     if current_hl then
-        local current_hl_state = vim.api.nvim_get_hl_by_name(current_hl, true)
-        vim.api.nvim_set_hl(0, 'ModeSep', { fg = current_hl_state.background, bg = current_hl_state.foreground })
+        reverse_hls(current_hl, 'ModeSep')
         current_hl = '%#' .. current_hl .. '# '
         return current_hl .. current_mode .. ' %#ModeSep#' .. right_separator .. ' %##'
     end
@@ -268,7 +267,7 @@ return function()
     vim.api.nvim_create_autocmd('ColorScheme', {
         group = id.StatusLineSetup,
         callback = function()
-            set_hls()
+            reverse_hls('MiniStatuslineModeVisual', 'ScrollSep')
             require('el').reset_windows()
         end,
     })

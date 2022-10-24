@@ -156,6 +156,10 @@ function lsp.attach(client, bufnr)
         require 'r.lsp.capabilities',
         { desc = 'Display Language Server capabilities' }
     )
+
+    if not package.loaded.luasnip then
+        require('packer').loader 'LuaSnip'
+    end
 end
 
 ------------------------------------------------------------------------
@@ -208,7 +212,8 @@ function lsp.servers()
         },
         sumneko_lua = {
             capabilities = lsp.capabilities(),
-            before_init = function(_, config)
+            before_init = function(params, config)
+                require('neodev.lsp').before_init(params, config)
                 local file = vim.fn.expand '%:t:r'
                 if vim.loop.fs_stat(file .. '.pd_lua') then
                     table.insert(config.settings.Lua.workspace.library, '/usr/lib/pd/extra/pdlua')
@@ -275,33 +280,33 @@ end
 
 function lsp.lintFormat()
     require('packer').loader 'null-ls.nvim'
-    local null_ls = require 'null-ls'
+    local nb = require 'null-ls.builtins'
     local sources = {
-        null_ls.builtins.code_actions.shellcheck,
+        nb.code_actions.shellcheck,
 
-        null_ls.builtins.diagnostics.checkmake,
-        null_ls.builtins.diagnostics.flake8,
-        null_ls.builtins.diagnostics.shellcheck,
-        null_ls.builtins.diagnostics.zsh,
-        null_ls.builtins.diagnostics.stylelint,
+        nb.diagnostics.checkmake,
+        nb.diagnostics.flake8,
+        nb.diagnostics.shellcheck,
+        nb.diagnostics.zsh,
+        nb.diagnostics.stylelint,
 
-        null_ls.builtins.formatting.black,
-        null_ls.builtins.formatting.cbfmt,
-        null_ls.builtins.formatting.isort,
-        null_ls.builtins.formatting.shfmt,
-        null_ls.builtins.formatting.stylua,
-        null_ls.builtins.formatting.clang_format.with {
+        nb.formatting.black,
+        nb.formatting.cbfmt,
+        nb.formatting.isort,
+        nb.formatting.shfmt,
+        nb.formatting.stylua,
+        nb.formatting.clang_format.with {
             filetypes = { 'glsl' },
         },
-        null_ls.builtins.formatting.cmake_format.with {
+        nb.formatting.cmake_format.with {
             extra_args = { '--config-file', vim.env.XDG_CONFIG_HOME .. '/cmake-format.json', '--' },
         },
-        null_ls.builtins.formatting.prettier.with {
+        nb.formatting.prettier.with {
             extra_filetypes = { 'toml' },
         },
     }
-    null_ls.setup { sources = sources }
-    null_ls.register(glsl())
+    require('null-ls').setup { sources = sources }
+    require('null-ls').register(glsl())
 end
 
 ------------------------------------------------------------------------
