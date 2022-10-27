@@ -92,7 +92,7 @@ return require('packer').startup {
             'folke/noice.nvim',
             event = 'VimEnter',
             config = function()
-                require('r.plugins').ui()
+                require 'r.plugins.noice'
             end,
             requires = { 'MunifTanjim/nui.nvim', module = 'nui' },
         }

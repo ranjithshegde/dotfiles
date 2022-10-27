@@ -69,6 +69,7 @@ local function config_files()
                     c = { open 'lua/r/plugins/completion.lua', 'Completion' },
                     p = { open 'lua/r/plugins/init.lua', 'Small configs' },
                     e = { open 'lua/r/plugins/statusline.lua', 'Express statusline' },
+                    n = { open 'lua/r/plugins/noice.lua', 'Noice UI' },
                 },
 
                 -- All keymaps (plugin and internal)
@@ -88,7 +89,6 @@ local function config_files()
                 l = {
                     name = 'Lsp',
                     s = { open 'lua/r/lsp/init.lua', 'Functions and Inits' },
-                    j = { open 'lua/r/lsp/signature.lua', 'Signature auto Popup' },
                     r = { open 'lua/r/lsp/rename.lua', 'Incremental rename' },
                     c = { open 'lua/r/lsp/clangd.lua', 'Clangd' },
                     l = { open 'lua/r/lsp/ltex.lua', 'Ltex LS' },

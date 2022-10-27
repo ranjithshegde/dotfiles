@@ -65,35 +65,6 @@ function plugins.org()
     }
 end
 
----Fancy UI
-function plugins.ui()
-    require('noice').setup {
-        cmdline = {
-            view = 'cmdline',
-            view_search = 'cmdline',
-            format = {
-                inc_rename = { pattern = '^:%s*IncRename%s+', icon = ' ', ft = 'text' },
-            },
-        },
-        presets = {
-            long_message_to_split = true,
-        },
-        lsp = {
-            -- hover = { enabled = true, opts = { border = { style = 'single' } } },
-            -- signature = { enabled = true, opts = { border = { style = 'rounded' } } },
-            -- documentation = {
-            --     opts = {
-            --         position = { row = 2 },
-            --         win_options = {
-            --             concealcursor = '',
-            --             winhighlight = { Normal = 'LspFloat', FloatBorder = 'LspFloatBorder' },
-            --         },
-            --     },
-            -- },
-        },
-    }
-end
-
 ---nvim-surround local and global config
 function plugins.surround()
     local ft = vim.bo.filetype

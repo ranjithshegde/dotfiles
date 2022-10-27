@@ -19,45 +19,6 @@ end
 
 ---**************************** LSP AuGroups and Handlers
 local id = {}
-function lsp.settings()
-    id.SetDiagnosticFuncs = augroup('SetDiagnosticFuncs', opts)
-    aucmd('DiagnosticChanged', {
-        group = id.SetDiagnosticFuncs,
-        callback = function()
-            vim.diagnostic.setloclist { open = false }
-        end,
-        desc = 'Send diagnostics to loclist on new errors',
-    })
-
-    -- Signature help always on top
-    local function signature(_, result, ctx, config)
-        local bufnr, winner = vim.lsp.handlers.signature_help(_, result, ctx, config)
-        local current_cursor_line = vim.api.nvim_win_get_cursor(0)[1]
-
-        if winner then
-            if current_cursor_line > 3 then
-                vim.api.nvim_win_set_config(winner, {
-                    anchor = 'SW',
-                    relative = 'cursor',
-                    row = 0,
-                    col = -1,
-                    border = 'rounded',
-                    focusable = false,
-                })
-            end
-        else
-            vim.notify 'No signature help available'
-        end
-
-        if bufnr and winner then
-            return bufnr, winner
-        end
-    end
-
-    -- borders for floating windows
-    vim.lsp.handlers['textDocument/hover'] = vim.lsp.with(vim.lsp.handlers.hover, { border = 'double' })
-    vim.lsp.handlers['textDocument/signatureHelp'] = vim.lsp.with(signature, { focusable = false })
-end
 
 ---**************************** Snippet capabilities
 function lsp.capabilities()
@@ -124,10 +85,6 @@ function lsp.attach(client, bufnr)
         end, { buffer = bufnr })
     end
     require('r.utils').register_au_id(id)
-
-    if sc.signatureHelpProvider then
-        require('r.lsp.signature').attach(client, bufnr)
-    end
 
     if sc.renameProvider then
         require('r.lsp.rename').attach()

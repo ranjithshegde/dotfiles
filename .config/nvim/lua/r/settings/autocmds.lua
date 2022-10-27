@@ -167,7 +167,6 @@ aucmd('FileType', {
     group = id.LspSettings,
     pattern = require('r.utils.tables').lspfiles,
     callback = function()
-        require('r.lsp').settings()
         require('r.lsp').servers()
         require('r.lsp').lintFormat()
         auexec('FileType', { group = 'lspconfig' })
@@ -199,13 +198,20 @@ aucmd('LspDetach', {
         local client = vim.lsp.get_client_by_id(args.data.client_id)
         vim.notify(string.format('Server %s detached from %d', client.name, args.buf))
         auclear { group = vim.g.au_id['LspAutoFormat_' .. client.name .. '_' .. args.buf], buffer = args.buf }
-        auclear { group = vim.g.au_id['lsp_signature_help_' .. client.name .. '_' .. args.buf] }
-        auclear { group = vim.g.au_id['lsp_signature_snip_' .. client.name .. '_' .. args.buf] }
         auclear { group = vim.g.au_id['LspHighlightSymbols_' .. client.name .. '_' .. args.buf], buffer = args.buf }
     end,
     desc = 'Clear AUGroups when LSP detaches',
 })
 
+-- ************** Diagnostics ------------------------------------------
+id.DiagnosticList = augroup('DiagnosticList', opts)
+aucmd('DiagnosticChanged', {
+    group = id.DiagnosticList,
+    callback = function()
+        vim.diagnostic.setloclist { open = false }
+    end,
+    desc = 'Send diagnostics to loclist on new errors',
+})
 ------------------------------------------------------------------------
 --                              Terminal management                   --
 ------------------------------------------------------------------------
