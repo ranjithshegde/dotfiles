@@ -56,7 +56,7 @@ local function config_files()
                     name = 'Options',
                     o = { open 'lua/r/settings/init.lua', 'vim options' },
                     a = { open 'lua/r/settings/autocmds.lua', 'Autocmds' },
-                    l = { open 'lua/r/settings/tabline.lua', 'Tabline' },
+                    t = { open 'lua/r/settings/tabline.lua', 'Tabline' },
                     w = { open 'lua/r/settings/winbar.lua', 'Winbar' },
                 },
 

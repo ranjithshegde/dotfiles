@@ -6,7 +6,7 @@ local opt = vim.opt
 ------------------------------------------------------------------------
 
 return function()
-    vim.cmd.colorscheme 'duskfox'
+    vim.cmd.colorscheme 'nightfox'
     local tab = 4
     o.title = true
     o.number = true

@@ -92,8 +92,8 @@ return function()
 
     vim.api.nvim_buf_set_lines(bufnr, 0, -1, true, buf_lines)
     vim.bo[bufnr].modifiable = false
-    vim.keymap.set('n', '<esc>', '<cmd>bd<CR>', { buffer = bufnr })
-    vim.keymap.set('n', 'q', '<cmd>bd<CR>', { buffer = bufnr })
+    vim.keymap.set('n', '<esc>', vim.cmd.bd, { buffer = bufnr })
+    vim.keymap.set('n', 'q', vim.cmd.bd, { buffer = bufnr })
     vim.api.nvim_open_win(bufnr, true, config)
     vim.bo[bufnr].filetype = 'LspCapabilities'
     vim.cmd.normal { args = { 'zx' }, bang = true }

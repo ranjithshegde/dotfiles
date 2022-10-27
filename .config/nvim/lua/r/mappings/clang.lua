@@ -119,6 +119,13 @@ function cmaps.clang()
                 end,
                 'Member classes',
             },
+            r = {
+                name = 'Refactor Cpp',
+                f = { vim.cmd.TSCppDefineClassFunc, 'function definition from declaration', mode = { 'n', 'v' } },
+                c = { vim.cmd.TSCppMakeConcreteClass, 'Convert virtual class to concrete class', mode = { 'n', 'v' } },
+                C = { vim.cmd.TSCppRuleOf3, 'Add Constructor, destructor and copy', mode = { 'n', 'v' } },
+                m = { vim.cmd.TSCppRuleOf5, 'Add move Constructor', mode = { 'n', 'v' } },
+            },
             v = { vim.cmd.CclsVars, 'Variables in function' },
             h = {
                 name = 'hierarchy',
@@ -146,13 +153,6 @@ function cmaps.clang()
                     end,
                     'Derived functions',
                 },
-            },
-            r = {
-                name = 'Refactor Cpp',
-                f = { vim.cmd.TSCppDefineClassFunc, 'function definition from declaration', mode = 'v' },
-                c = { vim.cmd.TSCppMakeConcreteClass, 'Convert virtual class to concrete class', mode = 'v' },
-                C = { vim.cmd.TSCppRuleOf3, 'Add Constructor, destructor and copy', mode = 'v' },
-                m = { vim.cmd.TSCppRuleOf5, 'Add move Constructor', mode = 'v' },
             },
         },
         [','] = {

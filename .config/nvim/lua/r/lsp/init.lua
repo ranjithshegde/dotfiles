@@ -156,10 +156,6 @@ function lsp.attach(client, bufnr)
         require 'r.lsp.capabilities',
         { desc = 'Display Language Server capabilities' }
     )
-
-    if not package.loaded.luasnip then
-        require('packer').loader 'LuaSnip'
-    end
 end
 
 ------------------------------------------------------------------------

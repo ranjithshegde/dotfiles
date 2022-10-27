@@ -37,19 +37,6 @@ function plugins.indent()
     end
 end
 
----Fancy UI
-function plugins.ui()
-    require('noice').setup {
-        cmdline = {
-            view = 'cmdline',
-            view_search = 'cmdline',
-            format = {
-                inc_rename = { pattern = '^:%s*IncRename%s+', icon = ' ', ft = 'text' },
-            },
-        },
-    }
-end
-
 ---nvim-colorizer
 function plugins.colorizer()
     require('colorizer').setup {
@@ -75,6 +62,35 @@ function plugins.org()
         },
         org_highlight_latex_and_related = 'entities',
         emacs_config = { config_path = '$XDG_CONFIG_HOME/emacs/init.el' },
+    }
+end
+
+---Fancy UI
+function plugins.ui()
+    require('noice').setup {
+        cmdline = {
+            view = 'cmdline',
+            view_search = 'cmdline',
+            format = {
+                inc_rename = { pattern = '^:%s*IncRename%s+', icon = ' ', ft = 'text' },
+            },
+        },
+        presets = {
+            long_message_to_split = true,
+        },
+        lsp = {
+            -- hover = { enabled = true, opts = { border = { style = 'single' } } },
+            -- signature = { enabled = true, opts = { border = { style = 'rounded' } } },
+            -- documentation = {
+            --     opts = {
+            --         position = { row = 2 },
+            --         win_options = {
+            --             concealcursor = '',
+            --             winhighlight = { Normal = 'LspFloat', FloatBorder = 'LspFloatBorder' },
+            --         },
+            --     },
+            -- },
+        },
     }
 end
 
@@ -156,9 +172,6 @@ function plugins.scnvim()
             if not require('scnvim').is_running() then
                 require('scnvim').start()
                 vim.api.nvim_input '<CR>'
-            end
-            if not package.loaded.luasnip then
-                require('packer').loader 'LuaSnip'
             end
         end,
         desc = 'Load SCNvim settings and launch interpreter on filetype',

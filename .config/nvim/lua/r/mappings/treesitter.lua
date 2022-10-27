@@ -304,7 +304,7 @@ return function()
             l = { to.select('@loop.outer', 'x'), 'loop' },
         },
         i = {
-            name = 'around',
+            name = 'inside',
             f = { to.select('@function.inner', 'x'), 'function' },
             c = { to.select('@conditional.inner', 'x'), 'conditional' },
             C = { to.select('@call.inner', 'x'), 'call' },

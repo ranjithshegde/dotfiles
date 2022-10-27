@@ -6,6 +6,7 @@ return function(n)
     local win_config = vim.api.nvim_win_get_config(n)
     local win_info = vim.fn.getwininfo(n)[1]
 
+    -- Dont set winbar to quickfix windows, terminals or popups
     if win_config.relative ~= '' or win_info.quickfix ~= 0 or win_info.terminal ~= 0 then
         vim.wo[n].winbar = nil
         return
@@ -14,6 +15,7 @@ return function(n)
     local tabpage = vim.api.nvim_win_get_tabpage(n)
     local list = vim.api.nvim_tabpage_list_wins(tabpage)
 
+    -- No need for winbar if its the only window inside the tab
     if #list <= 1 then
         vim.wo[n].winbar = nil
         return
@@ -27,6 +29,7 @@ return function(n)
         end
     end
 
+    -- Dont set winbars if the other windows are N/A buffers
     if i <= 1 then
         vim.wo[n].winbar = nil
         return
@@ -34,6 +37,7 @@ return function(n)
 
     local winbar
 
+    -- Dont set winbars for nondescript buffers
     local label = require('r.utils').get_file_label(n, false)
     if label.tail:match 'Empty' then
         vim.wo[n].winbar = ''

@@ -35,7 +35,6 @@ aucmd('FileType', {
     callback = function(args)
         if vim.tbl_contains(require('r.utils.tables').ignoreFiles, args.match) or args.file:find 'noice' then
             vim.o.relativenumber = false
-            vim.wo.cursorline = false
             vim.wo.foldcolumn = '0'
             vim.wo.winbar = nil
             return
@@ -120,7 +119,7 @@ aucmd({ 'BufEnter', 'WinEnter' }, {
         end
         require 'r.settings.winbar'(vim.api.nvim_get_current_win())
     end,
-    desc = 'Winbar on tabpages with more than one window',
+    desc = 'Set Winbar on BufEnter',
 })
 
 -- ************** Tabline ----------------------------------------------
@@ -221,7 +220,7 @@ aucmd({ 'BufEnter', 'BufWinEnter', 'TermOpen' }, {
             vim.cmd.startinsert()
         end
     end,
-    desc = 'Start terminals in insert mode',
+    desc = 'Start relevant terminals in insert mode',
 })
 aucmd('TermEnter', { group = id.TermOptions, command = 'startinsert', desc = 'Start terminals in insert mode' })
 
@@ -235,7 +234,7 @@ aucmd('TermEnter', {
             vim.keymap.set('t', '<Esc>', '<C-\\><C-n>', { buffer = true, desc = 'Escape Insert' })
         end
     end,
-    desc = 'Especial insertexit for ranger windows',
+    desc = 'Special insertexit for ranger windows',
 })
 aucmd('TermClose', {
     group = id.TermOptions,
@@ -351,6 +350,7 @@ aucmd('InsertEnter', {
         require('packer').loader 'LuaSnip'
         vim.schedule(vim.cmd.startinsert)
     end,
+    desc = 'Initialize completion framework only when entering relevant buffers',
 })
 
 ------------------------------------------------------------------------
@@ -358,9 +358,9 @@ aucmd('InsertEnter', {
 ------------------------------------------------------------------------
 
 -- ************** Compilers and REPL  ----------------------------------
-id.Compiler = augroup('Compiler', opts)
+id.Overseer = augroup('Overseer', opts)
 aucmd('FileType', {
-    group = id.Compiler,
+    group = id.Overseer,
     pattern = { 'java', 'lua', 'python', 'javascript', 'perl' },
     nested = true,
     callback = function()
@@ -390,7 +390,7 @@ aucmd('BufEnter', {
                 return
             end
             vim.cmd.bd()
-            require('r.utils.extensions').ranger(args.file, 'e ')
+            require('r.extensions').ranger(args.file, 'e ')
         end
     end,
     desc = 'Hijack netrw with ranger or telescope',

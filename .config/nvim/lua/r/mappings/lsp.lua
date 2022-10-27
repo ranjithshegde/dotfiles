@@ -9,7 +9,7 @@ function lspmap.lsp(client, bufnr)
     if client.name == 'ltex' then
         return
     end
-    vim.keymap.set('n', 'K', function()
+    map('n', 'K', function()
         local winid = package.loaded.ufo and require('ufo').peekFoldedLinesUnderCursor()
         if not winid then
             if vim.bo[bufnr].filetype == 'org' then
@@ -20,14 +20,13 @@ function lspmap.lsp(client, bufnr)
         end
     end, { desc = 'Hover or peek-fold', buffer = bufnr })
 
-    vim.keymap.set({ 'n', 'v' }, ',a', vim.lsp.buf.code_action, { desc = 'Code actions for buffer', buffer = bufnr })
-
     wk.register({
         ['<F7>'] = { require('r.debuggers').init, 'Initialize debugger adapter' },
         [','] = {
             name = 'Lsp functions',
             s = { vim.lsp.buf.signature_help, 'Show signature' },
             i = { vim.lsp.buf.implementation, 'Jump to Implementation' },
+            a = { vim.lsp.buf.code_action, 'Code actions for buffer', mode = { 'n', 'v' } },
             D = {
                 function()
                     vim.lsp.buf.declaration { reuse_win = true }
@@ -82,10 +81,6 @@ function lspmap.lsp(client, bufnr)
     map('n', '<F1>', function()
         require('overseer').window.toggle { enter = false }
     end, { desc = 'Open Task panel' })
-
-    map('n', '<F11>', function()
-        require('symbols-outline').toggle_outline()
-    end, { desc = 'Toggle Symbolsbar' })
 end
 
 -- ******************************** Diagnostics------------------------
@@ -107,6 +102,8 @@ function lspmap.debug()
                 name = 'debug',
                 b = { require('dap').toggle_breakpoint, 'set breakpoint' },
                 x = { require('dap').set_exception_breakpoints, 'set breakpoint' },
+                o = { require('dapui').float_element, 'Open float element', mode = { 'n', 'v' } },
+                E = { require('r.debuggers').exp.toggle, 'Expressions buffer', mode = { 'n', 'v', 's' } },
                 f = {
                     function()
                         require('dapui').float_element('scopes', { enter = true })
@@ -124,6 +121,14 @@ function lspmap.debug()
                         require('dap').toggle_breakpoint(vim.fn.input 'Breakpoint condition: ')
                     end,
                     'set breakpoint',
+                },
+                e = {
+                    function()
+                        require('dapui').eval()
+                        require('dapui').eval()
+                    end,
+                    'Evaluate Hover',
+                    mode = { 'n', 'v', 's' },
                 },
             },
         },
@@ -148,15 +153,6 @@ function lspmap.debug()
             'Repl Toggle',
         },
     }
-
-    map({ 'n', 'v', 's' }, '<leader>de', function()
-        require('dapui').eval()
-        require('dapui').eval()
-    end, { buffer = true, desc = 'Evaluate Hover ' })
-
-    map({ 'n', 'v' }, '<leader>do', require('dapui').float_element, { buffer = true, desc = 'Open floating elements' })
-
-    map({ 'n', 'v', 's' }, '<leader>dE', require('r.debuggers').exp.toggle, { buffer = true, desc = 'Expressions' })
 end
 
 return lspmap

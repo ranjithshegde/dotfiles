@@ -246,13 +246,6 @@ return require('packer').startup {
             'neovim/nvim-lspconfig',
             { 'jose-elias-alvarez/null-ls.nvim', opt = true },
             {
-                'simrat39/symbols-outline.nvim',
-                module = 'symbols-outline',
-                config = function()
-                    require('symbols-outline').setup { auto_preview = false, width = 40 }
-                end,
-            },
-            {
                 is_custom('WORKSPACE', 'Repos/ccls.nvim', 'ranjithshegde/ccls.nvim'),
                 ft = { 'c', 'cpp', 'opencl' },
                 config = function()

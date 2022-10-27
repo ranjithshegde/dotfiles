@@ -1,16 +1,3 @@
-local function exec_move(cmd)
-    local old_fold = vim.wo.foldmethod
-    if old_fold ~= 'manual' then
-        vim.wo.foldmethod = 'manual'
-    end
-    vim.cmd.normal { args = { 'm`' }, bang = true }
-    vim.cmd(cmd)
-    vim.cmd.normal { args = { '``' }, bang = true }
-    if old_fold ~= 'manual' then
-        vim.wo.foldmethod = old_fold
-    end
-end
-
 local function blank(count, orient)
     local space = {}
     for i = 1, count, 1 do
@@ -22,7 +9,16 @@ local function blank(count, orient)
 end
 
 local function move(cmd, count)
-    exec_move { cmd = 'move', args = { cmd, tostring(count) } }
+    local old_fold = vim.wo.foldmethod
+    if old_fold ~= 'manual' then
+        vim.wo.foldmethod = 'manual'
+    end
+    vim.cmd.normal { args = { 'm`' }, bang = true }
+    vim.cmd.move { args = { cmd, tostring(count) } }
+    vim.cmd.normal { args = { '``' }, bang = true }
+    if old_fold ~= 'manual' then
+        vim.wo.foldmethod = old_fold
+    end
 end
 
 local function call_cmd(cmd)

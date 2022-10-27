@@ -98,22 +98,20 @@ function utils.get_file_label(n, tab)
 
     local tail = vim.fn.fnamemodify(file_name, ':p:t')
 
+    if tail == '' then
+        if vim.fn.getwininfo(current_win)[1].quickfix == 1 then
+            tail = vim.fn.getqflist({ title = true }).title
+            vim.notify(tail)
+        else
+            tail = 'Empty Buffer'
+        end
+    end
+
     local result = {
         tail = tail,
         icon = nil,
         color = nil,
     }
-    if tail == '' then
-        if vim.fn.getwininfo(current_win)[1].quickfix == 1 then
-            tail = vim.fn.getqflist({ title = true }).title
-        end
-        if tail == '' then
-            result.tail = 'Empty Buffer'
-            return result
-        else
-            result.tail = tail
-        end
-    end
 
     local ext = nil
     if string.find(file_name, 'term://') ~= nil then

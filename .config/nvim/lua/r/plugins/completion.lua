@@ -78,7 +78,7 @@ function completion.init()
                 scrollbar = '║',
             },
             documentation = {
-                border = 'double',
+                border = 'single',
             },
         },
         experimental = { ghost_text = true },
