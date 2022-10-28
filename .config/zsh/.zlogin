@@ -35,3 +35,5 @@ fi
 export GPG_TTY=$(tty)
 gpg-connect-agent updatestartuptty /bye >/dev/null
 export GPG_AGENT_INFO
+
+xset r rate 200 30

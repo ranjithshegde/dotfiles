@@ -4,16 +4,14 @@ local completion = {}
 --                             Completion                             --
 ------------------------------------------------------------------------
 
-function completion.init()
-    local cmp = require 'cmp'
-    local luasnip = require 'luasnip'
-
+local function cmp_setup(cmp, luasnip)
     cmp.setup {
         snippet = {
             expand = function(args)
                 luasnip.lsp_expand(args.body)
             end,
         },
+        -- Setup mappings
         mapping = cmp.mapping.preset.insert {
             ['<C-b>'] = cmp.mapping.scroll_docs(-4),
             ['<C-f>'] = cmp.mapping.scroll_docs(4),
@@ -51,6 +49,7 @@ function completion.init()
                 end
             end, { 'i', 's' }),
         },
+        -- setup and chain sources
         sources = cmp.config.sources({
             { name = 'nvim_lsp' },
             { name = 'luasnip' },
@@ -66,6 +65,7 @@ function completion.init()
                 },
             },
         }),
+        -- Popup menu strategy
         formatting = {
             format = function(_, vim_item)
                 vim_item.kind =
@@ -73,6 +73,7 @@ function completion.init()
                 return vim_item
             end,
         },
+        -- Individual window properties
         window = {
             completion = {
                 scrollbar = '║',
@@ -83,12 +84,13 @@ function completion.init()
         },
         experimental = { ghost_text = true },
     }
-    require('luasnip.loaders.from_vscode').lazy_load()
+end
 
-    if vim.tbl_contains({ 'c', 'cpp', 'opencl' }, vim.bo.filetype) then
-        require('r.lsp.clangd').clangCmp()
-    end
+local function cmp_extras(cmp)
+    -- Load completion sources
+    require('packer').loader('cmp-path', 'cmp-buffer', 'cmp_luasnip')
 
+    -- Single keystroke to toggle between cmp and ins-completion
     local isCmp = true
     vim.keymap.set({ 'i', 's' }, '<C-k>', function()
         if isCmp then
@@ -101,6 +103,27 @@ function completion.init()
         end
         return '<C-N>'
     end, { expr = true })
+
+    -- Load special LSP sorter for c/c++/opencl
+    if vim.tbl_contains({ 'c', 'cpp', 'opencl' }, vim.bo.filetype) then
+        require('r.lsp.clangd').clangCmp()
+    end
+
+    -- Lazy load friendly snippets
+    require('luasnip.loaders.from_vscode').lazy_load()
+end
+
+function completion.init()
+    if not package.loaded.cmp then
+        require('packer').loader 'nvim-cmp'
+    end
+
+    local cmp = require 'cmp'
+    local luasnip = require 'luasnip'
+
+    cmp_setup(cmp, luasnip)
+
+    cmp_extras(cmp)
 end
 
 function completion.pairs()
@@ -132,18 +155,6 @@ function completion.pairs()
 end
 
 function completion.luasnip()
-    vim.api.nvim_create_autocmd('InsertEnter', {
-        pattern = '*.scd, *.sc, *.sc_help, *.quark',
-        group = vim.g.au_id.LspSettngs,
-        callback = function()
-            vim.schedule(function()
-                require('luasnip').add_snippets('supercollider', require('scnvim/utils').get_snippets())
-            end)
-        end,
-        once = true,
-        desc = 'Lazy load supercollider snippets on filetype',
-    })
-
     local types = require 'luasnip.util.types'
     require('luasnip').config.set_config {
         history = true,

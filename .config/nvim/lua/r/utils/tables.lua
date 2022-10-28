@@ -33,7 +33,6 @@ tables.lspfiles = {
     'perl',
     'rust',
     'sql',
-    -- 'supercollider',
     'mysql',
     'vim',
     'yaml',
@@ -67,6 +66,7 @@ tables.ignoreFiles = {
     'WhichKey',
     'checkhealth',
     'null-ls-info',
+    'DressingInput',
     'TelescopePrompt',
     'TelescopeResults',
 }

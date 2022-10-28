@@ -17,7 +17,6 @@ local function filterfmt(client)
     return not vim.tbl_contains(nofmt, client.name)
 end
 
----**************************** LSP AuGroups and Handlers
 local id = {}
 
 ---**************************** Snippet capabilities
@@ -148,7 +147,6 @@ function lsp.servers()
         tsserver = { capabilities = lsp.capabilities() },
         marksman = { capabilities = lsp.capabilities() },
         rust_analyzer = { capabilities = lsp.capabilities() },
-        -- supercollider = { capabilities = lsp.capabilities() },
         bashls = {
             capabilities = lsp.capabilities(),
             filetypes = { 'sh', 'zsh' },

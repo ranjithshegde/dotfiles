@@ -6,6 +6,18 @@ local opts = { clear = true }
 
 local id = {}
 
+local function ignore_files()
+    return vim.tbl_contains(require('r.utils.tables').ignoreFiles, vim.bo.filetype) or vim.fn.win_gettype() == 'popup'
+end
+
+local function ignore_win()
+    return ignore_files() or vim.fn.win_gettype() == 'popup'
+end
+
+local function ignore_empty(args)
+    return args.match == '' or args.file == ''
+end
+
 ------------------------------------------------------------------------
 --                              Formatting and UI                     --
 ------------------------------------------------------------------------
@@ -49,27 +61,18 @@ aucmd('FileType', {
 aucmd({ 'InsertEnter', 'WinLeave', 'FocusLost', 'BufNewFile' }, {
     group = id.FormatOptions,
     callback = function(args)
-        if
-            vim.tbl_contains(require('r.utils.tables').ignoreFiles, vim.bo.filetype)
-            or vim.fn.win_gettype() == 'popup'
-        then
-            return
+        if not ignore_files() then
+            vim.wo[vim.fn.bufwinid(args.buf)].relativenumber = false
         end
-        vim.wo[vim.fn.bufwinid(args.buf)].relativenumber = false
     end,
     desc = 'Dont use relativenumber where it makes no sense',
 })
 aucmd({ 'InsertLeave', 'WinEnter', 'FocusGained' }, {
     group = id.FormatOptions,
     callback = function(args)
-        if
-            vim.tbl_contains(require('r.utils.tables').ignoreFiles, vim.bo.filetype)
-            or vim.api.nvim_win_get_height(vim.api.nvim_get_current_win()) <= 15
-            or vim.fn.win_gettype() == 'popup'
-        then
-            return
+        if not ignore_win() then
+            vim.wo[vim.fn.bufwinid(args.buf)].relativenumber = true
         end
-        vim.wo[vim.fn.bufwinid(args.buf)].relativenumber = true
     end,
     desc = 'use relativenumber conditionally',
 })
@@ -78,29 +81,20 @@ aucmd({ 'InsertLeave', 'WinEnter', 'FocusGained' }, {
 aucmd({ 'FocusGained', 'WinEnter', 'BufEnter' }, {
     group = id.FormatOptions,
     callback = function(args)
-        if
-            vim.tbl_contains(require('r.utils.tables').ignoreFiles, vim.bo.filetype)
-            or vim.api.nvim_win_get_height(vim.api.nvim_get_current_win()) <= 15
-            or vim.fn.win_gettype() == 'popup'
-        then
-            return
+        if not ignore_win() then
+            vim.wo[vim.fn.bufwinid(args.buf)].cursorline = true
+            vim.wo[vim.fn.bufwinid(args.buf)].foldcolumn = 'auto'
         end
-        vim.wo[vim.fn.bufwinid(args.buf)].cursorline = true
-        vim.wo[vim.fn.bufwinid(args.buf)].foldcolumn = 'auto'
     end,
     desc = 'use cursorline only on active buffers',
 })
 aucmd({ 'FocusLost', 'WinLeave' }, {
     group = id.FormatOptions,
     callback = function(args)
-        if
-            vim.tbl_contains(require('r.utils.tables').ignoreFiles, vim.bo.filetype)
-            or vim.fn.win_gettype() == 'popup'
-        then
-            return
+        if not ignore_files() then
+            vim.wo[vim.fn.bufwinid(args.buf)].cursorline = false
+            vim.wo[vim.fn.bufwinid(args.buf)].foldcolumn = '0'
         end
-        vim.wo[vim.fn.bufwinid(args.buf)].cursorline = false
-        vim.wo[vim.fn.bufwinid(args.buf)].foldcolumn = '0'
     end,
     desc = 'dont use cursorline on inactive buffers',
 })
@@ -114,10 +108,9 @@ id.Decorations = augroup('Decorations', opts)
 aucmd({ 'BufEnter', 'WinEnter' }, {
     group = id.Decorations,
     callback = function(args)
-        if args.match == '' or args.file == '' then
-            return
+        if not ignore_empty(args) then
+            require 'r.settings.winbar'(vim.api.nvim_get_current_win())
         end
-        require 'r.settings.winbar'(vim.api.nvim_get_current_win())
     end,
     desc = 'Set Winbar on BufEnter',
 })
@@ -133,7 +126,7 @@ aucmd({ 'TabNewEntered', 'TabEnter' }, {
 aucmd({ 'WinEnter', 'BufEnter' }, {
     group = id.Decorations,
     callback = function(args)
-        if args.match == '' or args.file == '' then
+        if ignore_empty(args) then
             return
         end
         local tabline = vim.o.tabline
@@ -149,10 +142,9 @@ id.Statusline = augroup('Statusline', opts)
 aucmd('BufEnter', {
     group = id.Statusline,
     callback = function(args)
-        if args.match == '' or args.file == '' then
-            return
+        if not ignore_empty(args) then
+            auexec('User', { pattern = 'ScStatus' })
         end
-        auexec('User', { pattern = 'ScStatus' })
     end,
     desc = 'Load ScStatus only for supercollider',
 })
@@ -208,7 +200,7 @@ id.DiagnosticList = augroup('DiagnosticList', opts)
 aucmd('DiagnosticChanged', {
     group = id.DiagnosticList,
     callback = function()
-        vim.diagnostic.setloclist { open = false }
+        pcall(vim.diagnostic.setloclist, { open = false })
     end,
     desc = 'Send diagnostics to loclist on new errors',
 })
@@ -343,18 +335,10 @@ aucmd('FileType', {
 aucmd('InsertEnter', {
     group = id.PluginLoad,
     callback = function(args)
-        if
-            vim.tbl_contains(require('r.utils.tables').ignoreFiles, vim.bo[args.buf].filetype)
-            or vim.fn.win_gettype() == 'popup'
-        then
-            return
-        elseif package.loaded.luasnip then
+        if not ignore_files() then
+            require('r.plugins.completion').init()
             vim.api.nvim_del_autocmd(args.id)
-            return
         end
-        vim.api.nvim_input '<Esc>'
-        require('packer').loader 'LuaSnip'
-        vim.schedule(vim.cmd.startinsert)
     end,
     desc = 'Initialize completion framework only when entering relevant buffers',
 })

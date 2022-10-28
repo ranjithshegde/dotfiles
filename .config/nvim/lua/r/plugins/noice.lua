@@ -1,6 +1,11 @@
 vim.pretty_print = function(...)
-    local msg = vim.inspect(...)
-    vim.notify(msg, vim.log.levels.OFF)
+    local objects = {}
+    for i = 1, select('#', ...) do
+        local v = select(i, ...)
+        table.insert(objects, vim.inspect(v))
+    end
+
+    vim.api.nvim_echo({ { table.concat(objects, '    '), '' } }, true, {})
 end
 
 require('noice').setup {
@@ -9,14 +14,19 @@ require('noice').setup {
         view_search = 'cmdline',
         format = {
             inc_rename = { pattern = '^:%s*IncRename%s+', icon = ' ', ft = 'text' },
+            input = { icon = ' ', lang = 'text', view = 'cmdline_popup' },
         },
     },
     presets = {
         long_message_to_split = true,
     },
     lsp = {
-        hover = { enabled = true, opts = { border = { style = 'single' } } },
-        signature = { enabled = true, opts = { border = { style = 'rounded' } } },
+        hover = {
+            opts = { border = { style = 'single' } },
+        },
+        signature = {
+            opts = { border = { style = 'rounded' } },
+        },
         documentation = {
             opts = {
                 position = { row = 2 },
@@ -26,16 +36,14 @@ require('noice').setup {
                 },
             },
         },
+        override = {
+            ['vim.lsp.util.stylize_markdown'] = true,
+        },
     },
     routes = {
         {
             view = 'mini',
             filter = { event = 'msg_showmode' },
-        },
-        {
-            view = 'split',
-            filter = { event = 'notify', min_height = 20 },
-            opts = { enter = true, lang = 'lua' },
         },
     },
 }

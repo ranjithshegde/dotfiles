@@ -1,0 +1,14 @@
+[Unit]
+Description=Monitor hotplug service
+
+[Service]
+Type=oneshot
+
+# Make the service run as your user and not as root
+# User=ranjith
+
+# Change path to hotplug script as needed
+ExecStart=/home/ranjith/.local/bin/scripts/hdmi-udev
+
+[Install]
+WantedBy=graphical.target

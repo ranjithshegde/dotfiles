@@ -144,8 +144,20 @@ function plugins.scnvim()
                 require('scnvim').start()
                 vim.api.nvim_input '<CR>'
             end
+            if not package.loaded.cmp then
+                require('packer').loader 'nvim-cmp'
+            end
         end,
         desc = 'Load SCNvim settings and launch interpreter on filetype',
+    })
+
+    vim.api.nvim_create_autocmd('InsertEnter', {
+        group = vim.g.au_id.PluginLoad,
+        pattern = { '*.scd', '*.sc', '*.quark' },
+        callback = function()
+            require('luasnip').add_snippets('supercollider', require('scnvim/utils').get_snippets())
+        end,
+        once = true,
     })
 end
 

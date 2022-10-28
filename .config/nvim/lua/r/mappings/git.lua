@@ -33,6 +33,7 @@ function g.signs(bufnr, gs)
     require('which-key').register({
         ['<leader>g'] = {
             name = 'git functions',
+            i = { gs.preview_hunk_inline, 'Inline diff for hunk' },
             r = { gs.reset_hunk, 'reset hunk under cursor' },
             R = { gs.reset_buffer, 'reset current buffer' },
             s = { gs.stage_hunk, 'stage hunk under cursor' },

@@ -270,37 +270,28 @@ return require('packer').startup {
 
         -- completion and snippets
         use {
-            { 'hrsh7th/cmp-nvim-lsp', opt = 'true' },
-            { 'hrsh7th/cmp-path', after = 'nvim-cmp' },
-            { 'hrsh7th/cmp-buffer', after = 'nvim-cmp' },
-            { 'saadparwaiz1/cmp_luasnip', after = 'nvim-cmp' },
+            { 'hrsh7th/cmp-path', opt = true },
+            { 'hrsh7th/cmp-buffer', opt = true },
+            { 'saadparwaiz1/cmp_luasnip', opt = true },
+            { 'rafamadriz/friendly-snippets', after = 'LuaSnip' },
             {
-                'L3MON4D3/LuaSnip',
-                run = 'make install_jsregexp',
-                opt = true,
-                config = function()
-                    require('r.plugins.completion').luasnip()
-                end,
-            },
-            {
-                'rafamadriz/friendly-snippets',
-                after = 'LuaSnip',
-                config = function()
-                    require('luasnip.loaders.from_vscode').load()
-                end,
-            },
-            {
-                'hrsh7th/nvim-cmp',
-                after = 'friendly-snippets',
-                config = function()
-                    require('r.plugins.completion').init()
-                end,
+                'hrsh7th/cmp-nvim-lsp',
+                opt = 'true',
+                requires = 'hrsh7th/nvim-cmp',
             },
             {
                 'windwp/nvim-autopairs',
                 after = 'nvim-cmp',
                 config = function()
                     require('r.plugins.completion').pairs()
+                end,
+            },
+            {
+                'L3MON4D3/LuaSnip',
+                run = 'make install_jsregexp',
+                module = 'luasnip',
+                config = function()
+                    require('r.plugins.completion').luasnip()
                 end,
             },
         }
