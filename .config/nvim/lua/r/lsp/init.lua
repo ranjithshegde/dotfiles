@@ -133,6 +133,7 @@ function lsp.servers()
         }
     end
 
+    local pid = vim.fn.getpid()
     local configs = {
         yamlls = {},
         html = { capabilities = lsp.capabilities() },
@@ -160,6 +161,17 @@ function lsp.servers()
                     new_rootdir .. '/config.yml',
                 }
             end,
+        },
+        omnisharp = {
+            capabilities = lsp.capabilities(),
+            trace = 'verbose',
+            cmd = { 'omnisharp', '--languageserver', '--hostPID', tostring(pid) },
+
+            handlers = {
+                ['textDocument/definition'] = function(...)
+                    require('omnisharp_extended').handler(...)
+                end,
+            },
         },
         sumneko_lua = {
             capabilities = lsp.capabilities(),

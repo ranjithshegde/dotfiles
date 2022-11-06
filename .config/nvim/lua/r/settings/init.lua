@@ -65,6 +65,7 @@ return function()
     }
 
     opt.shortmess:append 'cs'
+    opt.diffopt:append 'linematch:60'
     opt.foldopen:append 'jump'
     opt.clipboard:append 'unnamedplus'
     opt.sessionoptions:append 'terminal,tabpages'

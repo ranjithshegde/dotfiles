@@ -25,10 +25,11 @@ export LESS_TERMCAP_ue=$'\e[0m'
 export LESS_TERMCAP_us=$'\e[1;4;31m'
 
 # CONFIG & PATHS
-export HISTFILE="${XDG_DATA_HOME}/zsh/history"
+export ANDROID_DATA="${XDG_DATA_HOME}/android"
 export CARGO_HOME="${XDG_DATA_HOME}/cargo"
+export CONAN_USER_HOME="${XDG_DATA_HOME}/conan"
 export CUDA_CACHE_PATH="${XDG_CACHE_HOME}/nv"
-export VSCODE_PORTABLE="${XDG_DATA_HOME}/vscode"
+export DOCKER_CONFIG="${XDG_CONFIG_HOME}/docker"
 export EMSDK="${HOME}/Software/libraries/emsdk"
 export EM_CONFIG="${EMSDK}/.emscripten"
 export EM_NODE="${EMSDK}/node/14.8.2_64bit/bin/node"
@@ -39,39 +40,21 @@ export GNUPGHOME="${XDG_DATA_HOME}/gnupg"
 export GOPATH="${XDG_DATA_HOME}/go"
 export GRADLE_USER_HOME="${XDG_DATA_HOME}/gradle"
 export GTK2_RC_FILES="${XDG_CONFIG_HOME}/gtk-2.0/gtkrc"
+export HISTFILE="${XDG_DATA_HOME}/zsh/history"
 export IPYTHONDIR="${XDG_CONFIG_HOME}/jupyter"
 export LESSHISTFILE="${XDG_CACHE_HOME}/less/history"
+export MACHINE_STORAGE_PATH="${XDG_DATA_HOME}/docker-machine"
 export MYPY_CACHE_DIR="${XDG_CACHE_HOME}/mypy"
+export MYSQL_HISTFILE="${XDG_DATA_HOME}"/mysql_history
 export NMBGIT="${XDG_DATA_HOME}/notmuch/nmbug"
 export NODE_REPL_HISTORY="${XDG_DATA_HOME}/node_repl_history"
 export NOTMUCH_CONFIG="${XDG_CONFIG_HOME}/notmuch/notmuchrc"
 export NPM_CONFIG_USERCONFIG="${XDG_CONFIG_HOME}/npm/npmrc"
-export PASSWORD_STORE_DIR="${HOME}/.local/share/pass"
-export PLATFORMIO_CACHE_DIR="${XDG_CACHE_HOME}/platformio"
-export PLATFORMIO_CORE_DIR="${XDG_DATA_HOME}/platformio"
-export PLATFORMIO_GLOBALLIB_DIR="${XDG_DATA_HOME}/platformio"
-export PLATFORMIO_PACKAGES_DIR="${XDG_DATA_HOME}/platformio/packages"
-export PLATFORMIO_PLATFORMS_DIR="${XDG_DATA_HOME}/platformio/platforms"
-export PYLINTHOME="${XDG_CACHE_HOME}/pylint"
-export PYTHONHISTFILE="${XDG_DATA_HOME}/python_history"
-export RUSTUP_HOME="${XDG_DATA_HOME}/rustup"
-export RLWRAP_HOME="${XDG_DATA_HOME}/rlwrap"
-export SSB_HOME="${XDG_DATA_HOME}/zoom"
-export TERMINFO="${XDG_DATA_HOME}/terminfo"
-export WGETRC="${XDG_CONFIG_HOME}/wgetrc"
-export WINEPREFIX="/storage/Games/Wine/default/"
-# export WINEPREFIX="${XDG_DATA_HOME}/wineprefixes/default"
-# export WINEARCH=win32
-export ZPLUG_BIN="${XDG_DATA_HOME}/bin"
-export ZPLUG_HOME="${XDG_DATA_HOME}/zsh/zplug"
-export _JAVA_OPTIONS=-Djava.util.prefs.userRoot="${XDG_CONFIG_HOME}/java"
+export NUGET_PACKAGES="$XDG_CACHE_HOME"/NuGetPackages
 export OPENCV_OPENCL_DEVICE=NVIDIA:GPU:0
 export OCTAVE_HISTFILE="${XDG_CACHE_HOME}/octave-hsts"
 export OCTAVE_SITE_INITFILE="${XDG_CONFIG_HOME}/octave/octaverc"
-export ANDROID_DATA="${XDG_DATA_HOME}/android"
-export CONAN_USER_HOME="${XDG_DATA_HOME}/conan"
-export DOCKER_CONFIG="${XDG_CONFIG_HOME}/docker"
-export MACHINE_STORAGE_PATH="${XDG_DATA_HOME}/docker-machine"
+export PASSWORD_STORE_DIR="${HOME}/.local/share/pass"
 export PERL_CPANM_HOME="${XDG_DATA_HOME}/cpan"
 PERL5LIB="${XDG_DATA_HOME}/perl/lib/perl5${PERL5LIB+:}${PERL5LIB}"
 export PERL5LIB
@@ -79,8 +62,27 @@ PERL_LOCAL_LIB_ROOT="${XDG_DATA_HOME}/perl${PERL_LOCAL_LIB_ROOT+:}${PERL_LOCAL_L
 export PERL_LOCAL_LIB_ROOT
 export PERL_MB_OPT='--install_base ~/.local/share/perl'
 export PERL_MM_OPT='INSTALL_BASE=~/.local/share/perl'
-export MYSQL_HISTFILE="${XDG_DATA_HOME}"/mysql_history
+export PLATFORMIO_CACHE_DIR="${XDG_CACHE_HOME}/platformio"
+export PLATFORMIO_CORE_DIR="${XDG_DATA_HOME}/platformio"
+export PLATFORMIO_GLOBALLIB_DIR="${XDG_DATA_HOME}/platformio"
+export PLATFORMIO_PACKAGES_DIR="${XDG_DATA_HOME}/platformio/packages"
+export PLATFORMIO_PLATFORMS_DIR="${XDG_DATA_HOME}/platformio/platforms"
 export PUB_CACHE="${XDG_CACHE_HOME}"/pub
+export PYLINTHOME="${XDG_CACHE_HOME}/pylint"
+export PYTHONHISTFILE="${XDG_DATA_HOME}/python_history"
+export RUSTUP_HOME="${XDG_DATA_HOME}/rustup"
+export RLWRAP_HOME="${XDG_DATA_HOME}/rlwrap"
+export SSB_HOME="${XDG_DATA_HOME}/zoom"
+export TERMINFO="${XDG_DATA_HOME}/terminfo"
+export uebp_FinalLogFolder="${XDG_DATA_HOME}/Unreal"
+export uebp_LogFolder="${XDG_DATA_HOME}/Unreal"
+export VSCODE_PORTABLE="${XDG_DATA_HOME}/vscode"
+# export WINEARCH=win32
+export WGETRC="${XDG_CONFIG_HOME}/wgetrc"
+export WINEPREFIX="/storage/Games/Wine/default/"
+export ZPLUG_BIN="${XDG_DATA_HOME}/bin"
+export ZPLUG_HOME="${XDG_DATA_HOME}/zsh/zplug"
+export _JAVA_OPTIONS=-Djava.util.prefs.userRoot="${XDG_CONFIG_HOME}/java"
 
 # GLOBALS
 export CHROME_EXECUTABLE=/usr/bin/brave
@@ -88,10 +90,11 @@ export ANDROID_NDK=/opt/android-ndk
 export ANDROID_SDK_ROOT=/opt/android-sdk
 export ANDROID_NDK_HOME=/opt/android-ndk
 export AWT_TOOLKIT=MToolkit
-export GST_VAAPI_ALL_DRIVERS=1
-export QT_STYLE_OVERRIDE=kvantum
 export DEBUGINFOD_URLS="https://debuginfod.archlinux.org"
+export GST_VAAPI_ALL_DRIVERS=1
 export MANPAGER="nvim +Man!"
+export QT_STYLE_OVERRIDE=kvantum
+export __EGL_VENDOR_LIBRARY_FILENAMES="/usr/share/glvnd/egl_vendor.d/50_mesa.json"
 
 # CUSTOM PATH ENVS
 export CWORK="${HOME}/Software/Workspaces/cpp"

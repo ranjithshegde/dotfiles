@@ -245,6 +245,7 @@ return require('packer').startup {
         use {
             'neovim/nvim-lspconfig',
             { 'jose-elias-alvarez/null-ls.nvim', opt = true },
+            { 'Hoffs/omnisharp-extended-lsp.nvim', ft = 'cs' },
             {
                 is_custom('WORKSPACE', 'Repos/ccls.nvim', 'ranjithshegde/ccls.nvim'),
                 ft = { 'c', 'cpp', 'opencl' },

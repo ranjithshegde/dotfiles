@@ -13,6 +13,7 @@ tables.lspfiles = {
     'css',
     'cmake',
     'c',
+    'cs',
     'cpp',
     'glsl',
     'objc',
