@@ -31,7 +31,7 @@ end
 
 function utilmaps.wordProcessor()
     map('n', '<leader><Space>', function()
-        require('r.utils').ex_cmd('global', { "/^/pu=''" }, { silent = true })
+        vim.cmd.global "/^/pu=''"
     end, { desc = 'Double space entire file' })
     map('n', ',K', function()
         require('r.utils').dictionary(vim.fn.expand '<cword>')

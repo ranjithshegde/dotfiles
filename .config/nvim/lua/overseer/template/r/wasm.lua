@@ -15,7 +15,7 @@ local tmpl = {
 
         return {
             cmd = cmd,
-            components = { 'default', 'unique', { 'r.dispatch', save = params.save } },
+            components = { 'default', 'on_output_quickfix', 'unique', { 'r.dispatch', save = params.save } },
         }
     end,
 }
@@ -27,7 +27,7 @@ return {
             return vim.b.wasm ~= nil
         end,
     },
-    generator = function(_)
+    generator = function(_, cb)
         local commands = {
             { args = { 'emmake', 'make', '-j12' }, tags = { TAG.BUILD }, priority = 50, save = true },
             { args = { 'emrun', "--browser='brave'", vim.b.wasm }, tags = { TAG.TEST }, priority = 40 },
@@ -47,6 +47,6 @@ return {
                 }, { args = command.args, save = command.save })
             )
         end
-        return ret
+        cb(ret)
     end,
 }

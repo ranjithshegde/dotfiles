@@ -2,6 +2,8 @@
 --                          scratchPad                                --
 ------------------------------------------------------------------------
 
+local shell = require('r.utils').silent_shell
+
 local function isFile(file)
     local stat = vim.loop.fs_stat(file)
     if stat ~= nil then
@@ -14,10 +16,10 @@ end
 local function croot()
     local files = { 'compile_flags.txt', '.clang-format' }
     if not isFile(files[1]) then
-        require('r.utils').silent_shell { 'touch', files[1] }
+        shell { 'touch', files[1] }
     end
     if not isFile(files[2]) then
-        require('r.utils').silent_shell { 'clang-format', '--style=webkit', '-dump-config', '>', '.clang_format' }
+        shell { 'clang-format', '--style=webkit', '-dump-config', '>', '.clang_format' }
     end
 end
 
@@ -25,14 +27,14 @@ local function execRoot(type)
     if type == 'cpp' then
         croot()
     elseif type == 'js' then
-        require('r.utils').silent_shell { 'echo', "'{}'", '>', 'tsconfig.json' }
+        shell { 'echo', "'{}'", '>', 'tsconfig.json' }
     end
 end
 
 local function openScratch(type)
     local dir = vim.env.WORKSPACE .. type .. '/Scratch'
     if vim.loop.fs_stat(dir).type ~= 'directory' then
-        require('r.utils').silent_shell { 'mkdir', '-p', dir }
+        shell { 'mkdir', '-p', dir }
     end
     vim.cmd.lcd(dir)
 
@@ -40,8 +42,8 @@ local function openScratch(type)
         local stat = isFile(input)
         local ext = vim.fn.fnamemodify(input, ':e')
         if stat and stat.type == 'directory' or ext == '' then
-            vim.cmd { cmd = '!', args = { 'mkdir', '-p', input }, mods = { silent = true } }
-            vim.fn.execute('lcd ' .. input)
+            shell { 'mkdir', '-p', input }
+            vim.cmd.lcd(input)
             execRoot(type)
             vim.ui.input({ prompt = 'Enter  filename: ', completion = 'file' }, function(i)
                 vim.cmd.e(i)

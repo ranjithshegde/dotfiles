@@ -23,7 +23,7 @@ local tmpl = {
 
         return {
             cmd = cmd,
-            components = { 'default', 'unique', { 'r.dispatch', save = params.save } },
+            components = { 'default', 'on_output_quickfix', 'unique', { 'r.dispatch', save = params.save } },
         }
     end,
 }
@@ -35,7 +35,7 @@ return {
             return vim.b.makeFile == 'CMakeLists.txt'
         end,
     },
-    generator = function(_)
+    generator = function(_, cb)
         local commands = {
             { args = { 'make', '-C', 'build', 'clean' }, tags = { TAG.CLEAN }, priority = 70, dGPU = false },
             {
@@ -97,6 +97,6 @@ return {
                 }, { args = command.args, save = command.save, dGPU = command.dGPU })
             )
         end
-        return ret
+        cb(ret)
     end,
 }

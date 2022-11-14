@@ -64,9 +64,15 @@ function servers.ccls()
             },
         },
     }
+
+    -- require('ccls').setup { lsp = { lspconfig = server_config } }
+    -- require('ccls').setup { lsp = { use_defaults = true } }
+    -- require('ccls').setup { lsp = { use_defaults = true, codelens = { enable = true } } }
+
     require('ccls').setup {
         filetypes = filetypes,
         lsp = {
+            -- lspconfig = server_config,
             server = server_config,
             disable_capabilities = {
                 completionProvider = true,
@@ -84,6 +90,9 @@ function servers.ccls()
             },
             disable_diagnostics = true,
             disable_signature = true,
+            codelens = {
+                enable = true,
+            },
         },
     }
 end

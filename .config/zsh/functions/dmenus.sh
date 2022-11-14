@@ -1,5 +1,3 @@
-#!/bin/zsh
-
 dmenu_font="FiraCode Nerd Font:Medium:pixelsize=15:antialias=true:autohint=true"
 col_gray1="#222222"
 col_gray3="#bbbbbb"

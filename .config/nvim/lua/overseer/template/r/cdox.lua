@@ -23,7 +23,7 @@ return {
     condition = {
         filetype = { 'c', 'cpp' },
     },
-    generator = function()
+    generator = function(_, cb)
         local commands = {
             {
                 args = { 'doxygen', 'doxyconf' },
@@ -59,6 +59,6 @@ return {
                 }, { args = command.args })
             )
         end
-        return ret
+        cb(ret)
     end,
 }

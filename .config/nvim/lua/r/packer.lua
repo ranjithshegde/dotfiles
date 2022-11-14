@@ -5,7 +5,7 @@ local packer_path = vim.fn.stdpath 'data' .. '/site/pack/packer/start/packer.nvi
 local packer_bootstrap = false
 if not vim.loop.fs_stat(vim.fs.normalize(packer_path)) then
     packer_bootstrap = true
-    vim.fn.execute('!git clone https://github.com/wbthomason/packer.nvim ' .. packer_path)
+    require('r.utils').ex_cmd('!', { 'git', 'clone', 'https://github.com/wbthomason/packer.nvim', packer_path })
 end
 
 local function is_custom(env, path, plugin)
@@ -26,7 +26,7 @@ return require('packer').startup {
         use 'wbthomason/packer.nvim'
 
         -- Colorscheme
-        use 'EdenEast/nightfox.nvim'
+        use 'folke/tokyonight.nvim'
 
         -- Better marks
         use { 'ThePrimeagen/harpoon', module = 'harpoon' }
@@ -47,7 +47,7 @@ return require('packer').startup {
             'stevearc/overseer.nvim',
             module = 'overseer',
             config = function()
-                require('overseer').setup { templates = { 'builtin', 'r' } }
+                require('overseer').setup { templates = { 'builtin', 'r' }, default_template_prompt = 'avoid' }
             end,
         }
 

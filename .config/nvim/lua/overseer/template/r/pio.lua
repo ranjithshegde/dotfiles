@@ -15,7 +15,7 @@ local tmpl = {
 
         return {
             cmd = cmd,
-            components = { 'default', 'unique', { 'r.dispatch', save = params.save } },
+            components = { 'default', 'on_output_quickfix', 'unique', { 'r.dispatch', save = params.save } },
         }
     end,
 }
@@ -27,7 +27,7 @@ return {
             return vim.b.makeFile == 'platformio.ini'
         end,
     },
-    generator = function(_)
+    generator = function(_, cb)
         local commands = {
             { args = { 'run' }, tags = { TAG.BUILD }, priority = 20, save = true },
             { args = { 'run', '-t', 'upload' }, tags = { TAG.TEST }, priority = 10 },
@@ -51,6 +51,6 @@ return {
             )
         end
         table.insert(ret, overseer.wrap_template(tmpl, { name = 'pio', priority = 50, desc = 'Run with custom args' }))
-        return ret
+        cb(ret)
     end,
 }

@@ -10,6 +10,7 @@ vim.filetype.add {
         pd_luax = 'lua',
         cl = 'opencl',
         make = 'make',
+        uproject = 'json',
     },
     filename = {
         ['/etc/environment'] = 'confini',

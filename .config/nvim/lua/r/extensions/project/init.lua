@@ -1,6 +1,5 @@
 local uv = vim.loop
 local shell = require('r.utils').silent_shell
-local ex_cmd = require('r.utils').ex_cmd
 
 local boilerplate = {
     webdev = { js = { '{}' } },
@@ -106,10 +105,10 @@ local function exec_async(cmd, args, callback, ...)
     end)
 end
 
-local function exec_sync(cmd, file)
+local function exec_sync(cmd, callback, args)
     vim.fn.jobstart(cmd, {
         on_exit = function()
-            vim.cmd.edit(file)
+            callback(args)
         end,
     })
 end
@@ -155,9 +154,9 @@ local function create_of(add)
 
         table.insert(args, 1, 'projectGenerator')
         shell(args)
-        ex_cmd('cd', { i })
+        vim.cmd.cd(i)
         shell { 'clang-format', '--style=webkit', '-dump-config', '>', '.clang_format' }
-        exec_sync('compiledb -n make', 'src/ofApp.h')
+        exec_sync('compiledb -n make', vim.cmd.edit, 'src/ofApp.h')
         exec_async('git', { 'init' }, write_file, '.gitignore', boilerplate.cpp.of.gitignore)
     end)
 end
@@ -177,10 +176,10 @@ local function select_addons(addon, list)
 end
 
 function projects.oF()
-    ex_cmd('cd', { vim.env.WORKSPACE .. '/openFrameworks' })
+    vim.cmd.cd(vim.env.WORKSPACE .. '/openFrameworks')
     vim.ui.input({ prompt = 'Enter filename or directory : ', completion = 'file' }, function(input)
         shell { 'mkdir', '-p', input }
-        ex_cmd('cd', { input })
+        vim.cmd.cd(input)
         vim.ui.select({ 'true', 'false' }, { prompt = 'Using addons?' }, function(choice)
             if choice == 'true' then
                 select_addons(get_addons(), '')
@@ -196,10 +195,10 @@ end
 ------------------------------------------------------------------------
 
 function projects.micro()
-    ex_cmd('cd', { vim.env.WORKSPACE .. '/electronics' })
+    vim.cmd.cd(vim.env.WORKSPACE .. '/electronics')
     vim.ui.input({ prompt = 'Enter project name', completion = 'file' }, function(input)
         shell { 'mkdir', '-p', input }
-        ex_cmd('cd', { input })
+        vim.cmd.cd(input)
 
         vim.ui.input({ prompt = 'Enter board name' }, function(board)
             shell { 'pio', 'project', 'init', '--board', board }
@@ -254,10 +253,10 @@ local function create_cmake_list(project_name, libs)
 end
 
 function projects.cmake()
-    ex_cmd('cd', { vim.env.WORKSPACE .. '/cpp/Projects' })
+    vim.cmd.cd(vim.env.WORKSPACE .. '/cpp/Projects')
     vim.ui.input({ prompt = 'Enter project name', completion = 'file' }, function(input)
         shell { 'mkdir', '-p', input }
-        ex_cmd('cd', { input })
+        vim.cmd.cd(input)
 
         shell { 'mkdir', 'src' }
         shell { 'mkdir', 'include' }
@@ -278,7 +277,7 @@ function projects.cmake()
 
             shell { 'clang-format', '--style=webkit', '-dump-config', '>', '.clang_format' }
             shell { 'chmod', 'u+x', 'autoBuild' }
-            exec_sync('autoBuild project', 'src/main.cpp')
+            exec_sync('autoBuild project', vim.cmd.edit, 'src/main.cpp')
         end)
     end)
 end
@@ -288,10 +287,10 @@ end
 ------------------------------------------------------------------------
 
 function projects.webdev()
-    ex_cmd('cd', { vim.env.WORKSPACE .. '/websites/' })
+    vim.cmd.cd(vim.env.WORKSPACE .. '/websites/')
     vim.ui.input({ prompt = 'Enter project name', completion = 'file' }, function(input)
         shell { 'mkdir', '-p', input }
-        ex_cmd('cd', { input })
+        vim.cmd.cd(input)
 
         exec_async(
             'cp',

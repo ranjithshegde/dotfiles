@@ -9,7 +9,7 @@ return {
     builder = function(_)
         return {
             cmd = { 'valgrind', '--leak-check=full', '--track-origins=yes', vim.b.debugBin },
-            components = { 'default', 'unique', 'r.dispatch' },
+            components = { 'default', 'on_output_quickfix', 'unique', 'r.dispatch' },
         }
     end,
     condition = { filetype = { 'c', 'cpp' } },

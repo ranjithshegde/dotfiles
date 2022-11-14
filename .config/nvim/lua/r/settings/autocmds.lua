@@ -51,8 +51,10 @@ aucmd('FileType', {
             vim.wo.winbar = nil
             return
         end
-        vim.o.relativenumber = true
-        vim.wo[vim.fn.bufwinid(args.buf)].cursorline = true
+        if vim.bo.buftype == '' then
+            vim.o.relativenumber = true
+            vim.wo[vim.fn.bufwinid(args.buf)].cursorline = true
+        end
     end,
     desc = 'Disable all custom decoration rules for non-language filetypes',
 })
@@ -244,22 +246,6 @@ aucmd('TermClose', {
         end
     end,
     desc = 'Remove the annoying [exited] termexit prompt',
-})
-aucmd('CmdlineEnter', {
-    pattern = [[/,\?]],
-    group = id.TermOptions,
-    callback = function()
-        vim.o.hlsearch = true
-    end,
-    desc = 'Use hlsearch when searching',
-})
-aucmd('CmdlineLeave', {
-    pattern = [[/,\?]],
-    group = id.TermOptions,
-    callback = function()
-        vim.o.hlsearch = false
-    end,
-    desc = 'Disable hlsearch on search exit',
 })
 
 ------------------------------------------------------------------------

@@ -15,11 +15,10 @@ local bufferPicker = {
         i = {
             ['<C-x>'] = function(prompt_bufnr)
                 local current_picker = require('telescope.actions.state').get_current_picker(prompt_bufnr)
-                local selected_bufnr = require('telescope.actions.state').get_selected_entry().bufnr
 
                 local replacement_buffers = {}
                 for entry in current_picker.manager:iter() do
-                    if entry.bufnr < selected_bufnr then
+                    if entry.bufnr < require('telescope.actions.state').get_selected_entry().bufnr then
                         table.insert(replacement_buffers, 1, entry.bufnr)
                     end
                 end
@@ -47,11 +46,11 @@ local function navigate(prompt_bufnr, maps, cwd, files)
         local wd = require('telescope.actions.state').get_selected_entry().value
         require('telescope.actions.set').select(prompt_bufnr, window)
         if files then
-            vim.fn.execute('tcd ' .. cwd)
+            vim.cmd.tcd(cwd)
         end
         if not require('plenary.path'):new(wd):is_dir() then
             local dir = vim.fn.fnamemodify(wd, ':p:h')
-            vim.fn.execute('tcd ' .. dir)
+            vim.cmd.tcd(dir)
         end
     end
     maps('n', '<CR>', function()

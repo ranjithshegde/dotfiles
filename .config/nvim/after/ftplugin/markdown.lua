@@ -1,6 +1,16 @@
 vim.bo.tabstop = 2
 vim.o.textwidth = 80
 
-vim.keymap.set('n', '<F5>', function()
-    require('overseer').run_template { name = 'shell', params = { cmd = 'glow ' .. vim.fn.expand '%' } }
-end, { buffer = true, desc = 'Run glow' })
+local task = nil
+local function start_task()
+    if task == nil then
+        task = require('overseer').new_task {
+            cmd = { 'glow' },
+            args = { vim.fn.expand '%' },
+            components = { 'default', 'unique' },
+        }
+    end
+    task:start()
+end
+
+vim.keymap.set('n', '<F5>', start_task, { buffer = true, desc = 'Run glow' })

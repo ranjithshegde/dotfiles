@@ -1808,12 +1808,6 @@ freetype-font=Noto Sans
 # Musicbrainz Server (string)
 #musicbrainz-server=musicbrainz.org
 
-# CDDB Server (string)
-#cddb-server=freedb.videolan.org
-
-# CDDB port (integer)
-#cddb-port=80
-
 [vdpau_chroma] # VDPAU surface conversions
 
 # Deinterlace (integer)

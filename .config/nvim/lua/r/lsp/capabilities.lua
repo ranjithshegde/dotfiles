@@ -31,7 +31,7 @@ return function()
 
     local function make_client_info(client)
         local info = client.name .. ' (id ' .. tostring(client.id) .. ')'
-        local capabils = { '## Capabilities:', '```json' }
+        local capabils = { '## Capabilities:', '```lua' }
         if client.server_capabilities then
             local all = client.server_capabilities
             local cap_resolved = available_capabilities(client.server_capabilities)
@@ -65,15 +65,15 @@ return function()
                                 end
                                 table.insert(capabils, '\t\t }')
                             else
-                                table.insert(capabils, '\t\t ' .. val .. [[ = "true",]])
+                                table.insert(capabils, '\t\t ' .. val .. '= true,')
                             end
                         end
                         table.insert(capabils, '\t },')
                     else
-                        table.insert(capabils, '\t ' .. value .. [[ = "true",]])
+                        table.insert(capabils, '\t ' .. value .. '= true,')
                     end
                 else
-                    table.insert(capabils, '\t ' .. value .. [[ = "false",]])
+                    table.insert(capabils, '\t ' .. value .. '= false,')
                 end
             end
         end

@@ -20,7 +20,7 @@ local tmpl = {
 
         return {
             cmd = cmd,
-            components = { 'default', 'unique', { 'r.dispatch', save = params.save } },
+            components = { 'default', 'on_output_quickfix', 'unique', { 'r.dispatch', save = params.save } },
         }
     end,
 }
@@ -33,7 +33,7 @@ return {
             return makeprg == 'g++' or makeprg == 'gcc'
         end,
     },
-    generator = function(opts)
+    generator = function(opts, cb)
         local compiler = opts.filetype == 'cpp' and 'g++' or 'gcc'
         local commands = {
             {
@@ -61,6 +61,6 @@ return {
                 }, { args = command.args, save = command.save })
             )
         end
-        return ret
+        cb(ret)
     end,
 }

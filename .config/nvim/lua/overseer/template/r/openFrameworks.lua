@@ -27,7 +27,7 @@ local tmpl = {
 
         return {
             cmd = cmd,
-            components = { 'default', 'unique', { 'r.dispatch', save = params.save } },
+            components = { 'default', 'on_output_quickfix', 'unique', { 'r.dispatch', save = params.save } },
         }
     end,
 }
@@ -39,7 +39,7 @@ return {
             return vim.b.makeFile == 'Makefile'
         end,
     },
-    generator = function(_)
+    generator = function(_, cb)
         local commands = {
             { args = { 'make' }, tags = { TAG.TEST }, priority = 10 },
             { args = { 'make', '-j12' }, tags = { TAG.BUILD }, priority = 20, save = true },
@@ -65,6 +65,6 @@ return {
                 }, { args = command.args, save = command.save })
             )
         end
-        return ret
+        cb(ret)
     end,
 }

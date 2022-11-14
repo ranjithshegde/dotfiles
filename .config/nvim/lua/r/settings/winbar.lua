@@ -2,14 +2,14 @@
 --                              Winbar                                --
 ------------------------------------------------------------------------
 
-return function(n)
+local function win_validate(n)
     local win_config = vim.api.nvim_win_get_config(n)
     local win_info = vim.fn.getwininfo(n)[1]
 
     -- Dont set winbar to quickfix windows, terminals or popups
     if win_config.relative ~= '' or win_info.quickfix ~= 0 or win_info.terminal ~= 0 then
         vim.wo[n].winbar = nil
-        return
+        return false
     end
 
     local tabpage = vim.api.nvim_win_get_tabpage(n)
@@ -18,7 +18,7 @@ return function(n)
     -- No need for winbar if its the only window inside the tab
     if #list <= 1 then
         vim.wo[n].winbar = nil
-        return
+        return false
     end
 
     local i = #list
@@ -32,6 +32,14 @@ return function(n)
     -- Dont set winbars if the other windows are N/A buffers
     if i <= 1 then
         vim.wo[n].winbar = nil
+        return false
+    end
+
+    return true
+end
+
+return function(n)
+    if not win_validate(n) then
         return
     end
 

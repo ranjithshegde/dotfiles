@@ -19,7 +19,7 @@ local tmpl = {
 
         return {
             cmd = cmd,
-            components = { 'default', 'unique', { 'r.dispatch', save = params.save } },
+            components = { 'default', 'on_output_quickfix', 'unique', { 'r.dispatch', save = params.save } },
         }
     end,
 }
@@ -28,7 +28,7 @@ return {
     condition = {
         filetype = { 'dart' },
     },
-    generator = function(_)
+    generator = function(_, cb)
         local commands = {
             { args = { 'build' }, tags = { TAG.BUILD }, priority = 10, save = true },
             { args = { 'run' }, tags = { TAG.TEST }, priority = 20 },
@@ -48,6 +48,6 @@ return {
             ret,
             overseer.wrap_template(tmpl, { name = 'Flutter', priority = 50, desc = 'Run with custom args' })
         )
-        return ret
+        cb(ret)
     end,
 }

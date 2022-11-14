@@ -4,7 +4,7 @@ inode/directory=ranger.desktop;
 x-scheme-handler/http=org.qutebrowser.qutebrowser.desktop;brave-browser.desktop;
 x-scheme-handler/https=org.qutebrowser.qutebrowser.desktop;brave-browser.desktop;
 text/html=brave-browser.desktop;
-application/x-cd-image=org.kde.kwikdisk.desktop;org.kde.kdf.desktop;
+application/octet-stream=f3d.desktop;blender.desktop;
 
 [Default Applications]
 application/pdf=sioyek.desktop

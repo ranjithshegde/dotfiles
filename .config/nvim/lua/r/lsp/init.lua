@@ -35,15 +35,6 @@ function lsp.attach(client, bufnr)
     local sc = client.server_capabilities
 
     if client.name == 'ccls' then
-        id['LspCodeLens_' .. client.name .. '_' .. bufnr] = augroup('LspCodeLens_' .. client.name .. '_' .. bufnr, opts)
-        aucmd({ 'BufEnter', 'BufWritePost' }, {
-            buffer = bufnr,
-            group = id['LspCodeLens_' .. client.name .. '_' .. bufnr],
-            callback = vim.lsp.codelens.refresh,
-            desc = 'Refresh codelens on save',
-        })
-        require('r.utils').register_au_id(id)
-        vim.lsp.codelens.refresh()
         vim.bo[bufnr].tagfunc = ''
         return
     end
