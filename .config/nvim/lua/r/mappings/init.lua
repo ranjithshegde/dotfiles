@@ -11,7 +11,7 @@ local open = function(path)
         if vim.api.nvim_buf_get_name(vim.api.nvim_get_current_buf()) ~= '' then
             cmd = 'tabnew'
         end
-        vim.cmd[cmd] { args = { '~/.config/nvim/' .. path } }
+        vim.cmd[cmd] { args = { vim.fn.stdpath 'config' .. '/' .. path } }
     end
 end
 
@@ -25,12 +25,21 @@ local function open_term(split)
             open_num = num
             num = num + 1
         end
+        vim.notify('Opening terminal indexed ' .. open_num)
         if not split then
             require('harpoon.term').gotoTerminal(open_num)
             return
         end
-        vim.cmd[split]()
-        require('harpoon.term').gotoTerminal(open_num)
+        local args = { idx = open_num }
+        if split == 'split' then
+            args.create_with = 'botright new | terminal'
+        elseif split == 'vsplit' then
+            args.create_with = 'belowright vnew | terminal'
+        elseif split == 'tabnew' then
+            args.create_with = 'tabnew | terminal'
+        end
+        -- vim.cmd[split]()
+        require('harpoon.term').gotoTerminal(args)
     end
 end
 

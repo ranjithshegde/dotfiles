@@ -35,6 +35,7 @@ tables.lspfiles = {
     'rust',
     'sql',
     'mysql',
+    'toml',
     'vim',
     'yaml',
 }
@@ -193,6 +194,12 @@ tables.tsNodes = {
             'if_statement',
             'for_statement',
             'linkage_specification',
+        },
+        cmake = {
+            'identifier',
+            'normal_command',
+            'argument',
+            'unquoted_argument',
         },
         json = {
             'object',

@@ -21,7 +21,7 @@ export CARGO_HOME="${XDG_DATA_HOME}/cargo"
 export CONAN_USER_HOME="${XDG_DATA_HOME}/conan"
 export CUDA_CACHE_PATH="${XDG_CACHE_HOME}/nv"
 export DOCKER_CONFIG="${XDG_CONFIG_HOME}/docker"
-export EMSDK="${HOME}/Software/libraries/emsdk"
+export EMSDK="${HOME}/Repositories/libraries/emsdk"
 export EM_CONFIG="${EMSDK}/.emscripten"
 export EM_NODE="${EMSDK}/node/14.8.2_64bit/bin/node"
 export GDBHISTFILE="${XDG_DATA_HOME}/gdb/history"
@@ -88,9 +88,9 @@ export QT_STYLE_OVERRIDE=kvantum
 export __EGL_VENDOR_LIBRARY_FILENAMES="/usr/share/glvnd/egl_vendor.d/50_mesa.json"
 
 # CUSTOM PATH ENVS
-export CWORK="${HOME}/Software/Workspaces/cpp"
-export WORKSPACE="${HOME}/Software/Workspaces/"
-export PG_OF_PATH="${HOME}/Software/libraries/openFrameworks"
+export CWORK="${HOME}/Workspaces/cpp"
+export WORKSPACE="${HOME}/Workspaces/"
+export PG_OF_PATH="${HOME}/Repositories/libraries/openFrameworks"
 
 # Addition to path...
 appendpath() {

@@ -32,7 +32,11 @@ local function execRoot(type)
 end
 
 local function openScratch(type)
-    local dir = vim.env.WORKSPACE .. type .. '/Scratch'
+    local workspace = vim.env.WORKSPACE
+    if workspace == nil then
+        workspace = vim.fn.input('Enter Worksapce Dir: ', '', 'file')
+    end
+    local dir = workspace .. type .. '/Scratch'
     if vim.loop.fs_stat(dir).type ~= 'directory' then
         shell { 'mkdir', '-p', dir }
     end

@@ -13,9 +13,9 @@ local subscribe = require 'el.subscribe'
 local id = {}
 id.StatusLineSetup = vim.api.nvim_create_augroup('StatusLineSetup', { clear = true })
 
-local function reverse_hls(hl1, hl2)
+local function seperator_hl(hl1, hl2)
     local cursor_hl = vim.api.nvim_get_hl_by_name(hl1, true)
-    vim.api.nvim_set_hl(0, hl2, { fg = cursor_hl.background, bg = cursor_hl.foreground })
+    vim.api.nvim_set_hl(0, hl2, { fg = cursor_hl.background })
 end
 
 --*********************************** Basics ----------------------------
@@ -128,11 +128,19 @@ local mode = subscribe.buf_autocmd('el_mode', 'ModeChanged', function()
     local current_mode = get_mode()
     local current_hl = mode_to_highlight[current_mode]
     if current_hl then
-        reverse_hls(current_hl, 'ModeSep')
+        seperator_hl(current_hl, 'ModeSep')
         current_hl = '%#' .. current_hl .. '# '
         return current_hl .. current_mode .. ' %#ModeSep#' .. right_separator .. ' %##'
     end
 end)
+
+-- local test_au = vim.api.nvim_create_augroup('ModeTest', { clear = true })
+-- vim.api.nvim_create_autocmd('ModeChanged', {
+--     group = test_au,
+--     callback = function(args)
+--         vim.pretty_print(args)
+--     end,
+-- })
 
 --*********************************** Scroll & position -------------------
 local scroll = subscribe.buf_autocmd('el_scroll', 'CursorMoved,CursorMovedI', function(_, _)
@@ -267,7 +275,7 @@ return function()
     vim.api.nvim_create_autocmd('ColorScheme', {
         group = id.StatusLineSetup,
         callback = function()
-            reverse_hls('MiniStatuslineModeVisual', 'ScrollSep')
+            seperator_hl('MiniStatuslineModeVisual', 'ScrollSep')
             require('el').reset_windows()
         end,
     })

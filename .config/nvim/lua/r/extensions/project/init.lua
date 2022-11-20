@@ -1,6 +1,11 @@
 local uv = vim.loop
 local shell = require('r.utils').silent_shell
 
+local workspace = vim.env.WORKSPACE
+if workspace == nil then
+    workspace = vim.fn.input('Enter Worksapce Dir: ', '', 'file')
+end
+
 local boilerplate = {
     webdev = { js = { '{}' } },
     cpp = {
@@ -176,7 +181,7 @@ local function select_addons(addon, list)
 end
 
 function projects.oF()
-    vim.cmd.cd(vim.env.WORKSPACE .. '/openFrameworks')
+    vim.cmd.cd(workspace .. '/openFrameworks')
     vim.ui.input({ prompt = 'Enter filename or directory : ', completion = 'file' }, function(input)
         shell { 'mkdir', '-p', input }
         vim.cmd.cd(input)
@@ -195,7 +200,7 @@ end
 ------------------------------------------------------------------------
 
 function projects.micro()
-    vim.cmd.cd(vim.env.WORKSPACE .. '/electronics')
+    vim.cmd.cd(workspace .. '/electronics')
     vim.ui.input({ prompt = 'Enter project name', completion = 'file' }, function(input)
         shell { 'mkdir', '-p', input }
         vim.cmd.cd(input)
@@ -253,7 +258,7 @@ local function create_cmake_list(project_name, libs)
 end
 
 function projects.cmake()
-    vim.cmd.cd(vim.env.WORKSPACE .. '/cpp/Projects')
+    vim.cmd.cd(workspace .. '/cpp/Projects')
     vim.ui.input({ prompt = 'Enter project name', completion = 'file' }, function(input)
         shell { 'mkdir', '-p', input }
         vim.cmd.cd(input)
@@ -287,7 +292,7 @@ end
 ------------------------------------------------------------------------
 
 function projects.webdev()
-    vim.cmd.cd(vim.env.WORKSPACE .. '/websites/')
+    vim.cmd.cd(workspace .. '/websites/')
     vim.ui.input({ prompt = 'Enter project name', completion = 'file' }, function(input)
         shell { 'mkdir', '-p', input }
         vim.cmd.cd(input)

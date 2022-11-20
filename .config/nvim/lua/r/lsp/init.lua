@@ -110,34 +110,21 @@ end
 ------------------------------------------------------------------------
 
 function lsp.servers()
-    local lspconf = require 'lspconfig.configs'
-    if not lspconf.neocmake then
-        lspconf.neocmake = {
-            default_config = {
-                cmd = { 'neocmakelsp', '--stdio' },
-                filetypes = { 'cmake' },
-                root_dir = function()
-                    return vim.fs.dirname(vim.fs.find({ '.git' }, { upward = true })[1])
-                end,
-                single_file_support = true,
-            },
-        }
-    end
-
     local pid = vim.fn.getpid()
     local configs = {
         yamlls = {},
         html = { capabilities = lsp.capabilities() },
         cssls = { capabilities = lsp.capabilities() },
+        taplo = { capabilities = lsp.capabilities() },
         vimls = { capabilities = lsp.capabilities() },
         dartls = { capabilities = lsp.capabilities() },
         jsonls = { capabilities = lsp.capabilities() },
         perlpls = { capabilities = lsp.capabilities() },
         pyright = { capabilities = lsp.capabilities() },
-        neocmake = { capabilities = lsp.capabilities() },
         dockerls = { capabilities = lsp.capabilities() },
-        tsserver = { capabilities = lsp.capabilities() },
         marksman = { capabilities = lsp.capabilities() },
+        neocmake = { capabilities = lsp.capabilities() },
+        tsserver = { capabilities = lsp.capabilities() },
         rust_analyzer = { capabilities = lsp.capabilities() },
         bashls = {
             capabilities = lsp.capabilities(),
@@ -249,14 +236,12 @@ function lsp.lintFormat()
         nb.formatting.isort,
         nb.formatting.shfmt,
         nb.formatting.stylua,
+        nb.formatting.prettier,
         nb.formatting.clang_format.with {
             filetypes = { 'glsl' },
         },
         nb.formatting.cmake_format.with {
             extra_args = { '--config-file', vim.env.XDG_CONFIG_HOME .. '/cmake-format.json', '--' },
-        },
-        nb.formatting.prettier.with {
-            extra_filetypes = { 'toml' },
         },
     }
     require('null-ls').setup { sources = sources }

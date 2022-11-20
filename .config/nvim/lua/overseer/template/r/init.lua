@@ -9,4 +9,5 @@ return {
     'r.cmake',
     'r.openFrameworks',
     'r.cdox',
+    'r.dotnet',
 }

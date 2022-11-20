@@ -38,9 +38,8 @@ ignore_failures = ["shell"]
 #max_concurrency = 5
 repos = [
     "/opt/vcpkg",
-    "~/Software/libraries/openFrameworks/",
-    "~/Software/libraries/emsdk/",
-#    "~/src/*/",
+    "~/Repositories/libraries/openFrameworks/",
+    "~/Repositories/libraries/emsdk/",
 ]
 
 # Don't pull the predefined git repos

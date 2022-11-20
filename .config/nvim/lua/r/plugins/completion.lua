@@ -129,12 +129,16 @@ end
 function completion.pairs()
     local npairs = require 'nvim-autopairs'
     npairs.setup { check_ts = true }
+    local ts_conds = require 'nvim-autopairs.ts-conds'
 
     local Rule = require 'nvim-autopairs.rule'
     npairs.add_rules {
         Rule('|', '|', 'supercollider'),
         Rule('$', '$', 'tex'),
         Rule('`', "'", 'tex'),
+        Rule('"', '",', 'lua'):with_pair(ts_conds.is_ts_node 'table_constructor'),
+        Rule('{', '},', 'lua'):with_pair(ts_conds.is_ts_node 'table_constructor'),
+        Rule("'", "',", 'lua'):with_pair(ts_conds.is_ts_node 'table_constructor'),
     }
 
     require('cmp').event:on(
