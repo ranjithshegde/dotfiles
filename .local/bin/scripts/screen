@@ -1,0 +1,60 @@
+#!/bin/sh
+# shellcheck disable=3030,3044,3037,3054
+# Description: Sends X display to an hdmi monitor and turns internal
+# display off when an HDMI cable is physically connected; turns monitor display
+# off and internal display back on when HDMI cable is physically disconnected.
+
+declare options=(
+    "Left
+Right")
+
+connect_external(){
+    notify-send "Connecting"
+    choice=$(echo -e "${options[@]}" | dmenu -i -c -l 2 -p 'Choose HDMI screen position: ')
+    case "$choice" in
+        Left) position='--left-of'
+            ;;
+        Right) position='--right-of'
+            ;;
+        *) position='--right-of'
+            ;;
+    esac
+
+    notify-send "$1"
+    xrandr --output "${internal}" --primary --mode 1920x1080 --rate 144 --dpi 96 --output "$1" "${position}" "${internal}" --mode 1920x1080 --rate 60 --dpi 96
+}
+
+# Specify your username and user ID
+if [ "${DESKTOP_SESSION}" = "dwm" ]; then
+    USER_NAME=ranjith
+    USER_ID=1000
+
+    # Export user's X-related environment variables
+    export DISPLAY=":0"
+    export XAUTHORITY="/home/${USER_NAME}/.local/share/Xauthority"
+    export DBUS_SESSION_BUS_ADDRESS="unix:path=/run/user/${USER_ID}/bus"
+
+    # Video output and hdmi_device names recogized by xrandr/sysfs
+    internal="eDP-1"        # change as needed
+
+    hdmi="HDMI-1-0"     # change as needed
+    hdmi_device="card1-HDMI-A-1" # change as needed
+    hdmi_status="$(/usr/bin/cat /sys/class/drm/${hdmi_device}/status)"
+
+    usbc="DP-1-0"
+    usbc_device="card1-DP-1"
+    usbc_status="$(/usr/bin/cat /sys/class/drm/${usbc_device}/status)"
+
+
+
+    if [ "${hdmi_status}" = "connected" ]; then
+        connect_external ${hdmi}
+    elif [ "${usbc_status}" = "connected" ]; then
+        connect_external ${usbc}
+    else
+        xrandr --output "${hdmi}" --off  --output "${usbc}" --off --output "${internal}" --mode 1920x1080 --rate 144 --dpi 96
+    fi
+
+    launch-polybar
+    nitrogen --force-setter=xinerama --restore || true
+fi

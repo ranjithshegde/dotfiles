@@ -47,7 +47,7 @@ return require('packer').startup {
             'stevearc/overseer.nvim',
             module = 'overseer',
             config = function()
-                require('overseer').setup { templates = { 'builtin', 'r' }, default_template_prompt = 'avoid' }
+                require('r.plugins').overseer()
             end,
         }
 

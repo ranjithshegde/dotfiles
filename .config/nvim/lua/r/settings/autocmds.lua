@@ -324,6 +324,7 @@ aucmd('InsertEnter', {
         if not ignore_files() then
             require('r.plugins.completion').init()
             vim.api.nvim_del_autocmd(args.id)
+            require('cmp').complete()
         end
     end,
     desc = 'Initialize completion framework only when entering relevant buffers',

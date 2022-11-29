@@ -225,17 +225,18 @@ function lsp.lintFormat()
     local sources = {
         nb.code_actions.shellcheck,
 
-        nb.diagnostics.checkmake,
-        nb.diagnostics.flake8,
-        nb.diagnostics.shellcheck,
         nb.diagnostics.zsh,
+        nb.diagnostics.flake8,
+        nb.diagnostics.checkmake,
         nb.diagnostics.stylelint,
+        nb.diagnostics.shellcheck,
 
         nb.formatting.black,
         nb.formatting.cbfmt,
         nb.formatting.isort,
         nb.formatting.shfmt,
         nb.formatting.stylua,
+        nb.formatting.beautysh,
         nb.formatting.prettier,
         nb.formatting.clang_format.with {
             filetypes = { 'glsl' },

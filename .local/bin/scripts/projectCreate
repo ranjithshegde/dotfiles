@@ -2,35 +2,35 @@
 # shellcheck disable=2220,2034,2162,3010,3037,2164,3014
 
 help() {
-	echo "usage: projectCreate -l lang "
-	echo "optional : -g intialise a git repo inside project folder"
-	echo "         : -h show this help message"
-	echo "         : -p projectName -c className -e executableName"
+    echo "usage: projectCreate -l lang "
+    echo "optional : -g intialise a git repo inside project folder"
+    echo "         : -h show this help message"
+    echo "         : -p projectName -c className -e executableName"
 }
 
 git_init='false'
 
 while getopts "l:hgp:c:e:" flag; do
-	case "${flag}" in
-	g)
-		git_init='true'
-		;;
-	l)
-		lang="${OPTARG}"
-		;;
-	p)
-		project_name="${OPTARG}"
-		;;
-	c)
-		class_name="${OPTARG}"
-		;;
-	e)
-		exe_name="${OPTARG}"
-		;;
-	h)
-		help
-		;;
-	esac
+    case "${flag}" in
+        g)
+            git_init='true'
+            ;;
+        l)
+            lang="${OPTARG}"
+            ;;
+        p)
+            project_name="${OPTARG}"
+            ;;
+        c)
+            class_name="${OPTARG}"
+            ;;
+        e)
+            exe_name="${OPTARG}"
+            ;;
+        h)
+            help
+            ;;
+    esac
 done
 
 [[ -z $lang ]] && printf "Enter Language Name : " && read lang
@@ -38,235 +38,235 @@ done
 
 gradle_init() {
 
-	[[ -z $class_name ]] && printf "Enter class Name : " && read class_name
+    [[ -z $class_name ]] && printf "Enter class Name : " && read class_name
 
-	mkdir -p $project_name || exit
-	mkdir -p $project_name/src/main/java
-	mkdir -p $project_name/src/main/resources
+    mkdir -p ${project_name} || exit
+    mkdir -p ${project_name}/src/main/java
+    mkdir -p ${project_name}/src/main/resources
 
-	(
-		echo "bin/*"
-		echo ".project"
-		echo ".gradle/*"
-		echo ".settings/*"
-		echo ".classpath"
-		echo "build/*"
-	) >$project_name/.gitignore
+    (
+        echo "bin/*"
+        echo ".project"
+        echo ".gradle/*"
+        echo ".settings/*"
+        echo ".classpath"
+        echo "build/*"
+    ) >$project_name/.gitignore
 
-	(
-		echo -e "plugins{"
-		echo -e "\tid 'java'"
-		echo -e "}"
-		echo -e "jar {"
-		echo -e "\tmanifest {"
-		echo -e "\t\tattributes 'Main-Class': '$class_name'"
-		echo -e "\t}\n}\n"
-	) >$project_name/build.gradle
+    (
+        echo -e "plugins{"
+        echo -e "\tid 'java'"
+        echo -e "}"
+        echo -e "jar {"
+        echo -e "\tmanifest {"
+        echo -e "\t\tattributes 'Main-Class': '$class_name'"
+        echo -e "\t}\n}\n"
+    ) >$project_name/build.gradle
 
-	folder="$(echo $project_name | sed "s/\./\//g" | xargs dirname)"
-	class="$(echo $class_name | sed "s/\./\//g" | xargs basename)"
-	mkdir -p $project_name/src/main/java/$folder
-	touch $project_name/src/main/java/$folder/$class.java
-	[ "$git_init" == "true" ] && git init $project_name
+    folder="$(echo ${project_name} | sed "s/\./\//g" | xargs dirname)"
+    class="$(echo ${class_name} | sed "s/\./\//g" | xargs basename)"
+    mkdir -p ${project_name}/src/main/java/${folder}
+    touch ${project_name}/src/main/java/${folder}/${class}.java
+    [ "$git_init" == "true" ] && git init ${project_name}
 }
 
 pdCBuild() {
-	mkdir "$project_name" || exit
-	(
-		echo 'lib.name = '"$project_name"'lib'
-		echo ''
-		echo 'class.sources = '"$project_name"'.c'
-		echo ''
-		echo 'include ~/.local/include/Makefile.pdlibbuilder'
-	) >"$project_name"/Makefile
+    mkdir "$project_name" || exit
+    (
+        echo 'lib.name = '"$project_name"'lib'
+        echo ''
+        echo 'class.sources = '"$project_name"'.c'
+        echo ''
+        echo 'include ~/.local/include/Makefile.pdlibbuilder'
+    ) >"$project_name"/Makefile
 
-	touch "$project_name"/"$project_name".c
+    touch "$project_name"/"$project_name".c
 
-	(
-		echo '#include "m_pd.h"'
-	) >"$project_name"/"$project_name".c
+    (
+        echo '#include "m_pd.h"'
+    ) >"$project_name"/"$project_name".c
 
-	(
-		echo 'compile_commands.json'
-		echo '.clangd/*'
-		echo '.clang-format'
-	) >"$project_name"/.gitignore
+    (
+        echo 'compile_commands.json'
+        echo '.clangd/*'
+        echo '.clang-format'
+    ) >"$project_name"/.gitignore
 
-	clang-format -style=webkit -dump-config >"$project_name"/.clang-format
+    clang-format -style=webkit -dump-config >"$project_name"/.clang-format
 
-	cd "$project_name" || exit
-	compiledb -n make
+    cd "$project_name" || exit
+    compiledb -n make
 }
 
 electronics() {
 
-	[[ -z $board_name ]] && printf "Enter board Name : " && read board_name
+    [[ -z $board_name ]] && printf "Enter board Name : " && read board_name
 
-	mkdir "$project_name" && cd "$project_name"
+    mkdir "$project_name" && cd "$project_name"
 
-	pio project init --board "$board_name"
+    pio project init --board "$board_name"
 
-	(
-		echo '#include<Arduino.h>'
-		echo ''
-		echo 'void setup()'
-		echo '{'
-		echo '}'
-		echo ''
-		echo 'void loop()'
-		echo '{'
-		echo '}'
+    (
+        echo '#include<Arduino.h>'
+        echo ''
+        echo 'void setup()'
+        echo '{'
+        echo '}'
+        echo ''
+        echo 'void loop()'
+        echo '{'
+        echo '}'
 
-	) >src/main.cpp
+    ) >src/main.cpp
 
-	clang-format -style=webkit -dump-config >.clang-format
+    clang-format -style=webkit -dump-config >.clang-format
 
-	pio run -t compiledb
+    pio run -t compiledb
 
-	(
-		echo 'build/*'
-		echo 'compile_commands.json'
-		echo '.clangd/*'
-		echo '.clang-format'
-	) >.gitignore
+    (
+        echo 'build/*'
+        echo 'compile_commands.json'
+        echo '.clangd/*'
+        echo '.clang-format'
+    ) >.gitignore
 
-	[ "$git_init" == "true" ] && git init || exit
+    [ "$git_init" == "true" ] && git init || exit
 }
 
 cpp_init() {
 
-	[[ -z $lib_name ]] && printf "Enter Package Name : " && read lib_name
+    [[ -z $lib_name ]] && printf "Enter Package Name : " && read lib_name
 
-	mkdir "$project_name"
-	mkdir "$project_name"/src
-	mkdir "$project_name"/include
-	mkdir "$project_name"/build
+    mkdir "$project_name"
+    mkdir "$project_name"/src
+    mkdir "$project_name"/include
+    mkdir "$project_name"/build
 
-	(
-		echo '#include<iostream>'
-		echo ''
-		echo 'int main()'
-		echo '{'
-		echo 'return 0;'
-		echo '}'
-	) >"$project_name"/src/main.cpp
+    (
+        echo '#include<iostream>'
+        echo ''
+        echo 'int main()'
+        echo '{'
+        echo 'return 0;'
+        echo '}'
+    ) >"$project_name"/src/main.cpp
 
-	(
-		echo "cmake_minimum_required(VERSION 3.2.0)"
-		echo ""
-		echo "project($project_name)"
-		echo ""
-		if [[ -n $lib_name ]]; then
-			echo "find_package($lib_name REQUIRED)"
-			echo ""
-		fi
-		echo 'file(GLOB_RECURSE SOURCES'
-		echo 'src/*.cpp'
-		echo ')'
-		echo ""
-		echo "add_executable($project_name \${SOURCES})"
-		echo ""
-		echo "target_include_directories("
-		echo "$project_name PUBLIC"
-		echo '${CMAKE_CURRENT_SOURCE_DIR}/include'
-		echo ")"
-		echo ""
-		if [[ -n $lib_name ]]; then
-			echo "target_link_libraries("
-			echo "$project_name PUBLIC"
-			echo "\${${lib_name}_LIBRARY}"
-			echo ")"
-			echo ""
-		fi
-		echo "install(TARGETS $project_name DESTINATION /usr/local/bin)"
-	) >"$project_name"/CMakeLists.txt
+    (
+        echo "cmake_minimum_required(VERSION 3.2.0)"
+        echo ""
+        echo "project($project_name)"
+        echo ""
+        if [[ -n $lib_name ]]; then
+            echo "find_package($lib_name REQUIRED)"
+            echo ""
+        fi
+        echo 'file(GLOB_RECURSE SOURCES'
+        echo 'src/*.cpp'
+        echo ')'
+        echo ""
+        echo "add_executable($project_name \${SOURCES})"
+        echo ""
+        echo "target_include_directories("
+        echo "$project_name PUBLIC"
+        echo '${CMAKE_CURRENT_SOURCE_DIR}/include'
+        echo ")"
+        echo ""
+        if [[ -n $lib_name ]]; then
+            echo "target_link_libraries("
+            echo "$project_name PUBLIC"
+            echo "\${${lib_name}_LIBRARY}"
+            echo ")"
+            echo ""
+        fi
+        echo "install(TARGETS $project_name DESTINATION /usr/local/bin)"
+    ) >"$project_name"/CMakeLists.txt
 
-	(
-		echo "#!/bin/sh"
-		echo "if [[ -z $1 ]]; then"
-		echo "mkdir -p build"
-		echo "cd build"
-		echo "cmake .."
-		echo "make"
-		echo 'elif [[ "$1" == "install" ]]; then'
-		echo "mkdir -p build"
-		echo "cd build"
-		echo 'cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=1 -DCMAKE_TOOLCHAIN_FILE="/opt/vcpkg/scripts/buildsystems/vcpkg.cmake" ..'
-		echo "sudo make install"
-		echo 'elif [[ "$1" == "debug" ]]; then'
-		echo "mkdir -p build"
-		echo "cd build"
-		echo 'cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_EXPORT_COMPILE_COMMANDS=1 -DCMAKE_TOOLCHAIN_FILE="/opt/vcpkg/scripts/buildsystems/vcpkg.cmake" ..'
-		echo "make"
-		echo 'elif [[ "$1" == "project" ]]; then'
-		echo "mkdir -p build"
-		echo "cd build"
-		echo 'cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=1 -DCMAKE_TOOLCHAIN_FILE="/opt/vcpkg/scripts/buildsystems/vcpkg.cmake" ..'
-		echo "cp compile_commands.json .."
-		echo "fi"
-	) >"$project_name"/autoBuild
+    (
+        echo "#!/bin/sh"
+        echo "if [[ -z $1 ]]; then"
+        echo "mkdir -p build"
+        echo "cd build"
+        echo "cmake .."
+        echo "make"
+        echo 'elif [[ "$1" == "install" ]]; then'
+        echo "mkdir -p build"
+        echo "cd build"
+        echo 'cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=1 -DCMAKE_TOOLCHAIN_FILE="/opt/vcpkg/scripts/buildsystems/vcpkg.cmake" ..'
+        echo "sudo make install"
+        echo 'elif [[ "$1" == "debug" ]]; then'
+        echo "mkdir -p build"
+        echo "cd build"
+        echo 'cmake -DCMAKE_BUILD_TYPE=Debug -DCMAKE_EXPORT_COMPILE_COMMANDS=1 -DCMAKE_TOOLCHAIN_FILE="/opt/vcpkg/scripts/buildsystems/vcpkg.cmake" ..'
+        echo "make"
+        echo 'elif [[ "$1" == "project" ]]; then'
+        echo "mkdir -p build"
+        echo "cd build"
+        echo 'cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=1 -DCMAKE_TOOLCHAIN_FILE="/opt/vcpkg/scripts/buildsystems/vcpkg.cmake" ..'
+        echo "cp compile_commands.json .."
+        echo "fi"
+    ) >"$project_name"/autoBuild
 
-	chmod u+x "$project_name"/autoBuild
-	clang-format -style=webkit -dump-config >"$project_name"/.clang-format
+    chmod u+x "$project_name"/autoBuild
+    clang-format -style=webkit -dump-config >"$project_name"/.clang-format
 
-	(
-		echo 'build/*'
-		echo 'compile_commands.json'
-		echo '.clangd/*'
-		echo '.clang-format'
-	) >"$project_name"/.gitignore
+    (
+        echo 'build/*'
+        echo 'compile_commands.json'
+        echo '.clangd/*'
+        echo '.clang-format'
+    ) >"$project_name"/.gitignore
 
-	[ "$git_init" == "true" ] && git init "$project_name"
+    [ "$git_init" == "true" ] && git init "$project_name"
 
-	cd "$project_name" && ./autoBuild project
+    cd "$project_name" && ./autoBuild project
 }
 
 py_init() {
 
-	mkdir $project_name || exit
-	_project_name=$(echo $project_name | sed -e 's/-/_/g')
-	mkdir -p $project_name/docs
-	mkdir -p $project_name/$_project_name
-	mkdir -p $project_name/tests
-	touch $project_name/LICENSE
-	touch $project_name/README.md
-	touch $project_name/TODO.md
-	touch $project_name/setup.py
-	touch $project_name/.gitignore
-	touch $project_name/install.sh
-	touch $project_name/$_project_name/__init__.py
-	touch $project_name/$_project_name/utils.py
-	touch $project_name/$_project_name/__main__.py
-	[ "$git_init" == "true" ] && git init $project_name
+    mkdir $project_name || exit
+    _project_name=$(echo $project_name | sed -e 's/-/_/g')
+    mkdir -p $project_name/docs
+    mkdir -p $project_name/$_project_name
+    mkdir -p $project_name/tests
+    touch $project_name/LICENSE
+    touch $project_name/README.md
+    touch $project_name/TODO.md
+    touch $project_name/setup.py
+    touch $project_name/.gitignore
+    touch $project_name/install.sh
+    touch $project_name/$_project_name/__init__.py
+    touch $project_name/$_project_name/utils.py
+    touch $project_name/$_project_name/__main__.py
+    [ "$git_init" == "true" ] && git init $project_name
 
 }
 
 p5init() {
-	mkdir $project_name || exit
-	cd $project_name
-	cp $HOME/Software/Workspaces/js/p5/{p5-test.js,p5.js,p5.min.js,p5.pre-min.js} .
-	cp -r $HOME/Software/Workspaces/js/p5/empty-example src/
-	cp -r $HOME/Software/Workspaces/js/p5/addons .
-	(echo '{}') >tsconfig.json
+    mkdir $project_name || exit
+    cd $project_name
+    cp $HOME/Software/Workspaces/js/p5/{p5-test.js,p5.js,p5.min.js,p5.pre-min.js} .
+    cp -r $HOME/Software/Workspaces/js/p5/empty-example src/
+    cp -r $HOME/Software/Workspaces/js/p5/addons .
+    (echo '{}') >tsconfig.json
 }
 
 case $lang in
-py)
-	py_init
-	;;
-c | cpp)
-	cpp_init
-	;;
-gradle)
-	gradle_init
-	;;
-p5)
-	p5init
-	;;
-pd)
-	pdCBuild
-	;;
-micro)
-	electronics
-	;;
+    py)
+        py_init
+        ;;
+    c | cpp)
+        cpp_init
+        ;;
+    gradle)
+        gradle_init
+        ;;
+    p5)
+        p5init
+        ;;
+    pd)
+        pdCBuild
+        ;;
+    micro)
+        electronics
+        ;;
 esac

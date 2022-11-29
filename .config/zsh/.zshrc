@@ -49,7 +49,7 @@ alias pqi="pacman -Qii"
 alias pqs="pacman -Qs"
 alias pql="pacman -Ql"
 alias pu="paru -Syyu"
-alias psu="paru -Syu"
+alias ps="paru -Ps"
 alias rocks='sudo luarocks --lua-version 5.1'
 
 

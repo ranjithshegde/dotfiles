@@ -42,7 +42,7 @@ end
 --                              OpenFrameworks                        --
 ------------------------------------------------------------------------
 
-function cmaps.makeC()
+function cmaps.oF()
     map('n', '<F2>', function()
         require('overseer').run_template { name = [[Build wasm]] }
     end, { buffer = true, desc = 'Compile Emscripten' })

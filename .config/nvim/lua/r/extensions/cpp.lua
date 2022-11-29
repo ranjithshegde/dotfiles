@@ -25,18 +25,27 @@ end
 
 -- Set C environment based on type [with makefile, microcontroller, cmake project or plain c]
 function clang.set_ctype()
+    local dirname = vim.fn.fnamemodify(vim.fn.getcwd(), ':t')
     if isFile 'CMakeLists.txt' then
-        require('r.mappings.clang').cmake()
-        vim.bo.makeprg = 'make'
-        vim.b.makeFile = 'CMakeLists.txt'
-        vim.b.debugBin = 'build/' .. vim.fn.fnamemodify(vim.fn.getcwd(), ':t')
+        local unreal_file = dirname .. '.uproject'
+        if isFile(unreal_file) then
+            vim.b.makeprg = '/opt/unreal-engine/Engine/Build/BatchFiles/Linux/Build.sh'
+            vim.b.unreal_dir = dirname
+        else
+            require('r.mappings.clang').cmake()
+            vim.bo.makeprg = 'make'
+            vim.b.makeFile = 'CMakeLists.txt'
+            vim.b.debugBin = 'build/' .. dirname
+        end
     elseif isFile 'Makefile' then
-        require('r.mappings.clang').makeC()
-        vim.b.makeFile = 'Makefile'
-        vim.bo.makeprg = 'make'
-        vim.b.makeBin = 'bin/' .. vim.fn.fnamemodify(vim.fn.getcwd(), ':t')
-        vim.b.debugBin = 'bin/' .. vim.fn.fnamemodify(vim.fn.getcwd(), ':t') .. '_debug'
-        vim.b.wasm = 'bin/' .. vim.fn.fnamemodify(vim.fn.getcwd(), ':t') .. '.html'
+        if isFile(dirname .. '.qbs') or isFile 'config.make' or isFile 'addons.make' then
+            require('r.mappings.clang').oF()
+            vim.b.makeFile = 'Makefile'
+            vim.bo.makeprg = 'make'
+            vim.b.makeBin = 'bin/' .. dirname
+            vim.b.debugBin = 'bin/' .. dirname .. '_debug'
+            vim.b.wasm = 'bin/' .. dirname .. '.html'
+        end
     elseif isFile 'platformio.ini' then
         vim.bo.makeprg = 'pio run'
         require('r.mappings.clang').micro()

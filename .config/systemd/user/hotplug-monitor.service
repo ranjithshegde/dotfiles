@@ -8,7 +8,7 @@ Type=oneshot
 # User=ranjith
 
 # Change path to hotplug script as needed
-ExecStart=/home/ranjith/.local/bin/scripts/hdmi-udev
+ExecStart=/home/ranjith/.local/bin/scripts/screen
 
 [Install]
 WantedBy=graphical.target

@@ -1,0 +1,4 @@
+# Use systemd user hotplug service when connecting/disconnecting hdmi
+# ACTION=="change", KERNEL=="card1", SUBSYSTEM=="drm", ENV{HOTPLUG}=="1", ENV{SYSTEMD_USER_WANTS}+="hotplug-monitor.service", TAG+="systemd"
+
+# ACTION=="change", KERNEL=="1-2", SUBSYSTEM=="usb", ENV{HOTPLUG}=="1", ENV{SYSTEMD_USER_WANTS}+="hotplug-monitor.service", TAG+="systemd"

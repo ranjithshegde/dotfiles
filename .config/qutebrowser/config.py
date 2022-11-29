@@ -1,4 +1,5 @@
 # pylint: disable=C0111
+# flake8: noqa: E501
 from qutebrowser.api import interceptor
 from qutebrowser.config.config import ConfigContainer  # noqa: F401
 from qutebrowser.config.configfiles import ConfigAPI  # noqa: F401
@@ -28,7 +29,7 @@ c.auto_save.session = True
 
 # Valid values:
 #   - all: Accept all cookies.
-#   - no-3rdparty: Accept cookies from the same origin only. This is known to break some sites, such as GMail.
+#   - no-3rdparty: Accept cookies from the same origin only.
 #   - no-unknown-3rdparty: Accept cookies from the same origin only, unless a cookie is already set for the domain.
 #   - never: Don't accept cookies at all.
 config.set("content.cookies.accept", "all", "chrome-devtools://*")
@@ -287,6 +288,8 @@ c.fonts.default_size = "10pt"
 # Page(s) to open at the start.
 # Type: List of FuzzyUrl, or FuzzyUrl
 c.url.start_pages = "https://search.brave.com"
+
+c.window.hide_decoration = True
 
 c.bindings.key_mappings = {
     "<Ctrl+6>": "<Ctrl+^>",
