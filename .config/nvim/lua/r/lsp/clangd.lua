@@ -65,36 +65,42 @@ function servers.ccls()
         },
     }
 
-    -- require('ccls').setup { lsp = { lspconfig = server_config } }
-    -- require('ccls').setup { lsp = { use_defaults = true } }
-    -- require('ccls').setup { lsp = { use_defaults = true, codelens = { enable = true } } }
+    local cwd = vim.loop.cwd()
+    local unreal = vim.fn.fnamemodify(cwd, ':t')
 
-    require('ccls').setup {
-        filetypes = filetypes,
-        lsp = {
-            -- lspconfig = server_config,
-            server = server_config,
-            disable_capabilities = {
-                completionProvider = true,
-                codeActionProvider = true,
-                documentFormattingProvider = true,
-                definitionProvider = true,
-                documentRangeFormattingProvider = true,
-                documentHighlightProvider = true,
-                documentSymbolProvider = true,
-                hoverProvider = true,
-                referencesProvider = true,
-                renameProvider = true,
-                typeDefinitionProvider = true,
-                workspaceSymbolProvider = true,
+    if not vim.loop.fs_stat(cwd .. '/' .. unreal .. '.uproject') then
+        -- vim.pretty_print('Unreal File', cwd .. '/' .. unreal .. '.uproject')
+
+        -- require('ccls').setup { lsp = { lspconfig = server_config } }
+        -- require('ccls').setup { lsp = { use_defaults = true } }
+        -- require('ccls').setup { lsp = { use_defaults = true, codelens = { enable = true } } }
+        require('ccls').setup {
+            filetypes = filetypes,
+            lsp = {
+                -- lspconfig = server_config,
+                server = server_config,
+                disable_capabilities = {
+                    completionProvider = true,
+                    codeActionProvider = true,
+                    documentFormattingProvider = true,
+                    definitionProvider = true,
+                    documentRangeFormattingProvider = true,
+                    documentHighlightProvider = true,
+                    documentSymbolProvider = true,
+                    hoverProvider = true,
+                    referencesProvider = true,
+                    renameProvider = true,
+                    typeDefinitionProvider = true,
+                    workspaceSymbolProvider = true,
+                },
+                disable_diagnostics = true,
+                disable_signature = true,
+                codelens = {
+                    enable = true,
+                },
             },
-            disable_diagnostics = true,
-            disable_signature = true,
-            codelens = {
-                enable = true,
-            },
-        },
-    }
+        }
+    end
 end
 
 return servers

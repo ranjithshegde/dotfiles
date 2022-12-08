@@ -97,15 +97,12 @@ return require('which-key').register {
             s = {
                 telargs(
                     'live_grep',
-                    { cwd = '~/Software/Workspaces/supercollider/', prompt_title = 'SuperCollider Workspace grep' }
+                    { cwd = '~/Workspaces/supercollider/', prompt_title = 'SuperCollider Workspace grep' }
                 ),
                 'grep SuperCollider',
             },
             o = {
-                telargs(
-                    'live_grep',
-                    { cwd = '~/Software/Workspaces/openFrameworks/', prompt_title = 'oF Workspace grep' }
-                ),
+                telargs('live_grep', { cwd = '~/Workspaces/openFrameworks/', prompt_title = 'oF Workspace grep' }),
                 'ofWorkspace',
             },
             w = { telargs('live_grep', { cwd = '~/Documents/Orgs/', prompt_title = 'Org Wiki' }), 'Org Grep' },
@@ -138,7 +135,7 @@ return require('which-key').register {
             R = { telargs('find_files', { cwd = '/usr/share/nvim/runtime/' }), 'Vim runtime files' },
             C = { cd_files('C++ Practice files/dirs', '$CWORK/Scratch'), 'Open C practice' },
             c = { cd_browser('C++ Practice files/dirs', '$CWORK/Scratch'), 'Open C practice' },
-            s = { cd_files('SuperCollider Directory', '~/Software/Workspaces/supercollider/'), 'SuperCollider files' },
+            s = { cd_files('SuperCollider Directory', '~/Workspaces/supercollider/'), 'SuperCollider files' },
             b = {
                 telargs('find_files', { cwd = '~/.local/bin/', prompt_title = 'Scripts and binaries in local' }),
                 'scripts & binaries',
@@ -156,10 +153,7 @@ return require('which-key').register {
                 'Vim plugin Directory',
             },
             o = {
-                telargs(
-                    'find_files',
-                    { cwd = '~/Software/Workspaces/openFrameworks/', prompt_title = 'oF Workspace files' }
-                ),
+                telargs('find_files', { cwd = '~/Workspaces/openFrameworks/', prompt_title = 'oF Workspace files' }),
                 'OfWorkspace',
             },
             ['?'] = {

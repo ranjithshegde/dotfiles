@@ -78,7 +78,7 @@ zplug "wfxr/forgit"
 zplug "lincheney/fzf-tab-completion"
 
 
-zplug load 
+zplug load
 
 # Custom completion scripts ---------------------------------------------------------------------
 source "${ZPLUG_HOME}/repos/agura-lex/find-the-command/usr/share/doc/find-the-command/ftc.zsh"
@@ -93,6 +93,8 @@ eval "$(register-python-argcomplete pipx)"
 eval "$(pip completion --zsh)"
 eval "$(_PIO_COMPLETE=zsh_source pio)"
 eval "$(zoxide init zsh)"
+
+compdef _dotnet_zsh_complete dotnet
 
 
 # Bindins --------------------------------------------------------------------------------------

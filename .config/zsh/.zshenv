@@ -1,14 +1,14 @@
 if [[ -z "${XDG_CONFIG_HOME}" ]]; then
-	XDG_CONFIG_HOME="$HOME"/.config
+    XDG_CONFIG_HOME="$HOME"/.config
 fi
 if [[ -z "${XDG_CACHE_HOME}" ]]; then
-	XDG_CACHE_HOME="$HOME"/.cache
+    XDG_CACHE_HOME="$HOME"/.cache
 fi
 if [[ -z "${XDG_DATA_HOME}" ]]; then
-	XDG_DATA_HOME="$HOME"/.local/share
+    XDG_DATA_HOME="$HOME"/.local/share
 fi
 if [[ -z "${XDG_STATE_HOME}" ]]; then
-	XDG_STATE_HOME="$HOME"/.local/state
+    XDG_STATE_HOME="$HOME"/.local/state
 fi
 
 VISUAL=editor
@@ -33,6 +33,7 @@ export GRADLE_USER_HOME="${XDG_DATA_HOME}/gradle"
 export GTK2_RC_FILES="${XDG_CONFIG_HOME}/gtk-2.0/gtkrc"
 export HISTFILE="${XDG_DATA_HOME}/zsh/history"
 export IPYTHONDIR="${XDG_CONFIG_HOME}/jupyter"
+export JDK_JAVA_OPTIONS='-Dsun.java2d.opengl=true -Dawt.useSystemAAFontSettings=on -Dswing.aatext=true -Dswing.defaultlaf=com.sun.java.swing.plaf.gtk.GTKLookAndFeel -Dswing.crossplatformlaf=com.sun.java.swing.plaf.gtk.GTKLookAndFeel'
 export LESSHISTFILE="${XDG_CACHE_HOME}/less/history"
 export MACHINE_STORAGE_PATH="${XDG_DATA_HOME}/docker-machine"
 export MYPY_CACHE_DIR="${XDG_CACHE_HOME}/mypy"
@@ -76,11 +77,11 @@ export ZPLUG_HOME="${XDG_DATA_HOME}/zsh/zplug"
 export _JAVA_OPTIONS=-Djava.util.prefs.userRoot="${XDG_CONFIG_HOME}/java"
 
 # GLOBALS
-export CHROME_EXECUTABLE=/usr/bin/brave
 export ANDROID_NDK=/opt/android-ndk
 export ANDROID_SDK_ROOT=/opt/android-sdk
 export ANDROID_NDK_HOME=/opt/android-ndk
 export AWT_TOOLKIT=MToolkit
+export CHROME_EXECUTABLE=/usr/bin/brave
 export DEBUGINFOD_URLS="https://debuginfod.archlinux.org"
 export GST_VAAPI_ALL_DRIVERS=1
 export MANPAGER="nvim +Man!"
@@ -94,13 +95,13 @@ export PG_OF_PATH="${HOME}/Repositories/libraries/openFrameworks"
 
 # Addition to path...
 appendpath() {
-	case ":$PATH:" in
-		*:"$1":*) ;;
+    case ":$PATH:" in
+        *:"$1":*) ;;
 
-		*)
-			PATH="${PATH:+$PATH:}$1"
-			;;
-	esac
+        *)
+            PATH="${PATH:+$PATH:}$1"
+            ;;
+    esac
 }
 
 appendpath "${HOME}/.local/bin"
@@ -118,10 +119,11 @@ unset -f appendpath
 export PATH
 
 sdo() {
-	sudo zsh -c "${functions[$1]}" "$@"
+    sudo zsh -c "${functions[$1]}" "$@"
 }
 
 source "${ZDOTDIR}/functions/fuzzy.sh"
 source "${ZDOTDIR}/functions/power_profiles.sh"
 source "${ZDOTDIR}/functions/dmenus.sh"
 source "${ZDOTDIR}/functions/scripts.sh"
+source "${ZDOTDIR}/functions/dotnet.sh"
