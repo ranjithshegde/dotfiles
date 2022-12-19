@@ -26,31 +26,29 @@ bashcompinit
 # Aliases--------------------------------------------------------------------------------
 
 alias ls=lsd
+alias cat=bat
 alias ll='ls -la'
 alias sxiv='nsxiv'
+alias pss="paru -Ps"
 alias python=python3
-alias grep='grep --color=auto'
-alias weather='curl wttr.in/"rotterdam"'
-alias cat=bat
-alias pd='/usr/local/bin/pdl'
-alias rfetch='rsfetch -PdehHklrNstU@'
-alias nv-settings='nvidia-settings --config="$XDG_CONFIG_HOME"/nvidia/settings'
-alias yarn='yarn --use-yarnrc "$XDG_CONFIG_HOME"/yarn/config'
-alias wget '--hsts-file="$XDG_CACHE_HOME"/wget-hsts'
-alias config='/usr/bin/git --git-dir=$WORKSPACE/Repos/dotfiles --work-tree=$HOME'
-alias cvim='GIT_DIR=$WORKSPACE/Repos/dotfiles GIT_WORK_TREE=$HOME vim'
-alias paclist="expac --timefmt='%Y-%m-%d %T' '%l\t%n' | sort | nvim +Man!"
+alias pu="paru -Syyu"
+alias pql="pacman -Ql"
+alias pqs="pacman -Qs"
+alias pqi="pacman -Qii"
+alias ns="nordvpn status"
+alias nc="nordvpn connect"
 alias PG="projectGenerator"
 alias CM="compiledb -n make"
-alias nc="nordvpn connect"
 alias nd="nordvpn disconnect"
-alias ns="nordvpn status"
-alias pqi="pacman -Qii"
-alias pqs="pacman -Qs"
-alias pql="pacman -Ql"
-alias pu="paru -Syyu"
-alias ps="paru -Ps"
+alias pd='/usr/local/bin/pdl'
+alias grep='grep --color=auto'
+alias weather='curl wttr.in/hague'
+alias rfetch='rsfetch -PdehHklrNstU@'
 alias rocks='sudo luarocks --lua-version 5.1'
+alias wget '--hsts-file="$XDG_CACHE_HOME"/wget-hsts'
+alias yarn='yarn --use-yarnrc "$XDG_CONFIG_HOME"/yarn/config'
+alias cvim='GIT_DIR=$WORKSPACE/Repos/dotfiles GIT_WORK_TREE=$HOME vim'
+alias config='/usr/bin/git --git-dir=$WORKSPACE/Repos/dotfiles --work-tree=$HOME'
 
 
 # Zplug-------------------------------------------------------------------------------

@@ -170,6 +170,12 @@ function cmaps.clang()
                     end,
                     'OpenGL reference',
                 },
+                u = {
+                    function()
+                        require('r.extensions.cpp').unRef(vim.fn.expand '<cword>')
+                    end,
+                    'Unreal Engine reference',
+                },
             },
             h = {
                 function()

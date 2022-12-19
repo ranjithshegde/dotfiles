@@ -71,7 +71,7 @@ export uebp_LogFolder="${XDG_DATA_HOME}/Unreal"
 export VSCODE_PORTABLE="${XDG_DATA_HOME}/vscode"
 # export WINEARCH=win32
 export WGETRC="${XDG_CONFIG_HOME}/wgetrc"
-export WINEPREFIX="/storage/Games/Wine/default/"
+export WINEPREFIX="/storage/Wine/default/"
 export ZPLUG_BIN="${XDG_DATA_HOME}/bin"
 export ZPLUG_HOME="${XDG_DATA_HOME}/zsh/zplug"
 export _JAVA_OPTIONS=-Djava.util.prefs.userRoot="${XDG_CONFIG_HOME}/java"

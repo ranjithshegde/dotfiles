@@ -6,9 +6,17 @@ adapters.lldb = {
     name = 'lldb',
 }
 
+local cpp_tools = nil
+
+if vim.fn.has 'win32' == 1 then
+    cpp_tools = vim.fs.normalize '~/.vscode/extensions/ms-vscode.cpptools-1.13.6-win32-x64'
+else
+    cpp_tools = vim.env.XDG_DATA_HOME .. '/debug-adapters/cpptools/extension'
+end
+
 adapters.cppdbg = {
     type = 'executable',
-    command = vim.env.XDG_DATA_HOME .. '/debug-adapters/cpptools/extension/debugAdapters/bin/OpenDebugAD7',
+    command = cpp_tools .. '/debugAdapters/bin/OpenDebugAD7',
 }
 
 adapters.python = {

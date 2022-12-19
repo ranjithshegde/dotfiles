@@ -26,10 +26,6 @@ cmd('Camel', function()
     require('r.extensions').CamelCase()
 end, { desc = 'Turn word and motion operators into camelcase' })
 
-cmd('ToggleTransparency', function()
-    require('r.extensions').trans_background()
-end, { desc = 'Toggle background transpparency for dark scheme' })
-
 cmd('Su', 'w !sudo tee %', {})
 
 -- ******************* Plugin mappings --------------------------------------------

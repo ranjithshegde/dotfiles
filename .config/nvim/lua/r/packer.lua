@@ -174,7 +174,6 @@ return require('packer').startup {
             { 'nvim-treesitter/nvim-treesitter', run = ':TSUpdate' },
             { 'p00f/nvim-ts-rainbow', event = 'BufReadPre' },
             { 'nvim-treesitter/nvim-treesitter-textobjects', module = 'nvim-treesitter.textobjects' },
-            { 'nvim-treesitter/playground', module = 'nvim-treesitter-playground' },
             { 'Badhi/nvim-treesitter-cpp-tools', ft = { 'c', 'cpp', 'opencl' } },
             {
                 'ThePrimeagen/refactoring.nvim',

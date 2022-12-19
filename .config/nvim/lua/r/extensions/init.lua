@@ -41,23 +41,6 @@ function extensions.diagnostics(bufnr)
     end, { nargs = '*', complete = complete, desc = 'Enable default diagnostic options for a client' })
 end
 
-local transparent = false
----Toggle background transparency for dark colorschemes
-function extensions.trans_background()
-    local colo = vim.api.nvim_exec('colo', true)
-    if colo == 'dayfox' or colo == 'dawnfox' then
-        print 'Error: Transparent background does not work with a light colorscheme!'
-        return
-    end
-    transparent = not transparent
-    require('nightfox').setup {
-        options = {
-            transparent = transparent,
-        },
-    }
-    vim.cmd.colorscheme(colo)
-end
-
 ------------------------------------------------------------------------
 --                          Camel case                                --
 ------------------------------------------------------------------------

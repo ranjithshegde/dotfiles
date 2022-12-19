@@ -55,7 +55,11 @@ function clang.set_ctype()
         vim.b.makeFile = 'build.gradle'
         vim.bo.makeprg = './gradlew'
     else
-        vim.bo.makeprg = 'g++'
+        if vim.fn.has 'win32' == 1 then
+            vim.bo.makeprg = 'clang++'
+        else
+            vim.bo.makeprg = 'g++'
+        end
         require('r.mappings.clang').ctests()
         vim.b.debugBin = vim.fn.expand '%<'
     end
@@ -69,7 +73,11 @@ function clang.set_type()
         vim.bo.makeprg = 'make'
         vim.b.makeFile = 'Makefile'
     else
-        vim.bo.makeprg = 'gcc'
+        if vim.fn.has 'win32' == 1 then
+            vim.bo.makeprg = 'clang'
+        else
+            vim.bo.makeprg = 'gcc'
+        end
         require('r.mappings.clang').ctests()
         vim.b.debugBin = vim.fn.expand '%<'
     end
@@ -88,6 +96,11 @@ end
 ---Search OpenGL reference manual for symbol
 function clang.glRef(cmd)
     local url = 'https://docs.gl/gl4/' .. cmd
+    require('r.utils').open_in_browser(url)
+end
+
+function clang.unRef(cmd)
+    local url = 'https://www.unrealengine.com/en-US/bing-search?x=0&y=0&filter=UE4+Documentation&keyword=' .. cmd
     require('r.utils').open_in_browser(url)
 end
 

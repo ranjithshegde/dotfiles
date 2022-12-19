@@ -55,19 +55,8 @@ return function()
     require('which-key').register {
         [';'] = {
             name = 'Syntax tree functions',
-            -- Plugins
-            K = {
-                function()
-                    require('nvim-treesitter-playground.hl-info').show_ts_node()
-                end,
-                'Show treesitter node',
-            },
-            P = {
-                function()
-                    require('nvim-treesitter-playground.internal').toggle()
-                end,
-                'Toggle playground',
-            },
+            K = { vim.show_pos, 'Show treesitter node' },
+            P = { vim.treesitter.show_tree, 'Toggle playground' },
             --Refactor
             d = 'Jump to node definition',
             i = { 'gg=G<C-o>zz', 'indent' },
