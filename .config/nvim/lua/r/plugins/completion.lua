@@ -88,7 +88,9 @@ end
 
 local function cmp_extras(cmp)
     -- Load completion sources
-    require('packer').loader('cmp-path', 'cmp-buffer', 'cmp_luasnip')
+    require('lazy').load 'cmp-path'
+    require('lazy').load 'cmp-buffer'
+    require('lazy').load 'cmp_luasnip'
 
     -- Single keystroke to toggle between cmp and ins-completion
     local isCmp = true
@@ -114,10 +116,6 @@ local function cmp_extras(cmp)
 end
 
 function completion.init()
-    if not package.loaded.cmp then
-        require('packer').loader 'nvim-cmp'
-    end
-
     local cmp = require 'cmp'
     local luasnip = require 'luasnip'
 

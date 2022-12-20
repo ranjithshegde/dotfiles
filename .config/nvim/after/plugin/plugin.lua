@@ -14,7 +14,6 @@ cmd('WordCount', function()
 end, { desc = 'Display text word count in the buffer' })
 
 cmd('Agenda', function()
-    require('packer').loader 'orgmode'
     require('orgmode').action 'agenda.prompt'
 end, { desc = 'Open Orgmode agenda' })
 
@@ -41,7 +40,7 @@ end
 
 load_plugin_on_key('n', '<Space>', 'Telescope', require, 'r.mappings.telescope')
 
-load_plugin_on_key('n', 'cr', 'Coerce', require('packer').loader, 'vim-abolish')
+load_plugin_on_key('n', 'cr', 'Coerce', require('lazy').load, 'vim-abolish')
 
 load_plugin_on_key('n', '<leader>r', 'Ranger file picker', function()
     require('r.mappings.util').ranger()

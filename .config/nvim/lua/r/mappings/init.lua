@@ -48,8 +48,8 @@ local function config_files()
         ['<leader>'] = {
             a = {
                 name = 'vimrc files',
-                -- Update packer plugins
-                P = { require('packer').sync, 'Update packages' },
+                -- Update plugins
+                P = { require('lazy').sync, 'Update packages' },
                 -- Reload config
                 R = { require('r.utils').restart, 'Reload Vim' },
 
@@ -57,8 +57,8 @@ local function config_files()
                 c = { open 'after/plugin/plugin.lua', 'User defined commands' },
                 -- Main vimRC
                 r = { open 'init.lua', 'VimRC' },
-                -- Packer config and plugin list
-                p = { open 'lua/r/packer.lua', 'Packer config' },
+                -- Plugin config and list
+                p = { open 'lua/r/lazy.lua', 'Plugin config' },
 
                 -- Vim options
                 o = {

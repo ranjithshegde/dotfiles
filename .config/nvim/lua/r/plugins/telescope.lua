@@ -103,7 +103,6 @@ function telescope.cdFiles(prompt, cwd)
 end
 
 function telescope.telescope()
-    require('packer').loader 'telescope-fzf-native.nvim'
     local layout_actions = require 'telescope.actions.layout'
     require('telescope').setup {
         pickers = {

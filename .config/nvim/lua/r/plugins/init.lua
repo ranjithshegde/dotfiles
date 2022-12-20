@@ -166,9 +166,6 @@ function plugins.scnvim()
                 require('scnvim').start()
                 vim.api.nvim_input '<CR>'
             end
-            if not package.loaded.cmp then
-                require('packer').loader 'nvim-cmp'
-            end
         end,
         desc = 'Load SCNvim settings and launch interpreter on filetype',
     })

@@ -199,7 +199,7 @@ local git_branch = subscribe.buf_autocmd('el_git_branch', 'BufReadPre', function
     end
     local branch = extensions.git_branch(window, buffer)
     if branch then
-        require('packer').loader 'gitsigns.nvim'
+        require('lazy').load 'gitsigns.nvim'
         return space .. extensions.git_icon() .. space .. branch
     end
 end)

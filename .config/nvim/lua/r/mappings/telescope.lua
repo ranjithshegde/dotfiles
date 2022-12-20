@@ -147,9 +147,9 @@ return require('which-key').register {
                 ),
                 'Dotfiles',
             },
-            V = { cd_browser('Vim plugins', '~/.local/share/nvim/site/pack/packer/'), 'Vim plugin Directory' },
+            V = { cd_browser('Vim plugins', '~/.local/share/nvim/lazy/'), 'Vim plugin Directory' },
             v = {
-                telargs('find_files', { cwd = '~/.local/share/nvim/site/pack/packer', prompt_title = 'Plugin files' }),
+                telargs('find_files', { cwd = '~/.local/share/nvim/lazy', prompt_title = 'Plugin files' }),
                 'Vim plugin Directory',
             },
             o = {

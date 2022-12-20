@@ -79,9 +79,9 @@ return function()
     vim.g.tex_flavor = 'latex'
 
     -- ************** Disable builtin plugins ---------------------------------------------------------
-    for _, plugin in pairs(require('r.utils.tables').disabled_builtins) do
-        vim.g['loaded_' .. plugin] = 1
-    end
+    -- for _, plugin in pairs(require('r.utils.tables').disabled_builtins) do
+    --     vim.g['loaded_' .. plugin] = 1
+    -- end
     vim.g.did_load_ftplugin = 1
 
     -- ************** HighlightOnYank ---------------------------------------------------------

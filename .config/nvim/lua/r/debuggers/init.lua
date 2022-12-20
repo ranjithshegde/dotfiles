@@ -14,7 +14,6 @@ end
 local Debugger = {}
 
 function Debugger.init()
-    require('packer').loader 'nvim-dap'
     signs()
 
     require('dapui').setup {

@@ -21,9 +21,6 @@ local id = {}
 
 ---**************************** Snippet capabilities
 function lsp.capabilities()
-    if not package.loaded.cmp_nvim_lsp then
-        require('packer').loader 'cmp-nvim-lsp'
-    end
     return require('cmp_nvim_lsp').default_capabilities()
 end
 
@@ -91,7 +88,6 @@ function lsp.attach(client, bufnr)
     end
 
     if client.name == 'sqls' then
-        require('packer').loader 'sqls.nvim'
         require('sqls').on_attach(client, bufnr)
         sc.documentFormattingProvider = false
         sc.documentRangeFormattingProvider = false
@@ -220,7 +216,6 @@ local function glsl()
 end
 
 function lsp.lintFormat()
-    require('packer').loader 'null-ls.nvim'
     local nb = require 'null-ls.builtins'
     local sources = {
         nb.code_actions.shellcheck,
