@@ -78,11 +78,17 @@ return function()
     vim.g.tex_conceal = 'abdmgs'
     vim.g.tex_flavor = 'latex'
 
+    if vim.g.is_win32 then
+        o.shell = vim.fn.executable 'pwsh' == 1 and 'pwsh' or 'powershell'
+        o.shellcmdflag =
+            '-NoLogo -NoProfile -ExecutionPolicy RemoteSigned -Command [Console]::InputEncoding=[Console]::OutputEncoding=[System.Text.Encoding]::UTF8;'
+        o.shellredir = '2>&1 | Out-File -Encoding UTF8 %s; exit $LastExitCode'
+        o.shellpipe = '2>&1 | Out-File -Encoding UTF8 %s; exit $LastExitCode'
+        vim.cmd 'set shellquote= shellxquote='
+    end
+
     -- ************** Disable builtin plugins ---------------------------------------------------------
-    -- for _, plugin in pairs(require('r.utils.tables').disabled_builtins) do
-    --     vim.g['loaded_' .. plugin] = 1
-    -- end
-    vim.g.did_load_ftplugin = 1
+    -- vim.g.did_load_ftplugin = 1
 
     -- ************** HighlightOnYank ---------------------------------------------------------
     vim.api.nvim_create_autocmd('TextYankPost', {

@@ -2,6 +2,12 @@
 
 local dev_path = vim.env.WORKSPACE .. 'Repos/'
 
+if vim.fn.has 'win32' == 1 then
+    vim.g.is_win32 = true
+else
+    vim.g.is_win32 = false
+end
+
 local function use_custom(path)
     local check_path = dev_path and dev_path .. path
     if check_path and vim.loop.fs_stat(check_path) then
@@ -24,18 +30,6 @@ if not vim.loop.fs_stat(lazypath) then
 end
 vim.opt.runtimepath:prepend(lazypath)
 
-local function load_plugin_on_key(mode, key, desc, callback, args, pkg)
-    if package.loaded[pkg] then
-        return
-    end
-    vim.keymap.set(mode, key, function()
-        vim.keymap.del(mode, key)
-        callback(args)
-        key = string.gsub(key, '<leader>', '\\')
-        vim.api.nvim_feedkeys(key, 'm', false)
-    end, { desc = desc })
-end
-
 --------------------------------------------------------------------------------------------------------
 --				 Plugins                                            							      --
 --------------------------------------------------------------------------------------------------------
@@ -46,9 +40,6 @@ return require('lazy').setup({
     -- Better marks
     'ThePrimeagen/harpoon',
 
-    -- Granular semantic substitution
-    { 'tpope/vim-abolish', cmd = { 'Subverse', 'Abolish' } },
-
     -- Databases
     {
         'kristijanhusak/vim-dadbod-ui',
@@ -56,20 +47,18 @@ return require('lazy').setup({
         dependencies = { 'tpope/vim-dadbod', 'nanotee/sqls.nvim' },
     },
 
+    -- Granular semantic substitution
+    {
+        'tpope/vim-abolish',
+        keys = 'cr',
+        cmd = { 'Subverse', 'Abolish' },
+    },
+
     -- Tasks
     {
         'stevearc/overseer.nvim',
         config = function()
             require('r.plugins').overseer()
-        end,
-    },
-
-    -- SuperCollider
-    {
-        'davidgranstrom/scnvim',
-        ft = 'supercollider',
-        config = function()
-            require('r.plugins').scnvim()
         end,
     },
 
@@ -90,6 +79,24 @@ return require('lazy').setup({
         end,
     },
 
+    -- Debugger adapter protocol
+    {
+        'mfussenegger/nvim-dap',
+        config = function()
+            require('r.debuggers').setup()
+        end,
+        dependencies = 'rcarriga/nvim-dap-ui',
+    },
+
+    -- SuperCollider
+    {
+        'davidgranstrom/scnvim',
+        ft = 'supercollider',
+        config = function()
+            require('r.plugins').scnvim()
+        end,
+    },
+
     -- Colorizer
     {
         'NvChad/nvim-colorizer.lua',
@@ -97,6 +104,24 @@ return require('lazy').setup({
             require('r.plugins').colorizer()
         end,
         cmd = { 'ColorizerAttachToBuffer', 'ColorizerToggle' },
+    },
+
+    -- Fancy folds
+    {
+        'kevinhwang91/nvim-ufo',
+        dependencies = 'kevinhwang91/promise-async',
+        config = function()
+            require 'r.plugins.folds'()
+        end,
+    },
+
+    -- Surround with TreeSitter
+    {
+        'kylechui/nvim-surround',
+        keys = { 'ys', 'yss', 'ySS', 'cs', 'ds', { 'S', mode = 'v' } },
+        config = function()
+            require('r.plugins').surround()
+        end,
     },
 
     -- Fancy UI
@@ -109,12 +134,14 @@ return require('lazy').setup({
         end,
     },
 
-    -- Fancy folds
+    -- Comment with TreeSitter
     {
-        'kevinhwang91/nvim-ufo',
-        dependencies = 'kevinhwang91/promise-async',
+        'numToStr/Comment.nvim',
+        keys = { 'gc', { 'gc', mode = 'v' }, 'gb', { 'gb', mode = 'v' } },
         config = function()
-            require 'r.plugins.folds'()
+            require('Comment').setup {
+                ignore = '^$',
+            }
         end,
     },
 
@@ -122,33 +149,12 @@ return require('lazy').setup({
     {
         'ranjithshegde/express_line.nvim',
         dev = use_custom 'express_line.nvim',
+        -- event = 'UIEnter',
         lazy = false,
         branch = '0.7',
         dependencies = { 'nvim-tree/nvim-web-devicons', 'nvim-lua/plenary.nvim' },
         config = function()
             require 'r.plugins.statusline'()
-        end,
-    },
-
-    -- Debugger adapter protocol
-    {
-        'mfussenegger/nvim-dap',
-        config = function()
-            require('r.debuggers').setup()
-        end,
-        dependencies = 'rcarriga/nvim-dap-ui',
-    },
-
-    -- WhichKey
-    {
-        'folke/which-key.nvim',
-        config = function()
-            require('which-key').setup {
-                show_help = false,
-                show_keys = false,
-                layout = { layout = { spacing = 15 } },
-                window = { border = 'single' },
-            }
         end,
     },
 
@@ -164,21 +170,17 @@ return require('lazy').setup({
         { 'tpope/vim-fugitive', cmd = { 'G', 'Git', 'Gclog' } },
     },
 
-    -- Telescope
+    -- WhichKey
     {
-        {
-            'nvim-telescope/telescope.nvim',
-            cmd = 'Telescope',
-            config = function()
-                require('r.plugins.telescope').telescope()
-            end,
-            dependencies = {
-                { 'nvim-lua/plenary.nvim' },
-                { 'nvim-telescope/telescope-project.nvim' },
-            },
-        },
-        { 'nvim-telescope/telescope-fzf-native.nvim', build = 'make' },
-        { 'nvim-telescope/telescope-file-browser.nvim' },
+        'folke/which-key.nvim',
+        config = function()
+            require('which-key').setup {
+                show_help = false,
+                show_keys = false,
+                layout = { layout = { spacing = 15 } },
+                window = { border = 'single' },
+            }
+        end,
     },
 
     -- TreeSitter
@@ -189,44 +191,30 @@ return require('lazy').setup({
         { 'Badhi/nvim-treesitter-cpp-tools', ft = { 'c', 'cpp', 'opencl' } },
         {
             'ThePrimeagen/refactoring.nvim',
-
             config = function()
                 require('r.plugins.treesitter').refactoring()
             end,
         },
     },
 
-    -- Comment with TreeSitter
+    -- Telescope
     {
-        'numToStr/Comment.nvim',
-        init = function()
-            load_plugin_on_key({ 'n', 'v' }, 'gc', 'Single comment', require('lazy').load, 'Comment.nvim', 'Comment')
-            load_plugin_on_key({ 'n', 'v' }, 'gb', 'Block comment', require('lazy').load, 'Comment.nvim', 'Comment')
-        end,
-        keys = 'gcc',
-        config = function()
-            require('Comment').setup {
-                ignore = '^$',
-            }
-        end,
-    },
-
-    -- Surround with TreeSitter
-    {
-        'kylechui/nvim-surround',
-        init = function()
-            load_plugin_on_key('n', 'ys', 'Surround', require('lazy').load, 'nvim-surround', 'nvim-surround')
-            load_plugin_on_key('n', 'ds', 'Delete surround', require('lazy').load, 'nvim-surround', 'nvim-surround')
-            load_plugin_on_key('n', 'cs', 'Change surround', require('lazy').load, 'nvim-surround', 'nvim-surround')
-            load_plugin_on_key('v', 'S', 'Surround', require('lazy').load, 'nvim-surround', 'nvim-surround')
-            load_plugin_on_key('n', 'yS', 'Surround line', require('lazy').load, 'nvim-surround', 'nvim-surround')
-            load_plugin_on_key('v', 'gS', 'Surround line', require('lazy').load, 'nvim-surround', 'nvim-surround')
-            -- load_plugin_on_key('n', 'yss', 'Surround line', require('lazy').load, 'nvim-surround', 'nvim-surround')
-            -- load_plugin_on_key('n', 'ySS', 'Surround line', require('lazy').load, 'nvim-surround', 'nvim-surround')
-        end,
-        config = function()
-            require('r.plugins').surround()
-        end,
+        {
+            'nvim-telescope/telescope.nvim',
+            init = function()
+                require('r.utils').lazy_on_key('n', '<Space>', 'Telescope', require, 'r.mappings.telescope')
+            end,
+            cmd = 'Telescope',
+            dependencies = {
+                { 'nvim-lua/plenary.nvim' },
+                { 'nvim-telescope/telescope-project.nvim' },
+            },
+            config = function()
+                require('r.plugins.telescope').telescope()
+            end,
+        },
+        { 'nvim-telescope/telescope-fzf-native.nvim', build = 'make' },
+        { 'nvim-telescope/telescope-file-browser.nvim' },
     },
 
     -- Orgmode
@@ -241,6 +229,11 @@ return require('lazy').setup({
         {
             'ranjithshegde/orgWiki.nvim',
             dev = use_custom 'orgWiki.nvim',
+            init = function()
+                require('r.utils').lazy_on_key('n', '<leader>w', 'OrgWiki', function()
+                    require('r.mappings.util').orgWiki()
+                end)
+            end,
             config = function()
                 require('orgWiki').setup {
                     disable_mappings = true,
@@ -284,6 +277,7 @@ return require('lazy').setup({
     {
         {
             'hrsh7th/nvim-cmp',
+            event = 'InsertEnter',
             dependencies = {
                 { 'hrsh7th/cmp-nvim-lsp' },
                 {
@@ -310,8 +304,10 @@ return require('lazy').setup({
         },
     },
 }, {
+    ui = { border = 'double' },
     dev = { path = dev_path },
-    rtp = { disabled_plugins = require('r.utils.tables').disabled_builtins },
+    performance = { rtp = { disabled_plugins = require('r.utils.tables').disabled_builtins } },
     debug = true,
     defaults = { lazy = true },
+    install = { colorscheme = { 'tokyonight' } },
 })

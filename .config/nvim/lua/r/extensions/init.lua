@@ -42,32 +42,6 @@ function extensions.diagnostics(bufnr)
 end
 
 ------------------------------------------------------------------------
---                          Camel case                                --
-------------------------------------------------------------------------
-
-function extensions.CamelCase()
-    local map = vim.keymap.set
-    local umap = vim.keymap.del
-    require('r.extensions.camel').init()
-
-    map('', 'w', '<Plug>CamelCaseMotion_w')
-    map('', 'b', '<Plug>CamelCaseMotion_b')
-    map('', 'e', '<Plug>CamelCaseMotion_e')
-    map('', 'ge', '<Plug>CamelCaseMotion_ge')
-
-    umap('s', 'w')
-    umap('s', 'b')
-    umap('s', 'e')
-    umap('s', 'ge')
-
-    map({ 'o', 'x' }, 'iw', '<Plug>CamelCaseMotion_iw')
-    map({ 'o', 'x' }, 'ib', '<Plug>CamelCaseMotion_ib')
-    map({ 'o', 'x' }, 'ie', '<Plug>CamelCaseMotion_ie')
-    map('i', '<S-Left>', '<C-o><Plug>CamelCaseMotion_b')
-    map('i', '<S-Right>', '<C-o><Plug>CamelCaseMotion_w')
-end
-
-------------------------------------------------------------------------
 --                          Word Processor                            --
 ------------------------------------------------------------------------
 

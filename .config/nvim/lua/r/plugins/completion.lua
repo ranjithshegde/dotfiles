@@ -88,9 +88,7 @@ end
 
 local function cmp_extras(cmp)
     -- Load completion sources
-    require('lazy').load 'cmp-path'
-    require('lazy').load 'cmp-buffer'
-    require('lazy').load 'cmp_luasnip'
+    require('lazy').load { plugins = { 'cmp-path', 'cmp-buffer', 'cmp_luasnip' } }
 
     -- Single keystroke to toggle between cmp and ins-completion
     local isCmp = true

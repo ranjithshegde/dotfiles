@@ -262,15 +262,6 @@ aucmd('BufReadPost', {
     once = true,
     desc = 'Load mappings for unimparied and treesiiter after reading buffer',
 })
--- -- ************** Load matchit  ----------------------------------------
---  aucmd('BufReadPost', {
---      group = id.PluginLoad,
---      callback = function()
---          vim.cmd.packadd 'matchit'
---      end,
---      once = true,
---      desc = 'Conditionally load matchit',
---  })
 -- -- ************** Load decoration plugins ------------------------------
 aucmd('FileType', {
     group = id.PluginLoad,
@@ -282,8 +273,7 @@ aucmd('FileType', {
         then
             return
         end
-        require('lazy').load 'nvim-ufo'
-        require('lazy').load 'indent-blankline.nvim'
+        require('lazy').load { plugins = { 'nvim-ufo', 'indent-blankline.nvim' } }
     end,
     desc = 'Load nvim-ufo and indent_blankline on relevant filetypes',
 })
@@ -307,20 +297,6 @@ aucmd('FileType', {
         end, { noremap = true, silent = true })
     end,
     desc = 'Make harpoon open in splits',
-})
--- ************** Load autocompletion
-aucmd('InsertEnter', {
-    group = id.PluginLoad,
-    callback = function(args)
-        if not ignore_files() then
-            vim.api.nvim_input '<Esc>'
-            -- require('r.plugins.completion').init()
-            require('lazy').load 'nvim-cmp'
-            vim.api.nvim_del_autocmd(args.id)
-            vim.api.nvim_input 'i'
-        end
-    end,
-    desc = 'Initialize completion framework only when entering relevant buffers',
 })
 
 ------------------------------------------------------------------------

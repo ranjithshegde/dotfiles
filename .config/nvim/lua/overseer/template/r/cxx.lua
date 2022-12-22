@@ -36,11 +36,10 @@ return {
     },
     generator = function(opts, cb)
         local compiler = nil
-        local is_win = vim.fn.has 'win32' == 1
         if opts.filetype == 'cpp' then
-            compiler = is_win and 'clang++' or 'g++'
+            compiler = vim.g.is_win32 and 'clang++' or 'g++'
         else
-            compiler = is_win and 'clang' or 'gcc'
+            compiler = vim.g.is_win32 and 'clang' or 'gcc'
         end
         local commands = {
             {

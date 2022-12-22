@@ -61,7 +61,7 @@ end
 ---@param key string key sequence
 ---@param mode string vim-mode for the keymap
 function utils.feedkey(key, mode)
-    vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes(key, true, true, true), mode, true)
+    vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes(key, true, false, true), mode, false)
 end
 
 ---Open thesaurus for the word online
@@ -171,6 +171,29 @@ function utils.toggle_vi()
         vim.cmd.IndentBlanklineToggle()
         vi = true
     end
+end
+
+---Load a plugin on key press or key sequence
+---@param mode table|string The mapping modes
+---@param key string The key sequence to map
+---@param desc string The desription for the keymapping
+---@param callback function The function to be evaluated on keypress
+---@param args any Arguements to the callback if any
+---@param pkg string the package name to verify before loading
+function utils.lazy_on_key(mode, key, desc, callback, args, pkg)
+    -- if pkg and package.loaded[pkg] then
+    --     return
+    -- else
+    -- end
+    vim.keymap.set(mode, key, function()
+        vim.keymap.del(mode, key)
+        if args and type(args) == 'table' then
+            callback(unpack(args))
+        else
+            callback(args)
+        end
+        utils.feedkey(key, 'm')
+    end, { desc = desc })
 end
 
 return utils

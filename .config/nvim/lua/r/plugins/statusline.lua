@@ -134,14 +134,6 @@ local mode = subscribe.buf_autocmd('el_mode', 'ModeChanged', function()
     end
 end)
 
--- local test_au = vim.api.nvim_create_augroup('ModeTest', { clear = true })
--- vim.api.nvim_create_autocmd('ModeChanged', {
---     group = test_au,
---     callback = function(args)
---         vim.pretty_print(args)
---     end,
--- })
-
 --*********************************** Scroll & position -------------------
 local scroll = subscribe.buf_autocmd('el_scroll', 'CursorMoved,CursorMovedI', function(_, _)
     local current_line = vim.api.nvim_win_get_cursor(0)[1]
@@ -199,7 +191,7 @@ local git_branch = subscribe.buf_autocmd('el_git_branch', 'BufReadPre', function
     end
     local branch = extensions.git_branch(window, buffer)
     if branch then
-        require('lazy').load 'gitsigns.nvim'
+        require('lazy').load { plugins = { 'gitsigns.nvim' } }
         return space .. extensions.git_icon() .. space .. branch
     end
 end)

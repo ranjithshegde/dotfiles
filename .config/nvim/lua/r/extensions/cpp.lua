@@ -55,11 +55,7 @@ function clang.set_ctype()
         vim.b.makeFile = 'build.gradle'
         vim.bo.makeprg = './gradlew'
     else
-        if vim.fn.has 'win32' == 1 then
-            vim.bo.makeprg = 'clang++'
-        else
-            vim.bo.makeprg = 'g++'
-        end
+        vim.bo.makeprg = vim.g.is_win32 and 'clang++' or 'g++'
         require('r.mappings.clang').ctests()
         vim.b.debugBin = vim.fn.expand '%<'
     end
@@ -73,11 +69,7 @@ function clang.set_type()
         vim.bo.makeprg = 'make'
         vim.b.makeFile = 'Makefile'
     else
-        if vim.fn.has 'win32' == 1 then
-            vim.bo.makeprg = 'clang'
-        else
-            vim.bo.makeprg = 'gcc'
-        end
+        vim.bo.makeprg = vim.g.is_win32 and 'clang' or 'gcc'
         require('r.mappings.clang').ctests()
         vim.b.debugBin = vim.fn.expand '%<'
     end

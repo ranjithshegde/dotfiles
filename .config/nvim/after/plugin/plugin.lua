@@ -21,31 +21,10 @@ cmd('Word', function()
     require('r.extensions').WordProcessor()
 end, { desc = 'Turn on WordProcessor mode' })
 
-cmd('Camel', function()
-    require('r.extensions').CamelCase()
-end, { desc = 'Turn word and motion operators into camelcase' })
-
 cmd('Su', 'w !sudo tee %', {})
 
 -- ******************* Plugin mappings --------------------------------------------
 
-local function load_plugin_on_key(mode, key, desc, callback, args)
-    vim.keymap.set(mode, key, function()
-        vim.keymap.del(mode, key)
-        callback(args)
-        key = string.gsub(key, '<leader>', '\\')
-        vim.api.nvim_input(key)
-    end, { desc = desc })
-end
-
-load_plugin_on_key('n', '<Space>', 'Telescope', require, 'r.mappings.telescope')
-
-load_plugin_on_key('n', 'cr', 'Coerce', require('lazy').load, 'vim-abolish')
-
-load_plugin_on_key('n', '<leader>r', 'Ranger file picker', function()
+require('r.utils').lazy_on_key('n', '<leader>r', 'Ranger file picker', function()
     require('r.mappings.util').ranger()
-end)
-
-load_plugin_on_key('n', '<leader>w', 'OrgWiki', function()
-    require('r.mappings.util').orgWiki()
 end)
