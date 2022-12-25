@@ -164,7 +164,11 @@ function lsp.servers()
     for ls, cfg in pairs(configs) do
         require('lspconfig')[ls].setup(cfg)
     end
+
     require('r.lsp.ltex').lsp()
+    if vim.tbl_contains({ 'tex', 'bib', 'plaintex' }, vim.bo.filetype) then
+        require('r.lsp.texlab').lsp()
+    end
     require('lspconfig.ui.windows').default_options.border = 'single'
 end
 

@@ -179,12 +179,7 @@ end
 ---@param desc string The desription for the keymapping
 ---@param callback function The function to be evaluated on keypress
 ---@param args any Arguements to the callback if any
----@param pkg string the package name to verify before loading
-function utils.lazy_on_key(mode, key, desc, callback, args, pkg)
-    -- if pkg and package.loaded[pkg] then
-    --     return
-    -- else
-    -- end
+function utils.lazy_on_key(mode, key, desc, callback, args)
     vim.keymap.set(mode, key, function()
         vim.keymap.del(mode, key)
         if args and type(args) == 'table' then

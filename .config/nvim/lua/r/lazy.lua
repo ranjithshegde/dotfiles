@@ -30,15 +30,34 @@ if not vim.loop.fs_stat(lazypath) then
 end
 vim.opt.runtimepath:prepend(lazypath)
 
+local function setup(module, key, config)
+    return function()
+        if key then
+            require(module)[key](config)
+        else
+            require(module)()
+        end
+    end
+end
+
 --------------------------------------------------------------------------------------------------------
 --				 Plugins                                            							      --
 --------------------------------------------------------------------------------------------------------
 return require('lazy').setup({
     -- Colorscheme
-    { 'folke/tokyonight.nvim', lazy = false },
+    'folke/tokyonight.nvim',
 
     -- Better marks
     'ThePrimeagen/harpoon',
+
+    -- CamelCaseMotion
+    'bkad/CamelCaseMotion',
+
+    -- Tasks
+    {
+        'stevearc/overseer.nvim',
+        config = setup('r.plugins', 'overseer'),
+    },
 
     -- Databases
     {
@@ -54,37 +73,10 @@ return require('lazy').setup({
         cmd = { 'Subverse', 'Abolish' },
     },
 
-    -- Tasks
-    {
-        'stevearc/overseer.nvim',
-        config = function()
-            require('r.plugins').overseer()
-        end,
-    },
-
-    -- Indents and chars
-    {
-        'lukas-reineke/indent-blankline.nvim',
-        config = function()
-            require('r.plugins').indent()
-        end,
-    },
-
-    -- Fancy UI
-    {
-        'stevearc/dressing.nvim',
-        event = 'VeryLazy',
-        config = function()
-            require('dressing').setup { input = { relative = 'editor' } }
-        end,
-    },
-
     -- Debugger adapter protocol
     {
         'mfussenegger/nvim-dap',
-        config = function()
-            require('r.debuggers').setup()
-        end,
+        config = setup('r.debuggers', 'setup'),
         dependencies = 'rcarriga/nvim-dap-ui',
     },
 
@@ -92,36 +84,50 @@ return require('lazy').setup({
     {
         'davidgranstrom/scnvim',
         ft = 'supercollider',
-        config = function()
-            require('r.plugins').scnvim()
-        end,
-    },
-
-    -- Colorizer
-    {
-        'NvChad/nvim-colorizer.lua',
-        config = function()
-            require('r.plugins').colorizer()
-        end,
-        cmd = { 'ColorizerAttachToBuffer', 'ColorizerToggle' },
-    },
-
-    -- Fancy folds
-    {
-        'kevinhwang91/nvim-ufo',
-        dependencies = 'kevinhwang91/promise-async',
-        config = function()
-            require 'r.plugins.folds'()
-        end,
+        config = setup('r.plugins', 'scnvim'),
     },
 
     -- Surround with TreeSitter
     {
         'kylechui/nvim-surround',
         keys = { 'ys', 'yss', 'ySS', 'cs', 'ds', { 'S', mode = 'v' } },
-        config = function()
-            require('r.plugins').surround()
-        end,
+        config = setup('r.plugins', 'surround'),
+    },
+
+    -- Comment with TreeSitter
+    {
+        'numToStr/Comment.nvim',
+        keys = { 'gc', { 'gc', mode = 'v' }, 'gb', { 'gb', mode = 'v' } },
+        config = { ignore = '^$' },
+    },
+
+    -- Treesitter indent guides
+    {
+        'lukas-reineke/indent-blankline.nvim',
+        config = setup('r.plugins', 'indent'),
+        event = 'BufReadPost',
+    },
+
+    -- Colorizer
+    {
+        'NvChad/nvim-colorizer.lua',
+        cmd = { 'ColorizerAttachToBuffer', 'ColorizerToggle' },
+        config = setup('r.plugins', 'colorizer'),
+    },
+
+    -- Fancy UI
+    {
+        'stevearc/dressing.nvim',
+        event = 'VeryLazy',
+        config = { input = { relative = 'editor' } },
+    },
+
+    -- Fancy folds
+    {
+        'kevinhwang91/nvim-ufo',
+        dependencies = 'kevinhwang91/promise-async',
+        config = setup 'r.plugins.folds',
+        event = 'BufReadPost',
     },
 
     -- Fancy UI
@@ -129,33 +135,17 @@ return require('lazy').setup({
         'folke/noice.nvim',
         dependencies = 'MunifTanjim/nui.nvim',
         event = 'VimEnter',
-        config = function()
-            require 'r.plugins.noice'
-        end,
-    },
-
-    -- Comment with TreeSitter
-    {
-        'numToStr/Comment.nvim',
-        keys = { 'gc', { 'gc', mode = 'v' }, 'gb', { 'gb', mode = 'v' } },
-        config = function()
-            require('Comment').setup {
-                ignore = '^$',
-            }
-        end,
+        config = setup 'r.plugins.noice',
     },
 
     -- StatusLine
     {
         'ranjithshegde/express_line.nvim',
         dev = use_custom 'express_line.nvim',
-        -- event = 'UIEnter',
         lazy = false,
         branch = '0.7',
         dependencies = { 'nvim-tree/nvim-web-devicons', 'nvim-lua/plenary.nvim' },
-        config = function()
-            require 'r.plugins.statusline'()
-        end,
+        config = setup 'r.plugins.statusline',
     },
 
     -- Git integration
@@ -163,9 +153,7 @@ return require('lazy').setup({
         {
             'lewis6991/gitsigns.nvim',
             dependencies = 'nvim-lua/plenary.nvim',
-            config = function()
-                require('r.plugins').gitsigns()
-            end,
+            config = setup('r.plugins', 'gitsigns'),
         },
         { 'tpope/vim-fugitive', cmd = { 'G', 'Git', 'Gclog' } },
     },
@@ -173,14 +161,12 @@ return require('lazy').setup({
     -- WhichKey
     {
         'folke/which-key.nvim',
-        config = function()
-            require('which-key').setup {
-                show_help = false,
-                show_keys = false,
-                layout = { layout = { spacing = 15 } },
-                window = { border = 'single' },
-            }
-        end,
+        config = {
+            show_help = false,
+            show_keys = false,
+            layout = { layout = { spacing = 15 } },
+            window = { border = 'single' },
+        },
     },
 
     -- TreeSitter
@@ -191,9 +177,7 @@ return require('lazy').setup({
         { 'Badhi/nvim-treesitter-cpp-tools', ft = { 'c', 'cpp', 'opencl' } },
         {
             'ThePrimeagen/refactoring.nvim',
-            config = function()
-                require('r.plugins.treesitter').refactoring()
-            end,
+            config = setup('r.plugins.treesitter', 'refactoring'),
         },
     },
 
@@ -209,9 +193,7 @@ return require('lazy').setup({
                 { 'nvim-lua/plenary.nvim' },
                 { 'nvim-telescope/telescope-project.nvim' },
             },
-            config = function()
-                require('r.plugins.telescope').telescope()
-            end,
+            config = setup('r.plugins.telescope', 'telescope'),
         },
         { 'nvim-telescope/telescope-fzf-native.nvim', build = 'make' },
         { 'nvim-telescope/telescope-file-browser.nvim' },
@@ -222,9 +204,7 @@ return require('lazy').setup({
         {
             'nvim-orgmode/orgmode',
             ft = 'org',
-            config = function()
-                require('r.plugins').org()
-            end,
+            config = setup('r.plugins', 'org'),
         },
         {
             'ranjithshegde/orgWiki.nvim',
@@ -234,80 +214,71 @@ return require('lazy').setup({
                     require('r.mappings.util').orgWiki()
                 end)
             end,
-            config = function()
-                require('orgWiki').setup {
-                    disable_mappings = true,
-                    wiki_path = { '~/Documents/Orgs/', '~/Documents/Projects/' },
-                    diary_path = '~/Documents/Orgs/diary/',
-                }
-            end,
-        },
-    },
-
-    --Lsp config and companions
-    {
-        'neovim/nvim-lspconfig',
-        { 'jose-elias-alvarez/null-ls.nvim' },
-        { 'Hoffs/omnisharp-extended-lsp.nvim', ft = 'cs' },
-        {
-            'ranjithshegde/ccls.nvim',
-            dev = use_custom 'ccls.nvim',
-            ft = { 'c', 'cpp', 'opencl' },
-            config = function()
-                require('r.lsp.clangd').ccls()
-            end,
-        },
-        {
-            'folke/neodev.nvim',
-            ft = 'lua',
-            config = function()
-                require('r.plugins').neodev()
-            end,
-        },
-        {
-            'p00f/clangd_extensions.nvim',
-            ft = { 'c', 'cpp', 'opencl' },
-            config = function()
-                require('r.lsp.clangd').clangd()
-            end,
+            config = {
+                disable_mappings = true,
+                wiki_path = { '~/Documents/Orgs/', '~/Documents/Projects/' },
+                diary_path = '~/Documents/Orgs/diary/',
+            },
         },
     },
 
     -- completion and snippets
     {
         {
-            'hrsh7th/nvim-cmp',
-            event = 'InsertEnter',
-            dependencies = {
-                { 'hrsh7th/cmp-nvim-lsp' },
-                {
-                    'windwp/nvim-autopairs',
-                    config = function()
-                        require('r.plugins.completion').pairs()
-                    end,
-                },
-            },
-            config = function()
-                require('r.plugins.completion').init()
-            end,
-        },
-        { 'hrsh7th/cmp-buffer' },
-        { 'hrsh7th/cmp-path' },
-        { 'saadparwaiz1/cmp_luasnip' },
-        {
             'L3MON4D3/LuaSnip',
             build = 'make install_jsregexp',
             dependencies = 'rafamadriz/friendly-snippets',
+            config = setup('r.plugins.completion', 'luasnip'),
+        },
+        {
+            'hrsh7th/nvim-cmp',
+            event = 'InsertEnter',
+            dependencies = {
+                'hrsh7th/cmp-nvim-lsp',
+                'hrsh7th/cmp-buffer',
+                'hrsh7th/cmp-path',
+                'saadparwaiz1/cmp_luasnip',
+                {
+                    'windwp/nvim-autopairs',
+                    config = setup('r.plugins.completion', 'pairs'),
+                },
+            },
+            config = setup('r.plugins.completion', 'init'),
+        },
+    },
+
+    --Lsp config and companions
+    {
+        { 'Hoffs/omnisharp-extended-lsp.nvim', ft = 'cs' },
+        {
+            'folke/neodev.nvim',
+            config = setup('r.plugins', 'neodev'),
+        },
+        {
+            'p00f/clangd_extensions.nvim',
+            ft = { 'c', 'cpp', 'opencl' },
+            config = setup('r.lsp.clangd', 'clangd'),
+        },
+        {
+            'ranjithshegde/ccls.nvim',
+            dev = use_custom 'ccls.nvim',
+            ft = { 'c', 'cpp', 'opencl' },
+            config = setup('r.lsp.clangd', 'ccls'),
+        },
+        {
+            'neovim/nvim-lspconfig',
+            ft = require('r.utils.tables').lspfiles,
+            dependencies = 'jose-elias-alvarez/null-ls.nvim',
             config = function()
-                require('r.plugins.completion').luasnip()
+                require('r.lsp').servers()
+                require('r.lsp').lintFormat()
             end,
         },
     },
 }, {
     ui = { border = 'double' },
     dev = { path = dev_path },
-    performance = { rtp = { disabled_plugins = require('r.utils.tables').disabled_builtins } },
-    debug = true,
+    performance = { rtp = { disabled_plugins = require('r.utils.tables').rtp } },
     defaults = { lazy = true },
     install = { colorscheme = { 'tokyonight' } },
 })

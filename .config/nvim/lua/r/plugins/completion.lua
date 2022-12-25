@@ -87,9 +87,6 @@ local function cmp_setup(cmp, luasnip)
 end
 
 local function cmp_extras(cmp)
-    -- Load completion sources
-    require('lazy').load { plugins = { 'cmp-path', 'cmp-buffer', 'cmp_luasnip' } }
-
     -- Single keystroke to toggle between cmp and ins-completion
     local isCmp = true
     vim.keymap.set({ 'i', 's' }, '<C-k>', function()

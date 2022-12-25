@@ -1,4 +1,3 @@
-require('r.lsp.texlab').lsp()
 local map = vim.keymap.set
 map('n', '<F3>', vim.cmd.WordCount, { buffer = true, desc = 'Word count' })
 

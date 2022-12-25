@@ -121,7 +121,6 @@ local function config_files()
                     q = { open 'lua/r/extensions/qf.lua', 'Quickfix and Loclist' },
                     s = { open 'lua/r/extensions/project/scratchpad.lua', 'ScratchPad' },
                     p = { open 'lua/r/extensions/project/init.lua', 'Initiate project' },
-                    m = { open 'lua/r/extensions/camel.lua', 'CamelCaseMotion' },
                 },
 
                 -- Basic utility functions

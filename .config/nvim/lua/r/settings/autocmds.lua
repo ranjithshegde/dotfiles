@@ -7,7 +7,7 @@ local opts = { clear = true }
 local id = {}
 
 local function ignore_files()
-    return vim.tbl_contains(require('r.utils.tables').ignoreFiles, vim.bo.filetype) or vim.fn.win_gettype() == 'popup'
+    return vim.tbl_contains(require('r.utils.tables').ignoreFiles, vim.bo.filetype)
 end
 
 local function ignore_win()
@@ -63,7 +63,7 @@ aucmd('FileType', {
 aucmd({ 'InsertEnter', 'WinLeave', 'FocusLost', 'BufNewFile' }, {
     group = id.FormatOptions,
     callback = function(args)
-        if not ignore_files() then
+        if not ignore_win() then
             vim.wo[vim.fn.bufwinid(args.buf)].relativenumber = false
         end
     end,
@@ -93,7 +93,7 @@ aucmd({ 'FocusGained', 'WinEnter', 'BufEnter' }, {
 aucmd({ 'FocusLost', 'WinLeave' }, {
     group = id.FormatOptions,
     callback = function(args)
-        if not ignore_files() then
+        if not ignore_win() then
             vim.wo[vim.fn.bufwinid(args.buf)].cursorline = false
             vim.wo[vim.fn.bufwinid(args.buf)].foldcolumn = '0'
         end
@@ -156,27 +156,6 @@ aucmd('BufEnter', {
 ------------------------------------------------------------------------
 
 id.LspSettings = augroup('LspSettings', opts)
--- ************** Lsp Configuration loading  ----------------------------
-aucmd('FileType', {
-    group = id.LspSettings,
-    pattern = require('r.utils.tables').lspfiles,
-    callback = function()
-        require('r.lsp').servers()
-        require('r.lsp').lintFormat()
-        auexec('FileType', { group = 'lspconfig' })
-    end,
-    once = true,
-    desc = 'Initialize lsp settings, AuGroups and server configurations',
-})
-aucmd('FileType', {
-    group = id.LspSettings,
-    pattern = 'opencl',
-    callback = function()
-        require('r.mappings.clang').clang()
-    end,
-    desc = 'OpenCL filetype to handle C++ lsp',
-})
-
 -- ************** Lsp attach --------------------------------------------
 aucmd('LspAttach', {
     group = id.LspSettings,
@@ -261,21 +240,6 @@ aucmd('BufReadPost', {
     end,
     once = true,
     desc = 'Load mappings for unimparied and treesiiter after reading buffer',
-})
--- -- ************** Load decoration plugins ------------------------------
-aucmd('FileType', {
-    group = id.PluginLoad,
-    callback = function(args)
-        if
-            vim.tbl_contains(require('r.utils.tables').ignoreFiles, args.match)
-            or not require('nvim-treesitter.parsers').has_parser()
-            or (package.loaded.ufo and package.loaded.indent_blankline)
-        then
-            return
-        end
-        require('lazy').load { plugins = { 'nvim-ufo', 'indent-blankline.nvim' } }
-    end,
-    desc = 'Load nvim-ufo and indent_blankline on relevant filetypes',
 })
 -- ************** Load harpoon maps ------------------------------------
 aucmd('FileType', {

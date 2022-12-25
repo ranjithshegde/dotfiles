@@ -11,10 +11,12 @@ vim.filetype.add {
         cl = 'opencl',
         make = 'make',
         uproject = 'json',
+        uplugin = 'json',
     },
     filename = {
         ['/etc/environment'] = 'confini',
         ['mimeapps.list'] = 'confini',
         ['doxyconf'] = 'conf',
+        ['.clangd'] = 'yaml',
     },
 }

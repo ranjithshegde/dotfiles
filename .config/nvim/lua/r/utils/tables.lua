@@ -258,29 +258,35 @@ tables.indentContext = {
 }
 
 --- disable builtin vim plugins
-tables.disabled_builtins = {
+tables.rtp = {
     'fzf',
     'tar',
     'zip',
     'gzip',
-    'zipPlugin',
-    'tarPlugin',
-    'vimball',
-    'vimballPlugin',
-    'matchit',
     'shada',
-    'logipat',
-    'rrhelper',
-    'compiler',
-    'bugreport',
-    'ftplugin',
-    'getscript',
-    'getscriptPlugin',
-    '2html_plugin',
-    'spellfile_plugin',
-    'netrw',
+    'tutor',
+    'tohtml',
+    'matchit',
+    'rplugin',
+    'spellfile',
+    'tarPlugin',
+    'zipPlugin',
+    'matchparen',
     'netrwPlugin',
-    'netrwFileHandlers',
+}
+
+tables.disabled_builtins = {
+    -- 'netrw',
+    -- 'logipat',
+    -- 'vimball',
+    -- 'compiler',
+    -- 'ftplugin',
+    -- 'rrhelper',
+    -- 'bugreport',
+    -- 'getscript',
+    -- 'vimballPlugin',
+    -- 'getscriptPlugin',
+    -- 'netrwFileHandlers',
 }
 
 --- TreeSitter parsers to keep installed

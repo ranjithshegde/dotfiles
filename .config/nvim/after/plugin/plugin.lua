@@ -21,6 +21,10 @@ cmd('Word', function()
     require('r.extensions').WordProcessor()
 end, { desc = 'Turn on WordProcessor mode' })
 
+cmd('Camel', function()
+    require('r.extensions').CamelCase()
+end, { desc = 'Use CamelCase motions' })
+
 cmd('Su', 'w !sudo tee %', {})
 
 -- ******************* Plugin mappings --------------------------------------------

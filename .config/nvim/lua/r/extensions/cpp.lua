@@ -96,12 +96,6 @@ function clang.unRef(cmd)
     require('r.utils').open_in_browser(url)
 end
 
--- Launch debuger
-function clang.termdebug()
-    require('r.debuggers').init()
-    require('dap').continue()
-end
-
 function clang.pdBuild()
     local bin = vim.fn.fnamemodify(vim.loop.cwd(), ':t') .. '.pd_linux'
     local dest = '~/.local/lib/pd/extra/'
