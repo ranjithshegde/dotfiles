@@ -6,7 +6,7 @@ local util = require 'lspconfig.util'
 
 local current_diagnostics = {}
 
-local TABLE = { 'underline', 'virtual_text', 'signs', 'update_in_insert', 'float' }
+local methods = { 'underline', 'virtual_text', 'signs', 'update_in_insert', 'float' }
 
 local function signs()
     vim.fn.sign_define('DiagnosticSignError', { text = '', texthl = 'DiagnosticSignError' })
@@ -89,7 +89,7 @@ end
 
 local function currentSettings(new_settings, client)
     local settings = {}
-    for _, setting in pairs(TABLE) do
+    for _, setting in pairs(methods) do
         settings[setting] = current_diagnostics[client].settings[setting].value
     end
     if not vim.tbl_isempty(new_settings) then
@@ -155,7 +155,7 @@ local Diagnostics = {}
 
 local function init(settings, client, config)
     local client_settings = settings or {}
-    for _, setting in ipairs(TABLE) do
+    for _, setting in ipairs(methods) do
         if client_settings[setting] ~= nil then
             config.settings[setting].default = client_settings[setting]
         end
@@ -184,7 +184,7 @@ function Diagnostics.attach(user_settings, client)
         },
     }
 
-    local current_virt = vim.tbl_contains(vim.tbl_keys(virt_text_conf), client.name) and virt_text_conf[client.name]
+    local current_virt = tableHasKey(virt_text_conf, client.name) and virt_text_conf[client.name]
         or virt_text_conf.default
 
     ns[client.name] = vim.lsp.diagnostic.get_namespace(client.id)
@@ -244,7 +244,7 @@ function Diagnostics.turn_on_diagnostics_default(client)
     if client and client ~= '' then
         local name = util.get_active_client_by_name(0, client)
         if name then
-            for _, setting in ipairs(TABLE) do
+            for _, setting in ipairs(methods) do
                 settings[setting] = current_diagnostics[client].settings[setting].default
             end
             configure(settings, client)
@@ -259,7 +259,7 @@ function Diagnostics.turn_on_diagnostics_default(client)
         end
     else
         for id, _ in pairs(current_diagnostics) do
-            for _, setting in ipairs(TABLE) do
+            for _, setting in ipairs(methods) do
                 settings[setting] = current_diagnostics[id].settings[setting].default
             end
             configure(settings)

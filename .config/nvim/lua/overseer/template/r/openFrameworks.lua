@@ -36,7 +36,7 @@ return {
     condition = {
         filetype = { 'c', 'cpp' },
         callback = function()
-            return vim.b.makeFile == 'Makefile'
+            return vim.b.cpp_type == 'oF'
         end,
     },
     generator = function(_, cb)

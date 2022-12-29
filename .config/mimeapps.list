@@ -23,6 +23,7 @@ image/jp2=nsxiv.desktop;
 image/jxl=nsxiv.desktop;
 image/avif=nsxiv.desktop;
 image/heif=nsxiv.desktop;
+application/rtf=libreoffice-writer.desktop;
 
 [Default Applications]
 application/pdf=sioyek.desktop
@@ -56,3 +57,4 @@ image/jp2=nsxiv.desktop
 image/jxl=nsxiv.desktop
 image/avif=nsxiv.desktop
 image/heif=nsxiv.desktop
+application/rtf=libreoffice-writer.desktop

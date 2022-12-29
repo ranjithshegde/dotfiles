@@ -32,7 +32,7 @@ return {
     condition = {
         filetype = { 'c', 'cpp' },
         callback = function()
-            return vim.b.makeFile == 'CMakeLists.txt'
+            return vim.b.cpp_type == 'CMake'
         end,
     },
     generator = function(_, cb)

@@ -5,6 +5,32 @@ local servers = {}
 ------------------------------------------------------------------------
 
 function servers.clangd()
+    local cmd = {
+        'clangd',
+        '--clang-tidy',
+        '--background-index',
+        '--all-scopes-completion',
+        '--completion-style=detailed',
+        '--fallback-style=webkit',
+        '--cross-file-rename',
+        '--offset-encoding=utf-32',
+    }
+
+    local header_cmp = {
+        '--header-insertion=iwyu',
+        '--header-insertion-decorators',
+        '--suggest-missing-includes',
+    }
+
+    if vim.b.cpp_type == 'Unreal' then
+        table.insert(cmd, '--header-insertion=never')
+        require('Unreal').Start()
+    else
+        for _, v in ipairs(header_cmp) do
+            table.insert(cmd, v)
+        end
+    end
+
     require('clangd_extensions').setup {
         server = {
             capabilities = require('r.lsp').capabilities(),
@@ -12,19 +38,7 @@ function servers.clangd()
             init_options = {
                 clangdFileStatus = true,
             },
-            cmd = {
-                'clangd',
-                '--clang-tidy',
-                '--background-index',
-                '--all-scopes-completion',
-                '--header-insertion=iwyu',
-                '--header-insertion-decorators',
-                '--completion-style=detailed',
-                '--suggest-missing-includes',
-                '--fallback-style=webkit',
-                '--cross-file-rename',
-                '--offset-encoding=utf-32',
-            },
+            cmd = cmd,
         },
         extensions = {
             autoSetHints = false,
@@ -57,13 +71,14 @@ end
 function servers.ccls()
     local filetypes = { 'c', 'cpp', 'objc', 'objcpp', 'opencl' }
     local server_config = {
+        cmd = { 'ccls', '--log-file=/tmp/ccls.log', '--v=1' },
         filetypes = filetypes,
         init_options = {
             cache = {
                 directory = vim.fs.normalize '~/.cache/ccls/',
             },
-            request = { timeout = 5000 },
         },
+        autostart = true,
     }
 
     -- require('ccls').setup { lsp = { lspconfig = server_config } }

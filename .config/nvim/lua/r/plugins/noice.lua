@@ -1,5 +1,3 @@
--- function()
--- function()
 vim.pretty_print = function(...)
     local objects = {}
     for i = 1, select('#', ...) do

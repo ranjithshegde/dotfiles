@@ -1,11 +1,13 @@
 -- -------------------------- Defs **********************************************************************
 
-local dev_path = vim.env.WORKSPACE .. 'Repos/'
+local dev_path = nil
 
 if vim.fn.has 'win32' == 1 then
     vim.g.is_win32 = true
+    dev_path = vim.fs.normalize '~/Repos/Gits/'
 else
     vim.g.is_win32 = false
+    dev_path = vim.env.WORKSPACE .. 'Repos/'
 end
 
 local function use_custom(path)
@@ -51,12 +53,17 @@ return require('lazy').setup({
     'ThePrimeagen/harpoon',
 
     -- CamelCaseMotion
-    'bkad/CamelCaseMotion',
+    'chaoren/vim-wordmotion',
 
     -- Tasks
     {
         'stevearc/overseer.nvim',
         config = setup('r.plugins', 'overseer'),
+    },
+
+    {
+        'ranjithshegde/Unreal.nvim',
+        dev = use_custom 'Unreal.nvim',
     },
 
     -- Databases
@@ -142,7 +149,7 @@ return require('lazy').setup({
     {
         'ranjithshegde/express_line.nvim',
         dev = use_custom 'express_line.nvim',
-        lazy = false,
+        event = 'UIEnter',
         branch = '0.7',
         dependencies = { 'nvim-tree/nvim-web-devicons', 'nvim-lua/plenary.nvim' },
         config = setup 'r.plugins.statusline',
@@ -189,14 +196,12 @@ return require('lazy').setup({
                 require('r.utils').lazy_on_key('n', '<Space>', 'Telescope', require, 'r.mappings.telescope')
             end,
             cmd = 'Telescope',
-            dependencies = {
-                { 'nvim-lua/plenary.nvim' },
-                { 'nvim-telescope/telescope-project.nvim' },
-            },
+            dependencies = 'nvim-lua/plenary.nvim',
             config = setup('r.plugins.telescope', 'telescope'),
         },
+        'nvim-telescope/telescope-project.nvim',
+        'nvim-telescope/telescope-file-browser.nvim',
         { 'nvim-telescope/telescope-fzf-native.nvim', build = 'make' },
-        { 'nvim-telescope/telescope-file-browser.nvim' },
     },
 
     -- Orgmode

@@ -181,7 +181,7 @@ id.DiagnosticList = augroup('DiagnosticList', opts)
 aucmd('DiagnosticChanged', {
     group = id.DiagnosticList,
     callback = function()
-        pcall(vim.diagnostic.setloclist, { open = false })
+        vim.diagnostic.setloclist { open = false }
     end,
     desc = 'Send diagnostics to loclist on new errors',
 })

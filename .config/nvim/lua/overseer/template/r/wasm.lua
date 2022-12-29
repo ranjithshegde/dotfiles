@@ -24,7 +24,7 @@ return {
     condition = {
         filetype = { 'c', 'cpp' },
         callback = function()
-            return vim.b.wasm ~= nil
+            return vim.b.wasm ~= nil or vim.b.cpp_type == 'oF'
         end,
     },
     generator = function(_, cb)

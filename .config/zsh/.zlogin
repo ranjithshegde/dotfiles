@@ -1,4 +1,3 @@
-# Run these only if X is running
 #USE VCPKG HEADERS
 export CPLUS_INCLUDE_PATH=$CPLUS_INCLUDE_PATH:/opt/vcpkg/installed/x64-linux/include/
 export C_INCLUDE_PATH=$C_INCLUDE_PATH:/opt/vcpkg/installed/x64-linux/include/
@@ -32,12 +31,14 @@ export GPG_TTY
 gpg-connect-agent updatestartuptty /bye >/dev/null
 export GPG_AGENT_INFO
 
-xset r rate 200 30
 
 if [[ ${XDG_SESSION_TYPE} == "wayland" ]]; then
     export QT_QPA_PLATFORM='wayland'
+else
+    xset r rate 200 30
 fi
 
+# Run these only if X is running
 if [[ ${DISPLAY} ]]; then
     if [[ ${DESKTOP_SESSION} == "dwm" ]]; then
         systemctl --user start redshift.service

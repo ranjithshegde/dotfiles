@@ -1,7 +1,9 @@
 local foldMaps = function(_, _)
     require('telescope.actions.set').select:enhance {
         post = function()
-            vim.cmd.normal { args = { 'zx' }, bang = true }
+            vim.schedule(function()
+                vim.cmd.normal { args = { 'zx' }, bang = true }
+            end)
         end,
     }
     return true
@@ -117,7 +119,10 @@ function telescope.telescope()
             git_files = { attach_mappings = foldMaps },
             live_grep = { attach_mappings = foldMaps },
             grep_string = { attach_mappings = foldMaps },
-            find_files = { follow = true, attach_mappings = foldMaps },
+            find_files = {
+                follow = true,
+                attach_mappings = foldMaps,
+            },
         },
         defaults = {
             vimgrep_arguments = {

@@ -22,7 +22,7 @@ cmd('Word', function()
 end, { desc = 'Turn on WordProcessor mode' })
 
 cmd('Camel', function()
-    require('r.extensions').CamelCase()
+    require('lazy').load { plugins = { 'vim-wordmotion' } }
 end, { desc = 'Use CamelCase motions' })
 
 cmd('Su', 'w !sudo tee %', {})

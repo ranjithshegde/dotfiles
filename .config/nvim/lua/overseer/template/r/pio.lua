@@ -24,7 +24,7 @@ return {
     condition = {
         filetype = { 'c', 'cpp' },
         callback = function()
-            return vim.b.makeFile == 'platformio.ini'
+            return vim.b.cpp_type == 'Pio'
         end,
     },
     generator = function(_, cb)

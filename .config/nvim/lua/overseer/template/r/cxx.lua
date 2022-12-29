@@ -25,22 +25,17 @@ local tmpl = {
     end,
 }
 
+local compiler = vim.bo.makeprg
+
 return {
     condition = {
         filetype = { 'c', 'cpp' },
         callback = function()
-            local makeprg = vim.bo.makeprg
             local compilers = { 'gcc', 'g++', 'clang', 'clang++' }
-            return vim.tbl_contains(compilers, makeprg)
+            return vim.tbl_contains(compilers, compiler)
         end,
     },
     generator = function(opts, cb)
-        local compiler = nil
-        if opts.filetype == 'cpp' then
-            compiler = vim.g.is_win32 and 'clang++' or 'g++'
-        else
-            compiler = vim.g.is_win32 and 'clang' or 'gcc'
-        end
         local commands = {
             {
                 args = { compiler, '-g', vim.fn.expand '%', '-o', vim.fn.expand '%<' },

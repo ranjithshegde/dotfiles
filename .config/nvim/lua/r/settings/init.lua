@@ -8,6 +8,7 @@ local opt = vim.opt
 return function()
     vim.cmd.colorscheme 'tokyonight-night'
     local tab = 4
+    o.exrc = true
     o.title = true
     o.number = true
     o.expandtab = true
