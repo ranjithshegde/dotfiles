@@ -66,13 +66,6 @@ return require('lazy').setup({
         dev = use_custom 'Unreal.nvim',
     },
 
-    -- Databases
-    {
-        'kristijanhusak/vim-dadbod-ui',
-        cmd = 'DBUI',
-        dependencies = { 'tpope/vim-dadbod', 'nanotee/sqls.nvim' },
-    },
-
     -- Granular semantic substitution
     {
         'tpope/vim-abolish',

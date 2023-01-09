@@ -87,12 +87,6 @@ function lsp.attach(client, bufnr)
         vim.lsp.commands['_ltex.hideFalsePositives'] = require('r.lsp.ltex').false_positive
     end
 
-    if client.name == 'sqls' then
-        require('sqls').on_attach(client, bufnr)
-        sc.documentFormattingProvider = false
-        sc.documentRangeFormattingProvider = false
-    end
-
     vim.api.nvim_buf_create_user_command(
         bufnr,
         'LspCapabilities',
@@ -125,16 +119,6 @@ function lsp.servers()
         bashls = {
             capabilities = lsp.capabilities(),
             filetypes = { 'sh', 'zsh' },
-        },
-        sqls = {
-            capabilities = lsp.capabilities(),
-            on_new_config = function(new_config, new_rootdir)
-                new_config.cmd = {
-                    'sqls',
-                    '-config',
-                    new_rootdir .. '/config.yml',
-                }
-            end,
         },
         omnisharp = {
             capabilities = lsp.capabilities(),
