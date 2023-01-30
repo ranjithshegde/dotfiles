@@ -61,6 +61,7 @@ return require('lazy').setup({
         config = setup('r.plugins', 'overseer'),
     },
 
+    -- Unreal integration
     {
         'ranjithshegde/Unreal.nvim',
         dev = use_custom 'Unreal.nvim',
@@ -78,6 +79,13 @@ return require('lazy').setup({
         'mfussenegger/nvim-dap',
         config = setup('r.debuggers', 'setup'),
         dependencies = 'rcarriga/nvim-dap-ui',
+    },
+
+    -- File browser/editor
+    {
+        'stevearc/oil.nvim',
+        cmd = 'Oil',
+        config = { columns = { 'icon', 'size' }, view_options = { show_hidden = true } },
     },
 
     -- SuperCollider
@@ -278,5 +286,5 @@ return require('lazy').setup({
     dev = { path = dev_path },
     performance = { rtp = { disabled_plugins = require('r.utils.tables').rtp } },
     defaults = { lazy = true },
-    install = { colorscheme = { 'tokyonight' } },
+    install = { colorscheme = { 'habamax' } },
 })

@@ -190,8 +190,8 @@ type = internal/network
 ; interface = wlo1
 interface = wlan0
 interval = 60
-format-connected = %{A1:st nmtui:}<ramp-signal>%{A} 
-format-disconnected =  %{A1:st nmtui:}<label-disconnected>%{A}
+format-connected = <ramp-signal> 
+format-disconnected =  <label-disconnected>
 label-disconnected = "󰤮 "
 
 format-connected-foreground = ${colors.wifi}

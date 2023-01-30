@@ -65,6 +65,7 @@ aucmd({ 'InsertEnter', 'WinLeave', 'FocusLost', 'BufNewFile' }, {
     callback = function(args)
         if not ignore_win() then
             vim.wo[vim.fn.bufwinid(args.buf)].relativenumber = false
+            -- vim.wo[vim.fn.bufwinid(args.buf)].statuscolumn = '%l'
         end
     end,
     desc = 'Dont use relativenumber where it makes no sense',
@@ -74,6 +75,7 @@ aucmd({ 'InsertLeave', 'WinEnter', 'FocusGained' }, {
     callback = function(args)
         if not ignore_win() then
             vim.wo[vim.fn.bufwinid(args.buf)].relativenumber = true
+            -- vim.wo[vim.fn.bufwinid(args.buf)].statuscolumn = '%l%r'
         end
     end,
     desc = 'use relativenumber conditionally',
@@ -288,19 +290,17 @@ aucmd('FileType', {
 
 id.ProjectDrawer = augroup('ProjectDrawer', opts)
 -- ************************ Handle netrw -------------------------------
-aucmd('BufEnter', {
+aucmd({ 'BufEnter', 'BufReadPre' }, {
     group = id.ProjectDrawer,
     callback = function(args)
         local fs = vim.loop.fs_stat(args.file)
-        if not fs then
-            return
-        end
-        if fs.type == 'directory' then
-            if package.loaded.telescope and package.loaded.telescope.extensions.file_browser then
-                return
+        if fs and fs.type == 'directory' then
+            if not package.loaded.oil then
+                vim.api.nvim_del_autocmd(args.id)
+                vim.schedule(function()
+                    require('oil').open(args.file)
+                end)
             end
-            vim.cmd.bd()
-            require('r.extensions').ranger(args.file, 'e ')
         end
     end,
     desc = 'Hijack netrw with ranger or telescope',

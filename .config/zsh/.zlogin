@@ -45,5 +45,6 @@ if [[ ${DISPLAY} ]]; then
         xrandr --dpi 96 &
         nitrogen --force-setter=xinerama --restore &
         picom &
+        nm-applet &
     fi
 fi

@@ -66,18 +66,19 @@ return function()
     }
 
     opt.shortmess:append 'cs'
-    opt.diffopt:append 'linematch:60'
     opt.foldopen:append 'jump'
+    opt.wildoptions:append 'fuzzy'
+    opt.diffopt:append 'linematch:60'
     opt.clipboard:append 'unnamedplus'
     opt.sessionoptions:append 'terminal,tabpages'
 
+    vim.g.markdown_folding = 1
     vim.g.loaded_ruby_provider = 0
     vim.g.loaded_perl_provider = 0
     vim.g.loaded_node_provider = 0
     vim.g.loaded_python3_provider = 0
-    vim.g.markdown_folding = 1
-    vim.g.tex_conceal = 'abdmgs'
     vim.g.tex_flavor = 'latex'
+    vim.g.tex_conceal = 'abdmgs'
 
     if vim.g.is_win32 then
         o.shell = vim.fn.executable 'pwsh' == 1 and 'pwsh' or 'powershell'
@@ -87,9 +88,6 @@ return function()
         o.shellpipe = '2>&1 | Out-File -Encoding UTF8 %s; exit $LastExitCode'
         vim.cmd 'set shellquote= shellxquote='
     end
-
-    -- ************** Disable builtin plugins ---------------------------------------------------------
-    -- vim.g.did_load_ftplugin = 1
 
     -- ************** HighlightOnYank ---------------------------------------------------------
     vim.api.nvim_create_autocmd('TextYankPost', {

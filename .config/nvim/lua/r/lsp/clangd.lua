@@ -24,7 +24,10 @@ function servers.clangd()
 
     if vim.b.cpp_type == 'Unreal' then
         table.insert(cmd, '--header-insertion=never')
-        require('Unreal').Start()
+        local ok, err = pcall(require('Unreal').Start)
+        if not ok then
+            vim.notify(err, vim.log.levels.ERROR, { title = 'Unreal.nvim' })
+        end
     else
         for _, v in ipairs(header_cmp) do
             table.insert(cmd, v)
@@ -73,11 +76,6 @@ function servers.ccls()
     local server_config = {
         cmd = { 'ccls', '--log-file=/tmp/ccls.log', '--v=1' },
         filetypes = filetypes,
-        init_options = {
-            cache = {
-                directory = vim.fs.normalize '~/.cache/ccls/',
-            },
-        },
         autostart = true,
     }
 
@@ -87,7 +85,7 @@ function servers.ccls()
     require('ccls').setup {
         filetypes = filetypes,
         lsp = {
-            -- lspconfig = server_config,
+            lspconfig = server_config,
             server = server_config,
             disable_capabilities = {
                 completionProvider = true,

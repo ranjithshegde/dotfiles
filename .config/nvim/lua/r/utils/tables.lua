@@ -19,7 +19,6 @@ tables.lspfiles = {
     'objc',
     'opencl',
     'dart',
-    'dockerfile',
     'html',
     'javascript',
     'typescript',
@@ -31,10 +30,8 @@ tables.lspfiles = {
     'markdown',
     'org',
     'python',
-    'perl',
     'rust',
     'toml',
-    'vim',
     'yaml',
 }
 
@@ -273,20 +270,6 @@ tables.rtp = {
     'netrwPlugin',
 }
 
-tables.disabled_builtins = {
-    -- 'netrw',
-    -- 'logipat',
-    -- 'vimball',
-    -- 'compiler',
-    -- 'ftplugin',
-    -- 'rrhelper',
-    -- 'bugreport',
-    -- 'getscript',
-    -- 'vimballPlugin',
-    -- 'getscriptPlugin',
-    -- 'netrwFileHandlers',
-}
-
 --- TreeSitter parsers to keep installed
 tables.ts_parsers = {
     'bash',
@@ -297,7 +280,6 @@ tables.ts_parsers = {
     'comment',
     'css',
     'dart',
-    'dockerfile',
     'glsl',
     'help',
     'html',

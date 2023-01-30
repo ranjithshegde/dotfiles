@@ -1,20 +1,6 @@
 local wk = require 'which-key'
 local map = vim.keymap.set
 
-------------------------------------------------------------------------
---                              Vim config files                      --
-------------------------------------------------------------------------
-
-local open = function(path)
-    return function()
-        local cmd = 'edit'
-        if vim.api.nvim_buf_get_name(vim.api.nvim_get_current_buf()) ~= '' then
-            cmd = 'tabnew'
-        end
-        vim.cmd[cmd] { args = { vim.fn.stdpath 'config' .. '/' .. path } }
-    end
-end
-
 local num = 1
 local function open_term(split)
     return function()
@@ -38,119 +24,8 @@ local function open_term(split)
         elseif split == 'tabnew' then
             args.create_with = 'tabnew | terminal'
         end
-        -- vim.cmd[split]()
         require('harpoon.term').gotoTerminal(args)
     end
-end
-
-local function config_files()
-    wk.register {
-        ['<leader>'] = {
-            a = {
-                name = 'vimrc files',
-                -- Update plugins
-                P = { require('lazy').sync, 'Update packages' },
-                -- Reload config
-                R = { require('r.utils').restart, 'Reload Vim' },
-
-                -- Internal `after/plugin` file
-                c = { open 'after/plugin/plugin.lua', 'User defined commands' },
-                -- Main vimRC
-                r = { open 'init.lua', 'VimRC' },
-                -- Plugin config and list
-                p = { open 'lua/r/lazy.lua', 'Plugin config' },
-
-                -- Vim options
-                o = {
-                    name = 'Options',
-                    o = { open 'lua/r/settings/init.lua', 'vim options' },
-                    a = { open 'lua/r/settings/autocmds.lua', 'Autocmds' },
-                    t = { open 'lua/r/settings/tabline.lua', 'Tabline' },
-                    w = { open 'lua/r/settings/winbar.lua', 'Winbar' },
-                },
-
-                -- Plugin settings and configurations
-                s = {
-                    name = 'Plugin settings',
-                    t = { open 'lua/r/plugins/telescope.lua', 'Telescope' },
-                    s = { open 'lua/r/plugins/treesitter.lua', 'Treesitter' },
-                    f = { open 'lua/r/plugins/folds.lua', 'Foldtext' },
-                    c = { open 'lua/r/plugins/completion.lua', 'Completion' },
-                    p = { open 'lua/r/plugins/init.lua', 'Small configs' },
-                    e = { open 'lua/r/plugins/statusline.lua', 'Express statusline' },
-                    n = { open 'lua/r/plugins/noice.lua', 'Noice UI' },
-                },
-
-                -- All keymaps (plugin and internal)
-                m = {
-                    name = 'Mappings',
-                    m = { open 'lua/r/mappings/init.lua', 'Common' },
-                    l = { open 'lua/r/mappings/lsp.lua', 'Lsp' },
-                    c = { open 'lua/r/mappings/clang.lua', 'C/C++' },
-                    u = { open 'lua/r/mappings/util.lua', 'Misc' },
-                    t = { open 'lua/r/mappings/telescope.lua', 'Telescope' },
-                    s = { open 'lua/r/mappings/treesitter.lua', 'Treesitter' },
-                    g = { open 'lua/r/mappings/git.lua', 'Git' },
-                    p = { open 'lua/r/mappings/pairs.lua', 'Unimpaired' },
-                },
-
-                -- LSP settings and extensions
-                l = {
-                    name = 'Lsp',
-                    s = { open 'lua/r/lsp/init.lua', 'Functions and Inits' },
-                    r = { open 'lua/r/lsp/rename.lua', 'Incremental rename' },
-                    c = { open 'lua/r/lsp/clangd.lua', 'Clangd' },
-                    l = { open 'lua/r/lsp/ltex.lua', 'Ltex LS' },
-                    t = { open 'lua/r/lsp/texlab.lua', 'Texlab LSP' },
-                },
-
-                -- Dap configs and tools
-                d = {
-                    name = 'Debug adapter protocol',
-                    a = { open 'lua/r/debuggers/adapters.lua', 'Adapters' },
-                    c = { open 'lua/r/debuggers/configs.lua', 'Configurations' },
-                    d = { open 'lua/r/debuggers/init.lua', 'DAP' },
-                },
-
-                -- Local plugins and extensions
-                e = {
-                    name = 'Custom plugins and extensions',
-                    c = { open 'lua/r/extensions/cpp.lua', 'Cpp Workstation' },
-                    e = { open 'lua/r/extensions/init.lua', 'General' },
-                    d = { open 'lua/r/extensions/diagnostics/init.lua', 'Diagnostic extensions' },
-                    q = { open 'lua/r/extensions/qf.lua', 'Quickfix and Loclist' },
-                    s = { open 'lua/r/extensions/project/scratchpad.lua', 'ScratchPad' },
-                    p = { open 'lua/r/extensions/project/init.lua', 'Initiate project' },
-                },
-
-                -- Basic utility functions
-                u = {
-                    name = 'Common & utility functions',
-                    u = { open 'lua/r/utils/init.lua', 'General' },
-                    t = { open 'lua/r/utils/tables.lua', 'Filter tables' },
-                },
-
-                -- Filetype specific configs
-                f = {
-                    name = 'Filetype Plugins',
-                    c = { open 'after/ftplugin/cpp.lua', 'Cpp' },
-                    g = { open 'after/ftplugin/glsl.lua', 'Glsl' },
-                    j = { open 'after/ftplugin/javascript.lua', 'JavaScript' },
-                    l = { open 'after/ftplugin/lua.lua', 'Lua' },
-                    o = { open 'after/ftplugin/org.lua', 'Orgmode' },
-                    t = { open 'after/ftplugin/tex.lua', 'Latex' },
-                    f = { open 'filetype.lua', 'Ftdetect' },
-                },
-
-                -- Treesitter highlight queries
-                q = {
-                    name = 'Treesitter queries',
-                    m = { open 'after/queries/markdown/highlights.scm', 'Markdown' },
-                    o = { open 'after/queries/org/highlights.scm', 'Org' },
-                },
-            },
-        },
-    }
 end
 
 ------------------------------------------------------------------------
@@ -158,8 +33,6 @@ end
 ------------------------------------------------------------------------
 
 return function()
-    config_files()
-
     local opts = { nowait = true, silent = true }
     -- Extend C-keys
     map('n', '<C-;>', ';')
@@ -263,4 +136,6 @@ return function()
     map('n', '<leader><Space>', function()
         require('harpoon.mark').add_file()
     end, { desc = 'Harpoon current file' })
+
+    map('n', '<leader>p', require('lazy').sync, { desc = 'Update plugins' })
 end
