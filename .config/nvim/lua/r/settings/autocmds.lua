@@ -238,11 +238,28 @@ aucmd('BufReadPost', {
     group = id.PluginLoad,
     callback = function()
         require 'r.mappings.pairs'
-        require 'r.mappings.treesitter'()
+        require('r.mappings.treesitter').common()
     end,
     once = true,
     desc = 'Load mappings for unimparied and treesiiter after reading buffer',
 })
+
+aucmd('FileType', {
+    -- group = id.Treesitter_local,
+    -- id.Treesitter_local = vim.api.nvim_create_augroup('Treesitter_local', { clear = true })
+    group = id.PluginLoad,
+    callback = function(args)
+        if vim.tbl_contains(require('r.utils.tables').ignoreFiles, args.match) then
+            return
+        end
+        if args.match == 'tex' then
+            require('r.mappings.treesitter').navigate_tex(args.buf)
+        else
+            require('r.mappings.treesitter').navigate(args.buf)
+        end
+    end,
+})
+
 -- ************** Load harpoon maps ------------------------------------
 aucmd('FileType', {
     pattern = 'harpoon',

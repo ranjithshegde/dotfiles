@@ -33,6 +33,7 @@ tables.lspfiles = {
     'rust',
     'toml',
     'yaml',
+    'java',
 }
 
 tables.projectTypes = {

@@ -12,6 +12,7 @@ vim.filetype.add {
         make = 'make',
         uproject = 'json',
         uplugin = 'json',
+        pde = 'java',
     },
     filename = {
         ['/etc/environment'] = 'confini',

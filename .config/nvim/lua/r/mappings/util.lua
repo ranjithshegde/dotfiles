@@ -129,4 +129,21 @@ function utilmaps.orgWiki()
     }
 end
 
+function utilmaps.noice()
+    wk.register {
+        ['<leader>n'] = {
+            name = 'Noice',
+            n = { vim.cmd.Noice, 'Noice window' },
+            e = { vim.cmd.NoiceErrors, 'Open error list' },
+            m = { vim.cmd.messages, 'Open messages' },
+            c = {
+                function()
+                    vim.cmd.messages 'clear'
+                end,
+                'Clear all messaages',
+            },
+        },
+    }
+end
+
 return utilmaps

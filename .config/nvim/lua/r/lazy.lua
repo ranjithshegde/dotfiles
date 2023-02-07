@@ -256,6 +256,7 @@ return require('lazy').setup({
     --Lsp config and companions
     {
         { 'Hoffs/omnisharp-extended-lsp.nvim', ft = 'cs' },
+        { 'mfussenegger/nvim-jdtls', ft = 'java', config = setup 'r.lsp.jdtls' },
         {
             'folke/neodev.nvim',
             config = setup('r.plugins', 'neodev'),

@@ -36,7 +36,10 @@ function lsp.attach(client, bufnr)
         return
     end
 
-    require('r.extensions.diagnostics').attach({ all = false, underline = false, update_in_insert = false }, client)
+    require('r.extensions.diagnostics').attach(
+        { all = false, virtual_text = false, underline = false, update_in_insert = false },
+        client
+    )
     require('r.extensions').diagnostics(bufnr)
 
     if sc.documentHighlightProvider then
@@ -93,6 +96,12 @@ function lsp.attach(client, bufnr)
         require 'r.lsp.capabilities',
         { desc = 'Display Language Server capabilities' }
     )
+
+    if package.loaded['nvim-jdtls'] then
+        if client.name == 'jdtls' then
+            require('jdtls.setup').add_commands()
+        end
+    end
 end
 
 ------------------------------------------------------------------------

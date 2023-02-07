@@ -57,6 +57,10 @@ return function()
     map('n', 'N', 'Nzzzv', { desc = 'jump to previous search result' })
     map('n', 'J', 'mzJ`z', { desc = 'Adjoin next line' })
 
+    map('n', '<leader>e', function()
+        vim.cmd.Oil(vim.loop.cwd())
+    end, { desc = 'Open file explorer' })
+
     --Quickfix
     map('n', '-', function()
         require('r.extensions.qf').toggle_qf 'q'

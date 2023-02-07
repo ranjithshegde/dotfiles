@@ -96,46 +96,13 @@ end
 ------------------------------------------------------------------------
 
 function lspmap.debug()
-    wk.register({
-        ['<leader>'] = {
-            d = {
-                name = 'debug',
-                b = { require('dap').toggle_breakpoint, 'set breakpoint' },
-                x = { require('dap').set_exception_breakpoints, 'set breakpoint' },
-                o = { require('dapui').float_element, 'Open float element', mode = { 'n', 'v' } },
-                E = { require('r.debuggers').exp.toggle, 'Expressions buffer', mode = { 'n', 'v', 's' } },
-                f = {
-                    function()
-                        require('dapui').float_element('scopes', { enter = true })
-                    end,
-                    'Floating Scopes',
-                },
-                F = {
-                    function()
-                        require('dapui').float_element('stacks', { enter = true })
-                    end,
-                    'Floating Stacks',
-                },
-                B = {
-                    function()
-                        require('dap').toggle_breakpoint(vim.fn.input 'Breakpoint condition: ')
-                    end,
-                    'set breakpoint',
-                },
-                e = {
-                    function()
-                        require('dapui').eval()
-                        require('dapui').eval()
-                    end,
-                    'Evaluate Hover',
-                    mode = { 'n', 'v', 's' },
-                },
-            },
-        },
-    }, { buffer = 0 })
     wk.register {
         ['<leader>d'] = {
             name = 'debug',
+            b = { require('dap').toggle_breakpoint, 'set breakpoint' },
+            x = { require('dap').set_exception_breakpoints, 'set breakpoint' },
+            o = { require('dapui').float_element, 'Open float element', mode = { 'n', 'v' } },
+            E = { require('r.debuggers').exp.toggle, 'Expressions buffer', mode = { 'n', 'v', 's' } },
             ['.'] = { require('dap').terminate, 'End' },
             ['?'] = { require('r.debuggers').frames.toggle, 'Frames' },
             ['/'] = { require('r.debuggers').scopes.toggle, 'Scopes' },
@@ -145,6 +112,32 @@ function lspmap.debug()
             n = { require('dap').step_over, 'step over' },
             s = { require('dap').step_into, 'step into' },
             S = { require('dap').step_out, 'step Out' },
+            f = {
+                function()
+                    require('dapui').float_element('scopes', { enter = true })
+                end,
+                'Floating Scopes',
+            },
+            F = {
+                function()
+                    require('dapui').float_element('stacks', { enter = true })
+                end,
+                'Floating Stacks',
+            },
+            B = {
+                function()
+                    require('dap').toggle_breakpoint(vim.fn.input 'Breakpoint condition: ')
+                end,
+                'set breakpoint',
+            },
+            e = {
+                function()
+                    require('dapui').eval()
+                    require('dapui').eval()
+                end,
+                'Evaluate Hover',
+                mode = { 'n', 'v', 's' },
+            },
         },
         ['<F10>'] = {
             function()

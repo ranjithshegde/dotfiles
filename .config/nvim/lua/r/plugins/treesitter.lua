@@ -46,7 +46,6 @@ function ts.init()
         },
         textobjects = {
             select = { enable = true, lookahead = true },
-
             move = {
                 enable = true,
                 set_jumps = false,
@@ -68,7 +67,6 @@ function ts.init()
             enable = true,
             extended_mode = true,
         },
-        playground = { enable = true, updatetime = 25, persist_queries = false },
         nt_cpp_tools = {
             enable = true,
             preview = {
