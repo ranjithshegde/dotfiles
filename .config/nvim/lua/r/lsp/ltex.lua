@@ -67,9 +67,9 @@ function ltex.false_positive(command)
     hidden(file)
 end
 
-function ltex.lsp()
+function ltex.lsp(navigator)
     local dict = vim.api.nvim_get_option 'spellfile'
-    require('lspconfig').ltex.setup {
+    local config = {
         filetypes = { 'bib', 'markdown', 'org', 'tex' },
         autostart = false,
         capabilities = require('r.lsp').capabilities(),
@@ -107,6 +107,12 @@ function ltex.lsp()
             },
         },
     }
+    if not navigator then
+        require('lspconfig').ltex.setup(config)
+    else
+        config.name = 'ltex'
+        return config
+    end
 end
 
 return ltex

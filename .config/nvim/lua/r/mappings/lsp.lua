@@ -25,31 +25,17 @@ function lspmap.lsp(client, bufnr)
         [','] = {
             name = 'Lsp functions',
             s = { vim.lsp.buf.signature_help, 'Show signature' },
-            i = { vim.lsp.buf.implementation, 'Jump to Implementation' },
-            a = { vim.lsp.buf.code_action, 'Code actions for buffer', mode = { 'n', 'v' } },
             D = {
                 function()
                     vim.lsp.buf.declaration { reuse_win = true }
                 end,
                 'Jump to Declaration',
             },
-            d = {
-                function()
-                    vim.lsp.buf.definition { reuse_win = true }
-                end,
-                'Jump to Definition',
-            },
-            t = {
+            T = {
                 function()
                     vim.lsp.buf.type_definition { reuse_win = true }
                 end,
                 'Jump to Type definition',
-            },
-            r = {
-                function()
-                    vim.lsp.buf.references { includeDeclaration = false }
-                end,
-                'References',
             },
             c = {
                 name = 'Codelens',
@@ -59,21 +45,10 @@ function lspmap.lsp(client, bufnr)
                 g = { vim.lsp.codelens.get, 'Fetch' },
             },
             l = {
-                name = 'Toggle diagnostics',
-                v = { require('r.extensions.diagnostics').toggle_virtual_text, 'Virtual text' },
-                s = { require('r.extensions.diagnostics').toggle_signs, 'Sings' },
-                u = { require('r.extensions.diagnostics').toggle_underline, 'Underline' },
-            },
-            w = {
-                name = 'Workspace',
-                a = { vim.lsp.buf.add_workspace_folder, 'Add workspace folder' },
-                r = { vim.lsp.buf.remove_workspace_folder, 'Remove workspace folder' },
-                l = {
-                    function()
-                        vim.pretty_print(vim.lsp.buf.list_workspace_folders())
-                    end,
-                    'List workspace folder',
-                },
+                name = 'Diagnostic action',
+                v = { require('r.extensions.diagnostics').toggle_virtual_text, 'Toggle Virtual text' },
+                s = { require('r.extensions.diagnostics').toggle_signs, 'Toggle Sings' },
+                u = { require('r.extensions.diagnostics').toggle_underline, 'Toggle Underline' },
             },
         },
     }, { buffer = bufnr })
@@ -81,6 +56,39 @@ function lspmap.lsp(client, bufnr)
     map('n', '<F1>', function()
         require('overseer').window.toggle { enter = false }
     end, { desc = 'Open Task panel' })
+
+    -- if not navigator then
+    --     wk.register({
+    --         [','] = {
+    --             name = 'LSP functions',
+    --             a = { vim.lsp.buf.code_action, 'Code actions for buffer', mode = { 'n', 'v' } },
+    --             i = { vim.lsp.buf.implementation, 'Jump to Implementation' },
+    --             w = {
+    --                 name = 'Workspace',
+    --                 a = { vim.lsp.buf.add_workspace_folder, 'Add workspace folder' },
+    --                 r = { vim.lsp.buf.remove_workspace_folder, 'Remove workspace folder' },
+    --                 l = {
+    --                     function()
+    --                         vim.pretty_print(vim.lsp.buf.list_workspace_folders())
+    --                     end,
+    --                     'List workspace folder',
+    --                 },
+    --             },
+    --             d = {
+    --                 function()
+    --                     vim.lsp.buf.definition { reuse_win = true }
+    --                 end,
+    --                 'Jump to Definition',
+    --             },
+    --             r = {
+    --                 function()
+    --                     vim.lsp.buf.references { includeDeclaration = false }
+    --                 end,
+    --                 'References',
+    --             },
+    --         },
+    --     }, { buffer = bufnr })
+    -- end
 end
 
 -- ******************************** Diagnostics------------------------
@@ -89,6 +97,75 @@ function lspmap.diagnostic(bufnr)
     map('n', ',ld', vim.diagnostic.open_float, { desc = 'Show line diagnostics', buffer = bufnr })
     map('n', '[d', vim.diagnostic.goto_prev, { desc = 'Show previous diagnostics', buffer = bufnr })
     map('n', ']d', vim.diagnostic.goto_next, { desc = 'Show next diagnostics', buffer = bufnr })
+end
+
+function lspmap.navic(bufnr)
+    -- map('n', ',r', require('navigator.reference').async_ref, { buffer = bufnr, desc = 'Lsp Async reference' })
+    -- map('n', ',s', require('navigator.symbols').document_symbols, { buffer = bufnr, desc = 'document_symbols' })
+    -- map('n', ',S', require('navigator.workspace').workspace_symbol_live, { buffer = bufnr, desc = 'workspace symbol' })
+    -- map('n', ',d', require('navigator.definition').definition, { buffer = bufnr, desc = 'definition' })
+    -- map('n', ',p', require('navigator.definition').definition_preview, { buffer = bufnr, desc = 'definition_preview' })
+    -- map('n', '<Leader>gt', require('navigator.treesitter').buf_ts, { buffer = bufnr, desc = 'buf_ts' })
+    -- map('n', '<Leader>gT', require('navigator.treesitter').bufs_ts, { buffer = bufnr, desc = 'bufs_ts' })
+    -- map('n', ',a', require('navigator.codeAction').code_action, { buffer = bufnr, desc = 'code_action' })
+    -- map('v', ',a', require('navigator.codeAction').range_code_action, { buffer = bufnr, desc = 'range_code_action' })
+    -- map('n', ',Ci', vim.lsp.buf.incoming_calls, { buffer = bufnr, desc = 'incoming_calls' })
+    -- map('n', ',Co', vim.lsp.buf.outgoing_calls, { buffer = bufnr, desc = 'outgoing_calls' })
+    -- map('n', ',i', vim.lsp.buf.implementation, { buffer = bufnr, desc = 'implementation' })
+    -- map('n', ',ll', require('navigator.diagnostics').show_diagnostics, { buffer = bufnr, desc = 'show_diagnostics' })
+    -- map('n', ',lb', require('navigator.diagnostics').show_buf_diagnostics, { buffer = bufnr, desc = 'buf diagnostics' })
+    -- map('n', ']r', require('navigator.treesitter').goto_next_usage, { buffer = bufnr, desc = 'next usage' })
+    -- map('n', '[r', require('navigator.treesitter').goto_previous_usage, { buffer = bufnr, desc = 'previous usage' })
+    -- map( 'n', '<Leader>k',  require('navigator.dochighlight').hi_symbol, {desc = 'hi_symbol'} )
+    -- map( 'n', '<Space>la', mode = 'n',  require('navigator.codelens').run_action, {desc = 'run code lens action'} )
+    wk.register({
+        [','] = {
+            name = 'Lsp',
+            -- { 's', require('navigator.symbols').document_symbols, 'document_symbols' },
+            -- { 'S', require('navigator.workspace').workspace_symbol_live, 'workspace symbol' },
+            -- '<Leader>gr' = {   require('navigator.reference').reference,  'eference' },
+            -- '<Space>rn' = {   require('navigator.rename').rename, desc = 'rename'}
+            r = { require('navigator.reference').async_ref, 'Lsp Async reference' },
+            a = { require('navigator.codeAction').code_action, 'code_action' },
+            i = { vim.lsp.buf.implementation, 'implementation' },
+            d = { require('navigator.definition').definition, 'definition' },
+            p = { require('navigator.definition').definition_preview, 'definition_preview' },
+            ca = { require('navigator.codelens').run_action, 'run code lens action' },
+            l = {
+                name = 'Diagnostic action',
+                l = { require('navigator.diagnostics').show_diagnostics, 'show_diagnostics' },
+                b = { require('navigator.diagnostics').show_buf_diagnostics, 'buf diagnostics' },
+            },
+            C = {
+                name = 'Calls',
+                i = { vim.lsp.buf.incoming_calls, 'incoming_calls' },
+                o = { vim.lsp.buf.outgoing_calls, 'outgoing_calls' },
+            },
+            t = {
+                name = 'Treesitter',
+                s = { require('navigator.treesitter').buf_ts, 'buf_ts' },
+                S = { require('navigator.treesitter').bufs_ts, 'bufs_ts' },
+            },
+            w = {
+                name = 'Workspace',
+                a = { require('navigator.workspace').add_workspace_folder, 'Add workspace folder' },
+                r = { require('navigator.workspace').remove_workspace_folder, 'Remove workspace folder' },
+                l = { require('navigator.workspace').list_workspace_folders, 'List workspace folder' },
+            },
+        },
+        [',a'] = { require('navigator.codeAction').range_code_action, 'range_code_action', mode = 'v' },
+        [']r'] = { require('navigator.treesitter').goto_next_usage, 'next usage' },
+        ['[r'] = { require('navigator.treesitter').goto_previous_usage, 'previous usage' },
+
+        ['<leader>l'] = {
+            name = 'Minimap',
+            l = { require('navigator.symbols').side_panel, 'Lsp Symbols' },
+            t = { require('navigator.treesitter').side_panel, 'Treesitter Symbols' },
+            r = { require('navigator.reference').side_panel, 'Reference list' },
+            -- r = { , 'Reference list' },
+            -- "command! -nargs=* Calltree lua require'navigator.hierarchy'.calltree(<f-args>)<CR>",
+        },
+    }, { buffer = bufnr })
 end
 
 ------------------------------------------------------------------------

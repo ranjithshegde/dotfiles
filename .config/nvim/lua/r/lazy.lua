@@ -2,6 +2,8 @@
 
 local dev_path = nil
 
+vim.g.navigator = true
+
 if vim.fn.has 'win32' == 1 then
     vim.g.is_win32 = true
     dev_path = vim.fs.normalize '~/Repos/Gits/'
@@ -255,6 +257,7 @@ return require('lazy').setup({
 
     --Lsp config and companions
     {
+        { 'p00f/clangd_extensions.nvim' },
         { 'Hoffs/omnisharp-extended-lsp.nvim', ft = 'cs' },
         { 'mfussenegger/nvim-jdtls', ft = 'java', config = setup 'r.lsp.jdtls' },
         {
@@ -262,15 +265,8 @@ return require('lazy').setup({
             config = setup('r.plugins', 'neodev'),
         },
         {
-            'p00f/clangd_extensions.nvim',
-            ft = { 'c', 'cpp', 'opencl' },
-            config = setup('r.lsp.clangd', 'clangd'),
-        },
-        {
-            'ranjithshegde/ccls.nvim',
-            dev = use_custom 'ccls.nvim',
-            ft = { 'c', 'cpp', 'opencl' },
-            config = setup('r.lsp.clangd', 'ccls'),
+            'ray-x/navigator.lua',
+            dependencies = { { 'ray-x/guihua.lua', build = { 'cd lua/fzy && make' } } },
         },
         {
             'neovim/nvim-lspconfig',
@@ -280,6 +276,12 @@ return require('lazy').setup({
                 require('r.lsp').servers()
                 require('r.lsp').lintFormat()
             end,
+        },
+        {
+            'ranjithshegde/ccls.nvim',
+            dev = use_custom 'ccls.nvim',
+            ft = { 'c', 'cpp', 'opencl' },
+            config = setup('r.lsp.clangd', 'ccls'),
         },
     },
 }, {

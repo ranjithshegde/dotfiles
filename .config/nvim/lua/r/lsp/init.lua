@@ -26,7 +26,13 @@ end
 
 ---**************************** Global attach function
 function lsp.attach(client, bufnr)
+    if not vim.g.navigator then
+        require('r.plugins.navigator').attach(client, bufnr)
+    end
+
+    require('r.mappings.lsp').navic(bufnr)
     require('r.mappings.lsp').lsp(client, bufnr)
+
     vim.b.hasLsp = true
 
     local sc = client.server_capabilities
@@ -41,23 +47,6 @@ function lsp.attach(client, bufnr)
         client
     )
     require('r.extensions').diagnostics(bufnr)
-
-    if sc.documentHighlightProvider then
-        id['LspHighlightSymbols_' .. client.name .. '_' .. bufnr] =
-            augroup('LspHighlightSymbols_' .. client.name .. '_' .. bufnr, opts)
-        aucmd('CursorHold', {
-            group = id['LspHighlightSymbols_' .. client.name .. '_' .. bufnr],
-            buffer = bufnr,
-            callback = vim.lsp.buf.document_highlight,
-            desc = 'highlight Lsp cword on CursorHold',
-        })
-        aucmd('CursorMoved, CursorMovedI', {
-            group = id['LspHighlightSymbols_' .. client.name .. '_' .. bufnr],
-            buffer = bufnr,
-            callback = vim.lsp.buf.clear_references,
-            desc = 'clear Lsp cword highlights on CursorMove',
-        })
-    end
 
     if sc.documentFormattingProvider or sc.rangeFormattingProvider then
         id['LspAutoFormat_' .. client.name .. '_' .. bufnr] =
@@ -151,14 +140,39 @@ function lsp.servers()
         },
     }
 
-    for ls, cfg in pairs(configs) do
-        require('lspconfig')[ls].setup(cfg)
+    if not vim.g.navigator then
+        for ls, cfg in pairs(configs) do
+            require('lspconfig')[ls].setup(cfg)
+        end
+        require('r.lsp.ltex').lsp()
+        if vim.tbl_contains({ 'tex', 'bib', 'plaintex' }, vim.bo.filetype) then
+            require('r.lsp.texlab').lsp()
+        end
+
+        if vim.tbl_contains({ 'c', 'cpp', 'opencl' }, vim.bo.filetype) then
+            require('r.lsp.clangd').clangd(false)
+        end
+
+        require('r.plugins.navigator').init()
+    else
+        local navic = require('r.plugins.navigator').config(true)
+
+        for ls, cfg in pairs(configs) do
+            navic.lsp[ls] = cfg
+        end
+
+        navic.lsp.ltex = require('r.lsp.ltex').lsp(true)
+        if vim.tbl_contains({ 'tex', 'bib', 'plaintex' }, vim.bo.filetype) then
+            navic.lsp.texlab = require('r.lsp.texlab').lsp(true)
+        end
+
+        if vim.tbl_contains({ 'c', 'cpp', 'opencl' }, vim.bo.filetype) then
+            local clangd = require('r.lsp.clangd').clangd(true)
+            navic.lsp.clangd = clangd
+        end
+        require('r.plugins.navigator').init(navic)
     end
 
-    require('r.lsp.ltex').lsp()
-    if vim.tbl_contains({ 'tex', 'bib', 'plaintex' }, vim.bo.filetype) then
-        require('r.lsp.texlab').lsp()
-    end
     require('lspconfig.ui.windows').default_options.border = 'single'
 end
 
