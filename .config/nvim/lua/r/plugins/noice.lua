@@ -8,7 +8,7 @@ vim.pretty_print = function(...)
     vim.api.nvim_echo({ { table.concat(objects, '    '), '' } }, true, {})
 end
 
-return function()
+local function setup()
     require('noice').setup {
         cmdline = {
             view = 'cmdline',
@@ -51,3 +51,10 @@ return function()
         },
     }
 end
+
+return {
+    'folke/noice.nvim',
+    dependencies = 'MunifTanjim/nui.nvim',
+    event = 'VimEnter',
+    config = setup,
+}

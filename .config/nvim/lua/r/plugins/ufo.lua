@@ -50,7 +50,7 @@ local function handler(virt_text, lnum, end_lnum, width, truncate, ctx)
     return result
 end
 
-return function()
+local function setup()
     require('ufo').setup {
         open_fold_hl_timeout = 0,
 
@@ -62,3 +62,10 @@ return function()
         fold_virt_text_handler = handler,
     }
 end
+
+return {
+    'kevinhwang91/nvim-ufo',
+    dependencies = 'kevinhwang91/promise-async',
+    config = setup,
+    event = 'BufReadPost',
+}

@@ -1,183 +1,254 @@
-local plugins = {}
+-- -------------------------- Defs **********************************************************************
 
-------------------------------------------------------------------------
---                      Config for various plugins                    --
-------------------------------------------------------------------------
+local dev_path = nil
 
----neodev
-function plugins.neodev()
-    require('neodev').setup {
-        library = { plugins = false },
-        override = function(_, library)
-            library.enabled = true
-        end,
-        lspconfig = false,
-    }
+vim.g.navigator = true
+
+if vim.fn.has 'win32' == 1 then
+    vim.g.is_win32 = true
+    dev_path = vim.fs.normalize '~/Repos/Gits/'
+else
+    vim.g.is_win32 = false
+    dev_path = vim.env.WORKSPACE .. 'Repos/'
 end
 
----Gitsigns
-function plugins.gitsigns()
-    require('gitsigns').setup {
-        on_attach = function(bufnr)
-            require('r.mappings.git').signs(bufnr, package.loaded.gitsigns)
-        end,
-        preview_config = { focusable = false },
-    }
-    require('r.mappings.git').fugitive()
-end
-
----IndentBlankline
-function plugins.indent()
-    require('indent_blankline').setup {
-        show_current_context = true,
-        use_treesitter = true,
-    }
-    for _, v in pairs(require('r.utils.tables').indentContext) do
-        vim.cmd("let g:indent_blankline_context_patterns+=['" .. v .. "']")
+local function use_custom(path)
+    local check_path = dev_path and dev_path .. path
+    if check_path and vim.loop.fs_stat(check_path) then
+        return true
+    else
+        return false
     end
 end
 
----nvim-colorizer
-function plugins.colorizer()
-    require('colorizer').setup {
-        filetypes = {
-            '*',
-            cpp = { AARRGGBB = true },
-            yaml = { AARRGGBB = true },
-            html = { mode = 'foreground' },
-            css = { rgb_fn = true, css_fn = true },
-        },
-    }
-end
-
----OrgMode
-function plugins.org()
-    require('orgmode').setup_ts_grammar()
-    require('orgmode').setup {
-        org_agenda_files = {
-            '~/Documents/Orgs/*',
-            '~/Documents/Orgs/*/*',
-            '~/Documents/Orgs/*/*/*',
-            '~/Documents/Orgs/*/*/*/*',
-        },
-        org_highlight_latex_and_related = 'entities',
-        emacs_config = { config_path = '$XDG_CONFIG_HOME/emacs/init.el' },
-    }
-end
-
----Build system using overseer
-function plugins.overseer()
-    require('overseer').setup {
-        templates = { 'builtin', 'r' },
-        default_template_prompt = 'avoid',
-    }
-
-    local make_provider = vim.deepcopy(require 'overseer.template.make')
-    local original_cb = make_provider.condition.callback
-    make_provider.name = 'make'
-
-    make_provider.condition.callback = function(opts)
-        local files = require 'overseer.files'
-        if files.is_subpath('/storage/Games/Unreal/', opts.dir) then
-            return false, 'Inside repo with large Makefile'
+local function setup(module, key, config)
+    return function()
+        if key then
+            require(module)[key](config)
+        else
+            require(module)()
         end
-        return original_cb(opts)
     end
-
-    require('overseer').register_template(make_provider)
 end
 
----nvim-surround local and global config
-function plugins.surround()
-    local ft = vim.bo.filetype
-    require('nvim-surround').setup {}
-    if ft == 'tex' then
-        local get_input = require('nvim-surround.config').get_input
-        require('nvim-surround').buffer_setup {
-            surrounds = {
-                ['f'] = {
-                    add = function()
-                        local result = get_input 'Enter the function name: '
-                        if result then
-                            return { { '\\' .. result .. '{' }, { '}' } }
-                        end
-                    end,
-                    find = '\\%a+%b{}',
-                    delete = '^(\\%a+{)().-(})()$',
-                    change = {
-                        target = '^\\(%a+)(){.-}()()$',
-                        replacement = function()
-                            local result = get_input 'Enter the function name: '
-                            if result then
-                                return { { result }, { '' } }
-                            end
-                        end,
-                    },
+--------------------------------------------------------------------------------------------------------
+--				 Plugins                                            							      --
+--------------------------------------------------------------------------------------------------------
+return {
+    -- Colorscheme
+    'folke/tokyonight.nvim',
+
+    -- Better marks
+    'ThePrimeagen/harpoon',
+
+    -- CamelCaseMotion
+    'chaoren/vim-wordmotion',
+
+    -- Tasks
+    {
+        'stevearc/overseer.nvim',
+        config = setup('r.plug', 'overseer'),
+    },
+
+    -- Unreal integration
+    {
+        'ranjithshegde/Unreal.nvim',
+        dev = use_custom 'Unreal.nvim',
+    },
+
+    -- Granular semantic substitution
+    {
+        'tpope/vim-abolish',
+        keys = 'cr',
+        cmd = { 'Subverse', 'Abolish' },
+    },
+
+    -- Debugger adapter protocol
+    {
+        'mfussenegger/nvim-dap',
+        config = setup('r.debuggers', 'setup'),
+        dependencies = 'rcarriga/nvim-dap-ui',
+    },
+
+    -- File browser/editor
+    {
+        'stevearc/oil.nvim',
+        cmd = 'Oil',
+        config = { columns = { 'icon', 'size' }, view_options = { show_hidden = true } },
+    },
+
+    -- SuperCollider
+    {
+        'davidgranstrom/scnvim',
+        ft = 'supercollider',
+        config = setup('r.plug', 'scnvim'),
+    },
+
+    -- Surround with TreeSitter
+    {
+        'kylechui/nvim-surround',
+        keys = { 'ys', 'yss', 'ySS', 'cs', 'ds', { 'S', mode = 'v' } },
+        config = setup('r.plug', 'surround'),
+    },
+
+    -- Comment with TreeSitter
+    {
+        'numToStr/Comment.nvim',
+        keys = { 'gc', { 'gc', mode = 'v' }, 'gb', { 'gb', mode = 'v' } },
+        config = { ignore = '^$' },
+    },
+
+    -- Treesitter indent guides
+    {
+        'lukas-reineke/indent-blankline.nvim',
+        config = setup('r.plug', 'indent'),
+        event = 'BufReadPost',
+    },
+
+    -- Colorizer
+    {
+        'NvChad/nvim-colorizer.lua',
+        cmd = { 'ColorizerAttachToBuffer', 'ColorizerToggle' },
+        config = setup('r.plug', 'colorizer'),
+    },
+
+    -- Fancy UI
+    {
+        'stevearc/dressing.nvim',
+        event = 'VeryLazy',
+        config = { input = { relative = 'editor' } },
+    },
+
+    -- Fancy folds
+
+    -- Fancy UI
+
+    -- StatusLine
+
+    -- Git integration
+    {
+        {
+            'lewis6991/gitsigns.nvim',
+            dependencies = 'nvim-lua/plenary.nvim',
+            config = setup('r.plug', 'gitsigns'),
+        },
+        { 'tpope/vim-fugitive', cmd = { 'G', 'Git', 'Gclog' } },
+    },
+
+    -- WhichKey
+    {
+        'folke/which-key.nvim',
+        config = {
+            show_help = false,
+            show_keys = false,
+            layout = { layout = { spacing = 15 } },
+            window = { border = 'single' },
+        },
+    },
+
+    -- TreeSitter
+    {
+        { 'nvim-treesitter/nvim-treesitter', lazy = false, build = ':TSUpdate' },
+        { 'p00f/nvim-ts-rainbow', event = 'BufReadPre' },
+        { 'nvim-treesitter/nvim-treesitter-textobjects' },
+        { 'Badhi/nvim-treesitter-cpp-tools', ft = { 'c', 'cpp', 'opencl' } },
+        {
+            'ThePrimeagen/refactoring.nvim',
+            config = setup('r.plug.treesitter', 'refactoring'),
+        },
+    },
+
+    -- Telescope
+    {
+        {
+            'nvim-telescope/telescope.nvim',
+            init = function()
+                require('r.utils').lazy_on_key('n', '<Space>', 'Telescope', require, 'r.mappings.telescope')
+            end,
+            cmd = 'Telescope',
+            dependencies = 'nvim-lua/plenary.nvim',
+            config = setup('r.plug.telescope', 'telescope'),
+        },
+        'nvim-telescope/telescope-project.nvim',
+        'nvim-telescope/telescope-file-browser.nvim',
+        { 'nvim-telescope/telescope-fzf-native.nvim', build = 'make' },
+    },
+
+    -- Orgmode
+    {
+        {
+            'nvim-orgmode/orgmode',
+            ft = 'org',
+            config = setup('r.plug', 'org'),
+        },
+        {
+            'ranjithshegde/orgWiki.nvim',
+            dev = use_custom 'orgWiki.nvim',
+            init = function()
+                require('r.utils').lazy_on_key('n', '<leader>w', 'OrgWiki', function()
+                    require('r.mappings.util').orgWiki()
+                end)
+            end,
+            config = {
+                disable_mappings = true,
+                wiki_path = { '~/Documents/Orgs/', '~/Documents/Projects/' },
+                diary_path = '~/Documents/Orgs/diary/',
+            },
+        },
+    },
+
+    -- completion and snippets
+    {
+        {
+            'L3MON4D3/LuaSnip',
+            build = 'make install_jsregexp',
+            dependencies = 'rafamadriz/friendly-snippets',
+            config = setup('r.plug.completion', 'luasnip'),
+        },
+        {
+            'hrsh7th/nvim-cmp',
+            event = 'InsertEnter',
+            dependencies = {
+                'hrsh7th/cmp-nvim-lsp',
+                'hrsh7th/cmp-buffer',
+                'hrsh7th/cmp-path',
+                'saadparwaiz1/cmp_luasnip',
+                {
+                    'windwp/nvim-autopairs',
+                    config = setup('r.plug.completion', 'pairs'),
                 },
             },
-        }
-    end
-end
-
----SuperCollider
-function plugins.scnvim()
-    local scnvim = require 'scnvim'
-    local map = scnvim.map
-    local map_expr = scnvim.map_expr
-    scnvim.setup {
-        keymaps = {
-            ['<F1>'] = map 'sclang.start',
-            ['<F2>'] = map 'sclang.poll_server_status',
-            ['<F3>'] = map(function()
-                require('scnvim.sclang').send 'Server.local.boot'
-                vim.defer_fn(function()
-                    vim.api.nvim_exec_autocmds('User', { pattern = 'ScStatus' })
-                end, 4000)
-            end),
-            ['<F4>'] = map_expr 'WFS.startup',
-            ['<F6>'] = map('editor.send_line', { 'i', 'n' }),
-            ['<F5>'] = {
-                map('editor.send_block', { 'i', 'n' }),
-                map('editor.send_selection', 'x'),
-            },
-            ['<F12>'] = map('sclang.hard_stop', { 'n', 'x', 'i' }),
-            ['<CR>'] = map('postwin.toggle', 'n'),
-            ['<C-CR>'] = map('postwin.toggle', 'i'),
-            ['<M-L>'] = map('postwin.clear', { 'n', 'i' }),
-            [',s'] = map('signature.show', 'n'),
-            ['<leader>s'] = map(function()
-                vim.cmd.drop { args = { '~/.config/SuperCollider/startup.scd' }, mods = { tab = 1 } }
-            end),
-            ['K'] = map(function()
-                local winid = require('ufo').peekFoldedLinesUnderCursor()
-                if not winid then
-                    require('scnvim.help').open_help_for(vim.fn.expand '<cword>')
-                end
-            end),
+            config = setup('r.plug.completion', 'init'),
         },
-        completion = { signature = { config = { border = 'rounded' } } },
-    }
-    vim.api.nvim_create_autocmd('FileType', {
-        group = vim.g.au_id.LspSettngs,
-        pattern = 'supercollider',
-        callback = function()
-            vim.wo.wrap = true
-            if not require('scnvim').is_running() then
-                require('scnvim').start()
-                vim.api.nvim_input '<CR>'
-            end
-        end,
-        desc = 'Load SCNvim settings and launch interpreter on filetype',
-    })
+    },
 
-    vim.api.nvim_create_autocmd('InsertEnter', {
-        group = vim.g.au_id.PluginLoad,
-        pattern = { '*.scd', '*.sc', '*.quark' },
-        callback = function()
-            require('luasnip').add_snippets('supercollider', require('scnvim/utils').get_snippets())
-        end,
-        once = true,
-    })
-end
-
-return plugins
+    --Lsp config and companions
+    {
+        { 'p00f/clangd_extensions.nvim' },
+        { 'Hoffs/omnisharp-extended-lsp.nvim', ft = 'cs' },
+        { 'mfussenegger/nvim-jdtls', ft = 'java', config = setup 'r.lsp.jdtls' },
+        {
+            'folke/neodev.nvim',
+            config = setup('r.plug', 'neodev'),
+        },
+        {
+            'ray-x/navigator.lua',
+            dependencies = { { 'ray-x/guihua.lua', build = { 'cd lua/fzy && make' } } },
+        },
+        {
+            'neovim/nvim-lspconfig',
+            ft = require('r.utils.tables').lspfiles,
+            dependencies = 'jose-elias-alvarez/null-ls.nvim',
+            config = function()
+                require('r.lsp').servers()
+                require('r.lsp').lintFormat()
+            end,
+        },
+        {
+            'ranjithshegde/ccls.nvim',
+            dev = use_custom 'ccls.nvim',
+            ft = { 'c', 'cpp', 'opencl' },
+            config = setup('r.lsp.clangd', 'ccls'),
+        },
+    },
+}

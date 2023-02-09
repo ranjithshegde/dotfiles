@@ -27,7 +27,7 @@ end
 ---**************************** Global attach function
 function lsp.attach(client, bufnr)
     if not vim.g.navigator then
-        require('r.plugins.navigator').attach(client, bufnr)
+        require('r.plug.navigator').attach(client, bufnr)
     end
 
     require('r.mappings.lsp').navic(bufnr)
@@ -153,9 +153,9 @@ function lsp.servers()
             require('r.lsp.clangd').clangd(false)
         end
 
-        require('r.plugins.navigator').init()
+        require('r.plug.navigator').init()
     else
-        local navic = require('r.plugins.navigator').config(true)
+        local navic = require('r.plug.navigator').config(true)
 
         for ls, cfg in pairs(configs) do
             navic.lsp[ls] = cfg
@@ -170,7 +170,7 @@ function lsp.servers()
             local clangd = require('r.lsp.clangd').clangd(true)
             navic.lsp.clangd = clangd
         end
-        require('r.plugins.navigator').init(navic)
+        require('r.plug.navigator').init(navic)
     end
 
     require('lspconfig.ui.windows').default_options.border = 'single'
