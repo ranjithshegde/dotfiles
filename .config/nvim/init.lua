@@ -11,26 +11,24 @@ if not vim.loop.fs_stat(lazypath) then
     }
 end
 
-local dev_path
 vim.opt.runtimepath:prepend(lazypath)
 
 if vim.fn.has 'win32' == 1 then
     vim.g.is_win32 = true
-    dev_path = vim.fs.normalize '~/Repos/Gits/'
+    vim.g.local_plugins = vim.fs.normalize '~/Repos/Gits/'
 else
     vim.g.is_win32 = false
-    dev_path = vim.env.WORKSPACE .. 'Repos/'
+    vim.g.local_plugins = vim.env.WORKSPACE .. 'Repos/'
 end
 
 require('lazy').setup('r.plugins', {
     ui = { border = 'double' },
-    dev = { path = dev_path },
+    dev = { path = vim.g.local_plugins, fallback = true },
     performance = { rtp = { disabled_plugins = require('r.utils.tables').rtp } },
     defaults = { lazy = true },
     install = { colorscheme = { 'habamax' } },
 })
 
 require 'r.settings'()
-require('r.plug.treesitter').init()
 require 'r.mappings'()
 require 'r.settings.autocmds'

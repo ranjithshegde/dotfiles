@@ -103,7 +103,7 @@ local function cmp_extras(cmp)
 
     -- Load special LSP sorter for c/c++/opencl
     if vim.tbl_contains({ 'c', 'cpp', 'opencl' }, vim.bo.filetype) then
-        require('r.lsp.clangd').clangCmp()
+        require('r.plugins.lsp.clang').clangCmp()
     end
 
     -- Lazy load friendly snippets

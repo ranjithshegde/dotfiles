@@ -35,7 +35,7 @@ function servers.clangd(navigator)
     end
 
     local config = {
-        capabilities = require('r.lsp').capabilities(),
+        capabilities = require('r.plugins.lsp.servers').capabilities(),
         filetypes = { 'c', 'cpp', 'opencl' },
         init_options = {
             clangdFileStatus = true,

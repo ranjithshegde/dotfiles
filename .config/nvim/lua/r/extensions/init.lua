@@ -5,7 +5,7 @@ local exec = vim.api.nvim_command
 ------------------------------------------------------------------------
 
 function extensions.diagnostics(bufnr)
-    require('r.mappings.lsp').diagnostic(bufnr)
+    require('r.plugins.lsp.mappings').diagnostic(bufnr)
     local cmd = vim.api.nvim_buf_create_user_command
     local complete = function()
         return require('r.utils').get_client_names()

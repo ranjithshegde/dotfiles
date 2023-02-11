@@ -72,7 +72,7 @@ function ltex.lsp(navigator)
     local config = {
         filetypes = { 'bib', 'markdown', 'org', 'tex' },
         autostart = false,
-        capabilities = require('r.lsp').capabilities(),
+        capabilities = require('r.plugins.lsp.servers').capabilities(),
         settings = {
             ltex = {
                 additionalRules = {

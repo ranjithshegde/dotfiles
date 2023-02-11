@@ -15,23 +15,7 @@ local Debugger = {}
 
 function Debugger.init()
     signs()
-
-    require('dapui').setup {
-        layouts = {
-            {
-                elements = { 'scopes', 'breakpoints', 'stacks', 'watches' },
-                size = 70,
-                position = 'left',
-            },
-            {
-                elements = { 'repl', 'console' },
-                size = 0.25,
-                position = 'bottom',
-            },
-        },
-    }
-
-    require('r.mappings.lsp').debug()
+    require 'r.plugins.debug.mappings'()
     require('dap.ext.vscode').load_launchjs 'launch.json'
     vim.notify 'Loaded nvim-dap. Bound keymaps'
 end
@@ -50,8 +34,8 @@ function Debugger.setup()
         args = { '-e' },
     }
 
-    dap.adapters = require 'r.debuggers.adapters'
-    dap.configurations = require 'r.debuggers.configs'
+    dap.adapters = require 'r.plugins.debug.adapters'
+    dap.configurations = require 'r.plugins.debug.configurations'
 
     dap.listeners.after.event_initialized['dapui_config'] = function()
         require('dapui').open()

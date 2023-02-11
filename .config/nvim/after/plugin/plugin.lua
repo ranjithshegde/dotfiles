@@ -10,12 +10,8 @@ cmd('Project', function(opts)
 end, { nargs = '*', desc = 'Create a project' })
 
 cmd('WordCount', function()
-    require('r.lsp.texlab').tex_word_count()
+    require('r.plugins.lsp.texlab').tex_word_count()
 end, { desc = 'Display text word count in the buffer' })
-
-cmd('Agenda', function()
-    require('orgmode').action 'agenda.prompt'
-end, { desc = 'Open Orgmode agenda' })
 
 cmd('Word', function()
     require('r.extensions').WordProcessor()
@@ -31,8 +27,4 @@ cmd('Su', 'w !sudo tee %', {})
 
 require('r.utils').lazy_on_key('n', '<leader>r', 'Ranger file picker', function()
     require('r.mappings.util').ranger()
-end)
-
-require('r.utils').lazy_on_key('n', '<leader>n', 'Noice', function()
-    require('r.mappings.util').noice()
 end)

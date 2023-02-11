@@ -64,8 +64,8 @@ local function setup()
 end
 
 return {
-    'kevinhwang91/nvim-ufo',
-    dependencies = 'kevinhwang91/promise-async',
-    config = setup,
-    event = 'BufReadPost',
+    -- 'kevinhwang91/nvim-ufo',
+    -- dependencies = 'kevinhwang91/promise-async',
+    -- config = setup,
+    -- event = 'BufReadPost',
 }

@@ -191,13 +191,17 @@ function utils.lazy_on_key(mode, key, desc, callback, args)
     end, { desc = desc })
 end
 
-utils.dev_path = vim.env.WORKSPACE .. 'Repos/'
-function utils.use_custom(path)
-    local check_path = utils.dev_path .. path
-    if check_path and vim.loop.fs_stat(check_path) then
-        return true
-    else
-        return false
+function utils.plugin_setup(module, key, config)
+    return function()
+        if key then
+            if config then
+                require(module)[key](config)
+            else
+                require(module)[key]()
+            end
+        else
+            require(module)()
+        end
     end
 end
 

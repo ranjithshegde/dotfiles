@@ -1,7 +1,5 @@
 local aucmd = vim.api.nvim_create_autocmd
 local augroup = vim.api.nvim_create_augroup
-local auexec = vim.api.nvim_exec_autocmds
-local auclear = vim.api.nvim_clear_autocmds
 local opts = { clear = true }
 
 local id = {}
@@ -142,41 +140,9 @@ aucmd({ 'WinEnter', 'BufEnter' }, {
     desc = 'Update Tabline on WinChange or BufChange',
 })
 
-id.Statusline = augroup('Statusline', opts)
-aucmd('BufEnter', {
-    group = id.Statusline,
-    callback = function(args)
-        if not ignore_empty(args) then
-            auexec('User', { pattern = 'ScStatus' })
-        end
-    end,
-    desc = 'Load ScStatus only for supercollider',
-})
-
 ------------------------------------------------------------------------
 --                              LSP                                   --
 ------------------------------------------------------------------------
-
-id.LspSettings = augroup('LspSettings', opts)
--- ************** Lsp attach --------------------------------------------
-aucmd('LspAttach', {
-    group = id.LspSettings,
-    callback = function(args)
-        local client = vim.lsp.get_client_by_id(args.data.client_id)
-        require('r.lsp').attach(client, args.buf)
-    end,
-    desc = 'Call attach function on event LspAttach',
-})
-aucmd('LspDetach', {
-    group = id.LspSettings,
-    callback = function(args)
-        local client = vim.lsp.get_client_by_id(args.data.client_id)
-        vim.notify(string.format('Server %s detached from %d', client.name, args.buf))
-        auclear { group = vim.g.au_id['LspAutoFormat_' .. client.name .. '_' .. args.buf], buffer = args.buf }
-        auclear { group = vim.g.au_id['LspHighlightSymbols_' .. client.name .. '_' .. args.buf], buffer = args.buf }
-    end,
-    desc = 'Clear AUGroups when LSP detaches',
-})
 
 -- ************** Diagnostics ------------------------------------------
 id.DiagnosticList = augroup('DiagnosticList', opts)
@@ -238,72 +204,14 @@ aucmd('BufReadPost', {
     group = id.PluginLoad,
     callback = function()
         require 'r.mappings.pairs'
-        require('r.mappings.treesitter').common()
     end,
     once = true,
-    desc = 'Load mappings for unimparied and treesiiter after reading buffer',
-})
-
-aucmd('FileType', {
-    -- group = id.Treesitter_local,
-    -- id.Treesitter_local = vim.api.nvim_create_augroup('Treesitter_local', { clear = true })
-    group = id.PluginLoad,
-    callback = function(args)
-        if vim.tbl_contains(require('r.utils.tables').ignoreFiles, args.match) then
-            return
-        end
-        if args.match == 'tex' then
-            require('r.mappings.treesitter').navigate_tex(args.buf)
-        else
-            require('r.mappings.treesitter').navigate(args.buf)
-        end
-    end,
-})
-
--- ************** Load harpoon maps ------------------------------------
-aucmd('FileType', {
-    pattern = 'harpoon',
-    group = id.PluginLoad,
-    callback = function()
-        vim.keymap.set('n', '<C-v>', function()
-            local curline = vim.api.nvim_get_current_line()
-            local working_directory = vim.fn.getcwd() .. '/'
-            vim.cmd 'vs'
-            vim.cmd('e ' .. working_directory .. curline)
-        end, { noremap = true, silent = true })
-
-        vim.keymap.set('n', '<C-t>', function()
-            local curline = vim.api.nvim_get_current_line()
-            local working_directory = vim.fn.getcwd() .. '/'
-            vim.cmd 'tabnew'
-            vim.cmd('e ' .. working_directory .. curline)
-        end, { noremap = true, silent = true })
-    end,
-    desc = 'Make harpoon open in splits',
+    desc = 'Load mappings for unimparied reading buffer',
 })
 
 ------------------------------------------------------------------------
 --                              Misc                                  --
 ------------------------------------------------------------------------
-
--- ************** Compilers and REPL  ----------------------------------
-id.Overseer = augroup('Overseer', opts)
-aucmd('FileType', {
-    group = id.Overseer,
-    pattern = { 'java', 'lua', 'python', 'javascript', 'perl' },
-    nested = true,
-    callback = function()
-        vim.keymap.set('n', '<F5>', function()
-            require('overseer').run_template { name = 'Run Single' }
-        end, { buffer = true, desc = 'Call native compile command' })
-
-        vim.keymap.set({ 'n', 't' }, '<F10>', function()
-            vim.cmd.stopinsert()
-            require('r.extensions').toggleTerm(vim.b.repl, 'repl')
-        end, { desc = 'Toggle REPL' })
-    end,
-    desc = 'set compiler and toggleable REPL for capable filetypes',
-})
 
 id.ProjectDrawer = augroup('ProjectDrawer', opts)
 -- ************************ Handle netrw -------------------------------

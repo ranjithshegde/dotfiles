@@ -21,7 +21,7 @@ function lspmap.lsp(client, bufnr)
     end, { desc = 'Hover or peek-fold', buffer = bufnr })
 
     wk.register({
-        ['<F7>'] = { require('r.debuggers').init, 'Initialize debugger adapter' },
+        ['<F7>'] = { require('r.plugins.debug.settings').init, 'Initialize debugger adapter' },
         [','] = {
             name = 'Lsp functions',
             s = { vim.lsp.buf.signature_help, 'Show signature' },
@@ -56,39 +56,6 @@ function lspmap.lsp(client, bufnr)
     map('n', '<F1>', function()
         require('overseer').window.toggle { enter = false }
     end, { desc = 'Open Task panel' })
-
-    -- if not navigator then
-    --     wk.register({
-    --         [','] = {
-    --             name = 'LSP functions',
-    --             a = { vim.lsp.buf.code_action, 'Code actions for buffer', mode = { 'n', 'v' } },
-    --             i = { vim.lsp.buf.implementation, 'Jump to Implementation' },
-    --             w = {
-    --                 name = 'Workspace',
-    --                 a = { vim.lsp.buf.add_workspace_folder, 'Add workspace folder' },
-    --                 r = { vim.lsp.buf.remove_workspace_folder, 'Remove workspace folder' },
-    --                 l = {
-    --                     function()
-    --                         vim.pretty_print(vim.lsp.buf.list_workspace_folders())
-    --                     end,
-    --                     'List workspace folder',
-    --                 },
-    --             },
-    --             d = {
-    --                 function()
-    --                     vim.lsp.buf.definition { reuse_win = true }
-    --                 end,
-    --                 'Jump to Definition',
-    --             },
-    --             r = {
-    --                 function()
-    --                     vim.lsp.buf.references { includeDeclaration = false }
-    --                 end,
-    --                 'References',
-    --             },
-    --         },
-    --     }, { buffer = bufnr })
-    -- end
 end
 
 -- ******************************** Diagnostics------------------------
@@ -166,63 +133,6 @@ function lspmap.navic(bufnr)
             -- "command! -nargs=* Calltree lua require'navigator.hierarchy'.calltree(<f-args>)<CR>",
         },
     }, { buffer = bufnr })
-end
-
-------------------------------------------------------------------------
---                              Debug Adapters                        --
-------------------------------------------------------------------------
-
-function lspmap.debug()
-    wk.register {
-        ['<leader>d'] = {
-            name = 'debug',
-            b = { require('dap').toggle_breakpoint, 'set breakpoint' },
-            x = { require('dap').set_exception_breakpoints, 'set breakpoint' },
-            o = { require('dapui').float_element, 'Open float element', mode = { 'n', 'v' } },
-            E = { require('r.debuggers').exp.toggle, 'Expressions buffer', mode = { 'n', 'v', 's' } },
-            ['.'] = { require('dap').terminate, 'End' },
-            ['?'] = { require('r.debuggers').frames.toggle, 'Frames' },
-            ['/'] = { require('r.debuggers').scopes.toggle, 'Scopes' },
-            t = { require('r.debuggers').threads.toggle, 'threads' },
-            u = { require('dapui').toggle, 'Toggle all UI' },
-            c = { require('dap').continue, 'continue to next breakpoint' },
-            n = { require('dap').step_over, 'step over' },
-            s = { require('dap').step_into, 'step into' },
-            S = { require('dap').step_out, 'step Out' },
-            f = {
-                function()
-                    require('dapui').float_element('scopes', { enter = true })
-                end,
-                'Floating Scopes',
-            },
-            F = {
-                function()
-                    require('dapui').float_element('stacks', { enter = true })
-                end,
-                'Floating Stacks',
-            },
-            B = {
-                function()
-                    require('dap').toggle_breakpoint(vim.fn.input 'Breakpoint condition: ')
-                end,
-                'set breakpoint',
-            },
-            e = {
-                function()
-                    require('dapui').eval()
-                    require('dapui').eval()
-                end,
-                'Evaluate Hover',
-                mode = { 'n', 'v', 's' },
-            },
-        },
-        ['<F10>'] = {
-            function()
-                require('dap').repl.toggle({ height = 10 }, 'split')
-            end,
-            'Repl Toggle',
-        },
-    }
 end
 
 return lspmap

@@ -1,6 +1,7 @@
 local lsp = {}
 local aucmd = vim.api.nvim_create_autocmd
 local augroup = vim.api.nvim_create_augroup
+local auclear = vim.api.nvim_clear_autocmds
 
 ------------------------------------------------------------------------
 --                             Lsp settings                           --
@@ -17,7 +18,31 @@ local function filterfmt(client)
     return not vim.tbl_contains(nofmt, client.name)
 end
 
-local id = {}
+---**************************** Initualize LSP
+function lsp.init()
+    local id = {}
+    id.LspSettings = augroup('LspSettings', opts)
+    -- ************** Lsp attach --------------------------------------------
+    aucmd('LspAttach', {
+        group = id.LspSettings,
+        callback = function(args)
+            local client = vim.lsp.get_client_by_id(args.data.client_id)
+            require('r.plugins.lsp.servers').attach(client, args.buf)
+        end,
+        desc = 'Call attach function on event LspAttach',
+    })
+    aucmd('LspDetach', {
+        group = id.LspSettings,
+        callback = function(args)
+            local client = vim.lsp.get_client_by_id(args.data.client_id)
+            vim.notify(string.format('Server %s detached from %d', client.name, args.buf))
+            auclear { group = vim.g.au_id['LspAutoFormat_' .. client.name .. '_' .. args.buf], buffer = args.buf }
+            auclear { group = vim.g.au_id['LspHighlightSymbols_' .. client.name .. '_' .. args.buf], buffer = args.buf }
+        end,
+        desc = 'Clear AUGroups when LSP detaches',
+    })
+    require('r.utils').register_au_id(id)
+end
 
 ---**************************** Snippet capabilities
 function lsp.capabilities()
@@ -26,12 +51,13 @@ end
 
 ---**************************** Global attach function
 function lsp.attach(client, bufnr)
+    local id = {}
     if not vim.g.navigator then
-        require('r.plug.navigator').attach(client, bufnr)
+        require('r.plugins.lsp.navigator').attach(client, bufnr)
     end
 
-    require('r.mappings.lsp').navic(bufnr)
-    require('r.mappings.lsp').lsp(client, bufnr)
+    require('r.plugins.lsp.mappings').navic(bufnr)
+    require('r.plugins.lsp.mappings').lsp(client, bufnr)
 
     vim.b.hasLsp = true
 
@@ -66,7 +92,7 @@ function lsp.attach(client, bufnr)
     require('r.utils').register_au_id(id)
 
     if sc.renameProvider then
-        require('r.lsp.rename').attach()
+        require('r.extensions.lsp.rename').attach()
 
         vim.keymap.set('n', ',R', function()
             return ':IncRename ' .. vim.fn.expand '<cword>'
@@ -74,15 +100,15 @@ function lsp.attach(client, bufnr)
     end
 
     if client.name == 'ltex' then
-        vim.lsp.commands['_ltex.addToDictionary'] = require('r.lsp.ltex').add_to_dict
-        vim.lsp.commands['_ltex.disableRules'] = require('r.lsp.ltex').disable_rule
-        vim.lsp.commands['_ltex.hideFalsePositives'] = require('r.lsp.ltex').false_positive
+        vim.lsp.commands['_ltex.addToDictionary'] = require('r.plugins.lsp.ltex').add_to_dict
+        vim.lsp.commands['_ltex.disableRules'] = require('r.plugins.lsp.ltex').disable_rule
+        vim.lsp.commands['_ltex.hideFalsePositives'] = require('r.plugins.lsp.ltex').false_positive
     end
 
     vim.api.nvim_buf_create_user_command(
         bufnr,
         'LspCapabilities',
-        require 'r.lsp.capabilities',
+        require 'r.extensions.lsp.capabilities',
         { desc = 'Display Language Server capabilities' }
     )
 
@@ -144,33 +170,33 @@ function lsp.servers()
         for ls, cfg in pairs(configs) do
             require('lspconfig')[ls].setup(cfg)
         end
-        require('r.lsp.ltex').lsp()
+        require('r.plugins.lsp.ltex').lsp()
         if vim.tbl_contains({ 'tex', 'bib', 'plaintex' }, vim.bo.filetype) then
-            require('r.lsp.texlab').lsp()
+            require('r.plugins.lsp.texlab').lsp()
         end
 
         if vim.tbl_contains({ 'c', 'cpp', 'opencl' }, vim.bo.filetype) then
-            require('r.lsp.clangd').clangd(false)
+            require('r.plugins.lsp.clang').clangd(false)
         end
 
-        require('r.plug.navigator').init()
+        require('r.plugins.lsp.navigator').init()
     else
-        local navic = require('r.plug.navigator').config(true)
+        local navic = require('r.plugins.lsp.navigator').config(true)
 
         for ls, cfg in pairs(configs) do
             navic.lsp[ls] = cfg
         end
 
-        navic.lsp.ltex = require('r.lsp.ltex').lsp(true)
+        navic.lsp.ltex = require('r.plugins.lsp.ltex').lsp(true)
         if vim.tbl_contains({ 'tex', 'bib', 'plaintex' }, vim.bo.filetype) then
-            navic.lsp.texlab = require('r.lsp.texlab').lsp(true)
+            navic.lsp.texlab = require('r.plugins.lsp.texlab').lsp(true)
         end
 
         if vim.tbl_contains({ 'c', 'cpp', 'opencl' }, vim.bo.filetype) then
-            local clangd = require('r.lsp.clangd').clangd(true)
+            local clangd = require('r.plugins.lsp.clang').clangd(true)
             navic.lsp.clangd = clangd
         end
-        require('r.plug.navigator').init(navic)
+        require('r.plugins.lsp.navigator').init(navic)
     end
 
     require('lspconfig.ui.windows').default_options.border = 'single'

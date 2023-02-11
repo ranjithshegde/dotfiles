@@ -1,14 +1,27 @@
-vim.pretty_print = function(...)
-    local objects = {}
-    for i = 1, select('#', ...) do
-        local v = select(i, ...)
-        table.insert(objects, vim.inspect(v))
-    end
-
-    vim.api.nvim_echo({ { table.concat(objects, '    '), '' } }, true, {})
+local function messages()
+    require('which-key').register {
+        ['<leader>n'] = {
+            name = 'Noice',
+            n = { vim.cmd.Noice, 'Noice window' },
+            e = { vim.cmd.NoiceErrors, 'Open error list' },
+            m = { vim.cmd.messages, 'Open messages' },
+            c = {
+                function()
+                    vim.cmd.messages 'clear'
+                end,
+                'Clear all messaages',
+            },
+        },
+    }
 end
 
-local function setup()
+local noice = {
+    'folke/noice.nvim',
+    dependencies = 'MunifTanjim/nui.nvim',
+    event = 'VimEnter',
+}
+
+function noice.config()
     require('noice').setup {
         cmdline = {
             view = 'cmdline',
@@ -52,9 +65,19 @@ local function setup()
     }
 end
 
-return {
-    'folke/noice.nvim',
-    dependencies = 'MunifTanjim/nui.nvim',
-    event = 'VimEnter',
-    config = setup,
-}
+function noice.init()
+    vim.pretty_print = function(...)
+        local objects = {}
+        for i = 1, select('#', ...) do
+            local v = select(i, ...)
+            table.insert(objects, vim.inspect(v))
+        end
+
+        vim.api.nvim_echo({ { table.concat(objects, '    '), '' } }, true, {})
+    end
+    require('r.utils').lazy_on_key('n', '<leader>n', 'Noice', function()
+        require('r.mappings.util').noice()
+    end)
+end
+
+return noice

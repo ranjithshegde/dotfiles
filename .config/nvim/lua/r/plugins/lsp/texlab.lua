@@ -42,7 +42,7 @@ end
 
 function texlab.lsp(navigator)
     local config = {
-        capabilities = require('r.lsp').capabilities(),
+        capabilities = require('r.plugins.lsp.servers').capabilities(),
         cmd = { 'texlab', '--log-file', './aux/texlab-log', '-vvvv' },
         before_init = function(_, _)
             if vim.fn.isdirectory 'aux' ~= 1 then

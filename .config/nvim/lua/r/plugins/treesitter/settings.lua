@@ -1,12 +1,40 @@
-local parsers = require 'nvim-treesitter.parsers'
-local ts_utils = require 'nvim-treesitter.ts_utils'
-
 local ts = {}
 ------------------------------------------------------------------------
 --                             Treesitter Config                      --
 ------------------------------------------------------------------------
 
-function ts.init()
+function ts.autocmds()
+    local id = {}
+    id.Treesitter = vim.api.nvim_create_augroup('Treesitter', { clear = true })
+    vim.api.nvim_create_autocmd('BufReadPost', {
+        group = id.Treesitter,
+        callback = function()
+            require('r.plugins.treesitter.mappings').common()
+        end,
+        once = true,
+        desc = 'Load mappings treesiiter after reading buffer',
+    })
+
+    vim.api.nvim_create_autocmd('FileType', {
+        group = id.Treesitter,
+        callback = function(args)
+            if vim.tbl_contains(require('r.utils.tables').ignoreFiles, args.match) then
+                return
+            end
+            if args.match == 'tex' then
+                require('r.plugins.treesitter.mappings').navigate_tex(args.buf)
+            else
+                require('r.plugins.treesitter.mappings').navigate(args.buf)
+            end
+        end,
+        desc = 'Loading treesitter navigation mappings',
+    })
+
+    require('r.utils').register_au_id(id)
+end
+
+function ts.setup()
+    local parsers = require 'nvim-treesitter.parsers'
     local ft_to_parser = parsers.filetype_to_parsername
     ft_to_parser.opencl = 'c'
 
@@ -164,6 +192,8 @@ local function transform_line(line)
 end
 
 function ts.statusline(opts)
+    local ts_utils = require 'nvim-treesitter.ts_utils'
+    local parsers = require 'nvim-treesitter.parsers'
     if not parsers.has_parser() then
         return
     end

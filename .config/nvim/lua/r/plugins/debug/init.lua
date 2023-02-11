@@ -1,0 +1,25 @@
+return {
+    {
+        'mfussenegger/nvim-dap',
+        config = require('r.utils').plugin_setup('r.plugins.debug.settings', 'setup'),
+    },
+    {
+        'rcarriga/nvim-dap-ui',
+        config = function()
+            require('dapui').setup {
+                layouts = {
+                    {
+                        elements = { 'scopes', 'breakpoints', 'stacks', 'watches' },
+                        size = 70,
+                        position = 'left',
+                    },
+                    {
+                        elements = { 'repl', 'console' },
+                        size = 0.25,
+                        position = 'bottom',
+                    },
+                },
+            }
+        end,
+    },
+}

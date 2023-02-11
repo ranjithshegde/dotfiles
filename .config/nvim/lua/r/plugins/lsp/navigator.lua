@@ -16,7 +16,7 @@ function navigator.config(native)
     end
 
     return {
-        fold_ts = true,
+        ts_fold = true,
         default_mapping = false,
         lsp_signature_help = false,
         lsp = {
