@@ -5,6 +5,13 @@ local function makeSidebar(element, width)
     return widgets.sidebar(widgets[element], { width = width })
 end
 
+local function makeFloat(element)
+    local widgets = require 'dap.ui.widgets'
+    return function()
+        widgets.centered_float(widgets[element], { border = 'double' })
+    end
+end
+
 local function signs()
     vim.fn.sign_define('DapBreakpoint', { text = '🟥' })
     vim.fn.sign_define('DapBreakpointRejected', { text = '🟦' })
@@ -27,6 +34,11 @@ function Debugger.setup()
     Debugger.scopes = makeSidebar('scopes', 60)
     Debugger.exp = makeSidebar('expression', 40)
     Debugger.threads = makeSidebar('threads', 40)
+
+    Debugger.fframes = makeFloat 'frames'
+    Debugger.fscopes = makeFloat 'scopes'
+    Debugger.fexp = makeFloat 'expression'
+    Debugger.fthreads = makeFloat 'threads'
 
     dap.defaults.fallback.terminal_win_cmd = 'tabnew'
     dap.defaults.fallback.external_terminal = {
@@ -57,26 +69,6 @@ function Debugger.setup()
         desc = 'Enable autocompletion in REPL windows',
     })
     require('r.utils').register_au_id(auid)
-end
-
-function Debugger.fscopes()
-    local widgets = require 'dap.ui.widgets'
-    widgets.centered_float(widgets.scopes, { border = 'double' })
-end
-
-function Debugger.fthreads()
-    local widgets = require 'dap.ui.widgets'
-    widgets.centered_float(widgets.threads, { border = 'double' })
-end
-
-function Debugger.fframes()
-    local widgets = require 'dap.ui.widgets'
-    widgets.centered_float(widgets.frames, { border = 'double' })
-end
-
-function Debugger.fexp()
-    local widgets = require 'dap.ui.widgets'
-    widgets.centered_float(widgets.expression, { border = 'double' })
 end
 
 return Debugger

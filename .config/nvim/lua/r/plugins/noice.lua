@@ -76,7 +76,7 @@ function noice.init()
         vim.api.nvim_echo({ { table.concat(objects, '    '), '' } }, true, {})
     end
     require('r.utils').lazy_on_key('n', '<leader>n', 'Noice', function()
-        require('r.mappings.util').noice()
+        messages()
     end)
 end
 

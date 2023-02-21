@@ -63,7 +63,6 @@ aucmd({ 'InsertEnter', 'WinLeave', 'FocusLost', 'BufNewFile' }, {
     callback = function(args)
         if not ignore_win() then
             vim.wo[vim.fn.bufwinid(args.buf)].relativenumber = false
-            -- vim.wo[vim.fn.bufwinid(args.buf)].statuscolumn = '%l'
         end
     end,
     desc = 'Dont use relativenumber where it makes no sense',
@@ -73,7 +72,6 @@ aucmd({ 'InsertLeave', 'WinEnter', 'FocusGained' }, {
     callback = function(args)
         if not ignore_win() then
             vim.wo[vim.fn.bufwinid(args.buf)].relativenumber = true
-            -- vim.wo[vim.fn.bufwinid(args.buf)].statuscolumn = '%l%r'
         end
     end,
     desc = 'use relativenumber conditionally',

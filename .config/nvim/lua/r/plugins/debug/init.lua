@@ -2,6 +2,7 @@ return {
     {
         'mfussenegger/nvim-dap',
         config = require('r.utils').plugin_setup('r.plugins.debug.settings', 'setup'),
+        dependencies = { { 'theHamsta/nvim-dap-virtual-text', config = true } },
     },
     {
         'rcarriga/nvim-dap-ui',

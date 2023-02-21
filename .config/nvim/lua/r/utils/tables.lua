@@ -58,6 +58,7 @@ tables.ignoreFiles = {
     'noice',
     'netrw',
     'scnvim',
+    'guihua',
     'Outline',
     'lspinfo',
     'NodeTree',

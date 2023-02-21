@@ -223,7 +223,6 @@ M.config = function()
         end
         local branch = extensions.git_branch(window, buffer)
         if branch then
-            require('lazy').load { plugins = { 'gitsigns.nvim' } }
             return space .. extensions.git_icon() .. space .. branch
         end
     end)

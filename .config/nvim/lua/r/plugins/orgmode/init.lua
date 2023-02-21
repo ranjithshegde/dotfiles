@@ -49,7 +49,7 @@ return {
                 require('r.plugins.orgmode.mappings').wiki()
             end)
         end,
-        config = {
+        opts = {
             disable_mappings = true,
             wiki_path = { '~/Documents/Orgs/', '~/Documents/Projects/' },
             diary_path = '~/Documents/Orgs/diary/',

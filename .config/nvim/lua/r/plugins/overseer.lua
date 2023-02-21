@@ -25,6 +25,15 @@ function overseer.init()
     })
 
     require('r.utils').register_au_id(id)
+
+    -- Terminals and Jobs
+    vim.keymap.set('n', '<leader>C', function()
+        require('overseer').run_template { name = 'shell' }
+    end, { desc = 'Run quick command with Overseer' })
+
+    vim.keymap.set('n', '<leader>c', function()
+        require('overseer').run_template()
+    end, { desc = 'Run task  with Overseer' })
 end
 
 function overseer.config()
@@ -32,20 +41,6 @@ function overseer.config()
         templates = { 'builtin', 'r' },
         default_template_prompt = 'avoid',
     }
-
-    local make_provider = vim.deepcopy(require 'overseer.template.make')
-    local original_cb = make_provider.condition.callback
-    make_provider.name = 'make'
-
-    make_provider.condition.callback = function(opts)
-        local files = require 'overseer.files'
-        if files.is_subpath('/storage/Games/Unreal/', opts.dir) then
-            return false, 'Inside repo with large Makefile'
-        end
-        return original_cb(opts)
-    end
-
-    require('overseer').register_template(make_provider)
 end
 
 return overseer

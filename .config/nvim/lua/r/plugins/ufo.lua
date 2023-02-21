@@ -49,23 +49,30 @@ local function handler(virt_text, lnum, end_lnum, width, truncate, ctx)
 
     return result
 end
+local ufo = {
+    'kevinhwang91/nvim-ufo',
+    dependencies = 'kevinhwang91/promise-async',
+    event = 'BufReadPost',
+}
 
-local function setup()
+function ufo.config()
+    vim.o.foldlevel = 99
+    vim.o.foldlevelstart = 99
+
     require('ufo').setup {
-        open_fold_hl_timeout = 0,
+        open_fold_hl_timeout = 1,
 
         provider_selector = function(_, _)
-            return ''
+            return { 'treesitter' }
         end,
 
         enable_get_fold_virt_text = true,
         fold_virt_text_handler = handler,
     }
+    vim.keymap.set('n', 'zR', require('ufo').openAllFolds)
+    vim.keymap.set('n', 'zM', require('ufo').closeAllFolds)
+    vim.keymap.set('n', 'zr', require('ufo').openFoldsExceptKinds)
+    vim.keymap.set('n', 'zm', require('ufo').closeFoldsWith)
 end
 
-return {
-    -- 'kevinhwang91/nvim-ufo',
-    -- dependencies = 'kevinhwang91/promise-async',
-    -- config = setup,
-    -- event = 'BufReadPost',
-}
+return ufo

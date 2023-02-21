@@ -34,7 +34,7 @@ function cmaps.micro()
     map('n', ',kT', require('r.extensions.cpp').teensyspecs, { buffer = true, desc = 'teensy specs' })
 
     wk.register {
-        [','] = { k = { 'Arduino documentation', buffer = 0 } },
+        [',k'] = { name = 'Arduino documentation', buffer = 0 },
     }
 end
 

@@ -24,6 +24,7 @@ return function()
     o.shiftwidth = tab
     o.softtabstop = tab
     o.cmdheight = 0
+    o.foldminlines = 3
     o.laststatus = 3
     o.scrolloff = 10
     o.updatetime = 1000
@@ -32,11 +33,9 @@ return function()
     o.mouse = 'n'
     o.foldcolumn = 'auto'
     o.jumpoptions = 'view'
-    o.foldmethod = 'expr'
     o.inccommand = 'split'
     o.spelloptions = 'camel'
     o.grepformat = '%f:%l:%c:%m'
-    o.foldexpr = 'nvim_treesitter#foldexpr()'
     o.grepprg = 'rg --vimgrep --smart-case --hidden'
     o.spellfile = vim.fn.stdpath 'config' .. '/spell/en.utf-8.add'
 

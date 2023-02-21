@@ -10,7 +10,7 @@ local auclear = vim.api.nvim_clear_autocmds
 local opts = { clear = true }
 
 local nofmt = {
-    'sumneko_lua',
+    'lua_ls',
     'jsonls',
 }
 
@@ -152,7 +152,7 @@ function lsp.servers()
                 end,
             },
         },
-        sumneko_lua = {
+        lua_ls = {
             capabilities = lsp.capabilities(),
             before_init = function(params, config)
                 require('neodev.lsp').before_init(params, config)

@@ -67,31 +67,9 @@ function lspmap.diagnostic(bufnr)
 end
 
 function lspmap.navic(bufnr)
-    -- map('n', ',r', require('navigator.reference').async_ref, { buffer = bufnr, desc = 'Lsp Async reference' })
-    -- map('n', ',s', require('navigator.symbols').document_symbols, { buffer = bufnr, desc = 'document_symbols' })
-    -- map('n', ',S', require('navigator.workspace').workspace_symbol_live, { buffer = bufnr, desc = 'workspace symbol' })
-    -- map('n', ',d', require('navigator.definition').definition, { buffer = bufnr, desc = 'definition' })
-    -- map('n', ',p', require('navigator.definition').definition_preview, { buffer = bufnr, desc = 'definition_preview' })
-    -- map('n', '<Leader>gt', require('navigator.treesitter').buf_ts, { buffer = bufnr, desc = 'buf_ts' })
-    -- map('n', '<Leader>gT', require('navigator.treesitter').bufs_ts, { buffer = bufnr, desc = 'bufs_ts' })
-    -- map('n', ',a', require('navigator.codeAction').code_action, { buffer = bufnr, desc = 'code_action' })
-    -- map('v', ',a', require('navigator.codeAction').range_code_action, { buffer = bufnr, desc = 'range_code_action' })
-    -- map('n', ',Ci', vim.lsp.buf.incoming_calls, { buffer = bufnr, desc = 'incoming_calls' })
-    -- map('n', ',Co', vim.lsp.buf.outgoing_calls, { buffer = bufnr, desc = 'outgoing_calls' })
-    -- map('n', ',i', vim.lsp.buf.implementation, { buffer = bufnr, desc = 'implementation' })
-    -- map('n', ',ll', require('navigator.diagnostics').show_diagnostics, { buffer = bufnr, desc = 'show_diagnostics' })
-    -- map('n', ',lb', require('navigator.diagnostics').show_buf_diagnostics, { buffer = bufnr, desc = 'buf diagnostics' })
-    -- map('n', ']r', require('navigator.treesitter').goto_next_usage, { buffer = bufnr, desc = 'next usage' })
-    -- map('n', '[r', require('navigator.treesitter').goto_previous_usage, { buffer = bufnr, desc = 'previous usage' })
-    -- map( 'n', '<Leader>k',  require('navigator.dochighlight').hi_symbol, {desc = 'hi_symbol'} )
-    -- map( 'n', '<Space>la', mode = 'n',  require('navigator.codelens').run_action, {desc = 'run code lens action'} )
     wk.register({
         [','] = {
             name = 'Lsp',
-            -- { 's', require('navigator.symbols').document_symbols, 'document_symbols' },
-            -- { 'S', require('navigator.workspace').workspace_symbol_live, 'workspace symbol' },
-            -- '<Leader>gr' = {   require('navigator.reference').reference,  'eference' },
-            -- '<Space>rn' = {   require('navigator.rename').rename, desc = 'rename'}
             r = { require('navigator.reference').async_ref, 'Lsp Async reference' },
             a = { require('navigator.codeAction').code_action, 'code_action' },
             i = { vim.lsp.buf.implementation, 'implementation' },
@@ -129,8 +107,6 @@ function lspmap.navic(bufnr)
             l = { require('navigator.symbols').side_panel, 'Lsp Symbols' },
             t = { require('navigator.treesitter').side_panel, 'Treesitter Symbols' },
             r = { require('navigator.reference').side_panel, 'Reference list' },
-            -- r = { , 'Reference list' },
-            -- "command! -nargs=* Calltree lua require'navigator.hierarchy'.calltree(<f-args>)<CR>",
         },
     }, { buffer = bufnr })
 end

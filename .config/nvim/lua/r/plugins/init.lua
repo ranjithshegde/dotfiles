@@ -1,7 +1,5 @@
 -- -------------------------- Defs **********************************************************************
-
 vim.g.navigator = true
-local setup = require('r.utils').plugin_setup
 
 --------------------------------------------------------------------------------------------------------
 --				 Plugins                                            							      --
@@ -26,36 +24,41 @@ return {
         cmd = { 'Subverse', 'Abolish' },
     },
 
-    -- File browser/editor
-    {
-        'stevearc/oil.nvim',
-        cmd = 'Oil',
-        config = { columns = { 'icon', 'size' }, view_options = { show_hidden = true } },
-    },
-
     -- Comment with TreeSitter
     {
         'numToStr/Comment.nvim',
         keys = { 'gc', { 'gc', mode = 'v' }, 'gb', { 'gb', mode = 'v' } },
-        config = { ignore = '^$' },
+        opts = { ignore = '^$' },
     },
 
     -- Fancy UI
     {
         'stevearc/dressing.nvim',
         event = 'VeryLazy',
-        config = { input = { relative = 'editor' } },
+        opts = { input = { relative = 'editor' } },
     },
 
     -- WhichKey
     {
         'folke/which-key.nvim',
-        config = {
+        opts = {
             show_help = false,
             show_keys = false,
             layout = { layout = { spacing = 15 } },
             window = { border = 'single' },
         },
+    },
+
+    -- File browser/editor
+    {
+        'stevearc/oil.nvim',
+        cmd = 'Oil',
+        opts = { columns = { 'icon', 'size' }, view_options = { show_hidden = true } },
+        init = function()
+            vim.keymap.set('n', '<leader>e', function()
+                require('oil').open_float(vim.loop.cwd())
+            end, { desc = 'Open file explorer' })
+        end,
     },
 
     -- Treesitter indent guides

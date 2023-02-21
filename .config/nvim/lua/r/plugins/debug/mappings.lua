@@ -42,7 +42,6 @@ return function()
             e = {
                 function()
                     require('dapui').eval()
-                    require('dapui').eval()
                 end,
                 'Evaluate Hover',
                 mode = { 'n', 'v', 's' },

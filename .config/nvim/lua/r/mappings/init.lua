@@ -1,4 +1,3 @@
-local wk = require 'which-key'
 local map = vim.keymap.set
 
 ------------------------------------------------------------------------
@@ -29,10 +28,6 @@ return function()
     map('n', 'n', 'nzzzv', { desc = 'jump to next search result' })
     map('n', 'N', 'Nzzzv', { desc = 'jump to previous search result' })
     map('n', 'J', 'mzJ`z', { desc = 'Adjoin next line' })
-
-    map('n', '<leader>e', function()
-        vim.cmd.Oil(vim.loop.cwd())
-    end, { desc = 'Open file explorer' })
 
     --Quickfix
     map('n', '-', function()
@@ -70,15 +65,6 @@ return function()
         local virt = vim.fn.virtcol '$'
         vim.fn.cursor { 0, virt / 2 }
     end, { desc = 'Move cursor to middle of the line' })
-
-    -- Terminals and Jobs
-    map('n', '<leader>C', function()
-        require('overseer').run_template { name = 'shell' }
-    end, { desc = 'Run quick command with Overseer' })
-
-    map('n', '<leader>c', function()
-        require('overseer').run_template()
-    end, { desc = 'Run task  with Overseer' })
 
     map({ 'n', 't' }, '<F9>', function()
         vim.cmd.stopinsert()

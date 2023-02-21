@@ -3,6 +3,25 @@ local supercollider = {
     ft = 'supercollider',
 }
 
+function supercollider.init()
+    local id = {}
+    id.scnvim = vim.api.nvim_create_augroup('scnvim', { clear = true })
+    vim.api.nvim_create_autocmd('FileType', {
+        group = id.scnvim,
+        pattern = 'supercollider',
+        callback = function()
+            vim.wo.wrap = true
+            if not require('scnvim').is_running() then
+                require('scnvim').start()
+                -- vim.api.nvim_input '<CR>'
+            end
+        end,
+        desc = 'Load SCNvim settings and launch interpreter on filetype',
+    })
+
+    require('r.utils').register_au_id(id)
+end
+
 supercollider.config = function()
     local scnvim = require 'scnvim'
     local map = scnvim.map
@@ -40,19 +59,6 @@ supercollider.config = function()
         },
         completion = { signature = { config = { border = 'rounded' } } },
     }
-
-    vim.api.nvim_create_autocmd('FileType', {
-        group = vim.g.au_id.LspSettngs,
-        pattern = 'supercollider',
-        callback = function()
-            vim.wo.wrap = true
-            if not require('scnvim').is_running() then
-                require('scnvim').start()
-                vim.api.nvim_input '<CR>'
-            end
-        end,
-        desc = 'Load SCNvim settings and launch interpreter on filetype',
-    })
 
     vim.api.nvim_create_autocmd('InsertEnter', {
         group = vim.g.au_id.PluginLoad,
