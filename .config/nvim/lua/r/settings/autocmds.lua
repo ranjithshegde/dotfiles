@@ -211,24 +211,6 @@ aucmd('BufReadPost', {
 --                              Misc                                  --
 ------------------------------------------------------------------------
 
-id.ProjectDrawer = augroup('ProjectDrawer', opts)
--- ************************ Handle netrw -------------------------------
-aucmd({ 'BufEnter', 'BufReadPre' }, {
-    group = id.ProjectDrawer,
-    callback = function(args)
-        local fs = vim.loop.fs_stat(args.file)
-        if fs and fs.type == 'directory' then
-            if not package.loaded.oil then
-                vim.api.nvim_del_autocmd(args.id)
-                vim.schedule(function()
-                    require('oil').open(args.file)
-                end)
-            end
-        end
-    end,
-    desc = 'Hijack netrw with ranger or telescope',
-})
-
 id.NoVim = augroup('NoVim', opts)
 -- ************************ Handle binaries ----------------------------
 aucmd('BufEnter', {

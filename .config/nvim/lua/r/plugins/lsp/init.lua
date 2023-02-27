@@ -3,7 +3,6 @@ local setup = require('r.utils').plugin_setup
 return {
     { 'p00f/clangd_extensions.nvim' },
     { 'Hoffs/omnisharp-extended-lsp.nvim', ft = 'cs' },
-    { 'mfussenegger/nvim-jdtls', ft = 'java', config = setup 'r.plugins.lsp.jdtls' },
     {
         'folke/neodev.nvim',
         config = setup 'r.plugins.lsp.neodev',

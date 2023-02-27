@@ -2,53 +2,69 @@
 --                              FoldText                              --
 ------------------------------------------------------------------------
 
-local function handler(virt_text, lnum, end_lnum, width, truncate, ctx)
-    local result = {}
+local function no_folds(bufnr, ft, buftype)
+    if ft == '' then
+        return true
+    elseif buftype ~= '' then
+        return true
+    end
+    local win = vim.fn.bufwinid(bufnr)
+    if vim.tbl_contains(require('r.utils.tables').ignoreFiles, ft) then
+        return true
+    elseif vim.fn.win_gettype(win) == 'popup' then
+        return true
+    end
+end
 
-    local counts = ('    %d    '):format(end_lnum - lnum)
-    local suffix = ' ⋯⋯  '
-    local padding = ''
-
-    local end_virt_text = ctx.get_fold_virt_text(end_lnum)
-
-    local sufWidth = (2 * vim.api.nvim_strwidth(suffix)) + vim.api.nvim_strwidth(counts)
-
-    local target_width = width - sufWidth
-    local cur_width = 0
-
-    for _, chunk in ipairs(virt_text) do
-        local chunk_text = chunk[1]
-
-        local chunk_width = vim.api.nvim_strwidth(chunk_text)
-        if target_width > cur_width + chunk_width then
-            table.insert(result, chunk)
+local function fallback_selector(bufnr)
+    local function handleFallbackException(err, providerName)
+        if type(err) == 'string' and err:match 'UfoFallbackException' then
+            vim.pretty_print(providerName)
+            return require('ufo').getFolds(bufnr, providerName)
         else
-            chunk_text = truncate(chunk_text, target_width - cur_width)
-            local hl_group = chunk[2]
-            table.insert(result, { chunk_text, hl_group })
-            chunk_width = vim.api.nvim_strwidth(chunk_text)
+            vim.pretty_print(err)
+            return require('promise').reject(err)
+        end
+    end
 
-            if cur_width + chunk_width < target_width then
-                padding = padding .. (' '):rep(target_width - cur_width - chunk_width)
+    return require('ufo')
+        .getFolds(bufnr, 'lsp')
+        :catch(function(err)
+            return handleFallbackException(err, 'treesitter')
+        end)
+        :catch(function(err)
+            return handleFallbackException(err, 'indent')
+        end)
+end
+
+local handler = function(virtText, lnum, endLnum, width, truncate)
+    local newVirtText = {}
+    local suffix = (' ⋯⋯    %d  ⋯⋯  '):format(endLnum - lnum)
+    local sufWidth = vim.fn.strdisplaywidth(suffix)
+    local targetWidth = width - sufWidth
+    local curWidth = 0
+    for _, chunk in ipairs(virtText) do
+        local chunkText = chunk[1]
+        local chunkWidth = vim.fn.strdisplaywidth(chunkText)
+        if targetWidth > curWidth + chunkWidth then
+            table.insert(newVirtText, chunk)
+        else
+            chunkText = truncate(chunkText, targetWidth - curWidth)
+            local hlGroup = chunk[2]
+            table.insert(newVirtText, { chunkText, hlGroup })
+            chunkWidth = vim.fn.strdisplaywidth(chunkText)
+
+            if curWidth + chunkWidth < targetWidth then
+                suffix = suffix .. (' '):rep(targetWidth - curWidth - chunkWidth)
             end
             break
         end
-        cur_width = cur_width + chunk_width
+        curWidth = curWidth + chunkWidth
     end
-
-    if end_virt_text[1] and end_virt_text[1][1] then
-        end_virt_text[1][1] = end_virt_text[1][1]:gsub('[%s\t]+', '')
-    end
-
-    table.insert(result, { suffix, 'UfoFoldedEllipsis' })
-    table.insert(result, { counts, 'MoreMsg' })
-    table.insert(result, { suffix, 'UfoFoldedEllipsis' })
-
-    vim.list_extend(result, end_virt_text)
-    table.insert(result, { padding, '' })
-
-    return result
+    table.insert(newVirtText, { suffix, 'MoreMsg' })
+    return newVirtText
 end
+
 local ufo = {
     'kevinhwang91/nvim-ufo',
     dependencies = 'kevinhwang91/promise-async',
@@ -62,13 +78,15 @@ function ufo.config()
     require('ufo').setup {
         open_fold_hl_timeout = 1,
 
-        provider_selector = function(_, _)
-            return { 'treesitter' }
+        provider_selector = function(bufnr, ft, buftype)
+            return no_folds(bufnr, ft, buftype) and '' or fallback_selector
         end,
 
         enable_get_fold_virt_text = true,
         fold_virt_text_handler = handler,
+        close_fold_kinds = { 'region' },
     }
+
     vim.keymap.set('n', 'zR', require('ufo').openAllFolds)
     vim.keymap.set('n', 'zM', require('ufo').closeAllFolds)
     vim.keymap.set('n', 'zr', require('ufo').openFoldsExceptKinds)

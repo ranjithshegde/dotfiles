@@ -1,5 +1,6 @@
 -- -------------------------- Defs **********************************************************************
 vim.g.navigator = true
+vim.keymap.set('n', '<leader>p', require('lazy').sync, { desc = 'Update plugins' })
 
 --------------------------------------------------------------------------------------------------------
 --				 Plugins                                            							      --
@@ -47,18 +48,6 @@ return {
             layout = { layout = { spacing = 15 } },
             window = { border = 'single' },
         },
-    },
-
-    -- File browser/editor
-    {
-        'stevearc/oil.nvim',
-        cmd = 'Oil',
-        opts = { columns = { 'icon', 'size' }, view_options = { show_hidden = true } },
-        init = function()
-            vim.keymap.set('n', '<leader>e', function()
-                require('oil').open_float(vim.loop.cwd())
-            end, { desc = 'Open file explorer' })
-        end,
     },
 
     -- Treesitter indent guides

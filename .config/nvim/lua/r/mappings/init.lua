@@ -15,8 +15,6 @@ return function()
     --line movement
     map('x', 'K', ":move '<-2<CR>gv", { desc = 'Move line up' })
     map('x', 'J', ":move '>+1<CR>gv", { desc = 'Move line down' })
-    -- visual cut for replase
-    map({ 'v', 's' }, 'P', '"_dP', opts)
     -- Indent
     map('v', '<', '<gv', opts)
     map('v', '>', '>gv', opts)
@@ -72,6 +70,4 @@ return function()
     end, {
         desc = 'Toggle current/default terminal',
     })
-
-    map('n', '<leader>p', require('lazy').sync, { desc = 'Update plugins' })
 end

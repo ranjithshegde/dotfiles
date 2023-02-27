@@ -24,7 +24,6 @@ return function()
     o.shiftwidth = tab
     o.softtabstop = tab
     o.cmdheight = 0
-    o.foldminlines = 3
     o.laststatus = 3
     o.scrolloff = 10
     o.updatetime = 1000

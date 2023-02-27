@@ -5,14 +5,14 @@
 local cd_files = function(...)
     local args = { ... }
     return function()
-        require('r.plugins.telescope.mappings').cdFiles(args[1], args[2])
+        require('r.plugins.telescope.settings').cdFiles(args[1], args[2])
     end
 end
 
 local cd_browser = function(...)
     local args = { ... }
     return function()
-        require('r.plugins.telescope.mappings').cdBrowser(args[1], args[2])
+        require('r.plugins.telescope.settings').cdBrowser(args[1], args[2])
     end
 end
 

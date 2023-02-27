@@ -34,9 +34,7 @@ function ts.autocmds()
 end
 
 function ts.setup()
-    local parsers = require 'nvim-treesitter.parsers'
-    local ft_to_parser = parsers.filetype_to_parsername
-    ft_to_parser.opencl = 'c'
+    vim.treesitter.language.register('c', 'opencl')
 
     local parser_config = require('nvim-treesitter.parsers').get_parser_configs()
     parser_config.org = {
@@ -192,13 +190,11 @@ local function transform_line(line)
 end
 
 function ts.statusline(opts)
-    local ts_utils = require 'nvim-treesitter.ts_utils'
-    local parsers = require 'nvim-treesitter.parsers'
-    if not parsers.has_parser() then
+    if not require('nvim-treesitter.parsers').has_parser() then
         return
     end
 
-    local current_node = ts_utils.get_node_at_cursor()
+    local current_node = vim.treesitter.get_node()
     if not current_node then
         return ''
     end

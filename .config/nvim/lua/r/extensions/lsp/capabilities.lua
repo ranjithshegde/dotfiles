@@ -95,6 +95,5 @@ return function()
     vim.keymap.set('n', '<esc>', vim.cmd.bd, { buffer = bufnr })
     vim.keymap.set('n', 'q', vim.cmd.bd, { buffer = bufnr })
     vim.api.nvim_open_win(bufnr, true, config)
-    vim.bo[bufnr].filetype = 'LspCapabilities'
-    vim.cmd.normal { args = { 'zx' }, bang = true }
+    vim.treesitter.start(bufnr, 'markdown')
 end
