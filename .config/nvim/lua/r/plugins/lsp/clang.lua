@@ -4,7 +4,7 @@ local servers = {}
 --                       Clangd  Lsp         	                      --
 ------------------------------------------------------------------------
 
-function servers.clangd(navigator)
+function servers.clangd()
     local cmd = {
         'clangd',
         '--clang-tidy',
@@ -35,7 +35,7 @@ function servers.clangd(navigator)
     end
 
     local config = {
-        capabilities = require('r.plugins.lsp.servers').capabilities(),
+        capabilities = require('r.plugins.lsp.handlers').capabilities(),
         filetypes = { 'c', 'cpp', 'opencl' },
         init_options = {
             clangdFileStatus = true,
@@ -53,17 +53,10 @@ function servers.clangd(navigator)
         },
     }
 
-    if not navigator then
-        require('clangd_extensions').setup {
-            server = config,
-            extensions = extensions,
-        }
-    else
-        return require('clangd_extensions').prepare {
-            server = config,
-            extensions = extensions,
-        }
-    end
+    return require('clangd_extensions').prepare {
+        server = config,
+        extensions = extensions,
+    }
 end
 
 function servers.clangCmp()

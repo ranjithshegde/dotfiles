@@ -40,9 +40,10 @@ function texlab.tex_clean()
     end
 end
 
-function texlab.lsp(navigator)
+function texlab.lsp()
     local config = {
-        capabilities = require('r.plugins.lsp.servers').capabilities(),
+        name = 'texlab',
+        capabilities = require('r.plugins.lsp.handlers').capabilities(),
         cmd = { 'texlab', '--log-file', './aux/texlab-log', '-vvvv' },
         before_init = function(_, _)
             if vim.fn.isdirectory 'aux' ~= 1 then
@@ -86,12 +87,7 @@ function texlab.lsp(navigator)
             },
         },
     }
-    if not navigator then
-        require('lspconfig').texlab.setup(config)
-    else
-        config.name = 'texlab'
-        return config
-    end
+    return config
 end
 
 return texlab

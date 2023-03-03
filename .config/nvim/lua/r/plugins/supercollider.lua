@@ -13,7 +13,6 @@ function supercollider.init()
             vim.wo.wrap = true
             if not require('scnvim').is_running() then
                 require('scnvim').start()
-                -- vim.api.nvim_input '<CR>'
             end
         end,
         desc = 'Load SCNvim settings and launch interpreter on filetype',

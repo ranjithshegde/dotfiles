@@ -1,9 +1,11 @@
+local setup = require('r.utils').plugin_setup
+
 return {
     {
         'L3MON4D3/LuaSnip',
         build = 'make install_jsregexp',
         dependencies = 'rafamadriz/friendly-snippets',
-        config = require('r.utils').plugin_setup('r.plugins.completion.settings', 'luasnip'),
+        config = setup('r.plugins.completion.settings', 'luasnip'),
     },
     {
         'hrsh7th/nvim-cmp',
@@ -15,9 +17,9 @@ return {
             'saadparwaiz1/cmp_luasnip',
             {
                 'windwp/nvim-autopairs',
-                config = require('r.utils').plugin_setup('r.plugins.completion.settings', 'pairs'),
+                config = setup('r.plugins.completion.settings', 'pairs'),
             },
         },
-        config = require('r.utils').plugin_setup('r.plugins.completion.settings', 'init'),
+        config = setup('r.plugins.completion.settings', 'init'),
     },
 }

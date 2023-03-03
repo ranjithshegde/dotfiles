@@ -6,6 +6,112 @@ local M = {
     dependencies = { 'nvim-tree/nvim-web-devicons', 'nvim-lua/plenary.nvim' },
 }
 
+local space = ' '
+local left_separator = ''
+local right_separator = ''
+
+local function seperator_hl(hl1, hl2)
+    local cursor_hl = vim.api.nvim_get_hl_by_name(hl1, true)
+    vim.api.nvim_set_hl(0, hl2, { fg = cursor_hl.background })
+end
+
+local function ignore_empty(args)
+    return args.match == '' or args.file == ''
+end
+
+local id = {}
+
+id.StatusLineSetup = vim.api.nvim_create_augroup('StatusLineSetup', { clear = true })
+id.Statusline = vim.api.nvim_create_augroup('Statusline', { clear = true })
+vim.api.nvim_create_autocmd('BufEnter', {
+    group = id.Statusline,
+    callback = function(args)
+        if not ignore_empty(args) then
+            vim.api.nvim_exec_autocmds('User', { pattern = 'ScStatus' })
+        end
+    end,
+    desc = 'Load ScStatus only for supercollider',
+})
+
+vim.api.nvim_create_autocmd('ColorScheme', {
+    group = id.StatusLineSetup,
+    callback = function()
+        seperator_hl('MiniStatuslineModeVisual', 'ScrollSep')
+        require('el').reset_windows()
+    end,
+})
+
+require('r.utils').register_au_id(id)
+
+local chars = {
+    '_',
+    '▁',
+    '▂',
+    '▃',
+    '▄',
+    '▅',
+    '▆',
+    '▇',
+    '█',
+}
+
+local map = {
+    ['n'] = 'NORMAL',
+    ['no'] = 'O-PENDING',
+    ['nov'] = 'O-PENDING',
+    ['noV'] = 'O-PENDING',
+    ['no\22'] = 'O-PENDING',
+    ['niI'] = 'NORMAL',
+    ['niR'] = 'NORMAL',
+    ['niV'] = 'NORMAL',
+    ['nt'] = 'NORMAL',
+    ['ntT'] = 'NORMAL',
+    ['v'] = 'VISUAL',
+    ['vs'] = 'VISUAL',
+    ['V'] = 'V-LINE',
+    ['Vs'] = 'V-LINE',
+    ['\22'] = 'V-BLOCK',
+    ['\22s'] = 'V-BLOCK',
+    ['s'] = 'SELECT',
+    ['S'] = 'S-LINE',
+    ['\19'] = 'S-BLOCK',
+    ['i'] = 'INSERT',
+    ['ic'] = 'INSERT',
+    ['ix'] = 'INSERT',
+    ['R'] = 'REPLACE',
+    ['Rc'] = 'REPLACE',
+    ['Rx'] = 'REPLACE',
+    ['Rv'] = 'V-REPLACE',
+    ['Rvc'] = 'V-REPLACE',
+    ['Rvx'] = 'V-REPLACE',
+    ['c'] = 'COMMAND',
+    ['cv'] = 'EX',
+    ['ce'] = 'EX',
+    ['r'] = 'REPLACE',
+    ['rm'] = 'MORE',
+    ['r?'] = 'CONFIRM',
+    ['!'] = 'SHELL',
+    ['t'] = 'TERMINAL',
+}
+
+local mode_to_highlight = {
+    ['VISUAL'] = 'MiniStatuslineModeVisual',
+    ['V-BLOCK'] = 'MiniStatuslineModeVisual',
+    ['V-LINE'] = 'MiniStatuslineModeVisual',
+    ['SELECT'] = 'MiniStatuslineModeVisual',
+    ['S-LINE'] = 'MiniStatuslineModeVisual',
+    ['S-BLOCK'] = 'MiniStatuslineModeVisual',
+    ['REPLACE'] = 'MiniStatuslineModeReplace',
+    ['V-REPLACE'] = 'MiniStatuslineModeReplace',
+    ['INSERT'] = 'MiniStatuslineModeInsert',
+    ['COMMAND'] = 'MiniStatuslineModeCommand',
+    ['EX'] = 'MiniStatuslineModeCommand',
+    ['MORE'] = 'MiniStatuslineModeCommand',
+    ['CONFIRM'] = 'MiniStatuslineModeCommand',
+    ['TERMINAL'] = 'MiniStatuslineModeOther',
+    ['NORMAL'] = 'MiniStatuslineModeNormal',
+}
+
 ------------------------------------------------------------------------
 --                              statusline                            --
 ------------------------------------------------------------------------
@@ -14,34 +120,6 @@ M.config = function()
     local extensions = require 'el.extensions'
     local sections = require 'el.sections'
     local subscribe = require 'el.subscribe'
-
-    -- Blank Between Components
-    local space = ' '
-    local left_separator = ''
-    local right_separator = ''
-
-    local function seperator_hl(hl1, hl2)
-        local cursor_hl = vim.api.nvim_get_hl_by_name(hl1, true)
-        vim.api.nvim_set_hl(0, hl2, { fg = cursor_hl.background })
-    end
-
-    local function ignore_empty(args)
-        return args.match == '' or args.file == ''
-    end
-
-    local id = {}
-
-    id.StatusLineSetup = vim.api.nvim_create_augroup('StatusLineSetup', { clear = true })
-    id.Statusline = vim.api.nvim_create_augroup('Statusline', { clear = true })
-    vim.api.nvim_create_autocmd('BufEnter', {
-        group = id.Statusline,
-        callback = function(args)
-            if not ignore_empty(args) then
-                vim.api.nvim_exec_autocmds('User', { pattern = 'ScStatus' })
-            end
-        end,
-        desc = 'Load ScStatus only for supercollider',
-    })
 
     --*********************************** Basics ----------------------------
     local modified = subscribe.buf_autocmd('el_mod', 'BufModifiedSet', function(_, _)
@@ -83,45 +161,6 @@ M.config = function()
 
     --*********************************** Vim Mode --------------------------
 
-    local map = {
-        ['n'] = 'NORMAL',
-        ['no'] = 'O-PENDING',
-        ['nov'] = 'O-PENDING',
-        ['noV'] = 'O-PENDING',
-        ['no\22'] = 'O-PENDING',
-        ['niI'] = 'NORMAL',
-        ['niR'] = 'NORMAL',
-        ['niV'] = 'NORMAL',
-        ['nt'] = 'NORMAL',
-        ['ntT'] = 'NORMAL',
-        ['v'] = 'VISUAL',
-        ['vs'] = 'VISUAL',
-        ['V'] = 'V-LINE',
-        ['Vs'] = 'V-LINE',
-        ['\22'] = 'V-BLOCK',
-        ['\22s'] = 'V-BLOCK',
-        ['s'] = 'SELECT',
-        ['S'] = 'S-LINE',
-        ['\19'] = 'S-BLOCK',
-        ['i'] = 'INSERT',
-        ['ic'] = 'INSERT',
-        ['ix'] = 'INSERT',
-        ['R'] = 'REPLACE',
-        ['Rc'] = 'REPLACE',
-        ['Rx'] = 'REPLACE',
-        ['Rv'] = 'V-REPLACE',
-        ['Rvc'] = 'V-REPLACE',
-        ['Rvx'] = 'V-REPLACE',
-        ['c'] = 'COMMAND',
-        ['cv'] = 'EX',
-        ['ce'] = 'EX',
-        ['r'] = 'REPLACE',
-        ['rm'] = 'MORE',
-        ['r?'] = 'CONFIRM',
-        ['!'] = 'SHELL',
-        ['t'] = 'TERMINAL',
-    }
-
     ---@return string current mode name
     local function get_mode()
         local mode_code = vim.api.nvim_get_mode().mode
@@ -130,24 +169,6 @@ M.config = function()
         end
         return map[mode_code]
     end
-
-    local mode_to_highlight = {
-        ['VISUAL'] = 'MiniStatuslineModeVisual',
-        ['V-BLOCK'] = 'MiniStatuslineModeVisual',
-        ['V-LINE'] = 'MiniStatuslineModeVisual',
-        ['SELECT'] = 'MiniStatuslineModeVisual',
-        ['S-LINE'] = 'MiniStatuslineModeVisual',
-        ['S-BLOCK'] = 'MiniStatuslineModeVisual',
-        ['REPLACE'] = 'MiniStatuslineModeReplace',
-        ['V-REPLACE'] = 'MiniStatuslineModeReplace',
-        ['INSERT'] = 'MiniStatuslineModeInsert',
-        ['COMMAND'] = 'MiniStatuslineModeCommand',
-        ['EX'] = 'MiniStatuslineModeCommand',
-        ['MORE'] = 'MiniStatuslineModeCommand',
-        ['CONFIRM'] = 'MiniStatuslineModeCommand',
-        ['TERMINAL'] = 'MiniStatuslineModeOther',
-        ['NORMAL'] = 'MiniStatuslineModeNormal',
-    }
 
     local mode = subscribe.buf_autocmd('el_mode', 'ModeChanged', function()
         local current_mode = get_mode()
@@ -163,17 +184,6 @@ M.config = function()
     local scroll = subscribe.buf_autocmd('el_scroll', 'CursorMoved,CursorMovedI', function(_, _)
         local current_line = vim.api.nvim_win_get_cursor(0)[1]
         local total_lines = vim.fn.line '$'
-        local chars = {
-            '_',
-            '▁',
-            '▂',
-            '▃',
-            '▄',
-            '▅',
-            '▆',
-            '▇',
-            '█',
-        }
         local index = 1
 
         if current_line == 1 then
@@ -286,7 +296,6 @@ M.config = function()
     end)
 
     --*********************************** Status config ---------------------
-    -- local function execute()
     require('el').reset_windows()
     require('r.extensions.diagnostics.format').sethl(
         'DiagnosticError',
@@ -294,15 +303,6 @@ M.config = function()
         'DiagnosticHint',
         'DiagnosticInfo'
     )
-
-    vim.api.nvim_create_autocmd('ColorScheme', {
-        group = id.StatusLineSetup,
-        callback = function()
-            seperator_hl('MiniStatuslineModeVisual', 'ScrollSep')
-            require('el').reset_windows()
-        end,
-    })
-    -- require('r.utils').register_au_id(id)
 
     require('el').setup {
         generator = function(_, _)
@@ -332,9 +332,6 @@ M.config = function()
             }
         end,
     }
-    -- end
-
-    require('r.utils').register_au_id(id)
 end
 
 return M

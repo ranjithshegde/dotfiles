@@ -20,13 +20,13 @@ return {
     {
         'neovim/nvim-lspconfig',
         ft = require('r.utils.tables').lspfiles,
-        dependencies = 'jose-elias-alvarez/null-ls.nvim',
-        init = function()
-            require('r.plugins.lsp.servers').init()
-        end,
-        config = function()
-            require('r.plugins.lsp.servers').servers()
-            require('r.plugins.lsp.servers').lintFormat()
-        end,
+        dependencies = {
+            {
+                'jose-elias-alvarez/null-ls.nvim',
+                config = setup 'r.plugins.lsp.linters_formatters',
+            },
+        },
+        init = setup('r.plugins.lsp.handlers', 'init'),
+        config = setup 'r.plugins.lsp.servers',
     },
 }
