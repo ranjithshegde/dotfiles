@@ -24,11 +24,13 @@ return function()
     o.shiftwidth = tab
     o.softtabstop = tab
     o.cmdheight = 0
-    o.laststatus = 3
     o.scrolloff = 10
-    o.updatetime = 1000
-    o.timeoutlen = 100
+    o.laststatus = 3
+    o.foldlevel = 99
     o.conceallevel = 1
+    o.timeoutlen = 100
+    o.updatetime = 1000
+    o.foldlevelstart = 99
     o.mouse = 'n'
     o.foldcolumn = 'auto'
     o.jumpoptions = 'view'

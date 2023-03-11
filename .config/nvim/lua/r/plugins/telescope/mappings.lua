@@ -169,6 +169,5 @@ return require('which-key').register {
                 'Neovim config files',
             },
         },
-        a = { vim.cmd.OverseerQuickAction, 'Action list' },
     },
 }

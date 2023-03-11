@@ -25,7 +25,12 @@ local function open_term(split)
     end
 end
 
-local function toggle_term()
+local harpoon = {
+    'ThePrimeagen/harpoon',
+}
+
+-- ************** Load harpoon maps ------------------------------------
+function harpoon.init()
     local wk = require 'which-key'
     local map = vim.keymap.set
     wk.register {
@@ -54,41 +59,6 @@ local function toggle_term()
     map('n', '<leader><Space>', function()
         require('harpoon.mark').add_file()
     end, { desc = 'Harpoon current file' })
-end
-
-local harpoon = {
-    'ThePrimeagen/harpoon',
-}
-
--- ************** Load harpoon maps ------------------------------------
-function harpoon.init()
-    local id = {}
-    id.Harpoon = vim.api.nvim_create_augroup('Harpoon', { clear = true })
-
-    vim.api.nvim_create_autocmd('FileType', {
-        pattern = 'harpoon',
-        group = id.Harpoon,
-        callback = function()
-            vim.keymap.set('n', '<C-v>', function()
-                local curline = vim.api.nvim_get_current_line()
-                local working_directory = vim.fn.getcwd() .. '/'
-                vim.cmd 'vs'
-                vim.cmd('e ' .. working_directory .. curline)
-            end, { noremap = true, silent = true })
-
-            vim.keymap.set('n', '<C-t>', function()
-                local curline = vim.api.nvim_get_current_line()
-                local working_directory = vim.fn.getcwd() .. '/'
-                vim.cmd 'tabnew'
-                vim.cmd('e ' .. working_directory .. curline)
-            end, { noremap = true, silent = true })
-        end,
-        desc = 'Make harpoon open in splits',
-
-        toggle_term(),
-    })
-
-    require('r.utils').register_au_id(id)
 end
 
 return harpoon

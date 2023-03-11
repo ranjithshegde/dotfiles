@@ -151,6 +151,7 @@ aucmd('DiagnosticChanged', {
     end,
     desc = 'Send diagnostics to loclist on new errors',
 })
+
 ------------------------------------------------------------------------
 --                              Terminal management                   --
 ------------------------------------------------------------------------

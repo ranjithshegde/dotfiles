@@ -52,10 +52,6 @@ function lspmap.lsp(client, bufnr)
             },
         },
     }, { buffer = bufnr })
-
-    map('n', '<F1>', function()
-        require('overseer').window.toggle { enter = false }
-    end, { desc = 'Open Task panel' })
 end
 
 -- ******************************** Diagnostics------------------------
@@ -109,6 +105,15 @@ function lspmap.navic(bufnr)
             r = { require('navigator.reference').side_panel, 'Reference list' },
         },
     }, { buffer = bufnr })
+end
+
+function lspmap.tex(bufnr)
+    map('n', '<F4>', function()
+        require('r.plugins.lsp.texlab').tex_clean()
+    end, { buffer = true, desc = 'Clean tex files' })
+
+    map('n', '<F5>', vim.cmd.TexlabBuild, { buffer = bufnr, desc = 'Compile tex document' })
+    map('n', '<F6>', vim.cmd.TexlabForward, { buffer = bufnr, desc = 'Launch zathura' })
 end
 
 return lspmap

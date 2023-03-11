@@ -1,4 +1,5 @@
 local ts = {}
+local aucmd = vim.api.nvim_create_autocmd
 ------------------------------------------------------------------------
 --                             Treesitter Config                      --
 ------------------------------------------------------------------------
@@ -6,7 +7,7 @@ local ts = {}
 function ts.autocmds()
     local id = {}
     id.Treesitter = vim.api.nvim_create_augroup('Treesitter', { clear = true })
-    vim.api.nvim_create_autocmd('BufReadPost', {
+    aucmd('BufReadPost', {
         group = id.Treesitter,
         callback = function()
             require('r.plugins.treesitter.mappings').common()
@@ -15,7 +16,7 @@ function ts.autocmds()
         desc = 'Load mappings treesiiter after reading buffer',
     })
 
-    vim.api.nvim_create_autocmd('FileType', {
+    aucmd('FileType', {
         group = id.Treesitter,
         callback = function(args)
             if vim.tbl_contains(require('r.utils.tables').ignoreFiles, args.match) then
@@ -28,6 +29,15 @@ function ts.autocmds()
             end
         end,
         desc = 'Loading treesitter navigation mappings',
+    })
+
+    aucmd('FileType', {
+        group = id.Treesitter,
+        pattern = { 'c', 'cpp', 'hpp' },
+        callback = function(args)
+            require('r.plugins.treesitter.mappings').cpp(args.buf)
+        end,
+        desc = 'Treesitter C++ refactoring mappings',
     })
 
     require('r.utils').register_au_id(id)

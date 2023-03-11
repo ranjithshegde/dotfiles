@@ -1,4 +1,2 @@
-vim.g.ccls_levels = 5
 vim.bo.commentstring = '//%s'
-
-require('r.mappings.clang').clang()
+require('r.mappings.language').cpp(vim.api.nvim_get_current_buf())

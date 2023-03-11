@@ -102,6 +102,18 @@ function treesitter.navigate_tex(buf)
     }, { buffer = buf })
 end
 
+function treesitter.cpp(buf)
+    require('which-key').register({
+        [';r'] = {
+            name = 'Refactor Cpp',
+            f = { vim.cmd.TSCppDefineClassFunc, 'function definition from declaration', mode = { 'n', 'v' } },
+            c = { vim.cmd.TSCppMakeConcreteClass, 'Convert virtual class to concrete class', mode = { 'n', 'v' } },
+            C = { vim.cmd.TSCppRuleOf3, 'Add Constructor, destructor and copy', mode = { 'n', 'v' } },
+            m = { vim.cmd.TSCppRuleOf5, 'Add move Constructor', mode = { 'n', 'v' } },
+        },
+    }, { buffer = buf })
+end
+
 function treesitter.navigate(buf)
     require('which-key').register({
         -- Motions
@@ -150,7 +162,7 @@ function treesitter.common()
         [';'] = {
             name = 'Syntax tree functions',
             K = { vim.show_pos, 'Show treesitter node' },
-            P = { vim.treesitter.show_tree, 'Toggle playground' },
+            P = { vim.treesitter.inspect_tree, 'Toggle playground' },
             --Refactor
             d = 'Jump to node definition',
             i = { 'gg=G<C-o>zz', 'indent' },

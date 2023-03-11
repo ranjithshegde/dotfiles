@@ -19,10 +19,8 @@ end
 local function fallback_selector(bufnr)
     local function handleFallbackException(err, providerName)
         if type(err) == 'string' and err:match 'UfoFallbackException' then
-            vim.pretty_print(providerName)
             return require('ufo').getFolds(bufnr, providerName)
         else
-            vim.pretty_print(err)
             return require('promise').reject(err)
         end
     end
@@ -72,9 +70,6 @@ local ufo = {
 }
 
 function ufo.config()
-    vim.o.foldlevel = 99
-    vim.o.foldlevelstart = 99
-
     require('ufo').setup {
         open_fold_hl_timeout = 1,
 

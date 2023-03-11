@@ -6,7 +6,4 @@ end
 vim.b.repl = 'rlwrap luajit'
 vim.b.make = 'luajit'
 
-vim.keymap.set('n', '<F6>', function()
-    vim.cmd.write()
-    vim.cmd.source '%'
-end, { buffer = true, desc = 'Evaluate current file' })
+require('r.utils').write_and_source(0)

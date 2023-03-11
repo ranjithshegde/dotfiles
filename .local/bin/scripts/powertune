@@ -1,0 +1,10 @@
+#!/bin/sh
+
+sleep 5
+/usr/bin/powertop --auto-tune
+wait
+/usr/bin/echo 'on' >'/sys/bus/usb/devices/1-8/power/control'
+
+if [ "$?" -ne 0 ]; then
+    /usr/bin/echo 'on' >'/sys/bus/usb/devices/2-8/power/control'
+fi

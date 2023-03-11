@@ -4,21 +4,6 @@ local function isFile(file)
     return vim.loop.fs_stat(file) ~= nil
 end
 
-local function sequencer(name_1, params, name_2)
-    require('overseer').run_template({ name = name_1, params = params, autostart = false }, function(task)
-        if task then
-            task:add_component {
-                'dependencies',
-                task_names = {
-                    name_2,
-                },
-                sequential = true,
-            }
-            task:start()
-        end
-    end)
-end
-
 ------------------------------------------------------------------------
 --                                Env Setup	                          --
 ------------------------------------------------------------------------
@@ -33,7 +18,7 @@ function clang.set_cpptype()
         vim.b.unreal_dir = dirname
         vim.b.cpp_type = 'Unreal'
     elseif isFile 'CMakeLists.txt' then
-        require('r.mappings.clang').cmake()
+        require('r.plugins.tasks.mappings').cmake()
         vim.bo.makeprg = 'make'
         vim.b.makeFile = 'CMakeLists.txt'
         vim.b.debugBin = 'build/' .. dirname
@@ -42,7 +27,7 @@ function clang.set_cpptype()
         vim.b.makeFile = 'Makefile'
         vim.bo.makeprg = 'make'
         if isFile(dirname .. '.qbs') or isFile 'config.make' or isFile 'addons.make' then
-            require('r.mappings.clang').oF()
+            require('r.plugins.tasks.mappings').oF()
             vim.b.makeBin = 'bin/' .. dirname
             vim.b.debugBin = 'bin/' .. dirname .. '_debug'
             vim.b.wasm = 'bin/' .. dirname .. '.html'
@@ -52,17 +37,17 @@ function clang.set_cpptype()
         end
     elseif isFile 'platformio.ini' then
         vim.bo.makeprg = 'pio run'
-        require('r.mappings.clang').micro()
+        require('r.plugins.tasks.mappings').micro()
         vim.b.makeFile = 'platformio.ini'
         vim.b.cpp_type = 'Pio'
     elseif isFile 'build.gradle' then
-        require('r.mappings.clang').makeGradle()
+        require('r.plugins.tasks.mappings').makeGradle()
         vim.b.makeFile = 'build.gradle'
         vim.bo.makeprg = './gradlew'
         vim.b.cpp_type = 'CDroid'
     else
         vim.bo.makeprg = vim.g.is_win32 and 'clang++' or 'g++'
-        require('r.mappings.clang').ctests()
+        require('r.plugins.tasks.mappings').ctests()
         vim.b.debugBin = vim.fn.expand '%<'
         vim.b.cpp_type = 'Single'
     end
@@ -70,16 +55,16 @@ end
 
 function clang.set_ctype()
     if isFile 'Makefile.pdlibbuilder' then
-        require('r.mappings.clang').pdc()
+        require('r.plugins.tasks.mappings').pdc()
         vim.b.c_type = 'PD'
     elseif isFile 'Makefile' then
-        require('r.mappings.clang').makeC()
+        require('r.plugins.tasks.mappings').makeC()
         vim.bo.makeprg = 'make'
         vim.b.makeFile = 'Makefile'
         vim.b.c_type = 'Make'
     else
         vim.bo.makeprg = vim.g.is_win32 and 'clang' or 'gcc'
-        require('r.mappings.clang').ctests()
+        require('r.plugins.tasks.mappings').ctests()
         vim.b.debugBin = vim.fn.expand '%<'
         vim.b.c_type = 'Single'
     end
@@ -106,52 +91,6 @@ function clang.unRef(cmd)
     require('r.utils').open_in_browser(url)
 end
 
-function clang.pdBuild()
-    local bin = vim.fn.fnamemodify(vim.loop.cwd(), ':t') .. '.pd_linux'
-    local dest = '~/.local/lib/pd/extra/'
-    vim.cmd.OverseerRunCmd { args = { 'cp', bin, dest } }
-end
-
-function clang.with_flags()
-    vim.ui.input({
-        prompt = 'Enter compiler flags: ',
-    }, function(input)
-        require('overseer').run_template { name = 'Compile', params = { flags = vim.split(input, ' ') } }
-    end)
-end
-
-function clang.renderOffload(cmd)
-    vim.ui.select(
-        { 'Integrated graphics', 'Dedicated (Nvidia) Graphics' },
-        { prompt = 'Run the binary on: ' },
-        function(choice)
-            local dGPU = false
-            if choice ~= 'Integrated graphics' then
-                dGPU = true
-            end
-            if cmd then
-                sequencer('oF Run', { dGPU = dGPU }, 'oF Build')
-            else
-                require('overseer').run_template { name = [[oF Run]], params = { dGPU = dGPU } }
-            end
-        end
-    )
-end
-
-------------------------------------------------------------------------
---                                CMake 	                          --
-------------------------------------------------------------------------
-
--- Clean and rebuild Release
-function clang.cmake_clean_gen()
-    sequencer('Cmake Configure', { type = 'Release' }, 'Cmake clean')
-end
-
--- Clean and rebuild debug
-function clang.cmake_clean_gen_debug()
-    sequencer('Cmake Configure', { type = 'Debug' }, 'Cmake clean')
-end
-
 -----------------------------------------------------------------------
 --                    MicroControllers  	                          --
 ------------------------------------------------------------------------
@@ -160,11 +99,6 @@ end
 function clang.monitor()
     local cmd = 'pio device monitor'
     require('r.utils.extensions').toggleTerm(cmd, 'pio')
-end
-
--- Clean directory
-function clang.pio_clean()
-    sequencer('pio compiledb', {}, 'pio clean')
 end
 
 function clang.teensypins()

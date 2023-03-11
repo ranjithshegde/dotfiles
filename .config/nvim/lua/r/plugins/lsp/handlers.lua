@@ -41,6 +41,7 @@ function handlers.init()
         end,
         desc = 'Clear AUGroups when LSP detaches',
     })
+
     require('r.utils').register_au_id(id)
 end
 
@@ -68,7 +69,13 @@ function handlers.attach(client, bufnr)
 
     if client.name == 'ccls' then
         vim.bo[bufnr].tagfunc = ''
+        vim.g.ccls_levels = 5
+        require('r.plugins.lsp.clang.mappings').ccls(bufnr)
         return
+    elseif client.name == 'texlab' then
+        require('r.plugins.lsp.mappings').tex(bufnr)
+    elseif client.name == 'clangd' then
+        require('r.plugins.lsp.clang.mappings').clangd(bufnr)
     end
 
     require('r.extensions.diagnostics').attach(

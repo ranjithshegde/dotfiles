@@ -3,4 +3,5 @@
 modprobe bluetooth
 modprobe btusb
 systemctl start bluetooth
+systemctl start blueman-mechanism
 rfkill unblock all

@@ -1,6 +1,7 @@
 #!/bin/sh
 
 rfkill block bluetooth
+systemctl start blueman-mechanism
 systemctl stop bluetooth
 rmmod btusb
 rmmod btrtl
