@@ -91,7 +91,7 @@ local function write_file(path, data)
     local stat = assert(uv.fs_fstat(fd))
     local err = assert(uv.fs_write(fd, data))
     if not stat and err then
-        vim.pretty_print(stat, err)
+        vim.print(stat, err)
     end
     assert(uv.fs_close(fd))
 end

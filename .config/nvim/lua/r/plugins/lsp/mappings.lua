@@ -21,7 +21,6 @@ function lspmap.lsp(client, bufnr)
     end, { desc = 'Hover or peek-fold', buffer = bufnr })
 
     wk.register({
-        ['<F7>'] = { require('r.plugins.debug.settings').init, 'Initialize debugger adapter' },
         [','] = {
             name = 'Lsp functions',
             s = { vim.lsp.buf.signature_help, 'Show signature' },

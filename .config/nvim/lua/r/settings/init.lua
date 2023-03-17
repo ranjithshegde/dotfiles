@@ -40,7 +40,6 @@ return function()
     o.grepprg = 'rg --vimgrep --smart-case --hidden'
     o.spellfile = vim.fn.stdpath 'config' .. '/spell/en.utf-8.add'
 
-    opt.completeopt = { 'menu', 'menuone', 'noinsert', 'noselect' }
     opt.guifont = {
         'FiraCode Nerd Font:style=Medium:h12',
         'Noto Sans Devanagari:style=Medium:h10',

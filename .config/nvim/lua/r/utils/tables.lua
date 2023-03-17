@@ -33,7 +33,18 @@ tables.lspfiles = {
     'rust',
     'toml',
     'yaml',
-    'java',
+}
+
+tables.debugfiles = {
+    'c',
+    'cs',
+    'cpp',
+    'glsl',
+    'objc',
+    'opencl',
+    'javascript',
+    'typescript',
+    'python',
 }
 
 tables.projectTypes = {

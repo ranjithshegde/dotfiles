@@ -66,7 +66,7 @@ function noice.config()
 end
 
 function noice.init()
-    vim.pretty_print = function(...)
+    vim.print = function(...)
         local objects = {}
         for i = 1, select('#', ...) do
             local v = select(i, ...)

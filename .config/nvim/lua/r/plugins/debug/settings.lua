@@ -1,5 +1,3 @@
-local auid = {}
-
 local function makeSidebar(element, width)
     local widgets = require 'dap.ui.widgets'
     return widgets.sidebar(widgets[element], { width = width })
@@ -21,14 +19,34 @@ end
 local Debugger = {}
 
 function Debugger.init()
-    signs()
-    require 'r.plugins.debug.mappings'()
-    require('dap.ext.vscode').load_launchjs 'launch.json'
-    vim.notify 'Loaded nvim-dap. Bound keymaps'
+    local id = {}
+    id.dap = vim.api.nvim_create_augroup('dap', { clear = true })
+    vim.api.nvim_create_autocmd('FileType', {
+        group = id.dap,
+        pattern = 'dap-repl',
+        callback = function()
+            require('dap.ext.autocompl').attach()
+        end,
+        desc = 'Enable autocompletion in REPL windows',
+    })
+    vim.api.nvim_create_autocmd('FileType', {
+        group = id.dap,
+        pattern = require('r.utils.tables').debugfiles,
+        callback = function(args)
+            if not package.loaded.dap then
+                require('r.utils').lazy_on_key('n', '<leader>d', 'Debuging', require, 'r.plugins.debug.mappings')
+                vim.api.nvim_del_autocmd(args.id)
+            end
+        end,
+    })
+    require('r.utils').register_au_id(id)
 end
 
 function Debugger.setup()
     local dap = require 'dap'
+    signs()
+
+    require('dap.ext.vscode').load_launchjs 'launch.json'
 
     Debugger.frames = makeSidebar('frames', 70)
     Debugger.scopes = makeSidebar('scopes', 60)
@@ -58,17 +76,6 @@ function Debugger.setup()
     dap.listeners.before.event_exited['dapui_config'] = function()
         require('dapui').close()
     end
-
-    auid.dap_repl = vim.api.nvim_create_augroup('dap_repl', { clear = true })
-    vim.api.nvim_create_autocmd('FileType', {
-        group = auid.dap_repl,
-        pattern = 'dap-repl',
-        callback = function()
-            require('dap.ext.autocompl').attach()
-        end,
-        desc = 'Enable autocompletion in REPL windows',
-    })
-    require('r.utils').register_au_id(auid)
 end
 
 return Debugger

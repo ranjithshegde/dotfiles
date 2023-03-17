@@ -400,9 +400,9 @@ end
 
 function Diagnostics.dump(client)
     if not client then
-        vim.pretty_print(current_diagnostics)
+        vim.print(current_diagnostics)
     end
-    vim.pretty_print(current_diagnostics[client])
+    vim.print(current_diagnostics[client])
 end
 
 return Diagnostics

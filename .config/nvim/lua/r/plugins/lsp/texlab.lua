@@ -32,7 +32,7 @@ function texlab.tex_clean()
                 error(tostring(err))
             end
             if result then
-                vim.pretty_print(result)
+                vim.print(result)
             end
         end, bufnr)
     else

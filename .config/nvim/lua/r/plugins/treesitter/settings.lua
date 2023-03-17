@@ -141,7 +141,7 @@ function ts.refactoring()
                 'std::cout << "%s" << std::endl;',
             },
             lua = {
-                'vim.pretty_print("%s")',
+                'vim.print("%s")',
             },
         },
         print_var_statements = {},
@@ -200,7 +200,7 @@ local function transform_line(line)
 end
 
 function ts.statusline(opts)
-    if not require('nvim-treesitter.parsers').has_parser() then
+    if not vim.treesitter.language.get_lang(vim.bo.filetype) then
         return
     end
 

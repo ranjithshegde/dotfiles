@@ -105,6 +105,7 @@ function telescope.cdFiles(prompt, cwd)
 end
 
 function telescope.telescope()
+    require 'r.plugins.telescope.mappings'
     local layout_actions = require 'telescope.actions.layout'
     require('telescope').setup {
         pickers = {

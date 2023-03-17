@@ -6,12 +6,9 @@ function orgmaps.wiki()
     require('which-key').register {
         ['<leader>w'] = {
             name = 'orgWiki',
-            w = {
-                function()
-                    require('orgWiki.wiki').openIndex()
-                end,
-                'Open Index',
-            },
+            w = { require('orgWiki.wiki').openIndex, 'Open Index' },
+            d = { require('orgWiki.wiki').deleteLink, 'Delete link under cursor' },
+            i = { require('orgWiki.diary').diaryIndexOpen, 'Open Diary index' },
             n = {
                 function()
                     require('orgWiki.wiki').nextWiki 'tabnew'
@@ -30,49 +27,18 @@ function orgmaps.wiki()
                 end,
                 'Open Index in a new tab',
             },
-            d = {
-                function()
-                    require('orgWiki.wiki').deleteLink()
-                end,
-                'Delete link under cursor',
-            },
-            i = {
-                function()
-                    require('orgWiki.diary').diaryIndexOpen()
-                end,
-                'Open Diary index',
-            },
+
             ['<leader>'] = {
                 name = 'Diary entries',
-                w = {
-                    function()
-                        require('orgWiki.diary').diaryTodayOpen()
-                    end,
-                    'Today',
-                },
+                w = { require('orgWiki.diary').diaryTodayOpen, 'Today' },
+                i = { require('orgWiki.diary').diaryGenerateIndex, 'Reindex' },
+                y = { require('orgWiki.diary').diaryYesterdayOpen, 'Yesterday' },
+                m = { require('orgWiki.diary').diaryTomorrowOpen, 'Tomorrow' },
                 t = {
                     function()
                         require('orgWiki.diary').diaryTodayOpen 'tab drop'
                     end,
                     'Today in a new tab',
-                },
-                i = {
-                    function()
-                        require('orgWiki.diary').diaryGenerateIndex()
-                    end,
-                    'Reindex',
-                },
-                y = {
-                    function()
-                        require('orgWiki.diary').diaryYesterdayOpen()
-                    end,
-                    'Yesterday',
-                },
-                m = {
-                    function()
-                        require('orgWiki.diary').diaryTomorrowOpen()
-                    end,
-                    'Tomorrow',
                 },
             },
         },
