@@ -18,13 +18,6 @@ return {
         dev = true,
     },
 
-    -- Granular semantic substitution
-    {
-        'tpope/vim-abolish',
-        keys = 'cr',
-        cmd = { 'Subverse', 'Abolish' },
-    },
-
     -- Comment with TreeSitter
     {
         'numToStr/Comment.nvim',

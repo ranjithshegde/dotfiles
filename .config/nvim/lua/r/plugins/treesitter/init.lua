@@ -15,4 +15,13 @@ return {
         config = setup('r.plugins.treesitter.settings', 'refactoring'),
     },
     { 'Badhi/nvim-treesitter-cpp-tools', ft = { 'c', 'cpp', 'opencl' } },
+    {
+        'ckolkey/ts-node-action',
+        config = setup('r.plugins.treesitter.settings', 'node_action'),
+        init = function()
+            vim.keymap.set({ 'n' }, ';a', function()
+                require('ts-node-action').node_action()
+            end, { desc = 'Trigger Node Action' })
+        end,
+    },
 }

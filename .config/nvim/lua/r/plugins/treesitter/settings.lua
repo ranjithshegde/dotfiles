@@ -151,6 +151,20 @@ function ts.refactoring()
     end
 end
 
+function ts.node_action()
+    require('ts-node-action').setup {
+        cpp = {
+            ['field_identifier'] = require('ts-node-action.actions').cycle_case(),
+            ['type_identifier'] = require('ts-node-action.actions').cycle_case(),
+        },
+        supercollider = {
+            ['method_call'] = require('ts-node-action.actions').toggle_multiline(),
+            ['parameter_call_list'] = require('ts-node-action.actions').toggle_multiline(),
+            ['parameter_list'] = require('ts-node-action.actions').toggle_multiline(),
+        },
+    }
+end
+
 ------------------------------------------------------------------------
 --                             Treesitter Statusline                  --
 ------------------------------------------------------------------------

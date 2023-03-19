@@ -58,3 +58,4 @@ image/jxl=nsxiv.desktop
 image/avif=nsxiv.desktop
 image/heif=nsxiv.desktop
 application/rtf=libreoffice-writer.desktop
+x-scheme-handler/sidequest=SideQuest.desktop
