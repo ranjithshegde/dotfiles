@@ -121,7 +121,13 @@ end
 
 function completion.pairs()
     local npairs = require 'nvim-autopairs'
-    npairs.setup { check_ts = true }
+    npairs.setup {
+        check_ts = true,
+        fast_wrap = {
+            map = '<C-e>',
+        },
+        enable_check_bracket_line = false,
+    }
     local ts_conds = require 'nvim-autopairs.ts-conds'
 
     local Rule = require 'nvim-autopairs.rule'

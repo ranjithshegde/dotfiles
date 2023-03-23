@@ -14,7 +14,11 @@ return {
         'ThePrimeagen/refactoring.nvim',
         config = setup('r.plugins.treesitter.settings', 'refactoring'),
     },
-    { 'Badhi/nvim-treesitter-cpp-tools', ft = { 'c', 'cpp', 'opencl' } },
+    {
+        'Badhi/nvim-treesitter-cpp-tools',
+        ft = { 'c', 'cpp', 'opencl' },
+        config = setup('r.plugins.treesitter.settings', 'cpp_tools'),
+    },
     {
         'ckolkey/ts-node-action',
         config = setup('r.plugins.treesitter.settings', 'node_action'),

@@ -70,6 +70,7 @@ function lspmap.navic(bufnr)
             i = { vim.lsp.buf.implementation, 'implementation' },
             d = { require('navigator.definition').definition, 'definition' },
             p = { require('navigator.definition').definition_preview, 'definition_preview' },
+            P = { require('navigator.definition').type_definition_preview, 'Type definition_preview' },
             ca = { require('navigator.codelens').run_action, 'run code lens action' },
             l = {
                 name = 'Diagnostic action',

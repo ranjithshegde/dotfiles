@@ -12,6 +12,7 @@ local navigator = {
             underline = false,
             update_in_insert = false,
         },
+        disply_diagnostic_qf = false,
     },
 }
 

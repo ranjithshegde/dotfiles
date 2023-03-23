@@ -103,18 +103,20 @@ function ts.setup()
             enable = true,
             extended_mode = true,
         },
-        nt_cpp_tools = {
-            enable = true,
-            preview = {
-                quit = 'Q',
-                accept = '<leader><cr>',
-            },
-            header_extension = 'h',
-            source_extension = 'cxx',
-            custom_define_class_function_commands = {
-                TSCppImplWrite = {
-                    output_handle = pcall(require, '("nvim-treesitter.nt-cpp-tools.output_handlers").get_add_to_cpp()'),
-                },
+    }
+end
+
+function ts.cpp_tools()
+    require('nt-cpp-tools').setup {
+        preview = {
+            quit = 'Q',
+            accept = '<leader><cr>',
+        },
+        header_extension = 'h',
+        source_extension = 'cxx',
+        custom_define_class_function_commands = {
+            TSCppImplWrite = {
+                output_handle = require('nt-cpp-tools.output_handlers').get_add_to_cpp(),
             },
         },
     }
