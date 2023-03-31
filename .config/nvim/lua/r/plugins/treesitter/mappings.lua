@@ -4,6 +4,8 @@
 
 local treesitter = {}
 
+local wk = require 'which-key'
+
 local to = { swap = {} }
 
 function to.repeat_last(query)
@@ -57,7 +59,7 @@ function refac.debug(func, args)
 end
 
 function treesitter.navigate_tex(buf)
-    require('which-key').register({
+    wk.register({
         -- Motions
         [']'] = {
             n = { to.move('goto_next_start', '@block.outer'), 'Move to next outer TeX environment start' },
@@ -103,7 +105,7 @@ function treesitter.navigate_tex(buf)
 end
 
 function treesitter.cpp(buf)
-    require('which-key').register({
+    wk.register({
         [';r'] = {
             name = 'Refactor Cpp',
             f = { vim.cmd.TSCppDefineClassFunc, 'function definition from declaration', mode = { 'n', 'v' } },
@@ -115,7 +117,7 @@ function treesitter.cpp(buf)
 end
 
 function treesitter.navigate(buf)
-    require('which-key').register({
+    wk.register({
         -- Motions
         [']'] = {
             n = { to.move('goto_next_start', '@function.outer'), 'Move to next outer function start' },
@@ -158,7 +160,7 @@ function treesitter.navigate(buf)
 end
 
 function treesitter.common()
-    require('which-key').register {
+    wk.register {
         [';'] = {
             name = 'Syntax tree functions',
             K = { vim.show_pos, 'Show treesitter node' },
@@ -256,7 +258,7 @@ function treesitter.common()
         },
     }
 
-    require('which-key').register({
+    wk.register({
         [';f'] = {
             name = 'Refactoring tools',
             i = {
@@ -288,7 +290,7 @@ function treesitter.common()
         },
     }, { mode = 'v' })
 
-    require('which-key').register({
+    wk.register({
         a = {
             name = 'around',
             f = { to.select('@function.outer', 'x'), 'function' },
@@ -314,7 +316,7 @@ function treesitter.common()
         },
     }, { mode = 'x' })
 
-    require('which-key').register({
+    wk.register({
         a = {
             name = 'around',
             f = { to.select('@function.outer', 'o'), 'function' },
@@ -340,7 +342,7 @@ function treesitter.common()
         },
     }, { mode = 'o' })
 
-    require('which-key').register({
+    wk.register({
         ['<C-;>'] = { to.repeat_last 'repeat_last_move_next', 'Repeat last move' },
         ['<C-,>'] = { to.repeat_last 'repeat_last_move_previous', 'Repeat last move' },
     }, { mode = { 'n', 'x', 'o' } })

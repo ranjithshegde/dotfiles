@@ -45,6 +45,7 @@ end
 
 function ts.setup()
     vim.treesitter.language.register('c', 'opencl')
+    vim.treesitter.language.register('bash', 'zsh')
 
     local parser_config = require('nvim-treesitter.parsers').get_parser_configs()
     parser_config.org = {
@@ -186,7 +187,7 @@ local function get_line_for_node(node, type_patterns, transform_fn, bufnr)
     if not is_valid then
         return ''
     end
-    local line = transform_fn(vim.trim(vim.treesitter.query.get_node_text(node, bufnr) or ''))
+    local line = transform_fn(vim.trim(vim.treesitter.get_node_text(node, bufnr) or ''))
 
     for index, value in pairs(require('r.utils.tables').tsNodeSymbols) do
         index = index:gsub('%[', ''):gsub('%]', '')

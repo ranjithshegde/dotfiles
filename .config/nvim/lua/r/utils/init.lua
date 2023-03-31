@@ -230,8 +230,8 @@ end
 ---@param hl1 string
 ---@param hl2 string
 function utils.switch_highlight(hl1, hl2)
-    local cursor_hl = vim.api.nvim_get_hl_by_name(hl1, true)
-    vim.api.nvim_set_hl(0, hl2, { fg = cursor_hl.background })
+    local hl = vim.api.nvim_get_hl_by_name(hl1, true)
+    vim.api.nvim_set_hl(0, hl2, { fg = hl.background })
 end
 
 return utils

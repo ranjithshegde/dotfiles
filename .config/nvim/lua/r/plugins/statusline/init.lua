@@ -57,7 +57,7 @@ statusline.config = function()
         end
     end)
 
-    local file_name = subscribe.buf_autocmd('el_file_name', 'BufRead,BufWritePost', function(_, buffer)
+    local file_name = subscribe.buf_autocmd('el_file_name', { 'BufRead', 'BufWritePost' }, function(_, buffer)
         return vim.fn.fnamemodify(buffer.name, ':t')
     end)
 
@@ -101,7 +101,7 @@ statusline.config = function()
                 sections.collapse_builtin {
                     subscribe.user_autocmd('el_scnvim', 'ScStatus', components.sc_status),
                     space,
-                    subscribe.buf_autocmd('el_gps', 'CursorMoved,CursorMovedI,BufEnter', components.gps),
+                    subscribe.buf_autocmd('el_gps', { 'CursorMoved', 'CursorMovedI', 'BufEnter' }, components.gps),
                 },
                 sections.split,
 
@@ -113,7 +113,7 @@ statusline.config = function()
                     space,
                     sections.highlight(
                         'FileIcon',
-                        subscribe.buf_autocmd('el_file_icon', 'BufRead,BufWritePost', components.file_icon)
+                        subscribe.buf_autocmd('el_file_icon', { 'BufRead', 'BufWritePost' }, components.file_icon)
                     ),
                     sections.highlight('StatusLine', file_name),
                     space,
@@ -123,13 +123,13 @@ statusline.config = function()
                 space,
 
                 --*********************************** Cursor position -------------------
-                subscribe.buf_autocmd('el_cursor', 'CursorMoved,CursorMovedI', components.cursor),
+                subscribe.buf_autocmd('el_cursor', { 'CursorMoved', 'CursorMovedI' }, components.cursor),
                 space,
 
                 --*********************************** Scroll ------------------------------
                 sections.highlight(
                     'DiagnosticWarn',
-                    subscribe.buf_autocmd('el_scroll', 'CursorMoved,CursorMovedI', components.scroll)
+                    subscribe.buf_autocmd('el_scroll', { 'CursorMoved', 'CursorMovedI' }, components.scroll)
                 ),
                 space,
             }

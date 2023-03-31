@@ -87,12 +87,4 @@ return function()
         o.shellpipe = '2>&1 | Out-File -Encoding UTF8 %s; exit $LastExitCode'
         vim.cmd 'set shellquote= shellxquote='
     end
-
-    -- ************** HighlightOnYank ---------------------------------------------------------
-    vim.api.nvim_create_autocmd('TextYankPost', {
-        callback = function()
-            vim.highlight.on_yank { higroup = 'IncSearch', timeout = 200 }
-        end,
-        desc = 'Highlight yanked text',
-    })
 end

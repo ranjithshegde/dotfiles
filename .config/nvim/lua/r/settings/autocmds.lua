@@ -1,7 +1,6 @@
 local aucmd = vim.api.nvim_create_autocmd
 local augroup = vim.api.nvim_create_augroup
 local opts = { clear = true }
-
 local id = {}
 
 local function ignore_files()
@@ -211,6 +210,16 @@ aucmd('BufReadPost', {
 ------------------------------------------------------------------------
 --                              Misc                                  --
 ------------------------------------------------------------------------
+
+id.TextYank = augroup('TextYank', opts)
+-- ************** HighlightOnYank ---------------------------------------------------------
+vim.api.nvim_create_autocmd('TextYankPost', {
+    group = id.TextYank,
+    callback = function()
+        vim.highlight.on_yank { higroup = 'IncSearch', timeout = 200 }
+    end,
+    desc = 'Highlight yanked text',
+})
 
 id.NoVim = augroup('NoVim', opts)
 -- ************************ Handle binaries ----------------------------

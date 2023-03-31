@@ -86,12 +86,16 @@ end
 --                              components                            --
 ------------------------------------------------------------------------
 
-function components.modified()
-    local status = vim.api.nvim_eval_statusline('%m', {}).str
-    if status:find '-' then
-        return ''
-    elseif status:find '+' then
-        return ''
+function components.modified(_, buffer)
+    if
+        buffer.name ~= '' and not vim.tbl_contains(require('r.utils.tables').ignoreFiles, vim.bo[buffer.bufnr].filetype)
+    then
+        local status = vim.api.nvim_eval_statusline('%m', {}).str
+        if status:find '-' then
+            return ''
+        elseif status:find '+' then
+            return ''
+        end
     end
 end
 
