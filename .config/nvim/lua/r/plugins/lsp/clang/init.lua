@@ -83,17 +83,12 @@ function servers.ccls()
         autostart = true,
     }
 
-    -- require('ccls').setup { lsp = { lspconfig = server_config } }
-    -- require('ccls').setup { lsp = { use_defaults = true } }
-    -- require('ccls').setup { lsp = { use_defaults = true, codelens = { enable = true } } }
     require('ccls').setup {
         filetypes = filetypes,
         lsp = {
-            -- lspconfig = server_config,
             server = server_config,
             disable_capabilities = {
                 completionProvider = true,
-                codeActionProvider = true,
                 documentFormattingProvider = true,
                 definitionProvider = true,
                 documentRangeFormattingProvider = true,

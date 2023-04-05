@@ -1,6 +1,7 @@
 ------------------------------------------------------------------------
 --                       Linters & formatters                         --
 ------------------------------------------------------------------------
+
 local function glsl()
     local null_ls = require 'null-ls'
 
@@ -44,10 +45,34 @@ local function glsl()
     }
 end
 
+local function node_actions()
+    return {
+        name = 'ts_node_actions',
+        method = { require('null-ls').methods.CODE_ACTION },
+        filetypes = { '_all' },
+        generator = {
+            fn = function(ctx)
+                if not ctx.lsp_params.context.triggerKind then
+                    return
+                end
+
+                local ok, actions = pcall(require('ts-node-action').available_actions)
+                if not ok then
+                    return
+                end
+                return actions
+            end,
+        },
+    }
+end
+
 return function()
     local nb = require 'null-ls.builtins'
     local sources = {
         nb.code_actions.shellcheck,
+        nb.code_actions.refactoring.with {
+            filetypes = require('r.utils.tables').lspfiles,
+        },
 
         nb.diagnostics.zsh,
         nb.diagnostics.flake8,
@@ -68,6 +93,15 @@ return function()
             extra_args = { '--config-file', vim.env.XDG_CONFIG_HOME .. '/cmake-format.json', '--' },
         },
     }
-    require('null-ls').setup { sources = sources }
+    require('null-ls').setup {
+        on_init = function(client)
+            local ft = vim.bo.filetype
+            if vim.tbl_contains({ 'c', 'cpp', 'hpp', 'glsl', 'opencl' }, ft) then
+                client.offset_encoding = 'utf-32'
+            end
+        end,
+        sources = sources,
+    }
     require('null-ls').register(glsl())
+    require('null-ls').register(node_actions())
 end
