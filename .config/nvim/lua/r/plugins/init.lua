@@ -18,18 +18,21 @@ return {
         dev = true,
     },
 
-    -- Comment with TreeSitter
-    {
-        'numToStr/Comment.nvim',
-        keys = { 'gc', { 'gc', mode = 'v' }, 'gb', { 'gb', mode = 'v' } },
-        opts = { ignore = '^$' },
-    },
-
     -- Fancy UI
     {
         'stevearc/dressing.nvim',
         event = 'VeryLazy',
         opts = { input = { relative = 'editor' } },
+    },
+
+    -- Comment with TreeSitter
+    {
+        'numToStr/Comment.nvim',
+        keys = {
+            { 'gc', mode = { 'n', 'v' } },
+            { 'gb', mode = { 'n', 'v' } },
+        },
+        opts = { ignore = '^$' },
     },
 
     -- WhichKey

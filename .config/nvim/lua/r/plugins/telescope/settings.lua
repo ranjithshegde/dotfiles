@@ -1,48 +1,3 @@
-local foldMaps = function(_, _)
-    require('telescope.actions.set').select:enhance {
-        post = function()
-            vim.schedule(function()
-                vim.cmd.normal { args = { 'zx' }, bang = true }
-            end)
-        end,
-    }
-    return true
-end
-
-local bufferPicker = {
-    sort_mru = true,
-    sort_lastused = true,
-    attach_mappings = foldMaps,
-    mappings = {
-        i = {
-            ['<C-x>'] = function(prompt_bufnr)
-                local current_picker = require('telescope.actions.state').get_current_picker(prompt_bufnr)
-
-                local replacement_buffers = {}
-                for entry in current_picker.manager:iter() do
-                    if entry.bufnr < require('telescope.actions.state').get_selected_entry().bufnr then
-                        table.insert(replacement_buffers, 1, entry.bufnr)
-                    end
-                end
-
-                current_picker:delete_selection(function(selection)
-                    local bufnr = selection.bufnr
-                    local winids = vim.fn.win_findbuf(bufnr)
-                    local tabwins = vim.api.nvim_tabpage_list_wins(0)
-                    for _, winid in ipairs(winids) do
-                        if vim.tbl_contains(tabwins, winid) then
-                            local new_buf =
-                                vim.F.if_nil(table.remove(replacement_buffers), vim.api.nvim_create_buf(false, true))
-                            vim.api.nvim_win_set_buf(winid, new_buf)
-                        end
-                    end
-                    vim.api.nvim_buf_delete(bufnr, { force = true })
-                end)
-            end,
-        },
-    },
-}
-
 local function navigate(prompt_bufnr, maps, cwd, files)
     local change_dir = function(window)
         local wd = require('telescope.actions.state').get_selected_entry().value
@@ -109,21 +64,22 @@ function telescope.telescope()
     local layout_actions = require 'telescope.actions.layout'
     require('telescope').setup {
         pickers = {
-            buffers = bufferPicker,
+            buffers = {
+                show_all_buffers = true,
+                sort_lastused = true,
+                mappings = {
+                    i = {
+                        ['<c-x>'] = 'delete_buffer',
+                    },
+                },
+            },
             loclist = { theme = 'ivy' },
             quickfix = { theme = 'ivy' },
+            find_files = { follow = true },
             lsp_document_symbols = { theme = 'ivy' },
-            lsp_workspace_symbols = { theme = 'cursor', layout_config = cursor_layout },
             current_buffer_fuzzy_find = { theme = 'ivy' },
             lsp_references = { theme = 'cursor', layout_config = cursor_layout },
-            oldfiles = { attach_mappings = foldMaps },
-            git_files = { attach_mappings = foldMaps },
-            live_grep = { attach_mappings = foldMaps },
-            grep_string = { attach_mappings = foldMaps },
-            find_files = {
-                follow = true,
-                attach_mappings = foldMaps,
-            },
+            lsp_workspace_symbols = { theme = 'cursor', layout_config = cursor_layout },
         },
         defaults = {
             vimgrep_arguments = {

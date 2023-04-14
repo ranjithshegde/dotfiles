@@ -294,7 +294,6 @@ tables.ts_parsers = {
     'css',
     'dart',
     'glsl',
-    'help',
     'html',
     'java',
     'javascript',
@@ -313,6 +312,7 @@ tables.ts_parsers = {
     'supercollider',
     'toml',
     'vim',
+    'vimdoc',
     'yaml',
 }
 

@@ -43,6 +43,23 @@ ranger_cd() {
     rm -f -- "$temp_file"
 }
 
+#Check externel screen connection status
+screen_connected() {
+
+    if [[ ${XDG_SESSION_TYPE} == "wayland" ]]; then
+        return 1
+    fi
+
+    hdmi_status="$(cat /sys/class/drm/card1-HDMI-A-1/status)"
+    usbc_status="$(cat /sys/class/drm/card1-DP-1/status)"
+
+    if [ "${hdmi_status}" = "connected" ] || [ "${usbc_status}" = "connected" ]; then
+        return 0
+    else
+        return 1
+    fi
+}
+
 # FZF dotfiles -------------------------------------------------------------------------------
 hcd() {
     dir=$(find "${1:-.}" -type d 2>/dev/null | fzf +m --reverse --prompt='Enter Directory> ') && cd "$dir" || exit

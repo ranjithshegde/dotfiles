@@ -22,6 +22,7 @@ local noice = {
 }
 
 function noice.config()
+    messages()
     require('noice').setup {
         cmdline = {
             view = 'cmdline',
@@ -72,12 +73,8 @@ function noice.init()
             local v = select(i, ...)
             table.insert(objects, vim.inspect(v))
         end
-
         vim.api.nvim_echo({ { table.concat(objects, '    '), '' } }, true, {})
     end
-    require('r.utils').lazy_on_key('n', '<leader>n', 'Noice', function()
-        messages()
-    end)
 end
 
 return noice

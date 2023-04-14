@@ -71,7 +71,6 @@ return function()
     opt.clipboard:append 'unnamedplus'
     opt.sessionoptions:append 'terminal,tabpages'
 
-    vim.g.markdown_folding = 1
     vim.g.loaded_ruby_provider = 0
     vim.g.loaded_perl_provider = 0
     vim.g.loaded_node_provider = 0

@@ -1,5 +1,5 @@
 ﻿###
-###  vlc 3.0.17.4
+###  vlc 3.0.18
 ###
 
 ###
@@ -1261,38 +1261,6 @@ freetype-font=Noto Sans
 # User agent (string)
 #http-user-agent=
 
-[live555] # RTP/RTSP/SDP demuxer (using Live555)
-
-# Use RTP over RTSP (TCP) (boolean)
-#rtsp-tcp=0
-
-# Client port (integer)
-#rtp-client-port=-1
-
-# Force multicast RTP via RTSP (boolean)
-#rtsp-mcast=0
-
-# Tunnel RTSP and RTP over HTTP (boolean)
-#rtsp-http=0
-
-# HTTP tunnel port (integer)
-#rtsp-http-port=80
-
-# Kasenna RTSP dialect (boolean)
-#rtsp-kasenna=0
-
-# WMServer RTSP dialect (boolean)
-#rtsp-wmserver=0
-
-# Username (string)
-#rtsp-user=
-
-# Password (string)
-#rtsp-pwd=
-
-# RTSP frame buffer size (integer)
-#rtsp-frame-buffer-size=250000
-
 [filesystem] # File input
 
 # List special files (boolean)
@@ -1314,6 +1282,17 @@ freetype-font=Noto Sans
 
 #  SRT Stream ID (string)
 #streamid=
+
+[smb] # SMB input
+
+# Username (string)
+#smb-user=
+
+# Password (string)
+#smb-pwd=
+
+# SMB domain (string)
+#smb-domain=
 
 [shm] # Shared memory framebuffer
 
@@ -1936,7 +1915,7 @@ freetype-font=Noto Sans
 #sout-avi-subject=
 
 # Encoder (string)
-#sout-avi-encoder=VLC Media Player - 3.0.17.4 Vetinari
+#sout-avi-encoder=VLC Media Player - 3.0.18 Vetinari
 
 # Keywords (string)
 #sout-avi-keywords=

@@ -4,7 +4,7 @@ local navigator = {
     lsp = {
         format_on_save = false,
         servers = {},
-        disable_lsp = { 'ccls' },
+        disable_lsp = { 'ccls', 'sqls' },
         hover = false,
         diagnostic = {
             all = false,
@@ -68,6 +68,7 @@ return function()
         navigator.lsp[ls] = cfg
     end
     table.insert(navigator.lsp.servers, 'neocmake')
+    table.insert(navigator.lsp.servers, 'marksman')
 
     navigator.lsp.ltex = require('r.plugins.lsp.ltex').lsp()
     table.insert(navigator.lsp.servers, 'ltex')

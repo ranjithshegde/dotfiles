@@ -23,4 +23,9 @@ return {
         'ckolkey/ts-node-action',
         config = setup('r.plugins.treesitter.settings', 'node_action'),
     },
+    {
+        'chrisgrieser/nvim-various-textobjs',
+        opts = { useDefaultKeymaps = true },
+        event = 'BufReadPost',
+    },
 }

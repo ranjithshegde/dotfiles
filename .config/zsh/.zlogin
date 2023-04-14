@@ -38,6 +38,7 @@ else
     xset r rate 200 30
 fi
 
+rfkill block bluetooth
 # Run these only if X is running
 if [[ ${DISPLAY} ]]; then
     if [[ ${DESKTOP_SESSION} == "dwm" ]]; then

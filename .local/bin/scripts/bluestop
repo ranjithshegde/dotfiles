@@ -3,12 +3,3 @@
 rfkill block bluetooth
 systemctl start blueman-mechanism
 systemctl stop bluetooth
-rmmod btusb
-rmmod btrtl
-rmmod btintel
-rmmod btbcm
-rmmod btnep
-rmmod btmtk
-rmmod bnep
-rmmod rfcomm
-rmmod bluetooth
