@@ -6,6 +6,7 @@ local navigator = {
         servers = {},
         disable_lsp = { 'ccls', 'sqls' },
         hover = false,
+        code_action = { enable = false },
         diagnostic = {
             all = false,
             virtual_text = false,

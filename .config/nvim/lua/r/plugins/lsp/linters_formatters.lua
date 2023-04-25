@@ -45,32 +45,14 @@ local function glsl()
     }
 end
 
-local function node_actions()
-    return {
-        name = 'ts_node_actions',
-        method = { require('null-ls').methods.CODE_ACTION },
-        filetypes = { '_all' },
-        generator = {
-            fn = function(ctx)
-                if not ctx.lsp_params.context.triggerKind then
-                    return
-                end
-
-                local ok, actions = pcall(require('ts-node-action').available_actions)
-                if not ok then
-                    return
-                end
-                return actions
-            end,
-        },
-    }
-end
-
 return function()
     local nb = require 'null-ls.builtins'
     local sources = {
         nb.code_actions.shellcheck,
         nb.code_actions.refactoring.with {
+            filetypes = require('r.utils.tables').lspfiles,
+        },
+        nb.code_actions.ts_node_action.with {
             filetypes = require('r.utils.tables').lspfiles,
         },
 
@@ -103,5 +85,4 @@ return function()
         sources = sources,
     }
     require('null-ls').register(glsl())
-    require('null-ls').register(node_actions())
 end

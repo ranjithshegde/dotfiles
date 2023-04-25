@@ -106,20 +106,17 @@ statusline.config = function()
                 sections.split,
 
                 --*********************************** File status -----------------------
-                sections.collapse_builtin {
-                    sections.highlight('DevIconHtml', readonly),
-                    space,
-                    sections.highlight('DevIconMarkdown', help),
-                    space,
-                    sections.highlight(
-                        'FileIcon',
-                        subscribe.buf_autocmd('el_file_icon', { 'BufRead', 'BufWritePost' }, components.file_icon)
-                    ),
-                    sections.highlight('StatusLine', file_name),
-                    space,
-                    subscribe.buf_autocmd('el_mod', 'BufModifiedSet', components.modified),
-                    space,
-                },
+                sections.highlight('DevIconHtml', readonly),
+                space,
+                sections.highlight('DevIconMarkdown', help),
+                space,
+                sections.highlight(
+                    'FileIcon',
+                    subscribe.buf_autocmd('el_file_icon', { 'BufRead', 'BufWritePost' }, components.file_icon)
+                ),
+                sections.highlight('StatusLine', file_name),
+                space,
+                subscribe.buf_autocmd('el_mod', 'BufModifiedSet', components.modified),
                 space,
 
                 --*********************************** Cursor position -------------------

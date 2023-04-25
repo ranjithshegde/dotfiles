@@ -23,21 +23,8 @@ function lspmap.lsp(client, bufnr)
     wk.register({
         [','] = {
             name = 'Lsp functions',
-            i = { vim.lsp.buf.implementation, 'implementation' },
             s = { vim.lsp.buf.signature_help, 'Show signature' },
             a = { vim.lsp.buf.code_action, 'Code action', mode = { 'n', 'v' } },
-            D = {
-                function()
-                    vim.lsp.buf.declaration { reuse_win = true }
-                end,
-                'Jump to Declaration',
-            },
-            T = {
-                function()
-                    vim.lsp.buf.type_definition { reuse_win = true }
-                end,
-                'Jump to Type definition',
-            },
             c = {
                 name = 'Codelens',
                 c = { vim.lsp.codelens.display, 'Display' },
@@ -57,6 +44,22 @@ function lspmap.lsp(client, bufnr)
                 u = { require('r.extensions.diagnostics').toggle_underline, 'Toggle Underline' },
             },
         },
+        g = {
+            name = 'Go to',
+            I = { vim.lsp.buf.implementation, 'implementation' },
+            D = {
+                function()
+                    vim.lsp.buf.declaration { reuse_win = true }
+                end,
+                'Go to Declaration',
+            },
+            y = {
+                function()
+                    vim.lsp.buf.type_definition { reuse_win = true }
+                end,
+                'Go to Type definition',
+            },
+        },
     }, { buffer = bufnr })
 end
 
@@ -64,10 +67,6 @@ function lspmap.navic(bufnr)
     wk.register({
         [','] = {
             name = 'Lsp',
-            r = { require('navigator.reference').async_ref, 'Lsp Async reference' },
-            d = { require('navigator.definition').definition, 'definition' },
-            p = { require('navigator.definition').definition_preview, 'definition_preview' },
-            P = { require('navigator.definition').type_definition_preview, 'Type definition_preview' },
             ca = { require('navigator.codelens').run_action, 'run code lens action' },
             l = {
                 name = 'Diagnostic action',
@@ -85,6 +84,13 @@ function lspmap.navic(bufnr)
                 r = { require('navigator.workspace').remove_workspace_folder, 'Remove workspace folder' },
                 l = { require('navigator.workspace').list_workspace_folders, 'List workspace folder' },
             },
+        },
+        g = {
+            name = 'Go to',
+            r = { require('navigator.reference').async_ref, 'Lsp Async reference' },
+            d = { require('navigator.definition').definition, 'definition' },
+            p = { require('navigator.definition').definition_preview, 'definition_preview' },
+            P = { require('navigator.definition').type_definition_preview, 'Type definition_preview' },
         },
         [']r'] = { require('navigator.treesitter').goto_next_usage, 'next usage' },
         ['[r'] = { require('navigator.treesitter').goto_previous_usage, 'previous usage' },

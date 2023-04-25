@@ -59,11 +59,6 @@ return function()
         require('r.utils').open_in_browser(word)
     end, { desc = 'exec word under cursor' })
 
-    map('n', 'gm', function()
-        local virt = vim.fn.virtcol '$'
-        vim.fn.cursor { 0, virt / 2 }
-    end, { desc = 'Move cursor to middle of the line' })
-
     map({ 'n', 't' }, '<F9>', function()
         vim.cmd.stopinsert()
         require('r.extensions').toggleTerm('zsh', 'shell', 1)
