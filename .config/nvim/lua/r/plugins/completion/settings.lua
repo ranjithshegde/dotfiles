@@ -82,7 +82,6 @@ local function cmp_setup(cmp, luasnip)
                 border = 'single',
             },
         },
-        experimental = { ghost_text = true },
     }
 end
 

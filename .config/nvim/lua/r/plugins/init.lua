@@ -44,6 +44,7 @@ return {
             layout = { layout = { spacing = 15 } },
             window = { border = 'single' },
         },
+        commit = '4acffc9',
     },
 
     -- Treesitter indent guides

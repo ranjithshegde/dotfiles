@@ -6,6 +6,6 @@ kon https://outlook.office.com/mail/inbox
 rnv https://www.reddit.com/r/neovim/
 of https://forum.openframeworks.cc/
 env https://app.element.io/#/room/%23neovim:matrix.org
-vim https://github.com/neovim/neovim
+vim https://github.com/neovim/neovim/pulls?q=is%3Apr+is%3Aopen+sort%3Aupdated-desc
 nn http://neuralnetworksanddeeplearning.com/chap1.html
 red https://www.reddit.com/

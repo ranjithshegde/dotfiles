@@ -55,7 +55,7 @@ font-4 = Hack:size=10:pixelsize=10
 
 modules-left = dwm xwindow
 modules-center = date 
-modules-right = backlight temperature alsa wlan battery 
+modules-right = backlight temperature alsa battery 
 
 tray-position = right
 tray-padding = 2
