@@ -5,7 +5,7 @@ local navigator = {
         format_on_save = false,
         servers = {},
         disable_lsp = { 'ccls', 'sqls' },
-        hover = false,
+        hover = { enable = false },
         code_action = { enable = false },
         diagnostic = {
             all = false,
@@ -30,6 +30,7 @@ return function()
         cssls = { capabilities = handlers.capabilities() },
         taplo = { capabilities = handlers.capabilities() },
         dartls = { capabilities = handlers.capabilities() },
+        glslls = { capabilities = handlers.capabilities() },
         jsonls = { capabilities = handlers.capabilities() },
         pyright = { capabilities = handlers.capabilities() },
         marksman = { capabilities = handlers.capabilities() },
@@ -68,6 +69,7 @@ return function()
     for ls, cfg in pairs(configs) do
         navigator.lsp[ls] = cfg
     end
+    table.insert(navigator.lsp.servers, 'glslls')
     table.insert(navigator.lsp.servers, 'neocmake')
     table.insert(navigator.lsp.servers, 'marksman')
 
@@ -80,6 +82,7 @@ return function()
 
     if vim.tbl_contains({ 'c', 'cpp', 'opencl' }, vim.bo.filetype) then
         navigator.lsp.clangd = require('r.plugins.lsp.clang').clangd()
+        require('r.plugins.lsp.clang').clangd_ext()
     end
 
     require('navigator').setup(navigator)

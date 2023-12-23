@@ -25,7 +25,7 @@ local tele_cd = function(dirs, ...)
     end
 end
 
-return require('which-key').register {
+require('which-key').register {
     ['<Space>'] = {
         name = 'Telescope',
         b = { tele 'buffers', 'Buffers' },

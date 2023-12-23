@@ -34,7 +34,7 @@ function servers.clangd()
         end
     end
 
-    local config = {
+    return {
         capabilities = require('r.plugins.lsp.handlers').capabilities(),
         filetypes = { 'c', 'cpp', 'opencl' },
         init_options = {
@@ -42,8 +42,10 @@ function servers.clangd()
         },
         cmd = cmd,
     }
+end
 
-    local extensions = {
+function servers.clangd_ext()
+    return require('clangd_extensions').setup {
         autoSetHints = false,
         memory_usage = {
             border = 'rounded',
@@ -51,11 +53,6 @@ function servers.clangd()
         symbol_info = {
             border = 'rounded',
         },
-    }
-
-    return require('clangd_extensions').prepare {
-        server = config,
-        extensions = extensions,
     }
 end
 

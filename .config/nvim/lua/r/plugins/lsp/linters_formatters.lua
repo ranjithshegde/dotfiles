@@ -84,5 +84,5 @@ return function()
         end,
         sources = sources,
     }
-    require('null-ls').register(glsl())
+    -- require('null-ls').register(glsl())
 end

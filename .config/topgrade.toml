@@ -1,3 +1,4 @@
+[misc]
 # Don't ask for confirmations
 #assume_yes = true
 
@@ -57,8 +58,8 @@ repos = [
 
 # Custom commands
 [commands]
-"perl" = "ucpan"
 "platform-io" = "pio pkg update -g"
+"perl" = "ucpan"
 
 [linux]
 # Arguments to pass yay when updating packages

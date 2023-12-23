@@ -13,9 +13,15 @@ function overseer.init()
     require('r.plugins.tasks.register').glow(id.Overseer)
     require('r.plugins.tasks.register').flutter(id.Overseer)
 
+    local get_ft = function()
+        local ft = require('r.utils.tables').lspfiles
+        table.insert(ft, 'OverseerList')
+        return ft
+    end
+
     vim.api.nvim_create_autocmd('FileType', {
         group = id.Overseer,
-        pattern = require('r.utils.tables').lspfiles,
+        pattern = get_ft(),
         callback = function(args)
             map('n', '<F1>', function()
                 require('overseer').window.toggle { enter = false }

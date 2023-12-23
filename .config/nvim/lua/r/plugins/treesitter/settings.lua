@@ -100,10 +100,10 @@ function ts.setup()
             use_virtual_text = true,
             lint_events = { 'BufWrite', 'CursorHold' },
         },
-        rainbow = {
-            enable = true,
-            extended_mode = true,
-        },
+        -- rainbow = {
+        --     enable = true,
+        --     extended_mode = true,
+        -- },
     }
 end
 

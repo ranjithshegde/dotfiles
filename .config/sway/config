@@ -118,7 +118,7 @@ for_window [instance="dropdown_*"] move position center
 # Default wallpaper (more resolutions are available in /usr/share/backgrounds/sway/)
 # output * bg /usr/share/backgrounds/sway/Sway_Wallpaper_Blue_1920x1080.png fill
 
-output * bg /home/ranjith/Pictures/backgrounds/coneGradients.png fill
+output * bg $HOME/Pictures/backgrounds/TripWal.png fill
 
 
   # output HDMI1
@@ -128,8 +128,8 @@ output * bg /home/ranjith/Pictures/backgrounds/coneGradients.png fill
   # }
 # output HDMI-A-1 mode 1920x1080 pos 1920 0
 output eDP1 pos 0 0 res 1920x1080
-output HDMI1 pos 1920 0 res 1920x1080
-output DP1 pos 1920 0 res 1920x1080
+# output HDMI1 pos 1920 0 res 1920x1080
+# output DP1 pos 1920 0 res 1920x1080
 
 #
 # You can get the names of your outputs by running: swaymsg -t get_outputs

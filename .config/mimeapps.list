@@ -61,3 +61,5 @@ image/heif=nsxiv.desktop
 application/rtf=libreoffice-writer.desktop
 x-scheme-handler/sidequest=SideQuest.desktop
 application/vnd.openxmlformats-officedocument.wordprocessingml.document=libreoffice-writer.desktop
+x-scheme-handler/nxm=vortex-steamtinkerlaunch-dl.desktop
+x-scheme-handler/nxm-protocol=vortex-steamtinkerlaunch-dl.desktop

@@ -32,7 +32,6 @@ local function navigate(prompt_bufnr, maps, cwd, files)
 end
 
 local cursor_layout = { width = 0.8, height = 0.6 }
-
 ------------------------------------------------------------------------
 --                       Telescope 									  --
 ------------------------------------------------------------------------
@@ -60,7 +59,6 @@ function telescope.cdFiles(prompt, cwd)
 end
 
 function telescope.telescope()
-    require 'r.plugins.telescope.mappings'
     local layout_actions = require 'telescope.actions.layout'
     require('telescope').setup {
         pickers = {
