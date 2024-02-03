@@ -91,9 +91,9 @@ bindsym $mod+Shift+r exec "rfm"
 
 bindsym $mod+Shift+f exec "pcmanfm"
 
-bindsym $mod+$ctrl+p exec "alacritty -e sudo powertop"
+bindsym $mod+$ctrl+p exec "st -e sudo powertop"
 
-bindsym $mod+$ctrl+k exec "alacritty -e sudo kmon"
+bindsym $mod+$ctrl+k exec "st -e sudo kmon"
 
 bindsym $mod+$ctrl+space exec "dmenu_search"
 

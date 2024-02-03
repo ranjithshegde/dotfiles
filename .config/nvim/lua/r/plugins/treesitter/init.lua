@@ -8,8 +8,13 @@ return {
         config = setup('r.plugins.treesitter.settings', 'setup'),
         init = setup('r.plugins.treesitter.settings', 'autocmds'),
     },
-    -- { 'p00f/nvim-ts-rainbow', event = 'BufReadPre' },
     { 'https://gitlab.com/HiPhish/rainbow-delimiters.nvim', event = 'BufReadPre' },
+    {
+        'lukas-reineke/indent-blankline.nvim',
+        event = 'BufReadPost',
+        main = 'ibl',
+        config = setup('r.plugins.treesitter.settings', 'indent_guide'),
+    },
     { 'nvim-treesitter/nvim-treesitter-textobjects' },
     {
         'ThePrimeagen/refactoring.nvim',

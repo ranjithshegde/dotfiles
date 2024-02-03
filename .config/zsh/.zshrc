@@ -31,7 +31,8 @@ alias ll='ls -la'
 alias sxiv='nsxiv'
 alias pss="paru -Ps"
 alias python=python3
-alias pu="paru -Syyu"
+alias pu="paru -Syu"
+alias pU="paru -Syyu"
 alias pql="pacman -Ql"
 alias pqs="pacman -Qs"
 alias pqi="pacman -Qii"
@@ -88,7 +89,6 @@ source /usr/share/fzf/completion.zsh
 source /opt/vcpkg/scripts/vcpkg_completion.zsh
 
 eval "$(register-python-argcomplete pipx)"
-eval "$(pip completion --zsh)"
 eval "$(_PIO_COMPLETE=zsh_source pio)"
 eval "$(zoxide init zsh)"
 

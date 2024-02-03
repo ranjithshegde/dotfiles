@@ -22,7 +22,7 @@ return {
         ft = require('r.utils.tables').lspfiles,
         dependencies = {
             {
-                'jose-elias-alvarez/null-ls.nvim',
+                'nvimtools/none-ls.nvim',
                 config = setup 'r.plugins.lsp.linters_formatters',
             },
         },
