@@ -79,7 +79,7 @@ function ufo.config()
 
         enable_get_fold_virt_text = true,
         fold_virt_text_handler = handler,
-        close_fold_kinds = { 'region' },
+        close_fold_kinds_for_ft = { default = { 'region' } },
     }
 
     vim.keymap.set('n', 'zR', require('ufo').openAllFolds)

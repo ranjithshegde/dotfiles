@@ -22,8 +22,14 @@ return {
         ft = require('r.utils.tables').lspfiles,
         dependencies = {
             {
-                'nvimtools/none-ls.nvim',
-                config = setup 'r.plugins.lsp.linters_formatters',
+                {
+                    'nvimtools/none-ls.nvim',
+                    dependencies = {
+                        "nvimtools/none-ls-extras.nvim",
+                        "gbprod/none-ls-shellcheck.nvim",
+                        },
+                    config = setup 'r.plugins.lsp.linters_formatters',
+                }
             },
         },
         init = setup('r.plugins.lsp.handlers', 'init'),

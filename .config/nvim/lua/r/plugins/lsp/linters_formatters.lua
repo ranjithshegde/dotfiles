@@ -3,9 +3,9 @@
 ------------------------------------------------------------------------
 
 return function()
-    local nb = require 'null-ls.builtins'
+    local nl = require("null-ls")
+    local nb = nl.builtins
     local sources = {
-        nb.code_actions.shellcheck,
         nb.code_actions.refactoring.with {
             filetypes = require('r.utils.tables').lspfiles,
         },
@@ -17,7 +17,6 @@ return function()
         nb.diagnostics.flake8,
         nb.diagnostics.checkmake,
         nb.diagnostics.stylelint,
-        nb.diagnostics.shellcheck,
 
         nb.formatting.black,
         nb.formatting.isort,
@@ -28,8 +27,12 @@ return function()
         nb.formatting.clang_format.with {
             filetypes = { 'glsl' },
         },
+
+        require("none-ls-shellcheck.diagnostics"),
+        require("none-ls-shellcheck.code_actions"),
+
     }
-    require('null-ls').setup {
+    nl.setup {
         on_init = function(client)
             local ft = vim.bo.filetype
             if vim.tbl_contains({ 'c', 'cpp', 'hpp', 'glsl', 'opencl' }, ft) then

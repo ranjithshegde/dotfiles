@@ -66,8 +66,13 @@ export RUSTUP_HOME="${XDG_DATA_HOME}/rustup"
 export RLWRAP_HOME="${XDG_DATA_HOME}/rlwrap"
 export SSB_HOME="${XDG_DATA_HOME}/zoom"
 export TERMINFO="${XDG_DATA_HOME}/terminfo"
+export TEXMFHOME=$XDG_DATA_HOME/texmf
+export TEXMFVAR=$XDG_CACHE_HOME/texlive/texmf-var
+export TEXMFCONFIG=$XDG_CONFIG_HOME/texlive/texmf-config
+
 export uebp_FinalLogFolder="${XDG_DATA_HOME}/Unreal"
 export uebp_LogFolder="${XDG_DATA_HOME}/Unreal"
+
 export VSCODE_PORTABLE="${XDG_DATA_HOME}/vscode"
 # export WINEARCH=win32
 export WGETRC="${XDG_CONFIG_HOME}/wgetrc"

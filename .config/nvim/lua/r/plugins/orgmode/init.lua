@@ -3,7 +3,6 @@ return {
         'nvim-orgmode/orgmode',
         ft = 'org',
         config = function()
-            require('orgmode').setup_ts_grammar()
             require('orgmode').setup {
                 org_agenda_files = {
                     '~/Documents/Orgs/*',
@@ -25,15 +24,15 @@ return {
                 end,
             })
 
-            vim.api.nvim_create_autocmd('BufWritePre', {
-                pattern = '*.org',
-                callback = function()
-                    local view = vim.fn.winsaveview()
-                    vim.cmd.normal 'gggqG'
-                    vim.fn.winrestview(view)
-                end,
-                desc = 'Format Org file on save',
-            })
+            -- vim.api.nvim_create_autocmd('BufWritePre', {
+            --     pattern = '*.org',
+            --     callback = function()
+            --         local view = vim.fn.winsaveview()
+            --         vim.cmd.normal 'gggqG'
+            --         vim.fn.winrestview(view)
+            --     end,
+            --     desc = 'Format Org file on save',
+            -- })
             require('r.utils').register_au_id(id)
 
             vim.api.nvim_create_user_command('Agenda', function()

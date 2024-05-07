@@ -116,8 +116,6 @@ end
 -- ******************************** Diagnostics------------------------
 function lspmap.diagnostic(bufnr)
     map('n', ',ld', vim.diagnostic.open_float, { desc = 'Show line diagnostics', buffer = bufnr })
-    map('n', '[d', vim.diagnostic.goto_prev, { desc = 'Show previous diagnostics', buffer = bufnr })
-    map('n', ']d', vim.diagnostic.goto_next, { desc = 'Show next diagnostics', buffer = bufnr })
 end
 
 return lspmap
