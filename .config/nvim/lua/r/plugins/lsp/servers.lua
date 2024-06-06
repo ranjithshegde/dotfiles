@@ -1,5 +1,6 @@
 local navigator = {
     default_mapping = false,
+    icons = { icons = false },
     lsp_signature_help = false,
     lsp = {
         format_on_save = false,
@@ -23,7 +24,6 @@ local navigator = {
 
 return function()
     local handlers = require 'r.plugins.lsp.handlers'
-    local pid = vim.fn.getpid()
     local configs = {
         yamlls = {},
         html = { capabilities = handlers.capabilities() },
@@ -41,23 +41,12 @@ return function()
             capabilities = handlers.capabilities(),
             filetypes = { 'sh', 'zsh' },
         },
-        omnisharp = {
-            capabilities = handlers.capabilities(),
-            trace = 'verbose',
-            cmd = { 'omnisharp', '--languageserver', '--hostPID', tostring(pid) },
-
-            handlers = {
-                ['textDocument/definition'] = function(...)
-                    require('omnisharp_extended').handler(...)
-                end,
-            },
-        },
         lua_ls = {
             capabilities = handlers.capabilities(),
             before_init = function(params, config)
                 require('neodev.lsp').before_init(params, config)
                 local file = vim.fn.expand '%:t:r'
-                if vim.loop.fs_stat(file .. '.pd_lua') then
+                if vim.uv.fs_stat(file .. '.pd_lua') then
                     table.insert(config.settings.Lua.workspace.library, '/usr/lib/pd/extra/pdlua')
                     config.settings.Lua.diagnostics = { globals = { 'pd' } }
                 end
@@ -69,6 +58,7 @@ return function()
     for ls, cfg in pairs(configs) do
         navigator.lsp[ls] = cfg
     end
+
     table.insert(navigator.lsp.servers, 'glslls')
     table.insert(navigator.lsp.servers, 'neocmake')
     table.insert(navigator.lsp.servers, 'marksman')

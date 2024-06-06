@@ -98,7 +98,7 @@ end
 -- print serial monitor
 function clang.monitor()
     local cmd = 'pio device monitor'
-    require('r.utils.extensions').toggleTerm(cmd, 'pio')
+    require('r.extensions').toggleTerm(cmd, 'pio')
 end
 
 function clang.teensypins()

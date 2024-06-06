@@ -40,25 +40,6 @@ return function()
     end, { desc = 'Open ScratchPad' })
 
     -- Misc
-    map('n', 'gx', function()
-        local word = vim.fn.expand '<cWORD>'
-        local begin = word:find '%('
-        if begin then
-            word = word:sub(begin + 1):gsub('%)', '')
-        else
-            begin = word:find '%['
-            if begin then
-                word = word:gsub('%[', '')
-                local ends = word:find '%]'
-                if ends then
-                    word = word:sub(begin, ends - 1)
-                end
-            end
-        end
-
-        require('r.utils').open_in_browser(word)
-    end, { desc = 'exec word under cursor' })
-
     map({ 'n', 't' }, '<F9>', function()
         vim.cmd.stopinsert()
         require('r.extensions').toggleTerm('zsh', 'shell', 1)

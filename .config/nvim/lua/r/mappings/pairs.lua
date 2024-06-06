@@ -1,7 +1,7 @@
 local function blank(count, orient)
     local space = {}
     for i = 1, count, 1 do
-        table.insert(space, 1, '')
+        table.insert(space, i, '')
     end
     local cursor = vim.api.nvim_win_get_cursor(0)
     vim.api.nvim_buf_set_lines(0, cursor[1] + orient, cursor[1] + orient, true, space)

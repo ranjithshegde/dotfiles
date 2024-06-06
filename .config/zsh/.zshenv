@@ -1,14 +1,14 @@
 if [[ -z "${XDG_CONFIG_HOME}" ]]; then
-    XDG_CONFIG_HOME="$HOME"/.config
+	XDG_CONFIG_HOME="$HOME"/.config
 fi
 if [[ -z "${XDG_CACHE_HOME}" ]]; then
-    XDG_CACHE_HOME="$HOME"/.cache
+	XDG_CACHE_HOME="$HOME"/.cache
 fi
 if [[ -z "${XDG_DATA_HOME}" ]]; then
-    XDG_DATA_HOME="$HOME"/.local/share
+	XDG_DATA_HOME="$HOME"/.local/share
 fi
 if [[ -z "${XDG_STATE_HOME}" ]]; then
-    XDG_STATE_HOME="$HOME"/.local/state
+	XDG_STATE_HOME="$HOME"/.local/state
 fi
 
 VISUAL=editor
@@ -80,6 +80,7 @@ export WINEPREFIX="/storage/Wine/default/"
 export ZPLUG_BIN="${XDG_DATA_HOME}/bin"
 export ZPLUG_HOME="${XDG_DATA_HOME}/zsh/zplug"
 export _JAVA_OPTIONS=-Djava.util.prefs.userRoot="${XDG_CONFIG_HOME}/java"
+export SCLANG_LSP_ENABLE=1
 
 # GLOBALS
 export ANDROID_NDK=/opt/android-ndk
@@ -100,13 +101,13 @@ export PG_OF_PATH="${HOME}/Repositories/libraries/openFrameworks"
 
 # Addition to path...
 appendpath() {
-    case ":$PATH:" in
-        *:"$1":*) ;;
+	case ":$PATH:" in
+	*:"$1":*) ;;
 
-        *)
-            PATH="${PATH:+$PATH:}$1"
-            ;;
-    esac
+	*)
+		PATH="${PATH:+$PATH:}$1"
+		;;
+	esac
 }
 
 appendpath "${HOME}/.local/bin"
@@ -124,7 +125,7 @@ unset -f appendpath
 export PATH
 
 sdo() {
-    sudo zsh -c "${functions[$1]}" "$@"
+	sudo zsh -c "${functions[$1]}" "$@"
 }
 
 source "${ZDOTDIR}/functions/fuzzy.sh"

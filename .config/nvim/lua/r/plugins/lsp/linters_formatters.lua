@@ -3,9 +3,24 @@
 ------------------------------------------------------------------------
 
 return function()
-    local nl = require("null-ls")
+    local nl = require 'null-ls'
     local nb = nl.builtins
     local sources = {
+        nb.diagnostics.zsh,
+        nb.diagnostics.checkmake,
+        nb.diagnostics.stylelint,
+
+        nb.formatting.black,
+        nb.formatting.isort,
+        nb.formatting.stylua,
+        nb.formatting.prettier,
+        nb.formatting.shfmt.with {
+            filetypes = { 'sh', 'zsh' },
+        },
+        nb.formatting.clang_format.with {
+            filetypes = { 'glsl' },
+        },
+
         nb.code_actions.refactoring.with {
             filetypes = require('r.utils.tables').lspfiles,
         },
@@ -13,24 +28,9 @@ return function()
             filetypes = require('r.utils.tables').lspfiles,
         },
 
-        nb.diagnostics.zsh,
-        nb.diagnostics.flake8,
-        nb.diagnostics.checkmake,
-        nb.diagnostics.stylelint,
-
-        nb.formatting.black,
-        nb.formatting.isort,
-        nb.formatting.shfmt,
-        nb.formatting.stylua,
-        nb.formatting.beautysh,
-        nb.formatting.prettier,
-        nb.formatting.clang_format.with {
-            filetypes = { 'glsl' },
-        },
-
-        require("none-ls-shellcheck.diagnostics"),
-        require("none-ls-shellcheck.code_actions"),
-
+        require 'none-ls.diagnostics.flake8',
+        require 'none-ls-shellcheck.diagnostics',
+        require 'none-ls-shellcheck.code_actions',
     }
     nl.setup {
         on_init = function(client)

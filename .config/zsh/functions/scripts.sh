@@ -33,6 +33,10 @@ netR() {
     netcat -l -p 7000 | pv | tar x
 }
 
+nopac(){
+    find /etc /usr /opt | LC_ALL=C.UTF-8 pacman -Qqo - 2>&1 >&- >/dev/null | cut -d ' ' -f 5- > excess.txt 
+}
+
 # Ranger change directory on exit-----------------------------------------------------------
 ranger_cd() {
     temp_file="$(mktemp -t "ranger_cd.XXXXXXXXXX")"

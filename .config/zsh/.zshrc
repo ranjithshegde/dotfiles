@@ -9,8 +9,17 @@ zstyle ':completion:*' max-errors 3 numeric
 zstyle :compinstall filename "$ZDOTDIR/.zshrc"
 # End of lines added by compinstall
 
-HISTSIZE=2000
-SAVEHIST=2000
+HISTSIZE=1000
+SAVEHIST=600
+
+setopt HIST_EXPIRE_DUPS_FIRST
+setopt HIST_IGNORE_DUPS
+setopt HIST_IGNORE_ALL_DUPS
+setopt HIST_FIND_NO_DUPS
+setopt HIST_SAVE_NO_DUPS
+setopt HIST_REDUCE_BLANKS
+setopt HIST_VERIFY
+
 setopt autocd beep extendedglob notify
 setopt correct
 
@@ -50,6 +59,15 @@ alias wget '--hsts-file="$XDG_CACHE_HOME"/wget-hsts'
 alias yarn='yarn --use-yarnrc "$XDG_CONFIG_HOME"/yarn/config'
 alias cvim='GIT_DIR=$WORKSPACE/Repos/dotfiles GIT_WORK_TREE=$HOME vim'
 alias config='/usr/bin/git --git-dir=$WORKSPACE/Repos/dotfiles --work-tree=$HOME'
+alias systat='systemctl status'
+alias systart='systemctl start'
+alias systop='systemctl stop'
+alias sysre='systemctl restart'
+alias usystat='systemctl --user status'
+alias usystart='systemctl --user start'
+alias usystop='systemctl --user stop'
+alias usysre='systemctl --user restart'
+alias srest='systemctl suspend'
 
 
 # Zplug-------------------------------------------------------------------------------

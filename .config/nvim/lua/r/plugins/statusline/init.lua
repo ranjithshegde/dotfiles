@@ -99,6 +99,7 @@ statusline.config = function()
                 --*********************************** Lsp status  -----------------------
                 diagnostics,
                 sections.collapse_builtin {
+                    components.sc_status,
                     subscribe.user_autocmd('el_scnvim', 'ScStatus', components.sc_status),
                     space,
                     subscribe.buf_autocmd('el_gps', { 'CursorMoved', 'CursorMovedI', 'BufEnter' }, components.gps),

@@ -2,7 +2,6 @@ local setup = require('r.utils').plugin_setup
 
 return {
     { 'p00f/clangd_extensions.nvim' },
-    { 'Hoffs/omnisharp-extended-lsp.nvim', ft = 'cs' },
     {
         'folke/neodev.nvim',
         config = setup 'r.plugins.lsp.neodev',
@@ -25,11 +24,11 @@ return {
                 {
                     'nvimtools/none-ls.nvim',
                     dependencies = {
-                        "nvimtools/none-ls-extras.nvim",
-                        "gbprod/none-ls-shellcheck.nvim",
-                        },
+                        'nvimtools/none-ls-extras.nvim',
+                        'gbprod/none-ls-shellcheck.nvim',
+                    },
                     config = setup 'r.plugins.lsp.linters_formatters',
-                }
+                },
             },
         },
         init = setup('r.plugins.lsp.handlers', 'init'),
