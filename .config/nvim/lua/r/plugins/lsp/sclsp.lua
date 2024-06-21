@@ -84,9 +84,22 @@ sclsp.start_process = function()
     })
 end
 
+sclsp.start_script = function()
+    vim.print 'Starting process'
+    sclsp.handle = vim.uv.spawn(vim.env.HOME .. '/.local/bin/scripts/sclsp.sh', {
+        exit_cb = function(code, signal)
+            vim.schedule(function()
+                vim.lsp.buf_detach_client(0)
+                handle:close()
+                print('SuperCollider language server exited with code ' .. code .. ' and signal ' .. signal)
+            end)
+        end,
+    })
+end
+
 sclsp.connect = function(port, start_process)
     if start_process then
-        sclsp.start_process()
+        sclsp.start_script()
     end
     vim.lsp.start {
         name = 'supercollider',

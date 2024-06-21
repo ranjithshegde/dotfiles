@@ -1,39 +1,36 @@
+# .zshrc - Improved version
+
 # Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
 if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
     source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
 
-# The following lines were added by compinstall-----------------------------------------
+# Completion configuration added by compinstall
 zstyle ':completion:*' completer _expand _complete _ignored _approximate
 zstyle ':completion:*' max-errors 3 numeric
 zstyle :compinstall filename "$ZDOTDIR/.zshrc"
-# End of lines added by compinstall
 
+# History configuration
 HISTSIZE=1000
 SAVEHIST=600
+setopt HIST_EXPIRE_DUPS_FIRST HIST_IGNORE_DUPS HIST_IGNORE_ALL_DUPS HIST_FIND_NO_DUPS
+setopt HIST_SAVE_NO_DUPS HIST_REDUCE_BLANKS HIST_VERIFY
 
-setopt HIST_EXPIRE_DUPS_FIRST
-setopt HIST_IGNORE_DUPS
-setopt HIST_IGNORE_ALL_DUPS
-setopt HIST_FIND_NO_DUPS
-setopt HIST_SAVE_NO_DUPS
-setopt HIST_REDUCE_BLANKS
-setopt HIST_VERIFY
+# Miscellaneous options
+setopt autocd beep extendedglob notify correct
 
-setopt autocd beep extendedglob notify
-setopt correct
-
-autoload -U bashcompinit
-autoload -U colors && colors
-autoload -Uz compinit
-zstyle ':completion:*' menu select
-zmodload zsh/complist
-compinit -d "$XDG_CACHE_HOME/zsh/zcompdump-$ZSH_VERSION"
-_comp_options+=(globdots)
+# Bash compatibility and colors
+autoload -U bashcompinit colors && colors
 bashcompinit
 
-# Aliases--------------------------------------------------------------------------------
+# Completion system setup
+autoload -Uz compinit
+compinit -d "${XDG_CACHE_HOME:-$HOME/.cache}/zsh/zcompdump-$ZSH_VERSION"
+zstyle ':completion:*' menu select
+zmodload zsh/complist
+_comp_options+=(globdots)
 
+# Aliases
 alias ls=lsd
 alias cat=bat
 alias ll='ls -la'
@@ -55,9 +52,8 @@ alias grep='grep --color=auto'
 alias weather='curl wttr.in/hague'
 alias rfetch='rsfetch -PdehHklrNstU@'
 alias rocks='sudo luarocks --lua-version 5.1'
-alias wget '--hsts-file="$XDG_CACHE_HOME"/wget-hsts'
-alias yarn='yarn --use-yarnrc "$XDG_CONFIG_HOME"/yarn/config'
-alias cvim='GIT_DIR=$WORKSPACE/Repos/dotfiles GIT_WORK_TREE=$HOME vim'
+alias wget='wget --hsts-file="${XDG_CACHE_HOME:-$HOME/.cache}/wget-hsts"'
+alias yarn='yarn --use-yarnrc "${XDG_CONFIG_HOME:-$HOME/.config}/yarn/config"'
 alias config='/usr/bin/git --git-dir=$WORKSPACE/Repos/dotfiles --work-tree=$HOME'
 alias systat='systemctl status'
 alias systart='systemctl start'
@@ -68,55 +64,43 @@ alias usystart='systemctl --user start'
 alias usystop='systemctl --user stop'
 alias usysre='systemctl --user restart'
 alias srest='systemctl suspend'
+alias sudo='sudo '
 
+if [[ "${MACHINE_TYPE}" = "laptop" ]]; then
+    alias cvim='GIT_DIR=$WORKSPACE/Repos/dotfiles GIT_WORK_TREE=$HOME vim'
+fi
 
-# Zplug-------------------------------------------------------------------------------
-
+# Zplug configuration
 source "${ZPLUG_HOME}/init.zsh"
-
 zplug 'zplug/zplug', hook-build:'zplug --self-manage'
-
 zplug "zsh-users/zsh-completions"
-
 zplug "MichaelAquilina/zsh-you-should-use"
-
 zplug "zsh-users/zsh-history-substring-search"
-
 zplug "zsh-users/zsh-autosuggestions"
-
 zplug "zsh-users/zsh-syntax-highlighting"
-
 zplug "agura-lex/find-the-command"
-
 zplug 'romkatv/powerlevel10k', as:theme, depth:1
-
 zplug "wfxr/forgit"
-
 zplug "lincheney/fzf-tab-completion"
-
-
 zplug load
 
-# Custom completion scripts ---------------------------------------------------------------------
+# Custom completion scripts
 source "${ZPLUG_HOME}/repos/agura-lex/find-the-command/usr/share/doc/find-the-command/ftc.zsh"
 source "${ZPLUG_HOME}/repos/zsh-users/zsh-history-substring-search/zsh-history-substring-search.zsh"
 source "${ZPLUG_HOME}/repos/lincheney/fzf-tab-completion/zsh/fzf-zsh-completion.sh"
-
 source /usr/share/fzf/key-bindings.zsh
 source /usr/share/fzf/completion.zsh
 source /opt/vcpkg/scripts/vcpkg_completion.zsh
-
 eval "$(register-python-argcomplete pipx)"
 eval "$(_PIO_COMPLETE=zsh_source pio)"
 eval "$(zoxide init zsh)"
-
 compdef _dotnet_zsh_complete dotnet
 
-
-# Bindins --------------------------------------------------------------------------------------
+# Key bindings
 bindkey '^[[A' history-substring-search-up
 bindkey '^[[B' history-substring-search-down
 # bindkey '^I' fzf_completion
 # bindkey '^[[Z' fzf_completion
 
+# Source Powerlevel10k configuration if it exists
 [[ ! -f $ZDOTDIR/p10k.zsh ]] || source $ZDOTDIR/p10k.zsh

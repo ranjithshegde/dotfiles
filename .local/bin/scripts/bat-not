@@ -1,0 +1,11 @@
+#!/bin/sh
+
+threshold=20
+
+status=$(cat /sys/class/power_supply/BAT0/status)
+capacity=$(cat /sys/class/power_supply/BAT0/capacity)
+
+if [ "${status}" = Discharging -a "${capacity}" -lt ${threshold} ]; then
+    # Send a notification that appears for 300000 ms (5 min)
+    notify-send -t 300000 "Charge your battery!"
+fi
