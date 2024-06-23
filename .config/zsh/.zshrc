@@ -1,5 +1,3 @@
-# .zshrc - Improved version
-
 # Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
 if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
     source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
@@ -67,7 +65,10 @@ alias srest='systemctl suspend'
 alias sudo='sudo '
 
 if [[ "${MACHINE_TYPE}" = "laptop" ]]; then
-    alias cvim='GIT_DIR=$WORKSPACE/Repos/dotfiles GIT_WORK_TREE=$HOME vim'
+        alias cvim='GIT_DIR=$WORKSPACE/Repos/dotfiles GIT_WORK_TREE=$HOME vim'
+        alias cgit='GIT_DIR=$WORKSPACE/Repos/dotfiles GIT_WORK_TREE=$HOME git'
+    else
+        alias cgit='GIT_DIR="${HOME}/Repositories/Maintained/dotbare" GIT_WORK_TREE="${HOME}" git'
 fi
 
 # Zplug configuration
@@ -90,7 +91,7 @@ source "${ZPLUG_HOME}/repos/zsh-users/zsh-history-substring-search/zsh-history-s
 source "${ZPLUG_HOME}/repos/lincheney/fzf-tab-completion/zsh/fzf-zsh-completion.sh"
 source /usr/share/fzf/key-bindings.zsh
 source /usr/share/fzf/completion.zsh
-source /opt/vcpkg/scripts/vcpkg_completion.zsh
+# source /opt/vcpkg/scripts/vcpkg_completion.zsh
 eval "$(register-python-argcomplete pipx)"
 eval "$(_PIO_COMPLETE=zsh_source pio)"
 eval "$(zoxide init zsh)"

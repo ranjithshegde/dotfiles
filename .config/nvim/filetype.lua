@@ -19,5 +19,6 @@ vim.filetype.add {
         ['mimeapps.list'] = 'confini',
         ['doxyconf'] = 'conf',
         ['.clangd'] = 'yaml',
+        ['~/.config/waybar/config'] = 'json',
     },
 }

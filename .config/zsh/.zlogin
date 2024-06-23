@@ -32,6 +32,9 @@ if [[ "${MACHINE_TYPE}" = "laptop" ]]; then
 	fi
 	# Disable Bluetooth by default
 	rfkill block bluetooth
+else
+    SSH_AUTH_SOCK="$XDG_RUNTIME_DIR/gcr/ssh"
+    export SSH_AUTH_SOCK
 fi
 
 # Set GPG_TTY to the current terminal and update GPG agent's tty

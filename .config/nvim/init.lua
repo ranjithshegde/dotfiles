@@ -15,7 +15,8 @@ vim.opt.runtimepath:prepend(lazypath)
 
 if vim.fn.has 'win32' == 1 then
     vim.g.is_win32 = true
-    vim.g.local_plugins = vim.fs.normalize '~/Repos/Gits/'
+    vim.g.local_plugins = vim.env.MACHINE_TYPE == 'laptop' and vim.fs.normalize '~/Repos/Gits/'
+        or vim.fs.normalize '~/Repositories/Maintained'
 else
     vim.g.is_win32 = false
     vim.g.local_plugins = vim.env.WORKSPACE .. 'Repos/'
