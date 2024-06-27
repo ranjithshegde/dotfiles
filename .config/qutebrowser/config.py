@@ -17,7 +17,6 @@ c.qt.args = [
     "enable-zero-copy",
     "enable-oop-rasterization",
     "enable-oop-rasterization-ddl",
-    "use-gl=egl",
     "enable-native-gpu-memory-buffers",
     "enable-oop-rasterization",
     "enable-features=VaapiVideoDecoder,VaapiVideoEncoder,CanvasOopRasterization",

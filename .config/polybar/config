@@ -248,6 +248,25 @@ ramp-signal-2 = "󰤢 "
 ramp-signal-3 = "󰤥 "
 ramp-signal-4 = "󰤨 "
 
+[module/ether]
+type = internal/network
+; interface = wlo1
+interface = eno1
+interval = 60
+format-connected = <ramp-signal> 
+format-disconnected =  <label-disconnected>
+label-disconnected = "󰤮 "
+
+format-connected-foreground = ${colors.wifi}
+
+format-disconnected-foreground = ${colors.foreground}
+
+ramp-signal-0 = "󰤯 "
+ramp-signal-1 = "󰤟 "
+ramp-signal-2 = "󰤢 "
+ramp-signal-3 = "󰤥 "
+ramp-signal-4 = "󰤨 "
+
 ;==================================================================================================
 
 [module/date]

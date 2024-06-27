@@ -53,21 +53,21 @@ alias rocks='sudo luarocks --lua-version 5.1'
 alias wget='wget --hsts-file="${XDG_CACHE_HOME:-$HOME/.cache}/wget-hsts"'
 alias yarn='yarn --use-yarnrc "${XDG_CONFIG_HOME:-$HOME/.config}/yarn/config"'
 alias config='/usr/bin/git --git-dir=$WORKSPACE/Repos/dotfiles --work-tree=$HOME'
-alias systat='systemctl status'
-alias systart='systemctl start'
-alias systop='systemctl stop'
-alias sysre='systemctl restart'
+alias systat='sudo systemctl status'
+alias systart='sudo systemctl start'
+alias systop='sudo systemctl stop'
+alias sysre='sudo systemctl restart'
 alias usystat='systemctl --user status'
 alias usystart='systemctl --user start'
 alias usystop='systemctl --user stop'
 alias usysre='systemctl --user restart'
 alias srest='systemctl suspend'
-alias sudo='sudo '
 
 if [[ "${MACHINE_TYPE}" = "laptop" ]]; then
         alias cvim='GIT_DIR=$WORKSPACE/Repos/dotfiles GIT_WORK_TREE=$HOME vim'
         alias cgit='GIT_DIR=$WORKSPACE/Repos/dotfiles GIT_WORK_TREE=$HOME git'
     else
+        alias cvim='GIT_DIR="${HOME}/Repositories/Maintained/dotbare" GIT_WORK_TREE="${HOME}" nvim'
         alias cgit='GIT_DIR="${HOME}/Repositories/Maintained/dotbare" GIT_WORK_TREE="${HOME}" git'
 fi
 
@@ -91,7 +91,6 @@ source "${ZPLUG_HOME}/repos/zsh-users/zsh-history-substring-search/zsh-history-s
 source "${ZPLUG_HOME}/repos/lincheney/fzf-tab-completion/zsh/fzf-zsh-completion.sh"
 source /usr/share/fzf/key-bindings.zsh
 source /usr/share/fzf/completion.zsh
-# source /opt/vcpkg/scripts/vcpkg_completion.zsh
 eval "$(register-python-argcomplete pipx)"
 eval "$(_PIO_COMPLETE=zsh_source pio)"
 eval "$(zoxide init zsh)"
@@ -100,8 +99,8 @@ compdef _dotnet_zsh_complete dotnet
 # Key bindings
 bindkey '^[[A' history-substring-search-up
 bindkey '^[[B' history-substring-search-down
-# bindkey '^I' fzf_completion
-# bindkey '^[[Z' fzf_completion
+bindkey '^I' fzf_completion
+bindkey '^[[Z' fzf_completion
 
 # Source Powerlevel10k configuration if it exists
 [[ ! -f $ZDOTDIR/p10k.zsh ]] || source $ZDOTDIR/p10k.zsh

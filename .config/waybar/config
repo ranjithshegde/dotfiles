@@ -1,40 +1,41 @@
 {
+    "bar_id": "bar-0",
+    "ipc": true,
     "layer": "bottom",
     "position": "top",
     "margin-top": 5,
-    "margin-bottom" :5,
+    "margin-bottom": 5,
     "height": 24,
     "modules-left": ["sway/workspaces", "sway/mode", "sway/window"],
     "modules-center": ["clock"],
-    "modules-right": [ "temperature", "backlight", "cpu", "pulseaudio","network", "battery", "tray"],
+    "modules-right": ["temperature", "pulseaudio", "tray"],
 
     // Modules configuration
-     "sway/workspaces": {
-         "all-outputs": true,
-	 "format": "{icon}",
+    "sway/workspaces": {
+        "all-outputs": true,
+        "format": "{icon}",
         "format-icons": {
-	"urgent": "",
-        "focused": "",
-        "default": ""
+            "urgent": "",
+            "focused": "",
+            "default": ""
         }
-        },
+    },
     "sway/window": {
         "max-length": 50
     },
     "sway/mode": {
         "tooltip": false,
-"format": "<span style=\"italic\">{}</span>"
+        "format": "<span style=\"italic\">{}</span>"
     },
-   
-        "cpu": {
+    "cpu": {
         "format": "{usage}% "
     },
-    // "custom/menu": {
-    //     "format": " ",
-    //     "tooltip": false,
-    //     "on-click": " killall wofi; wofi --show drun --hide-scroll --xoffset=3 --yoffset=3 --width=600 --height=400"
-    // },
-        "tray": {
+    "custom/menu": {
+        "format": " ",
+        "tooltip": false,
+        "on-click": " killall wofi; wofi --show drun --hide-scroll --xoffset=3 --yoffset=3 --width=600 --height=400"
+    },
+    "tray": {
         "spacing": 5,
         "icon-size": 14,
         "tooltip": false
@@ -46,7 +47,7 @@
         "format-critical": "{temperatureC}°C {icon}",
         "format": "{temperatureC}°C {icon}",
         "format-icons": ["", "", ""],
-        "on-click": "alacritty -e btop"
+        "on-click": "st -e btop"
     },
     "backlight": {
         "format": "{percent}% {icon}",
@@ -64,12 +65,12 @@
         "format-alt": "{time}{icon}",
         "format-icons": [" ", " ", " ", " ", " ", " ", " ", " "],
         "tooltip": false,
-        "on-click": "alacritty -e sudo powertop"
+        "on-click": "st -e sudo powertop"
     },
     "clock": {
         "format": "{:%a, %d %b %H:%M}",
         "tooltip": false,
-        "on-click": "alacritty -e calcurse"
+        "on-click": "st -e calcurse"
     },
     "network": {
         "format-wifi": "({signalStrength}%) ",
@@ -78,26 +79,24 @@
         "tooltip": false,
         "on-click": "cmst"
     },
-"custom/weather": {
-    "exec": "curl 'https://wttr.in/rotterdam?format=1'",
-    "interval": 3600
-  },
-  "pulseaudio": {
-    "format": "{volume}% {icon}",
-    "format-bluetooth": "{volume}% {icon}",
-    "format-muted": "",
-    "format-icons": {
-        "headphone": "",
-        "hands-free": "",
-        "headset": "",
-        "phone": "",
-        "portable": "",
-        "car": "",
-        "default": ["", ""]
+    "custom/weather": {
+        "exec": "curl 'https://wttr.in/rotterdam?format=1'",
+        "interval": 3600
     },
-    "scroll-step": 1,
-    "on-click": "pavucontrol"
+    "pulseaudio": {
+        "format": "{volume}% {icon}",
+        "format-bluetooth": "{volume}% {icon}",
+        "format-muted": "",
+        "format-icons": {
+            "headphone": "",
+            "hands-free": "",
+            "headset": "",
+            "phone": "",
+            "portable": "",
+            "car": "",
+            "default": ["", ""]
+        },
+        "scroll-step": 1,
+        "on-click": "pavucontrol"
+    }
 }
-      }
-
-

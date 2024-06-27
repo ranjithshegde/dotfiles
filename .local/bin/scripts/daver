@@ -1,0 +1,6 @@
+#!/bin/sh
+IMAGES_DIR="$HOME/Pictures/ELDEN-RING-4K-WALLPAPERS"
+IMAGE=$(find "$IMAGES_DIR" -type f | shuf -n 1)
+# Create a temporary X resource database entry to change the background
+xrdb -merge <<< "slock.image: $IMAGE"
+slock

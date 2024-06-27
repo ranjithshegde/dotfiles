@@ -1,0 +1,8 @@
+#!/bin/sh
+
+# Check if Steam is running a game
+if pgrep -x "steam" > /dev/null && pgrep -x "steamwebhelper" > /dev/null; then
+    exit 1
+else
+    exit 0
+fi

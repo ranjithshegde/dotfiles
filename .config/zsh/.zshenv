@@ -1,5 +1,3 @@
-# .zshenv - Improved version
-
 # Ensure XDG directories are set
 : ${XDG_CONFIG_HOME:="$HOME/.config"}
 : ${XDG_CACHE_HOME:="$HOME/.cache"}
@@ -17,8 +15,7 @@ export GST_VAAPI_ALL_DRIVERS=1
 export GTK_ICON_THEME="Adwaita"
 export GTK_THEME="Adwaita:dark"
 export MANPAGER="nvim +Man!"
-export OPENCV_OPENCL_DEVICE="NVIDIA:GPU:0"
-export QT_STYLE_OVERRIDE="kvantum"
+export QT_STYLE_OVERRIDE="Adwaita-Dark"
 export SCLANG_LSP_ENABLE=1
 export SUDO_ASKPASS="/usr/local/bin/dpass"
 export TERMINAL="/usr/local/bin/st"

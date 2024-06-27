@@ -65,21 +65,21 @@ bindsym XF86MonBrightnessUp exec "light -A 5"
 
 bindsym XF86AudioMute exec "pactl set-sink-mute @DEFAULT_SINK@ toggle"
 
-bindsym XF86AudioRaiseVolume exec "pamixer --increase 5"
+bindsym XF86AudioRaiseVolume exec "pactl set-sink-volume @DEFAULT_SINK@ +5%"
 
-bindsym XF86AudioLowerVolume exec "pamixer --decrease 5"
+bindsym XF86AudioLowerVolume exec "pactl set-sink-volume @DEFAULT_SINK@ -5%"
 
-bindsym XF86KbdBrightnessUp exec "light -s sysfs/leds/asus::kbd_backlight -r -A 1"
+# bindsym XF86KbdBrightnessUp exec "light -s sysfs/leds/asus::kbd_backlight -r -A 1"
 
-bindsym XF86KbdBrightnessDown exec "light -s sysfs/leds/asus::kbd_backlight -r -U 1"
+# bindsym XF86KbdBrightnessDown exec "light -s sysfs/leds/asus::kbd_backlight -r -U 1"
 
-bindsym XF86Launch1 exec "pProfile"
+# bindsym XF86Launch1 exec "pProfile"
 
-bindsym XF86Launch2 exec "asusctl led-mode -p"
+# bindsym XF86Launch2 exec "asusctl led-mode -p"
 
-bindsym XF86Launch3 exec "asusctl led-mode -n"
+# bindsym XF86Launch3 exec "asusctl led-mode -n"
 
-bindsym XF86Launch4 exec "asusctl profile -n"
+# bindsym XF86Launch4 exec "asusctl profile -n"
 
 bindsym $super+Return exec qutebrowser
 
@@ -89,7 +89,7 @@ bindsym $mod+Shift+Return exec "st -e nvim"
 
 bindsym $mod+Shift+r exec "rfm"
 
-bindsym $mod+Shift+f exec "pcmanfm"
+bindsym $mod+Shift+f exec "nautilus"
 
 bindsym $mod+$ctrl+p exec "st -e sudo powertop"
 
@@ -98,7 +98,6 @@ bindsym $mod+$ctrl+k exec "st -e sudo kmon"
 bindsym $mod+$ctrl+space exec "dmenu_search"
 
 bindsym $super+space exec "dmenu_qutebrowser"
-
 
 # General dropdown window traits-------------------------------------------------------------------
 
@@ -117,8 +116,11 @@ for_window [instance="dropdown_*"] move position center
 #
 # Default wallpaper (more resolutions are available in /usr/share/backgrounds/sway/)
 # output * bg /usr/share/backgrounds/sway/Sway_Wallpaper_Blue_1920x1080.png fill
+output * adaptive_sync on
+output eDP1 pos 0 0 res 1920x1080
+output DP-1 pos 0 0 bg $HOME/Pictures/1309958.png fill
+# }
 
-output * bg $HOME/Pictures/backgrounds/TripWal.png fill
 
 
   # output HDMI1
@@ -127,7 +129,6 @@ output * bg $HOME/Pictures/backgrounds/TripWal.png fill
   #   res 1920x1080
   # }
 # output HDMI-A-1 mode 1920x1080 pos 1920 0
-output eDP1 pos 0 0 res 1920x1080
 # output HDMI1 pos 1920 0 res 1920x1080
 # output DP1 pos 1920 0 res 1920x1080
 
@@ -341,14 +342,25 @@ for_window [title="SuperCollider"] floating enable
     #     inactive_workspace #32323200 #32323200 #5c5c5c
     # }
 # }
-
-
 bar {
     swaybar_command waybar
+    position top
+    hidden_state hide
+    mode hide
+    modifier Mod4
 }
 
+# exec sway-audio-idle-inhibit
+
+exec_always {
+    xss-lock --notifier "$HOME/.local/bin/scripts/steam_sleep" -- "$HOME/.local/bin/scripts/saver"
+}
+
+exec_always swayidle -w \
+    timeout 300 '$HOME/.local/bin/scripts/saver' \
+    timeout 600 'swaymsg "output * dpms off"' \
+    resume 'swaymsg "output * dpms on"' \
+    before-sleep '$HOME/.local/bin/scripts/saver'
 
 exec autotiling
-
-
 include /etc/sway/config.d/*
