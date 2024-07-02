@@ -6,11 +6,11 @@ vim.keymap.set('n', '<leader>p', require('lazy').sync, { desc = 'Update plugins'
 --				 Plugins                                            							      --
 --------------------------------------------------------------------------------------------------------
 return {
-    -- Colorscheme
-    'folke/tokyonight.nvim',
-
     -- CamelCaseMotion
     'chaoren/vim-wordmotion',
+
+    -- Colorscheme
+    { 'folke/tokyonight.nvim', opts = { plugins = { all = true } } },
 
     -- Unreal integration
     {

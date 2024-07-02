@@ -18,6 +18,9 @@ unset -f append_lib
 export LIBRARY_PATH
 
 if [[ "${MACHINE_TYPE}" = "laptop" ]]; then
+	# Unset Forward key
+	xmodmap -e 'keysym 0xff53 = NoSymbol'
+
 	# SSH with GNUPG -----------------------------------------------------------------------------
 	unset SSH_AGENT_PID
 

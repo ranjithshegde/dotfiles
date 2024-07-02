@@ -14,6 +14,7 @@ export EDITOR="editor"
 export GST_VAAPI_ALL_DRIVERS=1
 export GTK_ICON_THEME="Adwaita"
 export GTK_THEME="Adwaita:dark"
+export MANGOHUD=1
 export MANPAGER="nvim +Man!"
 export QT_STYLE_OVERRIDE="Adwaita-Dark"
 export SCLANG_LSP_ENABLE=1
