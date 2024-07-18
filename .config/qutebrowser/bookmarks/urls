@@ -58,3 +58,4 @@ https://git.sr.ht/~sanchayanmaity/dotfiles/tree/master/item/nvim/.config/nvim/au
 https://www.ejmastnak.com/tutorials/arch/graphics/monitor-hotplug.html Monitor hot-plugging on Linux using X | ejmastnak
 https://alain.xyz/blog/ue4-working-with-3rd-party-libraries Unreal Engine 4 - Working with 3rd Party Libraries
 https://www.reddit.com/r/darksouls3/comments/58vd3x/i_made_a_complete_list_of_important_things_that/ I made a complete list of important things that you need to do during every playthrough, because if you skip these, they become lost forever until NG+. If this list is missing anything, please post it in the comments. : r/darksouls3
+https://github.com/swaywm/sway/issues/3109 /etc/profile is never sourced when launching sway from GDM · Issue #3109 · swaywm/sway

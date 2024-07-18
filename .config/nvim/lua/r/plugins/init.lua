@@ -10,7 +10,7 @@ return {
     'chaoren/vim-wordmotion',
 
     -- Colorscheme
-    { 'folke/tokyonight.nvim', opts = { plugins = { all = true } } },
+    { 'folke/tokyonight.nvim', opts = { plugins = { mini_statusline = true } } },
 
     -- Unreal integration
     {
@@ -42,7 +42,7 @@ return {
             show_help = false,
             show_keys = false,
             layout = { layout = { spacing = 15 } },
-            window = { border = 'single' },
+            win = { border = 'single' },
         },
         -- commit = '4acffc9',
     },

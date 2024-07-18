@@ -76,7 +76,6 @@ if [[ ${DISPLAY} ]]; then
 			nm-applet &
 		fi
 
-		systemctl --user start redshift.service
 		nitrogen --force-setter=xinerama --restore &
 		picom &
 		# xautolock -time 5 -locker "$HOME/.local/bin/scripts/daver" &
