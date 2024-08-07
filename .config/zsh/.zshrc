@@ -71,30 +71,41 @@ if [[ "${MACHINE_TYPE}" = "laptop" ]]; then
         alias cgit='GIT_DIR="${HOME}/Repositories/Maintained/dotbare" GIT_WORK_TREE="${HOME}" git'
 fi
 
-# Zplug configuration
-source "${ZPLUG_HOME}/init.zsh"
-zplug 'zplug/zplug', hook-build:'zplug --self-manage'
-zplug "zsh-users/zsh-completions"
-zplug "MichaelAquilina/zsh-you-should-use"
-zplug "zsh-users/zsh-history-substring-search"
-zplug "zsh-users/zsh-autosuggestions"
-zplug "zsh-users/zsh-syntax-highlighting"
-zplug "agura-lex/find-the-command"
-zplug 'romkatv/powerlevel10k', as:theme, depth:1
-zplug "wfxr/forgit"
-zplug "lincheney/fzf-tab-completion"
-zplug load
+# Source Zplug initialization only if the init file exists
+if [ -f "${ZPLUG_HOME}/init.zsh" ]; then
+
+    source "${ZPLUG_HOME}/init.zsh"
+    # Zplug configuration
+    zplug 'zplug/zplug', hook-build:'zplug --self-manage'
+    zplug "zsh-users/zsh-completions"
+    zplug "MichaelAquilina/zsh-you-should-use"
+    zplug "zsh-users/zsh-history-substring-search"
+    zplug "zsh-users/zsh-autosuggestions"
+    zplug "zsh-users/zsh-syntax-highlighting"
+    zplug "agura-lex/find-the-command"
+    zplug 'romkatv/powerlevel10k', as:theme, depth:1
+    zplug "wfxr/forgit"
+    zplug "lincheney/fzf-tab-completion"
+    zplug load
+else
+    # Install Zplug if not found
+    echo "Zplug is not installed. Installing now..."
+    curl -sL --proto-redir -all,https https://raw.githubusercontent.com/zplug/installer/master/installer.zsh | zsh
+fi
 
 # Custom completion scripts
-source "${ZPLUG_HOME}/repos/agura-lex/find-the-command/usr/share/doc/find-the-command/ftc.zsh"
-source "${ZPLUG_HOME}/repos/zsh-users/zsh-history-substring-search/zsh-history-substring-search.zsh"
-source "${ZPLUG_HOME}/repos/lincheney/fzf-tab-completion/zsh/fzf-zsh-completion.sh"
-source /usr/share/fzf/key-bindings.zsh
-source /usr/share/fzf/completion.zsh
-eval "$(register-python-argcomplete pipx)"
-eval "$(_PIO_COMPLETE=zsh_source pio)"
-eval "$(zoxide init zsh)"
-compdef _dotnet_zsh_complete dotnet
+[[ -f "${ZPLUG_HOME}/repos/agura-lex/find-the-command/usr/share/doc/find-the-command/ftc.zsh" ]] && source "${ZPLUG_HOME}/repos/agura-lex/find-the-command/usr/share/doc/find-the-command/ftc.zsh"
+[[ -f "${ZPLUG_HOME}/repos/zsh-users/zsh-history-substring-search/zsh-history-substring-search.zsh" ]] && source "${ZPLUG_HOME}/repos/zsh-users/zsh-history-substring-search/zsh-history-substring-search.zsh"
+[[ -f "${ZPLUG_HOME}/repos/lincheney/fzf-tab-completion/zsh/fzf-zsh-completion.sh" ]] && source "${ZPLUG_HOME}/repos/lincheney/fzf-tab-completion/zsh/fzf-zsh-completion.sh"
+[[ -f /usr/share/fzf/key-bindings.zsh ]] && source /usr/share/fzf/key-bindings.zsh
+[[ -f /usr/share/fzf/completion.zsh ]] && source /usr/share/fzf/completion.zsh
+
+# Completion initialization
+[[ -x "$(command -v register-python-argcomplete)" ]] && eval "$(register-python-argcomplete pipx)"
+[[ -x "$(command -v pio)" ]] && eval "$(_PIO_COMPLETE=zsh_source pio)"
+[[ -x "$(command -v zoxide)" ]] && eval "$(zoxide init zsh)"
+# Dotnet completion
+[[ -x "$(command -v dotnet)" ]] && compdef _dotnet_zsh_complete dotnet
 
 # Key bindings
 bindkey '^[[A' history-substring-search-up
