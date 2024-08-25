@@ -48,7 +48,9 @@ require('which-key').register {
             name = 'Treesitter',
             n = { tele 'treesitter', 'TreeSitter nodes in buffer' },
             f = {
-                "<Esc><cmd>lua require('telescope').extensions.refactoring.refactors()<CR>",
+                function()
+                    require('telescope').extensions.refactoring.refactors()
+                end,
                 'Treesitter Refactoring options',
                 mode = 'v',
             },

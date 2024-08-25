@@ -1,6 +1,7 @@
 local constants = require 'overseer.constants'
 local overseer = require 'overseer'
 local TAG = constants.TAG
+local gpu_cmd = vim.env.MACHINE_TYPE == 'laptop' and 'prime-run' or 'DRI_PRIME=1'
 
 local tmpl = {
     params = {
@@ -22,7 +23,7 @@ local tmpl = {
             end
         end
         if params.dGPU then
-            table.insert(cmd, 1, 'prime-run')
+            table.insert(cmd, 1, gpu_cmd)
         end
 
         return {

@@ -24,7 +24,7 @@ function overseer.init()
         pattern = get_ft(),
         callback = function(args)
             map('n', '<F1>', function()
-                require('overseer').window.toggle { enter = false }
+                require('overseer').window.toggle { enter = false, direction = 'left' }
             end, { desc = 'Open Task panel', buffer = args.buf })
         end,
     })

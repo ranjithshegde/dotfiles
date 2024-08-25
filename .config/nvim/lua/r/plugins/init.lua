@@ -38,13 +38,13 @@ return {
     -- WhichKey
     {
         'folke/which-key.nvim',
+        branch = 'release-please--branches--main--components--which-key.nvim',
         opts = {
             show_help = false,
             show_keys = false,
             layout = { layout = { spacing = 15 } },
-            win = { border = 'single' },
+            window = { border = 'single' },
         },
-        -- commit = '4acffc9',
     },
 
     -- Colorizer

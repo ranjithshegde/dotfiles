@@ -122,21 +122,17 @@ end
 
 -- Run make compiled binary with Prime render offload
 function cpp.renderOffload(cmd)
-    vim.ui.select(
-        { 'Integrated graphics', 'Dedicated (Nvidia) Graphics' },
-        { prompt = 'Run the binary on: ' },
-        function(choice)
-            local dGPU = false
-            if choice ~= 'Integrated graphics' then
-                dGPU = true
-            end
-            if cmd then
-                sequencer('oF Run', { dGPU = dGPU }, 'oF Build')
-            else
-                require('overseer').run_template { name = [[oF Run]], params = { dGPU = dGPU } }
-            end
+    vim.ui.select({ 'Integrated graphics', 'Dedicated Graphics' }, { prompt = 'Run the binary on: ' }, function(choice)
+        local dGPU = false
+        if choice ~= 'Integrated graphics' then
+            dGPU = true
         end
-    )
+        if cmd then
+            sequencer('oF Run', { dGPU = dGPU }, 'oF Build')
+        else
+            require('overseer').run_template { name = [[oF Run]], params = { dGPU = dGPU } }
+        end
+    end)
 end
 
 -- Clean and rebuild Release

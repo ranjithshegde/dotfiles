@@ -1,7 +1,7 @@
 local surround = {
     'kylechui/nvim-surround',
-    keys = { 'ys', 'yss', 'ySS', 'cs', 'ds', { 'S', mode = 'v' } },
-    config = true,
+    keys = { 'gs', 'cs', 'ds', { 'S', mode = 'v' } },
+    opts = { keymaps = { normal = 'gs', normal_cur = 'gss' } },
 }
 
 function surround.init()

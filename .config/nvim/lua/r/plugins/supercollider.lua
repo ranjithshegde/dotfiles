@@ -57,6 +57,7 @@ supercollider.config = function()
             end),
         },
         completion = { signature = { config = { border = 'rounded' } } },
+        postwin = { float = { enabled = true } },
     }
 
     vim.api.nvim_create_autocmd('InsertEnter', {

@@ -187,7 +187,9 @@ function utils.lazy_on_key(mode, key, desc, callback, args)
         else
             callback(args)
         end
-        utils.feedkey(key, 'm')
+        vim.schedule(function()
+            utils.feedkey(key, 'm')
+        end)
     end, { desc = desc })
 end
 
