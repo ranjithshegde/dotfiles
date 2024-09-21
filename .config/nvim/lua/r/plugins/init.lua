@@ -63,4 +63,6 @@ return {
             }
         end,
     },
+
+    { 'milanglacier/yarepl.nvim', config = true, ft = 'python' },
 }

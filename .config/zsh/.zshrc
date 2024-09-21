@@ -62,14 +62,8 @@ alias usystart='systemctl --user start'
 alias usystop='systemctl --user stop'
 alias usysre='systemctl --user restart'
 alias srest='systemctl suspend'
-
-if [[ "${MACHINE_TYPE}" = "laptop" ]]; then
-        alias cvim='GIT_DIR=$WORKSPACE/Repos/dotfiles GIT_WORK_TREE=$HOME vim'
-        alias cgit='GIT_DIR=$WORKSPACE/Repos/dotfiles GIT_WORK_TREE=$HOME git'
-    else
-        alias cvim='GIT_DIR="${HOME}/Repositories/Maintained/dotbare" GIT_WORK_TREE="${HOME}" nvim'
-        alias cgit='GIT_DIR="${HOME}/Repositories/Maintained/dotbare" GIT_WORK_TREE="${HOME}" git'
-fi
+alias cvim='GIT_DIR="${HOME}/Repositories/Maintained/dotbare" GIT_WORK_TREE="${HOME}" nvim'
+alias cgit='GIT_DIR="${HOME}/Repositories/Maintained/dotbare" GIT_WORK_TREE="${HOME}" git'
 
 # Source Zplug initialization only if the init file exists
 if [ -f "${ZPLUG_HOME}/init.zsh" ]; then

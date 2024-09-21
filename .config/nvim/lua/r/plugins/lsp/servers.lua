@@ -32,10 +32,10 @@ return function()
         dartls = { capabilities = handlers.capabilities() },
         glslls = { capabilities = handlers.capabilities() },
         jsonls = { capabilities = handlers.capabilities() },
-        pyright = { capabilities = handlers.capabilities() },
         marksman = { capabilities = handlers.capabilities() },
         neocmake = { capabilities = handlers.capabilities() },
-        tsserver = { capabilities = handlers.capabilities() },
+        ts_ls = { capabilities = handlers.capabilities() },
+        pyright = { capabilities = handlers.capabilities() },
         rust_analyzer = { capabilities = handlers.capabilities() },
         bashls = {
             capabilities = handlers.capabilities(),

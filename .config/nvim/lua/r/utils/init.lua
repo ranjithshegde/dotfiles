@@ -41,7 +41,7 @@ end
 function utils.open_in_browser(url)
     local handle
     local args = type(url) == 'table' and url or { url }
-    handle = vim.loop.spawn('xdg-open', { args = args }, function()
+    handle = vim.uv.spawn('xdg-open', { args = args }, function()
         handle:close()
     end)
 end
@@ -123,9 +123,9 @@ function utils.get_file_label(n, tab)
     local icon, color = require('nvim-web-devicons').get_icon_color(tail, ext)
 
     if icon ~= nil then
-        local table = vim.api.nvim_get_hl_by_name('TablineSel', true)
+        local table = vim.api.nvim_get_hl(0, { name = 'TablineSel' })
         if tab then
-            vim.api.nvim_set_hl(0, 'IconColor', { bg = table['background'], fg = color, cterm = { bold = true } })
+            vim.api.nvim_set_hl(0, 'IconColor', { bg = table['bg'], fg = color, cterm = { bold = true } })
         end
         result.icon = icon
         result.color = color
@@ -136,7 +136,8 @@ end
 ---Get a table with names of currnetly active language server names
 ---@return table Active clients
 function utils.get_client_names()
-    local buf_clients = vim.lsp.get_active_clients()
+    local buf_clients = vim.lsp.get_clients()
+    -- local buf_clients = vim.lsp.get_active_clients()
 
     local buf_client_names = {}
     for _, client in pairs(buf_clients) do
@@ -218,7 +219,7 @@ end
 
 ---Set css and html as alternate files to each other
 function utils.switch_alternate()
-    local open_cmd = vim.loop.fs_stat(vim.fn.glob 'css/*.css') and vim.fn.glob 'css/*.css' or vim.fn.glob '*.css'
+    local open_cmd = vim.uv.fs_stat(vim.fn.glob 'css/*.css') and vim.fn.glob 'css/*.css' or vim.fn.glob '*.css'
     vim.keymap.set('n', '<leader>s', function()
         if vim.fn.expand '%:e' == 'html' then
             vim.cmd.edit(open_cmd)
@@ -232,8 +233,42 @@ end
 ---@param hl1 string
 ---@param hl2 string
 function utils.switch_highlight(hl1, hl2)
-    local hl = vim.api.nvim_get_hl_by_name(hl1, true)
-    vim.api.nvim_set_hl(0, hl2, { fg = hl.background })
+    local hl = vim.api.nvim_get_hl(0, { name = hl1 })
+    vim.api.nvim_set_hl(0, hl2, { fg = hl.bg })
+end
+
+function utils.get_maps(maps, prefix)
+    local temp = {}
+    prefix = prefix or ''
+
+    for k, v in pairs(maps) do
+        -- Skip keys like "group" and "name"
+        if k ~= 'group' and k ~= 'name' then
+            if type(v) == 'table' and (v[1] ~= nil or v.mode ~= nil or v.buf ~= nil) then
+                local rhs = v[1]
+                local opts = {}
+
+                for opt_key, opt_val in pairs(v) do
+                    if type(opt_key) ~= 'number' then
+                        opts[opt_key] = opt_val
+                    elseif opt_key ~= 1 then
+                        opts['desc'] = opt_val
+                    end
+                end
+
+                table.insert(temp, { prefix .. k, rhs, opts })
+            elseif type(v) == 'table' then
+                local subst = utils.get_maps(v, prefix .. k)
+                for _, _v in ipairs(subst) do
+                    table.insert(temp, _v)
+                end
+            else
+                table.insert(temp, { prefix .. k, v, {} })
+            end
+        end
+    end
+
+    return temp
 end
 
 return utils

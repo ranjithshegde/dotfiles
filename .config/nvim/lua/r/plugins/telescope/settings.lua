@@ -111,7 +111,6 @@ function telescope.telescope()
                     { '~/Repositories/libraries/', max_depth = 2 },
                     { '~/Workspaces/lua', max_depth = 4 },
                     { '~/Workspaces/cpp', max_depth = 4 },
-                    { '~/Workspaces/Repos', max_depth = 4 },
                     { '~/Workspaces/electronics', max_depth = 4 },
                     { '~/Workspaces/openFrameworks', max_depth = 5 },
                     { '~/Workspaces/websites/', max_depth = 3 },

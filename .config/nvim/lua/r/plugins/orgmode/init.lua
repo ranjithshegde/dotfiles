@@ -11,7 +11,10 @@ return {
                     '~/Documents/Orgs/*/*/*/*',
                 },
                 org_highlight_latex_and_related = 'entities',
-                emacs_config = { config_path = '$XDG_CONFIG_HOME/emacs/init.el' },
+                emacs_config = {
+                    config_path = vim.env.XDG_CONFIG_HOME and vim.env.XDG_CONFIG_HOME .. '/emacs/init.el'
+                        or '$HOME/.emacs.d/init.el',
+                },
             }
         end,
         init = function()
