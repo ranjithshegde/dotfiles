@@ -1,7 +1,7 @@
 local constants = require 'overseer.constants'
 local overseer = require 'overseer'
 local TAG = constants.TAG
-local gpu_cmd = vim.env.MACHINE_TYPE == 'laptop' and 'prime-run' or 'DRI_PRIME=1'
+local num_jobs = _G.__MACHINE and '-j12' or '-j32'
 
 local tmpl = {
     params = {
@@ -11,25 +11,30 @@ local tmpl = {
         save = { type = 'boolean', optional = true },
     },
     builder = function(params)
+        local build_table = {}
         local cmd = {}
         if params.args then
             cmd = vim.list_extend(cmd, params.args)
         end
         if params.type then
-            if vim.tbl_contains(cmd, '-j12') then
+            if vim.tbl_contains(cmd, num_jobs) then
                 table.insert(cmd, params.type)
             else
                 table.insert(cmd, 'Run' .. params.type)
             end
         end
         if params.dGPU then
-            table.insert(cmd, 1, gpu_cmd)
+            if _G.__MACHINE then
+                table.insert(cmd, 1, 'prime-run')
+            else
+                build_table.env = { DRI_PRIME = '1' }
+            end
         end
 
-        return {
-            cmd = cmd,
-            components = { 'default', 'on_output_quickfix', 'unique', { 'r.dispatch', save = params.save } },
-        }
+        build_table.components = { 'default', 'on_output_quickfix', 'unique', { 'r.dispatch', save = params.save } }
+        build_table.cmd = cmd
+
+        return build_table
     end,
 }
 
@@ -43,13 +48,13 @@ return {
     generator = function(_, cb)
         local commands = {
             { args = { 'make' }, tags = { TAG.TEST }, priority = 10 },
-            { args = { 'make', '-j12' }, tags = { TAG.BUILD }, priority = 20, save = true },
+            { args = { 'make', num_jobs }, tags = { TAG.BUILD }, priority = 20, save = true },
         }
         local ret = {}
         for _, command in ipairs(commands) do
             local name = 'oF'
             local desc
-            if vim.tbl_contains(command.args, '-j12') then
+            if vim.tbl_contains(command.args, num_jobs) then
                 name = name .. ' Build'
                 desc = 'Compile openFrameworks binary'
             else

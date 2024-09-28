@@ -1,7 +1,7 @@
 local constants = require 'overseer.constants'
 local overseer = require 'overseer'
 local TAG = constants.TAG
-local gpu_cmd = vim.env.MACHINE_TYPE == 'laptop' and 'prime-run' or 'DRI_PRIME=1'
+local num_jobs = _G.__MACHINE and '-j12' or '-j32'
 
 local tmpl = {
     params = {
@@ -11,6 +11,7 @@ local tmpl = {
         save = { type = 'boolean', optional = true },
     },
     builder = function(params)
+        local build_table = {}
         local cmd = {}
         if params.args then
             cmd = vim.list_extend(cmd, params.args)
@@ -19,13 +20,17 @@ local tmpl = {
             table.insert(cmd, '-DCMAKE_BUILD_TYPE=' .. params.type)
         end
         if params.dGPU then
-            table.insert(cmd, 1, gpu_cmd)
+            if _G.__MACHINE then
+                table.insert(cmd, 1, 'prime_run')
+            else
+                build_table.env = { DRI_PRIME = '1' }
+            end
         end
 
-        return {
-            cmd = cmd,
-            components = { 'default', 'on_output_quickfix', 'unique', { 'r.dispatch', save = params.save } },
-        }
+        build_table.cmd = cmd
+        build_table.components = { 'default', 'on_output_quickfix', 'unique', { 'r.dispatch', save = params.save } }
+
+        return build_table
     end,
 }
 
@@ -47,7 +52,7 @@ return {
                 dGPU = false,
             },
             {
-                args = { 'make', '-j12', '-C', 'build' },
+                args = { 'make', num_jobs, '-C', 'build' },
                 tags = { TAG.BUILD },
                 priority = 20,
                 save = true,
@@ -75,7 +80,7 @@ return {
             elseif vim.tbl_contains(command.args, '-B') then
                 name = name .. ' configure'
                 desc = 'configure project for build or release'
-            elseif vim.tbl_contains(command.args, '-j12') then
+            elseif vim.tbl_contains(command.args, num_jobs) then
                 name = name .. ' Build'
                 desc = 'Compile project binary'
             elseif vim.tbl_contains(command.args, '--config') then

@@ -1,6 +1,7 @@
 local constants = require 'overseer.constants'
 local overseer = require 'overseer'
 local TAG = constants.TAG
+local num_jobs = _G.__MACHINE and '-j12' or '-j32'
 
 local tmpl = {
     params = {
@@ -29,7 +30,7 @@ return {
     },
     generator = function(_, cb)
         local commands = {
-            { args = { 'emmake', 'make', '-j12' }, tags = { TAG.BUILD }, priority = 50, save = true },
+            { args = { 'emmake', 'make', num_jobs }, tags = { TAG.BUILD }, priority = 50, save = true },
             { args = { 'emrun', "--browser='brave'", vim.b.wasm }, tags = { TAG.TEST }, priority = 40 },
         }
         local ret = {}
