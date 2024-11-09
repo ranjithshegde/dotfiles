@@ -25,7 +25,7 @@ local tele_cd = function(dirs, ...)
     end
 end
 
-require('which-key').register {
+local maps = {
     ['<Space>'] = {
         name = 'Telescope',
         b = { tele 'buffers', 'Buffers' },
@@ -164,3 +164,5 @@ require('which-key').register {
         },
     },
 }
+
+require('which-key').register(maps)

@@ -1,4 +1,4 @@
-local uv = vim.loop
+local uv = vim.uv
 local shell = require('r.utils').silent_shell
 
 local workspace = vim.env.WORKSPACE
@@ -227,15 +227,14 @@ end
 
 local function create_cmake_list(project_name, libs)
     boilerplate.cpp.cmake.make = {
-        'cmake_minimum_required(VERSION 3.2.0)\n',
-        'set(CMAKE_TOOLCHAIN_FILE /opt/vcpkg/scripts/buildsystems/vcpkg.cmake)\n',
+        'cmake_minimum_required(VERSION 3.5)\n',
         'set(CMAKE_EXPORT_COMPILE_COMMANDS ON)\n',
         '\n',
         'project( ' .. project_name .. ')\n',
         libs and string.format('find_package(%s REQUIRED)\n\n', libs) or '\n',
         'file(\n',
         '\tGLOB_RECURSE SOURCES\n',
-        '\tsrc/*.cpp\n',
+        '\tsrc/**/*.cpp\n',
         ')\n',
         '\n',
         'add_compile_options (\n',

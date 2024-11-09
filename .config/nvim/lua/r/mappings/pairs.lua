@@ -21,27 +21,9 @@ local function move(cmd, count)
     end
 end
 
-local function call_cmd(cmd)
-    return function()
-        if vim.v.count > 1 then
-            if not pcall(vim.cmd, tostring(vim.v.count1) .. cmd) then
-                print 'No more results'
-            end
-        else
-            if not pcall(vim.cmd, cmd) then
-                print 'No more results'
-            end
-        end
-    end
-end
-
-return require('which-key').register({
+local maps = {
     [']'] = {
         name = 'Unimpaired next',
-        a = { call_cmd 'next', 'Switch to next file in argument list' },
-        b = { call_cmd 'bnext', 'Switch to next buffer' },
-        q = { call_cmd 'cnext', 'Switch to next Quickfix entry' },
-        l = { call_cmd 'lnext', 'Switch to next locationList entry' },
         e = {
             function()
                 move('+', vim.v.count1 - 1)
@@ -57,10 +39,6 @@ return require('which-key').register({
     },
     ['['] = {
         name = 'Unimpaired previous',
-        a = { call_cmd 'previous', 'Switch to next file in argument list' },
-        b = { call_cmd 'bprevious', 'Switch to previous buffer' },
-        q = { call_cmd 'cprevious', 'Switch to previous Quickfix entry' },
-        l = { call_cmd 'lprevious', 'Switch to previous locationList entry' },
         e = {
             function()
                 move('--', vim.v.count1 - 1)
@@ -74,4 +52,6 @@ return require('which-key').register({
             'Add [count] spaces above current line',
         },
     },
-}, {})
+}
+
+return require('which-key').register(maps)

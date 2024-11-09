@@ -111,6 +111,8 @@ appendpath "$XDG_DATA_HOME/perl/bin"
 appendpath "$EMSDK"
 appendpath "$EMSDK/upstream/emscripten"
 appendpath "/opt/UE5/Engine/Binaries/Linux"
+appendpath "/opt/UE5/Engine/Build/BatchFiles/"
+appendpath "/opt/UE5/Engine/Build/BatchFiles/Linux"
 
 unset -f appendpath
 export PATH

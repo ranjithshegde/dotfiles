@@ -24,16 +24,14 @@ if [[ "${MACHINE_TYPE}" = "laptop" ]]; then
 	# SSH with GNUPG -----------------------------------------------------------------------------
 	unset SSH_AGENT_PID
 
-	# Set SSH_AUTH_SOCK if not already set for this process
-	if [ "${gnupg_SSH_AUTH_SOCK_by:-0}" -ne $$ ]; then
-		SSH_AUTH_SOCK="$(gpgconf --list-dirs agent-ssh-socket)"
-		export SSH_AUTH_SOCK
-	fi
 	# Disable Bluetooth by default
 	rfkill block bluetooth
 	export OPENCV_OPENCL_DEVICE="NVIDIA:GPU:0"
-else
-	SSH_AUTH_SOCK="$XDG_RUNTIME_DIR/gcr/ssh"
+fi
+
+# Set SSH_AUTH_SOCK if not already set for this process
+if [ "${gnupg_SSH_AUTH_SOCK_by:-0}" -ne $$ ]; then
+	SSH_AUTH_SOCK="$(gpgconf --list-dirs agent-ssh-socket)"
 	export SSH_AUTH_SOCK
 fi
 
@@ -76,6 +74,7 @@ if [[ ${DISPLAY} ]]; then
 			nm-applet &
 		fi
 
+		# dbus-update-activation-environment --all &
 		nitrogen --force-setter=xinerama --restore &
 		picom &
 		# xautolock -time 5 -locker "$HOME/.local/bin/scripts/daver" &
