@@ -19,7 +19,7 @@ function gitsigns.init()
     vim.api.nvim_create_autocmd({ 'BufReadpost', 'VimEnter', 'DirChanged' }, {
         group = id.GitSigns,
         callback = function(args)
-            local git_dir = vim.loop.fs_stat(vim.loop.cwd() .. '/.git')
+            local git_dir = vim.uv.fs_stat(vim.uv.cwd() .. '/.git')
             if (git_dir and git_dir.type == 'directory') or vim.env.GIT_DIR then
                 require('lazy').load { plugins = { 'gitsigns.nvim' } }
                 vim.api.nvim_del_autocmd(args.id)

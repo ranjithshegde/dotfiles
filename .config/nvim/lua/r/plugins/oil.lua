@@ -6,7 +6,7 @@ return {
 
     init = function()
         vim.keymap.set('n', '<leader>e', function()
-            require('oil').open_float(vim.loop.cwd())
+            require('oil').open_float(vim.uv.cwd())
         end, { desc = 'Open file explorer' })
         local id = {}
 
@@ -15,7 +15,7 @@ return {
         vim.api.nvim_create_autocmd({ 'BufEnter', 'BufReadPre' }, {
             group = id.ProjectDrawer,
             callback = function(args)
-                local fs = vim.loop.fs_stat(args.file)
+                local fs = vim.uv.fs_stat(args.file)
                 if fs and fs.type == 'directory' then
                     if not package.loaded.oil then
                         vim.api.nvim_del_autocmd(args.id)

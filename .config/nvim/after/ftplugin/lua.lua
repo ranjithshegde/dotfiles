@@ -1,5 +1,5 @@
 local file = vim.fn.expand '%:t:r'
-if vim.loop.fs_stat(file .. '.pd_lua') then
+if vim.uv.fs_stat(file .. '.pd_lua') then
     vim.b.isPD = true
 end
 

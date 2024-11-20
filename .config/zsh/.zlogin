@@ -1,3 +1,7 @@
+if [ -z "$GNOME_KEYRING_CONTROL" ]; then
+	eval $(gnome-keyring-daemon --start --components=ssh)
+fi
+
 # Function to append library paths if not already included
 append_lib() {
 	case ":$LIBRARY_PATH:" in
@@ -20,9 +24,6 @@ export LIBRARY_PATH
 if [[ "${MACHINE_TYPE}" = "laptop" ]]; then
 	# Unset Forward key
 	xmodmap -e 'keysym 0xff53 = NoSymbol'
-
-	# SSH with GNUPG -----------------------------------------------------------------------------
-	unset SSH_AGENT_PID
 
 	# Disable Bluetooth by default
 	rfkill block bluetooth
@@ -65,24 +66,6 @@ if [[ ${XDG_SESSION_TYPE} == "wayland" ]]; then
 	export QT_QPA_PLATFORM='wayland'
 fi
 
-# Run these only if X is running
-if [[ ${DISPLAY} ]]; then
-	if [[ ${DESKTOP_SESSION} == "dwm" ]]; then
-		if [[ "${MACHINE_TYPE}" = "laptop" ]]; then
-			xset r rate 200 30 &
-			xrandr --dpi 96 &
-			nm-applet &
-		fi
-
-		# dbus-update-activation-environment --all &
-		nitrogen --force-setter=xinerama --restore &
-		picom &
-		# xautolock -time 5 -locker "$HOME/.local/bin/scripts/daver" &
-		xss-lock --notifier "$HOME/.local/bin/scripts/steam_sleep" -- "$HOME/.local/bin/scripts/daver" &
-
-	elif [[ ${DESKTOP_SESSION== 'sway'} ]]; then
-		export XDG_CURRENT_DESKTOP='sway'
-		export WLR_RENDERER='vulkan'
-		# export GBM_BACKEND='amdgpu-drm'
-	fi
-fi
+# 		export XDG_CURRENT_DESKTOP='sway'
+# 		export WLR_RENDERER='vulkan'
+# 		# export GBM_BACKEND='amdgpu-drm'

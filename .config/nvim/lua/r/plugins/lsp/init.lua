@@ -3,8 +3,15 @@ local setup = require('r.utils').plugin_setup
 return {
     { 'p00f/clangd_extensions.nvim' },
     {
-        'folke/neodev.nvim',
-        config = setup 'r.plugins.lsp.neodev',
+        'folke/lazydev.nvim',
+        dependencies = 'Bilal2453/luvit-meta',
+        ft = 'lua',
+        opts = {
+            library = {
+                { path = 'luvit-meta/library', words = { 'vim%.uv' } },
+                { path = '/usr/lib/pd/extra/pdlua', words = { 'pd', 'pdx' } },
+            },
+        },
     },
     {
         'ray-x/navigator.lua',

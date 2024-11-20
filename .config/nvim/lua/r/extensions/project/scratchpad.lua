@@ -5,7 +5,7 @@
 local shell = require('r.utils').silent_shell
 
 local function isFile(file)
-    local stat = vim.loop.fs_stat(file)
+    local stat = vim.uv.fs_stat(file)
     if stat ~= nil then
         return stat
     else
@@ -37,7 +37,7 @@ local function openScratch(type)
         workspace = vim.fn.input('Enter Worksapce Dir: ', '', 'file')
     end
     local dir = workspace .. type .. '/Scratch'
-    if vim.loop.fs_stat(dir).type ~= 'directory' then
+    if vim.uv.fs_stat(dir).type ~= 'directory' then
         shell { 'mkdir', '-p', dir }
     end
     vim.cmd.lcd(dir)

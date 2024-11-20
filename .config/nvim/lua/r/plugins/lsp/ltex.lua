@@ -14,14 +14,14 @@ local function write_file(path, data)
 end
 
 local function update_dict()
-    local client = vim.lsp.get_active_clients({ name = 'ltex' })[1]
+    local client = vim.lsp.get_clients({ name = 'ltex' })[1]
     client.config.settings.ltex.dictionary['en-GB'] =
-        require('r.utils').concat_fileLines(vim.api.nvim_get_option 'spellfile')
+        require('r.utils').concat_fileLines(vim.api.nvim_get_option_value('spellfile', {}))
     return client.notify('workspace/didChangeConfiguration', client.config.settings)
 end
 
 local function update_rule(file)
-    local client = vim.lsp.get_active_clients({ name = 'ltex' })[1]
+    local client = vim.lsp.get_clients({ name = 'ltex' })[1]
     if not client.config.settings.ltex.disabledRules then
         client.config.settings.ltex.disabledRules = {}
     end
@@ -30,7 +30,7 @@ local function update_rule(file)
 end
 
 local function hidden(file)
-    local client = vim.lsp.get_active_clients({ name = 'ltex' })[1]
+    local client = vim.lsp.get_clients({ name = 'ltex' })[1]
     if not client.config.settings.ltex.hiddenFalsePositives then
         client.config.settings.ltex.hiddenFalsePositives = {}
     end
@@ -42,7 +42,7 @@ end
 function ltex.add_to_dict(command)
     local args = command.arguments[1].words
     for _, words in pairs(args) do
-        write_file(vim.api.nvim_get_option 'spellfile', words)
+        write_file(vim.api.nvim_get_option_value('spellfile', {}), words)
     end
     update_dict()
 end
@@ -68,7 +68,7 @@ function ltex.false_positive(command)
 end
 
 function ltex.lsp()
-    local dict = vim.api.nvim_get_option 'spellfile'
+    local dict = vim.api.nvim_get_option_value('spellfile', {})
     local config = {
         name = 'ltex',
         filetypes = { 'bib', 'markdown', 'org', 'tex' },
@@ -96,14 +96,14 @@ function ltex.lsp()
                 language = 'en-GB',
                 dictionary = { ['en-GB'] = require('r.utils').concat_fileLines(dict) },
                 hiddenFalsePositives = {
-                    ['en-GB'] = vim.loop.fs_stat(vim.loop.cwd() .. '/.ltex_false_positive')
-                            and require('r.utils').concat_fileLines(vim.loop.cwd() .. '/.ltex_false_positive')
+                    ['en-GB'] = vim.uv.fs_stat(vim.uv.cwd() .. '/.ltex_false_positive')
+                            and require('r.utils').concat_fileLines(vim.uv.cwd() .. '/.ltex_false_positive')
                         or {},
                 },
                 disabledRules = {
-                    ['en-GB'] = vim.loop.fs_stat(vim.loop.cwd() .. '/.ltex_rules')
-                            and require('r.utils').concat_fileLines(vim.loop.cwd() .. '/.ltex_rules')
-                        or {},
+                    ['en-GB'] = vim.uv.fs_stat(vim.uv.cwd() .. '/.ltex_rules') and require('r.utils').concat_fileLines(
+                        vim.uv.cwd() .. '/.ltex_rules'
+                    ) or {},
                 },
             },
         },

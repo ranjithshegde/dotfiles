@@ -228,7 +228,7 @@ aucmd('BufEnter', {
     group = id.NoVim,
     callback = function()
         local handle
-        handle = vim.loop.spawn('xdg-open', { args = { vim.fn.expand '%:p' } }, function()
+        handle = vim.uv.spawn('xdg-open', { args = { vim.fn.expand '%:p' } }, function()
             handle:close()
         end)
         vim.api.nvim_buf_delete(vim.api.nvim_get_current_buf(), { force = true })

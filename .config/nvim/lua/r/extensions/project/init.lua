@@ -100,7 +100,7 @@ local function exec_async(cmd, args, callback, ...)
     local handle
     local c_args = { ... }
     handle = uv.spawn(cmd, {
-        cwd = vim.loop.cwd(),
+        cwd = uv.cwd(),
         args = args,
     }, function()
         handle:close()

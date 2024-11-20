@@ -55,6 +55,10 @@ local function cmp_setup(cmp, luasnip)
             { name = 'luasnip' },
             { name = 'orgmode' },
             { name = 'path' },
+            {
+                name = 'lazydev',
+                group_index = 0,
+            },
         }, {
             {
                 name = 'buffer',

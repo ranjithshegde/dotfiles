@@ -13,7 +13,6 @@ configs.cpp = {
                 return vim.fn.input('Path to executable: ', vim.fn.getcwd() .. '/', 'file')
             end
         end,
-        -- externalConsole = true,
         visualizerFile = vim.env.XDG_DATA_HOME .. '/debug-adapters/natvis/concurrency.natvis',
         cwd = '${workspaceFolder}',
         stopOnEntry = false,
@@ -36,7 +35,6 @@ configs.cpp = {
                 return vim.fn.input('Path to executable: ', vim.fn.getcwd() .. '/', 'file')
             end
         end,
-        -- externalConsole = true,
         visualizerFile = vim.env.XDG_DATA_HOME .. '/debug-adapters/natvis/concurrency.natvis',
         cwd = '${workspaceFolder}',
         stopOnEntry = false,
@@ -94,7 +92,7 @@ configs.python = {
 
         program = '${file}',
         pythonPath = function()
-            local cwd = vim.loop.cwd()
+            local cwd = vim.uv.cwd()
             if vim.fn.executable(cwd .. '/venv/bin/python') == 1 then
                 return cwd .. '/venv/bin/python'
             elseif vim.fn.executable(cwd .. '/.venv/bin/python') == 1 then
@@ -112,7 +110,7 @@ configs.javascript = {
         type = 'node2',
         request = 'launch',
         program = '${file}',
-        cwd = vim.loop.cwd(),
+        cwd = vim.uv.cwd(),
         sourceMaps = true,
         protocol = 'inspector',
         console = 'integratedTerminal',

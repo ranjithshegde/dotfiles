@@ -106,7 +106,7 @@ local cpp = {}
 
 -- Build puredata externals
 function cpp.pdBuild()
-    local bin = vim.fn.fnamemodify(vim.loop.cwd(), ':t') .. '.pd_linux'
+    local bin = vim.fn.fnamemodify(vim.uv.cwd(), ':t') .. '.pd_linux'
     local dest = '~/.local/lib/pd/extra/'
     vim.cmd.OverseerRunCmd { args = { 'cp', bin, dest } }
 end

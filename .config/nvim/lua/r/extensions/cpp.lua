@@ -1,7 +1,7 @@
 local clang = {}
 
 local function isFile(file)
-    return vim.loop.fs_stat(file) ~= nil
+    return vim.uv.fs_stat(file) ~= nil
 end
 
 ------------------------------------------------------------------------
