@@ -49,8 +49,14 @@ adapters.dart = {
 
 adapters.coreclr = {
     type = 'executable',
-    command = '/usr/bin/netcodedbg',
+    command = '/usr/bin/netcoredbg',
     args = { '--interpreter=vscode' },
+}
+
+adapters.godot = {
+    type = 'server',
+    host = '127.0.0.1',
+    port = 6006
 }
 
 return adapters

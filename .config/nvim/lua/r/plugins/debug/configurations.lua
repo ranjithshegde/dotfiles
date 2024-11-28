@@ -147,4 +147,11 @@ configs.cs = {
     },
 }
 
+configs.gdscript = {
+    type = 'godot',
+    request = 'launch',
+    name = 'Launch scene',
+    project = '${workspaceFolder}'
+}
+
 return configs

@@ -32,6 +32,7 @@ return function()
         dartls = { capabilities = handlers.capabilities() },
         glslls = { capabilities = handlers.capabilities() },
         jsonls = { capabilities = handlers.capabilities() },
+        gdscript = { capabilities = handlers.capabilities() },
         marksman = { capabilities = handlers.capabilities() },
         neocmake = { capabilities = handlers.capabilities() },
         ts_ls = { capabilities = handlers.capabilities() },
