@@ -87,7 +87,7 @@ KrohnkiteStairLayout=none,none,Krohnkite: Stair Layout
 KrohnkiteTileLayout=Alt+T,none,Krohnkite: Tile Layout
 KrohnkiteToggleFloat=Meta+F,none,Krohnkite: Toggle Float
 KrohnkiteTreeColumnLayout=none,none,Krohnkite: Tree Column Layout
-KrohnkitegrowWidth=none,none,Krohnkite: Grow Width
+KrohnkitegrowWidth=Alt+L,none,Krohnkite: Grow Width
 Move Tablet to Next Output=none,none,Move the tablet to the next output
 MoveMouseToCenter=Meta+F6,Meta+F6,Move Mouse to Center
 MoveMouseToFocus=Meta+F5,Meta+F5,Move Mouse to Focus
@@ -159,7 +159,7 @@ Window Fullscreen=Meta+Shift+Space,,Make Window Fullscreen
 Window Grow Horizontal=none,,Expand Window Horizontally
 Window Grow Vertical=none,,Expand Window Vertically
 Window Lower=none,,Lower Window
-Window Maximize=Meta+PgUp,Meta+PgUp,Maximize Window
+Window Maximize=Meta+Shift+M\tMeta+PgUp,Meta+PgUp,Maximize Window
 Window Maximize Horizontal=none,,Maximize Window Horizontally
 Window Maximize Vertical=none,,Maximize Window Vertically
 Window Minimize=Meta+PgDown,Meta+PgDown,Minimize Window
@@ -270,6 +270,9 @@ activate task manager entry 6=Meta+6,Meta+6,Activate Task Manager Entry 6
 activate task manager entry 7=Meta+7,Meta+7,Activate Task Manager Entry 7
 activate task manager entry 8=Meta+8,Meta+8,Activate Task Manager Entry 8
 activate task manager entry 9=Meta+9,Meta+9,Activate Task Manager Entry 9
+activate widget 28=none,none,Activate Icons-Only Task Manager Widget
+activate widget 30=none,none,Activate Application Launcher Widget
+activate widget 62=none,none,Activate Panel Widget
 clear-history=none,,Clear Clipboard History
 clipboard_action=Meta+Ctrl+X,Meta+Ctrl+X,Automatic Action Popup Menu
 cycle-panels=Meta+Alt+P,Meta+Alt+P,Move keyboard focus between panels
@@ -298,6 +301,13 @@ _launch=Alt+Shift+Return
 
 [services][net.local.rfm.desktop]
 _launch=Alt+Shift+R
+
+[services][org.kde.dolphin.desktop]
+_launch=Alt+Shift+F\tMeta+E
+
+[services][org.kde.spectacle.desktop]
+RecordRegion=none
+RecordWindow=none
 
 [services][org.qutebrowser.qutebrowser.desktop]
 _launch=Meta+Return

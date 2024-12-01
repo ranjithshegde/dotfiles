@@ -6,23 +6,36 @@ Name_3=New Desktop
 Number=3
 Rows=1
 
+[Effect-windowview]
+BorderActivateAll=3
+
+[NightColor]
+Active=true
+
 [Plugins]
 krohnkiteEnabled=true
 
 [Script-krohnkite]
 directionalKeyDwm=true
 directionalKeyFocus=false
-screenGapBottom=12
-screenGapLeft=12
-screenGapRight=12
-screenGapTop=12
+enableQuarterLayout=true
+maximizeSoleTile=true
 tileLayoutGap=12
 
 [Tiling]
 padding=4
 
+[Tiling][92e842d7-5928-5c43-884a-4912e7cc82ed]
+tiles={"layoutDirection":"horizontal","tiles":[{"width":0.25},{"width":0.5},{"width":0.25}]}
+
 [Tiling][e0498cb0-4201-5e81-8f16-84e8c9f1658f]
 tiles={"layoutDirection":"horizontal","tiles":[{"width":0.25},{"width":0.5},{"width":0.25}]}
 
 [Xwayland]
-Scale=1
+Scale=1.15
+
+[org.kde.kdecoration2]
+BorderSize=None
+BorderSizeAuto=false
+library=org.kde.breeze
+theme=Breeze
