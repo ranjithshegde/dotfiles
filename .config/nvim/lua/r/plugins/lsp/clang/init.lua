@@ -24,10 +24,6 @@ function servers.clangd()
 
     if vim.b.cpp_type == 'Unreal' then
         table.insert(cmd, '--header-insertion=never')
-        local ok, err = pcall(require('Unreal').Start)
-        if not ok then
-            vim.notify(err, vim.log.levels.ERROR, { title = 'Unreal.nvim' })
-        end
     else
         for _, v in ipairs(header_cmp) do
             table.insert(cmd, v)

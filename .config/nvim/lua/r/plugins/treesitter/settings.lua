@@ -197,6 +197,13 @@ function ts.indent_guide()
     hooks.register(hooks.type.SCOPE_HIGHLIGHT, hooks.builtin.scope_highlight_from_extmark)
 end
 
+function ts.trevj()
+    require('trevj').setup()
+    vim.keymap.set('n', ';J', function()
+        require('trevj').format_at_cursor()
+    end)
+end
+
 ------------------------------------------------------------------------
 --                             Treesitter Statusline                  --
 ------------------------------------------------------------------------

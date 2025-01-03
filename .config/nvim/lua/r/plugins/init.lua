@@ -14,8 +14,14 @@ return {
 
     -- Unreal integration
     {
-        'ranjithshegde/Unreal.nvim',
+        'ranjithshegde/nvim-ue5',
         dev = true,
+        lazy = false,
+        config = function()
+            require('nvim-ue5').setup {
+                unreal_engine_path = '/opt/unreal-engine/',
+            }
+        end,
     },
 
     -- Fancy UI

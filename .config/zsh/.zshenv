@@ -72,6 +72,7 @@ export TERMINFO="$XDG_DATA_HOME/terminfo"
 export TEXMFCONFIG="$XDG_CONFIG_HOME/texlive/texmf-config"
 export TEXMFHOME="$XDG_DATA_HOME/texmf"
 export TEXMFVAR="$XDG_CACHE_HOME/texlive/texmf-var"
+export UE_DDC_DIR=$XDG_CACHE_HOME/Unreal/DerivedDataCache
 export VSCODE_PORTABLE="$XDG_DATA_HOME/vscode"
 export WGETRC="$XDG_CONFIG_HOME/wgetrc"
 export WINEPREFIX="/storage/Wine/default/"
@@ -94,10 +95,10 @@ export WORKSPACE="$HOME/Workspaces/"
 
 # Function to append to PATH if not already included
 appendpath() {
-	case ":$PATH:" in
-	*:"$1":*) ;;
-	*) PATH="${PATH:+$PATH:}$1" ;;
-	esac
+    case ":$PATH:" in
+    *:"$1":*) ;;
+    *) PATH="${PATH:+$PATH:}$1" ;;
+    esac
 }
 
 appendpath "$HOME/.local/bin"
@@ -110,18 +111,18 @@ appendpath "$XDG_DATA_HOME/gem/ruby/3.0.0/bin"
 appendpath "$XDG_DATA_HOME/perl/bin"
 appendpath "$EMSDK"
 appendpath "$EMSDK/upstream/emscripten"
-appendpath "/opt/UE5/Engine/Binaries/Linux"
-appendpath "/opt/UE5/Engine/Build/BatchFiles/"
-appendpath "/opt/UE5/Engine/Build/BatchFiles/Linux"
+appendpath "/opt/unreal-engine/Engine/Binaries/Linux"
+appendpath "/opt/unreal-engine/Engine/Build/BatchFiles/"
+appendpath "/opt/unreal-engine/Engine/Build/BatchFiles/Linux"
 
 unset -f appendpath
 export PATH
 
 # Function to run commands with sudo
 sdo() {
-	local func="$1"
-	shift
-	sudo zsh -c "$(declare -f $func); $func $*"
+    local func="$1"
+    shift
+    sudo zsh -c "$(declare -f $func); $func $*"
 }
 
 # Source custom scripts

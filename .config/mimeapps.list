@@ -179,3 +179,6 @@ x-scheme-handler/sidequest=SideQuest.desktop
 x-scheme-handler/unknown=org.qutebrowser.qutebrowser.desktop
 x-scheme-handler/terminal=kitty.desktop
 x-terminal-emulator=kitty.desktop
+x-scheme-handler/sgnl=signal-desktop.desktop
+x-scheme-handler/signalcaptcha=signal-desktop.desktop
+x-scheme-handler/heroic=heroic.desktop

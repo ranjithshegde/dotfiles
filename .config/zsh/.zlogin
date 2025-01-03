@@ -67,7 +67,3 @@ if [[ ${XDG_SESSION_TYPE} == "wayland" ]]; then
     export TERMINAL=/usr/bin/kitty
     export TERM=kitty
 fi
-
-# 		export XDG_CURRENT_DESKTOP='sway'
-# 		export WLR_RENDERER='vulkan'
-# 		# export GBM_BACKEND='amdgpu-drm'
