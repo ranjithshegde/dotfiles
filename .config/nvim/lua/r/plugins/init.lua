@@ -5,6 +5,7 @@ vim.keymap.set('n', '<leader>p', require('lazy').sync, { desc = 'Update plugins'
 --------------------------------------------------------------------------------------------------------
 --				 Plugins                                            							      --
 --------------------------------------------------------------------------------------------------------
+
 return {
     -- CamelCaseMotion
     'chaoren/vim-wordmotion',
@@ -16,11 +17,12 @@ return {
     {
         'ranjithshegde/nvim-ue5',
         dev = true,
-        lazy = false,
         config = function()
-            require('nvim-ue5').setup {
+            local ue5 = require 'nvim-ue5'
+            ue5.setup {
                 unreal_engine_path = '/opt/unreal-engine/',
             }
+            ue5.scan()
         end,
     },
 

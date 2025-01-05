@@ -4,122 +4,71 @@ local completion = {}
 --                             Completion                             --
 ------------------------------------------------------------------------
 
-local function cmp_setup(cmp, luasnip)
-    cmp.setup {
-        snippet = {
-            expand = function(args)
-                luasnip.lsp_expand(args.body)
-            end,
-        },
-        -- Setup mappings
-        mapping = cmp.mapping.preset.insert {
-            ['<C-b>'] = cmp.mapping.scroll_docs(-4),
-            ['<C-f>'] = cmp.mapping.scroll_docs(4),
-            ['<C-e>'] = cmp.mapping.close(),
-            ['<CR>'] = cmp.mapping.confirm { select = false },
-            ['<C-h>'] = cmp.mapping(function(_)
-                if luasnip.jumpable(-1) then
-                    luasnip.jump(-1)
-                end
-            end, { 'i', 's' }),
-            ['<C-l>'] = cmp.mapping(function(_)
-                if luasnip.expand_or_jumpable() then
-                    luasnip.expand_or_jump()
-                end
-            end, { 'i', 's' }),
-            ['<C-j>'] = cmp.mapping(function(fallback)
-                if luasnip.choice_active() then
-                    luasnip.change_choice(1)
-                else
-                    fallback()
-                end
-            end, { 'i', 's' }),
-            ['<C-p>'] = cmp.mapping(function(fallback)
-                if cmp.visible() then
-                    cmp.select_prev_item()
-                else
-                    fallback()
-                end
-            end, { 'i', 's' }),
-            ['<C-n>'] = cmp.mapping(function(fallback)
-                if cmp.visible() then
-                    cmp.select_next_item()
-                else
-                    fallback()
-                end
-            end, { 'i', 's' }),
-        },
-        -- setup and chain sources
-        sources = cmp.config.sources({
-            { name = 'nvim_lsp' },
-            { name = 'luasnip' },
-            { name = 'orgmode' },
-            { name = 'path' },
-            {
-                name = 'lazydev',
-                group_index = 0,
+local function cmp_setup()
+    require('blink.cmp').setup {
+        completion = {
+            accept = {
+                create_undo_point = true,
+                auto_brackets = { enabled = true },
             },
-        }, {
-            {
-                name = 'buffer',
-                option = {
-                    get_bufnrs = function()
-                        return vim.api.nvim_list_bufs()
-                    end,
-                },
-            },
-        }),
-        -- Popup menu strategy
-        formatting = {
-            format = function(_, vim_item)
-                vim_item.kind =
-                    string.format('%s %s', require('r.utils.tables').kindSymbols[vim_item.kind], vim_item.kind)
-                return vim_item
-            end,
-        },
-        -- Individual window properties
-        window = {
-            completion = {
-                scrollbar = '║',
-            },
+            ghost_text = { enabled = true },
             documentation = {
-                border = 'single',
+                auto_show = true,
+                auto_show_delay_ms = 250,
+                window = { border = 'single' },
             },
+            menu = {
+                draw = { treesitter = { 'lsp' } },
+                auto_show = function(ctx)
+                    return ctx.mode ~= 'cmdline' or not vim.tbl_contains({ '/', '?' }, vim.fn.getcmdtype())
+                end,
+            },
+            list = {
+                selection = function(ctx)
+                    return ctx.mode == 'cmdline' and 'auto_insert' or 'preselect'
+                end,
+            },
+        },
+        keymap = {
+            preset = 'default',
+            ['<C-l>'] = { 'snippet_forward', 'fallback' },
+            ['<C-h>'] = { 'snippet_backward', 'fallback' },
+            ['<Return>'] = { 'select_and_accept', 'fallback' },
+            ['<Tab>'] = { 'select_and_accept', 'fallback' },
+            ['<S-Tab>'] = { 'fallback' },
+            cmdline = {
+                ['<CR>'] = { 'accept', 'fallback' },
+                ['<Esc>'] = { 'hide', 'fallback' },
+                ['<Tab>'] = { 'select_next', 'fallback' },
+                ['<S-Tab>'] = { 'select_prev', 'fallback' },
+                ['<C-e>'] = { 'cancel', 'fallback' },
+                ['<C-y>'] = { 'select_and_accept' },
+            },
+        },
+        -- signature = { enabled = true },
+        snippets = {
+            expand = function(snippet)
+                require('luasnip').lsp_expand(snippet)
+            end,
+            active = function(filter)
+                if filter and filter.direction then
+                    return require('luasnip').jumpable(filter.direction)
+                end
+                return require('luasnip').in_snippet()
+            end,
+            jump = function(direction)
+                require('luasnip').jump(direction)
+            end,
+        },
+        sources = {
+            default = { 'lsp', 'path', 'luasnip', 'buffer' },
         },
     }
 end
 
-local function cmp_extras(cmp)
-    -- Single keystroke to toggle between cmp and ins-completion
-    local isCmp = true
-    vim.keymap.set({ 'i', 's' }, '<C-k>', function()
-        if isCmp then
-            cmp.mapping.close()
-            isCmp = false
-        else
-            isCmp = true
-            require('r.utils').feedkey('<C-e>', 'n')
-            cmp.complete()
-        end
-        return '<C-N>'
-    end, { expr = true })
-
-    -- Load special LSP sorter for c/c++/opencl
-    if vim.tbl_contains({ 'c', 'cpp', 'opencl' }, vim.bo.filetype) then
-        require('r.plugins.lsp.clang').clangCmp()
-    end
-
-    -- Lazy load friendly snippets
-    require('luasnip.loaders.from_vscode').lazy_load()
-end
-
 function completion.init()
-    local cmp = require 'cmp'
-    local luasnip = require 'luasnip'
-
-    cmp_setup(cmp, luasnip)
-
-    cmp_extras(cmp)
+    cmp_setup()
+    require('luasnip.loaders.from_vscode').lazy_load()
 end
 
 function completion.pairs()
@@ -142,22 +91,6 @@ function completion.pairs()
         Rule('{', '},', 'lua'):with_pair(ts_conds.is_ts_node 'table_constructor'),
         Rule("'", "',", 'lua'):with_pair(ts_conds.is_ts_node 'table_constructor'),
     }
-
-    require('cmp').event:on(
-        'confirm_done',
-        require('nvim-autopairs.completion.cmp').on_confirm_done {
-            filetypes = {
-                tex = {
-                    ['{'] = {
-                        kind = {
-                            require('cmp').lsp.CompletionItemKind.Function,
-                        },
-                        handler = require('nvim-autopairs.completion.handlers')['*'],
-                    },
-                },
-            },
-        }
-    )
 end
 
 function completion.luasnip()

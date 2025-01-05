@@ -24,6 +24,7 @@ function servers.clangd()
 
     if vim.b.cpp_type == 'Unreal' then
         table.insert(cmd, '--header-insertion=never')
+        require('lazy').load { plugins = { 'nvim-ue5' } }
     else
         for _, v in ipairs(header_cmp) do
             table.insert(cmd, v)
@@ -48,22 +49,6 @@ function servers.clangd_ext()
         },
         symbol_info = {
             border = 'rounded',
-        },
-    }
-end
-
-function servers.clangCmp()
-    local cmp = require 'cmp'
-    cmp.setup.sorting = {
-        comparators = {
-            cmp.config.compare.offset,
-            cmp.config.compare.exact,
-            cmp.config.compare.recently_used,
-            require 'clangd_extensions.cmp_scores',
-            cmp.config.compare.kind,
-            cmp.config.compare.sort_text,
-            cmp.config.compare.length,
-            cmp.config.compare.order,
         },
     }
 end
