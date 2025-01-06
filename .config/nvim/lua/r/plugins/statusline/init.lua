@@ -64,7 +64,7 @@ statusline.config = function()
     --*********************************** Git branch ------------------------
     local git_branch = subscribe.buf_autocmd('el_git_branch', 'BufReadPre', function(window, buffer)
         local ft = vim.bo[buffer.bufnr].filetype
-        if ft == 'TelescopePrompt' then
+        if ft == 'fzf' then
             return
         end
         local branch = extensions.git_branch(window, buffer)

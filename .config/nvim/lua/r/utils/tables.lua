@@ -319,4 +319,13 @@ tables.ts_parsers = {
     'yaml',
 }
 
+tables.workspace_folderes = {
+    '~/Documents/LaTeX',
+    '~/Repositories/libraries/',
+    '~/Workspaces/lua',
+    '~/Workspaces/cpp',
+    '~/Workspaces/electronics',
+    '~/Workspaces/openFrameworks',
+}
+
 return tables

@@ -10,7 +10,7 @@ local function ranger(path, cmd, opts)
     return function()
         if vim.g.is_win32 then
             vim.notify(
-                'ranger is not available in Windows. Use `:Telescope file-browser` instead',
+                'ranger is not available in Windows. Use `Oil` instead',
                 vim.log.levels.ERROR,
                 { title = 'Ranger' }
             )

@@ -25,7 +25,7 @@ return {
                     end
                 end
             end,
-            desc = 'Hijack netrw with ranger or telescope',
+            desc = 'Hijack netrw with ranger or Oil.nvim',
         })
         require('r.utils').register_au_id(id)
     end,

@@ -175,7 +175,7 @@ aucmd('TermEnter', {
     callback = function(args)
         if args.file:match 'ranger' then
             vim.keymap.set('t', '<S-Esc>', '<C-\\><C-n>', { buffer = true, desc = 'Escape Insert' })
-        else
+        elseif vim.bo.filetype ~= 'fzf' then
             vim.keymap.set('t', '<Esc>', '<C-\\><C-n>', { buffer = true, desc = 'Escape Insert' })
         end
     end,
