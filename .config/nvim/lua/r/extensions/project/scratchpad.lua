@@ -32,6 +32,10 @@ local function execRoot(type)
 end
 
 local function openScratch(type)
+    if not type then
+        vim.print 'No filetype detected or selected. Exiting Operation...'
+        return
+    end
     local workspace = vim.env.WORKSPACE
     if workspace == nil then
         workspace = vim.fn.input('Enter Worksapce Dir: ', '', 'file')

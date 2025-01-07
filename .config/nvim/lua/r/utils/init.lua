@@ -157,8 +157,6 @@ function utils.toggle_vi()
         if vim.b.hasLsp then
             vim.cmd.DefaultDiagnostics()
         end
-        vim.cmd.IndentBlanklineToggle()
-
         vi = false
     else
         vim.o.number = false
@@ -169,7 +167,6 @@ function utils.toggle_vi()
         if vim.b.hasLsp then
             vim.cmd.DisableDiagnostics()
         end
-        vim.cmd.IndentBlanklineToggle()
         vi = true
     end
 end

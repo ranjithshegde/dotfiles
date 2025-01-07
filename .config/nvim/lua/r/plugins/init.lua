@@ -26,13 +26,6 @@ return {
         end,
     },
 
-    -- Fancy UI
-    {
-        'stevearc/dressing.nvim',
-        event = 'VeryLazy',
-        opts = { input = { relative = 'editor' } },
-    },
-
     -- Comment with TreeSitter
     {
         'numToStr/Comment.nvim',

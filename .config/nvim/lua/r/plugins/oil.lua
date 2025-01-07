@@ -27,6 +27,16 @@ return {
             end,
             desc = 'Hijack netrw with ranger or Oil.nvim',
         })
+
+        vim.api.nvim_create_autocmd('BufEnter', {
+            group = id.ProjectDrawer,
+            callback = function(args)
+                if vim.bo.filetype == 'oil' then
+                    vim.keymap.set('n', 'q', vim.cmd.quit, { desc = 'Close file browser', buffer = args.buf })
+                end
+            end,
+            desc = 'Close oil on Q',
+        })
         require('r.utils').register_au_id(id)
     end,
 }

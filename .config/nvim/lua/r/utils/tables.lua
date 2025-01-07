@@ -66,6 +66,7 @@ tables.projectTypes = {
 tables.ignoreFiles = {
     '',
     'qf',
+    'fzf',
     'man',
     'lazy',
     'help',
@@ -242,32 +243,6 @@ tables.tsNodes = {
 --                              Plugin lists                          --
 ------------------------------------------------------------------------
 
---- CUrrent context for indent blankline
-tables.indentContext = {
-    '^for',
-    '^case',
-    'block',
-    '^table',
-    'return',
-    '^while',
-    '^public',
-    '^switch',
-    '^object',
-    'inherits',
-    '^private',
-    '^protected',
-    'jsx_element',
-    'jsx_element',
-    'else_clause',
-    'if_statement',
-    'catch_clause',
-    'try_statement',
-    'operation_type',
-    'access_specifier',
-    'import_statement',
-    'jsx_self_closing_element',
-}
-
 --- disable builtin vim plugins
 tables.rtp = {
     'fzf',
@@ -326,6 +301,7 @@ tables.workspace_folderes = {
     '~/Workspaces/cpp',
     '~/Workspaces/electronics',
     '~/Workspaces/openFrameworks',
+    '~/Workspaces/Unreal',
 }
 
 return tables

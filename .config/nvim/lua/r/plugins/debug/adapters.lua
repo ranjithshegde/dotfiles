@@ -9,14 +9,17 @@ adapters.lldb = {
 local cpp_tools = nil
 
 if vim.fn.has 'win32' == 1 then
-    cpp_tools = vim.fs.normalize '~/.vscode/extensions/ms-vscode.cpptools-1.13.6-win32-x64'
+    cpp_tools =
+        vim.fs.normalize '~/.vscode/extensions/ms-vscode.cpptools-1.13.6-win32-x64/debugAdapters/bin/OpenDebugAD7'
+elseif vim.env.MACHINE_TYPE and vim.env.MACHINE_TYPE == 'laptop' then
+    cpp_tools = vim.env.XDG_DATA_HOME .. '/debug-adapters/cpptools/extension/debugAdapters/bin/OpenDebugAD7'
 else
-    cpp_tools = vim.env.XDG_DATA_HOME .. '/debug-adapters/cpptools/extension'
+    cpp_tools = '/usr/share/cpptools-debug/bin/OpenDebugAD7'
 end
 
 adapters.cppdbg = {
     type = 'executable',
-    command = cpp_tools .. '/debugAdapters/bin/OpenDebugAD7',
+    command = cpp_tools,
 }
 
 adapters.python = {
@@ -56,7 +59,7 @@ adapters.coreclr = {
 adapters.godot = {
     type = 'server',
     host = '127.0.0.1',
-    port = 6006
+    port = 6006,
 }
 
 return adapters

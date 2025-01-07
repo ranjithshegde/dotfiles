@@ -101,8 +101,10 @@ function fzy.setup()
 
     require('fzf-lua').setup {
         defaults = {
-            -- formatter = "path.filename_first",
             formatter = 'path.dirname_first',
+            git_icons = true,
+            file_icons = true,
+            color_icons = true,
             actions = {
                 ['ctrl-q'] = { fn = actions.file_sel_to_qf, prefix = 'select-all' },
                 ['ctrl-l'] = { fn = actions.file_sel_to_ll, prefix = 'select-all' },
@@ -113,7 +115,25 @@ function fzy.setup()
         files = {
             fd_opts = [[--color=never --type f --hidden --follow --exclude .git --exclude .ccls-cache --exclude .cache]],
         },
+        grep = {
+            multiprocess = true,
+        },
     }
+
+    -- require('fzf-lua').register_ui_select()
+end
+
+function fzy.init()
+    require 'r.plugins.fuzzy.mappings'
+
+    local function on_select(...)
+        require('fzf-lua').register_ui_select()
+        return vim.ui.select(...)
+    end
+
+    if vim.ui.select ~= on_select then
+        vim.ui.select = on_select
+    end
 end
 
 return fzy

@@ -11,7 +11,7 @@ local function cmp_setup()
                 create_undo_point = true,
                 auto_brackets = { enabled = true },
             },
-            ghost_text = { enabled = true },
+            -- ghost_text = { enabled = true },
             documentation = {
                 auto_show = true,
                 auto_show_delay_ms = 250,
@@ -63,6 +63,7 @@ local function cmp_setup()
         sources = {
             default = { 'lsp', 'path', 'luasnip', 'buffer' },
         },
+        appearance = { use_nvim_cmp_as_default = true },
     }
 end
 
