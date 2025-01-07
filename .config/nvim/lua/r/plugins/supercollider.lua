@@ -49,12 +49,6 @@ supercollider.config = function()
             ['<leader>s'] = map(function()
                 vim.cmd.drop { args = { '~/.config/SuperCollider/startup.scd' }, mods = { tab = 1 } }
             end),
-            ['K'] = map(function()
-                local winid = require('ufo').peekFoldedLinesUnderCursor()
-                if not winid then
-                    require('scnvim.help').open_help_for(vim.fn.expand '<cword>')
-                end
-            end),
         },
         completion = { signature = { config = { border = 'rounded' } } },
         postwin = { float = { enabled = true } },

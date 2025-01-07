@@ -122,7 +122,7 @@ local maps = {
             r = { fzf 'oldfiles', 'Vim recent files' },
             R = { fzf('files', { cwd = '/usr/share/nvim/runtime/' }), 'Vim runtime files' },
             C = {
-                fzf_cd(false, 'C++ Practice files/dirs', vim.env.CWORK .. '/Scratch'),
+                fzf_cd(false, 'C++ Practice files/dirs',  '$CWORK/Scratch'),
                 'Open C practice',
             },
             c = { fzf_cd(true, 'C++ Practice files/dirs', '$CWORK/Scratch'), 'Open C practice' },

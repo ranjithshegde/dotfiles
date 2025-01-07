@@ -1,5 +1,4 @@
 local completion = {}
-
 ------------------------------------------------------------------------
 --                             Completion                             --
 ------------------------------------------------------------------------
@@ -62,6 +61,7 @@ local function cmp_setup()
         },
         sources = {
             default = { 'lsp', 'path', 'luasnip', 'buffer' },
+            cmdline = {},
         },
         appearance = { use_nvim_cmp_as_default = true },
     }

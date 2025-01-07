@@ -10,14 +10,11 @@ function lspmap.lsp(client, bufnr)
         return
     end
     map('n', 'K', function()
-        local winid = package.loaded.ufo and require('ufo').peekFoldedLinesUnderCursor()
-        if not winid then
-            if vim.bo[bufnr].filetype == 'org' then
-                require('orgWiki.wiki').hover()
-                return
-            end
-            vim.lsp.buf.hover()
+        if vim.bo[bufnr].filetype == 'org' then
+            require('orgWiki.wiki').hover()
+            return
         end
+        vim.lsp.buf.hover()
     end, { desc = 'Hover or peek-fold', buffer = bufnr })
 
     wk.register({
