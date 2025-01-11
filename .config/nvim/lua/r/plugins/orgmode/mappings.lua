@@ -3,7 +3,7 @@ local map = vim.keymap.set
 
 -- ******************************** orgWiki -----------------------
 function orgmaps.wiki()
-    require('which-key').register {
+    require('which-key').add(require('r.utils.maps').convert_maps {
         ['<leader>w'] = {
             name = 'orgWiki',
             w = { require('orgWiki.wiki').openIndex, 'Open Index' },
@@ -42,7 +42,7 @@ function orgmaps.wiki()
                 },
             },
         },
-    }
+    })
 end
 
 function orgmaps.ft()

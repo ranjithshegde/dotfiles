@@ -122,7 +122,7 @@ local maps = {
             r = { fzf 'oldfiles', 'Vim recent files' },
             R = { fzf('files', { cwd = '/usr/share/nvim/runtime/' }), 'Vim runtime files' },
             C = {
-                fzf_cd(false, 'C++ Practice files/dirs',  '$CWORK/Scratch'),
+                fzf_cd(false, 'C++ Practice files/dirs', '$CWORK/Scratch'),
                 'Open C practice',
             },
             c = { fzf_cd(true, 'C++ Practice files/dirs', '$CWORK/Scratch'), 'Open C practice' },
@@ -163,4 +163,5 @@ local maps = {
     },
 }
 
-require('which-key').register(maps)
+local new_maps = require('r.utils.maps').convert_config(maps)
+require('which-key').add(new_maps)

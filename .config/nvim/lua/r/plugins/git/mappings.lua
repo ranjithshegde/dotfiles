@@ -2,6 +2,9 @@
 --                              Git                                   --
 ------------------------------------------------------------------------
 
+local wk = require 'which-key'
+local maps = require 'r.utils.maps'
+
 local function git_command(args)
     return function()
         vim.api.nvim_cmd({ cmd = 'G', args = args and args }, {})
@@ -11,7 +14,7 @@ end
 local g = {}
 
 function g.fugitive()
-    require('which-key').register {
+    wk.add(maps.convert_maps {
         ['<leader>g'] = {
             name = 'git functions',
             a = { git_command { 'add %' }, 'add current buffer' },
@@ -26,11 +29,11 @@ function g.fugitive()
             p = { git_command { 'push' }, 'push commits' },
             P = { git_command { 'push -f' }, 'force push commits' },
         },
-    }
+    })
 end
 
 function g.signs(bufnr, gs)
-    require('which-key').register({
+    wk.add(maps.convert_maps({
         ['<leader>g'] = {
             name = 'git functions',
             i = { gs.preview_hunk_inline, 'Inline diff for hunk' },
@@ -73,7 +76,7 @@ function g.signs(bufnr, gs)
             'Preview next hunk',
             expr = true,
         },
-    }, { buffer = bufnr })
+    }, { buffer = bufnr }))
 
     vim.keymap.set({ 'o', 'x' }, 'ih', ':<C-U>Gitsigns select_hunk<CR>', { buffer = bufnr, desc = 'select git hunk' })
 end

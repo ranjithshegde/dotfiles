@@ -26,7 +26,7 @@ local function ranger(path, cmd, opts)
 end
 
 function utilmaps.ranger()
-    wk.register {
+    wk.add(require('r.utils.maps').convert_maps {
         ['<leader>r'] = {
             name = 'Ranger file picker',
             r = { ranger('%:p:h', 'e '), 'from current file' },
@@ -36,7 +36,7 @@ function utilmaps.ranger()
             t = { ranger('%:p:h', 'tab drop '), 'in a new tab from current file' },
             T = { ranger('.', 'tab drop '), 'in a new tab from current directory' },
         },
-    }
+    })
 end
 
 function utilmaps.wordProcessor()

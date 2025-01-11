@@ -1,8 +1,9 @@
 local wk = require 'which-key'
+local maps = require 'r.utils.maps'
 local cmap = {}
 
 function cmap.ccls(buf)
-    wk.register({
+    wk.add(maps.convert_maps({
         [';'] = {
             b = { vim.cmd.CclsBase, 'Base function' },
             c = { vim.cmd.CclsIncomingCalls, 'Callers' },
@@ -55,11 +56,11 @@ function cmap.ccls(buf)
                 },
             },
         },
-    }, { buffer = buf })
+    }, { buffer = buf }))
 end
 
 function cmap.clangd(buf)
-    wk.register({
+    wk.add(maps.convert_maps({
         [',h'] = {
             function()
                 require('clangd_extensions.inlay_hints').toggle_inlay_hints()
@@ -70,7 +71,7 @@ function cmap.clangd(buf)
             vim.cmd.ClangdSwitchSourceHeader,
             'Switch to Header/Source',
         },
-    }, { buffer = buf })
+    }, { buffer = buf }))
 end
 
 return cmap

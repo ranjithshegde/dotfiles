@@ -1,6 +1,5 @@
 local gitsigns = {
     'lewis6991/gitsigns.nvim',
-    dependencies = 'nvim-lua/plenary.nvim',
 }
 
 function gitsigns.config()

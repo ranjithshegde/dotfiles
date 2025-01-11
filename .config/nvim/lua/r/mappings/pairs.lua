@@ -32,4 +32,4 @@ local maps = {
     },
 }
 
-return require('which-key').register(maps)
+return require('which-key').add(require('r.utils.maps').convert_maps(maps))

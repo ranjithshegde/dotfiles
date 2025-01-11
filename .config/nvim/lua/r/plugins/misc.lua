@@ -16,6 +16,7 @@ return {
             },
         },
         lazygit = { enabled = true },
+        notifier = { enabled = true },
         statuscolumn = { enabled = true },
         zen = { toggle = { dim = true } },
     },

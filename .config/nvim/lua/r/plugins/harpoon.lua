@@ -27,27 +27,29 @@ end
 
 local harpoon = {
     'ThePrimeagen/harpoon',
+    branch = 'harpoon2',
+    dependencies = { 'nvim-lua/plenary.nvim' },
 }
 
 -- ************** Load harpoon maps ------------------------------------
 function harpoon.init()
     local wk = require 'which-key'
     local map = vim.keymap.set
-    wk.register {
+    wk.add(require('r.utils.maps').convert_maps {
         ['<leader>t'] = {
             name = 'Launch terminal in split',
             h = { open_term 'split', 'Horizontal' },
             v = { open_term 'vsplit', 'Vertical' },
             t = { open_term 'tabnew', 'New tab' },
         },
-    }
+    })
 
     map('n', "<leader>'", function()
-        require('harpoon.ui').nav_next()
+        require('harpoon'):list().next()
     end, { desc = 'Navigate to next harpooned file' })
 
     map('n', '<leader>`', function()
-        require('harpoon.ui').nav_prev()
+        require('harpoon'):list().prev()
     end, { desc = 'Navigate to previous harpooned file' })
 
     map('n', '<leader><Tab>', open_term(), { desc = 'Navigate to harpooned terminal' })

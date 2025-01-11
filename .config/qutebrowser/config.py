@@ -1,5 +1,7 @@
 # pylint: disable=C0111
 # flake8: noqa: E501
+import os
+
 from qutebrowser.api import interceptor
 from qutebrowser.config.config import ConfigContainer  # noqa: F401
 from qutebrowser.config.configfiles import ConfigAPI  # noqa: F401
@@ -281,7 +283,14 @@ c.colors.tabs.pinned.selected.even.bg = "#282c34"
 # either a float value with a "pt" suffix, or an integer value with a
 # "px" suffix.
 # Type: String
-c.fonts.default_size = "10pt"
+if os.environ["MACHINE_TYPE"] and os.environ["MACHINE_TYPE"] == "laptop":
+    c.fonts.default_size = "10pt"
+else:
+    c.fonts.default_size = "12pt"
+    c.fonts.web.size.default = 16
+    c.fonts.web.size.minimum_logical = 16
+    c.fonts.web.size.minimum = 16
+    c.fonts.web.size.default_fixed = 16
 
 
 # Page(s) to open at the start.

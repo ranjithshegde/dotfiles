@@ -6,7 +6,7 @@ local wk = require 'which-key'
 --                              Cpp                                   --
 ------------------------------------------------------------------------
 function lang.cpp(buf)
-    wk.register({
+    wk.add(require('r.utils.maps').convert_maps({
         [','] = {
             k = {
                 name = 'Online help',
@@ -36,7 +36,7 @@ function lang.cpp(buf)
             end,
             'Open Makefile',
         },
-    }, { buffer = buf })
+    }, { buffer = buf }))
 end
 
 return lang

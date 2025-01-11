@@ -39,12 +39,11 @@ return {
     -- WhichKey
     {
         'folke/which-key.nvim',
-        branch = 'release-please--branches--main--components--which-key.nvim',
         opts = {
             show_help = false,
             show_keys = false,
             layout = { layout = { spacing = 15 } },
-            window = { border = 'single' },
+            win = { border = 'single' },
         },
     },
 

@@ -53,7 +53,7 @@ function handlers.init()
                 vim.lsp.foldclose('imports', vim.fn.bufwinid(args.buf))
             end
         end,
-        desc = "close fold on file register"
+        desc = 'close fold on file register',
     })
 
     require('r.utils').register_au_id(id)
@@ -63,7 +63,6 @@ end
 function handlers.capabilities()
     local capabilities = vim.lsp.protocol.make_client_capabilities()
     capabilities = require('blink.cmp').get_lsp_capabilities(capabilities)
-
     return capabilities
 end
 
@@ -89,7 +88,7 @@ function handlers.attach(client, bufnr)
         require('r.plugins.lsp.clang.mappings').clangd(bufnr)
     end
 
-    if client:supports_method('textDocument/foldingRange') then
+    if client:supports_method 'textDocument/foldingRange' then
         vim.wo.foldexpr = 'v:lua.vim.lsp.foldexpr()'
     end
 

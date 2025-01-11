@@ -11,6 +11,9 @@ BorderActivateAll=3
 
 [NightColor]
 Active=true
+EveningBeginFixed=1900
+Mode=Times
+MorningBeginFixed=0730
 
 [Plugins]
 krohnkiteEnabled=true

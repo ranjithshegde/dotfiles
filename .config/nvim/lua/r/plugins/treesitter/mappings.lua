@@ -5,6 +5,7 @@
 local treesitter = {}
 
 local wk = require 'which-key'
+local mapper = require 'r.utils.maps'
 
 local to = { swap = {} }
 
@@ -59,7 +60,7 @@ function refac.debug(func, args)
 end
 
 function treesitter.navigate_tex(buf)
-    wk.register({
+    wk.add(mapper.convert_maps({
         -- Motions
         [']'] = {
             m = { to.move('goto_next_start', '@block.outer'), 'Move to next outer TeX environment start' },
@@ -101,11 +102,11 @@ function treesitter.navigate_tex(buf)
             [[<Cmd>execute "keepjumps norm! " . v:count1 . "("<CR>]],
             'Move to previous sentence start',
         },
-    }, { buffer = buf })
+    }, { buffer = buf }))
 end
 
 function treesitter.cpp(buf)
-    wk.register({
+    wk.add(mapper.convert_maps({
         [';r'] = {
             name = 'Refactor Cpp',
             f = { vim.cmd.TSCppDefineClassFunc, 'function definition from declaration', mode = { 'n', 'v' } },
@@ -113,11 +114,11 @@ function treesitter.cpp(buf)
             C = { vim.cmd.TSCppRuleOf3, 'Add Constructor, destructor and copy', mode = { 'n', 'v' } },
             m = { vim.cmd.TSCppRuleOf5, 'Add move Constructor', mode = { 'n', 'v' } },
         },
-    }, { buffer = buf })
+    }, { buffer = buf }))
 end
 
 function treesitter.navigate(buf)
-    wk.register({
+    wk.add(mapper.convert_maps({
         -- Motions
         [']'] = {
             m = { to.move('goto_next_start', '@function.outer'), 'Move to next outer function start' },
@@ -161,11 +162,11 @@ function treesitter.navigate(buf)
             to.move('goto_previous_start', '@block.inner'),
             'Move to previous inner code block start',
         },
-    }, { buffer = buf })
+    }, { buffer = buf }))
 end
 
 function treesitter.common()
-    wk.register {
+    wk.add(mapper.convert_maps {
         [';'] = {
             name = 'Syntax tree functions',
             K = { vim.show_pos, 'Show treesitter node' },
@@ -208,7 +209,7 @@ function treesitter.common()
         cx = {
             name = 'Swap forwards',
             a = {
-                name = 'outer',
+                -- name = 'outer',
                 s = { to.swap.next '@statement.outer', 'statement' },
                 o = { to.swap.next '@comment.outer', 'comment' },
                 a = { to.swap.next '@call.outer', 'call' },
@@ -219,7 +220,7 @@ function treesitter.common()
                 v = { to.swap.next '@variable.outer', 'variable' },
             },
             i = {
-                name = 'inner',
+                -- name = 'inner',
                 a = { to.swap.next '@call.inner', 'call' },
                 f = { to.swap.next '@function.inner', 'function' },
                 p = { to.swap.next '@parameter.inner', 'Paramater' },
@@ -231,7 +232,7 @@ function treesitter.common()
         cX = {
             name = 'Swap backwards',
             a = {
-                name = 'outer',
+                -- name = 'outer',
                 s = { to.swap.previous '@statement.outer', 'statement' },
                 o = { to.swap.previous '@comment.outer', 'comment' },
                 a = { to.swap.previous '@call.outer', 'call' },
@@ -242,7 +243,7 @@ function treesitter.common()
                 v = { to.swap.previous '@variable.outer', 'variable' },
             },
             i = {
-                name = 'inner',
+                -- name = 'inner',
                 a = { to.swap.previous '@call.inner', 'call' },
                 f = { to.swap.previous '@function.inner', 'function' },
                 p = { to.swap.previous '@parameter.inner', 'Paramater' },
@@ -251,9 +252,9 @@ function treesitter.common()
                 v = { to.swap.previous '@variable.inner', 'variable' },
             },
         },
-    }
+    })
 
-    wk.register({
+    wk.add(mapper.convert_maps({
         [';f'] = {
             name = 'Refactoring tools',
             i = {
@@ -283,9 +284,9 @@ function treesitter.common()
                 },
             },
         },
-    }, { mode = 'v' })
+    }, { mode = 'v' }))
 
-    wk.register({
+    wk.add(mapper.convert_maps({
         a = {
             name = 'around',
             f = { to.select('@function.outer', 'x'), 'function' },
@@ -309,9 +310,9 @@ function treesitter.common()
             v = { to.select('@variable.inner', 'x'), 'variable' },
             l = { to.select('@loop.inner', 'x'), 'loop' },
         },
-    }, { mode = 'x' })
+    }, { mode = 'x' }))
 
-    wk.register({
+    wk.add(mapper.convert_maps({
         a = {
             name = 'around',
             f = { to.select('@function.outer', 'o'), 'function' },
@@ -335,12 +336,12 @@ function treesitter.common()
             v = { to.select('@variable.inner', 'o'), 'variable' },
             l = { to.select('@loop.inner', 'o'), 'loop' },
         },
-    }, { mode = 'o' })
+    }, { mode = 'o' }))
 
-    wk.register({
+    wk.add(mapper.convert_maps({
         ['<C-;>'] = { to.repeat_last 'repeat_last_move_next', 'Repeat last move' },
         ['<C-,>'] = { to.repeat_last 'repeat_last_move_previous', 'Repeat last move' },
-    }, { mode = { 'n', 'x', 'o' } })
+    }, { mode = { 'n', 'x', 'o' } }))
 end
 
 return treesitter

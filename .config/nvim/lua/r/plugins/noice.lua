@@ -1,5 +1,5 @@
 local function messages()
-    require('which-key').register {
+    require('which-key').add(require('r.utils.maps').convert_maps {
         ['<leader>n'] = {
             name = 'Noice',
             n = { vim.cmd.Noice, 'Noice window' },
@@ -12,7 +12,7 @@ local function messages()
                 'Clear all messaages',
             },
         },
-    }
+    })
 end
 
 local noice = {
@@ -54,7 +54,6 @@ function noice.config()
             override = {
                 ['vim.lsp.util.convert_input_to_markdown_lines'] = true,
                 ['vim.lsp.util.stylize_markdown'] = true,
-                -- ['cmp.entry.get_documentation'] = false,
             },
         },
         routes = {

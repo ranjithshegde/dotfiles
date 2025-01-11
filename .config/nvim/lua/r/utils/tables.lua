@@ -297,6 +297,7 @@ tables.ts_parsers = {
 tables.workspace_folderes = {
     '~/Documents/LaTeX',
     '~/Repositories/libraries/',
+    '~/Repositories/Maintained/',
     '~/Workspaces/lua',
     '~/Workspaces/cpp',
     '~/Workspaces/electronics',

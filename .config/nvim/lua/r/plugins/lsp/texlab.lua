@@ -6,16 +6,38 @@ local texlab = {}
 
 ---Return word count for the tex document
 function texlab.tex_word_count()
-    local result
-    require('plenary.job')
-        :new({
-            command = 'texcount',
-            args = { '-inc', '-sum', '-1', vim.fn.expand '%' },
-            on_exit = function(j)
-                result = j:result()[1]
-            end,
-        })
-        :sync()
+    local result = ''
+    local handle
+    local output = vim.uv.new_pipe(false)
+
+    handle = vim.uv.spawn('texcount', {
+        args = { '-inc', '-sum', '-1', vim.fn.expand '%' },
+        stdio = { nil, output, nil },
+    }, function(code)
+        if code == 0 then
+            output:read_stop()
+            output:close()
+        else
+            vim.notify('texcount failed with exit code ' .. code, vim.log.levels.ERROR)
+        end
+    end)
+
+    output:read_start(function(err, chunk)
+        if err then
+            vim.notify('Error reading texcount output: ' .. err, vim.log.levels.ERROR)
+            return
+        end
+        if chunk then
+            result = result .. chunk
+        end
+    end)
+
+    vim.wait(1000, function()
+        return result ~= ''
+    end)
+
+    handle:close()
+
     vim.notify(result, nil, { title = 'Current document word count' })
 end
 
@@ -44,7 +66,7 @@ function texlab.lsp()
     local config = {
         name = 'texlab',
         capabilities = require('r.plugins.lsp.handlers').capabilities(),
-        cmd = { 'texlab', '--log-file', './aux/texlab-log', '-vvvv' },
+        cmd = { 'texlab', '--log-file', './aux/texlab-log' },
         before_init = function(_, _)
             if vim.fn.isdirectory 'aux' ~= 1 then
                 vim.fn.mkdir 'aux'

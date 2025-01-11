@@ -27,6 +27,7 @@ return function()
     o.scrolloff = 10
     o.laststatus = 3
     o.conceallevel = 1
+    o.timeout = false
     o.timeoutlen = 100
     o.updatetime = 1000
     o.mouse = 'n'
@@ -37,7 +38,7 @@ return function()
     o.inccommand = 'split'
     o.spelloptions = 'camel'
     o.grepformat = '%f:%l:%c:%m'
-    o.foldexpr = "v:lua.vim.treesitter.foldexpr()"
+    o.foldexpr = 'v:lua.vim.treesitter.foldexpr()'
     o.grepprg = 'rg --vimgrep --smart-case --hidden'
     o.spellfile = vim.fn.stdpath 'config' .. '/spell/en.utf-8.add'
 

@@ -34,8 +34,8 @@ function taskmap.micro()
     map('n', ',kt', require('r.extensions.cpp').teensypins, { buffer = true, desc = 'teensy pins' })
     map('n', ',kT', require('r.extensions.cpp').teensyspecs, { buffer = true, desc = 'teensy specs' })
 
-    wk.register {
-        [',k'] = { name = 'Arduino documentation', buffer = 0 },
+    wk.add {
+        { ',k', group = 'Arduino documentation', buffer = 0 },
     }
 end
 
