@@ -28,3 +28,7 @@ cmd('Su', 'w !sudo tee %', {})
 require('r.utils').lazy_on_key('n', '<leader>r', 'Ranger file picker', function()
     require('r.mappings.util').ranger()
 end)
+
+require('r.utils').lazy_on_key('n', '<leader>t', 'Ranger file picker', function()
+    require('r.mappings.util').terminal()
+end)

@@ -79,6 +79,7 @@ return function()
     vim.g.loaded_python3_provider = 0
     vim.g.tex_flavor = 'latex'
     vim.g.tex_conceal = 'abdmgs'
+    vim.g.health = { style = 'float' }
 
     if vim.g.is_win32 then
         o.shell = vim.fn.executable 'pwsh' == 1 and 'pwsh' or 'powershell'

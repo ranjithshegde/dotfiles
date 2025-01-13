@@ -163,5 +163,5 @@ local maps = {
     },
 }
 
-local new_maps = require('r.utils.maps').convert_config(maps)
+local new_maps = require 'r.utils.expand_maps'(maps)
 require('which-key').add(new_maps)

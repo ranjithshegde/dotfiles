@@ -1,7 +1,7 @@
 local lspmap = {}
 local wk = require 'which-key'
 local map = vim.keymap.set
-local mapper = require 'r.utils.maps'
+local mapper = require 'r.utils.expand_maps'
 ------------------------------------------------------------------------
 --                              Language servers                      --
 ------------------------------------------------------------------------
@@ -18,7 +18,7 @@ function lspmap.lsp(client, bufnr)
         vim.lsp.buf.hover()
     end, { desc = 'Hover or peek-fold', buffer = bufnr })
 
-    wk.add(mapper.convert_maps({
+    wk.add(mapper({
         [','] = {
             name = 'Lsp functions',
             s = { vim.lsp.buf.signature_help, 'Show signature' },
@@ -62,7 +62,7 @@ function lspmap.lsp(client, bufnr)
 end
 
 function lspmap.navic(bufnr)
-    wk.add(mapper.convert_maps({
+    wk.add(mapper({
         [','] = {
             name = 'Lsp',
             ca = { require('navigator.codelens').run_action, 'run code lens action' },

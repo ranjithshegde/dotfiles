@@ -1,5 +1,5 @@
 local function messages()
-    require('which-key').add(require('r.utils.maps').convert_maps {
+    require('which-key').add(require 'r.utils.expand_maps' {
         ['<leader>n'] = {
             name = 'Noice',
             n = { vim.cmd.Noice, 'Noice window' },

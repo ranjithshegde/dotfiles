@@ -1,6 +1,7 @@
 local utilmaps = {}
 local wk = require 'which-key'
 local map = vim.keymap.set
+local mapper = require 'r.utils.expand_maps'
 
 ------------------------------------------------------------------------
 --                              Utilities                             --
@@ -25,8 +26,14 @@ local function ranger(path, cmd, opts)
     end
 end
 
+local function open_term(split, mods)
+    return function()
+        require('r.utils').ex_cmd(split, { 'term://zsh' }, mods, { file = true, bar = true })
+    end
+end
+
 function utilmaps.ranger()
-    wk.add(require('r.utils.maps').convert_maps {
+    wk.add(mapper {
         ['<leader>r'] = {
             name = 'Ranger file picker',
             r = { ranger('%:p:h', 'e '), 'from current file' },
@@ -35,6 +42,17 @@ function utilmaps.ranger()
             V = { ranger('.', 'vs '), 'in a split from current directory' },
             t = { ranger('%:p:h', 'tab drop '), 'in a new tab from current file' },
             T = { ranger('.', 'tab drop '), 'in a new tab from current directory' },
+        },
+    })
+end
+
+function utilmaps.terminal()
+    wk.add(mapper {
+        ['<leader>t'] = {
+            name = 'Launch terminal in split',
+            h = { open_term('split', { silent = true }), 'Horizontal' },
+            v = { open_term('vsplit', { silent = true }), 'Vertical' },
+            t = { open_term('drop', { silent = true, tab = 2 }), 'New tab' },
         },
     })
 end

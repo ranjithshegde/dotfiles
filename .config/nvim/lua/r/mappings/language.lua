@@ -6,7 +6,7 @@ local wk = require 'which-key'
 --                              Cpp                                   --
 ------------------------------------------------------------------------
 function lang.cpp(buf)
-    wk.add(require('r.utils.maps').convert_maps({
+    wk.add(require 'r.utils.expand_maps'({
         [','] = {
             k = {
                 name = 'Online help',

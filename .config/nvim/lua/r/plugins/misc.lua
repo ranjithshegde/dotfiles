@@ -8,7 +8,6 @@ return {
         gitbrowse = { enabled = true },
         indent = {
             animate = { enabled = false },
-            -- only_scope = true,
             only_current = true,
             scope = {
                 enabled = true,
@@ -16,7 +15,6 @@ return {
             },
         },
         lazygit = { enabled = true },
-        notifier = { enabled = true },
         statuscolumn = { enabled = true },
         zen = { toggle = { dim = true } },
     },

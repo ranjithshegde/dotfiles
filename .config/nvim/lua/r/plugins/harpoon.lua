@@ -1,30 +1,3 @@
-local num = 1
-local function open_term(split)
-    return function()
-        local open_num = nil
-        if vim.v.count ~= 0 then
-            open_num = vim.v.count
-        else
-            open_num = num
-            num = num + 1
-        end
-        vim.notify('Opening terminal indexed ' .. open_num)
-        if not split then
-            require('harpoon.term').gotoTerminal(open_num)
-            return
-        end
-        local args = { idx = open_num }
-        if split == 'split' then
-            args.create_with = 'botright new | terminal'
-        elseif split == 'vsplit' then
-            args.create_with = 'belowright vnew | terminal'
-        elseif split == 'tabnew' then
-            args.create_with = 'tabnew | terminal'
-        end
-        require('harpoon.term').gotoTerminal(args)
-    end
-end
-
 local harpoon = {
     'ThePrimeagen/harpoon',
     branch = 'harpoon2',
@@ -33,33 +6,26 @@ local harpoon = {
 
 -- ************** Load harpoon maps ------------------------------------
 function harpoon.init()
-    local wk = require 'which-key'
     local map = vim.keymap.set
-    wk.add(require('r.utils.maps').convert_maps {
-        ['<leader>t'] = {
-            name = 'Launch terminal in split',
-            h = { open_term 'split', 'Horizontal' },
-            v = { open_term 'vsplit', 'Vertical' },
-            t = { open_term 'tabnew', 'New tab' },
-        },
-    })
 
     map('n', "<leader>'", function()
-        require('harpoon'):list().next()
+        local harp = require 'harpoon'
+        harp:list().next()
     end, { desc = 'Navigate to next harpooned file' })
 
     map('n', '<leader>`', function()
-        require('harpoon'):list().prev()
+        local harp = require 'harpoon'
+        harp:list().prev()
     end, { desc = 'Navigate to previous harpooned file' })
 
-    map('n', '<leader><Tab>', open_term(), { desc = 'Navigate to harpooned terminal' })
-
     map('n', '<leader><leader>', function()
-        require('harpoon.ui').toggle_quick_menu()
+        local harp = require 'harpoon'
+        harp.ui:toggle_quick_menu(harp:list())
     end, { desc = 'Open harpoon list' })
 
     map('n', '<leader><Space>', function()
-        require('harpoon.mark').add_file()
+        local harp = require 'harpoon'
+        harp:list().add()
     end, { desc = 'Harpoon current file' })
 end
 

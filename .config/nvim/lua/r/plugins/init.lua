@@ -40,6 +40,7 @@ return {
     {
         'folke/which-key.nvim',
         opts = {
+            preset = 'modern',
             show_help = false,
             show_keys = false,
             layout = { layout = { spacing = 15 } },

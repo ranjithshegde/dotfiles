@@ -1,5 +1,3 @@
-local M = {}
-
 -- Process a single mapping entry and its value
 local function process_mapping(key, value, options)
     if type(value) ~= 'table' then
@@ -69,7 +67,7 @@ local function is_implicit_group(value)
 end
 
 -- Convert mappings to the new format
-function M.convert_maps(mappings, options)
+return function(mappings, options)
     if type(mappings) ~= 'table' then
         return {}
     end
@@ -135,8 +133,3 @@ function M.convert_maps(mappings, options)
 
     return result
 end
-
--- Backwards compatibility
-M.convert_config = M.convert_maps
-
-return M

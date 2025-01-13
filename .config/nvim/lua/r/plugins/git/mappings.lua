@@ -3,7 +3,7 @@
 ------------------------------------------------------------------------
 
 local wk = require 'which-key'
-local maps = require 'r.utils.maps'
+local maps = require 'r.utils.expand_maps'
 
 local function git_command(args)
     return function()
@@ -14,7 +14,7 @@ end
 local g = {}
 
 function g.fugitive()
-    wk.add(maps.convert_maps {
+    wk.add(maps {
         ['<leader>g'] = {
             name = 'git functions',
             a = { git_command { 'add %' }, 'add current buffer' },
@@ -33,7 +33,7 @@ function g.fugitive()
 end
 
 function g.signs(bufnr, gs)
-    wk.add(maps.convert_maps({
+    wk.add(maps({
         ['<leader>g'] = {
             name = 'git functions',
             i = { gs.preview_hunk_inline, 'Inline diff for hunk' },

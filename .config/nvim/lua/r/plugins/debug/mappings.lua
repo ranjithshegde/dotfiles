@@ -2,7 +2,7 @@
 --                              Debug Adapters                        --
 ------------------------------------------------------------------------
 
-return require('which-key').add(require('r.utils.maps').convert_maps {
+return require('which-key').add(require 'r.utils.expand_maps' {
     ['<leader>d'] = {
         name = 'debug',
         b = { require('dap').toggle_breakpoint, 'set breakpoint' },

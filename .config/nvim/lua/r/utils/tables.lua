@@ -75,6 +75,7 @@ tables.ignoreFiles = {
     'scnvim',
     'guihua',
     'Outline',
+    'trouble',
     'lspinfo',
     'NodeTree',
     'WhichKey',
@@ -83,6 +84,7 @@ tables.ignoreFiles = {
     'DressingInput',
     'TelescopePrompt',
     'TelescopeResults',
+    'snacks_dashboard',
 }
 
 tables.ignore_binaries = {

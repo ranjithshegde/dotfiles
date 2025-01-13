@@ -1,5 +1,3 @@
-local util = require 'lspconfig.util'
-
 ------------------------------------------------------------------------
 --                              General functions                     --
 ------------------------------------------------------------------------
@@ -76,7 +74,7 @@ local function tableHasKey(table, key)
 end
 
 local function returnID(client)
-    local lang_server = util.get_active_client_by_name(0, client)
+    local lang_server = vim.lsp.get_clients { name = client }
     if not lang_server then
         vim.notify(
             string.format('The language server %s is not active on this buffer', vim.log.levels.WARN, client),
@@ -84,7 +82,7 @@ local function returnID(client)
         )
         return
     end
-    return lang_server.id
+    return lang_server[1].id
 end
 
 local function currentSettings(new_settings, client)
@@ -209,8 +207,8 @@ end
 
 function Diagnostics.turn_off_diagnostics(client)
     if client and client ~= '' then
-        local name = util.get_active_client_by_name(0, client)
-        if name then
+        local name = vim.lsp.get_clients { name = client }
+        if name[1] then
             configure({
                 underline = false,
                 virtual_text = false,
@@ -242,8 +240,8 @@ end
 function Diagnostics.turn_on_diagnostics_default(client)
     local settings = {}
     if client and client ~= '' then
-        local name = util.get_active_client_by_name(0, client)
-        if name then
+        local name = vim.lsp.get_clients { name = client }
+        if name[1] then
             for _, setting in ipairs(methods) do
                 settings[setting] = current_diagnostics[client].settings[setting].default
             end
@@ -271,7 +269,7 @@ end
 
 function Diagnostics.turn_on_diagnostics(client)
     if client and client ~= '' then
-        local name = util.get_active_client_by_name(0, client)
+        local name = vim.lsp.get_clients { name = client }
         if name then
             configure({
                 underline = true,
@@ -304,9 +302,9 @@ end
 
 function Diagnostics.toggle_all_diagnostics(client)
     if client and client ~= '' then
-        local name = util.get_active_client_by_name(0, client)
-        if name then
-            if current_diagnostics[name.id].settings.all then
+        local name = vim.lsp.get_clients { name = client }
+        if name[1] then
+            if current_diagnostics[name[1].id].settings.all then
                 Diagnostics.turn_off_diagnostics(client)
             else
                 Diagnostics.turn_on_diagnostics(client)
@@ -342,8 +340,8 @@ function Diagnostics.toggle_diagnostic(name, client)
             return current_diagnostics[id].settings[name].value
         end
     else
-        local cname = util.get_active_client_by_name(0, client)
-        if cname then
+        local cname = vim.lsp.get_clients { name = client }
+        if cname[1] then
             if type(current_diagnostics[client].settings[name].default) == 'boolean' then
                 current_diagnostics[client].settings[name].value = not current_diagnostics[client].settings[name].value
             elseif current_diagnostics[client].settings[name].value == false then
