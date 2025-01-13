@@ -14,10 +14,6 @@ return {
         },
     },
     {
-        'ray-x/navigator.lua',
-        dependencies = { { 'ray-x/guihua.lua', build = { 'cd lua/fzy && make' } } },
-    },
-    {
         'ranjithshegde/ccls.nvim',
         dev = true,
         ft = { 'c', 'cpp', 'opencl' },

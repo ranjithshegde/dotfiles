@@ -35,16 +35,25 @@ function lspmap.lsp(client, bufnr)
                 i = { vim.lsp.buf.incoming_calls, 'incoming_calls' },
                 o = { vim.lsp.buf.outgoing_calls, 'outgoing_calls' },
             },
+            w = {
+                name = 'Workspace',
+                a = { vim.lsp.buf.add_workspace_folder, 'Add workspace folder' },
+                r = { vim.lsp.buf.remove_workspace_folder, 'Remove workspace folder' },
+                l = { vim.lsp.buf.list_workspace_folders, 'List workspace folder' },
+            },
             l = {
                 name = 'Diagnostic action',
                 v = { require('r.extensions.diagnostics').toggle_virtual_text, 'Toggle Virtual text' },
                 s = { require('r.extensions.diagnostics').toggle_signs, 'Toggle Sings' },
                 u = { require('r.extensions.diagnostics').toggle_underline, 'Toggle Underline' },
+                d = { vim.diagnostic.open_float, 'Show line diagnostics' },
             },
         },
         g = {
             name = 'Go to',
             I = { vim.lsp.buf.implementation, 'implementation' },
+            r = { vim.lsp.buf.references, 'Lsp Async reference' },
+            d = { vim.lsp.buf.definition, 'definition' },
             D = {
                 function()
                     vim.lsp.buf.declaration { reuse_win = true }
@@ -61,47 +70,6 @@ function lspmap.lsp(client, bufnr)
     }, { buffer = bufnr }))
 end
 
-function lspmap.navic(bufnr)
-    wk.add(mapper({
-        [','] = {
-            name = 'Lsp',
-            ca = { require('navigator.codelens').run_action, 'run code lens action' },
-            l = {
-                name = 'Diagnostic action',
-                l = { require('navigator.diagnostics').show_diagnostics, 'show_diagnostics' },
-                b = { require('navigator.diagnostics').show_buf_diagnostics, 'buf diagnostics' },
-            },
-            t = {
-                name = 'Treesitter',
-                s = { require('navigator.treesitter').buf_ts, 'buf_ts' },
-                S = { require('navigator.treesitter').bufs_ts, 'bufs_ts' },
-            },
-            w = {
-                name = 'Workspace',
-                a = { require('navigator.workspace').add_workspace_folder, 'Add workspace folder' },
-                r = { require('navigator.workspace').remove_workspace_folder, 'Remove workspace folder' },
-                l = { require('navigator.workspace').list_workspace_folders, 'List workspace folder' },
-            },
-        },
-        g = {
-            name = 'Go to',
-            r = { require('navigator.reference').async_ref, 'Lsp Async reference' },
-            d = { require('navigator.definition').definition, 'definition' },
-            p = { require('navigator.definition').definition_preview, 'definition_preview' },
-            P = { require('navigator.definition').type_definition_preview, 'Type definition_preview' },
-        },
-        [']r'] = { require('navigator.treesitter').goto_next_usage, 'next usage' },
-        ['[r'] = { require('navigator.treesitter').goto_previous_usage, 'previous usage' },
-
-        ['<leader>l'] = {
-            name = 'Minimap',
-            l = { require('navigator.symbols').side_panel, 'Lsp Symbols' },
-            t = { require('navigator.treesitter').side_panel, 'Treesitter Symbols' },
-            r = { require('navigator.reference').side_panel, 'Reference list' },
-        },
-    }, { buffer = bufnr }))
-end
-
 function lspmap.tex(bufnr)
     map('n', '<F4>', function()
         require('r.plugins.lsp.texlab').tex_clean()
@@ -109,17 +77,6 @@ function lspmap.tex(bufnr)
 
     map('n', '<F5>', vim.cmd.TexlabBuild, { buffer = bufnr, desc = 'Compile tex document' })
     map('n', '<F6>', vim.cmd.TexlabForward, { buffer = bufnr, desc = 'Launch zathura' })
-end
-
--- ******************************** Diagnostics------------------------
-function lspmap.diagnostic(bufnr)
-    map('n', ',ld', vim.diagnostic.open_float, { desc = 'Show line diagnostics', buffer = bufnr })
-    map('n', '[d', function()
-        vim.diagnostic.jump { count = -vim.v.count1, float = true }
-    end, { desc = 'Show previous diagnostics', buffer = bufnr })
-    map('n', ']d', function()
-        vim.diagnostic.jump { count = vim.v.count1, float = true }
-    end, { desc = 'Show next diagnostics', buffer = bufnr })
 end
 
 return lspmap

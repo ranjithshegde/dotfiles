@@ -70,7 +70,6 @@ end
 function handlers.attach(client, bufnr)
     local id = {}
 
-    require('r.plugins.lsp.mappings').navic(bufnr)
     require('r.plugins.lsp.mappings').lsp(client, bufnr)
 
     vim.b.hasLsp = true

@@ -45,6 +45,14 @@ function to.peek(query)
     end
 end
 
+function to.goto_next()
+    require('nvim-treesitter-refactor.navigation').goto_next_usage()
+end
+
+function to.goto_prev()
+    require('nvim-treesitter-refactor.navigation').goto_previous_usage()
+end
+
 local refac = {}
 
 function refac.refac(args)
@@ -172,94 +180,99 @@ function treesitter.common()
             desc = 'Accept refactor edits',
         },
         { 'Q', desc = 'Reject refactor edits' },
+        { ']r', to.goto_next, desc = 'Go to next node usage' },
+        { '[r', to.goto_prev, desc = 'Go to previous node usage' },
+        mapper {
+            [';'] = {
+                name = 'Syntax tree functions',
+                K = { vim.show_pos, 'Show treesitter node' },
+                P = { vim.treesitter.inspect_tree, 'Toggle playground' },
+                i = { 'gg=G<C-o>zz', 'indent' },
+                -- TextObjects
+                p = {
+                    name = 'Peek function defintion',
+                    f = { to.peek '@function.outer', 'function' },
+                    c = { to.peek '@class.outer', 'class' },
+                },
+                g = {
+                    name = 'incremental selection',
+                    n = 'Start selection at node',
+                    i = { 'Increment nodes', mode = 'v' },
+                    s = { 'Increment Scope', mode = 'v' },
+                    d = { 'Decrememnt nodes', mode = 'v' },
+                },
+                f = {
+                    name = 'Refactoring tools',
+                    i = { refac.refac 'Inline Variable', 'Inline Variable' },
+                    e = {
+                        name = 'Extract',
+                        b = { refac.refac 'Extract Block', 'extract block' },
+                        B = { refac.refac 'Extract Block To File', 'extract block to file' },
+                    },
+                    d = {
+                        name = 'print debug information',
+                        p = { refac.debug('printf', { below = true }), 'Printf below' },
+                        P = { refac.debug('printf', { below = false }), 'Printf above' },
+                        v = { refac.debug('print_var', { normal = true }), 'Printf variable' },
+                        c = { refac.debug('cleanup', {}), 'Cleanup prints' },
+                    },
+                },
+            },
+        },
+        mapper {
+            -- Swap
+            cx = {
+                name = 'Swap forwards',
+                a = {
+                    -- name = 'outer',
+                    s = { to.swap.next '@statement.outer', 'statement' },
+                    o = { to.swap.next '@comment.outer', 'comment' },
+                    a = { to.swap.next '@call.outer', 'call' },
+                    f = { to.swap.next '@function.outer', 'function' },
+                    p = { to.swap.next '@parameter.outer', 'Paramater' },
+                    c = { to.swap.next '@conditional.outer', 'conditional' },
+                    l = { to.swap.next '@loop.outer', 'loop' },
+                    v = { to.swap.next '@variable.outer', 'variable' },
+                },
+                i = {
+                    -- name = 'inner',
+                    a = { to.swap.next '@call.inner', 'call' },
+                    f = { to.swap.next '@function.inner', 'function' },
+                    p = { to.swap.next '@parameter.inner', 'Paramater' },
+                    c = { to.swap.next '@conditional.inner', 'conditional' },
+                    l = { to.swap.next '@loop.inner', 'loop' },
+                    v = { to.swap.next '@variable.inner', 'variable' },
+                },
+            },
+            cX = {
+                name = 'Swap backwards',
+                a = {
+                    -- name = 'outer',
+                    s = { to.swap.previous '@statement.outer', 'statement' },
+                    o = { to.swap.previous '@comment.outer', 'comment' },
+                    a = { to.swap.previous '@call.outer', 'call' },
+                    f = { to.swap.previous '@function.outer', 'function' },
+                    p = { to.swap.previous '@parameter.outer', 'Paramater' },
+                    c = { to.swap.previous '@conditional.outer', 'conditional' },
+                    l = { to.swap.previous '@loop.outer', 'loop' },
+                    v = { to.swap.previous '@variable.outer', 'variable' },
+                },
+                i = {
+                    -- name = 'inner',
+                    a = { to.swap.previous '@call.inner', 'call' },
+                    f = { to.swap.previous '@function.inner', 'function' },
+                    p = { to.swap.previous '@parameter.inner', 'Paramater' },
+                    c = { to.swap.previous '@conditional.inner', 'conditional' },
+                    l = { to.swap.previous '@loop.inner', 'loop' },
+                    v = { to.swap.previous '@variable.inner', 'variable' },
+                },
+            },
+        },
+        mapper({
+            ['<C-;>'] = { to.repeat_last 'repeat_last_move_next', 'Repeat last move' },
+            ['<C-,>'] = { to.repeat_last 'repeat_last_move_previous', 'Repeat last move' },
+        }, { mode = { 'n', 'x', 'o' } }),
     }
-    wk.add(mapper {
-        [';'] = {
-            name = 'Syntax tree functions',
-            K = { vim.show_pos, 'Show treesitter node' },
-            P = { vim.treesitter.inspect_tree, 'Toggle playground' },
-            i = { 'gg=G<C-o>zz', 'indent' },
-            -- TextObjects
-            p = {
-                name = 'Peek function defintion',
-                f = { to.peek '@function.outer', 'function' },
-                c = { to.peek '@class.outer', 'class' },
-            },
-            g = {
-                name = 'incremental selection',
-                n = 'Start selection at node',
-                i = { 'Increment nodes', mode = 'v' },
-                s = { 'Increment Scope', mode = 'v' },
-                d = { 'Decrememnt nodes', mode = 'v' },
-            },
-            f = {
-                name = 'Refactoring tools',
-                i = { refac.refac 'Inline Variable', 'Inline Variable' },
-                e = {
-                    name = 'Extract',
-                    b = { refac.refac 'Extract Block', 'extract block' },
-                    B = { refac.refac 'Extract Block To File', 'extract block to file' },
-                },
-                d = {
-                    name = 'print debug information',
-                    p = { refac.debug('printf', { below = true }), 'Printf below' },
-                    P = { refac.debug('printf', { below = false }), 'Printf above' },
-                    v = { refac.debug('print_var', { normal = true }), 'Printf variable' },
-                    c = { refac.debug('cleanup', {}), 'Cleanup prints' },
-                },
-            },
-        },
-    })
-
-    wk.add(mapper {
-        -- Swap
-        cx = {
-            name = 'Swap forwards',
-            a = {
-                -- name = 'outer',
-                s = { to.swap.next '@statement.outer', 'statement' },
-                o = { to.swap.next '@comment.outer', 'comment' },
-                a = { to.swap.next '@call.outer', 'call' },
-                f = { to.swap.next '@function.outer', 'function' },
-                p = { to.swap.next '@parameter.outer', 'Paramater' },
-                c = { to.swap.next '@conditional.outer', 'conditional' },
-                l = { to.swap.next '@loop.outer', 'loop' },
-                v = { to.swap.next '@variable.outer', 'variable' },
-            },
-            i = {
-                -- name = 'inner',
-                a = { to.swap.next '@call.inner', 'call' },
-                f = { to.swap.next '@function.inner', 'function' },
-                p = { to.swap.next '@parameter.inner', 'Paramater' },
-                c = { to.swap.next '@conditional.inner', 'conditional' },
-                l = { to.swap.next '@loop.inner', 'loop' },
-                v = { to.swap.next '@variable.inner', 'variable' },
-            },
-        },
-        cX = {
-            name = 'Swap backwards',
-            a = {
-                -- name = 'outer',
-                s = { to.swap.previous '@statement.outer', 'statement' },
-                o = { to.swap.previous '@comment.outer', 'comment' },
-                a = { to.swap.previous '@call.outer', 'call' },
-                f = { to.swap.previous '@function.outer', 'function' },
-                p = { to.swap.previous '@parameter.outer', 'Paramater' },
-                c = { to.swap.previous '@conditional.outer', 'conditional' },
-                l = { to.swap.previous '@loop.outer', 'loop' },
-                v = { to.swap.previous '@variable.outer', 'variable' },
-            },
-            i = {
-                -- name = 'inner',
-                a = { to.swap.previous '@call.inner', 'call' },
-                f = { to.swap.previous '@function.inner', 'function' },
-                p = { to.swap.previous '@parameter.inner', 'Paramater' },
-                c = { to.swap.previous '@conditional.inner', 'conditional' },
-                l = { to.swap.previous '@loop.inner', 'loop' },
-                v = { to.swap.previous '@variable.inner', 'variable' },
-            },
-        },
-    })
 
     wk.add(mapper({
         [';f'] = {
@@ -344,11 +357,6 @@ function treesitter.common()
             l = { to.select('@loop.inner', 'o'), 'loop' },
         },
     }, { mode = 'o' }))
-
-    wk.add(mapper({
-        ['<C-;>'] = { to.repeat_last 'repeat_last_move_next', 'Repeat last move' },
-        ['<C-,>'] = { to.repeat_last 'repeat_last_move_previous', 'Repeat last move' },
-    }, { mode = { 'n', 'x', 'o' } }))
 end
 
 return treesitter

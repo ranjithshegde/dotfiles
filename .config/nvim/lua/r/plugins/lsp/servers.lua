@@ -1,23 +1,3 @@
-local navigator = {
-    default_mapping = false,
-    icons = { icons = false },
-    lsp_signature_help = false,
-    lsp = {
-        enabled = false,
-        disable_lsp = 'all',
-        format_on_save = false,
-        hover = { enable = false },
-        code_action = { enable = false },
-        diagnostic = {
-            all = false,
-            virtual_text = false,
-            underline = false,
-            update_in_insert = false,
-        },
-        disply_diagnostic_qf = false,
-    },
-}
-
 ------------------------------------------------------------------------
 --                         Language servers                           --
 ------------------------------------------------------------------------
@@ -65,7 +45,6 @@ return function()
         require('r.plugins.lsp.clang').clangd_ext()
     end
 
-    require('navigator').setup(navigator)
     require('lspconfig.ui.windows').default_options.border = 'single'
 
     for ls, cfg in pairs(configs) do

@@ -95,6 +95,7 @@ function ts.setup()
                 border = 'double',
             },
         },
+        refactor = { navigation = { enable = true } },
         query_linter = {
             enable = true,
             use_virtual_text = true,
@@ -145,9 +146,6 @@ function ts.refactoring()
         },
         print_var_statements = {},
     }
-    if package.loaded.telescope then
-        require('telescope').load_extension 'refactoring'
-    end
 end
 
 function ts.node_action()
@@ -162,13 +160,6 @@ function ts.node_action()
             ['parameter_list'] = require('ts-node-action.actions').toggle_multiline(),
         },
     }
-end
-
-function ts.trevj()
-    require('trevj').setup()
-    vim.keymap.set('n', ';J', function()
-        require('trevj').format_at_cursor()
-    end)
 end
 
 ------------------------------------------------------------------------

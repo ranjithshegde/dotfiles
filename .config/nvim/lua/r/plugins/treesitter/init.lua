@@ -10,6 +10,7 @@ return {
     },
     { 'https://gitlab.com/HiPhish/rainbow-delimiters.nvim', event = 'BufReadPre' },
     { 'nvim-treesitter/nvim-treesitter-textobjects' },
+    { 'nvim-treesitter/nvim-treesitter-refactor' },
     {
         'ThePrimeagen/refactoring.nvim',
         config = setup('r.plugins.treesitter.settings', 'refactoring'),
@@ -27,10 +28,5 @@ return {
         'chrisgrieser/nvim-various-textobjs',
         opts = { keymaps = { useDefaults = true } },
         event = 'BufReadPost',
-    },
-    {
-        'AckslD/nvim-trevJ.lua',
-        keys = ';J',
-        config = setup('r.plugins.treesitter.settings', 'trevj'),
     },
 }
