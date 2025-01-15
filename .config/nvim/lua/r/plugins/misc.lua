@@ -14,6 +14,7 @@ return {
                 underline = true,
             },
         },
+        scope = { enabled = true },
         lazygit = { enabled = true },
         statuscolumn = { enabled = true },
         zen = { toggle = { dim = true } },

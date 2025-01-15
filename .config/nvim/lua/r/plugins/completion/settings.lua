@@ -112,6 +112,10 @@ function completion.luasnip()
             },
         },
     }
+
+    if vim.b.cpp_type and vim.b.cpp_type == 'Unreal' then
+        require('luasnip').filetype_extend('cpp', { 'unreal' })
+    end
 end
 
 return completion

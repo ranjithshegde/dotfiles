@@ -6,12 +6,20 @@ local current_diagnostics = {}
 
 local methods = { 'underline', 'virtual_text', 'signs', 'update_in_insert', 'float' }
 
-local function signs()
-    vim.fn.sign_define('DiagnosticSignError', { text = '', texthl = 'DiagnosticSignError' })
-    vim.fn.sign_define('DiagnosticSignWarn', { text = '', texthl = 'DiagnosticSignWarn' })
-    vim.fn.sign_define('DiagnosticSignInfo', { text = '', texthl = 'DiagnosticSignInfo' })
-    vim.fn.sign_define('DiagnosticSignHint', { text = '', texthl = 'DiagnosticSignHint' })
-end
+local sign_conf = {
+    text = {
+        [vim.diagnostic.severity.ERROR] = '',
+        [vim.diagnostic.severity.WARN] = '',
+        [vim.diagnostic.severity.INFO] = '',
+        [vim.diagnostic.severity.HINT] = '',
+    },
+    numhl = {
+        [vim.diagnostic.severity.ERROR] = 'DiagnosticSignError',
+        [vim.diagnostic.severity.WARN] = 'DiagnosticSignWarn',
+        [vim.diagnostic.severity.INFO] = 'DiagnosticSignInfo',
+        [vim.diagnostic.severity.HINT] = 'DiagnosticSignHint',
+    },
+}
 
 local function fmt(diagnostic)
     if diagnostic.code then
@@ -23,7 +31,7 @@ end
 local float_conf = {
     show_header = true,
     source = 'always',
-    border = 'double',
+    border = 'rounded',
     format = fmt,
 }
 
@@ -105,8 +113,7 @@ local function configure(settings, client)
             if conf.virtual_text then
                 conf.virtual_text = virt_text_conf[client] and virt_text_conf[client] or virt_text_conf.default
             end
-            vim.lsp.handlers['textDocument/publishDiagnostics'] =
-                vim.lsp.with(vim.lsp.diagnostic.on_publish_diagnostics, conf)
+            vim.diagnostic.config(conf, ns[client])
             local client_id = returnID(id)
             if not client_id then
                 return
@@ -126,8 +133,7 @@ local function configure(settings, client)
         if conf.virtual_text then
             conf.virtual_text = virt_text_conf[client] and virt_text_conf[client] or virt_text_conf.default
         end
-        vim.lsp.handlers['textDocument/publishDiagnostics'] =
-            vim.lsp.with(vim.lsp.diagnostic.on_publish_diagnostics, conf)
+        vim.diagnostic.config(conf, ns[client])
         local client_id = returnID(client)
         if not client_id then
             return
@@ -169,7 +175,6 @@ local function init(settings, client, config)
 end
 
 function Diagnostics.attach(user_settings, client)
-    signs()
     local config = {
         settings = {
             all = true,
@@ -187,13 +192,21 @@ function Diagnostics.attach(user_settings, client)
 
     ns[client.name] = vim.lsp.diagnostic.get_namespace(client.id)
 
-    vim.diagnostic.config { float = float_conf, severity_sort = true }
+    vim.diagnostic.config {
+        float = float_conf,
+        severity_sort = true,
+        signs = sign_conf,
+        jump = { float = true },
+    }
 
     if ns[client.name] then
-        vim.diagnostic.config(
-            { float = float_conf, severity_sort = true, virtual_text = current_virt },
-            ns[client.name]
-        )
+        vim.diagnostic.config({
+            float = float_conf,
+            severity_sort = true,
+            virtual_text = current_virt,
+            signs = sign_conf,
+            jump = { float = true },
+        }, ns[client.name])
     end
 
     if vim.tbl_isempty(current_diagnostics) then
@@ -311,7 +324,7 @@ function Diagnostics.toggle_all_diagnostics(client)
             end
             displayStatus('all diagnostics are', current_diagnostics[client].settings.all, client)
         else
-            print(string.format('The language server %s is not active on this buffer', client))
+            vim.notify(string.format('The language server %s is not active on this buffer', client))
         end
     else
         for id, _ in pairs(current_diagnostics) do

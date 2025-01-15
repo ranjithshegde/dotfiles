@@ -203,17 +203,20 @@ function treesitter.common()
                 },
                 f = {
                     name = 'Refactoring tools',
-                    i = { refac.refac 'Inline Variable', 'Inline Variable' },
+                    i = { refac.refac 'Inline Variable', 'Inline Variable', mode = { 'n', 'v' } },
                     e = {
                         name = 'Extract',
                         b = { refac.refac 'Extract Block', 'extract block' },
                         B = { refac.refac 'Extract Block To File', 'extract block to file' },
+                        v = { refac.refac 'Extract Variable', 'Extract Variable', mode = { 'n', 'v' } },
+                        f = { refac.refac 'Extract Function', 'Extract Function', mode = { 'n', 'v' } },
+                        F = { refac.refac 'Extract Function to File', 'Extract Function to File', mode = { 'n', 'v' } },
                     },
                     d = {
                         name = 'print debug information',
                         p = { refac.debug('printf', { below = true }), 'Printf below' },
                         P = { refac.debug('printf', { below = false }), 'Printf above' },
-                        v = { refac.debug('print_var', { normal = true }), 'Printf variable' },
+                        v = { refac.debug('print_var', { normal = true }), 'Printf variable', mode = { 'n', 'v' } },
                         c = { refac.debug('cleanup', {}), 'Cleanup prints' },
                     },
                 },
@@ -273,38 +276,6 @@ function treesitter.common()
             ['<C-,>'] = { to.repeat_last 'repeat_last_move_previous', 'Repeat last move' },
         }, { mode = { 'n', 'x', 'o' } }),
     }
-
-    wk.add(mapper({
-        [';f'] = {
-            name = 'Refactoring tools',
-            i = {
-                [[<Esc><Cmd>lua require('refactoring').refactor('Inline Variable')<CR>]],
-                'Inline Variable',
-            },
-            e = {
-                name = 'Extract',
-                v = {
-                    [[<Esc><Cmd>lua require('refactoring').refactor('Extract Variable')<CR>]],
-                    'Extract Variable',
-                },
-                f = {
-                    [[<Esc><Cmd>lua require('refactoring').refactor('Extract Function')<CR>]],
-                    'Extract function',
-                },
-                F = {
-                    [[<Esc><Cmd>lua require('refactoring').refactor('Extract Function To File')<CR>]],
-                    'Extract function To File',
-                },
-            },
-            d = {
-                name = 'print debug information',
-                v = {
-                    [[:lua require("refactoring").debug.print_var ({})<CR>]],
-                    'Printf variable',
-                },
-            },
-        },
-    }, { mode = 'v' }))
 
     wk.add(mapper({
         a = {

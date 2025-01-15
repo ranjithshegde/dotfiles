@@ -27,10 +27,6 @@ return function()
         nb.code_actions.ts_node_action.with {
             filetypes = require('r.utils.tables').lspfiles,
         },
-
-        require 'none-ls.diagnostics.flake8',
-        require 'none-ls-shellcheck.diagnostics',
-        require 'none-ls-shellcheck.code_actions',
     }
     nl.setup {
         on_init = function(client)

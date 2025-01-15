@@ -5,7 +5,6 @@ local exec = vim.api.nvim_command
 ------------------------------------------------------------------------
 
 function extensions.diagnostics(bufnr)
-    require('r.plugins.lsp.mappings').diagnostic(bufnr)
     local cmd = vim.api.nvim_buf_create_user_command
     local complete = function()
         return require('r.utils').get_client_names()
@@ -76,7 +75,7 @@ function extensions.toggleTerm(cmd, name, spl)
         vim.cmd.startinsert()
     else
         exec(split)
-        vim.fn.termopen(cmd)
+        vim.fn.jobstart(cmd, { term = true })
         vim.cmd.startinsert()
         vim.cmd.f(name)
     end
@@ -88,7 +87,7 @@ end
 function extensions.ranger(path, edit_cmd)
     local cpath = '/tmp/chosenfile'
     local currentPath = vim.fn.expand(path)
-    local rc = { name = 'ranger', edit_cmd = edit_cmd }
+    local rc = { name = 'ranger', edit_cmd = edit_cmd, term = true }
     function rc.on_exit(_, code, _)
         if not code then
             vim.api.nvim_buf_delete(0, { force = true })
@@ -103,9 +102,9 @@ function extensions.ranger(path, edit_cmd)
 
     vim.cmd.enew()
     if vim.fn.isdirectory(currentPath) then
-        vim.fn.termopen('ranger --choosefiles=' .. cpath .. ' "' .. currentPath .. '"', rc)
+        vim.fn.jobstart('ranger --choosefiles=' .. cpath .. ' "' .. currentPath .. '"', rc)
     else
-        vim.fn.termopen('ranger --choosefiles=' .. cpath .. ' --selectfile="' .. currentPath .. '"', rc)
+        vim.fn.jobstart('ranger --choosefiles=' .. cpath .. ' --selectfile="' .. currentPath .. '"', rc)
     end
     vim.cmd.startinsert()
 end

@@ -30,10 +30,8 @@ local maps = {
         j = { fzf 'jumps', 'Jump history' },
         l = { fzf 'loclist', 'local quickfix list' },
         m = { fzf 'man_pages', 'Man pages' },
-        -- n = { tel_ext 'noice', 'Notifications' },
         q = { fzf 'quickfix', 'Quickfix list' },
-        r = { fzf 'lsp_references', 'Lsp References' },
-        R = { fzf 'reloader', 'Reload lua modules' },
+        r = { fzf('lsp_references', { winopts = { preview = { layout = 'vertical' } } }), 'Lsp References' },
         s = { fzf('lsp_document_symbols', { winopts = { row = 1, col = 0 } }), 'Lsp symbols in buffer' },
         S = { fzf 'lsp_live_workspace_symbols', 'Grep lsp workspace symbols' },
         t = {
@@ -144,6 +142,10 @@ local maps = {
                 'Vim plugin Directory',
             },
             o = {
+                fzf('files', { cwd = '~/Documents/Orgs/', prompt_title = 'Org files' }),
+                'Org files',
+            },
+            O = {
                 fzf('files', { cwd = '~/Workspaces/openFrameworks/', prompt_title = 'oF Workspace files' }),
                 'OfWorkspace',
             },

@@ -33,7 +33,7 @@ end
 
 local function openScratch(type)
     if not type then
-        vim.print 'No filetype detected or selected. Exiting Operation...'
+        vim.notify 'No filetype detected or selected. Exiting Operation...'
         return
     end
     local workspace = vim.env.WORKSPACE

@@ -119,8 +119,6 @@ function fzy.setup()
             multiprocess = true,
         },
     }
-
-    -- require('fzf-lua').register_ui_select()
 end
 
 function fzy.init()

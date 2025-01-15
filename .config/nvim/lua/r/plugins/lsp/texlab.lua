@@ -58,7 +58,7 @@ function texlab.tex_clean()
             end
         end, bufnr)
     else
-        print 'method texlab.cleanArtifacts is not supported by any servers active on the current buffer'
+        vim.notify 'method texlab.cleanArtifacts is not supported by any servers active on the current buffer'
     end
 end
 
