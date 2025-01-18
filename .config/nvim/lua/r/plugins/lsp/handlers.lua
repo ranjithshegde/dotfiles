@@ -42,7 +42,6 @@ function handlers.init()
             local client = vim.lsp.get_client_by_id(args.data.client_id)
             vim.notify(string.format('Server %s detached from %d', client.name, args.buf))
             auclear { group = vim.g.au_id['LspAutoFormat_' .. client.name .. '_' .. args.buf], buffer = args.buf }
-            auclear { group = vim.g.au_id['LspHighlightSymbols_' .. client.name .. '_' .. args.buf], buffer = args.buf }
         end,
         desc = 'Clear AUGroups when LSP detaches',
     })
@@ -92,8 +91,8 @@ function handlers.attach(client, bufnr)
     end
 
     require('r.extensions.diagnostics').attach(
-        { all = false, virtual_text = false, underline = false, update_in_insert = false },
-        client
+        client,
+        { virtual_text = false, underline = false, update_in_insert = false }
     )
     require('r.extensions').diagnostics(bufnr)
 

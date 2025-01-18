@@ -11,7 +11,7 @@ return {
     {
         'saghen/blink.cmp',
         event = 'InsertEnter',
-        version = 'v0.10.0',
+        version = 'v0.*',
         config = setup('r.plugins.completion.settings', 'init'),
         dependencies = {
             'windwp/nvim-autopairs',

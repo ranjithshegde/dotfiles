@@ -283,7 +283,6 @@ tables.ts_parsers = {
     'make',
     'markdown',
     'markdown_inline',
-    'org',
     'perl',
     'python',
     'query',

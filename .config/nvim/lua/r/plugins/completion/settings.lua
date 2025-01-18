@@ -44,12 +44,12 @@ local function cmp_setup()
                 ['<S-Tab>'] = { 'select_prev', 'fallback' },
                 ['<C-e>'] = { 'cancel', 'fallback' },
                 ['<C-y>'] = { 'select_and_accept' },
-                ['<esc>'] = {
-                    'hide',
-                    function()
-                        if vim.fn.getcmdtype() ~= '' then
+                ['<Esc>'] = {
+                    function(cmp)
+                        if cmp.is_visible() then
+                            cmp.cancel()
+                        else
                             vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<C-c>', true, true, true), 'n', true)
-                            return
                         end
                     end,
                 },

@@ -11,6 +11,7 @@ return {
 
     -- Colorscheme
     { 'folke/tokyonight.nvim', opts = { plugins = { mini_statusline = true } } },
+    { 'rose-pine/neovim', name = 'rose-pine' },
 
     -- Unreal integration
     {

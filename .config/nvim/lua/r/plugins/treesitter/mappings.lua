@@ -72,9 +72,9 @@ function treesitter.navigate_tex(buf)
         -- Motions
         [']'] = {
             m = { to.move('goto_next_start', '@block.outer'), 'Move to next outer TeX environment start' },
-            i = { to.move('goto_next_start', '@block.inner'), 'Move to next inner TeX environment start' },
+            f = { to.move('goto_next_start', '@block.inner'), 'Move to next inner TeX environment start' },
             M = { to.move('goto_next_end', '@block.outer'), 'Move to next TeX environment outer end' },
-            I = { to.move('goto_next_end', '@block.inner'), 'Move to next TeX environment inner end' },
+            F = { to.move('goto_next_end', '@block.inner'), 'Move to next TeX environment inner end' },
         },
         ['<Down>'] = {
             to.move('goto_next_start', '@class.outer'),
@@ -93,11 +93,11 @@ function treesitter.navigate_tex(buf)
                 to.move('goto_previous_end', '@block.outer'),
                 'Move to previous TeX environment outer end',
             },
-            i = {
+            f = {
                 to.move('goto_previous_start', '@block.inner'),
                 'Move to previous inner TeX environment start',
             },
-            I = {
+            F = {
                 to.move('goto_previous_end', '@block.inner'),
                 'Move to previous TeX environment inner end',
             },
@@ -131,10 +131,10 @@ function treesitter.navigate(buf)
         [']'] = {
             m = { to.move('goto_next_start', '@function.outer'), 'Move to next outer function start' },
             M = { to.move('goto_next_end', '@function.outer'), 'Move to next outer function end' },
-            i = { to.move('goto_next_start', '@function.inner'), 'Move to next inner function start' },
-            I = { to.move('goto_next_end', '@function.inner'), 'Move to next function inner end' },
-            [']'] = { to.move('goto_next_start', '@class.outer'), 'Move to next outer class start' },
-            ['['] = { to.move('goto_next_end', '@class.outer'), 'Move to next outer class end' },
+            f = { to.move('goto_next_start', '@function.inner'), 'Move to next inner function start' },
+            F = { to.move('goto_next_end', '@function.inner'), 'Move to next function inner end' },
+            ['}'] = { to.move('goto_next_start', '@class.outer'), 'Move to next outer class start' },
+            ['{'] = { to.move('goto_next_end', '@class.outer'), 'Move to next outer class end' },
         },
         ['<Down>'] = { to.move('goto_next_start', '@block.outer'), 'Move to next outer code block start' },
         ['<Right>'] = {
@@ -147,16 +147,16 @@ function treesitter.navigate(buf)
                 'Move to previous outer function start',
             },
             M = { to.move('goto_previous_end', '@function.outer'), 'Move to previous function outer end' },
-            i = {
+            f = {
                 to.move('goto_previous_start', '@function.inner'),
                 'Move to previous inner function start',
             },
-            I = { to.move('goto_previous_end', '@function.inner'), 'Move to previous function inner end' },
-            ['['] = {
+            F = { to.move('goto_previous_end', '@function.inner'), 'Move to previous function inner end' },
+            ['{'] = {
                 to.move('goto_previous_start', '@class.outer'),
                 'Move to previous outer class start',
             },
-            [']'] = {
+            ['}'] = {
                 to.move('goto_previous_end', '@class.outer'),
                 'Move to previous outer class end',
             },

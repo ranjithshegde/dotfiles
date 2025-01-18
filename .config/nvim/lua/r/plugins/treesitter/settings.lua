@@ -47,18 +47,10 @@ function ts.setup()
     vim.treesitter.language.register('c', 'opencl')
     vim.treesitter.language.register('bash', 'zsh')
 
-    local parser_config = require('nvim-treesitter.parsers').get_parser_configs()
-    parser_config.org = {
-        install_info = {
-            url = 'https://github.com/milisims/tree-sitter-org',
-            revision = '081179c52b3e8175af62b9b91dc099d010c38770',
-            files = { 'src/parser.c', 'src/scanner.cc' },
-        },
-        filetype = 'org',
-    }
     require('nvim-treesitter.configs').setup {
         ensure_installed = require('r.utils.tables').ts_parsers,
         auto_install = true,
+        ignore_install = { 'org' },
         highlight = {
             enable = true,
             additional_vim_regex_highlighting = { 'latex', 'org' },

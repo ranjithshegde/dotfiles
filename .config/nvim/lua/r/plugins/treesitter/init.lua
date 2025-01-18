@@ -8,7 +8,7 @@ return {
         config = setup('r.plugins.treesitter.settings', 'setup'),
         init = setup('r.plugins.treesitter.settings', 'autocmds'),
     },
-    { 'https://gitlab.com/HiPhish/rainbow-delimiters.nvim', event = 'BufReadPre' },
+    { 'HiPhish/rainbow-delimiters.nvim', event = 'BufReadPre' },
     { 'nvim-treesitter/nvim-treesitter-textobjects' },
     { 'nvim-treesitter/nvim-treesitter-refactor' },
     {
