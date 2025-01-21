@@ -57,7 +57,6 @@ end
 local function apply_initial_settings(client)
     local ns = get_namespace(client)
     vim.diagnostic.config(get_config(client), ns)
-    vim.notify(string.format('Initialized diagnostics for client %s', client.name), vim.log.levels.INFO)
 end
 
 local function toggle_setting(setting, client_name)
@@ -83,10 +82,6 @@ local function toggle_setting(setting, client_name)
         end
 
         vim.diagnostic.config(config, ns)
-        vim.notify(
-            string.format('Toggled %s to %s for client %s', setting, tostring(config[setting]), client.name),
-            vim.log.levels.INFO
-        )
     end
 end
 
@@ -132,7 +127,6 @@ function Diagnostics.enable_all(client_name)
         local ns = get_namespace(client)
         client_diagnostics[client.id].config = vim.deepcopy(default_settings)
         vim.diagnostic.config(client_diagnostics[client.id].config, ns)
-        vim.notify(string.format('Enabled all diagnostics for client %s', client.name), vim.log.levels.INFO)
     end
 end
 
@@ -157,7 +151,6 @@ function Diagnostics.disable_all(client_name)
         end
 
         vim.diagnostic.config(config, ns)
-        vim.notify(string.format('Disabled all diagnostics for client %s', client.name), vim.log.levels.INFO)
     end
 end
 

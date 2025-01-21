@@ -13,31 +13,32 @@ end
 function fzy.cd_files(prompt, cwd)
     local fzf = require 'fzf-lua'
     local def_action = fzf.actions
+    local dir = vim.fs.normalize(cwd)
     fzf.files {
         prompt = prompt,
-        cwd = cwd,
+        cwd = dir,
         actions = {
             ['default'] = {
                 fn = function(selected, opts)
-                    dir_changer(selected[1], cwd)
+                    dir_changer(selected[1], dir)
                     def_action.file_edit(selected, opts)
                 end,
             },
             ['ctrl-s'] = {
                 fn = function(selected, opts)
-                    dir_changer(selected[1], cwd)
+                    dir_changer(selected[1], dir)
                     def_action.file_split(selected, opts)
                 end,
             },
             ['ctrl-v'] = {
                 fn = function(selected, opts)
-                    dir_changer(selected[1], cwd)
+                    dir_changer(selected[1], dir)
                     def_action.file_vsplit(selected, opts)
                 end,
             },
             ['ctrl-t'] = {
                 fn = function(selected, opts)
-                    dir_changer(selected[1], cwd)
+                    dir_changer(selected[1], dir)
                     def_action.file_tabedit(selected, opts)
                 end,
             },
@@ -118,6 +119,20 @@ function fzy.setup()
         grep = {
             multiprocess = true,
         },
+        lsp = {
+            jump_to_single_result = true,
+            code_actions = {
+                winopts = {
+                    relative = 'cursor',
+                    row = 1,
+                    col = 0,
+                    height = 0.4,
+                    preview = { vertical = 'down:70%' },
+                },
+                previewer = vim.fn.executable 'delta' == 1 and 'codeaction_native' or nil,
+                preview_pager = "delta --width=$COLUMNS --hunk-header-style='omit' --file-style='omit'",
+            },
+        },
     }
 end
 
@@ -125,7 +140,16 @@ function fzy.init()
     require 'r.plugins.fuzzy.mappings'
 
     local function on_select(...)
-        require('fzf-lua').register_ui_select()
+        require('fzf-lua').register_ui_select(function(_, items)
+            local min_h, max_h = 0.15, 0.70
+            local h = (#items + 4) / vim.o.lines
+            if h < min_h then
+                h = min_h
+            elseif h > max_h then
+                h = max_h
+            end
+            return { winopts = { height = h, width = 0.60, row = 0.40 } }
+        end)
         return vim.ui.select(...)
     end
 

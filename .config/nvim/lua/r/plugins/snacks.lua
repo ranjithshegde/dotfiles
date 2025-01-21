@@ -14,8 +14,8 @@ return {
                 underline = true,
             },
         },
+        notifier = { enabled = true },
         scope = { enabled = true, treesitter = { blocks = { enabled = true } } },
-        -- picker = { enabled = true },
         lazygit = { enabled = true },
         statuscolumn = { enabled = true },
         words = { enabled = true, jumplist = false },
@@ -23,7 +23,7 @@ return {
     },
     keys = {
         {
-            ']]',
+            ']r',
             function()
                 Snacks.words.jump(vim.v.count1)
             end,
@@ -31,7 +31,7 @@ return {
             mode = { 'n', 't' },
         },
         {
-            '[[',
+            '[r',
             function()
                 Snacks.words.jump(-vim.v.count1)
             end,

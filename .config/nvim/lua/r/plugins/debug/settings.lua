@@ -46,7 +46,7 @@ function Debugger.setup()
     local dap = require 'dap'
     signs()
 
-    require('dap.ext.vscode').load_launchjs 'launch.json'
+    require('dap.ext.vscode').getconfigs()
 
     Debugger.frames = makeSidebar('frames', 70)
     Debugger.scopes = makeSidebar('scopes', 60)

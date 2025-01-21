@@ -10,7 +10,6 @@ return {
     },
     { 'HiPhish/rainbow-delimiters.nvim', event = 'BufReadPre' },
     { 'nvim-treesitter/nvim-treesitter-textobjects' },
-    { 'nvim-treesitter/nvim-treesitter-refactor' },
     {
         'ThePrimeagen/refactoring.nvim',
         config = setup('r.plugins.treesitter.settings', 'refactoring'),

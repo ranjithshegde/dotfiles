@@ -202,7 +202,7 @@ function components.gps(window, buffer)
         vim.b.gps = max_width
     end
 
-    local context = require('r.plugins.treesitter.settings').statusline {
+    local context = require 'r.utils.context' {
         indicator_size = vim.b.gps,
         type_patterns = tsNodes.filetype[fs] or tsNodes.default,
         bufnr = buffer.bufnr,

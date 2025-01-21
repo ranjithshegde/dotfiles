@@ -61,6 +61,10 @@ function noice.config()
                 view = 'mini',
                 filter = { event = 'msg_showmode' },
             },
+            {
+                view = 'mini',
+                filter = { event = 'msg_show' },
+            },
         },
     }
 end

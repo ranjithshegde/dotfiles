@@ -45,14 +45,6 @@ function to.peek(query)
     end
 end
 
-function to.goto_next()
-    require('nvim-treesitter-refactor.navigation').goto_next_usage()
-end
-
-function to.goto_prev()
-    require('nvim-treesitter-refactor.navigation').goto_previous_usage()
-end
-
 local refac = {}
 
 function refac.refac(args)
@@ -175,13 +167,6 @@ end
 
 function treesitter.common()
     wk.add {
-        {
-            '<leader><CR>',
-            desc = 'Accept refactor edits',
-        },
-        { 'Q', desc = 'Reject refactor edits' },
-        { ']r', to.goto_next, desc = 'Go to next node usage' },
-        { '[r', to.goto_prev, desc = 'Go to previous node usage' },
         mapper {
             [';'] = {
                 name = 'Syntax tree functions',

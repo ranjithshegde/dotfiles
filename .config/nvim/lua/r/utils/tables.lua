@@ -74,6 +74,7 @@ tables.ignoreFiles = {
     'netrw',
     'scnvim',
     'guihua',
+    'Glance',
     'Outline',
     'trouble',
     'lspinfo',

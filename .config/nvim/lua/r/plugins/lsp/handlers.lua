@@ -90,10 +90,7 @@ function handlers.attach(client, bufnr)
         vim.wo.foldexpr = 'v:lua.vim.lsp.foldexpr()'
     end
 
-    require('r.extensions.diagnostics').attach(
-        client,
-        { virtual_text = false, underline = false, update_in_insert = false }
-    )
+    require('r.extensions.diagnostics').attach(client, { underline = false })
     require('r.extensions').diagnostics(bufnr)
 
     if sc.documentFormattingProvider or sc.rangeFormattingProvider then

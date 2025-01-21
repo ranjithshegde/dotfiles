@@ -101,7 +101,6 @@ function utils.get_file_label(n, tab)
     if tail == '' then
         if vim.fn.getwininfo(current_win)[1].quickfix == 1 then
             tail = vim.fn.getqflist({ title = true }).title
-            vim.notify(tail)
         else
             tail = 'Empty Buffer'
         end
@@ -232,40 +231,6 @@ end
 function utils.switch_highlight(hl1, hl2)
     local hl = vim.api.nvim_get_hl(0, { name = hl1 })
     vim.api.nvim_set_hl(0, hl2, { fg = hl.bg })
-end
-
-function utils.get_maps(maps, prefix)
-    local temp = {}
-    prefix = prefix or ''
-
-    for k, v in pairs(maps) do
-        -- Skip keys like "group" and "name"
-        if k ~= 'group' and k ~= 'name' then
-            if type(v) == 'table' and (v[1] ~= nil or v.mode ~= nil or v.buf ~= nil) then
-                local rhs = v[1]
-                local opts = {}
-
-                for opt_key, opt_val in pairs(v) do
-                    if type(opt_key) ~= 'number' then
-                        opts[opt_key] = opt_val
-                    elseif opt_key ~= 1 then
-                        opts['desc'] = opt_val
-                    end
-                end
-
-                table.insert(temp, { prefix .. k, rhs, opts })
-            elseif type(v) == 'table' then
-                local subst = utils.get_maps(v, prefix .. k)
-                for _, _v in ipairs(subst) do
-                    table.insert(temp, _v)
-                end
-            else
-                table.insert(temp, { prefix .. k, v, {} })
-            end
-        end
-    end
-
-    return temp
 end
 
 return utils
