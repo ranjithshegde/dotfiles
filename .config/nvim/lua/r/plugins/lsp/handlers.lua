@@ -90,7 +90,7 @@ function handlers.attach(client, bufnr)
         vim.wo.foldexpr = 'v:lua.vim.lsp.foldexpr()'
     end
 
-    require('r.extensions.diagnostics').attach(client, { underline = false })
+    require('r.extensions.diagnostics').attach(client, { underline = false, update_in_insert = false })
     require('r.extensions').diagnostics(bufnr)
 
     if sc.documentFormattingProvider or sc.rangeFormattingProvider then
@@ -104,7 +104,7 @@ function handlers.attach(client, bufnr)
             end,
             desc = 'let LSP format the buffer on save',
         })
-        vim.keymap.set({ 'n', 'v' }, ',f', function()
+        vim.keymap.set({ 'n', 'v' }, 'gaf', function()
             vim.lsp.buf.format { filter = filterfmt, timeout_ms = 2000 }
         end, { buffer = bufnr })
     end
@@ -113,7 +113,7 @@ function handlers.attach(client, bufnr)
     if sc.renameProvider then
         require('r.extensions.lsp.rename').attach()
 
-        vim.keymap.set('n', ',R', function()
+        vim.keymap.set('n', 'crr', function()
             return ':IncRename ' .. vim.fn.expand '<cword>'
         end, { expr = true, buffer = bufnr, desc = 'Incremental rename' })
     end

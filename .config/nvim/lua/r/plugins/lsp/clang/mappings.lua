@@ -4,30 +4,37 @@ local cmap = {}
 
 function cmap.ccls(buf)
     wk.add(maps({
-        [';'] = {
-            b = { vim.cmd.CclsBase, 'Base function' },
-            c = { vim.cmd.CclsIncomingCalls, 'Callers' },
-            C = { vim.cmd.CclsOutgoingCalls, 'Callees' },
-            d = { vim.cmd.CclsDerived, 'Derived functions' },
+        ['s'] = {
+            name = 'Show',
+            c = {
+                name = 'ccls - Code Structure',
+                b = { vim.cmd.CclsBase, 'Show Base Function' },
+                c = { vim.cmd.CclsIncomingCalls, 'Show Callers' },
+                C = { vim.cmd.CclsOutgoingCalls, 'Show Callees' },
+                d = { vim.cmd.CclsDerived, 'Show Derived Functions' },
+                v = { vim.cmd.CclsVars, 'Show Variables in Function' },
+            },
             m = {
-                function()
-                    vim.cmd.CclsMemberHierarchy { args = { 'float' } }
-                end,
-                'Member variables',
+                name = 'ccls - Members',
+                m = {
+                    function()
+                        vim.cmd.CclsMemberHierarchy { args = { 'float' } }
+                    end,
+                    'Member variables',
+                },
+                f = {
+                    function()
+                        vim.cmd.CclsMemberFunctionHierarchy { args = { 'float' } }
+                    end,
+                    'Member functions',
+                },
+                t = {
+                    function()
+                        vim.cmd.CclsMemberTypeHierarchy { args = { 'float' } }
+                    end,
+                    'Member classes',
+                },
             },
-            F = {
-                function()
-                    vim.cmd.CclsMemberFunctionHierarchy { args = { 'float' } }
-                end,
-                'Member functions',
-            },
-            t = {
-                function()
-                    vim.cmd.CclsMemberTypeHierarchy { args = { 'float' } }
-                end,
-                'Member classes',
-            },
-            v = { vim.cmd.CclsVars, 'Variables in function' },
             h = {
                 name = 'hierarchy',
                 b = {
@@ -61,7 +68,7 @@ end
 
 function cmap.clangd(buf)
     wk.add(maps({
-        [',h'] = {
+        ['cth'] = {
             function()
                 require('clangd_extensions.inlay_hints').toggle_inlay_hints()
             end,

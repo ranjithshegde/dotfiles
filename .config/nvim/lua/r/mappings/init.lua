@@ -7,8 +7,7 @@ local map = vim.keymap.set
 return function()
     local opts = { nowait = true, silent = true }
     -- Extend C-keys
-    map('n', '<C-;>', ';')
-    map('n', '<C-,>', ',')
+    map({ 'n', 'v' }, 's', '<Nop>', { silent = true, desc = 'Show mode' })
     map('n', '<C-i>', '<C-i>', { desc = 'Dont map C-i to Tab' })
     map({ 'n', 'i', 's' }, '<BS>', '<BS>', { desc = 'Dont map C-h to backspace' })
 

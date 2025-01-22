@@ -45,7 +45,7 @@ supercollider.config = function()
             ['<CR>'] = map('postwin.toggle', 'n'),
             ['<C-CR>'] = map('postwin.toggle', 'i'),
             ['<M-L>'] = map('postwin.clear', { 'n', 'i' }),
-            [',s'] = map('signature.show', 'n'),
+            ['sk'] = map('signature.show', 'n'),
             ['<leader>s'] = map(function()
                 vim.cmd.drop { args = { '~/.config/SuperCollider/startup.scd' }, mods = { tab = 1 } }
             end),

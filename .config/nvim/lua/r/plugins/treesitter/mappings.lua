@@ -105,18 +105,6 @@ function treesitter.navigate_tex(buf)
     }, { buffer = buf }))
 end
 
-function treesitter.cpp(buf)
-    wk.add(mapper({
-        [';r'] = {
-            name = 'Refactor Cpp',
-            f = { vim.cmd.TSCppDefineClassFunc, 'function definition from declaration', mode = { 'n', 'v' } },
-            c = { vim.cmd.TSCppMakeConcreteClass, 'Convert virtual class to concrete class', mode = { 'n', 'v' } },
-            C = { vim.cmd.TSCppRuleOf3, 'Add Constructor, destructor and copy', mode = { 'n', 'v' } },
-            m = { vim.cmd.TSCppRuleOf5, 'Add move Constructor', mode = { 'n', 'v' } },
-        },
-    }, { buffer = buf }))
-end
-
 function treesitter.navigate(buf)
     wk.add(mapper({
         -- Motions
@@ -168,44 +156,24 @@ end
 function treesitter.common()
     wk.add {
         mapper {
-            [';'] = {
-                name = 'Syntax tree functions',
-                K = { vim.show_pos, 'Show treesitter node' },
-                P = { vim.treesitter.inspect_tree, 'Toggle playground' },
-                i = { 'gg=G<C-o>zz', 'indent' },
-                -- TextObjects
-                p = {
-                    name = 'Peek function defintion',
-                    f = { to.peek '@function.outer', 'function' },
-                    c = { to.peek '@class.outer', 'class' },
-                },
-                g = {
-                    name = 'incremental selection',
-                    n = 'Start selection at node',
-                    i = { 'Increment nodes', mode = 'v' },
-                    s = { 'Increment Scope', mode = 'v' },
-                    d = { 'Decrememnt nodes', mode = 'v' },
-                },
-                f = {
-                    name = 'Refactoring tools',
-                    i = { refac.refac 'Inline Variable', 'Inline Variable', mode = { 'n', 'v' } },
-                    e = {
-                        name = 'Extract',
-                        b = { refac.refac 'Extract Block', 'extract block' },
-                        B = { refac.refac 'Extract Block To File', 'extract block to file' },
-                        v = { refac.refac 'Extract Variable', 'Extract Variable', mode = { 'n', 'v' } },
-                        f = { refac.refac 'Extract Function', 'Extract Function', mode = { 'n', 'v' } },
-                        F = { refac.refac 'Extract Function to File', 'Extract Function to File', mode = { 'n', 'v' } },
-                    },
-                    d = {
-                        name = 'print debug information',
-                        p = { refac.debug('printf', { below = true }), 'Printf below' },
-                        P = { refac.debug('printf', { below = false }), 'Printf above' },
-                        v = { refac.debug('print_var', { normal = true }), 'Printf variable', mode = { 'n', 'v' } },
-                        c = { refac.debug('cleanup', {}), 'Cleanup prints' },
-                    },
-                },
+            ['cr'] = {
+                name = 'Refactoring tools',
+                i = { refac.refac 'Inline Variable', 'Inline Variable', mode = { 'n', 'v' } },
+                b = { refac.refac 'Extract Block', 'extract block' },
+                B = { refac.refac 'Extract Block To File', 'extract block to file' },
+                v = { refac.refac 'Extract Variable', 'Extract Variable', mode = { 'n', 'v' } },
+                f = { refac.refac 'Extract Function', 'Extract Function', mode = { 'n', 'v' } },
+                F = { refac.refac 'Extract Function to File', 'Extract Function to File', mode = { 'n', 'v' } },
             },
+            ['ga'] = {
+                name = 'Add or apply',
+                p = { refac.debug('printf', { below = true }), 'Printf below' },
+                P = { refac.debug('printf', { below = false }), 'Printf above' },
+                v = { refac.debug('print_var', { normal = true }), 'Printf variable', mode = { 'n', 'v' } },
+                c = { refac.debug('cleanup', {}), 'Cleanup prints' },
+            },
+            ['sK'] = { vim.show_pos, 'Show treesitter node' },
+            ['sP'] = { vim.treesitter.inspect_tree, 'Toggle playground' },
         },
         mapper {
             -- Swap

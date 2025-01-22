@@ -19,40 +19,65 @@ function lspmap.lsp(client, bufnr)
     end, { desc = 'Hover or peek-fold', buffer = bufnr })
 
     wk.add(mapper({
-        [','] = {
-            name = 'Lsp functions',
-            s = { vim.lsp.buf.signature_help, 'Show signature' },
-            a = { vim.lsp.buf.code_action, 'Code action', mode = { 'n', 'v' } },
-            c = {
+        s = {
+            name = 'show',
+            k = { vim.lsp.buf.signature_help, 'Show signature' },
+            l = {
                 name = 'Codelens',
-                c = { vim.lsp.codelens.display, 'Display' },
-                r = { vim.lsp.codelens.run, 'Run' },
-                R = { vim.lsp.codelens.refresh, 'Refresh' },
+                r = { vim.lsp.codelens.refresh, 'Refresh' },
                 g = { vim.lsp.codelens.get, 'Fetch' },
+                s = { vim.lsp.codelens.display, 'Display' },
             },
             C = {
                 name = 'Calls',
                 i = { vim.lsp.buf.incoming_calls, 'incoming_calls' },
                 o = { vim.lsp.buf.outgoing_calls, 'outgoing_calls' },
             },
-            w = {
-                name = 'Workspace',
-                a = { vim.lsp.buf.add_workspace_folder, 'Add workspace folder' },
-                r = { vim.lsp.buf.remove_workspace_folder, 'Remove workspace folder' },
-                l = { vim.lsp.buf.list_workspace_folders, 'List workspace folder' },
+            D = {
+                function()
+                    require('glance').open 'definitions'
+                end,
+                'Peek definition',
             },
-            l = {
+            t = {
+                function()
+                    require('glance').open 'type_definitions'
+                end,
+                'Peek type definition',
+            },
+            d = {
                 name = 'Diagnostic action',
                 v = { require('r.extensions.diagnostics').toggle_virtual_text, 'Toggle Virtual text' },
                 s = { require('r.extensions.diagnostics').toggle_signs, 'Toggle Sings' },
                 u = { require('r.extensions.diagnostics').toggle_underline, 'Toggle Underline' },
                 d = { vim.diagnostic.open_float, 'Show line diagnostics' },
             },
+            w = {
+                function()
+                    vim.notify(vim.inspect(vim.lsp.buf.list_workspace_folders()))
+                end,
+                'List workspace folder',
+            },
         },
         g = {
             name = 'Go to',
+            a = {
+                name = 'Add or Apply',
+                a = { vim.lsp.buf.code_action, 'Code action', mode = { 'n', 'v' } },
+                w = { vim.lsp.buf.add_workspace_folder, 'Add workspace folder' },
+                c = { vim.lsp.codelens.run, 'Run' },
+            },
+            R = {
+                name = 'remove',
+                r = { vim.lsp.buf.remove_workspace_folder, 'Remove workspace folder' },
+            },
             I = { vim.lsp.buf.implementation, 'implementation' },
-            r = { vim.lsp.buf.references, 'Lsp Async reference' },
+            r = {
+                function()
+                    require('glance').open 'references'
+                end,
+                'Lsp Async reference',
+            },
             d = { vim.lsp.buf.definition, 'definition' },
             D = {
                 function()
