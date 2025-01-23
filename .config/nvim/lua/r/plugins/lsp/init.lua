@@ -3,16 +3,9 @@ local setup = require('r.utils').plugin_setup
 return {
     { 'p00f/clangd_extensions.nvim' },
     {
-        'dnlhc/glance.nvim',
-        cmd = 'Glance',
-        config = function()
-            local glance = require 'glance'
-            local actions = glance.actions
-            glance.setup {
-                border = { enable = true },
-                mappings = { list = { ['<leader>s'] = actions.enter_win 'preview' } },
-            }
-        end,
+        'folke/trouble.nvim',
+        opts = require 'r.plugins.lsp.trouble',
+        cmd = 'Trouble',
     },
     {
         'folke/lazydev.nvim',

@@ -45,6 +45,11 @@ return {
             show_keys = false,
             layout = { layout = { spacing = 15 } },
             win = { border = 'single' },
+            triggers = {
+                { '<auto>', mode = 'nixsotc' },
+                { 'c', mode = { 'n', 'v' } },
+                { 's', mode = { 'n', 'v' } },
+            },
         },
     },
 

@@ -26,11 +26,11 @@ else
 end
 
 require('lazy').setup('r.plugins', {
-    ui = { border = 'double' },
+    ui = { border = 'single' },
     dev = { path = vim.g.local_plugins, fallback = true },
     performance = { rtp = { disabled_plugins = require('r.utils.tables').rtp } },
     defaults = { lazy = true },
-    install = { colorscheme = { 'tokyonight-night', 'habamax' } },
+    install = { colorscheme = { 'rose-pine-moon', 'habamax' } },
 })
 
 require 'r.settings'()

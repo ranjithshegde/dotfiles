@@ -11,37 +11,31 @@ local to = { swap = {} }
 
 function to.repeat_last(query)
     return function()
-        require('nvim-treesitter.textobjects.repeatable_move')[query]()
+        require('nvim-treesitter-textobjects.repeatable_move')[query]()
     end
 end
 
-function to.select(query, mode)
+function to.select(query)
     return function()
-        require('nvim-treesitter.textobjects.select').select_textobject(query, 'textobjects', mode)
+        require('nvim-treesitter-textobjects.select').select_textobject(query, 'textobjects')
     end
 end
 
 function to.swap.next(query)
     return function()
-        require('nvim-treesitter.textobjects.swap').swap_next(query)
+        require('nvim-treesitter-textobjects.swap').swap_next(query)
     end
 end
 
 function to.swap.previous(query)
     return function()
-        require('nvim-treesitter.textobjects.swap').swap_previous(query)
+        require('nvim-treesitter-textobjects.swap').swap_previous(query)
     end
 end
 
 function to.move(direction, query)
     return function()
-        require('nvim-treesitter.textobjects.move')[direction](query)
-    end
-end
-
-function to.peek(query)
-    return function()
-        require('nvim-treesitter.textobjects.lsp_interop').peek_definition_code(query)
+        require('nvim-treesitter-textobjects.move')[direction](query)
     end
 end
 
@@ -57,6 +51,18 @@ function refac.debug(func, args)
     return function()
         require('refactoring').debug[func](args)
     end
+end
+
+function treesitter.cpp(buf)
+    wk.add(mapper({
+        ['cr'] = {
+            name = 'Refactor Cpp',
+            m = { vim.cmd.TSCppDefineClassFunc, 'function definition from declaration', mode = { 'n', 'v' } },
+            c = { vim.cmd.TSCppMakeConcreteClass, 'Convert virtual class to concrete class', mode = { 'n', 'v' } },
+            o = { vim.cmd.TSCppRuleOf3, 'Add Constructor, destructor and copy', mode = { 'n', 'v' } },
+            O = { vim.cmd.TSCppRuleOf5, 'Add move Constructor', mode = { 'n', 'v' } },
+        },
+    }, { buffer = buf }))
 end
 
 function treesitter.navigate_tex(buf)
@@ -173,7 +179,7 @@ function treesitter.common()
                 c = { refac.debug('cleanup', {}), 'Cleanup prints' },
             },
             ['sK'] = { vim.show_pos, 'Show treesitter node' },
-            ['sP'] = { vim.treesitter.inspect_tree, 'Toggle playground' },
+            ['sI'] = { vim.treesitter.inspect_tree, 'Toggle playground' },
         },
         mapper {
             -- Swap
@@ -233,52 +239,52 @@ function treesitter.common()
     wk.add(mapper({
         a = {
             name = 'around',
-            f = { to.select('@function.outer', 'x'), 'function' },
-            F = { to.select('@frame.outer', 'x'), 'frame' },
-            c = { to.select('@conditional.outer', 'x'), 'conditional' },
-            C = { to.select('@call.outer', 'x'), 'call' },
-            o = { to.select('@class.outer', 'x'), 'class' },
-            e = { to.select('@block.outer', 'x'), 'block' },
-            d = { to.select('@comment.outer', 'x'), 'comment' },
-            s = { to.select('@statement.outer', 'x'), 'statement' },
-            v = { to.select('@variable.outer', 'x'), 'variable' },
-            l = { to.select('@loop.outer', 'x'), 'loop' },
+            f = { to.select '@function.outer', 'function' },
+            F = { to.select '@frame.outer', 'frame' },
+            c = { to.select '@conditional.outer', 'conditional' },
+            C = { to.select '@call.outer', 'call' },
+            o = { to.select '@class.outer', 'class' },
+            e = { to.select '@block.outer', 'block' },
+            d = { to.select '@comment.outer', 'comment' },
+            s = { to.select '@statement.outer', 'statement' },
+            v = { to.select '@variable.outer', 'variable' },
+            l = { to.select '@loop.outer', 'loop' },
         },
         i = {
             name = 'inside',
-            f = { to.select('@function.inner', 'x'), 'function' },
-            c = { to.select('@conditional.inner', 'x'), 'conditional' },
-            C = { to.select('@call.inner', 'x'), 'call' },
-            o = { to.select('@class.inner', 'x'), 'class' },
-            e = { to.select('@block.inner', 'x'), 'block' },
-            v = { to.select('@variable.inner', 'x'), 'variable' },
-            l = { to.select('@loop.inner', 'x'), 'loop' },
+            f = { to.select '@function.inner', 'function' },
+            c = { to.select '@conditional.inner', 'conditional' },
+            C = { to.select '@call.inner', 'call' },
+            o = { to.select '@class.inner', 'class' },
+            e = { to.select '@block.inner', 'block' },
+            v = { to.select '@variable.inner', 'variable' },
+            l = { to.select '@loop.inner', 'loop' },
         },
     }, { mode = 'x' }))
 
     wk.add(mapper({
         a = {
             name = 'around',
-            f = { to.select('@function.outer', 'o'), 'function' },
-            F = { to.select('@frame.outer', 'o'), 'frame' },
-            c = { to.select('@conditional.outer', 'o'), 'conditional' },
-            C = { to.select('@call.outer', 'o'), 'call' },
-            o = { to.select('@class.outer', 'o'), 'class' },
-            e = { to.select('@block.outer', 'o'), 'block' },
-            d = { to.select('@comment.outer', 'o'), 'comment' },
-            s = { to.select('@statement.outer', 'o'), 'statement' },
-            v = { to.select('@variable.outer', 'o'), 'variable' },
-            l = { to.select('@loop.outer', 'o'), 'loop' },
+            f = { to.select '@function.outer', 'function' },
+            F = { to.select '@frame.outer', 'frame' },
+            c = { to.select '@conditional.outer', 'conditional' },
+            C = { to.select '@call.outer', 'call' },
+            o = { to.select '@class.outer', 'class' },
+            e = { to.select '@block.outer', 'block' },
+            d = { to.select '@comment.outer', 'comment' },
+            s = { to.select '@statement.outer', 'statement' },
+            v = { to.select '@variable.outer', 'variable' },
+            l = { to.select '@loop.outer', 'loop' },
         },
         i = {
             name = 'inside',
-            f = { to.select('@function.inner', 'o'), 'function' },
-            c = { to.select('@conditional.inner', 'o'), 'conditional' },
-            C = { to.select('@call.inner', 'o'), 'call' },
-            o = { to.select('@class.inner', 'o'), 'class' },
-            e = { to.select('@block.inner', 'o'), 'block' },
-            v = { to.select('@variable.inner', 'o'), 'variable' },
-            l = { to.select('@loop.inner', 'o'), 'loop' },
+            f = { to.select '@function.inner', 'function' },
+            c = { to.select '@conditional.inner', 'conditional' },
+            C = { to.select '@call.inner', 'call' },
+            o = { to.select '@class.inner', 'class' },
+            e = { to.select '@block.inner', 'block' },
+            v = { to.select '@variable.inner', 'variable' },
+            l = { to.select '@loop.inner', 'loop' },
         },
     }, { mode = 'o' }))
 end

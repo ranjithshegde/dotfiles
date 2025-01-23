@@ -35,7 +35,7 @@ function cmap.ccls(buf)
                     'Member classes',
                 },
             },
-            h = {
+            H = {
                 name = 'hierarchy',
                 b = {
                     function()
@@ -68,7 +68,7 @@ end
 
 function cmap.clangd(buf)
     wk.add(maps({
-        ['cth'] = {
+        ['sh'] = {
             function()
                 require('clangd_extensions.inlay_hints').toggle_inlay_hints()
             end,

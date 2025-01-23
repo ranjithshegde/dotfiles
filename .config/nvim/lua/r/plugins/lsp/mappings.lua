@@ -2,6 +2,16 @@ local lspmap = {}
 local wk = require 'which-key'
 local map = vim.keymap.set
 local mapper = require 'r.utils.expand_maps'
+
+local function has_fzf()
+    return package.loaded['fzf-lua']
+end
+
+local function trouble(action, mode)
+    return function()
+        require('trouble')[action] { mode = mode }
+    end
+end
 ------------------------------------------------------------------------
 --                              Language servers                      --
 ------------------------------------------------------------------------
@@ -21,6 +31,8 @@ function lspmap.lsp(client, bufnr)
     wk.add(mapper({
         s = {
             name = 'show',
+            o = { trouble('open', 'symbols'), 'Symbol Outline' },
+            M = { trouble('open', 'lsp'), 'Lsp Map' },
             k = { vim.lsp.buf.signature_help, 'Show signature' },
             l = {
                 name = 'Codelens',
@@ -33,18 +45,6 @@ function lspmap.lsp(client, bufnr)
                 i = { vim.lsp.buf.incoming_calls, 'incoming_calls' },
                 o = { vim.lsp.buf.outgoing_calls, 'outgoing_calls' },
             },
-            D = {
-                function()
-                    require('glance').open 'definitions'
-                end,
-                'Peek definition',
-            },
-            t = {
-                function()
-                    require('glance').open 'type_definitions'
-                end,
-                'Peek type definition',
-            },
             d = {
                 name = 'Diagnostic action',
                 v = { require('r.extensions.diagnostics').toggle_virtual_text, 'Toggle Virtual text' },
@@ -54,7 +54,7 @@ function lspmap.lsp(client, bufnr)
             },
             w = {
                 function()
-                    vim.notify(vim.inspect(vim.lsp.buf.list_workspace_folders()))
+                    vim.print(vim.lsp.buf.list_workspace_folders())
                 end,
                 'List workspace folder',
             },
@@ -65,19 +65,14 @@ function lspmap.lsp(client, bufnr)
                 name = 'Add or Apply',
                 a = { vim.lsp.buf.code_action, 'Code action', mode = { 'n', 'v' } },
                 w = { vim.lsp.buf.add_workspace_folder, 'Add workspace folder' },
-                c = { vim.lsp.codelens.run, 'Run' },
+                c = { vim.lsp.codelens.run, 'Run Codelens' },
             },
             R = {
                 name = 'remove',
                 r = { vim.lsp.buf.remove_workspace_folder, 'Remove workspace folder' },
             },
             I = { vim.lsp.buf.implementation, 'implementation' },
-            r = {
-                function()
-                    require('glance').open 'references'
-                end,
-                'Lsp Async reference',
-            },
+            r = { trouble('open', 'lsp_references'), 'Lsp Async reference' },
             d = { vim.lsp.buf.definition, 'definition' },
             D = {
                 function()
@@ -91,7 +86,24 @@ function lspmap.lsp(client, bufnr)
                 end,
                 'Go to Type definition',
             },
+            p = {
+                name = 'preview',
+                d = { trouble('open', 'lsp_definitions'), 'Peek definition' },
+                t = { trouble('open', 'lsp_type_definitions'), 'Peek type definition' },
+            },
+            O = {
+                function()
+                    if has_fzf() then
+                        require('fzf-lua').lsp_document_symbols { winopts = { row = 1, col = 0 } }
+                    else
+                        vim.lsp.buf.document_symbol()
+                    end
+                end,
+                'Document symbol',
+            },
         },
+        ['-'] = { trouble('toggle', 'quickfix'), 'Toggle qflist' },
+        ['_'] = { trouble('toggle', 'loclist'), 'Toggle loclist' },
     }, { buffer = bufnr }))
 end
 

@@ -54,39 +54,19 @@ function ts.setup()
         highlight = {
             enable = true,
             additional_vim_regex_highlighting = { 'latex', 'org' },
-            disable = function(_, buf)
-                local max_filesize = 1000 * 1024
-                local ok, stats = pcall(vim.uv.fs_stat, vim.api.nvim_buf_get_name(buf))
-                if ok and stats and stats.size > max_filesize then
-                    return true
-                end
-            end,
         },
         indent = { enable = true, disable = { 'python', 'org' } },
-        autopairs = { enable = true },
-        incremental_selection = {
+    }
+end
+
+function ts.text_objects()
+    require('nvim-treesitter-textobjects').setup {
+        select = { enable = true, lookahead = true },
+        move = {
             enable = true,
-            keymaps = {
-                init_selection = ';gn',
-                node_incremental = ';gi',
-                scope_incremental = ';gs',
-                node_decremental = ';gr',
-            },
+            set_jumps = false,
         },
-        textobjects = {
-            select = { enable = true, lookahead = true },
-            move = {
-                enable = true,
-                set_jumps = false,
-            },
-            swap = {
-                enable = true,
-            },
-            lsp_interop = {
-                enable = true,
-                border = 'double',
-            },
-        },
+        swap = { enable = true },
     }
 end
 

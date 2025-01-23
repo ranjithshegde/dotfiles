@@ -53,6 +53,7 @@ function Debugger.setup()
     Debugger.exp = makeSidebar('expression', 40)
     Debugger.threads = makeSidebar('threads', 40)
 
+    Debugger.fexp = makeFloat 'expression'
     Debugger.fframes = makeFloat 'frames'
     Debugger.fscopes = makeFloat 'scopes'
     Debugger.fexp = makeFloat 'expression'

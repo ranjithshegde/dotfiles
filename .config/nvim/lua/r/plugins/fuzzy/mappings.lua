@@ -96,6 +96,10 @@ local maps = {
                 fzf('live_grep', { cwd = '~/.config', prompt_title = 'Dotfiles' }),
                 'grep dotfiles',
             },
+            v = {
+                fzf('live_grep', { cwd = '~/.local/share/nvim/lazy', prompt_title = 'Plugin files' }),
+                'Vim plugin Directory',
+            },
             ['?'] = {
                 function()
                     require('fzf-lua').live_grep {

@@ -73,8 +73,6 @@ function handlers.attach(client, bufnr)
 
     vim.b.hasLsp = true
 
-    local sc = client.server_capabilities
-
     if client.name == 'ccls' then
         vim.bo[bufnr].tagfunc = ''
         vim.g.ccls_levels = 5
@@ -93,7 +91,10 @@ function handlers.attach(client, bufnr)
     require('r.extensions.diagnostics').attach(client, { underline = false, update_in_insert = false })
     require('r.extensions').diagnostics(bufnr)
 
-    if sc.documentFormattingProvider or sc.rangeFormattingProvider then
+    if
+        client:supports_method 'textDocument/documentFormatting'
+        or client:supports_method 'textDocument/rangeFormatting'
+    then
         id['LspAutoFormat_' .. client.name .. '_' .. bufnr] =
             augroup('LspAutoFormat_' .. client.name .. '_' .. bufnr, opts)
         aucmd('BufWrite', {
@@ -108,9 +109,18 @@ function handlers.attach(client, bufnr)
             vim.lsp.buf.format { filter = filterfmt, timeout_ms = 2000 }
         end, { buffer = bufnr })
     end
+
     require('r.utils').register_au_id(id)
 
-    if sc.renameProvider then
+    if client:supports_method 'textDocument/inlayHint' then
+        if client.name ~= 'clangd' then
+            vim.keymap.set('n', 'sh', function()
+                vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled { bufnr = bufnr }, { bufnr = bufnr })
+            end, { buffer = bufnr, desc = 'Toggle inlay hint' })
+        end
+    end
+
+    if client:supports_method 'textDocument/rename' then
         require('r.extensions.lsp.rename').attach()
 
         vim.keymap.set('n', 'crr', function()

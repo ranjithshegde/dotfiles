@@ -11,7 +11,7 @@ local cpp_tools = nil
 if vim.fn.has 'win32' == 1 then
     cpp_tools =
         vim.fs.normalize '~/.vscode/extensions/ms-vscode.cpptools-1.13.6-win32-x64/debugAdapters/bin/OpenDebugAD7'
-elseif vim.env.MACHINE_TYPE and vim.env.MACHINE_TYPE == 'laptop' then
+elseif _G.__MACHINE then
     cpp_tools = vim.env.XDG_DATA_HOME .. '/debug-adapters/cpptools/extension/debugAdapters/bin/OpenDebugAD7'
 else
     cpp_tools = '/usr/share/cpptools-debug/bin/OpenDebugAD7'

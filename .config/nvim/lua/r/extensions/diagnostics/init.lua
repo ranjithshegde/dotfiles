@@ -30,10 +30,10 @@ local float_conf = {
 }
 
 local default_settings = {
-    underline = true,
-    virtual_text = true,
+    underline = false,
+    virtual_text = false,
     signs = sign_conf,
-    update_in_insert = true,
+    update_in_insert = false,
     float = float_conf,
     jump = { float = true },
 }
