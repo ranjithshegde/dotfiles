@@ -60,15 +60,21 @@ local function cmp_setup()
         },
         sources = {
             default = { 'lazydev', 'lsp', 'path', 'snippets', 'buffer' },
+            per_filetype = {
+                org = { 'orgmode', 'buffer', 'snippets' },
+            },
             providers = {
                 lazydev = {
                     name = 'LazyDev',
                     module = 'lazydev.integrations.blink',
                     score_offset = 100,
+                    enabled = function()
+                        return vim.bo.filetype == 'lua' or vim.bo.filetype == 'pd_lua'
+                    end,
                 },
             },
         },
-        appearance = { use_nvim_cmp_as_default = true },
+        appearance = { nerd_font_variant = 'mono' },
     }
 end
 

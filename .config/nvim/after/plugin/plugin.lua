@@ -17,10 +17,6 @@ cmd('Word', function()
     require('r.extensions').WordProcessor()
 end, { desc = 'Turn on WordProcessor mode' })
 
-cmd('Camel', function()
-    require('lazy').load { plugins = { 'vim-wordmotion' } }
-end, { desc = 'Use CamelCase motions' })
-
 cmd('Su', 'w !sudo tee %', {})
 
 -- ******************* Plugin mappings --------------------------------------------

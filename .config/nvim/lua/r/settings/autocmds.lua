@@ -169,7 +169,7 @@ aucmd({ 'BufEnter', 'BufWinEnter', 'TermOpen' }, {
 })
 aucmd('TermEnter', { group = id.TermOptions, command = 'startinsert', desc = 'Start terminals in insert mode' })
 
--- ************************ Terminal autoecape --------------------------
+-- ************************ Terminal autoescape --------------------------
 aucmd('TermEnter', {
     group = id.TermOptions,
     callback = function(args)
@@ -205,10 +205,10 @@ id.PluginLoad = augroup('PluginLoad', opts)
 aucmd('BufReadPost', {
     group = id.PluginLoad,
     callback = function()
-        require 'r.mappings.pairs'
+        require('r.mappings.util').move()
     end,
     once = true,
-    desc = 'Load mappings for unimparied reading buffer',
+    desc = 'Load mappings for unimparied',
 })
 
 ------------------------------------------------------------------------

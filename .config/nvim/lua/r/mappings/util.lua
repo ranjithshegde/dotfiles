@@ -7,6 +7,19 @@ local mapper = require 'r.utils.expand_maps'
 --                              Utilities                             --
 ------------------------------------------------------------------------
 
+local function move(cmd, count)
+    local old_fold = vim.wo.foldmethod
+    if old_fold ~= 'manual' then
+        vim.wo.foldmethod = 'manual'
+    end
+    vim.cmd.normal { args = { 'm`' }, bang = true }
+    vim.cmd.move { args = { cmd, tostring(count) } }
+    vim.cmd.normal { args = { '``' }, bang = true }
+    if old_fold ~= 'manual' then
+        vim.wo.foldmethod = old_fold
+    end
+end
+
 local function ranger(path, cmd, opts)
     return function()
         if vim.g.is_win32 then
@@ -61,12 +74,22 @@ function utilmaps.wordProcessor()
     map('n', '<leader><Space>', function()
         vim.cmd.global "/^/pu=''"
     end, { desc = 'Double space entire file' })
-    map('n', ',K', function()
+    map('n', 'sm', function()
         require('r.utils').dictionary(vim.fn.expand '<cword>')
     end, { desc = 'Lookup Wikitionary' })
-    map('n', ',T', function()
+    map('n', 'ss', function()
         require('r.utils').thesaurus(vim.fn.expand '<cword>')
     end, { desc = 'Lookup Synonyms' })
+end
+
+function utilmaps.move()
+    map('n', ']e', function()
+        move('+', vim.v.count1 - 1)
+    end, { desc = 'Move current line below to the specified count' })
+
+    map('n', '[e', function()
+        move('--', vim.v.count1 - 1)
+    end, { desc = 'Move current line above to the specified count' })
 end
 
 return utilmaps

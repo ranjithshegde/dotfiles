@@ -2,6 +2,7 @@ return {
     {
         'nvim-orgmode/orgmode',
         ft = 'org',
+        cmd = 'Org',
         config = function()
             require('orgmode').setup {
                 org_agenda_files = {
@@ -21,17 +22,28 @@ return {
             local id = {}
             id.OrgMode = vim.api.nvim_create_augroup('OrgMode', { clear = true })
             vim.api.nvim_create_autocmd('FileType', {
+                group = id.OrgMode,
                 pattern = 'org',
                 callback = function()
                     require('r.plugins.orgmode.mappings').ft()
                 end,
+                desc = 'Add orgwiki mappings',
+            })
+            -- Hack till upstream blink is fixed
+            vim.api.nvim_create_autocmd('FileType', {
+                group = id.OrgMode,
+                pattern = 'org',
+                once = true,
+                callback = function()
+                    require('blink.cmp').add_provider('orgmode', {
+                        name = 'Orgmode',
+                        module = 'orgmode.org.autocompletion.blink',
+                    })
+                end,
+                desc = 'Add org completion source',
             })
 
             require('r.utils').register_au_id(id)
-
-            vim.api.nvim_create_user_command('Agenda', function()
-                require('orgmode').action 'agenda.prompt'
-            end, { desc = 'Open Orgmode agenda' })
         end,
     },
     {

@@ -6,11 +6,7 @@ vim.keymap.set('n', '<leader>p', require('lazy').sync, { desc = 'Update plugins'
 --------------------------------------------------------------------------------------------------------
 
 return {
-    -- CamelCaseMotion
-    'chaoren/vim-wordmotion',
-
     -- Colorscheme
-    { 'folke/tokyonight.nvim', opts = { plugins = { mini_statusline = true } } },
     { 'rose-pine/neovim', name = 'rose-pine' },
 
     -- Unreal integration
@@ -51,23 +47,6 @@ return {
                 { 's', mode = { 'n', 'v' } },
             },
         },
-    },
-
-    -- Colorizer
-    {
-        'NvChad/nvim-colorizer.lua',
-        cmd = { 'ColorizerAttachToBuffer', 'ColorizerToggle' },
-        config = function()
-            require('colorizer').setup {
-                filetypes = {
-                    '*',
-                    cpp = { AARRGGBB = true },
-                    yaml = { AARRGGBB = true },
-                    html = { mode = 'foreground' },
-                    css = { rgb_fn = true, css_fn = true },
-                },
-            }
-        end,
     },
 
     { 'milanglacier/yarepl.nvim', config = true, ft = 'python' },

@@ -1,10 +1,10 @@
 local function messages()
     require('which-key').add(require 'r.utils.expand_maps' {
-        ['<leader>n'] = {
-            name = 'Noice',
-            n = { vim.cmd.Noice, 'Noice window' },
-            e = { vim.cmd.NoiceErrors, 'Open error list' },
-            m = { vim.cmd.messages, 'Open messages' },
+        ['<leader>m'] = {
+            name = 'Messages',
+            n = { vim.cmd.Noice, 'Notifications window' },
+            e = { vim.cmd.NoiceErrors, 'Error list' },
+            m = { vim.cmd.messages, 'Messages' },
             c = {
                 function()
                     vim.cmd.messages 'clear'
@@ -35,6 +35,7 @@ function noice.config()
         presets = {
             long_message_to_split = true,
         },
+        commands = { history = { view = 'popup' } },
         lsp = {
             hover = {
                 opts = { border = { style = 'single' } },
