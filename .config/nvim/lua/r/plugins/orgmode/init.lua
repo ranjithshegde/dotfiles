@@ -47,6 +47,15 @@ return {
         end,
     },
     {
+        'chipsenkbeil/org-roam.nvim',
+        dependencies = 'nvim-orgmode/orgmode',
+        ft = 'org',
+        config = function()
+            require('org-roam').setup { directory = '~/Documents/Orgs/Roam' }
+        end,
+        keys = { '<leader>n' },
+    },
+    {
         'ranjithshegde/orgWiki.nvim',
         dev = true,
         init = function()

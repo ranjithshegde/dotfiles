@@ -116,6 +116,10 @@ return {
         })
         config.options.disabled_filetypes.statusline = { 'snacks_dashboard', 'trouble' }
 
+        config.options.section_separators = { right = '', left = '' }
+        -- config.options.component_separators = { right = '', left = '' }
+        config.options.component_separators = ' '
+
         -- ************** Tabline ----------------------------------------------
         config.tabline = {
             lualine_a = { { 'tabs', cond = tab_cond } },
