@@ -35,7 +35,6 @@ return {
         dependencies = {
             'nvim-lua/plenary.nvim',
             'sindrets/diffview.nvim',
-            'ibhagwan/fzf-lua',
         },
         opts = {
             kind = 'split',
@@ -44,7 +43,6 @@ return {
             process_spinner = true,
             integrations = {
                 diffview = true,
-                fzf_lua = true,
             },
         },
         cmd = 'Neogit',

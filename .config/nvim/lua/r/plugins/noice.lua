@@ -59,6 +59,20 @@ function noice.config()
         },
         routes = {
             {
+                filter = {
+                    event = 'msg_show',
+                    any = {
+                        { find = '%d+L, %d+B' },
+                        { find = '; after #%d+' },
+                        { find = '; before #%d+' },
+                        { find = '%d fewer lines' },
+                        { find = '%d more lines' },
+                        { find = '%dL' },
+                    },
+                },
+                opts = { skip = true },
+            },
+            {
                 view = 'mini',
                 filter = { event = 'msg_showmode' },
             },
@@ -72,12 +86,16 @@ end
 
 function noice.init()
     vim.print = function(...)
-        local objects = {}
-        for i = 1, select('#', ...) do
-            local v = select(i, ...)
-            table.insert(objects, vim.inspect(v))
+        if package.loaded.snacks then
+            return Snacks.debug.inspect(...)
+        else
+            local objects = {}
+            for i = 1, select('#', ...) do
+                local v = select(i, ...)
+                table.insert(objects, vim.inspect(v))
+            end
+            vim.api.nvim_echo({ { table.concat(objects, '    '), '' } }, true, {})
         end
-        vim.api.nvim_echo({ { table.concat(objects, '    '), '' } }, true, {})
     end
 end
 

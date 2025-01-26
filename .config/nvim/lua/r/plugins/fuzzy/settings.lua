@@ -75,7 +75,7 @@ function fzy.project()
         actions = {
             ['default'] = function(selected, _)
                 vim.cmd.tcd(selected[1])
-                fzf.git_files { cwd = selected[1] }
+                fzf.files { cwd = selected[1] }
             end,
             ['ctrl-f'] = function(selected, _)
                 vim.cmd.tcd(selected[1])

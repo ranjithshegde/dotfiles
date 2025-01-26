@@ -11,10 +11,6 @@ local function ignore_win()
     return ignore_files() or vim.fn.win_gettype() == 'popup'
 end
 
-local function ignore_empty(args)
-    return args.match == '' or args.file == ''
-end
-
 ------------------------------------------------------------------------
 --                              Formatting and UI                     --
 ------------------------------------------------------------------------
@@ -45,7 +41,6 @@ aucmd('FileType', {
         if vim.tbl_contains(require('r.utils.tables').ignoreFiles, args.match) or args.file:find 'noice' then
             vim.o.relativenumber = false
             vim.wo.foldcolumn = '0'
-            vim.wo.winbar = nil
             return
         end
         if vim.bo.buftype == '' then
@@ -96,45 +91,6 @@ aucmd({ 'FocusLost', 'WinLeave' }, {
         end
     end,
     desc = 'dont use cursorline on inactive buffers',
-})
-
-------------------------------------------------------------------------
---                  Statusline Winbar Tabline                         --
-------------------------------------------------------------------------
-id.Decorations = augroup('Decorations', opts)
-
--- ************** Winbar -----------------------------------------------
-aucmd({ 'BufEnter', 'WinEnter' }, {
-    group = id.Decorations,
-    callback = function(args)
-        if not ignore_empty(args) then
-            require 'r.settings.winbar'(vim.api.nvim_get_current_win())
-        end
-    end,
-    desc = 'Set Winbar on BufEnter',
-})
-
--- ************** Tabline ----------------------------------------------
-aucmd({ 'TabNewEntered', 'TabEnter' }, {
-    group = id.Decorations,
-    callback = function()
-        vim.o.tabline = require 'r.settings.tabline'()
-    end,
-    desc = 'Dynamically set tablines',
-})
-aucmd({ 'WinEnter', 'BufEnter' }, {
-    group = id.Decorations,
-    callback = function(args)
-        if ignore_empty(args) then
-            return
-        end
-        local tabline = vim.o.tabline
-        if not tabline or tabline == '' then
-            return
-        end
-        vim.o.tabline = require 'r.settings.tabline'()
-    end,
-    desc = 'Update Tabline on WinChange or BufChange',
 })
 
 ------------------------------------------------------------------------
