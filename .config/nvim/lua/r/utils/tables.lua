@@ -80,11 +80,17 @@ tables.ignoreFiles = {
     'lspinfo',
     'NodeTree',
     'WhichKey',
+    'gitcommit',
+    'gitrebase',
     'checkhealth',
     'null-ls-info',
+    'NeogitStatus',
+    'NeogitLogView',
     'DressingInput',
+    'NeogitDiffView',
     'TelescopePrompt',
     'TelescopeResults',
+    'NeogitCommitView',
     'snacks_dashboard',
 }
 

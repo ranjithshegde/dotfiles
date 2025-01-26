@@ -11,6 +11,18 @@ local function git_command(args)
     end
 end
 
+local function neogit_command(args)
+    return function()
+        vim.api.nvim_cmd({ cmd = 'Neogit', args = args and args }, {})
+    end
+end
+
+local function neogit_lua(popup, action, args)
+    return function()
+        vim.schedule(require('neogit').action(popup, action, args and args))
+    end
+end
+
 local g = {}
 
 function g.fugitive()
@@ -19,14 +31,14 @@ function g.fugitive()
             name = 'git functions',
             a = { git_command { 'add %' }, 'add current buffer' },
             b = { git_command { 'branch -a' }, 'branch list' },
-            B = { git_command { 'blame' }, 'toggle blame' },
-            c = { git_command { 'commit' }, 'commit changes' },
+            -- c = { neogit_lua('commit', 'commit', { '--verbose' }), 'commit changes' },
+            c = { neogit_command { 'commit' }, 'commit changes' },
             C = { git_command { 'commit %' }, 'commit current buffer' },
             d = { git_command { 'difftool' }, 'launch difftool' },
-            g = { git_command(), 'Git window' },
-            l = { git_command { 'log' }, 'commit history' },
-            L = { vim.cmd.Gclog, 'commit CLog' },
-            p = { git_command { 'push' }, 'push commits' },
+            g = { neogit_command { 'kind=floating' }, 'Git window' },
+            l = { neogit_lua('log', 'log_current', { '--graph', '--color', '--decorate' }), 'commit Log' },
+            L = { git_command { 'log' }, 'commit history' },
+            p = { neogit_command { 'push' }, 'push commits' },
             P = { git_command { 'push -f' }, 'force push commits' },
         },
     })
@@ -36,12 +48,20 @@ function g.signs(bufnr, gs)
     wk.add(maps({
         ['<leader>g'] = {
             name = 'git functions',
-            i = { gs.preview_hunk_inline, 'Inline diff for hunk' },
             r = { gs.reset_hunk, 'reset hunk under cursor' },
             R = { gs.reset_buffer, 'reset current buffer' },
             s = { gs.stage_hunk, 'stage hunk under cursor' },
             S = { gs.stage_buffer, 'stage current buffer' },
+        },
+        sg = {
+            name = 'Git',
+            i = { gs.preview_hunk_inline, 'Inline diff for hunk' },
+            b = { gs.blame_line, 'Blame' },
+            B = { gs.blame, 'Blame pane' },
+            v = { gs.toggle_current_line_blame, 'toggle blame virtual text' },
             x = { gs.toggle_deleted, 'Toggle deleted' },
+            w = { gs.toggle_word_diff, 'Toggle word diff' },
+            l = { gs.toggle_linehl, 'Toggle line highlights' },
             h = {
                 function()
                     gs.toggle_linehl()
