@@ -68,15 +68,15 @@ end
 
 function cmap.clangd(buf)
     wk.add(maps({
-        ['sh'] = {
-            function()
-                require('clangd_extensions.inlay_hints').toggle_inlay_hints()
-            end,
-            'Toggle hints',
-        },
         ['<leader>s'] = {
             vim.cmd.ClangdSwitchSourceHeader,
             'Switch to Header/Source',
+        },
+        ['<leader>m'] = {
+            function()
+                vim.cmd.tabnew(vim.b.makeFile)
+            end,
+            'Open Makefile',
         },
     }, { buffer = buf }))
 end

@@ -1,7 +1,7 @@
 local center_sep = '%='
 
 local function sc_status()
-    local scstatus = require('scnvim.statusline').get_server_status()
+    local scstatus = tostring(require('scnvim.statusline').get_server_status())
     if scstatus ~= '' then
         scstatus = scstatus:gsub('%%', '%%%%')
         return '📡 [' .. scstatus .. ']'
@@ -123,20 +123,19 @@ return {
         -- ************** Tabline ----------------------------------------------
         config.tabline = {
             lualine_a = { { 'tabs', cond = tab_cond } },
-            lualine_c = { { center_sep, cond = tab_cond, separator = '' }, { 'filename', cond = tab_cond } },
+            lualine_c = { { 'buffers', cond = tab_cond } },
             lualine_z = { { rootDir, cond = tab_cond } },
         }
         config.options.always_show_tabline = false
 
         -- ************** Winbar -----------------------------------------------
-        config.winbar = {
+        config.inactive_winbar = {
             lualine_c = {
                 { center_sep, cond = win_cond, separator = '' },
                 { 'filename', cond = win_cond, icons_enabled = true, separator = '' },
                 { center_sep, cond = win_cond, separator = '' },
             },
         }
-        config.inactive_winbar = config.winbar
         config.options.disabled_filetypes.winbar = require('r.utils.tables').ignoreFiles
 
         config.extensions = { 'fzf', 'lazy', 'oil', 'overseer', 'fugitive', 'man', 'quickfix' }

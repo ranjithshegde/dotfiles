@@ -49,6 +49,7 @@ function lspmap.lsp(client, bufnr)
                 name = 'Diagnostic action',
                 v = { require('r.extensions.diagnostics').toggle_virtual_text, 'Toggle Virtual text' },
                 s = { require('r.extensions.diagnostics').toggle_signs, 'Toggle Sings' },
+                l = { require('r.extensions.diagnostics').toggle_lines, 'Toggle Lines' },
                 u = { require('r.extensions.diagnostics').toggle_underline, 'Toggle Underline' },
                 d = { vim.diagnostic.open_float, 'Show line diagnostics' },
             },

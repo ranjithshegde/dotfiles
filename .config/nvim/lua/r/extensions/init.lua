@@ -15,6 +15,10 @@ function extensions.diagnostics(bufnr)
         diagnostics.toggle_virtual_text(opts.args)
     end, { nargs = '*', complete = complete, desc = 'Toggle diagnostic virtual text for a client' })
 
+    cmd(bufnr, 'ToggleLines', function(opts)
+        diagnostics.toggle_lines(opts.args)
+    end, { nargs = '*', complete = complete, desc = 'Toggle diagnostic lines for a client' })
+
     cmd(bufnr, 'ToggleSigns', function(opts)
         diagnostics.toggle_signs(opts.args)
     end, { nargs = '*', complete = complete, desc = 'Toggle diagnostic signs for a client' })

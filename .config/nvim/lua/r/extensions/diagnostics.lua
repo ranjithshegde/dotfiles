@@ -36,6 +36,7 @@ local default_settings = {
     update_in_insert = false,
     float = float_conf,
     jump = { float = true },
+    virtual_lines = false,
 }
 
 local client_diagnostics = {}
@@ -105,6 +106,10 @@ end
 
 function Diagnostics.toggle_virtual_text(client_name)
     toggle_setting('virtual_text', client_name)
+end
+
+function Diagnostics.toggle_lines(client_name)
+    toggle_setting('virtual_lines', client_name)
 end
 
 function Diagnostics.toggle_signs(client_name)

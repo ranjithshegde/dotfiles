@@ -113,15 +113,13 @@ function handlers.attach(client, bufnr)
     require('r.utils').register_au_id(id)
 
     if client:supports_method 'textDocument/inlayHint' then
-        if client.name ~= 'clangd' then
-            vim.keymap.set('n', 'sh', function()
-                vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled { bufnr = bufnr }, { bufnr = bufnr })
-            end, { buffer = bufnr, desc = 'Toggle inlay hint' })
-        end
+        vim.keymap.set('n', 'sh', function()
+            vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled { bufnr = bufnr }, { bufnr = bufnr })
+        end, { buffer = bufnr, desc = 'Toggle inlay hint' })
     end
 
     if client:supports_method 'textDocument/rename' then
-        require('r.extensions.lsp.rename').attach()
+        require('r.extensions.lsp_rename').attach()
 
         vim.keymap.set('n', 'crr', function()
             return ':IncRename ' .. vim.fn.expand '<cword>'
@@ -134,12 +132,24 @@ function handlers.attach(client, bufnr)
         vim.lsp.commands['_ltex.hideFalsePositives'] = require('r.plugins.lsp.ltex').false_positive
     end
 
-    vim.api.nvim_buf_create_user_command(
-        bufnr,
-        'LspCapabilities',
-        require 'r.extensions.lsp.capabilities',
-        { desc = 'Display Language Server capabilities' }
-    )
+    local complete = function()
+        return require('r.utils').get_client_names()
+    end
+
+    vim.api.nvim_buf_create_user_command(bufnr, 'LspCapabilities', function(opt)
+        local cap_client = vim.lsp.get_clients { name = opt.args, bufnr = bufnr }
+        if cap_client then
+            vim.print(cap_client[1].server_capabilities)
+        else
+            vim.print(
+                string.format(
+                    'Cannot retrieve capabilities: %s is not currently attached to buffer %d',
+                    opt.args,
+                    bufnr
+                )
+            )
+        end
+    end, { nargs = '*', complete = complete, desc = 'Toggle diagnostic virtual text for a client' })
 end
 
 ------------------------------------------------------------------------

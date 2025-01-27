@@ -73,7 +73,7 @@ function ltex.lsp()
         name = 'ltex',
         filetypes = { 'bib', 'markdown', 'org', 'tex' },
         autostart = false,
-        capabilities = require('r.plugins.lsp.handlers').capabilities(),
+        capabilities = vim.lsp.protocol.make_client_capabilities(),
         settings = {
             ltex = {
                 additionalRules = {
