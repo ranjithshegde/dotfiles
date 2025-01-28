@@ -49,5 +49,16 @@ return {
         },
     },
 
+    -- Python REPL
     { 'milanglacier/yarepl.nvim', config = true, ft = 'python' },
+
+    -- Modular bufferline
+    {
+        'Bekaboo/dropbar.nvim',
+        event = 'BufReadPost',
+        opts = {
+            sources = { treesitter = { valid_types = require('r.utils.tables').tsNodes } },
+            icons = { kinds = { symbols = require('r.utils.tables').nodeSymbols } },
+        },
+    },
 }

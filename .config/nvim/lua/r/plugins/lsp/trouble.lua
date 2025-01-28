@@ -33,12 +33,13 @@ local float_preview = {
     type = 'float',
     relative = 'win',
     anchor = 'NW',
-    position = { 0, float_win.size.width + 2 },
+    position = { 0, float_win.size.width + 1 },
     size = {
-        width = math.floor(vim.o.columns * 0.5),
+        width = math.min(math.floor(vim.o.columns * 0.5), vim.o.columns - float_win.size.width - 2),
         height = math.floor(vim.o.lines * 0.5),
     },
     border = 'rounded',
+    zindex = 200,
 }
 
 local float_conf = {
