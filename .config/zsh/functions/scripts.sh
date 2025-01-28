@@ -1,5 +1,9 @@
 #!/bin/sh
 
+nt() {
+    nvim -c "autocmd BufEnter * only" -c "lua require('orgmode').capture:open_template_by_shortcut('t')"
+}
+
 nvp() {
     cat /sys/bus/pci/devices/0000:01:00.0/power_state
 }

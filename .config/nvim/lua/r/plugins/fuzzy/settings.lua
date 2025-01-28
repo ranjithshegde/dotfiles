@@ -1,7 +1,7 @@
 local fzy = {}
 
 local function dir_changer(entry, cwd)
-    entry = entry:gsub('[\128-\255]+', '')
+    entry = entry:gsub('.*([%z\1-\127\128-\255]+)', '')
     entry = vim.fs.joinpath(cwd, entry)
     if vim.uv.fs_stat(entry).type == 'directory' then
         vim.cmd.tcd(entry)

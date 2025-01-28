@@ -171,6 +171,18 @@ aucmd('BufReadPost', {
 --                              Misc                                  --
 ------------------------------------------------------------------------
 
+id.FoldMaps = augroup('FoldMaps', opts)
+aucmd('FileType', {
+    group = id.FoldMaps,
+    callback = function(args)
+        if not vim.tbl_contains(require('r.utils.tables').ignoreFiles, args.match) or args.match ~= 'org' then
+            vim.keymap.set('n', '<Tab>', 'za', { desc = 'Toggle fold current' })
+            vim.keymap.set('n', '<S-Tab>', 'zA', { desc = 'Toggle fold All' })
+        end
+    end,
+    desc = 'Use Tab to cycle folds',
+})
+
 id.TextYank = augroup('TextYank', opts)
 -- ************** HighlightOnYank ---------------------------------------------------------
 vim.api.nvim_create_autocmd('TextYankPost', {

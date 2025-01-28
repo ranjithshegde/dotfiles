@@ -13,9 +13,8 @@ local function rootDir()
     local val = vim.fn.expand '%'
     if string.find(val, 'term://') then
         val = ' ' .. vim.fn.fnamemodify(val, ':p:t')
-    -- elseif val ~= '' then
     elseif val then
-        val = '🗀 ' .. val
+        val = '🗀 ' .. vim.fs.dirname(val)
     end
     return val
 end

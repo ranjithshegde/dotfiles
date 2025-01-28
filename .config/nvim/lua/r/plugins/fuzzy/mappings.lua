@@ -117,6 +117,19 @@ local maps = {
                 'grep dotfiles',
             },
         },
+        o = {
+            name = 'Orgmode',
+            a = {
+                -- fzf('files', { cwd = '~/Documents/Agenda/', prompt_title = 'Org Agenda' }),
+                fzf_cd(false, 'Org Agenda', '$HOME/Documents/Agenda/'),
+                'Org Agenda',
+            },
+            w = {
+                fzf_cd(false, 'Org Wiki', '$HOME/Documents/Wiki/'),
+                -- fzf('files', { cwd = '~/Documents/Wiki/', prompt_title = 'Org Wiki' }),
+                'Org Wiki',
+            },
+        },
         f = {
             name = 'find files in',
             f = { fzf 'files', 'Current directory' },
@@ -144,10 +157,6 @@ local maps = {
             v = {
                 fzf('files', { cwd = '~/.local/share/nvim/lazy', prompt_title = 'Plugin files' }),
                 'Vim plugin Directory',
-            },
-            o = {
-                fzf('files', { cwd = '~/Documents/Orgs/', prompt_title = 'Org files' }),
-                'Org files',
             },
             O = {
                 fzf('files', { cwd = '~/Workspaces/openFrameworks/', prompt_title = 'oF Workspace files' }),

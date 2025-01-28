@@ -74,7 +74,7 @@ function ts.cpp_tools()
     require('nt-cpp-tools').setup {
         preview = {
             quit = 'Q',
-            accept = '<leader><cr>',
+            accept = '<leader>a',
         },
         header_extension = 'h',
         source_extension = 'cxx',

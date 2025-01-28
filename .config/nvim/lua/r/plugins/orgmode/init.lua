@@ -4,31 +4,48 @@ return {
         ft = 'org',
         cmd = 'Org',
         config = function()
+            local menu = require 'r.plugins.orgmode.ui'
             require('orgmode').setup {
                 org_agenda_files = {
-                    '~/Documents/Orgs/*',
-                    '~/Documents/Orgs/*/*',
-                    '~/Documents/Orgs/*/*/*',
-                    '~/Documents/Orgs/*/*/*/*',
+                    '~/Documents/Agenda/*',
+                    '~/Documents/Agenda/*/*',
+                    '~/Documents/Agenda/*/*/*',
+                    '~/Documents/Agenda/*/*/*/*',
                 },
+                org_default_notes_file = '~/Documents/notes.org',
                 org_highlight_latex_and_related = 'entities',
                 emacs_config = {
                     config_path = vim.env.XDG_CONFIG_HOME and vim.env.XDG_CONFIG_HOME .. '/emacs/init.el'
                         or '$HOME/.emacs.d/init.el',
                 },
+                ui = {
+                    menu = {
+                        handler = function(data)
+                            menu
+                                :new({
+                                    window = {
+                                        margin = { 1, 0, 1, 0 },
+                                        padding = { 0, 1, 0, 1 },
+                                        title_pos = 'center',
+                                        border = 'single',
+                                        zindex = 1000,
+                                    },
+                                    icons = {
+                                        separator = '➜',
+                                    },
+                                })
+                                :open(data)
+                        end,
+                    },
+                },
             }
         end,
         init = function()
+            require('r.utils').lazy_on_key('n', '<leader>o', 'Orgmode', function()
+                require('lazy').load { plugins = { 'orgmode' } }
+            end)
             local id = {}
             id.OrgMode = vim.api.nvim_create_augroup('OrgMode', { clear = true })
-            vim.api.nvim_create_autocmd('FileType', {
-                group = id.OrgMode,
-                pattern = 'org',
-                callback = function()
-                    require('r.plugins.orgmode.mappings').ft()
-                end,
-                desc = 'Add orgwiki mappings',
-            })
             -- Hack till upstream blink is fixed
             vim.api.nvim_create_autocmd('FileType', {
                 group = id.OrgMode,
@@ -51,22 +68,11 @@ return {
         dependencies = 'nvim-orgmode/orgmode',
         ft = 'org',
         config = function()
-            require('org-roam').setup { directory = '~/Documents/Orgs/Roam' }
+            require('org-roam').setup {
+                directory = '~/Documents/Wiki/',
+                bindings = { prefix = '<leader>w' },
+            }
         end,
-        keys = { '<leader>n' },
-    },
-    {
-        'ranjithshegde/orgWiki.nvim',
-        dev = true,
-        init = function()
-            require('r.utils').lazy_on_key('n', '<leader>w', 'OrgWiki', function()
-                require('r.plugins.orgmode.mappings').wiki()
-            end)
-        end,
-        opts = {
-            disable_mappings = true,
-            wiki_path = { '~/Documents/Orgs/', '~/Documents/Projects/' },
-            diary_path = '~/Documents/Orgs/diary/',
-        },
+        keys = { '<leader>w' },
     },
 }

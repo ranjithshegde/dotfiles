@@ -18,31 +18,8 @@ return function()
     map('v', '<', '<gv', opts)
     map('v', '>', '>gv', opts)
 
-    -- Toggle folds
-    map('n', '<Tab>', 'za', { desc = 'Toggle fold current' })
-    map('n', '<S-Tab>', 'zA', { desc = 'Toggle fold All' })
     -- open folds when searching
     map('n', 'n', 'nzzzv', { desc = 'jump to next search result' })
     map('n', 'N', 'Nzzzv', { desc = 'jump to previous search result' })
     map('n', 'J', 'mzJ`z', { desc = 'Adjoin next line' })
-
-    --Quickfix
-    map('n', '-', function()
-        require('r.extensions.qf').toggle_qf 'q'
-    end, { desc = 'Toggle quickfix' })
-    map('n', '_', function()
-        require('r.extensions.qf').toggle_qf 'l'
-    end, { desc = 'Toggle loclist' })
-    -- ScratchPad
-    map('n', '<leader>S', function()
-        require 'r.extensions.project.scratchpad' 'tab'
-    end, { desc = 'Open ScratchPad' })
-
-    -- Misc
-    map({ 'n', 't' }, '<F9>', function()
-        vim.cmd.stopinsert()
-        require('r.extensions').toggleTerm('zsh', 'shell', 1)
-    end, {
-        desc = 'Toggle current/default terminal',
-    })
 end
