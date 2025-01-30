@@ -53,9 +53,9 @@ function ts.setup()
         ignore_install = { 'org' },
         highlight = {
             enable = true,
-            additional_vim_regex_highlighting = { 'latex', 'org' },
+            additional_vim_regex_highlighting = { 'latex' },
         },
-        indent = { enable = true, disable = { 'python', 'org' } },
+        indent = { enable = true, disable = { 'python' } },
     }
 end
 

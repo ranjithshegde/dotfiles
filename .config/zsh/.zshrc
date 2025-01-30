@@ -80,6 +80,7 @@ if [ -f "${ZPLUG_HOME}/init.zsh" ]; then
     zplug 'romkatv/powerlevel10k', as:theme, depth:1
     zplug "wfxr/forgit"
     zplug "lincheney/fzf-tab-completion"
+    zplug "hlissner/zsh-autopair", defer:2
     zplug load
 else
     # Install Zplug if not found

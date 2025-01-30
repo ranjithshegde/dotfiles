@@ -88,8 +88,7 @@ function handlers.attach(client, bufnr)
         vim.wo.foldexpr = 'v:lua.vim.lsp.foldexpr()'
     end
 
-    require('r.extensions.diagnostics').attach(client, { underline = false, update_in_insert = false })
-    require('r.extensions').diagnostics(bufnr)
+    require('r.extensions.diagnostics').attach(client, bufnr, { underline = false, update_in_insert = false })
 
     if
         client:supports_method 'textDocument/documentFormatting'

@@ -92,12 +92,14 @@ end
 
 local Diagnostics = {}
 
-function Diagnostics.attach(client, settings)
+function Diagnostics.attach(client, bufnr, settings)
     if settings then
         client_diagnostics[client.id] = client_diagnostics[client.id] or {}
         client_diagnostics[client.id].config = vim.tbl_deep_extend('force', get_config(client), settings)
     end
     apply_initial_settings(client)
+
+    Diagnostics.commands(bufnr)
 end
 
 function Diagnostics.toggle_underline(client_name)
@@ -157,6 +159,49 @@ function Diagnostics.disable_all(client_name)
 
         vim.diagnostic.config(config, ns)
     end
+end
+
+------------------------------------------------------------------------
+--                          User commands                             --
+------------------------------------------------------------------------
+
+function Diagnostics.commands(bufnr)
+    local cmd = vim.api.nvim_buf_create_user_command
+    local complete = function()
+        return require('r.utils').get_client_names()
+    end
+
+    cmd(bufnr, 'ToggleVirtual', function(opts)
+        Diagnostics.toggle_virtual_text(opts.args)
+    end, { nargs = '*', complete = complete, desc = 'Toggle diagnostic virtual text for a client' })
+
+    cmd(bufnr, 'ToggleLines', function(opts)
+        Diagnostics.toggle_lines(opts.args)
+    end, { nargs = '*', complete = complete, desc = 'Toggle diagnostic lines for a client' })
+
+    cmd(bufnr, 'ToggleSigns', function(opts)
+        Diagnostics.toggle_signs(opts.args)
+    end, { nargs = '*', complete = complete, desc = 'Toggle diagnostic signs for a client' })
+
+    cmd(bufnr, 'ToggleUnderline', function(opts)
+        Diagnostics.toggle_underline(opts.args)
+    end, { nargs = '*', complete = complete, desc = 'Toggle diagnostic underlines for a client' })
+
+    cmd(bufnr, 'ToggleAllDiagnostics', function(opts)
+        Diagnostics.toggle_all_diagnostics(opts.args)
+    end, { nargs = '*', complete = complete, desc = 'Toggle all diagnostic options for a client' })
+
+    cmd(bufnr, 'DisableDiagnostics', function(opts)
+        Diagnostics.turn_off_diagnostics(opts.args)
+    end, { nargs = '*', complete = complete, desc = 'Disable all diagnostic options for a client' })
+
+    cmd(bufnr, 'EnableDiagnostics', function(opts)
+        Diagnostics.turn_on_diagnostics(opts.args)
+    end, { nargs = '*', complete = complete, desc = 'Enable all diagnostic options for a client' })
+
+    cmd(bufnr, 'DefaultDiagnostics', function(opts)
+        Diagnostics.turn_on_diagnostics_default(opts.args)
+    end, { nargs = '*', complete = complete, desc = 'Enable default diagnostic options for a client' })
 end
 
 return Diagnostics

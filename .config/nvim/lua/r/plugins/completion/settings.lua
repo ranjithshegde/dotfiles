@@ -6,10 +6,7 @@ local completion = {}
 local function cmp_setup()
     require('blink.cmp').setup {
         completion = {
-            accept = {
-                create_undo_point = true,
-                auto_brackets = { enabled = true },
-            },
+            keyword = { range = 'full' },
             ghost_text = { enabled = true },
             documentation = {
                 auto_show = true,
@@ -19,7 +16,8 @@ local function cmp_setup()
             menu = {
                 draw = { treesitter = { 'lsp' } },
                 auto_show = function(ctx)
-                    return ctx.mode ~= 'cmdline' or not vim.tbl_contains({ '/', '?' }, vim.fn.getcmdtype())
+                    --     return ctx.mode ~= 'cmdline' or not vim.tbl_contains({ '/', '?' }, vim.fn.getcmdtype())
+                    return not vim.tbl_contains({ '/', '?' }, vim.fn.getcmdtype())
                 end,
             },
             list = {

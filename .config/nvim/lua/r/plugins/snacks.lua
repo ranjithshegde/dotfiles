@@ -3,7 +3,40 @@ return {
     priority = 1000,
     lazy = false,
     opts = {
-        dashboard = { enabled = true },
+        dashboard = {
+            sections = {
+                { section = 'header' },
+                -- {
+                --     section = 'terminal',
+                --     cmd = 'lolcat --seed=24 ~/.config/nvim/static/neovim.cat',
+                --     indent = -5,
+                --     height = 8,
+                --     width = 69,
+                --     padding = 4,
+                -- },
+                { section = 'keys', gap = 1, padding = 1 },
+                {
+                    title = 'Orgmode',
+                    icon = ' ',
+                },
+                {
+                    title = 'Agenda',
+                    indent = 3,
+                    action = ':lua require("orgmode").agenda:agenda()',
+                    key = 'a',
+                },
+                {
+                    title = 'Capture',
+                    indent = 3,
+                    action = '<leader>oc',
+                    key = 'C',
+                    padding = 1,
+                    gap = 2,
+                },
+                -- { icon = ' ', title = 'Projects', section = 'projects', indent = 2, padding = 2 },
+                { section = 'startup' },
+            },
+        },
         dim = { enabled = true },
         gitbrowse = { enabled = true },
         indent = {
