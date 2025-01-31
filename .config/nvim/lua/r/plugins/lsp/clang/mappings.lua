@@ -72,7 +72,7 @@ function cmap.clangd(buf)
             vim.cmd.ClangdSwitchSourceHeader,
             'Switch to Header/Source',
         },
-        ['<leader>m'] = {
+        ['<leader>M'] = {
             function()
                 vim.cmd.tabnew(vim.b.makeFile)
             end,

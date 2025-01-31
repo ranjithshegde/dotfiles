@@ -10,6 +10,7 @@ return function()
     map({ 'n', 'v' }, 's', '<Nop>', opts)
     map('n', '<C-i>', '<C-i>', { desc = 'Dont map C-i to Tab' })
     map({ 'n', 'i', 's' }, '<BS>', '<BS>', { desc = 'Dont map C-h to backspace' })
+    map({ 'v', 'x' }, 'C', 'c', { desc = 'Change selected text' })
 
     --line movement
     map('x', 'K', ":move '<-2<CR>gv", { desc = 'Move line up' })

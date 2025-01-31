@@ -57,10 +57,10 @@ function treesitter.cpp(buf)
     wk.add(mapper({
         ['cr'] = {
             name = 'Refactor Cpp',
-            m = { vim.cmd.TSCppDefineClassFunc, 'function definition from declaration', mode = { 'n', 'v' } },
-            c = { vim.cmd.TSCppMakeConcreteClass, 'Convert virtual class to concrete class', mode = { 'n', 'v' } },
-            o = { vim.cmd.TSCppRuleOf3, 'Add Constructor, destructor and copy', mode = { 'n', 'v' } },
-            O = { vim.cmd.TSCppRuleOf5, 'Add move Constructor', mode = { 'n', 'v' } },
+            m = { vim.cmd.TSCppDefineClassFunc, 'function definition from declaration', mode = { 'n', 'x' } },
+            c = { vim.cmd.TSCppMakeConcreteClass, 'Convert virtual class to concrete class', mode = { 'n', 'x' } },
+            o = { vim.cmd.TSCppRuleOf3, 'Add Constructor, destructor and copy', mode = { 'n', 'x' } },
+            O = { vim.cmd.TSCppRuleOf5, 'Add move Constructor', mode = { 'n', 'x' } },
         },
     }, { buffer = buf }))
 end
@@ -164,12 +164,12 @@ function treesitter.common()
         mapper {
             ['cr'] = {
                 name = 'Refactoring tools',
-                i = { refac.refac 'Inline Variable', 'Inline Variable', mode = { 'n', 'v' } },
+                i = { refac.refac 'Inline Variable', 'Inline Variable', mode = { 'n', 'x' } },
                 b = { refac.refac 'Extract Block', 'extract block' },
                 B = { refac.refac 'Extract Block To File', 'extract block to file' },
-                v = { refac.refac 'Extract Variable', 'Extract Variable', mode = { 'n', 'v' } },
-                f = { refac.refac 'Extract Function', 'Extract Function', mode = { 'n', 'v' } },
-                F = { refac.refac 'Extract Function to File', 'Extract Function to File', mode = { 'n', 'v' } },
+                v = { refac.refac 'Extract Variable', 'Extract Variable', mode = { 'n', 'x' } },
+                f = { refac.refac 'Extract Function', 'Extract Function', mode = { 'n', 'x' } },
+                F = { refac.refac 'Extract Function to File', 'Extract Function to File', mode = { 'n', 'x' } },
             },
             ['ga'] = {
                 name = 'Add or apply',

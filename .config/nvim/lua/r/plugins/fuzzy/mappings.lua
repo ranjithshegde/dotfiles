@@ -50,7 +50,7 @@ local maps = {
         ["'"] = { fzf 'marks', 'Marks' },
         ['"'] = { fzf 'registers', 'Registers' },
         ['='] = { fzf 'spell_suggest', 'Spell suggest' },
-        ['/'] = { fzf 'grep', 'Grep CWORD in directory' },
+        ['/'] = { fzf 'grep_cword', 'Grep CWORD in directory' },
         ['<Space>'] = { fzf 'builtin', 'Builtin Searchers' },
         ['<CR>'] = { fzf 'resume', 'Resume last picker' },
         p = {
@@ -91,7 +91,6 @@ local maps = {
                 fzf('live_grep', { cwd = '~/Workspaces/openFrameworks/', prompt_title = 'oF Workspace grep' }),
                 'ofWorkspace',
             },
-            w = { fzf('live_grep', { cwd = '~/Documents/Orgs/', prompt_title = 'Org Wiki' }), 'Org Grep' },
             d = {
                 fzf('live_grep', { cwd = '~/.config', prompt_title = 'Dotfiles' }),
                 'grep dotfiles',
@@ -120,13 +119,11 @@ local maps = {
         o = {
             name = 'Orgmode',
             a = {
-                -- fzf('files', { cwd = '~/Documents/Agenda/', prompt_title = 'Org Agenda' }),
-                fzf_cd(false, 'Org Agenda', '$HOME/Documents/Agenda/'),
+                fzf_cd(false, 'Org Agenda', '$HOME/Documents/Mandala/Agenda'),
                 'Org Agenda',
             },
             w = {
-                fzf_cd(false, 'Org Wiki', '$HOME/Documents/Wiki/'),
-                -- fzf('files', { cwd = '~/Documents/Wiki/', prompt_title = 'Org Wiki' }),
+                fzf_cd(false, 'Org Wiki', '$HOME/Documents/Mandala/Wiki/'),
                 'Org Wiki',
             },
         },
