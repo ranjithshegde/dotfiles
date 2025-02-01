@@ -1,9 +1,16 @@
 local wk = require 'which-key'
-local maps = require 'r.utils.expand_maps'
-local cmap = {}
+local mapper = require 'r.utils.expand_maps'
+local lspmap = {}
+local map = vim.keymap.set
 
-function cmap.ccls(buf)
-    wk.add(maps({
+function lspmap.tex(bufnr)
+    map('n', '<F4>', vim.cmd.TexlabCleanArtifacts, { buffer = true, desc = 'Clean tex files' })
+    map('n', '<F5>', vim.cmd.TexlabBuild, { buffer = bufnr, desc = 'Compile tex document' })
+    map('n', '<F6>', vim.cmd.TexlabForward, { buffer = bufnr, desc = 'Launch zathura' })
+end
+
+function lspmap.ccls(buf)
+    wk.add(mapper({
         ['s'] = {
             name = 'Show',
             c = {
@@ -66,19 +73,12 @@ function cmap.ccls(buf)
     }, { buffer = buf }))
 end
 
-function cmap.clangd(buf)
-    wk.add(maps({
-        ['<leader>s'] = {
-            vim.cmd.ClangdSwitchSourceHeader,
-            'Switch to Header/Source',
-        },
-        ['<leader>M'] = {
-            function()
-                vim.cmd.tabnew(vim.b.makeFile)
-            end,
-            'Open Makefile',
-        },
-    }, { buffer = buf }))
+function lspmap.clangd(buf)
+    map('n', '<leader>s', vim.cmd.ClangdSwitchSourceHeader, { desc = 'Switch to header/source', buffer = buf })
+
+    map('n', '<leader>M', function()
+        vim.cmd.tabnew(vim.b.makeFile)
+    end, { desc = 'Open Makefile', buffer = buf })
 end
 
-return cmap
+return lspmap

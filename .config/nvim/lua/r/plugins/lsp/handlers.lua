@@ -69,19 +69,19 @@ end
 function handlers.attach(client, bufnr)
     local id = {}
 
-    require('r.plugins.lsp.mappings').lsp(client, bufnr)
+    require 'r.plugins.lsp.mappings'(client, bufnr)
 
     vim.b.hasLsp = true
 
     if client.name == 'ccls' then
         vim.bo[bufnr].tagfunc = ''
         vim.g.ccls_levels = 5
-        require('r.plugins.lsp.clang.mappings').ccls(bufnr)
+        require('r.plugins.lsp.mappings.servers').ccls(bufnr)
         return
     elseif client.name == 'texlab' then
-        require('r.plugins.lsp.mappings').tex(bufnr)
+        require('r.plugins.lsp.mappings.servers').tex(bufnr)
     elseif client.name == 'clangd' then
-        require('r.plugins.lsp.clang.mappings').clangd(bufnr)
+        require('r.plugins.lsp.mappings.servers').clangd(bufnr)
     end
 
     if client:supports_method 'textDocument/foldingRange' then

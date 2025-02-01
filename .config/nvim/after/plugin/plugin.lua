@@ -10,8 +10,8 @@ cmd('Project', function(opts)
 end, { nargs = '*', desc = 'Create a project' })
 
 cmd('WordCount', function()
-    require('r.plugins.lsp.texlab').tex_word_count()
-end, { desc = 'Display text word count in the buffer' })
+    require('r.extensions').tex_word_count()
+end, { desc = 'Display LaTeX project word count' })
 
 cmd('Word', function()
     require('r.extensions').WordProcessor()

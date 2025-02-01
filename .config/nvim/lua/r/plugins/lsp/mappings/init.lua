@@ -1,4 +1,3 @@
-local lspmap = {}
 local wk = require 'which-key'
 local map = vim.keymap.set
 local mapper = require 'r.utils.expand_maps'
@@ -16,7 +15,7 @@ end
 --                              Language servers                      --
 ------------------------------------------------------------------------
 
-function lspmap.lsp(client, bufnr)
+return function(client, bufnr)
     if client.name == 'ltex' then
         return
     end
@@ -107,14 +106,3 @@ function lspmap.lsp(client, bufnr)
         ['_'] = { trouble('toggle', 'loclist'), 'Toggle loclist' },
     }, { buffer = bufnr }))
 end
-
-function lspmap.tex(bufnr)
-    map('n', '<F4>', function()
-        require('r.plugins.lsp.texlab').tex_clean()
-    end, { buffer = true, desc = 'Clean tex files' })
-
-    map('n', '<F5>', vim.cmd.TexlabBuild, { buffer = bufnr, desc = 'Compile tex document' })
-    map('n', '<F6>', vim.cmd.TexlabForward, { buffer = bufnr, desc = 'Launch zathura' })
-end
-
-return lspmap

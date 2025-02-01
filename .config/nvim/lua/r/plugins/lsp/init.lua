@@ -22,7 +22,7 @@ return {
         'ranjithshegde/ccls.nvim',
         dev = true,
         ft = { 'c', 'cpp', 'opencl' },
-        config = setup('r.plugins.lsp.clang', 'ccls'),
+        config = setup('r.plugins.lsp.servers.clang', 'ccls'),
     },
     {
         'neovim/nvim-lspconfig',
@@ -31,7 +31,7 @@ return {
             {
                 {
                     'nvimtools/none-ls.nvim',
-                    config = setup 'r.plugins.lsp.linters_formatters',
+                    config = setup 'r.plugins.lsp.servers.linters_formatters',
                 },
             },
         },

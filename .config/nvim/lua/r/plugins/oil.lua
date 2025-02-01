@@ -8,6 +8,11 @@ return {
         vim.keymap.set('n', '<leader>e', function()
             require('oil').open_float(vim.uv.cwd())
         end, { desc = 'Open file explorer' })
+
+        vim.keymap.set('n', '<leader>E', function()
+            require('oil').open_float(vim.fs.dirname(vim.fn.expand '%'))
+        end, { desc = 'Open file explorer from current file dir' })
+
         local id = {}
 
         id.ProjectDrawer = vim.api.nvim_create_augroup('ProjectDrawer', { clear = true })
