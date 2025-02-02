@@ -1,0 +1,36 @@
+"$schema" = "https://yazi-rs.github.io/schemas/keymap.json"
+
+[manager]
+prepend_keymap = [
+    { on = [
+        "d",
+        "d",
+    ], run = "yank --cut", desc = "Cut the selected files" },
+    { on = [
+        "d",
+        "D",
+    ], run = "remove --permanently", desc = "Permanently delete the files" },
+    { on = [
+        "y",
+        "y",
+    ], run = "yank", desc = "Copy the selected files" },
+    { on = [
+        "p",
+        "p",
+    ], run = "paste", desc = "Paste the files" },
+    { on = [
+        "p",
+        "o",
+    ], run = "paste --force", desc = "Paste the files (overwrite if destination exists)" },
+    { on = "!", run = 'shell "$SHELL" --block', desc = "Open shell here" },
+    { on = "T", run = "plugin smart-tab", desc = "Create a tab and enter the hovered directory" },
+    { on = 'l', run = 'plugin smart-enter', desc = 'Enter the child directory, or open the file' },
+    { on = [
+        "g",
+        "P",
+    ], run = "cd ~/.local/share/nvim/lazy", desc = "Goto Nvim plugin directory" },
+    { on = [
+        "g",
+        "G",
+    ], run = "cd /storage/Games/", desc = "Goto Games directory" },
+]

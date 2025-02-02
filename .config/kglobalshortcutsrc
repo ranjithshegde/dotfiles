@@ -293,7 +293,7 @@ toggle do not disturb=none,,Toggle do not disturb
 [services][brave-browser.desktop]
 _launch=Alt+Shift+W
 
-[services][kitty.desktop]
+[services][net.local.ghostty.desktop]
 _launch=Alt+Return
 
 [services][net.local.lnvim.desktop]

@@ -1,0 +1,16 @@
+theme = rose-pine-moon
+background-opacity = 0.8
+window-decoration = false
+gtk-titlebar = false
+font-family = "JetBrainsMono Nerd Font Mono"
+confirm-close-surface = false
+
+keybind = shift+control+h=new_split:left
+keybind = shift+control+j=new_split:down
+keybind = shift+control+k=new_split:up
+keybind = shift+control+l=new_split:right
+
+keybind = alt+control+h=goto_split:left
+keybind = alt+control+j=goto_split:down
+keybind = alt+control+k=goto_split:up
+keybind = alt+control+l=goto_split:right

@@ -117,7 +117,7 @@ aucmd({ 'BufEnter', 'BufWinEnter', 'TermOpen' }, {
     group = id.TermOptions,
     pattern = { 'term://*', 'shell' },
     callback = function(args)
-        if args.file:match 'zsh' or args.file:match 'ranger' or args.file:match 'shell' then
+        if args.file:match 'zsh' or args.file:match 'yazi' or args.file:match 'shell' then
             vim.cmd.startinsert()
         end
     end,
@@ -129,22 +129,22 @@ aucmd('TermEnter', { group = id.TermOptions, command = 'startinsert', desc = 'St
 aucmd('TermEnter', {
     group = id.TermOptions,
     callback = function(args)
-        if args.file:match 'ranger' then
+        if args.file:match 'yazi' then
             vim.keymap.set('t', '<S-Esc>', '<C-\\><C-n>', { buffer = true, desc = 'Escape Insert' })
 
             vim.keymap.set('t', 'q', function()
                 vim.api.nvim_win_close(vim.api.nvim_get_current_win(), false)
-            end, { buffer = true, desc = 'Close ranger' })
+            end, { buffer = true, desc = 'Close Yazi' })
         elseif vim.bo.filetype ~= 'fzf' then
             vim.keymap.set('t', '<Esc>', '<C-\\><C-n>', { buffer = true, desc = 'Escape Insert' })
         end
     end,
-    desc = 'Special insertexit for ranger windows',
+    desc = 'Special insertexit for Yazi windows',
 })
 aucmd('TermClose', {
     group = id.TermOptions,
     callback = function(args)
-        if args.file:match 'zsh' or args.file:match 'ranger' or args.file:match 'shell' then
+        if args.file:match 'zsh' or args.file:match 'yazi' or args.file:match 'shell' then
             if vim.fn.mode() == 't' then
                 vim.api.nvim_input '<CR>'
             end

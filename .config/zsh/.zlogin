@@ -64,6 +64,6 @@ gpg-connect-agent updatestartuptty /bye >/dev/null
 # Set platform-specific environment variables
 if [[ ${XDG_SESSION_TYPE} == "wayland" ]]; then
     export QT_QPA_PLATFORM='wayland'
-    export TERMINAL=/usr/bin/kitty
-    export TERM=kitty
+    export TERMINAL=/usr/bin/ghostty
+    export TERM=ghostty
 fi

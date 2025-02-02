@@ -97,6 +97,7 @@ tables.ignoreFiles = {
     'TelescopeResults',
     'NeogitCommitView',
     'snacks_dashboard',
+    'NeogitCommitSelectView',
 }
 
 tables.ignore_binaries_regex = {

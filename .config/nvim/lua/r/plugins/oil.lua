@@ -30,7 +30,7 @@ return {
                     end
                 end
             end,
-            desc = 'Hijack netrw with ranger or Oil.nvim',
+            desc = 'Hijack netrw with Yazi or Oil.nvim',
         })
 
         vim.api.nvim_create_autocmd('BufEnter', {

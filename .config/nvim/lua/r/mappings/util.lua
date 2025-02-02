@@ -20,22 +20,14 @@ local function move(cmd, count)
     end
 end
 
-local function ranger(path, cmd, opts)
+local function yazi(path, cmd, opts)
     return function()
-        if vim.g.is_win32 then
-            vim.notify(
-                'ranger is not available in Windows. Use `Oil` instead',
-                vim.log.levels.ERROR,
-                { title = 'Ranger' }
-            )
-            return
-        end
         vim.api.nvim_open_win(
             0,
             true,
             opts or { relative = 'editor', row = 0, col = 30, width = 150, height = 150, border = 'double' }
         )
-        require('r.extensions').ranger(path, cmd)
+        require('r.extensions').yazi(path, cmd)
     end
 end
 
@@ -45,16 +37,16 @@ local function open_term(split, mods)
     end
 end
 
-function utilmaps.ranger()
+function utilmaps.yazi()
     wk.add(mapper {
         ['<leader>r'] = {
-            name = 'Ranger file picker',
-            r = { ranger('%:p:h', 'e '), 'from current file' },
-            R = { ranger('.', 'e '), 'from current directory' },
-            v = { ranger('%:h', 'vs '), 'in a split from current file' },
-            V = { ranger('.', 'vs '), 'in a split from current directory' },
-            t = { ranger('%:p:h', 'tab drop '), 'in a new tab from current file' },
-            T = { ranger('.', 'tab drop '), 'in a new tab from current directory' },
+            name = 'Yazi file picker',
+            r = { yazi('%:p:h', 'e '), 'from current file' },
+            R = { yazi('.', 'e '), 'from current directory' },
+            v = { yazi('%:h', 'vs '), 'in a split from current file' },
+            V = { yazi('.', 'vs '), 'in a split from current directory' },
+            t = { yazi('%:p:h', 'tab drop '), 'in a new tab from current file' },
+            T = { yazi('.', 'tab drop '), 'in a new tab from current directory' },
         },
     })
 end

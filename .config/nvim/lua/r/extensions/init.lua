@@ -42,30 +42,33 @@ function extensions.toggleTerm(cmd, name, spl)
     end
 end
 
----Use ranger as file picker
----@param path string Patht open ranger from
----@param edit_cmd string Ranger window position - e: open over current buffer - vs: Vertical split - tab drop: in new or existing tab window
-function extensions.ranger(path, edit_cmd)
+---Use Yazi as file picker
+---@param path string Patht open yazi from
+---@param edit_cmd string Yazi window position - e: open over current buffer - vs: Vertical split - tab drop: in new or existing tab window
+function extensions.yazi(path, edit_cmd)
     local cpath = '/tmp/chosenfile'
     local currentPath = vim.fn.expand(path)
-    local rc = { name = 'ranger', edit_cmd = edit_cmd, term = true }
+    local rc = { name = 'Yazi', edit_cmd = edit_cmd, term = true }
     function rc.on_exit(_, code, _)
         if not code then
             vim.api.nvim_buf_delete(0, { force = true })
         end
-        if io.open(cpath, 'r') then
-            for f in io.lines(cpath) do
+        local file = io.open(cpath, 'r')
+        if file then
+            for f in file:lines() do
                 vim.fn.execute(edit_cmd .. f)
             end
+            file:close()
             os.remove(cpath)
         end
     end
 
     vim.cmd.enew()
     if vim.fn.isdirectory(currentPath) then
-        vim.fn.jobstart('ranger --choosefiles=' .. cpath .. ' "' .. currentPath .. '"', rc)
+        vim.fn.jobstart(string.format('yazi --chooser-file=%s "%s"', cpath, currentPath), rc)
     else
-        vim.fn.jobstart('ranger --choosefiles=' .. cpath .. ' --selectfile="' .. currentPath .. '"', rc)
+        local dir = vim.fs.dirname(currentPath)
+        vim.fn.jobstart(string.format('yazi --chooser-file=%s "%s"', cpath, dir), rc)
     end
     vim.cmd.startinsert()
 end
