@@ -1,5 +1,15 @@
 local fzy = {}
 
+local cached_workspace_folders = nil
+
+local function get_workspace_folders()
+    if cached_workspace_folders then
+        return cached_workspace_folders
+    end
+    cached_workspace_folders = table.concat(require('r.utils.tables').workspace_folderes, ' ')
+    return cached_workspace_folders
+end
+
 local function dir_changer(entry, cwd)
     entry = entry:gsub('.*([%z\1-\127\128-\255]+)', '')
     entry = vim.fs.joinpath(cwd, entry)
@@ -67,7 +77,7 @@ end
 
 function fzy.project()
     local fzf = require 'fzf-lua'
-    local fd_command = "fd '.git$' --prune -utd " .. table.concat(require('r.utils.tables').workspace_folderes, ' ')
+    local fd_command = "fd '.git$' --prune -utd " .. get_workspace_folders()
 
     fzf.fzf_exec(fd_command .. ' | xargs dirname', {
         prompt = 'Select Project: ',

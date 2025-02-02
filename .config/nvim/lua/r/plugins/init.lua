@@ -7,7 +7,7 @@ vim.keymap.set('n', '<leader>p', require('lazy').sync, { desc = 'Update plugins'
 
 return {
     -- Colorscheme
-    { 'rose-pine/neovim', name = 'rose-pine' },
+    { 'rose-pine/neovim', name = 'rose-pine', opts = { styles = { transparency = true } } },
 
     -- Unreal integration
     {

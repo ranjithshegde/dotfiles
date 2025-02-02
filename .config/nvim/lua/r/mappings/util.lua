@@ -97,21 +97,15 @@ function utilmaps.cpp_ref(buf)
         ['gk'] = {
             name = 'Online help',
             c = {
-                function()
-                    require('r.extensions.cpp').creference(vim.fn.expand '<cword>')
-                end,
+                require('r.extensions.cpp').cppref,
                 'C++ std reference',
             },
             g = {
-                function()
-                    require('r.extensions.cpp').glRef(vim.fn.expand '<cword>')
-                end,
+                require('r.extensions.cpp').glref,
                 'OpenGL reference',
             },
             u = {
-                function()
-                    require('r.extensions.cpp').unRef(vim.fn.expand '<cword>')
-                end,
+                require('r.extensions.cpp').unrealref,
                 'Unreal Engine reference',
             },
         },

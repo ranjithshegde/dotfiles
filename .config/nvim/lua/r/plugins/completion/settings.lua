@@ -22,9 +22,7 @@ local function cmp_setup()
             },
             list = {
                 selection = {
-                    preselect = function(ctx)
-                        return ctx.mode ~= 'cmdline'
-                    end,
+                    preselect = false,
                     auto_insert = true,
                 },
             },
@@ -53,9 +51,7 @@ local function cmp_setup()
                 },
             },
         },
-        snippets = {
-            preset = 'luasnip',
-        },
+        snippets = { preset = 'luasnip' },
         sources = {
             default = { 'lazydev', 'lsp', 'path', 'snippets', 'buffer' },
             per_filetype = {

@@ -89,6 +89,7 @@ tables.ignoreFiles = {
     'checkhealth',
     'null-ls-info',
     'NeogitStatus',
+    'OverseerList',
     'NeogitLogView',
     'DressingInput',
     'NeogitDiffView',

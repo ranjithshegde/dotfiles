@@ -13,10 +13,14 @@ function overseer.init()
     require('r.plugins.tasks.register').glow(id.Overseer)
     require('r.plugins.tasks.register').flutter(id.Overseer)
 
+    local cached_ft = nil
     local get_ft = function()
-        local ft = require('r.utils.tables').lspfiles
-        table.insert(ft, 'OverseerList')
-        return ft
+        if cached_ft then
+            return cached_ft
+        end
+        cached_ft = require('r.utils.tables').lspfiles
+        table.insert(cached_ft, 'OverseerList')
+        return cached_ft
     end
 
     vim.api.nvim_create_autocmd('FileType', {

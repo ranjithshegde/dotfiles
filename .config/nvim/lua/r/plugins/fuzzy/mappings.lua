@@ -46,7 +46,13 @@ local maps = {
             },
         },
         T = { fzf 'tagstack', 'Lsp Ctags' },
-        z = { fzf('grep_curbuf', { winopts = { row = 1, col = 0 } }), 'Fuzzy find in buffer' },
+        -- z = { fzf('grep_curbuf', { winopts = { row = 1, col = 0 } }), 'Fuzzy find in buffer' },
+        z = {
+            function()
+                Snacks.picker.lines()
+            end,
+            'Fuzzy find in buffer',
+        },
         ["'"] = { fzf 'marks', 'Marks' },
         ['"'] = { fzf 'registers', 'Registers' },
         ['='] = { fzf 'spell_suggest', 'Spell suggest' },
