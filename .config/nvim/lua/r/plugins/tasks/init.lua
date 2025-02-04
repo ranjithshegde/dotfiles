@@ -8,6 +8,7 @@ function overseer.init()
     local id = {}
     id.Overseer = vim.api.nvim_create_augroup('Overseer', { clear = true })
 
+    require('r.plugins.tasks.register').cpp(id.Overseer)
     require('r.plugins.tasks.register').repl(id.Overseer)
     require('r.plugins.tasks.register').LiveServer(id.Overseer)
     require('r.plugins.tasks.register').glow(id.Overseer)

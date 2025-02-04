@@ -3,6 +3,12 @@ local mapper = require 'r.utils.expand_maps'
 local lspmap = {}
 local map = vim.keymap.set
 
+local function cmdl(cmd, args)
+    return function()
+        vim.cmd[cmd](args)
+    end
+end
+
 function lspmap.tex(bufnr)
     map('n', '<F4>', vim.cmd.TexlabCleanArtifacts, { buffer = true, desc = 'Clean tex files' })
     map('n', '<F5>', vim.cmd.TexlabBuild, { buffer = bufnr, desc = 'Compile tex document' })
@@ -23,51 +29,16 @@ function lspmap.ccls(buf)
             },
             m = {
                 name = 'ccls - Members',
-                m = {
-                    function()
-                        vim.cmd.CclsMemberHierarchy { args = { 'float' } }
-                    end,
-                    'Member variables',
-                },
-                f = {
-                    function()
-                        vim.cmd.CclsMemberFunctionHierarchy { args = { 'float' } }
-                    end,
-                    'Member functions',
-                },
-                t = {
-                    function()
-                        vim.cmd.CclsMemberTypeHierarchy { args = { 'float' } }
-                    end,
-                    'Member classes',
-                },
+                m = { cmdl('CclsMemberHierarchy', { args = { 'float' } }), 'Member variables' },
+                f = { cmdl('CclsMemberFunctionHierarchy', { args = { 'float' } }), 'Member functions' },
+                t = { cmdl('CclsMemberTypeHierarchy', { args = { 'float' } }), 'Member classes' },
             },
             H = {
                 name = 'hierarchy',
-                b = {
-                    function()
-                        vim.cmd.CclsBaseHierarchy { args = { 'float' } }
-                    end,
-                    'Base function',
-                },
-                c = {
-                    function()
-                        vim.cmd.CclsIncomingCallsHierarchy { args = { 'float' } }
-                    end,
-                    'Caller',
-                },
-                C = {
-                    function()
-                        vim.cmd.CclsOutgoingCallsHierarchy { args = { 'float' } }
-                    end,
-                    'Callee',
-                },
-                d = {
-                    function()
-                        vim.cmd.CclsDerivedHierarchy { args = { 'float' } }
-                    end,
-                    'Derived functions',
-                },
+                b = { cmdl('CclsBaseHierarchy', { args = { 'float' } }), 'Base function' },
+                c = { cmdl('CclsIncomingCallsHierarchy', { args = { 'float' } }), 'Caller' },
+                C = { cmdl('CclsOutgoingCallsHierarchy', { args = { 'float' } }), 'Callee' },
+                d = { cmdl('CclsDerivedHierarchy', { args = { 'float' } }), 'Derived functions' },
             },
         },
     }, { buffer = buf }))
@@ -75,10 +46,6 @@ end
 
 function lspmap.clangd(buf)
     map('n', '<leader>s', vim.cmd.ClangdSwitchSourceHeader, { desc = 'Switch to header/source', buffer = buf })
-
-    map('n', '<leader>M', function()
-        vim.cmd.tabnew(vim.b.makeFile)
-    end, { desc = 'Open Makefile', buffer = buf })
 end
 
 return lspmap

@@ -86,22 +86,39 @@ end
 
 function utilmaps.cpp_ref(buf)
     wk.add(require 'r.utils.expand_maps'({
-        ['gk'] = {
+        ['go'] = {
             name = 'Online help',
             c = {
-                require('r.extensions.cpp').cppref,
+                require('r.extensions.project.docs').cppref,
                 'C++ std reference',
             },
             g = {
-                require('r.extensions.cpp').glref,
+                require('r.extensions.project.docs').glref,
                 'OpenGL reference',
             },
             u = {
-                require('r.extensions.cpp').unrealref,
+                require('r.extensions.project.docs').unrealref,
                 'Unreal Engine reference',
             },
         },
     }, { buffer = buf }))
+end
+
+function utilmaps.micro_ref(bufnr)
+    wk.add(require 'r.utils.expand_maps' {
+        ['go'] = {
+            name = 'Goto extenral',
+            a = {
+                function()
+                    require('r.extensions.project.docs').ardRef(vim.fn.expand '<cword>')
+                end,
+                'Arduino',
+            },
+            t = { require('r.extensions.project.docs').teensypins, 'teensy pins' },
+            T = { require('r.extensions.project.docs').teensyspecs, 'teensy specs' },
+        },
+        { buffer = bufnr },
+    })
 end
 
 return utilmaps

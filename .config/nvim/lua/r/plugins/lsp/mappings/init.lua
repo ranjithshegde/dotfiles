@@ -19,13 +19,10 @@ return function(client, bufnr)
     if client.name == 'ltex' then
         return
     end
-    map('n', 'K', function()
-        if vim.bo[bufnr].filetype == 'org' then
-            require('orgWiki.wiki').hover()
-            return
-        end
-        vim.lsp.buf.hover()
-    end, { desc = 'Hover or peek-fold', buffer = bufnr })
+    map('n', 'K', vim.lsp.buf.hover, { desc = 'Hover Documentation', buffer = bufnr })
+
+    map('n', '-', trouble('toggle', 'quickfix'), { desc = 'Toggle qflist' })
+    map('n', '_', trouble('toggle', 'loclist'), { desc = 'Toggle loclist' })
 
     wk.add(mapper({
         s = {
@@ -102,7 +99,5 @@ return function(client, bufnr)
                 'Document symbol',
             },
         },
-        ['-'] = { trouble('toggle', 'quickfix'), 'Toggle qflist' },
-        ['_'] = { trouble('toggle', 'loclist'), 'Toggle loclist' },
     }, { buffer = bufnr }))
 end

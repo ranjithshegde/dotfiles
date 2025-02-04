@@ -12,7 +12,6 @@ return {
 
         return {
             cmd = { 'UnrealEditor', target },
-            -- cmd = { 'zsh', '-c', ('UnrealEditor "%s" & disown'):format(target) },
             components = {
                 'default',
                 'on_output_quickfix',
@@ -25,16 +24,7 @@ return {
     condition = {
         filetype = { 'cpp', 'c' },
         callback = function()
-            if vim.b.cpp_type ~= 'Unreal' then
-                return false
-            end
-            if not vim.fn.executable 'UnrealEditor' then
-                return false
-            end
-            local cwd = vim.uv.cwd()
-            local project_name = vim.fn.fnamemodify(cwd, ':t') .. '.uproject'
-            local target = vim.fs.joinpath(cwd, project_name)
-            return vim.uv.fs_stat(target) ~= nil
+            return vim.b.cpp_type == 'Unreal' and vim.fn.executable 'UnrealEditor'
         end,
     },
     priority = 50,

@@ -9,21 +9,6 @@ local function task_map(key, task, desc, buf)
     end
 end
 
-local function sequencer(name_1, params, name_2)
-    require('overseer').run_template({ name = name_1, params = params, autostart = false }, function(task)
-        if task then
-            task:add_component {
-                'dependencies',
-                task_names = {
-                    name_2,
-                },
-                sequential = true,
-            }
-            task:start()
-        end
-    end)
-end
-
 function register.repl(id)
     aucmd('FileType', {
         group = id,
@@ -98,59 +83,37 @@ function register.flutter(id)
     })
 end
 
-local cpp = {}
+function register.cpp(id)
+    vim.api.nvim_create_autocmd('FileType', {
+        pattern = { 'c', 'cpp', 'opencl' },
+        group = id,
+        callback = function()
+            local build_config = require 'r.extensions.project.detection'
+            build_config.register_handler('Pio', function(bufnr)
+                require('r.plugins.tasks.cpp').micro(bufnr)
+            end)
 
-------------------------------------------------------------------------
---                                Cpp    	                          --
-------------------------------------------------------------------------
+            build_config.register_handler('oF', function(bufnr)
+                require('r.plugins.tasks.cpp').oF(bufnr)
+            end)
 
--- Build puredata externals
-function cpp.pdBuild()
-    local bin = vim.fn.fnamemodify(vim.uv.cwd(), ':t') .. '.pd_linux'
-    local dest = '~/.local/lib/pd/extra/'
-    vim.cmd.OverseerRunCmd { args = { 'cp', bin, dest } }
+            build_config.register_handler('Single', function(bufnr)
+                require('r.plugins.tasks.cpp').ctests(bufnr)
+            end)
+
+            build_config.register_handler('PD', function(bufnr)
+                require('r.plugins.tasks.cpp').pdc(bufnr)
+            end)
+
+            build_config.register_handler('CMake', function(bufnr)
+                require('r.plugins.tasks.cpp').cmake(bufnr)
+            end)
+
+            build_config.register_handler('Unreal', function(bufnr)
+                require('r.plugins.tasks.cpp').unreal(bufnr)
+            end)
+        end,
+    })
 end
-
--- Single file gcc/clang with flags
-function cpp.with_flags()
-    vim.ui.input({
-        prompt = 'Enter compiler flags: ',
-    }, function(input)
-        require('overseer').run_template { name = 'Compile', params = { flags = vim.split(input, ' ') } }
-    end)
-end
-
--- Run make compiled binary with Prime render offload
-function cpp.renderOffload(cmd)
-    vim.ui.select({ 'Integrated graphics', 'Dedicated Graphics' }, { prompt = 'Run the binary on: ' }, function(choice)
-        local dGPU = false
-        if choice ~= 'Integrated graphics' then
-            dGPU = true
-        end
-        if cmd then
-            sequencer('oF Run', { dGPU = dGPU }, 'oF Build')
-        else
-            require('overseer').run_template { name = [[oF Run]], params = { dGPU = dGPU } }
-        end
-    end)
-end
-
--- Clean and rebuild Release
-function cpp.cmake_clean_gen()
-    sequencer('Cmake Configure', { type = 'Release' }, 'Cmake clean')
-end
-
--- Clean and rebuild debug
-function cpp.cmake_clean_gen_debug()
-    sequencer('Cmake Configure', { type = 'Debug' }, 'Cmake clean')
-end
-
--- Clean pio directory
-function cpp.pio_clean()
-    sequencer('pio compiledb', {}, 'pio clean')
-end
-
--- return cpp
-setmetatable(register, { __index = cpp })
 
 return register
