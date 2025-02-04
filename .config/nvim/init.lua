@@ -16,6 +16,7 @@ if vim.env.MACHINE_TYPE == 'laptop' then
 end
 
 vim.g.local_plugins = vim.fs.normalize '~/Repositories/Maintained'
+vim.g.ue_path = '/opt/unreal-engine/'
 
 vim.opt.runtimepath:prepend(lazypath)
 

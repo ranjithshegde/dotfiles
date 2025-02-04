@@ -8,7 +8,13 @@ return {
     builder = function(params)
         return {
             cmd = { vim.b.make, vim.fn.expand '%' },
-            components = { 'default', 'on_output_quickfix', 'unique', { 'r.dispatch', save = params.save } },
+            components = {
+                'default',
+                'on_output_quickfix',
+                'on_result_diagnostics_trouble',
+                'unique',
+                { 'r.dispatch', save = params.save },
+            },
         }
     end,
     condition = { filetype = { 'java', 'lua', 'python', 'javascript', 'perl', 'dart' } },

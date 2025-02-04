@@ -15,8 +15,7 @@ local function cmp_setup()
             },
             menu = {
                 draw = { treesitter = { 'lsp' } },
-                auto_show = function(ctx)
-                    --     return ctx.mode ~= 'cmdline' or not vim.tbl_contains({ '/', '?' }, vim.fn.getcmdtype())
+                auto_show = function()
                     return not vim.tbl_contains({ '/', '?' }, vim.fn.getcmdtype())
                 end,
             },
@@ -100,8 +99,9 @@ function completion.pairs()
 end
 
 function completion.luasnip()
+    local luasnip = require 'luasnip'
     local types = require 'luasnip.util.types'
-    require('luasnip').config.set_config {
+    luasnip.config.set_config {
         history = true,
         update_events = { 'InsertLeave', 'TextChanged', 'TextChangedI' },
         ext_opts = {
@@ -114,8 +114,14 @@ function completion.luasnip()
     }
 
     if vim.b.cpp_type and vim.b.cpp_type == 'Unreal' then
-        require('luasnip').filetype_extend('cpp', { 'unreal' })
+        luasnip.filetype_extend('cpp', { 'unreal' })
     end
+
+    vim.keymap.set({ 'i', 's' }, '<C-s>', function()
+        if luasnip.choice_active() then
+            require 'luasnip.extras.select_choice'()
+        end
+    end, { desc = 'Select choice' })
 end
 
 return completion

@@ -1,30 +1,10 @@
-local docs = {}
-
-------------------------------------------------------------------------
---                                Env Setup	                          --
-------------------------------------------------------------------------
-
--- Set C environment based on type [with makefile, microcontroller, cmake project or plain c]
-local site_mappings = {
+--[[
     cppref = {
         base_url = 'https://www.cplusplus.com/search.do',
         query_param = 'q',
     },
     glref = {
         base_url = 'https://docs.gl/gl4',
-        query_param = nil, -- No query param, path-based
-    },
-    unrealref = {
-        base_url = 'https://www.unrealengine.com/en-US/bing-search',
-        query_param = 'keyword',
-        additional_params = {
-            x = '0',
-            y = '0',
-            filter = 'UE4 Documentation',
-        },
-    },
-    arduinoref = {
-        base_url = 'https://www.arduino.cc/reference/en',
         query_param = nil, -- No query param, path-based
     },
     teensypins = {
@@ -35,87 +15,102 @@ local site_mappings = {
         base_url = 'https://www.pjrc.com/teensy/techspecs.html',
         query_param = nil, -- No query param, path-based
     },
+]]
+
+local docs = {}
+
+------------------------------------------------------------------------
+--                                Env Setup	                          --
+------------------------------------------------------------------------
+
+-- Documentation sources
+local site_mappings = {
+    cppref = {
+        base_url = 'https://en.cppreference.com/mwiki/index.php',
+        query_param = 'title=Special:Search&search',
+    },
+    glref = {
+        base_url = 'https://www.khronos.org/registry/OpenGL-Refpages/gl4',
+        query_param = nil,
+    },
+    vulkanref = {
+        base_url = 'https://registry.khronos.org/vulkan/specs/1.3-extensions/html',
+        query_param = nil,
+    },
+    unrealref = {
+        base_url = 'https://www.unrealengine.com/en-US/bing-search',
+        query_param = 'keyword',
+    },
+    nvidia = {
+        base_url = 'https://developer.nvidia.com/search',
+        query_param = 'site_search',
+    },
+    arduino = {
+        base_url = 'https://www.arduino.cc/reference/en',
+        query_param = nil,
+    },
 }
 
--- Utility function to construct URLs dynamically
+-- Construct search URLs dynamically
 local function construct_url(site, query)
     local mapping = site_mappings[site]
     if not mapping then
         error('Invalid site: ' .. site)
     end
-
     local url = mapping.base_url
-
     if mapping.query_param then
-        -- Add query parameter if it exists
         query = vim.fn.escape(query, ':/?&=')
         url = url .. '?' .. mapping.query_param .. '=' .. query
     else
-        -- Append query as a path (e.g., for glref)
-        url = url .. '/' .. query
+        url = url .. '/' .. query .. '.html'
     end
-
-    -- Add additional parameters if they exist
-    if mapping.additional_params then
-        for key, value in pairs(mapping.additional_params) do
-            url = url .. '&' .. key .. '=' .. value
-        end
-    end
-
     return url
 end
 
--- Generic function to open a reference in the browser
-function docs.open_reference(site, query)
-    query = query or vim.fn.expand '<cword>' -- Use word under cursor if no query is provided
-    local url = construct_url(site, query)
-
-    -- Open the URL in the browser
-    local ok, err = pcall(function()
-        require('r.utils').open_in_browser(url)
-    end)
-    if not ok then
-        vim.notify('Failed to open URL: ' .. err, vim.log.levels.ERROR)
+-- Open the search result in the browser
+local function open_reference(site, query)
+    if not query or query == '' then
+        query = vim.fn.input 'Enter query: '
     end
+    local url = construct_url(site, query)
+    vim.fn.system { 'xdg-open', url }
 end
 
 ------------------------------------------------------------------------
 --                                Cpp Setup	                          --
 ------------------------------------------------------------------------
 
----Search Cplusplus.com for symbol
-function docs.cppref()
-    docs.open_reference 'cppref'
+-- Define search functions
+docs.cppref = function()
+    open_reference('cppref', vim.fn.expand '<cword>')
+end
+docs.glref = function()
+    open_reference('glref', vim.fn.expand '<cword>')
+end
+docs.vulkanref = function()
+    open_reference('vulkanref', vim.fn.expand '<cword>')
+end
+docs.unrealref = function()
+    open_reference('unrealref', vim.fn.expand '<cword>')
+end
+docs.nvidia = function()
+    open_reference('nvidia', vim.fn.expand '<cword>')
+end
+docs.arduino = function()
+    open_reference('arduino', vim.fn.expand '<cword>')
 end
 
----Search OpenGL reference manual for symbol
-function docs.glref()
-    docs.open_reference 'glref'
-end
-
-function docs.unrealref()
-    docs.open_reference 'unrealref'
-end
-
------------------------------------------------------------------------
---                    MicroControllers  	                          --
-------------------------------------------------------------------------
-
-function docs.teensypins()
-    docs.open_reference 'teensypins'
-end
-
-function docs.teensyspecs()
-    docs.open_reference 'teensyspecs'
-end
-
-function docs.arduinoref()
-    docs.open_reference 'arduinoref'
-end
-
-function docs.ardRef(cmd)
-    local url = 'https://search.arduino.cc/search?tab=reference&q=' .. cmd
-    require('r.utils').open_in_browser(url)
+docs.mappings = function(buffer)
+    require('which-key').add(require 'r.utils.expand_maps'({
+        ['go'] = {
+            name = 'Online help',
+            a = { require('r.extensions.project.docs').arduino, 'Arduino' },
+            c = { require('r.extensions.project.docs').cppref, 'C++ std reference' },
+            g = { require('r.extensions.project.docs').glref, 'OpenGL reference' },
+            u = { require('r.extensions.project.docs').unrealref, 'Unreal Engine reference' },
+            v = { require('r.extensions.project.docs').vulkanref, 'Unreal Engine reference' },
+        },
+    }, { buffer = buffer }))
 end
 
 return docs

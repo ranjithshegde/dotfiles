@@ -24,7 +24,6 @@ function servers.clangd()
 
     if vim.b.cpp_type == 'Unreal' then
         table.insert(cmd, '--header-insertion=never')
-        require('lazy').load { plugins = { 'nvim-ue5' } }
     else
         for _, v in ipairs(header_cmp) do
             table.insert(cmd, v)

@@ -9,19 +9,6 @@ return {
     -- Colorscheme
     { 'rose-pine/neovim', name = 'rose-pine', opts = { styles = { transparency = true } } },
 
-    -- Unreal integration
-    {
-        'ranjithshegde/nvim-ue5',
-        dev = true,
-        config = function()
-            local ue5 = require 'nvim-ue5'
-            ue5.setup {
-                unreal_engine_path = '/opt/unreal-engine/',
-            }
-            ue5.scan()
-        end,
-    },
-
     -- Comment with TreeSitter
     {
         'numToStr/Comment.nvim',

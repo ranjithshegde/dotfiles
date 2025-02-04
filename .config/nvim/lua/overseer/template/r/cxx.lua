@@ -20,7 +20,13 @@ local tmpl = {
 
         return {
             cmd = cmd,
-            components = { 'default', 'on_output_quickfix', 'unique', { 'r.dispatch', save = params.save } },
+            components = {
+                'default',
+                'on_output_quickfix',
+                'on_result_diagnostics_trouble',
+                'unique',
+                { 'r.dispatch', save = params.save },
+            },
         }
     end,
 }

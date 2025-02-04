@@ -11,4 +11,6 @@ return {
     'r.cdox',
     'r.dotnet',
     'r.unreal',
+    'r.unreal_clang',
+    'r.unreal_compile',
 }

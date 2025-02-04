@@ -5,17 +5,26 @@ M.state = {
     type_handlers = {},
 }
 
+local function get_dirname()
+    return vim.fn.fnamemodify(vim.fn.getcwd(), ':t')
+end
+
+local function get_unreal_proj()
+    return get_dirname() .. '.uproject'
+end
+
 -- Detection rules for different project types
 local project_types = {
     unreal = {
         detect = function()
-            local dirname = vim.fn.fnamemodify(vim.fn.getcwd(), ':t')
-            return vim.fn.filereadable(dirname .. '.uproject') == 1
+            return vim.fn.filereadable(get_unreal_proj()) == 1
         end,
         config = function()
             return {
                 type_name = 'Unreal',
                 makeprg = '/opt/unreal-engine/Engine/Build/BatchFiles/Linux/Build.sh',
+                project_conf = get_unreal_proj(),
+                project_name = get_dirname(),
             }
         end,
     },
@@ -24,7 +33,7 @@ local project_types = {
             return vim.fn.filereadable 'CMakeLists.txt' == 1
         end,
         config = function()
-            local dirname = vim.fn.fnamemodify(vim.fn.getcwd(), ':t')
+            local dirname = get_dirname()
             return {
                 type_name = 'CMake',
                 makeprg = 'make',
@@ -35,7 +44,7 @@ local project_types = {
     },
     openframeworks = {
         detect = function()
-            local dirname = vim.fn.fnamemodify(vim.fn.getcwd(), ':t')
+            local dirname = get_dirname()
             return vim.fn.filereadable 'Makefile' == 1
                 and (
                     vim.fn.filereadable(dirname .. '.qbs') == 1
@@ -44,7 +53,7 @@ local project_types = {
                 )
         end,
         config = function()
-            local dirname = vim.fn.fnamemodify(vim.fn.getcwd(), ':t')
+            local dirname = get_dirname()
             return {
                 type_name = 'oF',
                 makeprg = 'make',
@@ -206,6 +215,14 @@ function M.apply_config(config, bufnr)
         vim.b[bufnr].wasm = config.wasm_bin
     end
 
+    if config.project_name then
+        vim.b[bufnr].project_name = config.project_name
+    end
+
+    if config.project_conf then
+        vim.b[bufnr].project_conf = config.project_conf
+    end
+
     -- Run any registered handlers for this type
     local handlers = M.state.type_handlers[config.type_name]
     if handlers then
@@ -231,6 +248,8 @@ function M.setup(buffer)
     vim.keymap.set('n', '<leader>M', function()
         vim.cmd.tabnew(vim.b.makeFile)
     end, { desc = 'Open Makefile', buffer = buffer })
+
+    require('r.extensions.project.docs').mappings(buffer)
 end
 
 function M.init()

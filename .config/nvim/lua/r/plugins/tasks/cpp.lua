@@ -169,6 +169,10 @@ function tasks.cmake(bufnr)
 end
 
 function tasks.unreal(bufnr)
+    map('n', '<F3>', function()
+        require('overseer').run_template { name = 'generate compile_commands.json' }
+    end, { buffer = bufnr, desc = 'Re/Generate clangd and ccls project files' })
+
     map('n', '<F6>', function()
         require('overseer').run_template { name = 'UnrealEditor' }
     end, { buffer = bufnr, desc = 'Launch Unreal Editor for current project' })
