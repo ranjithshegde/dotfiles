@@ -20,6 +20,7 @@ return function(client, bufnr)
         return
     end
     map('n', 'K', vim.lsp.buf.hover, { desc = 'Hover Documentation', buffer = bufnr })
+    map('n', '<C-k>', vim.lsp.buf.signature_help, { desc = 'Show signature', buffer = bufnr })
 
     map('n', '-', trouble('toggle', 'quickfix'), { desc = 'Toggle qflist' })
     map('n', '_', trouble('toggle', 'loclist'), { desc = 'Toggle loclist' })
@@ -29,7 +30,6 @@ return function(client, bufnr)
             name = 'show',
             o = { trouble('open', 'symbols'), 'Symbol Outline' },
             M = { trouble('open', 'lsp'), 'Lsp Map' },
-            k = { vim.lsp.buf.signature_help, 'Show signature' },
             l = {
                 name = 'Codelens',
                 r = { vim.lsp.codelens.refresh, 'Refresh' },

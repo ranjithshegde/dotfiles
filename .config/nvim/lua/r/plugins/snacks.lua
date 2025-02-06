@@ -6,14 +6,6 @@ return {
         dashboard = {
             sections = {
                 { section = 'header' },
-                -- {
-                --     section = 'terminal',
-                --     cmd = 'lolcat --seed=24 ~/.config/nvim/static/neovim.cat',
-                --     indent = -5,
-                --     height = 8,
-                --     width = 69,
-                --     padding = 4,
-                -- },
                 { section = 'keys', gap = 1, padding = 1 },
                 {
                     title = 'Orgmode',
@@ -33,7 +25,7 @@ return {
                     padding = 1,
                     gap = 2,
                 },
-                -- { icon = ' ', title = 'Projects', section = 'projects', indent = 2, padding = 2 },
+                { icon = ' ', title = 'Projects', section = 'projects', indent = 2, padding = 2 },
                 { section = 'startup' },
             },
         },
@@ -58,6 +50,7 @@ return {
         {
             ']r',
             function()
+                ---@diagnostic disable-next-line
                 Snacks.words.jump(vim.v.count1)
             end,
             desc = 'Next Reference',
@@ -66,10 +59,27 @@ return {
         {
             '[r',
             function()
+                ---@diagnostic disable-next-line
                 Snacks.words.jump(-vim.v.count1)
             end,
             desc = 'Prev Reference',
             mode = { 'n', 't' },
+        },
+        {
+            '<leader>.',
+            function()
+                ---@diagnostic disable-next-line
+                Snacks.scratch()
+            end,
+            desc = 'Create scratch buffer',
+        },
+        {
+            '<leader>s',
+            function()
+                ---@diagnostic disable-next-line
+                Snacks.scratch.select()
+            end,
+            desc = 'Select scratch buffer',
         },
     },
 }

@@ -30,16 +30,26 @@ function g.fugitive()
         ['<leader>g'] = {
             name = 'git functions',
             a = { git_command { 'add %' }, 'add current buffer' },
-            b = { git_command { 'branch -a' }, 'branch list' },
-            -- c = { neogit_lua('commit', 'commit', { '--verbose' }), 'commit changes' },
+            b = { neogit_command { 'branch' }, 'branch poppup' },
+            B = { git_command { 'blame' }, 'branch poppup' },
             c = { neogit_command { 'commit' }, 'commit changes' },
-            C = { git_command { 'commit %' }, 'commit current buffer' },
-            d = { git_command { 'difftool' }, 'launch difftool' },
+            C = { neogit_lua('commit', 'commit', { '--verbose', '--all' }), 'commit changes' },
+            d = { '<cmd>DiffviewOpen<CR>', 'launch difftool' },
+            D = { '<cmd>DiffviewFileHistory<CR>', 'launch difftool' },
             g = { neogit_command { 'kind=floating' }, 'Git window' },
-            l = { neogit_lua('log', 'log_current', { '--graph', '--color', '--decorate' }), 'commit Log' },
-            L = { git_command { 'log' }, 'commit history' },
+            l = {
+                neogit_lua('log', 'log_local_branches', { '--graph', '--color', '--decorate', '--reflog' }),
+                'commit Log Local',
+            },
+            L = {
+                neogit_lua('log', 'log_local_branches', { '--graph', '--color', '--decorate', '--reflog' }),
+                'commit Log Local',
+            },
             p = { neogit_command { 'push' }, 'push commits' },
-            P = { git_command { 'push -f' }, 'force push commits' },
+            P = {
+                neogit_lua('push', 'to_pushremote'),
+                'Push commits no_confirm',
+            },
         },
     })
 end

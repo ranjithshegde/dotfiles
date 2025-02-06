@@ -112,5 +112,3 @@ bindkey '^[[Z' fzf_completion
 
 # Source Powerlevel10k configuration if it exists
 [[ ! -f $ZDOTDIR/p10k.zsh ]] || source $ZDOTDIR/p10k.zsh
-
-# eval "$(starship init zsh)"

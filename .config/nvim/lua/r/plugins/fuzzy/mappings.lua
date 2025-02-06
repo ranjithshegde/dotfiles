@@ -8,6 +8,13 @@ local fzf = function(name, args)
     end
 end
 
+local sp = function(name, args)
+    return function()
+        ---@diagnostic disable-next-line
+        Snacks.picker[name](args)
+    end
+end
+
 local function fzf_cd(dir, prompt, cwd)
     if dir then
         return function()
@@ -29,7 +36,8 @@ local maps = {
         H = { fzf 'highlights', 'Highlights' },
         j = { fzf 'jumps', 'Jump history' },
         l = { fzf 'loclist', 'local quickfix list' },
-        m = { fzf 'man_pages', 'Man pages' },
+        m = { '<cmd>Noice fzf<CR>', 'Messages' },
+        M = { fzf 'man_pages', 'Man pages' },
         q = { fzf 'quickfix', 'Quickfix list' },
         r = { fzf('lsp_references', { winopts = { preview = { layout = 'vertical' } } }), 'Lsp References' },
         s = { fzf('lsp_document_symbols', { winopts = { row = 1, col = 0 } }), 'Lsp symbols in buffer' },
@@ -46,12 +54,7 @@ local maps = {
             },
         },
         T = { fzf 'tagstack', 'Lsp Ctags' },
-        z = {
-            function()
-                Snacks.picker.lines()
-            end,
-            'Fuzzy find in buffer',
-        },
+        z = { sp 'lines', 'Fuzzy find in buffer' },
         ["'"] = { fzf 'marks', 'Marks' },
         ['"'] = { fzf 'registers', 'Registers' },
         ['='] = { fzf 'spell_suggest', 'Spell suggest' },
@@ -59,9 +62,7 @@ local maps = {
         ['<Space>'] = { fzf 'builtin', 'Builtin Searchers' },
         ['<CR>'] = { fzf 'resume', 'Resume last picker' },
         p = {
-            function()
-                require('r.plugins.fuzzy.settings').project()
-            end,
+            sp('projects', { dev = require('r.utils.tables').workspace_folderes }),
             'Projects',
         },
         k = {
@@ -78,8 +79,10 @@ local maps = {
         G = {
             name = 'git commands',
             b = { fzf 'git_branches', 'Branches' },
+            B = { fzf 'git_blame', 'Blame' },
             c = { fzf 'git_commits', 'Commit history' },
-            s = { fzf 'git_status', 'Status' },
+            C = { fzf 'git_bcommits', 'Buffer commit history' },
+            s = { fzf 'git_stash', 'Stashes' },
             f = { fzf 'git_files', 'Tracked files' },
         },
         g = {

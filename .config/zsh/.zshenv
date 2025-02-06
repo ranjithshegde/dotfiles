@@ -7,19 +7,20 @@
 export XDG_CONFIG_HOME XDG_CACHE_HOME XDG_DATA_HOME XDG_STATE_HOME
 
 # Global defaults
-# export __EGL_VENDOR_LIBRARY_FILENAMES="/usr/share/glvnd/egl_vendor.d/50_mesa.json"
-export AWT_TOOLKIT="MToolkit"
 export DEBUGINFOD_URLS="https://debuginfod.archlinux.org"
 export EDITOR="editor"
 export GST_VAAPI_ALL_DRIVERS=1
 export GTK_ICON_THEME="Adwaita"
 export GTK_THEME="Adwaita:dark"
 export MANPAGER="nvim +Man!"
-export QT_STYLE_OVERRIDE="Adwaita-Dark"
 export SCLANG_LSP_ENABLE=1
-export SUDO_ASKPASS="/usr/local/bin/dpass"
-export TERMINAL="/usr/local/bin/st"
 export VISUAL="editor"
+
+if [[ -z "$WAYLAND_DISPLAY" ]]; then
+    # Not in a Wayland session, apply your flags here
+    export AWT_TOOLKIT="MToolkit"
+    export QT_STYLE_OVERRIDE="Adwaita-Dark"
+fi
 
 # CONFIG & PATHS
 export ANDROID_DATA="$XDG_DATA_HOME/android"

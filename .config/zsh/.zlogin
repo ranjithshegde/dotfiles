@@ -1,7 +1,3 @@
-if [ -z "$GNOME_KEYRING_CONTROL" ]; then
-    eval $(gnome-keyring-daemon --start --components=ssh)
-fi
-
 # Function to append library paths if not already included
 append_lib() {
     case ":$LIBRARY_PATH:" in
@@ -66,4 +62,8 @@ if [[ ${XDG_SESSION_TYPE} == "wayland" ]]; then
     export QT_QPA_PLATFORM='wayland'
     export TERMINAL=/usr/bin/ghostty
     export TERM=ghostty
+else
+    export SUDO_ASKPASS="/usr/local/bin/dpass"
+    export TERMINAL="/usr/local/bin/st"
+    export TERM=st
 fi

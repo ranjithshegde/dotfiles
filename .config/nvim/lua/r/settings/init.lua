@@ -41,6 +41,7 @@ return function()
     o.foldexpr = 'v:lua.vim.treesitter.foldexpr()'
     o.grepprg = 'rg --vimgrep --smart-case --hidden'
     o.spellfile = vim.fn.stdpath 'config' .. '/spell/en.utf-8.add'
+    opt.diffopt = 'internal,filler,closeoff,indent-heuristic,linematch:60,algorithm:histogram'
 
     opt.guifont = {
         'FiraCode Nerd Font:style=Medium:h12',
@@ -69,7 +70,7 @@ return function()
     opt.shortmess:append 'cs'
     opt.foldopen:append 'jump'
     opt.wildoptions:append 'fuzzy'
-    opt.diffopt:append 'linematch:60'
+    -- opt.diffopt:append 'linematch:60'
     opt.clipboard:append 'unnamedplus'
     opt.sessionoptions:append 'terminal,tabpages'
 

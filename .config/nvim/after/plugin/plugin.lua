@@ -37,10 +37,6 @@ end, { desc = 'Toggle quickfix' })
 map('n', '_', function()
     require('r.extensions.qf').toggle_qf 'l'
 end, { desc = 'Toggle loclist' })
--- ScratchPad
-map('n', '<leader>S', function()
-    require 'r.extensions.project.scratchpad' 'tab'
-end, { desc = 'Open ScratchPad' })
 
 -- Misc
 map({ 'n', 't' }, '<F9>', function()

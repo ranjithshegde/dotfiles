@@ -1,8 +1,17 @@
 "$schema" = "https://yazi-rs.github.io/schemas/yazi.json"
 
+[manager]
+linemode = "size"
+
 [preview]
 max_width = 1920
 max_height = 1080
+
+[open]
+rules = [
+    # Media
+    { mime = "{audio,video}/*", use = ["open", "reveal", "play"] },
+]
 
 [plugin]
 prepend_previewers = [{ name = "*.md", run = "glow" }]
