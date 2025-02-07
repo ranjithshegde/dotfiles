@@ -12,7 +12,6 @@ function overseer.init()
     require('r.plugins.tasks.register').repl(id.Overseer)
     require('r.plugins.tasks.register').LiveServer(id.Overseer)
     require('r.plugins.tasks.register').glow(id.Overseer)
-    require('r.plugins.tasks.register').flutter(id.Overseer)
 
     local cached_ft = nil
     local get_ft = function()

@@ -16,6 +16,48 @@ function extensions.WordProcessor()
     require('r.mappings.util').wordProcessor()
 end
 
+---Return word count for the tex project
+function extensions.tex_word_count()
+    local fs = vim.bo.filetype
+    if fs == 'tex' or fs == 'bib' then
+        local result = ''
+        local handle
+        local output = vim.uv.new_pipe(false)
+
+        handle = vim.uv.spawn('texcount', {
+            args = { '-inc', '-sum', '-1', vim.fn.expand '%' },
+            stdio = { nil, output, nil },
+        }, function(code)
+            if code == 0 then
+                output:read_stop()
+                output:close()
+            else
+                vim.notify('texcount failed with exit code ' .. code, vim.log.levels.ERROR)
+            end
+        end)
+
+        output:read_start(function(err, chunk)
+            if err then
+                vim.notify('Error reading texcount output: ' .. err, vim.log.levels.ERROR)
+                return
+            end
+            if chunk then
+                result = result .. chunk
+            end
+        end)
+
+        vim.wait(1000, function()
+            return result ~= ''
+        end)
+
+        handle:close()
+
+        vim.notify(result, nil, { title = 'Current document word count' })
+    else
+        vim.notify(string.format('texcount binary only supports latex subtypes. Filetype %s is unsupported', fs))
+    end
+end
+
 ------------------------------------------------------------------------
 --                              Terminal                              --
 ------------------------------------------------------------------------
@@ -73,45 +115,4 @@ function extensions.yazi(path, edit_cmd)
     vim.cmd.startinsert()
 end
 
----Return word count for the tex project
-function extensions.tex_word_count()
-    local fs = vim.bo.filetype
-    if fs == 'tex' or fs == 'bib' then
-        local result = ''
-        local handle
-        local output = vim.uv.new_pipe(false)
-
-        handle = vim.uv.spawn('texcount', {
-            args = { '-inc', '-sum', '-1', vim.fn.expand '%' },
-            stdio = { nil, output, nil },
-        }, function(code)
-            if code == 0 then
-                output:read_stop()
-                output:close()
-            else
-                vim.notify('texcount failed with exit code ' .. code, vim.log.levels.ERROR)
-            end
-        end)
-
-        output:read_start(function(err, chunk)
-            if err then
-                vim.notify('Error reading texcount output: ' .. err, vim.log.levels.ERROR)
-                return
-            end
-            if chunk then
-                result = result .. chunk
-            end
-        end)
-
-        vim.wait(1000, function()
-            return result ~= ''
-        end)
-
-        handle:close()
-
-        vim.notify(result, nil, { title = 'Current document word count' })
-    else
-        vim.notify(string.format('texcount binary only supports latex subtypes. Filetype %s is unsupported', fs))
-    end
-end
 return extensions

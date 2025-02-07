@@ -124,18 +124,6 @@ configs.javascript = {
     },
 }
 
-configs.dart = {
-    {
-        type = 'dart',
-        request = 'launch',
-        name = 'Launch flutter',
-        dartSdkPath = '/opt/flutter/bin/cache/dart-sdk/',
-        flutterSdkPath = '/opt/flutter/',
-        program = '${workspaceFolder}/lib/main.dart',
-        cwd = '${workspaceFolder}',
-    },
-}
-
 configs.cs = {
     {
         type = 'coreclr',
@@ -151,7 +139,7 @@ configs.gdscript = {
     type = 'godot',
     request = 'launch',
     name = 'Launch scene',
-    project = '${workspaceFolder}'
+    project = '${workspaceFolder}',
 }
 
 return configs

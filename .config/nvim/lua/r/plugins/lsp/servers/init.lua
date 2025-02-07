@@ -11,7 +11,6 @@ return function()
         'cssls',
         'taplo',
         'ts_ls',
-        'dartls',
         'glslls',
         'jsonls',
         'yamlls',

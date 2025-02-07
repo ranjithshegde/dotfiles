@@ -3,12 +3,22 @@ local augroup = vim.api.nvim_create_augroup
 local opts = { clear = true }
 local id = {}
 
-local function ignore_files()
+local window = vim.wo
+local option = vim.o
+
+local function is_ignored_filetype()
     return vim.tbl_contains(require('r.utils.tables').ignoreFiles, vim.bo.filetype)
 end
 
-local function ignore_win()
-    return ignore_files() or vim.fn.win_gettype() == 'popup'
+local function should_ignore_window()
+    return is_ignored_filetype() or vim.fn.win_gettype() == 'popup'
+end
+
+local function set_window_options(bufnr, options)
+    local winid = vim.fn.bufwinid(bufnr)
+    for key, value in pairs(options) do
+        window[winid][key] = value
+    end
 end
 
 ------------------------------------------------------------------------
@@ -38,60 +48,58 @@ aucmd('FileType', {
 aucmd('FileType', {
     group = id.FormatOptions,
     callback = function(args)
-        if vim.tbl_contains(require('r.utils.tables').ignoreFiles, args.match) or args.file:find 'noice' then
-            vim.o.relativenumber = false
-            vim.wo.foldcolumn = '0'
+        if is_ignored_filetype() or args.file:find 'noice' then
+            option.relativenumber = false
             return
         end
+
         if vim.bo.buftype == '' then
-            vim.o.relativenumber = true
-            vim.wo[vim.fn.bufwinid(args.buf)].cursorline = true
+            option.relativenumber = true
+            set_window_options(args.buf, { cursorline = true })
         end
     end,
-    desc = 'Disable all custom decoration rules for non-language filetypes',
+    desc = 'Set decoration rules based on filetype',
 })
 
 -- ************** Selective numbering  ---------------------------------
-aucmd({ 'InsertEnter', 'WinLeave', 'FocusLost', 'BufNewFile' }, {
-    group = id.FormatOptions,
-    callback = function(args)
-        if not ignore_win() then
-            vim.wo[vim.fn.bufwinid(args.buf)].relativenumber = false
-        end
-    end,
-    desc = 'Dont use relativenumber where it makes no sense',
-})
-aucmd({ 'InsertLeave', 'WinEnter', 'FocusGained' }, {
-    group = id.FormatOptions,
-    callback = function(args)
-        if not ignore_win() then
-            vim.wo[vim.fn.bufwinid(args.buf)].relativenumber = true
-        end
-    end,
-    desc = 'use relativenumber conditionally',
-})
+local number_events = {
+    disable = { 'InsertEnter', 'WinLeave', 'FocusLost', 'BufNewFile' },
+    enable = { 'InsertLeave', 'WinEnter', 'FocusGained' },
+}
+
+for state, events in pairs(number_events) do
+    aucmd(events, {
+        group = id.FormatOptions,
+        callback = function(args)
+            if not should_ignore_window() then
+                set_window_options(args.buf, {
+                    relativenumber = state == 'enable',
+                })
+            end
+        end,
+        desc = string.format('%s relative numbers conditionally', state),
+    })
+end
 
 -- ************** Selective cursorline  ----------------------------------
-aucmd({ 'FocusGained', 'WinEnter', 'BufEnter' }, {
-    group = id.FormatOptions,
-    callback = function(args)
-        if not ignore_win() then
-            vim.wo[vim.fn.bufwinid(args.buf)].cursorline = true
-            vim.wo[vim.fn.bufwinid(args.buf)].foldcolumn = 'auto'
-        end
-    end,
-    desc = 'use cursorline only on active buffers',
-})
-aucmd({ 'FocusLost', 'WinLeave' }, {
-    group = id.FormatOptions,
-    callback = function(args)
-        if not ignore_win() then
-            vim.wo[vim.fn.bufwinid(args.buf)].cursorline = false
-            vim.wo[vim.fn.bufwinid(args.buf)].foldcolumn = '0'
-        end
-    end,
-    desc = 'dont use cursorline on inactive buffers',
-})
+local cursorline_events = {
+    enable = { 'FocusGained', 'WinEnter', 'BufEnter' },
+    disable = { 'FocusLost', 'WinLeave' },
+}
+
+for state, events in pairs(cursorline_events) do
+    aucmd(events, {
+        group = id.FormatOptions,
+        callback = function(args)
+            if not should_ignore_window() then
+                set_window_options(args.buf, {
+                    cursorline = state == 'enable',
+                })
+            end
+        end,
+        desc = string.format('%s cursorline for %s buffers', state, state == 'enable' and 'active' or 'inactive'),
+    })
+end
 
 ------------------------------------------------------------------------
 --                              LSP                                   --
@@ -171,21 +179,9 @@ aucmd('BufReadPost', {
 --                              Misc                                  --
 ------------------------------------------------------------------------
 
-id.FoldMaps = augroup('FoldMaps', opts)
-aucmd('FileType', {
-    group = id.FoldMaps,
-    callback = function(args)
-        if not vim.tbl_contains(require('r.utils.tables').ignoreFiles, args.match) or args.match ~= 'org' then
-            vim.keymap.set('n', '<Tab>', 'za', { desc = 'Toggle fold current' })
-            vim.keymap.set('n', '<S-Tab>', 'zA', { desc = 'Toggle fold All' })
-        end
-    end,
-    desc = 'Use Tab to cycle folds',
-})
-
 id.TextYank = augroup('TextYank', opts)
 -- ************** HighlightOnYank ---------------------------------------------------------
-aucmd('TextYankPost', {
+vim.api.nvim_create_autocmd('TextYankPost', {
     group = id.TextYank,
     callback = function()
         vim.highlight.on_yank { higroup = 'IncSearch', timeout = 200 }
@@ -207,5 +203,7 @@ aucmd('BufEnter', {
     end,
     desc = 'Open non text files with MIME',
 })
+
+require 'r.autocmds.filetype'(id)
 
 require('r.utils').register_au_id(id)

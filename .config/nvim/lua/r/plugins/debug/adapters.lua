@@ -44,12 +44,6 @@ adapters.codelldb = {
     },
 }
 
-adapters.dart = {
-    type = 'executable',
-    command = 'node',
-    args = { vim.env.XDG_DATA_HOME .. '/debug-adapters/Dart-Code/out/dist/debug.js', 'flutter' },
-}
-
 adapters.coreclr = {
     type = 'executable',
     command = '/usr/bin/netcoredbg',

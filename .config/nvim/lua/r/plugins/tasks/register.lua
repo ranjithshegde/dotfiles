@@ -12,14 +12,9 @@ end
 function register.repl(id)
     aucmd('FileType', {
         group = id,
-        pattern = { 'java', 'lua', 'python', 'javascript', 'perl' },
+        pattern = { 'lua', 'python', 'javascript' },
         callback = function(args)
             task_map('<F5>', 'Run Single', 'Call native compile command', args.buf)
-
-            vim.keymap.set({ 'n', 't' }, '<F10>', function()
-                vim.cmd.stopinsert()
-                require('r.extensions').toggleTerm(vim.b.repl, 'repl')
-            end, { desc = 'Toggle REPL' })
         end,
         desc = 'set compiler and toggleable REPL for capable filetypes',
     })
@@ -56,30 +51,6 @@ function register.glow(id)
             vim.keymap.set('n', '<F5>', start_task, { buffer = args.buf, desc = 'Run glow' })
         end,
         desc = 'Initialize Glow task for Markdown',
-    })
-end
-
-function register.flutter(id)
-    aucmd('FileType', {
-        group = id,
-        pattern = 'dart',
-        callback = function(args)
-            vim.b.make = 'dart'
-
-            task_map('<F6>', 'Flutter run', 'Run Flutter', args.buf)
-            task_map('<F6>', 'Run Single', 'Run single file', args.buf)
-
-            vim.keymap.set('n', '<F5>', function()
-                vim.ui.select(
-                    { 'aar', 'apk', 'appbundle', 'bundle', 'web' },
-                    { prompt = 'Compile flutter for: ' },
-                    function(choice)
-                        require('overseer').run_template { name = 'Flutter build', params = { env = choice } }
-                    end
-                )
-            end, { desc = 'Build Flutter', buffer = args.buf })
-        end,
-        desc = 'Initialize build tasks for Dart',
     })
 end
 

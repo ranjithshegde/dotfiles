@@ -5,6 +5,11 @@ local completion = {}
 
 local function cmp_setup()
     require('blink.cmp').setup {
+        enabled = function()
+            return not vim.tbl_contains({ 'org-roam-select' }, vim.bo.filetype)
+                and vim.bo.buftype ~= 'prompt'
+                and vim.b.completion ~= false
+        end,
         completion = {
             keyword = { range = 'full' },
             ghost_text = { enabled = true },

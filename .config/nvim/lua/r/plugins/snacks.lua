@@ -42,7 +42,9 @@ return {
         notifier = { enabled = true },
         scope = { enabled = true, treesitter = { blocks = { enabled = true } } },
         lazygit = { enabled = true },
-        statuscolumn = { enabled = true },
+        statuscolumn = {
+            folds = { open = true, git_hl = true },
+        },
         words = { enabled = true, jumplist = false },
         zen = { toggle = { dim = true } },
     },

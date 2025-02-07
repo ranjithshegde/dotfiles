@@ -232,8 +232,6 @@ function M.apply_config(config, bufnr)
     end
 end
 
-local id = {}
-
 -- Main setup function
 function M.setup(buffer)
     if not buffer then
@@ -244,25 +242,6 @@ function M.setup(buffer)
     end
     local config = M.detect_project_type(buffer)
     M.apply_config(config, buffer)
-
-    vim.keymap.set('n', '<leader>M', function()
-        vim.cmd.tabnew(vim.b.makeFile)
-    end, { desc = 'Open Makefile', buffer = buffer })
-
-    require('r.extensions.project.docs').mappings(buffer)
-end
-
-function M.init()
-    id.cproject_type = vim.api.nvim_create_augroup('cproject_type', { clear = true })
-    vim.api.nvim_create_autocmd('FileType', {
-        group = id.cproject_type,
-        pattern = { 'c', 'cpp', 'objc', 'objcpp', 'opencl' },
-        callback = function(args)
-            M.setup(args.buf)
-        end,
-        desc = 'Detect project type and configure basic properties',
-    })
-    require('r.utils').register_au_id(id)
 end
 
 return M

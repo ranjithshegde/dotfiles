@@ -55,16 +55,6 @@ end
 
 local tasks = {}
 
--- Clean and rebuild Release
-local function cmake_clean_gen()
-    sequencer('Cmake Configure', { type = 'Release' }, 'Cmake clean')
-end
-
--- Clean and rebuild debug
-local function cmake_clean_gen_debug()
-    sequencer('Cmake Configure', { type = 'Debug' }, 'Cmake clean')
-end
-
 local map = vim.keymap.set
 
 ------------------------------------------------------------------------

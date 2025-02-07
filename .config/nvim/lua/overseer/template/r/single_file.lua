@@ -17,6 +17,6 @@ return {
             },
         }
     end,
-    condition = { filetype = { 'java', 'lua', 'python', 'javascript', 'perl', 'dart' } },
+    condition = { filetype = { 'lua', 'python', 'javascript' } },
     priority = 20,
 }
