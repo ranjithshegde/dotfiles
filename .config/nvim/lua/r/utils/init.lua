@@ -4,13 +4,6 @@ local utils = {}
 --                              Vim options                           --
 ------------------------------------------------------------------------
 
----Restart Vim without having to close and run again
-function utils.restart()
-    require('plenary.reload').reload_module 'r'
-    vim.cmd.source '$MYVIMRC'
-    vim.api.nvim_exec_autocmds('VimEnter', {})
-end
-
 function utils.register_au_id(id)
     if type(id) ~= 'table' then
         vim.notify(
@@ -145,31 +138,6 @@ function utils.get_client_names()
     return buf_client_names
 end
 
-local vi = false
-function utils.toggle_vi()
-    if vi then
-        vim.o.number = true
-        vim.o.relativenumber = true
-        vim.o.signcolumn = 'auto'
-        vim.o.foldcolumn = 'auto:1'
-        vim.o.laststatus = 3
-        if vim.b.hasLsp then
-            vim.cmd.DefaultDiagnostics()
-        end
-        vi = false
-    else
-        vim.o.number = false
-        vim.o.relativenumber = false
-        vim.o.signcolumn = 'no'
-        vim.o.foldcolumn = '0'
-        vim.o.laststatus = 0
-        if vim.b.hasLsp then
-            vim.cmd.DisableDiagnostics()
-        end
-        vi = true
-    end
-end
-
 ---Load a plugin on key press or key sequence
 ---@param mode table|string The mapping modes
 ---@param key string The key sequence to map
@@ -223,14 +191,6 @@ function utils.switch_alternate()
             vim.cmd.edit 'index.html'
         end
     end, { buffer = 0, silent = true, desc = 'Open alternate shader file' })
-end
-
----Switch bg and fg for statusline separator component
----@param hl1 string
----@param hl2 string
-function utils.switch_highlight(hl1, hl2)
-    local hl = vim.api.nvim_get_hl(0, { name = hl1 })
-    vim.api.nvim_set_hl(0, hl2, { fg = hl.bg })
 end
 
 return utils

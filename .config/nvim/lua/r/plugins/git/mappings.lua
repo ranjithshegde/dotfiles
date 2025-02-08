@@ -5,12 +5,6 @@
 local wk = require 'which-key'
 local maps = require 'r.utils.expand_maps'
 
-local function git_command(args)
-    return function()
-        vim.api.nvim_cmd({ cmd = 'G', args = args and args }, {})
-    end
-end
-
 local function neogit_command(args)
     return function()
         vim.api.nvim_cmd({ cmd = 'Neogit', args = args and args }, {})
@@ -25,21 +19,29 @@ end
 
 local g = {}
 
-function g.fugitive()
+function g.git()
     wk.add(maps {
         ['<leader>g'] = {
             name = 'git functions',
-            a = { git_command { 'add %' }, 'add current buffer' },
+            a = {
+                function()
+                    local file = vim.fn.expand '%'
+                    require('neogit.lib.git.index').add { file }
+                end,
+                'add current buffer',
+            },
             b = { neogit_command { 'branch' }, 'branch poppup' },
-            B = { git_command { 'blame' }, 'branch poppup' },
             c = { neogit_command { 'commit' }, 'commit changes' },
             C = { neogit_lua('commit', 'commit', { '--verbose', '--all' }), 'commit changes' },
             d = { '<cmd>DiffviewOpen<CR>', 'launch difftool' },
             D = { '<cmd>DiffviewFileHistory<CR>', 'launch difftool' },
             g = { neogit_command { 'kind=floating' }, 'Git window' },
             l = {
-                neogit_lua('log', 'log_local_branches', { '--graph', '--color', '--decorate', '--reflog' }),
-                'commit Log Local',
+                function()
+                    local file = vim.fn.expand '%'
+                    neogit_lua('log', 'log_current', { '--graph', '--color', '--decorate', '--reflog', '--', file })()
+                end,
+                'commit Log file',
             },
             L = {
                 neogit_lua('log', 'log_local_branches', { '--graph', '--color', '--decorate', '--reflog' }),

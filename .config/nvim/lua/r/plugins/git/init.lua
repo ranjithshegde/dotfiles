@@ -5,7 +5,7 @@ local function sign_config()
         end,
         preview_config = { focusable = false },
     }
-    require('r.plugins.git.mappings').fugitive()
+    require('r.plugins.git.mappings').git()
 end
 
 local function signs_init()
@@ -47,5 +47,4 @@ return {
         },
         cmd = 'Neogit',
     },
-    { 'tpope/vim-fugitive', cmd = { 'G', 'Git', 'Gclog' } },
 }

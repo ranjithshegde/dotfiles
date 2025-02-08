@@ -1,8 +1,9 @@
 theme = rose-pine-moon
-background-opacity = 0.8
+background-opacity = 0.85
 window-decoration = false
 gtk-titlebar = false
 font-family = "JetBrainsMono Nerd Font Mono"
+font-size = 13
 confirm-close-surface = false
 
 keybind = shift+control+h=new_split:left

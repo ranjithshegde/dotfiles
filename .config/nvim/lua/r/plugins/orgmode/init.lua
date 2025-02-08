@@ -46,7 +46,7 @@ return {
         dependencies = 'nvim-orgmode/orgmode',
         opts = {
             directory = vim.fs.joinpath(settings.paths.root, 'Wiki'),
-            bindings = { prefix = '<leader>w' },
+            bindings = { prefix = '<leader>w', goto_next_node = ']w', goto_prev_node = '[w' },
         },
         keys = { '<leader>w' },
     },
