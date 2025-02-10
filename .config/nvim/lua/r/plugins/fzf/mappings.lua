@@ -8,23 +8,23 @@ local fzf = function(name, args)
     end
 end
 
-local sp = function(name, args)
-    return function()
-        ---@diagnostic disable-next-line
-        Snacks.picker[name](args)
-    end
-end
-
 local function fzf_cd(dir, prompt, cwd)
     if dir then
         return function()
-            require('r.plugins.fuzzy.settings').cd_folder(prompt, cwd)
+            require('r.plugins.fzf.settings').cd_folder(prompt, cwd)
         end
     end
     return function()
-        require('r.plugins.fuzzy.settings').cd_files(prompt, cwd)
+        require('r.plugins.fzf.settings').cd_files(prompt, cwd)
     end
 end
+
+local kind = {
+    'Function',
+    'Class',
+    'Object',
+    'Method',
+}
 
 local maps = {
     ['<Space>'] = {
@@ -39,8 +39,24 @@ local maps = {
         m = { '<cmd>Noice fzf<CR>', 'Messages' },
         M = { fzf 'man_pages', 'Man pages' },
         q = { fzf 'quickfix', 'Quickfix list' },
-        r = { fzf('lsp_references', { winopts = { preview = { layout = 'vertical' } } }), 'Lsp References' },
-        s = { fzf('lsp_document_symbols', { winopts = { row = 1, col = 0 } }), 'Lsp symbols in buffer' },
+        z = { fzf 'blines', 'Quickfix list' },
+        r = {
+            fzf('lsp_references', { winopts = require('r.plugins.fzf.settings').layouts.center_stack }),
+            'Lsp References',
+        },
+        s = {
+            fzf('lsp_document_symbols', {
+                winopts = require('r.plugins.fzf.settings').layouts.partial_stack,
+                regex_filter = function(item)
+                    for _, v in ipairs(kind) do
+                        if item.kind:match(v) then
+                            return true
+                        end
+                    end
+                end,
+            }),
+            'Lsp symbols in buffer',
+        },
         S = { fzf 'lsp_live_workspace_symbols', 'Grep lsp workspace symbols' },
         t = {
             name = 'Treesitter',
@@ -54,17 +70,12 @@ local maps = {
             },
         },
         T = { fzf 'tagstack', 'Lsp Ctags' },
-        z = { sp 'lines', 'Fuzzy find in buffer' },
         ["'"] = { fzf 'marks', 'Marks' },
         ['"'] = { fzf 'registers', 'Registers' },
         ['='] = { fzf 'spell_suggest', 'Spell suggest' },
         ['/'] = { fzf 'grep_cword', 'Grep CWORD in directory' },
         ['<Space>'] = { fzf 'builtin', 'Builtin Searchers' },
         ['<CR>'] = { fzf 'resume', 'Resume last picker' },
-        p = {
-            sp('projects', { dev = require('r.utils.tables').workspace_folderes }),
-            'Projects',
-        },
         k = {
             function()
                 require('fzf-lua').lsp_workspace_symbols { query = vim.fn.expand '<cword>' }

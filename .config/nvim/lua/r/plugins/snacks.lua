@@ -1,87 +1,117 @@
+local cached_workspace_folders = nil
+local function get_workspace_folders()
+    if cached_workspace_folders then
+        return cached_workspace_folders
+    end
+    cached_workspace_folders = require('r.utils.tables').workspace_folderes
+    return cached_workspace_folders
+end
+
+local sf = function(module, cmd, args)
+    return function()
+        if not cmd and not args then
+            ---@diagnostic disable-next-line
+            Snacks[module]()
+        else
+            ---@diagnostic disable-next-line
+            Snacks[module][cmd](args and args)
+        end
+    end
+end
+
+local function init()
+    local id = {}
+    id.OilRename = vim.api.nvim_create_augroup('OilRename', { clear = true })
+    vim.api.nvim_create_autocmd('User', {
+        group = id.OilRename,
+        pattern = 'OilActionsPost',
+        callback = function(event)
+            if event.data.actions.type == 'move' then
+                ---@diagnostic disable-next-line
+                Snacks.rename.on_rename_file(event.data.actions.src_url, event.data.actions.dest_url)
+            end
+        end,
+        desc = 'Initiate lsp rename via Snacks on Oil file rename',
+    })
+
+    require('r.utils').register_au_id(id)
+end
+
+------------------------------------------------------------------------
+--                              Modules                               --
+------------------------------------------------------------------------
+
+local default = { enabled = true }
+
+-- ************** Startup screen  --------------------------------------
+local dashboard = {
+    sections = {
+        { section = 'header' },
+        { section = 'keys', gap = 1, padding = 1 },
+        {
+            title = 'Orgmode',
+            icon = ' ',
+        },
+        {
+            title = 'Agenda',
+            indent = 3,
+            action = ':lua require("orgmode").agenda:agenda()',
+            key = 'a',
+        },
+        {
+            title = 'Capture',
+            indent = 3,
+            action = '<leader>oc',
+            key = 'C',
+            padding = 1,
+            gap = 2,
+        },
+        { icon = ' ', title = 'Projects', section = 'projects', indent = 2, padding = 2 },
+        { section = 'startup' },
+    },
+}
+
+-- ************** Indent guides  --------------------------------------
+local indent = {
+    animate = { enabled = false },
+    only_current = true,
+    scope = {
+        enabled = true,
+        underline = true,
+    },
+}
+
+-- ************** general ---------------------------------------------
+local opts = {
+    dashboard = dashboard,
+    dim = default,
+    gitbrowse = default,
+    indent = indent,
+    notifier = default,
+    scope = { treesitter = { blocks = { enabled = true } } },
+    lazygit = default,
+    rename = default,
+    statuscolumn = { folds = { open = true } },
+    words = { jumplist = false },
+    zen = { toggle = { dim = true } },
+}
+
 return {
     'folke/snacks.nvim',
     priority = 1000,
     lazy = false,
-    opts = {
-        dashboard = {
-            sections = {
-                { section = 'header' },
-                { section = 'keys', gap = 1, padding = 1 },
-                {
-                    title = 'Orgmode',
-                    icon = ' ',
-                },
-                {
-                    title = 'Agenda',
-                    indent = 3,
-                    action = ':lua require("orgmode").agenda:agenda()',
-                    key = 'a',
-                },
-                {
-                    title = 'Capture',
-                    indent = 3,
-                    action = '<leader>oc',
-                    key = 'C',
-                    padding = 1,
-                    gap = 2,
-                },
-                { icon = ' ', title = 'Projects', section = 'projects', indent = 2, padding = 2 },
-                { section = 'startup' },
-            },
-        },
-        dim = { enabled = true },
-        gitbrowse = { enabled = true },
-        indent = {
-            animate = { enabled = false },
-            only_current = true,
-            scope = {
-                enabled = true,
-                underline = true,
-            },
-        },
-        notifier = { enabled = true },
-        scope = { enabled = true, treesitter = { blocks = { enabled = true } } },
-        lazygit = { enabled = true },
-        statuscolumn = {
-            folds = { open = true, git_hl = true },
-        },
-        words = { enabled = true, jumplist = false },
-        zen = { toggle = { dim = true } },
-    },
+    init = init,
+    opts = opts,
     keys = {
+        { ']r', sf('words', 'jump', vim.v.count1), desc = 'Next Reference', mode = { 'n', 't' } },
+        { '[r', sf('words', 'jump', -vim.v.count1), desc = 'Prev Reference', mode = { 'n', 't' } },
+        { '<leader>go', sf 'gitbrowse', desc = 'Open git remote for current file' },
+        { '<leader>.', sf 'scratch', desc = 'Create scratch buffer' },
+        { '<leader>s', sf('scratch', 'select'), desc = 'Select scratch buffer' },
         {
-            ']r',
-            function()
-                ---@diagnostic disable-next-line
-                Snacks.words.jump(vim.v.count1)
-            end,
-            desc = 'Next Reference',
-            mode = { 'n', 't' },
-        },
-        {
-            '[r',
-            function()
-                ---@diagnostic disable-next-line
-                Snacks.words.jump(-vim.v.count1)
-            end,
-            desc = 'Prev Reference',
-            mode = { 'n', 't' },
-        },
-        {
-            '<leader>.',
-            function()
-                ---@diagnostic disable-next-line
-                Snacks.scratch()
-            end,
-            desc = 'Create scratch buffer',
-        },
-        {
-            '<leader>s',
-            function()
-                ---@diagnostic disable-next-line
-                Snacks.scratch.select()
-            end,
-            desc = 'Select scratch buffer',
+            '<Space>p',
+            sf('picker', 'projects', { dev = get_workspace_folders() }),
+            desc = 'Projects',
         },
     },
 }

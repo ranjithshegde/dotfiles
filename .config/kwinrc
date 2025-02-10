@@ -21,13 +21,15 @@ krohnkiteEnabled=true
 [Script-krohnkite]
 directionalKeyDwm=true
 directionalKeyFocus=false
+enableFloatingLayout=true
 enableQuarterLayout=true
+enableSpiralLayout=false
 ignoreClass=krunner,yakuake,spectacle,kded5,xwaylandvideobridge,plasmashell,ksplashqml,org.kde.plasmashell,org.kde.polkit-kde-authentication-agent-1,org.kde.krule
 maximizeSoleTile=true
-tileLayoutGap=12
+tileLayoutGap=4
 
 [Tiling]
-padding=4
+padding=0
 
 [Tiling][4e390e0d-8d1a-5fbb-8eb9-8f57e8530ee1]
 tiles={"layoutDirection":"horizontal","tiles":[{"width":0.25},{"width":0.5},{"width":0.25}]}

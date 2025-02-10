@@ -306,6 +306,9 @@ _launch=Alt+Shift+R
 [services][org.kde.dolphin.desktop]
 _launch=Alt+Shift+F\tMeta+E
 
+[services][org.kde.krunner.desktop]
+_launch=Search\tAlt+Space
+
 [services][org.kde.spectacle.desktop]
 RecordRegion=none
 RecordWindow=none
