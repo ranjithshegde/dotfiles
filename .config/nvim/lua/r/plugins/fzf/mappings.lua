@@ -26,6 +26,14 @@ local kind = {
     'Method',
 }
 
+local function top_level_kind(item)
+    for _, v in ipairs(kind) do
+        if item.kind:match(v) then
+            return true
+        end
+    end
+end
+
 local maps = {
     ['<Space>'] = {
         name = 'FZF',
@@ -39,25 +47,28 @@ local maps = {
         m = { '<cmd>Noice fzf<CR>', 'Messages' },
         M = { fzf 'man_pages', 'Man pages' },
         q = { fzf 'quickfix', 'Quickfix list' },
-        z = { fzf 'blines', 'Quickfix list' },
+        z = { fzf 'blines', 'Gerp current buffer lines' },
         r = {
             fzf('lsp_references', { winopts = require('r.plugins.fzf.settings').layouts.center_stack }),
             'Lsp References',
         },
         s = {
             fzf('lsp_document_symbols', {
+
                 winopts = require('r.plugins.fzf.settings').layouts.partial_stack,
-                regex_filter = function(item)
-                    for _, v in ipairs(kind) do
-                        if item.kind:match(v) then
-                            return true
-                        end
-                    end
-                end,
+                regex_filter = top_level_kind,
             }),
             'Lsp symbols in buffer',
         },
-        S = { fzf 'lsp_live_workspace_symbols', 'Grep lsp workspace symbols' },
+        S = {
+            fzf('lsp_workspace_symbols', {
+
+                winopts = require('r.plugins.fzf.settings').layouts.partial_stack,
+                regex_filter = top_level_kind,
+            }),
+            'Lsp symbols in buffer',
+        },
+        O = { fzf 'lsp_live_workspace_symbols', 'Grep lsp workspace symbols' },
         t = {
             name = 'Treesitter',
             n = { fzf 'treesitter', 'TreeSitter nodes in buffer' },

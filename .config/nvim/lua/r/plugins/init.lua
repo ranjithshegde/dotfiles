@@ -7,7 +7,11 @@ vim.keymap.set('n', '<leader>p', require('lazy').sync, { desc = 'Update plugins'
 
 return {
     -- Colorscheme
-    { 'rose-pine/neovim', name = 'rose-pine', opts = { styles = { transparency = true } } },
+    {
+        { 'rose-pine/neovim', name = 'rose-pine', opts = { styles = { transparency = true } }, enabled = false },
+        { 'eldritch-theme/eldritch.nvim', opts = { transparent = true }, enabled = false },
+        { 'rebelot/kanagawa.nvim', opts = { transparent = true } },
+    },
 
     -- Comment with TreeSitter
     {
@@ -26,7 +30,7 @@ return {
             preset = 'modern',
             show_help = false,
             show_keys = false,
-            layout = { layout = { spacing = 15 } },
+            layout = { spacing = 10 },
             win = { border = 'single' },
             triggers = {
                 { '<auto>', mode = 'nixsotc' },

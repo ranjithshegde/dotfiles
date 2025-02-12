@@ -24,8 +24,8 @@ local float_win = {
     border = 'single',
     position = { 0, 0 },
     size = {
-        width = math.floor(vim.o.columns * 0.3),
-        height = math.floor(vim.o.lines * 0.3),
+        width = math.floor(vim.o.columns * 0.6),
+        height = math.floor(vim.o.lines * 0.25),
     },
 }
 
@@ -35,7 +35,7 @@ local float_preview = {
     anchor = 'NW',
     position = { 0, float_win.size.width + 1 },
     size = {
-        width = math.min(math.floor(vim.o.columns * 0.5), vim.o.columns - float_win.size.width - 2),
+        width = math.min(math.floor(vim.o.columns * 0.6), vim.o.columns - float_win.size.width + 2),
         height = math.floor(vim.o.lines * 0.5),
     },
     border = 'rounded',

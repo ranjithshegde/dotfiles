@@ -12,7 +12,7 @@ local boilerplate = {
         of = {
             gitignore = {
                 '.cache/\n',
-                '.clang-format\n',
+                '.clang_format\n',
                 'tags\n',
                 'compile_commands.json\n',
                 '*.qbs\n',
@@ -40,7 +40,7 @@ local boilerplate = {
                 'build/*\n',
                 'compile_commands.json\n',
                 '.clangd/*\n',
-                '.clang-format\n',
+                '.clang_format\n',
             },
         },
         cmake = {
@@ -80,7 +80,7 @@ local boilerplate = {
                 'build/*\n',
                 'compile_commands.json\n',
                 '.clangd/*\n',
-                '.clang-format\n',
+                '.clang_format\n',
             },
         },
     },

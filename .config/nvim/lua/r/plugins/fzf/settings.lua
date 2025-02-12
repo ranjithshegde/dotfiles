@@ -30,7 +30,7 @@ fzy.layouts = {
         column = 1,
         height = 0.75,
         width = 0.5,
-        preview = { horizontal = 'up:30%' },
+        preview = { horizontal = 'up:30%', layout = 'horizontal' },
     },
     cursor = {
         relative = 'cursor',
@@ -124,7 +124,7 @@ function fzy.setup()
         lines = { winopts = fzy.layouts.stack },
         blines = { winopts = fzy.layouts.full },
         lsp = {
-            jump_to_single_result = true,
+            jump1 = true,
             code_actions = {
                 winopts = fzy.layouts.cursor,
                 previewer = vim.fn.executable 'delta' == 1 and 'codeaction_native' or nil,
@@ -140,7 +140,7 @@ function fzy.init()
     local function on_select(...)
         require('fzf-lua').register_ui_select(function(_, items)
             local min_h = 0.15
-            local h = (#items + 4) / vim.o.lines
+            local h = (#items + 2) / vim.o.lines
             if h < min_h then
                 h = min_h
             end

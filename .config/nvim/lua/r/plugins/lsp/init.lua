@@ -17,6 +17,25 @@ return {
                 { path = '/usr/lib/pd/extra/pdlua', words = { 'pd', 'pdx' } },
             },
         },
+        init = function()
+            local id = { OrgMode = vim.api.nvim_create_augroup('LazyDev', { clear = true }) }
+
+            vim.api.nvim_create_autocmd('FileType', {
+                group = id.LazyDev,
+                pattern = 'lua',
+                once = true,
+                callback = function()
+                    require('blink.cmp').add_provider('lazydev', {
+                        name = 'Lazydev',
+                        module = 'lazydev.integrations.blink',
+                        score_offset = 100,
+                    })
+                end,
+                desc = 'Add lazydev completion source',
+            })
+
+            require('r.utils').register_au_id(id)
+        end,
     },
     {
         'ranjithshegde/ccls.nvim',

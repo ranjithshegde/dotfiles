@@ -27,7 +27,6 @@ local function cmp_setup()
             list = {
                 selection = {
                     preselect = false,
-                    auto_insert = true,
                 },
             },
         },
@@ -35,7 +34,7 @@ local function cmp_setup()
             preset = 'default',
             ['<C-l>'] = { 'snippet_forward', 'fallback' },
             ['<C-h>'] = { 'snippet_backward', 'fallback' },
-            ['<Return>'] = { 'select_and_accept', 'fallback' },
+            ['<CR>'] = { 'accept', 'fallback' },
             ['<Tab>'] = { 'select_and_accept', 'fallback' },
             ['<S-Tab>'] = { 'fallback' },
             cmdline = {
@@ -57,19 +56,11 @@ local function cmp_setup()
         },
         snippets = { preset = 'luasnip' },
         sources = {
-            default = { 'lazydev', 'lsp', 'path', 'snippets', 'buffer' },
+            default = { 'lsp', 'snippets', 'path', 'buffer' },
             per_filetype = {
                 org = { 'orgmode', 'buffer', 'snippets' },
-            },
-            providers = {
-                lazydev = {
-                    name = 'LazyDev',
-                    module = 'lazydev.integrations.blink',
-                    score_offset = 100,
-                    enabled = function()
-                        return vim.bo.filetype == 'lua' or vim.bo.filetype == 'pd_lua'
-                    end,
-                },
+                lua = { 'lazydev', 'lsp', 'path', 'snippets', 'buffer' },
+                pd_lua = { 'lazydev', 'lsp', 'path', 'snippets', 'buffer' },
             },
         },
         appearance = { nerd_font_variant = 'mono' },

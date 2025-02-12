@@ -137,7 +137,7 @@ function handlers.attach(client, bufnr)
 
     vim.api.nvim_buf_create_user_command(bufnr, 'LspCapabilities', function(opt)
         local cap_client = vim.lsp.get_clients { name = opt.args, bufnr = bufnr }
-        if cap_client then
+        if cap_client and cap_client[1] then
             vim.print(cap_client[1].server_capabilities)
         else
             vim.print(
