@@ -9,8 +9,7 @@ local function sign_config()
 end
 
 local function signs_init()
-    local id = {}
-    id.GitSigns = vim.api.nvim_create_augroup('GitSigns', { clear = true })
+    local id = { GitSigns = vim.api.nvim_create_augroup('GitSigns', { clear = true }) }
     vim.api.nvim_create_autocmd({ 'BufReadpost', 'VimEnter', 'DirChanged' }, {
         group = id.GitSigns,
         callback = function(args)

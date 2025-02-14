@@ -12,8 +12,7 @@ local surround = {
 }
 
 function surround.init()
-    local id = {}
-    id.TexRules = vim.api.nvim_create_augroup('TexRules', { clear = true })
+    local id = { TexRules = vim.api.nvim_create_augroup('TexRules', { clear = true }) }
     vim.api.nvim_create_autocmd('FileType', {
         pattern = 'tex',
         group = id.TexRules,

@@ -8,9 +8,10 @@ vim.keymap.set('n', '<leader>p', require('lazy').sync, { desc = 'Update plugins'
 return {
     -- Colorscheme
     {
+        { 'folke/tokyonight.nvim', opts = { transparent = true }, enabled = true },
         { 'rose-pine/neovim', name = 'rose-pine', opts = { styles = { transparency = true } }, enabled = false },
         { 'eldritch-theme/eldritch.nvim', opts = { transparent = true }, enabled = false },
-        { 'rebelot/kanagawa.nvim', opts = { transparent = true } },
+        { 'rebelot/kanagawa.nvim', opts = { transparent = true }, enabled = false },
     },
 
     -- Comment with TreeSitter

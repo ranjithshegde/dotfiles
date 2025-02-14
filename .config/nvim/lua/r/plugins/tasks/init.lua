@@ -5,8 +5,7 @@ local overseer = {
 local map = vim.keymap.set
 
 function overseer.init()
-    local id = {}
-    id.Overseer = vim.api.nvim_create_augroup('Overseer', { clear = true })
+    local id = { Overseer = vim.api.nvim_create_augroup('Overseer', { clear = true }) }
 
     require('r.plugins.tasks.register').cpp(id.Overseer)
     require('r.plugins.tasks.register').repl(id.Overseer)

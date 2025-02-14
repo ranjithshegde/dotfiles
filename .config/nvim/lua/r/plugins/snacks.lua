@@ -20,8 +20,7 @@ local sf = function(module, cmd, args)
 end
 
 local function init()
-    local id = {}
-    id.OilRename = vim.api.nvim_create_augroup('OilRename', { clear = true })
+    local id = { OilRename = vim.api.nvim_create_augroup('OilRename', { clear = true }) }
     vim.api.nvim_create_autocmd('User', {
         group = id.OilRename,
         pattern = 'OilActionsPost',

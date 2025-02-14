@@ -141,7 +141,13 @@ aucmd('TermEnter', {
             vim.keymap.set('t', '<S-Esc>', '<C-\\><C-n>', { buffer = true, desc = 'Escape Insert' })
 
             vim.keymap.set('t', 'q', function()
-                vim.api.nvim_win_close(vim.api.nvim_get_current_win(), false)
+                local job_id = vim.b.yazi_id
+                if job_id then
+                    local win = vim.api.nvim_get_current_win()
+                    vim.fn.jobstop(job_id)
+                    local winid = vim.fn.win_getid(win)
+                    vim.api.nvim_buf_delete(vim.fn.winbufnr(winid), { force = true })
+                end
             end, { buffer = true, desc = 'Close Yazi' })
         elseif vim.bo.filetype ~= 'fzf' then
             vim.keymap.set('t', '<Esc>', '<C-\\><C-n>', { buffer = true, desc = 'Escape Insert' })

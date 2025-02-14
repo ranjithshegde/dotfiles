@@ -4,8 +4,7 @@ local supercollider = {
 }
 
 function supercollider.init()
-    local id = {}
-    id.scnvim = vim.api.nvim_create_augroup('scnvim', { clear = true })
+    local id = { scnvim = vim.api.nvim_create_augroup('scnvim', { clear = true }) }
     vim.api.nvim_create_autocmd('FileType', {
         group = id.scnvim,
         pattern = 'supercollider',

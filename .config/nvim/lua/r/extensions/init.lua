@@ -90,6 +90,8 @@ end
 function extensions.yazi(path, edit_cmd)
     local cpath = '/tmp/chosenfile'
     local currentPath = vim.fn.expand(path)
+    local job_id = nil
+
     local rc = { name = 'Yazi', edit_cmd = edit_cmd, term = true }
     function rc.on_exit(_, code, _)
         if not code then
@@ -107,11 +109,12 @@ function extensions.yazi(path, edit_cmd)
 
     vim.cmd.enew()
     if vim.fn.isdirectory(currentPath) then
-        vim.fn.jobstart(string.format('yazi --chooser-file=%s "%s"', cpath, currentPath), rc)
+        job_id = vim.fn.jobstart(string.format('yazi --chooser-file=%s "%s"', cpath, currentPath), rc)
     else
         local dir = vim.fs.dirname(currentPath)
-        vim.fn.jobstart(string.format('yazi --chooser-file=%s "%s"', cpath, dir), rc)
+        job_id = vim.fn.jobstart(string.format('yazi --chooser-file=%s "%s"', cpath, dir), rc)
     end
+    vim.b.yazi_id = job_id
     vim.cmd.startinsert()
 end
 

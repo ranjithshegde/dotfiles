@@ -12,23 +12,9 @@ function servers.clangd()
         '--all-scopes-completion',
         '--completion-style=detailed',
         '--fallback-style=webkit',
-        '--cross-file-rename',
         '--offset-encoding=utf-32',
+        '--header-insertion=never',
     }
-
-    local header_cmp = {
-        '--header-insertion=iwyu',
-        '--header-insertion-decorators',
-        '--suggest-missing-includes',
-    }
-
-    if vim.b.cpp_type == 'Unreal' then
-        table.insert(cmd, '--header-insertion=never')
-    else
-        for _, v in ipairs(header_cmp) do
-            table.insert(cmd, v)
-        end
-    end
 
     return {
         capabilities = require('r.plugins.lsp.handlers').capabilities(),

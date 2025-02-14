@@ -33,8 +33,7 @@ return {
     },
 
     init = function()
-        local id = {}
-        id.ProjectDrawer = vim.api.nvim_create_augroup('ProjectDrawer', { clear = true })
+        local id = { ProjectDrawer = vim.api.nvim_create_augroup('ProjectDrawer', { clear = true }) }
 
         -- ************************ Handle netrw -------------------------------
         vim.api.nvim_create_autocmd({ 'BufEnter', 'BufReadPre' }, {

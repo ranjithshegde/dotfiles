@@ -3,7 +3,7 @@ local completion = {}
 --                             Completion                             --
 ------------------------------------------------------------------------
 
-local function cmp_setup()
+function completion.blink()
     require('blink.cmp').setup {
         enabled = function()
             return not vim.tbl_contains({ 'org-roam-select' }, vim.bo.filetype)
@@ -67,11 +67,6 @@ local function cmp_setup()
     }
 end
 
-function completion.init()
-    cmp_setup()
-    require('luasnip.loaders.from_vscode').lazy_load()
-end
-
 function completion.pairs()
     local npairs = require 'nvim-autopairs'
     npairs.setup {
@@ -109,9 +104,19 @@ function completion.luasnip()
         },
     }
 
-    if vim.b.cpp_type and vim.b.cpp_type == 'Unreal' then
-        luasnip.filetype_extend('cpp', { 'unreal' })
-    end
+    require('luasnip.loaders.from_vscode').lazy_load()
+    local id = { UnrealSnip = vim.api.nvim_create_augroup('UnrealSnip', { clear = true }) }
+    vim.api.nvim_create_autocmd('FileType', {
+        group = id.UnrealSnip,
+        pattern = { 'c', 'cpp' },
+        callback = function()
+            if vim.b.cpp_type and vim.b.cpp_type == 'Unreal' then
+                luasnip.filetype_extend('cpp', { 'unreal' })
+            end
+        end,
+        desc = 'Load UE5 snippets in UECpp files',
+    })
+    require('r.utils').register_au_id(id)
 
     vim.keymap.set({ 'i', 's' }, '<C-s>', function()
         if luasnip.choice_active() then

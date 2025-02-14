@@ -18,7 +18,7 @@ return {
             },
         },
         init = function()
-            local id = { OrgMode = vim.api.nvim_create_augroup('LazyDev', { clear = true }) }
+            local id = { LazyDev = vim.api.nvim_create_augroup('LazyDev', { clear = true }) }
 
             vim.api.nvim_create_autocmd('FileType', {
                 group = id.LazyDev,

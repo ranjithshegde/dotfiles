@@ -58,12 +58,14 @@ fi
 gpg-connect-agent updatestartuptty /bye >/dev/null
 
 # Set platform-specific environment variables
+export SUDO_ASKPASS="/usr/local/bin/dpass"
 if [[ ${XDG_SESSION_TYPE} == "wayland" ]]; then
     export QT_QPA_PLATFORM='wayland'
+    export ENABLE_HDR_WSI=1
+    export DXVK_HDR=1
     export TERMINAL=/usr/bin/ghostty
     export TERM=ghostty
 else
-    export SUDO_ASKPASS="/usr/local/bin/dpass"
     export TERMINAL="/usr/local/bin/st"
     export TERM=st
 fi

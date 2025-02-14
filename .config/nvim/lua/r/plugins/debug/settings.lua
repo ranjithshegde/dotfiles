@@ -19,8 +19,7 @@ end
 local Debugger = {}
 
 function Debugger.init()
-    local id = {}
-    id.dap = vim.api.nvim_create_augroup('dap', { clear = true })
+    local id = { dap = vim.api.nvim_create_augroup('dap', { clear = true }) }
     vim.api.nvim_create_autocmd('FileType', {
         group = id.dap,
         pattern = 'dap-repl',

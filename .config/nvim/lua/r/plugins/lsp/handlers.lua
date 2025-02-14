@@ -20,8 +20,7 @@ end
 
 ---**************************** Initualize LSP
 function handlers.init()
-    local id = {}
-    id.LspSettings = augroup('LspSettings', opts)
+    local id = { LspSettings = augroup('LspSettings', opts) }
 
     vim.keymap.del('n', 'grn')
     vim.keymap.del('n', 'gri')

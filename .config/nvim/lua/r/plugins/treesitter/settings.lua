@@ -5,8 +5,7 @@ local aucmd = vim.api.nvim_create_autocmd
 ------------------------------------------------------------------------
 
 function ts.autocmds()
-    local id = {}
-    id.Treesitter = vim.api.nvim_create_augroup('Treesitter', { clear = true })
+    local id = { Treesitter = vim.api.nvim_create_augroup('Treesitter', { clear = true }) }
     aucmd('BufReadPost', {
         group = id.Treesitter,
         callback = function()

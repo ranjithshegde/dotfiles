@@ -331,9 +331,9 @@ function rename.attach(config)
 
     state.preview_strategy = config.multi_files and multi_file_strategy or single_file_strategy
 
-    local id = vim.api.nvim_create_augroup('inc_rename', { clear = true })
+    local id = { IncRename = vim.api.nvim_create_augroup('IncRename', { clear = true }) }
     vim.api.nvim_create_autocmd({ 'CmdLineLeave' }, {
-        group = id,
+        group = id.IncRename,
         callback = function()
             if state.preview_ns then
                 state.preview_strategy.restore_buffer_state(true)
@@ -341,6 +341,7 @@ function rename.attach(config)
         end,
         desc = 'check if the command was cancelled to refetch the references.',
     })
+    require('r.utils').register_au_id(id)
 
     vim.api.nvim_create_user_command(
         'IncRename',
