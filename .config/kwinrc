@@ -27,6 +27,7 @@ directionalKeyFocus=false
 enableFloatingLayout=true
 enableQuarterLayout=true
 enableSpiralLayout=false
+enableStackedLayout=true
 ignoreClass=krunner,yakuake,spectacle,kded5,xwaylandvideobridge,plasmashell,ksplashqml,org.kde.plasmashell,org.kde.polkit-kde-authentication-agent-1,org.kde.krule
 maximizeSoleTile=true
 tileLayoutGap=4

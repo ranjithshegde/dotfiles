@@ -41,16 +41,6 @@ nopac() {
     find /etc /usr /opt | LC_ALL=C.UTF-8 pacman -Qqo - 2>&1 >&- >/dev/null | cut -d ' ' -f 5- >excess.txt
 }
 
-# Ranger change directory on exit-----------------------------------------------------------
-ranger_cd() {
-    temp_file="$(mktemp -t "ranger_cd.XXXXXXXXXX")"
-    ranger --choosedir="$temp_file" -- "${@:-$PWD}"
-    if chosen_dir="$(cat -- "$temp_file")" && [ -n "$chosen_dir" ] && [ "$chosen_dir" != "$PWD" ]; then
-        cd -- "$chosen_dir" || exit
-    fi
-    rm -f -- "$temp_file"
-}
-
 #Check externel screen connection status
 screen_connected() {
 

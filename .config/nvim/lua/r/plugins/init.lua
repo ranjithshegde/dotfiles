@@ -41,9 +41,6 @@ return {
         },
     },
 
-    -- Python REPL
-    { 'milanglacier/yarepl.nvim', config = true, ft = 'python' },
-
     -- Modular bufferline
     {
         'Bekaboo/dropbar.nvim',

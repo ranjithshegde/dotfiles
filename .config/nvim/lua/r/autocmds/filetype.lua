@@ -77,9 +77,6 @@ return function(id)
     ftcmd('Eval_file', 'python', function(args)
         vim.b[args.buf].repl = 'ipython'
         vim.b[args.buf].make = 'python'
-
-        vim.keymap.set('n', '<F7>', '<cmd>REPLSendLine<CR>', { buffer = args.buf, desc = 'Send current line to REPL' })
-        vim.keymap.set('v', '<F7>', '<cmd>REPLSendVisual<CR>', { buffer = args.buf, desc = 'Send selection to REPL' })
     end, 'Python project setup')
 
     -- ************** Latex ---------------------------------------
