@@ -57,7 +57,6 @@ tables.projectTypes = {
     'js',
     'python',
     'supercollider',
-    'website',
 }
 
 ---Filetypes that are read-only
@@ -87,14 +86,17 @@ tables.ignoreFiles = {
     'null-ls-info',
     'NeogitStatus',
     'OverseerList',
+    'snacks_notif',
     'NeogitLogView',
     'DressingInput',
+    'blink-cmp-menu',
     'NeogitDiffView',
     'TelescopePrompt',
-    'TelescopeResults',
     'NeogitCommitView',
     'snacks_dashboard',
+    'TelescopeResults',
     'NeogitCommitSelectView',
+    'blink-cmp-documentation',
 }
 
 tables.ignore_binaries_regex = {

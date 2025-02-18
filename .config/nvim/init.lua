@@ -15,25 +15,10 @@ if vim.env.MACHINE_TYPE == 'laptop' then
     _G.__MACHINE = 'laptop'
 end
 
-if vim.fn.has 'win32' == 1 then
-    vim.g.is_win32 = true
-else
-    vim.g.is_win32 = false
-end
-
-if vim.fn.has 'mac' == 1 then
-    vim.g.is_mac = true
-else
-    vim.g.is_mac = false
-end
-
+vim.g.is_win32 = vim.fn.has 'win32' == 1
+vim.g.is_mac = vim.fn.has 'mac' == 1
+vim.g.ue_path = vim.g.is_mac and '/Users/Shared/Epic Games/UE_5.5/' or '/opt/unreal-engine/'
 vim.g.local_plugins = vim.fs.normalize '~/Repositories/Maintained'
-
-if vim.g.is_mac then
-    vim.g.ue_path = '/Users/Shared/Epic Games/UE_5.5/'
-else
-    vim.g.ue_path = '/opt/unreal-engine/'
-end
 
 vim.opt.runtimepath:prepend(lazypath)
 
@@ -42,7 +27,7 @@ require('lazy').setup('r.plugins', {
     dev = { path = vim.g.local_plugins, fallback = true },
     performance = { rtp = { disabled_plugins = require('r.utils.tables').rtp } },
     defaults = { lazy = true },
-    install = { colorscheme = { 'rose-pine-moon', 'habamax' } },
+    install = { colorscheme = { 'tokyonight-moon', 'habamax' } },
 })
 
 require 'r.options'()

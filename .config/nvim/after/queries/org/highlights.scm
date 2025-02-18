@@ -19,10 +19,6 @@
  (#set! conceal "✿")
  )
 ;; extends
-(expr
-  ["*"] @conceal
-  (#set! conceal ""))
-;; extends
 (list
   (listitem
     (bullet)

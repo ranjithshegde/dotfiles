@@ -6,11 +6,10 @@ local opt = vim.opt
 ------------------------------------------------------------------------
 
 return function()
-    -- vim.cmd.colorscheme 'rose-pine-moon'
+    vim.cmd.colorscheme 'rose-pine-moon'
     -- vim.cmd.colorscheme 'eldritch'
     -- vim.cmd.colorscheme 'kanagawa'
-    -- vim.cmd.colorscheme 'neon'
-    vim.cmd.colorscheme 'tokyonight-moon'
+    -- vim.cmd.colorscheme 'tokyonight-moon'
     local tab = 4
     o.exrc = true
     o.title = true
@@ -42,7 +41,6 @@ return function()
     o.inccommand = 'split'
     o.spelloptions = 'camel'
     o.grepformat = '%f:%l:%c:%m'
-    o.foldexpr = 'v:lua.vim.treesitter.foldexpr()'
     o.grepprg = 'rg --vimgrep --smart-case --hidden'
     o.spellfile = vim.fn.stdpath 'config' .. '/spell/en.utf-8.add'
 

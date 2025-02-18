@@ -6,6 +6,7 @@ return {
         event = 'InsertEnter',
         version = 'v0.*',
         config = setup('r.plugins.completion.settings', 'blink'),
+        opts_extend = { 'sources.per_filetype' },
         dependencies = {
             {
                 'windwp/nvim-autopairs',

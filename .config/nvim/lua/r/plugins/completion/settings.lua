@@ -16,7 +16,7 @@ function completion.blink()
             documentation = {
                 auto_show = true,
                 auto_show_delay_ms = 250,
-                window = { border = 'single' },
+                window = { border = 'rounded' },
             },
             menu = {
                 draw = { treesitter = { 'lsp' } },
@@ -37,8 +37,10 @@ function completion.blink()
             ['<CR>'] = { 'accept', 'fallback' },
             ['<Tab>'] = { 'select_and_accept', 'fallback' },
             ['<S-Tab>'] = { 'fallback' },
-            cmdline = {
-                ['<CR>'] = { 'accept', 'fallback' },
+        },
+        cmdline = {
+            keymap = {
+                ['<CR>'] = { 'accept_and_enter', 'fallback' },
                 ['<Tab>'] = { 'select_next', 'fallback' },
                 ['<S-Tab>'] = { 'select_prev', 'fallback' },
                 ['<C-e>'] = { 'cancel', 'fallback' },
@@ -59,8 +61,6 @@ function completion.blink()
             default = { 'lsp', 'snippets', 'path', 'buffer' },
             per_filetype = {
                 org = { 'orgmode', 'buffer', 'snippets' },
-                lua = { 'lazydev', 'lsp', 'path', 'snippets', 'buffer' },
-                pd_lua = { 'lazydev', 'lsp', 'path', 'snippets', 'buffer' },
             },
         },
         appearance = { nerd_font_variant = 'mono' },

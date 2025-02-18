@@ -24,10 +24,13 @@ krohnkiteEnabled=true
 [Script-krohnkite]
 directionalKeyDwm=true
 directionalKeyFocus=false
+enableColumnsLayout=false
 enableFloatingLayout=true
 enableQuarterLayout=true
 enableSpiralLayout=false
+enableSpreadLayout=false
 enableStackedLayout=true
+enableStairLayout=false
 ignoreClass=krunner,yakuake,spectacle,kded5,xwaylandvideobridge,plasmashell,ksplashqml,org.kde.plasmashell,org.kde.polkit-kde-authentication-agent-1,org.kde.krule
 maximizeSoleTile=true
 tileLayoutGap=4

@@ -10,16 +10,8 @@ return function()
         nb.diagnostics.checkmake,
         nb.diagnostics.stylelint,
 
-        nb.formatting.black,
-        nb.formatting.isort,
         nb.formatting.stylua,
         nb.formatting.prettier,
-        nb.formatting.shfmt.with {
-            filetypes = { 'sh', 'zsh' },
-        },
-        nb.formatting.clang_format.with {
-            filetypes = { 'glsl' },
-        },
 
         nb.code_actions.refactoring.with {
             filetypes = require('r.utils.tables').lspfiles,

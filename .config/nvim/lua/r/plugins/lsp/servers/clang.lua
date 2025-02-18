@@ -28,7 +28,6 @@ end
 
 function servers.clangd_ext()
     return require('clangd_extensions').setup {
-        autoSetHints = false,
         memory_usage = {
             border = 'rounded',
         },

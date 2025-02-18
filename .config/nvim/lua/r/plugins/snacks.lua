@@ -85,6 +85,7 @@ local opts = {
     dashboard = dashboard,
     dim = default,
     gitbrowse = default,
+    image = default,
     indent = indent,
     notifier = default,
     scope = { treesitter = { blocks = { enabled = true } } },

@@ -10,6 +10,7 @@ function supercollider.init()
         pattern = 'supercollider',
         callback = function()
             vim.wo.wrap = true
+            vim.wo.foldexpr = 'v:lua.vim.treesitter.foldexpr()'
             if not require('scnvim').is_running() then
                 require('scnvim').start()
             end

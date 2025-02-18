@@ -7,7 +7,12 @@ return function(id)
             group = au_id,
             pattern = type,
             desc = desc,
-            callback = func,
+            callback = function(args)
+                if not vim.b[args.buf][args.id] then
+                    vim.b[args.buf][args.id] = true
+                    func(args)
+                end
+            end,
         })
     end
 
@@ -85,7 +90,7 @@ return function(id)
 
         vim.bo[args.buf].makeprg = 'latexmk'
         vim.b[args.buf].gps = 75
-        vim.bop[args.buf].textwidth = 148
+        vim.bo[args.buf].textwidth = 148
         require('r.extensions').WordProcessor()
     end, 'Latex project setup')
 

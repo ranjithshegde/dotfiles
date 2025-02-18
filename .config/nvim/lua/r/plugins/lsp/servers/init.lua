@@ -11,13 +11,14 @@ return function()
         'cssls',
         'taplo',
         'ts_ls',
-        'glslls',
+        'bashls',
         'jsonls',
         'yamlls',
         'gdscript',
         'marksman',
         'neocmake',
         'basedpyright',
+        'glsl_analyzer',
         'rust_analyzer',
     }
 
@@ -27,10 +28,8 @@ return function()
         configs[server] = { capabilities = handlers.capabilities() }
     end
 
-    configs.bashls = {
-        capabilities = handlers.capabilities(),
-        filetypes = { 'sh', 'zsh' },
-    }
+    configs.bashls.filetypes = { 'sh', 'zsh', 'bash' }
+    configs.glslls = {}
 
     configs.lua_ls = {
         capabilities = handlers.capabilities(),
@@ -53,8 +52,6 @@ return function()
         configs.clangd = require('r.plugins.lsp.servers.clang').clangd()
         require('r.plugins.lsp.servers.clang').clangd_ext()
     end
-
-    -- require('lspconfig.ui.windows').default_options.border = 'single'
 
     for ls, cfg in pairs(configs) do
         require('lspconfig')[ls].setup(cfg)

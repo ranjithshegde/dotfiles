@@ -38,7 +38,7 @@ function noice.config()
         commands = { history = { view = 'popup' } },
         lsp = {
             hover = {
-                opts = { border = { style = 'single' } },
+                opts = { border = { style = 'rounded' } },
             },
             signature = {
                 opts = { border = { style = 'rounded' } },

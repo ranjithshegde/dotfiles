@@ -1,5 +1,7 @@
 local setup = require('r.utils').plugin_setup
 
+local lua_src = { 'lazydev', 'lsp', 'path', 'snippets', 'buffer' }
+
 return {
     { 'p00f/clangd_extensions.nvim' },
     {
@@ -9,7 +11,13 @@ return {
     },
     {
         'folke/lazydev.nvim',
-        dependencies = 'Bilal2453/luvit-meta',
+        dependencies = {
+            'Bilal2453/luvit-meta',
+            {
+                'saghen/blink.cmp',
+                opts = { sources = { per_filetype = { lua = lua_src, pd_lua = lua_src } } },
+            },
+        },
         ft = 'lua',
         opts = {
             library = {
@@ -17,25 +25,6 @@ return {
                 { path = '/usr/lib/pd/extra/pdlua', words = { 'pd', 'pdx' } },
             },
         },
-        init = function()
-            local id = { LazyDev = vim.api.nvim_create_augroup('LazyDev', { clear = true }) }
-
-            vim.api.nvim_create_autocmd('FileType', {
-                group = id.LazyDev,
-                pattern = 'lua',
-                once = true,
-                callback = function()
-                    require('blink.cmp').add_provider('lazydev', {
-                        name = 'Lazydev',
-                        module = 'lazydev.integrations.blink',
-                        score_offset = 100,
-                    })
-                end,
-                desc = 'Add lazydev completion source',
-            })
-
-            require('r.utils').register_au_id(id)
-        end,
     },
     {
         'ranjithshegde/ccls.nvim',
@@ -50,7 +39,7 @@ return {
             {
                 {
                     'nvimtools/none-ls.nvim',
-                    config = setup 'r.plugins.lsp.servers.linters_formatters',
+                    config = setup 'r.plugins.lsp.servers.null_ls',
                 },
             },
         },

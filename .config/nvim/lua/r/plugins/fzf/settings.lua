@@ -139,11 +139,10 @@ function fzy.init()
 
     local function on_select(...)
         require('fzf-lua').register_ui_select(function(_, items)
-            local min_h = 0.15
+            local min_h = 0.25
+            local max_h = 0.65
             local h = (#items + 2) / vim.o.lines
-            if h < min_h then
-                h = min_h
-            end
+            h = math.max(min_h, math.min(h, max_h))
             return { winopts = { height = h, width = 0.60, row = 0.40 } }
         end)
         return vim.ui.select(...)

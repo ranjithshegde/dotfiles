@@ -83,8 +83,12 @@ function handlers.attach(client, bufnr)
         require('r.plugins.lsp.mappings.servers').clangd(bufnr)
     end
 
-    if client:supports_method 'textDocument/foldingRange' then
-        vim.wo.foldexpr = 'v:lua.vim.lsp.foldexpr()'
+    if client.name ~= 'null-ls' then
+        if client:supports_method 'textDocument/foldingRange' then
+            vim.wo.foldexpr = 'v:lua.vim.lsp.foldexpr()'
+        else
+            vim.wo.foldexpr = 'v:lua.vim.treesitter.foldexpr()'
+        end
     end
 
     require('r.extensions.diagnostics').attach(client, bufnr, { underline = false, update_in_insert = false })
