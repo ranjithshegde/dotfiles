@@ -17,64 +17,6 @@ local function set_error(msg, level)
     state.cached_lines = nil
 end
 
-local single_file_strategy = {
-    cache_lines = function(result, bufnr)
-        local cached_lines = {}
-        local uri = vim.uri_from_bufnr(bufnr)
-        local lsp_ranges = vim.tbl_map(
-            function(item)
-                return item.range
-            end,
-            vim.tbl_filter(function(item)
-                return item.uri == uri
-            end, result)
-        )
-
-        for _, range in ipairs(lsp_ranges) do
-            -- E.g. sumneko_lua sends ranges across multiple lines when a table value is a function, skip this range.
-            if range.start.line == range['end'].line then
-                local line_nr = range.start.line
-                local line = vim.api.nvim_buf_get_lines(bufnr, line_nr, line_nr + 1, false)[1]
-                local start_col, end_col = range.start.character, range['end'].character
-                local line_item = { text = line, start_col = start_col, end_col = end_col }
-                -- Same line was already seen
-                if cached_lines[line_nr] then
-                    table.insert(cached_lines[line_nr], line_item)
-                else
-                    cached_lines[line_nr] = { line_item }
-                end
-            end
-        end
-        return cached_lines
-    end,
-    filter_duplicates = function(cached_lines, filter_duplicates_fn)
-        for line_nr, line_info in pairs(cached_lines) do
-            cached_lines = filter_duplicates_fn(cached_lines, line_nr, line_info)
-        end
-        return cached_lines
-    end,
-    apply_highlights = function(cached_lines, apply_highlights_fn)
-        for line_nr, line_info in pairs(cached_lines) do
-            apply_highlights_fn(0, line_nr, line_info)
-        end
-    end,
-    restore_buffer_state = function(should_fetch_references, opts)
-        opts = opts or {}
-        -- Only clear highlights when bufnr is explicitly passed, if not passed
-        -- buffer will be cleared by command preview automatically
-        if opts.bufnr and state.cached_lines then
-            vim.api.nvim_buf_clear_namespace(opts.bufnr, opts.preview_ns, 0, -1)
-            for line_nr, line_info in pairs(state.cached_lines) do
-                for _, inter_line_info in ipairs(line_info) do
-                    vim.api.nvim_buf_set_lines(opts.bufnr, line_nr, line_nr + 1, true, { inter_line_info.text })
-                end
-            end
-        end
-        state.cached_lines = nil
-        state.should_fetch_references = should_fetch_references
-    end,
-}
-
 local multi_file_strategy = {
     cache_lines = function(result, _)
         local cached_lines = {}
@@ -142,9 +84,10 @@ local multi_file_strategy = {
 
 -- Get positions of LSP reference symbols
 local function fetch_lsp_references(bufnr, lsp_params)
-    local clients = vim.lsp.get_active_clients {
+    local clients = vim.lsp.get_clients {
         bufnr = bufnr,
     }
+
     clients = vim.tbl_filter(function(client)
         return client.supports_method 'textDocument/rename'
     end, clients)
@@ -239,22 +182,20 @@ local function incremental_rename_preview(opts, preview_ns, preview_buf)
         end
 
         for _, hl_pos in ipairs(highlight_positions) do
-            vim.api.nvim_buf_add_highlight(
+            vim.hl.range(
                 bufnr or opts.bufnr,
                 preview_ns,
                 'Substitute',
-                line_nr,
-                hl_pos.start_col,
-                hl_pos.end_col
+                { line_nr, hl_pos.start_col },
+                { line_nr, hl_pos.end_col }
             )
             if preview_buf then
-                vim.api.nvim_buf_add_highlight(
+                vim.hl.range(
                     preview_buf,
                     preview_ns,
                     'Substitute',
-                    line_nr,
-                    hl_pos.start_col,
-                    hl_pos.end_col
+                    { line_nr, hl_pos.start_col },
+                    { line_nr, hl_pos.end_col }
                 )
             end
         end
@@ -268,8 +209,10 @@ end
 -- Sends a LSP rename request and optionally displays a message to the user showing
 -- how many instances were renamed in how many files
 local function perform_lsp_rename(new_name)
-    local params = vim.lsp.util.make_position_params()
-    params.newName = new_name
+    local params = vim.lsp.util.make_position_params(vim.api.nvim_get_current_win(), {
+        newName = new_name,
+    })
+    -- params.newName = new_name
 
     vim.lsp.buf_request(0, 'textDocument/rename', params, function(err, result, ctx, _)
         if err and err.message then
@@ -308,13 +251,8 @@ end
 -- Called when the command is executed (user pressed enter)
 local function incremental_rename_execute(new_name)
     -- Any errors that occur in the preview function are not directly shown to the user but are stored in vim.v.errmsg.
-    -- For more info, see https://github.com/neovim/neovim/issues/18910.
     if vim.v.errmsg ~= '' then
-        vim.notify(
-            '[inc-rename] An error occurred in the preview function. Please report this error here: https://github.com/smjonas/inc-rename.nvim/issues:\n'
-                .. vim.v.errmsg,
-            vim.lsp.log_levels.ERROR
-        )
+        vim.notify('[inc-rename] An error occurred in the preview function.' .. vim.v.errmsg, vim.lsp.log_levels.ERROR)
     elseif state.err then
         vim.notify(state.err.msg, state.err.level)
     else
@@ -322,14 +260,8 @@ local function incremental_rename_execute(new_name)
     end
 end
 
-function rename.attach(config)
-    if not config then
-        config = {
-            multi_files = true,
-        }
-    end
-
-    state.preview_strategy = config.multi_files and multi_file_strategy or single_file_strategy
+function rename.attach()
+    state.preview_strategy = multi_file_strategy
 
     local id = { IncRename = vim.api.nvim_create_augroup('IncRename', { clear = true }) }
     vim.api.nvim_create_autocmd({ 'CmdLineLeave' }, {
@@ -343,15 +275,10 @@ function rename.attach(config)
     })
     require('r.utils').register_au_id(id)
 
-    vim.api.nvim_create_user_command(
-        'IncRename',
-        function(opts)
-            state.preview_strategy.restore_buffer_state(true)
-            incremental_rename_execute(opts.args)
-        end,
-        -- vim.schedule_wrap(incremental_rename_execute),
-        { nargs = 1, addr = 'lines', preview = incremental_rename_preview, desc = 'Incremental Lsp rename' }
-    )
+    vim.api.nvim_create_user_command('IncRename', function(opts)
+        state.preview_strategy.restore_buffer_state(true)
+        incremental_rename_execute(opts.args)
+    end, { nargs = 1, addr = 'lines', preview = incremental_rename_preview, desc = 'Incremental Lsp rename' })
 end
 
 return rename

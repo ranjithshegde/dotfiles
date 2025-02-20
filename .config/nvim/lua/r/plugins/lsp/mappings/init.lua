@@ -6,9 +6,9 @@ local function has_fzf()
     return package.loaded['fzf-lua']
 end
 
-local function trouble(action, mode)
+local function trouble(action, mode, float)
     return function()
-        require('trouble')[action] { mode = mode }
+        require('r.plugins.lsp.trouble').call(action, mode, float)
     end
 end
 ------------------------------------------------------------------------
@@ -22,14 +22,11 @@ return function(client, bufnr)
     map('n', 'K', vim.lsp.buf.hover, { desc = 'Hover Documentation', buffer = bufnr })
     map('n', '<C-k>', vim.lsp.buf.signature_help, { desc = 'Show signature', buffer = bufnr })
 
-    map('n', '-', trouble('toggle', 'quickfix'), { desc = 'Toggle qflist' })
-    map('n', '_', trouble('toggle', 'loclist'), { desc = 'Toggle loclist' })
-
     wk.add(mapper({
         s = {
             name = 'show',
             o = { trouble('open', 'symbols'), 'Symbol Outline' },
-            M = { trouble('open', 'lsp'), 'Lsp Map' },
+            M = { trouble('toggle', 'lsp'), 'Lsp Map' },
             l = {
                 name = 'Codelens',
                 r = { vim.lsp.codelens.refresh, 'Refresh' },
@@ -69,7 +66,7 @@ return function(client, bufnr)
                 r = { vim.lsp.buf.remove_workspace_folder, 'Remove workspace folder' },
             },
             I = { vim.lsp.buf.implementation, 'implementation' },
-            r = { trouble('open', 'lsp_references'), 'Lsp Async reference' },
+            r = { trouble('open', 'lsp_references', true), 'Lsp Async reference' },
             d = { vim.lsp.buf.definition, 'definition' },
             D = {
                 function()
@@ -85,8 +82,8 @@ return function(client, bufnr)
             },
             p = {
                 name = 'preview',
-                d = { trouble('open', 'lsp_definitions'), 'Peek definition' },
-                t = { trouble('open', 'lsp_type_definitions'), 'Peek type definition' },
+                d = { trouble('open', 'lsp_definitions', true), 'Peek definition' },
+                t = { trouble('open', 'lsp_type_definitions', true), 'Peek type definition' },
             },
             O = {
                 function()

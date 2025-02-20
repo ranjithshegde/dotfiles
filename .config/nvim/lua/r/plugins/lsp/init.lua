@@ -6,7 +6,8 @@ return {
     { 'p00f/clangd_extensions.nvim' },
     {
         'folke/trouble.nvim',
-        opts = require 'r.plugins.lsp.trouble',
+        opts = require('r.plugins.lsp.trouble').config,
+        init = setup('r.plugins.lsp.trouble', 'init'),
         cmd = 'Trouble',
     },
     {

@@ -104,21 +104,4 @@ return function(id)
             vim.keymap.set('n', '<S-Tab>', 'zA', { buffer = args.buf, desc = 'Toggle fold All' })
         end
     end, 'Use Tab to cycle folds')
-
-    ftcmd('QuickFix', 'qf', function(args)
-        vim.keymap.set('n', 'L', vim.cmd.cnewer, { buffer = args.buf, desc = 'Jump to Next list' })
-        vim.keymap.set('n', 'H', vim.cmd.colder, { buffer = args.buf, desc = 'Jump to previous list' })
-        vim.keymap.set(
-            'n',
-            'dd',
-            require('r.extensions.qf').delete,
-            { buffer = args.buf, desc = 'Delete quickfix item' }
-        )
-        vim.keymap.set(
-            { 'v' },
-            'd',
-            require('r.extensions.qf').delete,
-            { buffer = args.buf, desc = 'Delete quickfix item' }
-        )
-    end, 'Use Tab to cycle folds')
 end

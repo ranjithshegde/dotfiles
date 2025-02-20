@@ -1,66 +1,95 @@
+local trouble = {}
+
 local side_width = 40
 
-local sidebar_preview = {
-    type = 'float',
-    relative = 'editor',
-    anchor = 'NW',
-    position = {
-        math.floor(0),
-        math.floor(vim.o.columns - side_width - math.floor(vim.o.columns * 0.3)),
-    },
-    size = {
-        width = math.floor(vim.o.columns * 0.3),
-        height = math.floor(vim.o.lines * 0.4),
-    },
-    border = 'rounded',
-    title = 'Preview',
-    title_pos = 'center',
-    zindex = 200,
-}
-
-local float_win = {
-    type = 'float',
-    relative = 'cursor',
-    border = 'rounded',
-    position = { 0, 0 },
-    size = {
-        width = math.floor(vim.o.columns * 0.6),
-        height = math.floor(vim.o.lines * 0.25),
-    },
-}
-
-local float_preview = {
-    type = 'float',
-    relative = 'win',
-    anchor = 'NW',
-    position = { 0, float_win.size.width + 1 },
-    size = {
-        width = math.max(math.floor(vim.o.columns * 0.6), vim.o.columns - float_win.size.width + 2),
-        height = math.floor(vim.o.lines * 0.7),
-    },
-    border = 'rounded',
-    zindex = 200,
-}
-
-local float_conf = {
-    auto_jump = false,
-    win = float_win,
-    focus = true,
-    preview = float_preview,
-}
-
-return {
-    modes = {
-        lsp = {
-            win = {
-                position = 'right',
-                size = { width = side_width },
-            },
-            preview = sidebar_preview,
+local function float_win()
+    return {
+        type = 'float',
+        relative = 'cursor',
+        border = 'rounded',
+        position = { 0, 0 },
+        size = {
+            width = math.floor(vim.o.columns * 0.25),
+            height = math.floor(vim.o.lines * 0.25),
         },
-        symbols = { win = { position = 'left' } },
-        lsp_references = float_conf,
-        lsp_definitions = float_conf,
-        lsp_type_definitions = float_conf,
-    },
-}
+    }
+end
+
+local function float_preview()
+    local floating = float_win()
+    local padding = 1
+
+    local remaining_width =
+        math.floor(vim.api.nvim_win_get_width(0) - (floating.position[2] + floating.size.width + padding))
+
+    return {
+        type = 'float',
+        relative = 'win',
+        anchor = 'NW',
+        position = { 0, floating.size.width + 1 },
+        size = {
+            width = remaining_width,
+            height = math.floor(vim.o.lines * 0.7),
+        },
+        border = 'rounded',
+        zindex = 200,
+    }
+end
+
+function trouble.call(action, mode, float)
+    local opts = { mode = mode }
+    if float then
+        opts.auto_jump = false
+        opts.win = float_win()
+        opts.focus = true
+        opts.preview = float_preview()
+    end
+    require('trouble')[action](opts)
+end
+
+function trouble.init()
+    local id = { Trouble = vim.api.nvim_create_augroup('Trouble', { clear = true }) }
+
+    vim.keymap.set('n', '-', function()
+        trouble.call('toggle', 'qflist')
+    end, { desc = 'Toggle qflist' })
+    vim.keymap.set('n', '_', function()
+        trouble.call('toggle', 'loclist')
+    end, { desc = 'Toggle loclist' })
+
+    vim.api.nvim_create_autocmd('BufRead', {
+        group = id.Trouble,
+        callback = function(args)
+            local type = vim.bo[args.buf].buftype
+            if type == 'quickfix' then
+                vim.schedule(function()
+                    vim.cmd.cclose()
+                    trouble.call('toggle', 'qflist')
+                end)
+            elseif type == 'loclist' then
+                vim.schedule(function()
+                    vim.cmd.lclose()
+                    trouble.call('toggle', 'loclist')
+                end)
+            end
+        end,
+    })
+
+    require('r.utils').register_au_id(id)
+end
+
+function trouble.config()
+    return {
+        modes = {
+            lsp = {
+                win = {
+                    position = 'right',
+                    size = { width = side_width },
+                },
+            },
+            symbols = { win = { position = 'left' } },
+        },
+    }
+end
+
+return trouble

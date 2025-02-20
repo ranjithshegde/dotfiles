@@ -2,11 +2,7 @@ theme = rose-pine-moon
 background-opacity = 0.85
 window-decoration = false
 gtk-titlebar = false
-# font-family = "JetBrainsMono Nerd Font Mono"
-font-family = "FiraCode Nerd Font Mono"
-font-style-italic = "SourceCode Pro Light Italic"
 font-size = 13
-# font-feature = +calt,+liga,+dlig
 font-synthetic-style = true
 confirm-close-surface = false
 

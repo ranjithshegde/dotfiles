@@ -30,14 +30,6 @@ require('r.utils').lazy_on_key('n', '<leader>t', 'Open Terminal', function()
     require('r.mappings.util').terminal()
 end)
 
---Quickfix
-map('n', '-', function()
-    require('r.extensions.qf').toggle_qf 'q'
-end, { desc = 'Toggle quickfix' })
-map('n', '_', function()
-    require('r.extensions.qf').toggle_qf 'l'
-end, { desc = 'Toggle loclist' })
-
 -- Misc
 map({ 'n', 't' }, '<F9>', function()
     vim.cmd.stopinsert()
