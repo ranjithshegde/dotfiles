@@ -121,9 +121,10 @@ function handlers.attach(client, bufnr)
     end
 
     if client:supports_method 'textDocument/rename' then
-        require('r.extensions.lsp_rename').attach()
-
         vim.keymap.set('n', 'crr', function()
+            if not package.loaded['inc-rename'] then
+                require('lazy').load { plugins = { 'inc-rename.nvim' } }
+            end
             return ':IncRename ' .. vim.fn.expand '<cword>'
         end, { expr = true, buffer = bufnr, desc = 'Incremental rename' })
     end

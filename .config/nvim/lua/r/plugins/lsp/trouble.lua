@@ -20,7 +20,7 @@ local function float_preview()
     local padding = 1
 
     local remaining_width =
-        math.floor(vim.api.nvim_win_get_width(0) - (floating.position[2] + floating.size.width + padding))
+        math.floor(vim.api.nvim_win_get_width(0) - (vim.api.nvim_win_get_cursor(0)[2] + floating.size.width + padding))
 
     return {
         type = 'float',

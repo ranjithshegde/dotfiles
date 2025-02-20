@@ -10,6 +10,7 @@ return {
         init = setup('r.plugins.lsp.trouble', 'init'),
         cmd = 'Trouble',
     },
+    { 'smjonas/inc-rename.nvim', config = true },
     {
         'folke/lazydev.nvim',
         dependencies = {

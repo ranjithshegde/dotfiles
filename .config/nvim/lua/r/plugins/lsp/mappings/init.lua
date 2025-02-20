@@ -2,10 +2,6 @@ local wk = require 'which-key'
 local map = vim.keymap.set
 local mapper = require 'r.utils.expand_maps'
 
-local function has_fzf()
-    return package.loaded['fzf-lua']
-end
-
 local function trouble(action, mode, float)
     return function()
         require('r.plugins.lsp.trouble').call(action, mode, float)
@@ -84,16 +80,6 @@ return function(client, bufnr)
                 name = 'preview',
                 d = { trouble('open', 'lsp_definitions', true), 'Peek definition' },
                 t = { trouble('open', 'lsp_type_definitions', true), 'Peek type definition' },
-            },
-            O = {
-                function()
-                    if has_fzf() then
-                        require('fzf-lua').lsp_document_symbols { winopts = { row = 1, col = 0 } }
-                    else
-                        vim.lsp.buf.document_symbol()
-                    end
-                end,
-                'Document symbol',
             },
         },
     }, { buffer = bufnr }))
