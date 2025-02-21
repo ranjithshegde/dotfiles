@@ -50,7 +50,6 @@ return function()
 
     if vim.tbl_contains({ 'c', 'cpp', 'opencl' }, vim.bo.filetype) then
         configs.clangd = require('r.plugins.lsp.servers.clang').clangd()
-        require('r.plugins.lsp.servers.clang').clangd_ext()
     end
 
     for ls, cfg in pairs(configs) do

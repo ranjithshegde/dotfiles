@@ -3,7 +3,6 @@ local setup = require('r.utils').plugin_setup
 local lua_src = { 'lazydev', 'lsp', 'path', 'snippets', 'buffer' }
 
 return {
-    { 'p00f/clangd_extensions.nvim' },
     {
         'folke/trouble.nvim',
         opts = require('r.plugins.lsp.trouble').config,

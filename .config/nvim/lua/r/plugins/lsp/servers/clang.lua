@@ -26,17 +26,6 @@ function servers.clangd()
     }
 end
 
-function servers.clangd_ext()
-    return require('clangd_extensions').setup {
-        memory_usage = {
-            border = 'rounded',
-        },
-        symbol_info = {
-            border = 'rounded',
-        },
-    }
-end
-
 function servers.ccls()
     local filetypes = { 'c', 'cpp', 'objc', 'objcpp', 'opencl' }
     local server_config = {
