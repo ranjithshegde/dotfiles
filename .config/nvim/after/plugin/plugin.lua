@@ -17,6 +17,10 @@ cmd('Word', function()
     require('r.extensions').WordProcessor()
 end, { desc = 'Turn on WordProcessor mode' })
 
+cmd('GDEditor', function()
+    require('r.extensions').godot_editor()
+end, { desc = 'Start Godot Server' })
+
 cmd('Su', 'w !sudo tee %', {})
 
 -- ******************* Extensions mappings --------------------------------------------
@@ -37,3 +41,5 @@ map({ 'n', 't' }, '<F9>', function()
 end, {
     desc = 'Toggle current/default terminal',
 })
+
+vim.cmd.GDEditor()

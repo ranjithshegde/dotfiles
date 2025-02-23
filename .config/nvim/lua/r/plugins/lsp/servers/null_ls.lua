@@ -6,10 +6,6 @@ return function()
     local nl = require 'null-ls'
     local nb = nl.builtins
     local sources = {
-        nb.diagnostics.zsh,
-        nb.diagnostics.checkmake,
-        nb.diagnostics.stylelint,
-
         nb.formatting.stylua,
         nb.formatting.prettier,
 

@@ -9,7 +9,18 @@ return {
     -- Colorscheme
     {
         { 'rebelot/kanagawa.nvim', opts = { transparent = true }, enabled = false },
-        { 'neko-night/nvim', name = 'nekonight', opts = { transparent = true } },
+        {
+            'neko-night/nvim',
+            name = 'nekonight',
+            config = function()
+                require('nekonight').setup {
+                    transparent = true,
+                    on_highlights = function(hl, c)
+                        hl.Folded = { bg = c.bg_dark1 }
+                    end,
+                }
+            end,
+        },
     },
 
     -- Comment with TreeSitter

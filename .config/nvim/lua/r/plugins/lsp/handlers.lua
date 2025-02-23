@@ -18,6 +18,10 @@ local function filterfmt(client)
     return not vim.tbl_contains(nofmt, client.name)
 end
 
+local function complete()
+    return require('r.utils').get_client_names()
+end
+
 ---**************************** Initualize LSP
 function handlers.init()
     local id = { LspSettings = augroup('LspSettings', au_opts) }
@@ -83,16 +87,6 @@ function handlers.attach(client, bufnr)
         require('r.plugins.lsp.mappings.servers').clangd(bufnr)
     end
 
-    if client.name ~= 'null-ls' then
-        if client:supports_method 'textDocument/foldingRange' then
-            vim.wo.foldexpr = 'v:lua.vim.lsp.foldexpr()'
-        else
-            vim.wo.foldexpr = 'v:lua.vim.treesitter.foldexpr()'
-        end
-    end
-
-    require('r.extensions.diagnostics').attach(client, bufnr, { underline = false, update_in_insert = false })
-
     if
         client:supports_method 'textDocument/documentFormatting'
         or client:supports_method 'textDocument/rangeFormatting'
@@ -112,6 +106,18 @@ function handlers.attach(client, bufnr)
         end, { buffer = bufnr })
     end
 
+    if client.name == 'null-ls' then
+        return
+    end
+
+    if client:supports_method 'textDocument/foldingRange' then
+        vim.wo.foldexpr = 'v:lua.vim.lsp.foldexpr()'
+    else
+        vim.wo.foldexpr = 'v:lua.vim.treesitter.foldexpr()'
+    end
+
+    require('r.extensions.diagnostics').attach(client, bufnr, { underline = false, update_in_insert = false })
+
     require('r.utils').register_au_id(id)
 
     if client:supports_method 'textDocument/inlayHint' then
@@ -130,13 +136,9 @@ function handlers.attach(client, bufnr)
     end
 
     if client.name == 'ltex' then
-        vim.lsp.commands['_ltex.addToDictionary'] = require('r.plugins.lsp.ltex').add_to_dict
-        vim.lsp.commands['_ltex.disableRules'] = require('r.plugins.lsp.ltex').disable_rule
-        vim.lsp.commands['_ltex.hideFalsePositives'] = require('r.plugins.lsp.ltex').false_positive
-    end
-
-    local complete = function()
-        return require('r.utils').get_client_names()
+        vim.lsp.commands['_ltex.addToDictionary'] = require('r.plugins.lsp.servers.ltex').add_to_dict
+        vim.lsp.commands['_ltex.disableRules'] = require('r.plugins.lsp.servers.ltex').disable_rule
+        vim.lsp.commands['_ltex.hideFalsePositives'] = require('r.plugins.lsp.servers.ltex').false_positive
     end
 
     vim.api.nvim_buf_create_user_command(bufnr, 'LspCapabilities', function(opt)

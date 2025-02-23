@@ -79,7 +79,7 @@ function ltex.lsp()
                 additionalRules = {
                     enablePickyRules = true,
                     motherTongue = 'en',
-                    languageModel = '/usr/share/Ngrams/',
+                    languageModel = '/usr/share/ngrams/',
                 },
                 bibtex = {
                     fields = { address = false, author = false, title = true, description = true, url = false },

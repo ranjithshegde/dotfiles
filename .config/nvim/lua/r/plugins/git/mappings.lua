@@ -34,7 +34,7 @@ function g.git()
             c = { neogit_command { 'commit' }, 'commit changes' },
             C = { neogit_lua('commit', 'commit', { '--verbose', '--all' }), 'commit changes' },
             d = { '<cmd>DiffviewOpen<CR>', 'launch difftool' },
-            D = { '<cmd>DiffviewFileHistory<CR>', 'launch difftool' },
+            D = { '<cmd>DiffviewFileHistory<CR>', 'launch diff history' },
             g = { neogit_command { 'kind=floating' }, 'Git window' },
             l = {
                 function()
