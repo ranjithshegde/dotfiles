@@ -27,7 +27,7 @@ require('lazy').setup('r.plugins', {
     dev = { path = vim.g.local_plugins, fallback = true },
     performance = { rtp = { disabled_plugins = require('r.utils.tables').rtp } },
     defaults = { lazy = true },
-    install = { colorscheme = { 'tokyonight-moon', 'habamax' } },
+    install = { colorscheme = { 'nekonight', 'default' } },
 })
 
 require 'r.options'()

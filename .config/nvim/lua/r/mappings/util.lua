@@ -7,19 +7,6 @@ local mapper = require 'r.utils.expand_maps'
 --                              Utilities                             --
 ------------------------------------------------------------------------
 
-local function move(cmd, count)
-    local old_fold = vim.wo.foldmethod
-    if old_fold ~= 'manual' then
-        vim.wo.foldmethod = 'manual'
-    end
-    vim.cmd.normal { args = { 'm`' }, bang = true }
-    vim.cmd.move { args = { cmd, tostring(count) } }
-    vim.cmd.normal { args = { '``' }, bang = true }
-    if old_fold ~= 'manual' then
-        vim.wo.foldmethod = old_fold
-    end
-end
-
 local function yazi(path, cmd, opts)
     return function()
         vim.api.nvim_open_win(
@@ -76,11 +63,11 @@ end
 
 function utilmaps.move()
     map('n', ']e', function()
-        move('+', vim.v.count1 - 1)
+        require('r.extensions').move_lines('+', vim.v.count1 - 1)
     end, { desc = 'Move current line below to the specified count' })
 
     map('n', '[e', function()
-        move('--', vim.v.count1 - 1)
+        require('r.extensions').move_lines('--', vim.v.count1 - 1)
     end, { desc = 'Move current line above to the specified count' })
 end
 

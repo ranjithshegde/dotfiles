@@ -3,7 +3,7 @@ local mapper = require 'r.utils.expand_maps'
 local lspmap = {}
 local map = vim.keymap.set
 
-local function cmdl(cmd, args)
+local function c_cmd(cmd, args)
     return function()
         vim.cmd[cmd](args)
     end
@@ -29,16 +29,16 @@ function lspmap.ccls(buf)
             },
             m = {
                 name = 'ccls - Members',
-                m = { cmdl('CclsMemberHierarchy', { args = { 'float' } }), 'Member variables' },
-                f = { cmdl('CclsMemberFunctionHierarchy', { args = { 'float' } }), 'Member functions' },
-                t = { cmdl('CclsMemberTypeHierarchy', { args = { 'float' } }), 'Member classes' },
+                m = { c_cmd('CclsMemberHierarchy', { args = { 'float' } }), 'Member variables' },
+                f = { c_cmd('CclsMemberFunctionHierarchy', { args = { 'float' } }), 'Member functions' },
+                t = { c_cmd('CclsMemberTypeHierarchy', { args = { 'float' } }), 'Member classes' },
             },
             H = {
                 name = 'hierarchy',
-                b = { cmdl('CclsBaseHierarchy', { args = { 'float' } }), 'Base function' },
-                c = { cmdl('CclsIncomingCallsHierarchy', { args = { 'float' } }), 'Caller' },
-                C = { cmdl('CclsOutgoingCallsHierarchy', { args = { 'float' } }), 'Callee' },
-                d = { cmdl('CclsDerivedHierarchy', { args = { 'float' } }), 'Derived functions' },
+                b = { c_cmd('CclsBaseHierarchy', { args = { 'float' } }), 'Base function' },
+                c = { c_cmd('CclsIncomingCallsHierarchy', { args = { 'float' } }), 'Caller' },
+                C = { c_cmd('CclsOutgoingCallsHierarchy', { args = { 'float' } }), 'Callee' },
+                d = { c_cmd('CclsDerivedHierarchy', { args = { 'float' } }), 'Derived functions' },
             },
         },
     }, { buffer = buf }))
@@ -46,6 +46,7 @@ end
 
 function lspmap.clangd(buf)
     map('n', '<leader>s', vim.cmd.ClangdSwitchSourceHeader, { desc = 'Switch to header/source', buffer = buf })
+    map('n', 'smi', vim.cmd.ClangdShowSymbolInfo, { desc = 'Show symbol info', buffer = buf })
 end
 
 return lspmap

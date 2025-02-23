@@ -1,6 +1,22 @@
 local extensions = {}
 local exec = vim.api.nvim_command
 
+--- Move selected line by count, similar to unimparied move
+---@param cmd string Direction to move in
+---@param count integer Number of positions to move, vim.v.count1
+function extensions.move_lines(cmd, count)
+    local old_fold = vim.wo.foldmethod
+    if old_fold ~= 'manual' then
+        vim.wo.foldmethod = 'manual'
+    end
+    vim.cmd.normal { args = { 'm`' }, bang = true }
+    vim.cmd.move { args = { cmd, tostring(count) } }
+    vim.cmd.normal { args = { '``' }, bang = true }
+    if old_fold ~= 'manual' then
+        vim.wo.foldmethod = old_fold
+    end
+end
+
 ------------------------------------------------------------------------
 --                          Word Processor                            --
 ------------------------------------------------------------------------

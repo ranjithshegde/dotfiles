@@ -7,7 +7,7 @@ local auclear = vim.api.nvim_clear_autocmds
 --                             Lsp settings                           --
 ------------------------------------------------------------------------
 
-local opts = { clear = true }
+local au_opts = { clear = true }
 
 local nofmt = {
     'lua_ls',
@@ -20,7 +20,7 @@ end
 
 ---**************************** Initualize LSP
 function handlers.init()
-    local id = { LspSettings = augroup('LspSettings', opts) }
+    local id = { LspSettings = augroup('LspSettings', au_opts) }
 
     vim.keymap.del('n', 'grn')
     vim.keymap.del('n', 'gri')
@@ -98,7 +98,7 @@ function handlers.attach(client, bufnr)
         or client:supports_method 'textDocument/rangeFormatting'
     then
         id['LspAutoFormat_' .. client.name .. '_' .. bufnr] =
-            augroup('LspAutoFormat_' .. client.name .. '_' .. bufnr, opts)
+            augroup('LspAutoFormat_' .. client.name .. '_' .. bufnr, au_opts)
         aucmd('BufWrite', {
             group = id['LspAutoFormat_' .. client.name .. '_' .. bufnr],
             buffer = bufnr,
