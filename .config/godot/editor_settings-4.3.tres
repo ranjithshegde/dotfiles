@@ -144,6 +144,7 @@ text_editor/help/sort_functions_alphabetically = true
 metadata/script_setup_templates_dictionary = {
 "Area2D": "0NodeDefault",
 "CharacterBody2D": "0CharacterBody2DBasic Movement",
+"HSlider": "0NodeDefault",
 "Node": "0NodeDefault",
 "Node2D": "0ObjectEmpty"
 }

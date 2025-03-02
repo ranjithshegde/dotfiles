@@ -138,7 +138,6 @@ function extensions.godot_editor()
     local pipepath = vim.fn.stdpath 'cache' .. '/gdeditor.pipe'
 
     if not vim.uv.fs_stat(pipepath) and vim.uv.fs_stat 'project.godot' then
-        vim.print 'Fpp'
         vim.fn.serverstart(pipepath)
     end
 end

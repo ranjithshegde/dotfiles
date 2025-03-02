@@ -3,68 +3,58 @@ local completion = {}
 --                             Completion                             --
 ------------------------------------------------------------------------
 
-function completion.blink()
-    require('blink.cmp').setup {
-        enabled = function()
-            return not vim.tbl_contains({ 'org-roam-select' }, vim.bo.filetype)
-                and vim.bo.buftype ~= 'prompt'
-                and vim.b.completion ~= false
-        end,
-        completion = {
-            keyword = { range = 'full' },
-            ghost_text = { enabled = true },
-            documentation = {
-                auto_show = true,
-                auto_show_delay_ms = 250,
-                window = { border = 'rounded' },
-            },
-            menu = {
-                draw = { treesitter = { 'lsp' } },
-                auto_show = function()
-                    return not vim.tbl_contains({ '/', '?' }, vim.fn.getcmdtype())
-                end,
-            },
-            list = {
-                selection = {
-                    preselect = false,
-                },
+local blink_opts = {
+    enabled = function()
+        return not vim.tbl_contains({ 'org-roam-select' }, vim.bo.filetype)
+            and vim.bo.buftype ~= 'prompt'
+            and vim.b.completion ~= false
+    end,
+    completion = {
+        keyword = { range = 'full' },
+        ghost_text = { enabled = true },
+        documentation = {
+            auto_show = true,
+            auto_show_delay_ms = 250,
+            window = { border = 'rounded' },
+        },
+        menu = {
+            draw = { treesitter = { 'lsp', 'buffer', 'snippets' } },
+        },
+        list = {
+            selection = {
+                preselect = false,
             },
         },
+    },
+    keymap = {
+        preset = 'default',
+        ['<C-l>'] = { 'snippet_forward', 'fallback' },
+        ['<C-h>'] = { 'snippet_backward', 'fallback' },
+        ['<CR>'] = { 'accept', 'fallback' },
+        ['<Tab>'] = { 'fallback' },
+        ['<S-Tab>'] = { 'fallback' },
+    },
+    cmdline = {
+        completion = { ghost_text = { enabled = false } },
         keymap = {
-            preset = 'default',
-            ['<C-l>'] = { 'snippet_forward', 'fallback' },
-            ['<C-h>'] = { 'snippet_backward', 'fallback' },
-            ['<CR>'] = { 'accept', 'fallback' },
-            ['<Tab>'] = { 'select_and_accept', 'fallback' },
-            ['<S-Tab>'] = { 'fallback' },
+            preset = 'cmdline',
+            ['<CR>'] = { 'accept_and_enter', 'fallback' },
+            ['<C-n>'] = { 'show_and_insert', 'select_next' },
+            ['<C-p>'] = { 'show_and_insert', 'select_prev' },
         },
-        cmdline = {
-            keymap = {
-                ['<CR>'] = { 'accept_and_enter', 'fallback' },
-                ['<Tab>'] = { 'select_next', 'fallback' },
-                ['<S-Tab>'] = { 'select_prev', 'fallback' },
-                ['<C-e>'] = { 'cancel', 'fallback' },
-                ['<C-y>'] = { 'select_and_accept' },
-                ['<Esc>'] = {
-                    function(cmp)
-                        if cmp.is_visible() then
-                            cmp.cancel()
-                        else
-                            vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes('<C-c>', true, true, true), 'n', true)
-                        end
-                    end,
-                },
-            },
+    },
+    snippets = { preset = 'luasnip' },
+    sources = {
+        default = { 'lsp', 'snippets', 'path', 'buffer' },
+        per_filetype = {
+            org = { 'orgmode', 'buffer', 'snippets' },
         },
-        snippets = { preset = 'luasnip' },
-        sources = {
-            default = { 'lsp', 'snippets', 'path', 'buffer' },
-            per_filetype = {
-                org = { 'orgmode', 'buffer', 'snippets' },
-            },
-        },
-        appearance = { nerd_font_variant = 'mono' },
-    }
+    },
+    appearance = { nerd_font_variant = 'mono' },
+}
+
+function completion.blink()
+    require('blink.cmp').setup(blink_opts)
 end
 
 function completion.pairs()
@@ -105,6 +95,7 @@ function completion.luasnip()
     }
 
     require('luasnip.loaders.from_vscode').lazy_load()
+
     local id = { UnrealSnip = vim.api.nvim_create_augroup('UnrealSnip', { clear = true }) }
     vim.api.nvim_create_autocmd('FileType', {
         group = id.UnrealSnip,

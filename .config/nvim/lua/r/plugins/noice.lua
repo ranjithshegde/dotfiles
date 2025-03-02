@@ -24,39 +24,14 @@ local noice = {
 function noice.config()
     messages()
     require('noice').setup {
-        cmdline = {
-            view = 'cmdline',
-            view_search = 'cmdline',
-            format = {
-                inc_rename = { pattern = '^:%s*IncRename%s+', icon = ' ', ft = 'text' },
-                input = { icon = ' ', lang = 'text', view = 'cmdline_popup' },
-            },
-        },
         presets = {
             long_message_to_split = true,
+            bottom_search = true,
+            command_palette = true,
+            inc_rename = true,
+            lsp_doc_border = 'rounded',
         },
         commands = { history = { view = 'popup' } },
-        lsp = {
-            hover = {
-                opts = { border = { style = 'rounded' } },
-            },
-            signature = {
-                opts = { border = { style = 'rounded' } },
-            },
-            documentation = {
-                opts = {
-                    position = { row = 2 },
-                    win_options = {
-                        concealcursor = '',
-                        winhighlight = { Normal = 'LspFloat', FloatBorder = 'LspFloatBorder' },
-                    },
-                },
-            },
-            override = {
-                ['vim.lsp.util.convert_input_to_markdown_lines'] = true,
-                ['vim.lsp.util.stylize_markdown'] = true,
-            },
-        },
         routes = {
             {
                 filter = {
@@ -74,6 +49,19 @@ function noice.config()
             },
             {
                 view = 'mini',
+                filter = {
+                    event = 'msg_show',
+                    any = {
+                        { find = 'E85: There is no listed buffer' },
+                        { find = 'E486: Pattern not found: ?$' },
+                        { find = 'E490: No fold found' },
+                        { find = 'Already at oldest change' },
+                        { kind = 'wmsg' },
+                    },
+                },
+            },
+            {
+                view = 'mini',
                 filter = { event = 'msg_showmode' },
             },
             {
@@ -82,21 +70,6 @@ function noice.config()
             },
         },
     }
-end
-
-function noice.init()
-    vim.print = function(...)
-        if package.loaded.snacks then
-            return Snacks.debug.inspect(...)
-        else
-            local objects = {}
-            for i = 1, select('#', ...) do
-                local v = select(i, ...)
-                table.insert(objects, vim.inspect(v))
-            end
-            vim.api.nvim_echo({ { table.concat(objects, '    '), '' } }, true, {})
-        end
-    end
 end
 
 return noice

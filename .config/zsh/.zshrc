@@ -64,7 +64,6 @@ alias usysre='systemctl --user restart'
 alias srest='systemctl suspend'
 alias cvim='GIT_DIR="${HOME}/Repositories/Maintained/dotbare" GIT_WORK_TREE="${HOME}" nvim'
 alias cgit='GIT_DIR="${HOME}/Repositories/Maintained/dotbare" GIT_WORK_TREE="${HOME}" git'
-alias ranger='yazi'
 alias lf='yazi'
 
 # Source Zplug initialization only if the init file exists

@@ -1,4 +1,5 @@
 local cached_workspace_folders = nil
+
 local function get_workspace_folders()
     if cached_workspace_folders then
         return cached_workspace_folders
@@ -34,6 +35,12 @@ local function init()
     })
 
     require('r.utils').register_au_id(id)
+
+    ---@diagnostic disable-next-line
+    vim.print = function(...)
+        ---@diagnostic disable-next-line
+        return Snacks.debug.inspect(...)
+    end
 end
 
 ------------------------------------------------------------------------
@@ -71,12 +78,32 @@ local dashboard = {
 }
 
 -- ************** Indent guides  --------------------------------------
+local indent_hl = {
+    'SnacksIndent1',
+    'SnacksIndent2',
+    'SnacksIndent3',
+    'SnacksIndent4',
+    'SnacksIndent5',
+    'SnacksIndent6',
+    'SnacksIndent7',
+    'SnacksIndent8',
+}
+
 local indent = {
     animate = { enabled = false },
-    only_current = true,
     scope = {
         enabled = true,
         underline = true,
+        hl = indent_hl,
+    },
+    indent = { only_current = true },
+    chunk = {
+        enabled = true,
+        hl = indent_hl,
+        char = {
+            corner_top = '╭',
+            corner_bottom = '╰',
+        },
     },
 }
 
@@ -89,7 +116,6 @@ local opts = {
     indent = indent,
     notifier = default,
     scope = { treesitter = { blocks = { enabled = true } } },
-    lazygit = default,
     rename = default,
     statuscolumn = { folds = { open = true } },
     words = { jumplist = false },
