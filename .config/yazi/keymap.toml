@@ -33,5 +33,9 @@ prepend_keymap = [
         "g",
         "G",
     ], run = "cd /storage/Games/", desc = "Goto Games directory" },
+    { on = [
+        "g",
+        "T",
+    ], run = "cd ~/Videos/Tutorials/", desc = "Goto Games directory" },
     { on = "M", run = "plugin mount", desc = "Open mount manager menu" },
 ]

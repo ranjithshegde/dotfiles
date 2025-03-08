@@ -7,6 +7,9 @@ return {
         ft = 'org',
         cmd = 'Org',
         init = settings.org_init,
+        dependencies = {
+            { 'lukas-reineke/headlines.nvim', config = true },
+        },
         opts = {
             org_agenda_files = settings.paths.agenda_files,
             org_agenda_custom_commands = settings.agenda_custom_commmands,
@@ -27,18 +30,8 @@ return {
             },
         },
         keys = {
-            {
-                '<leader>oa',
-                function()
-                    return Org.agenda()
-                end,
-            },
-            {
-                '<leader>oc',
-                function()
-                    return Org.capture()
-                end,
-            },
+            { '<leader>oa', '<cmd>Org agenda<cr>' },
+            { '<leader>oc', '<cmd>Org capture<cr>' },
         },
     },
     {

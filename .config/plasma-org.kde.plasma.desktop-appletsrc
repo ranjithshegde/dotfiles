@@ -254,5 +254,5 @@ knownItems=com.github.korapp.nordvpn,org.kde.plasma.notifications,org.kde.plasma
 scaleIconsToFit=true
 
 [ScreenMapping]
-itemsOnDisabledScreens=0,42cfd941-f257-4e76-9e6e-809cce6a5b82,11,desktop:/Cyberpunk 2077.desktop,desktop:/Metro Last Light Redux.desktop,desktop:/Opus Magnum.desktop,desktop:/God of War Ragnark.desktop,desktop:/backup,desktop:/Baldur's Gate 3.desktop,desktop:/e.md,desktop:/EXAPUNKS.desktop,desktop:/Black Myth Wukong.desktop,desktop:/Metro Exodus Enhanced Edition.desktop,desktop:/Black Mesa.desktop
-screenMapping=desktop:/Black Myth Wukong.desktop,0,442d3150-bb06-4c87-bb53-37e4fdd1874c,desktop:/backup,0,442d3150-bb06-4c87-bb53-37e4fdd1874c
+itemsOnDisabledScreens=0,42cfd941-f257-4e76-9e6e-809cce6a5b82,11,desktop:/Baldur's Gate 3.desktop,desktop:/e.md,desktop:/EXAPUNKS.desktop,desktop:/Black Myth Wukong.desktop,desktop:/Metro Exodus Enhanced Edition.desktop,desktop:/Black Mesa.desktop,desktop:/Cyberpunk 2077.desktop,desktop:/Metro Last Light Redux.desktop,desktop:/Opus Magnum.desktop,desktop:/God of War Ragnark.desktop,desktop:/backup
+screenMapping=desktop:/backup,0,442d3150-bb06-4c87-bb53-37e4fdd1874c,desktop:/Black Myth Wukong.desktop,0,442d3150-bb06-4c87-bb53-37e4fdd1874c
