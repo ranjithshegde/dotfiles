@@ -234,6 +234,7 @@ tables.ts_parsers = {
     'cpp',
     'comment',
     'css',
+    'dap_repl',
     'glsl',
     'gdscript',
     'godot_resource',

@@ -132,6 +132,7 @@ function settings.org_init()
             vim.keymap.set('i', '<S-CR>', function()
                 require('orgmode').action 'org_mappings.meta_return'
             end, { silent = true, buffer = args.buf })
+            vim.api.nvim_set_hl(0, 'Folded', { link = 'Headline' })
         end,
         desc = 'Add org completion source, map <S-CR>',
     })

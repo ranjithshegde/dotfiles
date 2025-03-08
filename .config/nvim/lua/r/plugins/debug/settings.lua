@@ -6,7 +6,7 @@ end
 local function makeFloat(element)
     local widgets = require 'dap.ui.widgets'
     return function()
-        widgets.centered_float(widgets[element], { border = 'double' })
+        widgets.cursor_float(widgets[element], { border = 'double' })
     end
 end
 
@@ -30,6 +30,16 @@ function Debugger.init()
     })
     vim.api.nvim_create_autocmd('FileType', {
         group = id.dap,
+        pattern = 'dap-float',
+        callback = function(args)
+            vim.keymap.set('n', 'q', function()
+                vim.api.nvim_win_close(vim.fn.bufwinid(args.buf), true)
+            end, { desc = 'Close dap view', buffer = args.buf })
+        end,
+        desc = 'Close DAP Floating window',
+    })
+    vim.api.nvim_create_autocmd('FileType', {
+        group = id.dap,
         pattern = require('r.utils.tables').debugfiles,
         callback = function(args)
             if not package.loaded.dap then
@@ -47,35 +57,24 @@ function Debugger.setup()
 
     require('dap.ext.vscode').getconfigs()
 
+    Debugger.exp = makeSidebar('expression', 40)
     Debugger.frames = makeSidebar('frames', 70)
     Debugger.scopes = makeSidebar('scopes', 60)
-    Debugger.exp = makeSidebar('expression', 40)
     Debugger.threads = makeSidebar('threads', 40)
 
     Debugger.fexp = makeFloat 'expression'
     Debugger.fframes = makeFloat 'frames'
     Debugger.fscopes = makeFloat 'scopes'
-    Debugger.fexp = makeFloat 'expression'
     Debugger.fthreads = makeFloat 'threads'
 
     dap.defaults.fallback.terminal_win_cmd = 'tabnew'
     dap.defaults.fallback.external_terminal = {
-        command = '/usr/bin/st',
+        command = '/usr/bin/ghostty',
         args = { '-e' },
     }
 
     dap.adapters = require 'r.plugins.debug.adapters'
     dap.configurations = require 'r.plugins.debug.configurations'
-
-    dap.listeners.after.event_initialized['dapui_config'] = function()
-        require('dapui').open()
-    end
-    dap.listeners.before.event_terminated['dapui_config'] = function()
-        require('dapui').close()
-    end
-    dap.listeners.before.event_exited['dapui_config'] = function()
-        require('dapui').close()
-    end
 end
 
 return Debugger
