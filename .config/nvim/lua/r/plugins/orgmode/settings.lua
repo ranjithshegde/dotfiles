@@ -132,9 +132,15 @@ function settings.org_init()
             vim.keymap.set('i', '<S-CR>', function()
                 require('orgmode').action 'org_mappings.meta_return'
             end, { silent = true, buffer = args.buf })
-            vim.api.nvim_set_hl(0, 'Folded', { link = 'Headline' })
         end,
         desc = 'Add org completion source, map <S-CR>',
+    })
+
+    vim.api.nvim_create_autocmd('FileType', {
+        group = id.OrgMode,
+        pattern = 'org',
+        command = 'setlocal winhighlight=Folded:Headline',
+        desc = 'Stop conflicting hl between fold and headline',
     })
 
     require('r.utils').register_au_id(id)

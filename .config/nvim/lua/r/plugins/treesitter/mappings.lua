@@ -43,7 +43,7 @@ local refac = {}
 
 function refac.refac(args)
     return function()
-        require('refactoring').refactor(args)
+        return require('refactoring').refactor(args)
     end
 end
 
@@ -51,18 +51,6 @@ function refac.debug(func, args)
     return function()
         require('refactoring').debug[func](args)
     end
-end
-
-function treesitter.cpp(buf)
-    wk.add(mapper({
-        ['cr'] = {
-            name = 'Refactor Cpp',
-            m = { vim.cmd.TSCppDefineClassFunc, 'function definition from declaration', mode = { 'n', 'x' } },
-            c = { vim.cmd.TSCppMakeConcreteClass, 'Convert virtual class to concrete class', mode = { 'n', 'x' } },
-            o = { vim.cmd.TSCppRuleOf3, 'Add Constructor, destructor and copy', mode = { 'n', 'x' } },
-            O = { vim.cmd.TSCppRuleOf5, 'Add move Constructor', mode = { 'n', 'x' } },
-        },
-    }, { buffer = buf }))
 end
 
 function treesitter.navigate_tex(buf)
@@ -161,7 +149,7 @@ end
 
 function treesitter.common()
     wk.add {
-        mapper {
+        mapper({
             ['cr'] = {
                 name = 'Refactoring tools',
                 i = { refac.refac 'Inline Variable', 'Inline Variable', mode = { 'n', 'x' } },
@@ -171,6 +159,8 @@ function treesitter.common()
                 f = { refac.refac 'Extract Function', 'Extract Function', mode = { 'n', 'x' } },
                 F = { refac.refac 'Extract Function to File', 'Extract Function to File', mode = { 'n', 'x' } },
             },
+        }, { expr = true }),
+        mapper {
             ['ga'] = {
                 name = 'Add or apply',
                 p = { refac.debug('printf', { below = true }), 'Printf below' },

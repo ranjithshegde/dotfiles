@@ -30,15 +30,6 @@ function ts.autocmds()
         desc = 'Loading treesitter navigation mappings',
     })
 
-    aucmd('FileType', {
-        group = id.Treesitter,
-        pattern = { 'c', 'cpp', 'hpp' },
-        callback = function(args)
-            require('r.plugins.treesitter.mappings').cpp(args.buf)
-        end,
-        desc = 'Treesitter C++ refactoring mappings',
-    })
-
     require('r.utils').register_au_id(id)
 end
 
@@ -66,22 +57,6 @@ function ts.text_objects()
             set_jumps = false,
         },
         swap = { enable = true },
-    }
-end
-
-function ts.cpp_tools()
-    require('nt-cpp-tools').setup {
-        preview = {
-            quit = 'Q',
-            accept = '<leader>a',
-        },
-        header_extension = 'h',
-        source_extension = 'cxx',
-        custom_define_class_function_commands = {
-            TSCppImplWrite = {
-                output_handle = require('nt-cpp-tools.output_handlers').get_add_to_cpp(),
-            },
-        },
     }
 end
 
@@ -115,14 +90,18 @@ end
 
 function ts.node_action()
     require('ts-node-action').setup {
+        ['*'] = {
+            ['parameter_list'] = require('ts-node-action.actions').toggle_multiline(),
+        },
         cpp = {
             ['field_identifier'] = require('ts-node-action.actions').cycle_case(),
             ['type_identifier'] = require('ts-node-action.actions').cycle_case(),
+            ['initializer_list'] = require('ts-node-action.actions').toggle_multiline(),
+            ['field_initializer_list'] = require('ts-node-action.actions').toggle_multiline(),
         },
         supercollider = {
             ['method_call'] = require('ts-node-action.actions').toggle_multiline(),
             ['parameter_call_list'] = require('ts-node-action.actions').toggle_multiline(),
-            ['parameter_list'] = require('ts-node-action.actions').toggle_multiline(),
         },
     }
 end
