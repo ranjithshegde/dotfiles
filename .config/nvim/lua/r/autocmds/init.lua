@@ -31,7 +31,6 @@ aucmd('FileType', {
     group = id.FormatOptions,
     callback = function()
         vim.opt.formatoptions = vim.opt.formatoptions
-            - 'a' -- Dont format pasted code
             - 'o' -- O and o don't continue comments
             - 'r' -- Return does not continue comments
             + 't' -- Autowrap respecting textwidth

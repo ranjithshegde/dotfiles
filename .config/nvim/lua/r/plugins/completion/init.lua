@@ -3,7 +3,7 @@ local setup = require('r.utils').plugin_setup
 return {
     {
         'saghen/blink.cmp',
-        event = 'InsertEnter',
+        event = { 'InsertEnter', 'CmdlineEnter' },
         version = 'v0.*',
         config = setup('r.plugins.completion.settings', 'blink'),
         opts_extend = { 'sources.per_filetype' },

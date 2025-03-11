@@ -12,6 +12,7 @@ return {
         {
             'neko-night/nvim',
             name = 'nekonight',
+            enabled = true,
             config = function()
                 require('nekonight').setup {
                     transparent = true,
@@ -58,5 +59,12 @@ return {
             sources = { treesitter = { valid_types = require('r.utils.tables').tsNodes } },
             icons = { kinds = { symbols = require('r.utils.tables').nodeSymbols } },
         },
+    },
+
+    -- Markdown and orgmode headlines
+    {
+        'lukas-reineke/headlines.nvim',
+        ft = 'markdown',
+        opts = { org = { codeblock_highlight = '' } },
     },
 }

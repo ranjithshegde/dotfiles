@@ -46,8 +46,23 @@ local maps = {
         l = { fzf 'loclist', 'local quickfix list' },
         m = { '<cmd>Noice fzf<CR>', 'Messages' },
         M = { fzf 'man_pages', 'Man pages' },
+        O = { fzf 'lsp_live_workspace_symbols', 'Grep lsp workspace symbols' },
         q = { fzf 'quickfix', 'Quickfix list' },
+        T = { fzf 'tagstack', 'Lsp Ctags' },
         z = { fzf 'blines', 'Gerp current buffer lines' },
+        Z = { fzf 'zoxide', 'Zoxide to Oil' },
+        ["'"] = { fzf 'marks', 'Marks' },
+        ['"'] = { fzf 'registers', 'Registers' },
+        ['='] = { fzf 'spell_suggest', 'Spell suggest' },
+        ['/'] = { fzf 'grep_cword', 'Grep CWORD in directory' },
+        ['<Space>'] = { fzf 'builtin', 'Builtin Searchers' },
+        ['<CR>'] = { fzf 'resume', 'Resume last picker' },
+        k = {
+            function()
+                require('fzf-lua').lsp_workspace_symbols { query = vim.fn.expand '<cword>' }
+            end,
+            'Search lsp workspace symbol',
+        },
         r = {
             fzf('lsp_references', { winopts = require('r.plugins.fzf.settings').layouts.center_stack }),
             'Lsp References',
@@ -68,31 +83,6 @@ local maps = {
             }),
             'Lsp symbols in buffer',
         },
-        O = { fzf 'lsp_live_workspace_symbols', 'Grep lsp workspace symbols' },
-        t = {
-            name = 'Treesitter',
-            n = { fzf 'treesitter', 'TreeSitter nodes in buffer' },
-            f = {
-                function()
-                    require('refactoring').select_refactor()
-                end,
-                'Treesitter Refactoring options',
-                mode = { 'n', 'v' },
-            },
-        },
-        T = { fzf 'tagstack', 'Lsp Ctags' },
-        ["'"] = { fzf 'marks', 'Marks' },
-        ['"'] = { fzf 'registers', 'Registers' },
-        ['='] = { fzf 'spell_suggest', 'Spell suggest' },
-        ['/'] = { fzf 'grep_cword', 'Grep CWORD in directory' },
-        ['<Space>'] = { fzf 'builtin', 'Builtin Searchers' },
-        ['<CR>'] = { fzf 'resume', 'Resume last picker' },
-        k = {
-            function()
-                require('fzf-lua').lsp_workspace_symbols { query = vim.fn.expand '<cword>' }
-            end,
-            'Search lsp workspace symbol',
-        },
         d = {
             name = 'diagnostics',
             b = { fzf 'diagnostics_document', 'buffer diagnostics' },
@@ -106,6 +96,28 @@ local maps = {
             C = { fzf 'git_bcommits', 'Buffer commit history' },
             s = { fzf 'git_stash', 'Stashes' },
             f = { fzf 'git_files', 'Tracked files' },
+        },
+        o = {
+            name = 'Orgmode',
+            a = {
+                fzf_cd(false, 'Org Agenda', '$HOME/Documents/Mandala/Agenda'),
+                'Org Agenda',
+            },
+            w = {
+                fzf_cd(false, 'Org Wiki', '$HOME/Documents/Mandala/Wiki/'),
+                'Org Wiki',
+            },
+        },
+        t = {
+            name = 'Treesitter',
+            n = { fzf 'treesitter', 'TreeSitter nodes in buffer' },
+            f = {
+                function()
+                    require('refactoring').select_refactor()
+                end,
+                'Treesitter Refactoring options',
+                mode = { 'n', 'v' },
+            },
         },
         g = {
             name = 'Live grep in',
@@ -146,28 +158,18 @@ local maps = {
                 'grep dotfiles',
             },
         },
-        o = {
-            name = 'Orgmode',
-            a = {
-                fzf_cd(false, 'Org Agenda', '$HOME/Documents/Mandala/Agenda'),
-                'Org Agenda',
-            },
-            w = {
-                fzf_cd(false, 'Org Wiki', '$HOME/Documents/Mandala/Wiki/'),
-                'Org Wiki',
-            },
-        },
         f = {
             name = 'find files in',
             f = { fzf 'files', 'Current directory' },
             h = { fzf('files', { cwd = '~' }), 'Home directory' },
             r = { fzf 'oldfiles', 'Vim recent files' },
             R = { fzf('files', { cwd = '/usr/share/nvim/runtime/' }), 'Vim runtime files' },
+
+            c = { fzf_cd(true, 'C++ Practice files/dirs', '$CWORK/Scratch'), 'Open C practice' },
             C = {
                 fzf_cd(false, 'C++ Practice files/dirs', '$CWORK/Scratch'),
                 'Open C practice',
             },
-            c = { fzf_cd(true, 'C++ Practice files/dirs', '$CWORK/Scratch'), 'Open C practice' },
             s = {
                 fzf_cd(true, 'SuperCollider Directory', '~/Workspaces/supercollider/'),
                 'SuperCollider files',

@@ -14,8 +14,8 @@ return function()
     map({ 'v', 'x' }, 'C', 'c', { desc = 'Change selected text' })
 
     --line movement
-    map('x', 'K', ":move '<-2<CR>gv", { desc = 'Move line up' })
-    map('x', 'J', ":move '>+1<CR>gv", { desc = 'Move line down' })
+    map('x', 'K', "<cmd>move '<-2<CR>gv", { desc = 'Move line up' })
+    map('x', 'J', "<cmd>move '>+1<CR>gv", { desc = 'Move line down' })
     -- Indent
     map('v', '<', '<gv', opts)
     map('v', '>', '>gv', opts)
@@ -24,4 +24,5 @@ return function()
     map('n', 'n', 'nzzzv', { desc = 'jump to next search result' })
     map('n', 'N', 'Nzzzv', { desc = 'jump to previous search result' })
     map('n', 'J', 'mzJ`z', { desc = 'Adjoin next line' })
+    map('i', 'jk', '<Esc>', { desc = 'Map Esc to jk' })
 end

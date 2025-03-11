@@ -131,6 +131,16 @@ function fzy.setup()
                 preview_pager = "delta --width=$COLUMNS --hunk-header-style='omit' --file-style='omit'",
             },
         },
+        zoxide = {
+            actions = {
+                ['default'] = {
+                    fn = function(selected, opts)
+                        actions.cd(selected, opts)
+                        require('fzf-lua').git_files()
+                    end,
+                },
+            },
+        },
     }
 end
 

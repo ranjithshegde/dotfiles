@@ -10,3 +10,4 @@ vim https://github.com/neovim/neovim/pulls?q=is%3Apr+is%3Aopen+sort%3Aupdated-de
 nn http://neuralnetworksanddeeplearning.com/chap1.html
 red https://www.reddit.com/
 orgmode https://github.com/kristijanhusak/neovim-config/blob/master/nvim/lua/partials/plugins/orgmode.lua
+dail https://app.daily.dev/

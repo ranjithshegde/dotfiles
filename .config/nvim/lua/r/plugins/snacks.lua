@@ -26,9 +26,9 @@ local function init()
         group = id.OilRename,
         pattern = 'OilActionsPost',
         callback = function(event)
-            if event.data.actions.type == 'move' then
+            if event.data.actions[1].type == 'move' then
                 ---@diagnostic disable-next-line
-                Snacks.rename.on_rename_file(event.data.actions.src_url, event.data.actions.dest_url)
+                Snacks.rename.on_rename_file(event.data.actions[1].src_url, event.data.actions[1].dest_url)
             end
         end,
         desc = 'Initiate lsp rename via Snacks on Oil file rename',
@@ -61,7 +61,9 @@ local dashboard = {
         {
             title = 'Agenda',
             indent = 3,
-            action = ':lua require("orgmode").agenda:agenda()',
+            action = function()
+                require('orgmode').agenda:agenda()
+            end,
             key = 'a',
         },
         {
