@@ -1,113 +1,173 @@
-# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
-if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
-    source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+# ==============================================================================
+#                   Zinit Configuration
+# ==============================================================================
+if [[ ! -f "$ZINIT_HOME/bin/zinit.zsh" ]]; then
+    print "zinit not found. Installing..."
+    mkdir -p "$ZINIT_HOME" && command chmod g-rwX "$ZINIT_HOME"
+    git clone https://github.com/zdharma-continuum/zinit "$ZINIT_HOME/bin" &&
+        print "Zinit installed successfully."
 fi
+source "$ZINIT_HOME/bin/zinit.zsh"
 
-# Completion configuration added by compinstall
-zstyle ':completion:*' completer _expand _complete _ignored _approximate
-zstyle ':completion:*' max-errors 3 numeric
-zstyle :compinstall filename "$ZDOTDIR/.zshrc"
+# ==============================================================================
+#                   Shell Options & Basic Configuration
+# ==============================================================================
+# Core shell options
+setopt autocd extendedglob notify correct
+unsetopt beep
+
+# Load colors for essential tools
+autoload -U colors && colors
 
 # History configuration
-HISTSIZE=1000
-SAVEHIST=600
-setopt HIST_EXPIRE_DUPS_FIRST HIST_IGNORE_DUPS HIST_IGNORE_ALL_DUPS HIST_FIND_NO_DUPS
-setopt HIST_SAVE_NO_DUPS HIST_REDUCE_BLANKS HIST_VERIFY
+HISTSIZE=10000
+SAVEHIST=1000
+setopt hist_reduce_blanks hist_verify sharehistory
+setopt hist_ignore_space hist_expire_dups_first hist_ignore_dups hist_ignore_all_dups hist_find_no_dups hist_save_no_dups
 
-# Miscellaneous options
-setopt autocd beep extendedglob notify correct
-
-# Bash compatibility and colors
-autoload -U bashcompinit colors && colors
-bashcompinit
-
-# Completion system setup
-autoload -Uz compinit
-compinit -d "${XDG_CACHE_HOME:-$HOME/.cache}/zsh/zcompdump-$ZSH_VERSION"
-zstyle ':completion:*' menu select
+# ==============================================================================
+#                   Default Configuration Setup
+# ==============================================================================
+# Load completion system modules
 zmodload zsh/complist
 _comp_options+=(globdots)
 
-# Aliases
+# Determine dump file location
+zcompdump="${ZDOTDIR:-$HOME}/.zcompdump"
+
+# Basic completion styles
+zstyle ':completion:*' menu select
+zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'
+zstyle ':completion:*' completer _expand _complete _ignored _approximate
+zstyle ':completion:*' max-errors 3 numeric
+zstyle ':completion:*' group-name ''
+zstyle ':completion:*' verbose yes
+zstyle ':completion:*' list-colors '${(s.:.)LS_COLORS}'
+zstyle ':completion:*:matches' group 'yes'
+zstyle ':completion:*:warnings' format '%F{red}%B-- No matches found --%b%f'
+zstyle ':completion:*:messages' format '%d'
+zstyle ':completion:*:corrections' format '%B%d (errors: %e)%b'
+zstyle ':completion:*:descriptions' format '%B%F{blue}%d%f%b'
+
+# ==============================================================================
+#                   Core Plugins
+# ==============================================================================
+
+# Prompt
+zinit ice lucid \
+    atclone"starship init zsh > init.zsh; starship completions zsh > _starship" \
+    atpull"%atclone" src"init.zsh"
+zinit light zdharma-continuum/null
+
+# Load zoxide early since it's frequently used
+zinit ice wait:0 lucid atload"eval \"\$(zoxide init zsh)\""
+zinit light zdharma-continuum/null
+
+# The big Two
+zinit wait:0 lucid for \
+    zdharma-continuum/fast-syntax-highlighting \
+    MichaelAquilina/zsh-you-should-use \
+    hlissner/zsh-autopair
+
+# ==============================================================================
+#                   Utility Plugins
+# ==============================================================================
+# History
+zi ice wait lucid for \
+    atload"bindkey '^[[A' history-substring-search-up; bindkey '^[[B' history-substring-search-down" \
+    zsh-users/zsh-history-substring-search
+
+# Find the command
+zi ice wait lucid for \
+    atload"source ${ZINIT_HOME}/plugins/agura-lex---find-the-command/usr/share/doc/find-the-command/ftc.zsh" \
+    agura-lex/find-the-command
+
+# Git
+zinit wait:1 lucid for wfxr/forgit
+
+# ==============================================================================
+#                   External snippets
+# ==============================================================================
+zinit wait:1 lucid for \
+    OMZP::git \
+    OMZP::sudo \
+    OMZP::archlinux \
+    OMZP::systemd
+
+# ==============================================================================
+#                   Completion plugins
+# ==============================================================================
+# Load completion system
+zi for \
+    atload"zicompinit; zicdreplay" \
+    blockf \
+    lucid \
+    wait \
+    zsh-users/zsh-completions
+
+# Load autosuggestions separately with its specific hook
+zinit wait:0 lucid \
+    atload"_zsh_autosuggest_start" \
+    for zsh-users/zsh-autosuggestions
+
+# ==============================================================================
+#                   FZF Integration
+# ==============================================================================
+# FZF Tab (load after completions)
+zinit wait"0" lucid for \
+    Aloxaf/fzf-tab
+
+# FZF Tab styles (after loading fzf-tab)
+zinit ice wait:0 lucid
+zinit snippet OMZP::fzf
+# FZF-tab specific styles
+zstyle ':fzf-tab:complete:cd:*' fzf-preview 'ls --color $realpath'
+zstyle ':fzf-tab:complete:__zoxide_z:*' fzf-preview 'ls --color $realpath'
+zstyle ':fzf-tab:*' show-group brief
+
+# ==============================================================================
+#                   Aliases
+# ==============================================================================
+# File Management
 alias ls=lsd
 alias cat=bat
-alias ll='ls -la'
-alias sxiv='nsxiv'
-alias pss="paru -Ps"
+alias lf=yazi
+alias sxiv=nsxiv
+
+# Development
 alias python=python3
+alias PG=projectGenerator
+
+# Common command aliases with flags
+alias CM="compiledb -n make"
+alias grep='grep --color=auto'
+alias rocks='sudo luarocks --lua-version 5.1'
+
+# Git
+alias config='/usr/bin/git --git-dir=$WORKSPACE/Repos/dotfiles --work-tree=$HOME'
+alias cgit='GIT_DIR="${HOME}/Repositories/Maintained/dotbare" GIT_WORK_TREE="${HOME}" git'
+alias cvim='GIT_DIR="${HOME}/Repositories/Maintained/dotbare" GIT_WORK_TREE="${HOME}" nvim'
+
+# Package Management
+alias pss="paru -Ps"
 alias pu="paru -Syu"
 alias pU="paru -Syyu"
 alias pql="pacman -Ql"
 alias pqs="pacman -Qs"
 alias pqi="pacman -Qii"
+
+# VPN
 alias ns="nordvpn status"
 alias nc="nordvpn connect"
-alias PG="projectGenerator"
-alias CM="compiledb -n make"
 alias nd="nordvpn disconnect"
-alias pd='/usr/local/bin/pdl'
-alias grep='grep --color=auto'
-alias weather='curl wttr.in/hague'
-alias rfetch='rsfetch -PdehHklrNstU@'
-alias rocks='sudo luarocks --lua-version 5.1'
+
+# XDG Compliance
 alias wget='wget --hsts-file="${XDG_CACHE_HOME:-$HOME/.cache}/wget-hsts"'
 alias yarn='yarn --use-yarnrc "${XDG_CONFIG_HOME:-$HOME/.config}/yarn/config"'
-alias config='/usr/bin/git --git-dir=$WORKSPACE/Repos/dotfiles --work-tree=$HOME'
-alias systat='sudo systemctl status'
-alias systart='sudo systemctl start'
-alias systop='sudo systemctl stop'
-alias sysre='sudo systemctl restart'
-alias usystat='systemctl --user status'
-alias usystart='systemctl --user start'
-alias usystop='systemctl --user stop'
-alias usysre='systemctl --user restart'
-alias srest='systemctl suspend'
-alias cvim='GIT_DIR="${HOME}/Repositories/Maintained/dotbare" GIT_WORK_TREE="${HOME}" nvim'
-alias cgit='GIT_DIR="${HOME}/Repositories/Maintained/dotbare" GIT_WORK_TREE="${HOME}" git'
-alias lf='yazi'
 
-# Source Zplug initialization only if the init file exists
-if [ -f "${ZPLUG_HOME}/init.zsh" ]; then
-
-    source "${ZPLUG_HOME}/init.zsh"
-    # Zplug configuration
-    zplug 'zplug/zplug', hook-build:'zplug --self-manage'
-    zplug "zsh-users/zsh-completions"
-    zplug "MichaelAquilina/zsh-you-should-use"
-    zplug "zsh-users/zsh-history-substring-search"
-    zplug "zsh-users/zsh-autosuggestions"
-    zplug "zsh-users/zsh-syntax-highlighting"
-    zplug "agura-lex/find-the-command"
-    zplug 'romkatv/powerlevel10k', as:theme, depth:1
-    zplug "wfxr/forgit"
-    zplug "lincheney/fzf-tab-completion"
-    zplug "hlissner/zsh-autopair", defer:2
-    zplug load
-else
-    # Install Zplug if not found
-    echo "Zplug is not installed. Installing now..."
-    curl -sL --proto-redir -all,https https://raw.githubusercontent.com/zplug/installer/master/installer.zsh | zsh
-fi
-
-# Custom completion scripts
-[[ -f "${ZPLUG_HOME}/repos/agura-lex/find-the-command/usr/share/doc/find-the-command/ftc.zsh" ]] && source "${ZPLUG_HOME}/repos/agura-lex/find-the-command/usr/share/doc/find-the-command/ftc.zsh"
-[[ -f "${ZPLUG_HOME}/repos/zsh-users/zsh-history-substring-search/zsh-history-substring-search.zsh" ]] && source "${ZPLUG_HOME}/repos/zsh-users/zsh-history-substring-search/zsh-history-substring-search.zsh"
-[[ -f "${ZPLUG_HOME}/repos/lincheney/fzf-tab-completion/zsh/fzf-zsh-completion.sh" ]] && source "${ZPLUG_HOME}/repos/lincheney/fzf-tab-completion/zsh/fzf-zsh-completion.sh"
-[[ -f /usr/share/fzf/key-bindings.zsh ]] && source /usr/share/fzf/key-bindings.zsh
-[[ -f /usr/share/fzf/completion.zsh ]] && source /usr/share/fzf/completion.zsh
-
-# Completion initialization
-[[ -x "$(command -v register-python-argcomplete)" ]] && eval "$(register-python-argcomplete pipx)"
-[[ -x "$(command -v pio)" ]] && eval "$(_PIO_COMPLETE=zsh_source pio)"
-[[ -x "$(command -v zoxide)" ]] && eval "$(zoxide init zsh)"
-# Dotnet completion
-[[ -x "$(command -v dotnet)" ]] && compdef _dotnet_zsh_complete dotnet
-
-# Key bindings
-bindkey '^[[A' history-substring-search-up
-bindkey '^[[B' history-substring-search-down
-bindkey '^I' fzf_completion
-bindkey '^[[Z' fzf_completion
-
-# Source Powerlevel10k configuration if it exists
-[[ ! -f $ZDOTDIR/p10k.zsh ]] || source $ZDOTDIR/p10k.zsh
+# ==============================================================================
+#                   Load Functions
+# ==============================================================================
+for script in "$ZDOTDIR/functions/"*.sh; do
+    source "$script"
+done

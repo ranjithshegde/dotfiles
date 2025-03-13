@@ -1,3 +1,11 @@
+if [[ "$OSTYPE" == "darwin"* ]]; then
+    if [[ "$(uname -m)" == "arm64" ]]; then
+        export PATH="/opt/local/bin:opt/local/sbin:$PATH"
+        eval "$(/opt/homebrew/bin/brew shellenv)"
+    fi
+    return
+fi
+
 # Function to append library paths if not already included
 append_lib() {
     case ":$LIBRARY_PATH:" in

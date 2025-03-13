@@ -1,5 +1,5 @@
 [Activities][LastVirtualDesktop]
-42cfd941-f257-4e76-9e6e-809cce6a5b82=69edae7f-a2df-4b3a-a4d5-e3a4c9cead31
+42cfd941-f257-4e76-9e6e-809cce6a5b82=f6ecae32-0baf-487b-9645-327064e54969
 
 [Desktops]
 Id_1=1e893712-eee4-4ef3-b1b5-951ff2ba2926
@@ -36,7 +36,7 @@ maximizeSoleTile=true
 tileLayoutGap=4
 
 [Tiling]
-padding=0
+padding=4
 
 [Tiling][4e390e0d-8d1a-5fbb-8eb9-8f57e8530ee1]
 tiles={"layoutDirection":"horizontal","tiles":[{"width":0.25},{"width":0.5},{"width":0.25}]}
@@ -45,6 +45,9 @@ tiles={"layoutDirection":"horizontal","tiles":[{"width":0.25},{"width":0.5},{"wi
 tiles={"layoutDirection":"horizontal","tiles":[{"width":0.25},{"width":0.5},{"width":0.25}]}
 
 [Tiling][e0498cb0-4201-5e81-8f16-84e8c9f1658f]
+tiles={"layoutDirection":"horizontal","tiles":[{"width":0.25},{"width":0.5},{"width":0.25}]}
+
+[Tiling][f4b2356f-a268-5a18-9d8c-41b8f9638094]
 tiles={"layoutDirection":"horizontal","tiles":[{"width":0.25},{"width":0.5},{"width":0.25}]}
 
 [Xwayland]
