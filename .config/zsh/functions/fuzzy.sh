@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/zsh
 
 fkill() {
     local pid
@@ -31,4 +31,8 @@ sc() {
 
 fbrow() {
     pacman -Qq | fzf --preview 'pacman -Qil {}' --layout=reverse --bind 'enter:execute(pacman -Qil {} | less)'
+}
+
+hcd() {
+    dir=$(fd --type d --follow . "${1:-.}" 2>/dev/null | fzf +m --reverse --prompt='Enter Directory> ') && cd "$dir" || exit
 }

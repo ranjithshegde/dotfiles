@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/zsh
 
 refile() {
     nvim -c "autocmd BufEnter * only" -c "lua require('orgmode').capture:open_template_by_shortcut('t')"
@@ -12,10 +12,6 @@ nvs() {
     nvidia-settings --config="$XDG_CONFIG_HOME"/nvidia/settings
 }
 
-vids() {
-    vlc "$(find ~/Videos/. -name "*.*" | dmenu -l 30 -i -p 'Select video: ')"
-}
-
 pacelist() {
     expac --timefmt='%Y-%m-%d %T' '%l\t%n\t:%w' | sort | grep -i 'explicit' | tail -n 200 | awk -F: '{print $1 $2 $3}' | nvim +Man!
 }
@@ -24,21 +20,10 @@ paclist() {
     expac --timefmt='%Y-%m-%d %T' '%l\t%n\t:%w' | sort | tail -n 200 | awk -F: '{print $1 $2 $3}' | nvim +Man!
 }
 
-netS() {
-    DT=$(echo | dmenu -c -p "File or directory: ")
-    IT=$(echo | dmenu -c -p "ip extension 192.168.: ")
-
-    echo "Exporting file ${DT} to ip 192.168.${IT}"
-
-    tar cf - "${DT}" | pv | netcat 192.168."${IT}" 7000
-}
-
-netR() {
-    netcat -l -p 7000 | pv | tar x
-}
-
 nopac() {
-    find /etc /usr /opt | LC_ALL=C.UTF-8 pacman -Qqo - 2>&1 >&- >/dev/null | cut -d ' ' -f 5- >excess.txt
+    # find /etc /usr /opt | LC_ALL=C.UTF-8 pacman -Qqo - 2>&1 >&- >/dev/null | cut -d ' ' -f 5- >excess.txt
+    SEARCH_DIRS="/etc:/usr:/opt"
+    fd ${SEARCH_DIRS//:/ } | LC_ALL=C.UTF-8 pacman -Qqo - 2>&1 >&- >/dev/null | cut -d ' ' -f 5- >excess.txt
 }
 
 #Check externel screen connection status
@@ -58,38 +43,8 @@ screen_connected() {
     fi
 }
 
-# FZF dotfiles -------------------------------------------------------------------------------
-hcd() {
-    dir=$(find "${1:-.}" -type d 2>/dev/null | fzf +m --reverse --prompt='Enter Directory> ') && cd "$dir" || exit
+# OSC 133 (Prompt Marking)
+function osc133_prompt() {
+    printf '\033]133;A\033\\'
 }
-
-dgvim() {
-    local original_git_dir="$GIT_DIR"
-    local original_git_work_tree="$GIT_WORK_TREE"
-
-    # Set Git environment variables
-    export GIT_DIR="${HOME}/Repositories/Maintained/dotbare"
-    export GIT_WORK_TREE="${HOME}"
-
-    # Check if core.worktree is already set
-    local current_worktree=$(git config --get core.worktree)
-
-    if [ -z "$current_worktree" ]; then
-        # Set core.worktree configuration
-        git config --replace-all core.worktree "$HOME"
-    fi
-
-    # Launch Neovim
-    nvim
-
-    # After Neovim exits, restore original Git environment variables
-    GIT_DIR="$original_git_dir"
-    GIT_WORK_TREE="$original_git_work_tree"
-    export GIT_DIR
-    export GIT_WORK_TREE
-}
-
-zle -N hcd
-bindkey -M emacs '\eD' hcd
-bindkey -M vicmd '\eD' hcd
-bindkey -M viins '\eD' hcd
+precmd_functions+=(osc133_prompt)

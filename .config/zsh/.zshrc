@@ -4,8 +4,7 @@
 if [[ ! -f "$ZINIT_HOME/bin/zinit.zsh" ]]; then
     print "zinit not found. Installing..."
     mkdir -p "$ZINIT_HOME" && command chmod g-rwX "$ZINIT_HOME"
-    git clone https://github.com/zdharma-continuum/zinit "$ZINIT_HOME/bin" &&
-        print "Zinit installed successfully."
+    git clone https://github.com/zdharma-continuum/zinit "$ZINIT_HOME/bin"
 fi
 source "$ZINIT_HOME/bin/zinit.zsh"
 
@@ -17,7 +16,7 @@ setopt autocd extendedglob notify correct
 unsetopt beep
 
 # Load colors for essential tools
-autoload -U colors && colors
+autoload colors && colors
 
 # History configuration
 HISTSIZE=10000
@@ -26,10 +25,10 @@ setopt hist_reduce_blanks hist_verify sharehistory
 setopt hist_ignore_space hist_expire_dups_first hist_ignore_dups hist_ignore_all_dups hist_find_no_dups hist_save_no_dups
 
 # ==============================================================================
-#                   Default Configuration Setup
+#                   Default Completion Setup
 # ==============================================================================
 # Load completion system modules
-zmodload zsh/complist
+zmodload -i zsh/complist
 _comp_options+=(globdots)
 
 # Determine dump file location
@@ -60,8 +59,9 @@ zinit ice lucid \
 zinit light zdharma-continuum/null
 
 # Load zoxide early since it's frequently used
-zinit ice wait:0 lucid atload"eval \"\$(zoxide init zsh)\""
-zinit light zdharma-continuum/null
+unalias zi
+zinit ice wait:0 lucid atinit"export _ZO_FZF_OPTS='--height=40%'"
+zinit snippet OMZP::zoxide
 
 # The big Two
 zinit wait:0 lucid for \
@@ -73,12 +73,24 @@ zinit wait:0 lucid for \
 #                   Utility Plugins
 # ==============================================================================
 # History
-zi ice wait lucid for \
+zinit ice wait:1 lucid for \
     atload"bindkey '^[[A' history-substring-search-up; bindkey '^[[B' history-substring-search-down" \
     zsh-users/zsh-history-substring-search
 
+# Multiword History
+zinit ice wait:1 lucid for \
+    zdharma-continuum/history-search-multi-word
+
+zstyle ":history-search-multi-word" highlight-color "fg=yellow,bold"
+zstyle ":history-search-multi-word" page-size "8"
+zstyle ":plugin:history-search-multi-word" active "underline"
+zstyle ":plugin:history-search-multi-word" check-paths "yes"
+zstyle ":plugin:history-search-multi-word" clear-on-cancel "no"
+zstyle ":plugin:history-search-multi-word" synhl "yes"
+zstyle :plugin:history-search-multi-word reset-prompt-protect 1
+
 # Find the command
-zi ice wait lucid for \
+zinit ice wait lucid for \
     atload"source ${ZINIT_HOME}/plugins/agura-lex---find-the-command/usr/share/doc/find-the-command/ftc.zsh" \
     agura-lex/find-the-command
 
@@ -91,14 +103,16 @@ zinit wait:1 lucid for wfxr/forgit
 zinit wait:1 lucid for \
     OMZP::git \
     OMZP::sudo \
-    OMZP::archlinux \
-    OMZP::systemd
+    OMZP::systemd \
+    OMZP::archlinux
 
 # ==============================================================================
 #                   Completion plugins
 # ==============================================================================
+zinit ice wait'0' lucid for PZTM::completion
+
 # Load completion system
-zi for \
+zinit for \
     atload"zicompinit; zicdreplay" \
     blockf \
     lucid \
@@ -114,8 +128,7 @@ zinit wait:0 lucid \
 #                   FZF Integration
 # ==============================================================================
 # FZF Tab (load after completions)
-zinit wait"0" lucid for \
-    Aloxaf/fzf-tab
+zinit wait"0" lucid for Aloxaf/fzf-tab
 
 # FZF Tab styles (after loading fzf-tab)
 zinit ice wait:0 lucid

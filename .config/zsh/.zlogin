@@ -1,23 +1,26 @@
-if [[ "$OSTYPE" == "darwin"* ]]; then
+typeset -U PATH LIBRARY_PATH
+
+# macOS-specific settings
+if [[ "$OSTYPE" == "darwin*" ]]; then
     if [[ "$(uname -m)" == "arm64" ]]; then
-        export PATH="/opt/local/bin:opt/local/sbin:$PATH"
+        path=("/opt/local/bin" "/opt/local/sbin" $path)
         eval "$(/opt/homebrew/bin/brew shellenv)"
     fi
+
+    export TERM=xterm-256color
+    export TERMINAL=/opt/homebrew/bin/ghostty
     return
 fi
 
 # Function to append library paths if not already included
 append_lib() {
-    case ":$LIBRARY_PATH:" in
-    *:"$1":*) ;; # If already included, do nothing
-    *)
-        LIBRARY_PATH="${LIBRARY_PATH:+$LIBRARY_PATH:}$1"
-        ;;
-    esac
+    if (( ! ${LIBRARY_PATH[(I)$1]} )); then
+        LIBRARY_PATH+=("$1")
+    fi
 }
 
 # Read library paths from configuration files and append to LIBRARY_PATH
-for line in $(cat /etc/ld.so.conf.d/*.conf); do
+for line in /etc/ld.so.conf.d/*.conf; do
     append_lib "$line"
 done
 
@@ -25,6 +28,7 @@ done
 unset -f append_lib
 export LIBRARY_PATH
 
+# Laptop-specific settings
 if [[ "${MACHINE_TYPE}" = "laptop" ]]; then
     # Unset Forward key
     xmodmap -e 'keysym 0xff53 = NoSymbol'
@@ -35,45 +39,43 @@ if [[ "${MACHINE_TYPE}" = "laptop" ]]; then
 fi
 
 # Set SSH_AUTH_SOCK if not already set for this process
-if [ "${gnupg_SSH_AUTH_SOCK_by:-0}" -ne $$ ]; then
-    SSH_AUTH_SOCK="$(gpgconf --list-dirs agent-ssh-socket)"
-    export SSH_AUTH_SOCK
-fi
+: ${SSH_AUTH_SOCK:="$(gpgconf --list-dirs agent-ssh-socket)"}
+export SSH_AUTH_SOCK
 
 # Set GPG_TTY to the current terminal
 if tty -s; then
-    GPG_TTY=$(tty)
-    export GPG_TTY
+    export GPG_TTY=$(tty)
 else
     # Attempt to find a terminal or fallback to a default
     if [ -n "$XDG_VTNR" ]; then
-        GPG_TTY="/dev/tty$XDG_VTNR"
+        export GPG_TTY="/dev/tty$XDG_VTNR"
     elif [ -n "$XDG_SESSION_ID" ]; then
-        GPG_TTY="/dev/tty$(loginctl show-session $XDG_SESSION_ID -p VTNr --value)"
+        export GPG_TTY="/dev/tty$(loginctl show-session $XDG_SESSION_ID -p VTNr --value)"
     else
-        GPG_TTY="/dev/tty1" # Fallback to a default TTY
+        export GPG_TTY="/dev/tty1" # Fallback to a default TTY
     fi
-    export GPG_TTY
     echo "Fallback GPG_TTY: $GPG_TTY"
 fi
 
 # Ensure GPG_AGENT_INFO is available (legacy variable, usually not needed)
-if [ -z "$GPG_AGENT_INFO" ]; then
-    GPG_AGENT_INFO=$(gpgconf --list-dirs agent-socket)
-    export GPG_AGENT_INFO
-fi
+: ${GPG_AGENT_INFO:="$(gpgconf --list-dirs agent-socket)"}
+export GPG_AGENT_INFO
 
 gpg-connect-agent updatestartuptty /bye >/dev/null
 
 # Set platform-specific environment variables
 export SUDO_ASKPASS="/usr/local/bin/dpass"
-if [[ ${XDG_SESSION_TYPE} == "wayland" ]]; then
-    export QT_QPA_PLATFORM='wayland'
-    export ENABLE_HDR_WSI=1
-    export DXVK_HDR=1
-    export TERMINAL=/usr/bin/ghostty
-    export TERM=ghostty
-else
-    export TERMINAL="/usr/local/bin/st"
-    export TERM=st
-fi
+
+case "${XDG_SESSION_TYPE}" in
+    wayland)
+        export QT_QPA_PLATFORM='wayland'
+        export ENABLE_HDR_WSI=1
+        export DXVK_HDR=1
+        export TERMINAL=/usr/bin/ghostty
+        export TERM=ghostty
+        ;;
+    *)
+        export TERMINAL="/usr/local/bin/st"
+        export TERM=st
+        ;;
+esac
