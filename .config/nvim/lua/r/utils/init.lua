@@ -117,16 +117,4 @@ function utils.write_and_source(buf)
     end, { buffer = buf, desc = 'Evaluate current file' })
 end
 
----Set css and html as alternate files to each other
-function utils.switch_alternate()
-    local open_cmd = vim.uv.fs_stat(vim.fn.glob 'css/*.css') and vim.fn.glob 'css/*.css' or vim.fn.glob '*.css'
-    vim.keymap.set('n', '<leader>s', function()
-        if vim.fn.expand '%:e' == 'html' then
-            vim.cmd.edit(open_cmd)
-        else
-            vim.cmd.edit 'index.html'
-        end
-    end, { buffer = 0, silent = true, desc = 'Open alternate shader file' })
-end
-
 return utils

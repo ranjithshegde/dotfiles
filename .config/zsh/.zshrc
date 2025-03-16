@@ -184,3 +184,9 @@ alias yarn='yarn --use-yarnrc "${XDG_CONFIG_HOME:-$HOME/.config}/yarn/config"'
 for script in "$ZDOTDIR/functions/"*.sh; do
     source "$script"
 done
+
+precmd() {
+    precmd() {
+        echo
+    }
+}

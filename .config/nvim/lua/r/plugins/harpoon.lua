@@ -4,36 +4,32 @@ return {
     dependencies = { 'nvim-lua/plenary.nvim' },
     keys = {
         {
-            "<leader>'",
+            ']`',
             function()
-                local harp = require 'harpoon'
-                harp:list():next()
+                require('harpoon'):list():next()
             end,
             'Navigate to next harpooned file',
         },
         {
-            '<leader>`',
+            '[`',
             function()
-                local harp = require 'harpoon'
-                harp:list():prev()
+                require('harpoon'):list():prev()
             end,
             'Navigate to previous harpooned file',
         },
         {
-            '<leader><leader>',
+            '<leader>`',
             function()
-                local harp = require 'harpoon'
-                harp.ui:toggle_quick_menu(harp:list())
-            end,
-            'Open harpoon list',
-        },
-        {
-            '<leader><Space>',
-            function()
-                local harp = require 'harpoon'
-                harp:list():add()
+                require('harpoon'):list():add()
             end,
             'Harpoon current file',
+        },
+        {
+            '<leader><leader>',
+            function()
+                require('harpoon').ui:toggle_quick_menu(require('harpoon'):list())
+            end,
+            'Open harpoon list',
         },
     },
 }

@@ -134,8 +134,8 @@ return {
         { ']r', sf('words', 'jump', vim.v.count1), desc = 'Next Reference', mode = { 'n', 't' } },
         { '[r', sf('words', 'jump', -vim.v.count1), desc = 'Prev Reference', mode = { 'n', 't' } },
         { '<leader>go', sf 'gitbrowse', desc = 'Open git remote for current file' },
-        { '<leader>.', sf 'scratch', desc = 'Create scratch buffer' },
-        { '<leader>s', sf('scratch', 'select'), desc = 'Select scratch buffer' },
+        { '<leader>sa', sf 'scratch', desc = 'Create scratch buffer' },
+        { '<leader>ss', sf('scratch', 'select'), desc = 'Select scratch buffer' },
         {
             '<Space>p',
             sf('picker', 'projects', { dev = get_workspace_folders() }),

@@ -45,7 +45,7 @@ function lspmap.ccls(buf)
 end
 
 function lspmap.clangd(buf)
-    map('n', '<leader>s', vim.cmd.ClangdSwitchSourceHeader, { desc = 'Switch to header/source', buffer = buf })
+    map('n', 'sa', vim.cmd.ClangdSwitchSourceHeader, { desc = 'Switch to header/source/alternate', buffer = buf })
     map('n', 'smi', vim.cmd.ClangdShowSymbolInfo, { desc = 'Show symbol info', buffer = buf })
 end
 

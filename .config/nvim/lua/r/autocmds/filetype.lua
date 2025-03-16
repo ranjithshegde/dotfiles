@@ -35,7 +35,7 @@ return function(id)
     end, 'Default commenstring for c style filetype')
 
     ftcmd('C_style', 'glsl', function(args)
-        vim.keymap.set('n', '<leader>s', function()
+        vim.keymap.set('n', 'sa', function()
             if vim.fn.expand '%:e' == 'vert' then
                 vim.cmd.edit(vim.fn.expand '%:r' .. '.frag')
             else
@@ -57,7 +57,14 @@ return function(id)
 
     -- ************** Web Development  ---------------------------------------
     ftcmd('WebDev', { 'css', 'html' }, function()
-        require('r.utils').switch_alternate()
+        local open_cmd = vim.uv.fs_stat(vim.fn.glob 'css/*.css') and vim.fn.glob 'css/*.css' or vim.fn.glob '*.css'
+        vim.keymap.set('n', 'sa', function()
+            if vim.fn.expand '%:e' == 'html' then
+                vim.cmd.edit(open_cmd)
+            else
+                vim.cmd.edit 'index.html'
+            end
+        end, { buffer = 0, silent = true, desc = 'Open alternate shader file' })
     end, 'Default ftplugin for css and html')
 
     ftcmd('WebDev', 'javascript', function()
