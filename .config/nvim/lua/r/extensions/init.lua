@@ -28,49 +28,30 @@ function extensions.WordProcessor()
     vim.opt_local.spell = true
     vim.opt_local.complete:append 'k'
     vim.opt_local.spelllang = { 'en_us', 'en_gb' }
-    vim.o.thesaurus = vim.env.XDG_CONFIG_HOME .. '/nvim/thesaurus/mthesaur.txt'
-    require('r.mappings.util').wordProcessor()
+    vim.o.thesaurus = vim.fn.stdpath 'config' .. '/thesaurus/mthesaur.txt'
+
+    require('r.extensions.mappings').writer(vim.api.nvim_get_current_buf())
 end
 
 ---Return word count for the tex project
 function extensions.tex_word_count()
     local fs = vim.bo.filetype
     if fs == 'tex' or fs == 'bib' then
-        local result = ''
-        local handle
-        local output = vim.uv.new_pipe(false)
+        local cmd = { 'texcount', '-inc', '-sum', '-1', vim.fn.expand '%' }
 
-        handle = vim.uv.spawn('texcount', {
-            args = { '-inc', '-sum', '-1', vim.fn.expand '%' },
-            stdio = { nil, output, nil },
-        }, function(code)
-            if code == 0 then
-                output:read_stop()
-                output:close()
-            else
-                vim.notify('texcount failed with exit code ' .. code, vim.log.levels.ERROR)
-            end
-        end)
+        local on_exit = function(obj)
+            vim.notify(obj.stdout)
+            vim.notify(obj.stderr)
+        end
 
-        output:read_start(function(err, chunk)
-            if err then
-                vim.notify('Error reading texcount output: ' .. err, vim.log.levels.ERROR)
-                return
-            end
-            if chunk then
-                result = result .. chunk
-            end
-        end)
-
-        vim.wait(1000, function()
-            return result ~= ''
-        end)
-
-        handle:close()
-
-        vim.notify(result, nil, { title = 'Current document word count' })
+        vim.system(cmd, { text = true }, on_exit)
     else
-        vim.notify(string.format('texcount binary only supports latex subtypes. Filetype %s is unsupported', fs))
+        vim.notify(
+            string.format(
+                'texcount binary only supports latex subtypes. Filetype %s is unsupported, use `wordcount()` instead',
+                fs
+            )
+        )
     end
 end
 
@@ -103,7 +84,9 @@ end
 ---Use Yazi as file picker
 ---@param path string Patht open yazi from
 ---@param edit_cmd string Yazi window position - e: open over current buffer - vs: Vertical split - tab drop: in new or existing tab window
-function extensions.yazi(path, edit_cmd)
+---@param float boolean Whether to open Yazi in a floating window
+---@param opts table Floating window options
+function extensions.yazi(path, edit_cmd, float, opts)
     local cpath = '/tmp/chosenfile'
     local currentPath = vim.fn.expand(path)
     local job_id = nil
@@ -121,6 +104,14 @@ function extensions.yazi(path, edit_cmd)
             file:close()
             os.remove(cpath)
         end
+    end
+
+    if float then
+        vim.api.nvim_open_win(
+            0,
+            true,
+            opts or { relative = 'editor', row = 0, col = 30, width = 150, height = 150, border = 'double' }
+        )
     end
 
     vim.cmd.enew()

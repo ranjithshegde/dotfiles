@@ -27,11 +27,11 @@ cmd('Su', 'w !sudo tee %', {})
 local map = vim.keymap.set
 
 require('r.utils').lazy_on_key('n', '<leader>r', 'Yazi file picker', function()
-    require('r.mappings.util').yazi()
+    require('r.extensions.mappings').yazi()
 end)
 
 require('r.utils').lazy_on_key('n', '<leader>t', 'Open Terminal', function()
-    require('r.mappings.util').terminal()
+    require('r.extensions.mappings').terminal()
 end)
 
 -- Misc

@@ -25,4 +25,8 @@ return function()
     map('n', 'N', 'Nzzzv', { desc = 'jump to previous search result' })
     map('n', 'J', 'mzJ`z', { desc = 'Adjoin next line' })
     map('i', 'jk', '<Esc>', { desc = 'Map Esc to jk' })
+
+    map('n', 'cr<Space>', function()
+        vim.cmd.global "/^/pu=''"
+    end, { desc = 'Double space entire file' })
 end

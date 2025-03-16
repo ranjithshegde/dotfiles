@@ -174,7 +174,7 @@ id.PluginLoad = augroup('PluginLoad', opts)
 aucmd('BufReadPost', {
     group = id.PluginLoad,
     callback = function()
-        require('r.mappings.util').move()
+        require('r.extensions.mappings').move()
     end,
     once = true,
     desc = 'Load mappings for unimparied',
@@ -200,10 +200,7 @@ aucmd('BufEnter', {
     pattern = require('r.utils.tables').ignore_binaries_regex,
     group = id.NoVim,
     callback = function()
-        local handle
-        handle = vim.uv.spawn('xdg-open', { args = { vim.fn.expand '%:p' } }, function()
-            handle:close()
-        end)
+        vim.system { 'xdg-open', vim.fn.expand '%:p' }
         vim.api.nvim_buf_delete(vim.api.nvim_get_current_buf(), { force = true })
     end,
     desc = 'Open non text files with MIME',

@@ -227,7 +227,7 @@ immutability=1
 plugin=org.kde.plasma.bluetooth
 
 [Containments][68][Applets][83][Configuration]
-PreloadWeight=0
+PreloadWeight=5
 
 [Containments][68][Applets][84]
 immutability=1
@@ -241,7 +241,7 @@ immutability=1
 plugin=org.kde.plasma.battery
 
 [Containments][68][Applets][89][Configuration]
-PreloadWeight=2
+PreloadWeight=0
 
 [Containments][68][ConfigDialog]
 DialogHeight=540
@@ -254,4 +254,4 @@ knownItems=com.github.korapp.nordvpn,org.kde.plasma.notifications,org.kde.plasma
 scaleIconsToFit=true
 
 [ScreenMapping]
-itemsOnDisabledScreens=0,42cfd941-f257-4e76-9e6e-809cce6a5b82,3,http://442d3150-bb06-4c87-bb53-37e4fdd1874c,,http://0.0.0.0
+itemsOnDisabledScreens=0,42cfd941-f257-4e76-9e6e-809cce6a5b82,3,http://442d3150-bb06-4c87-bb53-37e4fdd1874c,http://0.0.0.0,

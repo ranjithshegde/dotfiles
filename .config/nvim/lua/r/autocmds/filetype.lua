@@ -27,7 +27,7 @@ return function(id)
             vim.cmd.tabnew(vim.b.makeFile)
         end, { desc = 'Open Makefile', buffer = args.buf })
 
-        require('r.extensions.project.docs').mappings(args.buf)
+        require('r.extensions.mappings').cpp(args.buf)
     end, 'Default Cpp ftplugin')
 
     ftcmd('C_style', { 'c', 'cpp', 'opencl', 'glsl' }, function(args)

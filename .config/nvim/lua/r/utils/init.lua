@@ -32,11 +32,7 @@ function utils.silent_shell(args)
 end
 
 function utils.open_in_browser(url)
-    local handle
-    local args = type(url) == 'table' and url or { url }
-    handle = vim.uv.spawn('xdg-open', { args = args }, function()
-        handle:close()
-    end)
+    vim.system { 'xdg-open', url }
 end
 
 ---Concat all lines from a file into a table
@@ -57,20 +53,6 @@ function utils.feedkey(key, mode)
     vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes(key, true, false, true), mode, false)
 end
 
----Open thesaurus for the word online
----@param cmd string Word to search
-function utils.thesaurus(cmd)
-    local url = 'https://www.thesaurus.com/browse/' .. cmd
-    utils.open_in_browser(url)
-end
-
----Open wiktionary for the word online
----@param cmd string Word to search
-function utils.dictionary(cmd)
-    local url = 'https://en.wiktionary.org/wiki/' .. cmd
-    utils.open_in_browser(url)
-end
-
 ---Execute ex-command through nvim_cmd
 ---@param cmd string command to execute
 ---@param args table a list of arguments (each is as a string)
@@ -80,56 +62,10 @@ function utils.ex_cmd(cmd, args, mods, magic)
     vim.api.nvim_cmd({ cmd = cmd, args = args and args, mods = mods and mods, magic = magic and magic }, {})
 end
 
----Get a table for filename, icon and hl_group
----@param n number window ID
----@param tab boolean True for tabline, false for winbar
----@return table {file_tail, file_icon, icon_highlight}
-function utils.get_file_label(n, tab)
-    local current_win = tab and vim.api.nvim_tabpage_get_win(n) or n
-    local current_buf = vim.api.nvim_win_get_buf(current_win)
-    local file_name = vim.api.nvim_buf_get_name(current_buf)
-
-    local tail = vim.fn.fnamemodify(file_name, ':p:t')
-
-    if tail == '' then
-        if vim.fn.getwininfo(current_win)[1].quickfix == 1 then
-            tail = vim.fn.getqflist({ title = true }).title
-        else
-            tail = 'Empty Buffer'
-        end
-    end
-
-    local result = {
-        tail = tail,
-        icon = nil,
-        color = nil,
-    }
-
-    local ext = nil
-    if string.find(file_name, 'term://') ~= nil then
-        ext = 'terminal'
-    else
-        ext = vim.fn.fnamemodify(tail, ':e')
-    end
-
-    local icon, color = require('nvim-web-devicons').get_icon_color(tail, ext)
-
-    if icon ~= nil then
-        local table = vim.api.nvim_get_hl(0, { name = 'TablineSel' })
-        if tab then
-            vim.api.nvim_set_hl(0, 'IconColor', { bg = table['bg'], fg = color, cterm = { bold = true } })
-        end
-        result.icon = icon
-        result.color = color
-    end
-    return result
-end
-
 ---Get a table with names of currnetly active language server names
 ---@return table Active clients
 function utils.get_client_names()
     local buf_clients = vim.lsp.get_clients()
-    -- local buf_clients = vim.lsp.get_active_clients()
 
     local buf_client_names = {}
     for _, client in pairs(buf_clients) do

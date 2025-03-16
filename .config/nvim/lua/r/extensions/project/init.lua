@@ -97,13 +97,10 @@ local function write_file(path, data)
 end
 
 local function exec_async(cmd, args, callback, ...)
-    local handle
     local c_args = { ... }
-    handle = uv.spawn(cmd, {
+    vim.system({ cmd, args }, {
         cwd = uv.cwd(),
-        args = args,
     }, function()
-        handle:close()
         if callback then
             callback(unpack(c_args))
         end

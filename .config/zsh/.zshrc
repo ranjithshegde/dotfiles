@@ -78,8 +78,8 @@ zinit ice wait:1 lucid for \
     zsh-users/zsh-history-substring-search
 
 # Multiword History
-zinit ice wait:1 lucid for \
-    zdharma-continuum/history-search-multi-word
+zinit ice wait:1 lucid
+zinit load zdharma-continuum/history-search-multi-word
 
 zstyle ":history-search-multi-word" highlight-color "fg=yellow,bold"
 zstyle ":history-search-multi-word" page-size "8"
@@ -95,13 +95,13 @@ zinit ice wait lucid for \
     agura-lex/find-the-command
 
 # Git
-zinit wait:1 lucid for wfxr/forgit
+zinit ice wait lucid
+zinit load wfxr/forgit
 
 # ==============================================================================
 #                   External snippets
 # ==============================================================================
 zinit wait:1 lucid for \
-    OMZP::git \
     OMZP::sudo \
     OMZP::systemd \
     OMZP::archlinux
