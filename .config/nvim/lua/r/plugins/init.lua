@@ -8,11 +8,9 @@ vim.keymap.set('n', '<leader>p', require('lazy').sync, { desc = 'Update plugins'
 return {
     -- Colorscheme
     {
-        { 'rebelot/kanagawa.nvim', opts = { transparent = true }, enabled = false },
         {
             'neko-night/nvim',
             name = 'nekonight',
-            enabled = true,
             config = function()
                 require('nekonight').setup {
                     transparent = true,
@@ -42,7 +40,7 @@ return {
             show_help = false,
             show_keys = false,
             layout = { spacing = 10 },
-            win = { border = 'single' },
+            win = { border = 'rounded' },
             triggers = {
                 { '<auto>', mode = 'nixsotc' },
                 { 'c', mode = { 'n', 'v' } },

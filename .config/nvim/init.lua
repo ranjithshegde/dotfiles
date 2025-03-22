@@ -23,7 +23,7 @@ vim.g.local_plugins = vim.fs.normalize '~/Repositories/Maintained'
 vim.opt.runtimepath:prepend(lazypath)
 
 require('lazy').setup('r.plugins', {
-    ui = { border = 'single' },
+    ui = { border = 'rounded' },
     dev = { path = vim.g.local_plugins, fallback = true },
     performance = { rtp = { disabled_plugins = require('r.utils.tables').rtp } },
     defaults = { lazy = true },

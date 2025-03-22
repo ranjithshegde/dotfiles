@@ -20,8 +20,26 @@ paclist() {
     expac --timefmt='%Y-%m-%d %T' '%l\t%n\t:%w' | sort | tail -n 200 | awk -F: '{print $1 $2 $3}' | nvim +Man!
 }
 
+function pacdisowned() {
+    local tmp_dir db fs
+    tmp_dir=$(mktemp --directory)
+    db=$tmp_dir/db
+    fs=$tmp_dir/fs
+
+    trap "rm -rf $tmp_dir" EXIT
+
+    pacman -Qlq | sort -u >"$db"
+
+    # fd --type d --exclude lost+found --full-path --print0 /etc /usr | sort -z >"$fs"
+    find /etc /usr ! -name lost+found \
+        \( -type d -printf '%p/\n' -o -print \) | sort >"$fs"
+
+    comm -23 "$fs" "$db"
+
+    rm -rf $tmp_dir
+}
+
 nopac() {
-    # find /etc /usr /opt | LC_ALL=C.UTF-8 pacman -Qqo - 2>&1 >&- >/dev/null | cut -d ' ' -f 5- >excess.txt
     SEARCH_DIRS="/etc:/usr:/opt"
     fd ${SEARCH_DIRS//:/ } | LC_ALL=C.UTF-8 pacman -Qqo - 2>&1 >&- >/dev/null | cut -d ' ' -f 5- >excess.txt
 }

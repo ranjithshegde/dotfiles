@@ -18,7 +18,13 @@ local blink_opts = {
             window = { border = 'rounded' },
         },
         menu = {
-            draw = { treesitter = { 'lsp', 'buffer', 'snippets' } },
+            draw = {
+                treesitter = { 'lsp', 'buffer', 'snippets' },
+                columns = {
+                    { 'label', 'label_description', gap = 1 },
+                    { 'kind_icon', gap = 1, 'kind' },
+                },
+            },
         },
         list = {
             selection = {

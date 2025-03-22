@@ -103,8 +103,7 @@ zinit load wfxr/forgit
 # ==============================================================================
 zinit wait:1 lucid for \
     OMZP::sudo \
-    OMZP::systemd \
-    OMZP::archlinux
+    OMZP::systemd
 
 # ==============================================================================
 #                   Completion plugins

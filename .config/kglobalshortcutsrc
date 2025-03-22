@@ -327,3 +327,10 @@ RecordWindow=none
 
 [services][org.qutebrowser.qutebrowser.desktop]
 _launch=Meta+Return
+
+[token_chromium_AEB42048C955B5FF22021930A378120F]
+_k_friendly_name=token_chromium_AEB42048C955B5FF22021930A378120F
+open-dashboard=none,none,Open dashboard
+open-dashboard-with-running-scripts=none,none,Open dashboard with the current tab's URL used as filter
+open-new-script=none,none,Open new script tab
+toggle-enable=none,none,Toggle enable state

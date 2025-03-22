@@ -125,7 +125,7 @@ function settings.org_init()
         pattern = 'org',
         once = true,
         callback = function(args)
-            require('blink.cmp').add_provider('orgmode', {
+            require('blink.cmp').add_source_provider('orgmode', {
                 name = 'Orgmode',
                 module = 'orgmode.org.autocompletion.blink',
             })

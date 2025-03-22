@@ -67,7 +67,6 @@ function Debugger.setup()
     Debugger.fscopes = makeFloat 'scopes'
     Debugger.fthreads = makeFloat 'threads'
 
-    dap.defaults.fallback.terminal_win_cmd = 'tabnew'
     dap.defaults.fallback.external_terminal = {
         command = '/usr/bin/ghostty',
         args = { '-e' },
@@ -75,6 +74,26 @@ function Debugger.setup()
 
     dap.adapters = require 'r.plugins.debug.adapters'
     dap.configurations = require 'r.plugins.debug.configurations'
+
+    local dv = require 'dap-view'
+    dap.listeners.before.attach['dap-view-config'] = function()
+        dv.open()
+    end
+    dap.listeners.before.launch['dap-view-config'] = function()
+        dv.open()
+    end
+
+    dap.listeners.after.event_initialized['dap-view-config'] = function(session)
+        session.on_close['dap-view-config'] = function()
+            dv.close()
+            for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+                local bufname = vim.api.nvim_buf_get_name(buf)
+                if bufname:find '%[dap%-terminal%]' then
+                    vim.api.nvim_buf_delete(buf, { force = true })
+                end
+            end
+        end
+    end
 end
 
 return Debugger

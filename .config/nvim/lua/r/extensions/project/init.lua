@@ -96,9 +96,9 @@ local function write_file(path, data)
     assert(uv.fs_close(fd))
 end
 
-local function exec_async(cmd, args, callback, ...)
+local function exec_async(cmd, callback, ...)
     local c_args = { ... }
-    vim.system({ cmd, args }, {
+    vim.system(cmd, {
         cwd = uv.cwd(),
     }, function()
         if callback then
@@ -159,7 +159,7 @@ local function create_of(add)
         vim.cmd.cd(i)
         shell { 'clang-format', '--style=webkit', '-dump-config', '>', '.clang_format' }
         exec_sync('compiledb -n make', vim.cmd.edit, 'src/ofApp.h')
-        exec_async('git', { 'init' }, write_file, '.gitignore', boilerplate.cpp.of.gitignore)
+        exec_async({ 'git', 'init' }, write_file, '.gitignore', boilerplate.cpp.of.gitignore)
     end)
 end
 
@@ -205,9 +205,9 @@ function projects.micro()
         vim.ui.input({ prompt = 'Enter board name' }, function(board)
             shell { 'pio', 'project', 'init', '--board', board }
 
-            exec_async('pio', { 'run', '-t', 'compiledb' }, write_file, 'src/main.cpp', boilerplate.cpp.micro.cpp)
+            exec_async({ 'pio', 'run', '-t', 'compiledb' }, write_file, 'src/main.cpp', boilerplate.cpp.micro.cpp)
 
-            exec_async('git', { 'init' }, write_file, '.gitignore', boilerplate.cpp.micro.gitignore)
+            exec_async({ 'git', 'init' }, write_file, '.gitignore', boilerplate.cpp.micro.gitignore)
 
             shell { 'clang-format', '--style=webkit', '-dump-config', '>', '.clang_format' }
 
@@ -225,14 +225,14 @@ end
 local function create_cmake_list(project_name, libs)
     boilerplate.cpp.cmake.make = {
         'cmake_minimum_required(VERSION 3.5)\n',
+        'set(CMAKE_CXX_STANDARD 20)\n',
+        'set(CMAKE_CXX_STANDARD_REQUIRED ON)\n',
         'set(CMAKE_EXPORT_COMPILE_COMMANDS ON)\n',
         '\n',
         'project( ' .. project_name .. ')\n',
         libs and string.format('find_package(%s REQUIRED)\n\n', libs) or '\n',
-        'file(\n',
-        '\tGLOB_RECURSE SOURCES\n',
-        '\tsrc/*.cpp\n',
-        '\tsrc/**/*.cpp\n',
+        'file(GLOB_RECURSE SOURCES\n',
+        '\t${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp\n',
         ')\n',
         '\n',
         'add_compile_options (\n',
@@ -261,7 +261,6 @@ function projects.cmake()
         vim.cmd.cd(input)
 
         shell { 'mkdir', 'src' }
-        shell { 'mkdir', 'include' }
         shell { 'mkdir', 'build' }
 
         write_file('src/main.cpp', boilerplate.cpp.cmake.cpp)
@@ -275,7 +274,7 @@ function projects.cmake()
             end
             write_file('CMakeLists.txt', boilerplate.cpp.cmake.make)
 
-            exec_async('git', { 'init' }, write_file, '.gitignore', boilerplate.cpp.cmake.gitignore)
+            exec_async({ 'git', 'init' }, write_file, '.gitignore', boilerplate.cpp.cmake.gitignore)
 
             shell { 'clang-format', '--style=webkit', '-dump-config', '>', '.clang_format' }
             shell { 'chmod', 'u+x', 'autoBuild' }
@@ -294,22 +293,18 @@ function projects.webdev()
         shell { 'mkdir', '-p', input }
         vim.cmd.cd(input)
 
-        exec_async(
+        exec_async({
             'cp',
-            { vim.fs.normalize '~/.config/prettierrc.toml', '.prettierrc.toml' },
-            write_file,
-            'tsconfig.json',
-            boilerplate.webdev.js
-        )
+            vim.fs.normalize '~/.config/prettierrc.toml',
+            '.prettierrc.toml',
+        }, write_file, 'tsconfig.json', boilerplate.webdev.js)
 
-        exec_async('mkdir', { 'css', 'res' }, exec_async, 'touch', { 'css/main.css' })
+        exec_async({ 'mkdir', 'css', 'res' }, exec_async, { 'touch', 'css/main.css' })
 
         exec_async(
-            'git',
-            { 'init' },
+            { 'git', 'init' },
             exec_async,
-            'cp',
-            { vim.fs.normalize '~/.config/stylelintrc.js', '.stylelintrc.js' }
+            { 'cp', vim.fs.normalize '~/.config/stylelintrc.js', '.stylelintrc.js' }
         )
 
         vim.cmd.edit 'index.html'
