@@ -1,9 +1,0 @@
-#!/bin/sh
-# Path to your images directory
-IMAGES_DIR="$HOME/Pictures/ELDEN-RING-4K-WALLPAPERS/"
-
-# Select a random image from the directory
-IMAGE=$(find "$IMAGES_DIR" -type f | shuf -n 1)
-
-# Lock the screen with the selected image
-swaylock -i "$IMAGE"

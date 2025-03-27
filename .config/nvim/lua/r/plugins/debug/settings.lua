@@ -89,7 +89,8 @@ function Debugger.setup()
             for _, buf in ipairs(vim.api.nvim_list_bufs()) do
                 local bufname = vim.api.nvim_buf_get_name(buf)
                 if bufname:find '%[dap%-terminal%]' then
-                    vim.api.nvim_buf_delete(buf, { force = true })
+                    local winnr = vim.fn.bufwinid(buf)
+                    vim.api.nvim_win_close(winnr, true)
                 end
             end
         end

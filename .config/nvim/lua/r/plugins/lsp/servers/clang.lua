@@ -32,6 +32,9 @@ function servers.ccls()
         cmd = { 'ccls', '--log-file=/tmp/ccls.log', '--v=1' },
         filetypes = filetypes,
         autostart = true,
+        root_dir = vim.fs.dirname(
+            vim.fs.find({ 'compile_commands.json', 'compile_flags.txt', '.git', '.ccls' }, { upward = true })[1]
+        ),
     }
 
     require('ccls').setup {

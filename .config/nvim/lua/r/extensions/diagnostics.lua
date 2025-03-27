@@ -36,7 +36,7 @@ local default_settings = {
     update_in_insert = false,
     float = float_conf,
     jump = { float = true },
-    virtual_lines = false,
+    virtual_lines = true,
 }
 
 local client_diagnostics = {}

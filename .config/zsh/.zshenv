@@ -129,10 +129,3 @@ path=(
     $path
 )
 export PATH
-
-# Function to run commands with sudo
-sdo() {
-    local func="$1"
-    shift
-    sudo zsh -c "$(declare -f $func); $func $*"
-}

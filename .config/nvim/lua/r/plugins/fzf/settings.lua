@@ -1,13 +1,9 @@
 local fzy = {}
 
 local function dir_changer(entry, cwd)
-    entry = entry:gsub('.*([%z\1-\127\128-\255]+)', '')
+    entry = entry:gsub('[\128-\255]+', '')
     entry = vim.fs.joinpath(cwd, entry)
-    if vim.uv.fs_stat(entry).type == 'directory' then
-        vim.cmd.tcd(entry)
-    else
-        vim.cmd.tcd(vim.fs.dirname(entry))
-    end
+    vim.cmd.tcd(vim.fs.dirname(entry))
 end
 
 fzy.layouts = {
@@ -80,15 +76,16 @@ end
 function fzy.cd_folder(prompt, cwd)
     local fzf = require 'fzf-lua'
     local dir = vim.fs.normalize(cwd)
-    local fd_command = 'fd --base-directory=' .. dir .. ' --type d .'
+    local fd_command = 'fd --type d'
 
     fzf.fzf_exec(fd_command, {
         prompt = prompt,
         fzf_opts = { ['--layout'] = 'reverse-list' },
+        cwd = dir,
         actions = {
             ['default'] = {
-                fn = function(selected, _)
-                    dir_changer(selected[1], dir)
+                fn = function(selected, opts)
+                    fzf.actions.cd(selected, opts)
                     fzf.files()
                 end,
             },

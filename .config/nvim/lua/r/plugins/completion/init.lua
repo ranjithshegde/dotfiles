@@ -4,7 +4,7 @@ return {
     {
         'saghen/blink.cmp',
         event = { 'InsertEnter', 'CmdlineEnter' },
-        version = 'v0.*',
+        version = 'v1.*',
         config = setup('r.plugins.completion.settings', 'blink'),
         opts_extend = { 'sources.per_filetype' },
         dependencies = {

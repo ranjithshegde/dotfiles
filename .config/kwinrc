@@ -4,9 +4,7 @@
 [Desktops]
 Id_1=1e893712-eee4-4ef3-b1b5-951ff2ba2926
 Id_2=69edae7f-a2df-4b3a-a4d5-e3a4c9cead31
-Id_3=f6ecae32-0baf-487b-9645-327064e54969
-Name_3=New Desktop
-Number=3
+Number=2
 Rows=1
 
 [Effect-windowview]
@@ -19,6 +17,7 @@ Mode=Times
 MorningBeginFixed=0730
 
 [Plugins]
+dynamic_workspacesEnabled=true
 krohnkiteEnabled=true
 
 [Script-krohnkite]

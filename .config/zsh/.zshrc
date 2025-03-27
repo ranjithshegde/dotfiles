@@ -181,8 +181,16 @@ alias yarn='yarn --use-yarnrc "${XDG_CONFIG_HOME:-$HOME/.config}/yarn/config"'
 #                   Load Functions
 # ==============================================================================
 for script in "$ZDOTDIR/functions/"*.sh; do
-    source "$script"
+    # source "$script"
+    zinit snippet "$script"
 done
+
+# Function to run commands with sudo
+sdo() {
+    local func="$1"
+    shift
+    sudo zsh -c "$(declare -f $func); $func $*"
+}
 
 precmd() {
     precmd() {

@@ -10,4 +10,4 @@ fi
 
 nitrogen --force-setter=xinerama --restore &
 picom &
-xss-lock --notifier "$HOME/.local/bin/scripts/steam_sleep" -- "$HOME/.local/bin/scripts/daver" &
+xss-lock --notifier "$HOME/.local/bin/scripts/steam_sleep" -- "$HOME/.local/bin/scripts/dwm_lock" &
