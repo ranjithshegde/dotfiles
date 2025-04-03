@@ -11,3 +11,4 @@ nn http://neuralnetworksanddeeplearning.com/chap1.html
 red https://www.reddit.com/
 orgmode https://github.com/kristijanhusak/neovim-config/blob/master/nvim/lua/partials/plugins/orgmode.lua
 dail https://app.daily.dev/
+fol https://www.reddit.com/r/neovim/comments/1fzn1zt/custom_fold_text_function_with_treesitter_syntax/

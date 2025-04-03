@@ -179,14 +179,14 @@ function M.register_handler(type_name, handler)
     table.insert(M.state.type_handlers[type_name], handler)
 
     -- Apply handler to existing buffers of this type
-    for bufnr, config in pairs(M.state.buffers) do
+    for _, config in pairs(M.state.buffers) do
         if config.type_name == type_name then
             -- TODO: Fix temporary workaround for DAP
-            if package.loaded['dap'] then
-                handler(0, config)
-            else
-                handler(bufnr, config)
-            end
+            -- if package.loaded['dap'] then
+            handler(0, config)
+            -- else
+            --     handler(bufnr, config)
+            -- end
         end
     end
 

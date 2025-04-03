@@ -29,6 +29,8 @@ local float_conf = {
     end,
 }
 
+local lines_conf = { current_line = true }
+
 local default_settings = {
     underline = false,
     virtual_text = false,
@@ -36,7 +38,7 @@ local default_settings = {
     update_in_insert = false,
     float = float_conf,
     jump = { float = true },
-    virtual_lines = true,
+    virtual_lines = lines_conf,
 }
 
 local client_diagnostics = {}
@@ -77,6 +79,12 @@ local function toggle_setting(setting, client_name)
                 config.signs = sign_conf
             else
                 config.signs = false
+            end
+        elseif setting == 'virtual_lines' then
+            if config.virtual_lines == false then
+                config.virtual_lines = lines_conf
+            else
+                config.virtual_lines = false
             end
         else
             config[setting] = not config[setting]

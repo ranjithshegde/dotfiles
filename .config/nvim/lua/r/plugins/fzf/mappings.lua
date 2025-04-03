@@ -48,6 +48,7 @@ local maps = {
         M = { fzf 'man_pages', 'Man pages' },
         O = { fzf 'lsp_live_workspace_symbols', 'Grep lsp workspace symbols' },
         q = { fzf 'quickfix', 'Quickfix list' },
+        t = { fzf 'treesitter', 'TreeSitter nodes in buffer' },
         T = { fzf 'tagstack', 'Lsp Ctags' },
         z = { fzf 'blines', 'Gerp current buffer lines' },
         Z = { fzf 'zoxide', 'Zoxide to Oil' },
@@ -106,17 +107,6 @@ local maps = {
             w = {
                 fzf_cd(false, 'Org Wiki', '$HOME/Documents/Mandala/Wiki/'),
                 'Org Wiki',
-            },
-        },
-        t = {
-            name = 'Treesitter',
-            n = { fzf 'treesitter', 'TreeSitter nodes in buffer' },
-            f = {
-                function()
-                    require('refactoring').select_refactor()
-                end,
-                'Treesitter Refactoring options',
-                mode = { 'n', 'v' },
             },
         },
         g = {

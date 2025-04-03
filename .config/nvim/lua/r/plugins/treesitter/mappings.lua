@@ -158,6 +158,13 @@ function treesitter.common()
                 v = { refac.refac 'Extract Variable', 'Extract Variable', mode = { 'n', 'x' } },
                 f = { refac.refac 'Extract Function', 'Extract Function', mode = { 'n', 'x' } },
                 F = { refac.refac 'Extract Function to File', 'Extract Function to File', mode = { 'n', 'x' } },
+                l = {
+                    function()
+                        require('refactoring').select_refactor()
+                    end,
+                    'Treesitter Refactoring options',
+                    mode = { 'n', 'v' },
+                },
             },
         }, { expr = true }),
         mapper {

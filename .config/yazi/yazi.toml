@@ -7,12 +7,6 @@ linemode = "size"
 max_width = 1920
 max_height = 1080
 
-[open]
-prepend_rules = [
-    # Media
-    { mime = "{audio,video}/*", use = ["open", "reveal", "play"] },
-]
-
 [plugin]
 prepend_previewers = [{ name = "*.md", run = "glow" }]
 prepend_fetchers = [{ name = "*", id = "git", run = "git" }]

@@ -116,7 +116,11 @@ function handlers.attach(client, bufnr)
         vim.wo.foldexpr = 'v:lua.vim.treesitter.foldexpr()'
     end
 
-    require('r.extensions.diagnostics').attach(client, bufnr, { underline = false, update_in_insert = false })
+    require('r.extensions.diagnostics').attach(
+        client,
+        bufnr,
+        { underline = false, update_in_insert = false, virtual_lines = false }
+    )
 
     require('r.utils').register_au_id(id)
 

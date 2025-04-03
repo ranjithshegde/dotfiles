@@ -22,4 +22,10 @@ return {
         'ckolkey/ts-node-action',
         config = setup('r.plugins.treesitter.settings', 'node_action'),
     },
+    {
+        'DanielMSussman/simpleCppTreesitterTools.nvim',
+        dependencies = { 'nvim-treesitter/nvim-treesitter' },
+        ft = 'cpp',
+        config = true,
+    },
 }
