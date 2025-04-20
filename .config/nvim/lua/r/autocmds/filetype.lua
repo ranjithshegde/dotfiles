@@ -49,7 +49,8 @@ return function(id)
     ------------------------------------------------------------------------
 
     ftcmd('repl', { 'lua', 'python', 'javascript' }, function(args)
-        vim.keymap.set({ 'n', 't' }, '<F10>', function()
+        --Shift F9
+        vim.keymap.set({ 'n', 't' }, '<F21>', function()
             vim.cmd.stopinsert()
             require('r.extensions').toggleTerm(vim.b[args.buf].repl, 'repl')
         end, { desc = 'Toggle REPL', buffer = args.buf })

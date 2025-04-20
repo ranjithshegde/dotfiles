@@ -39,8 +39,8 @@ warningResources_dismissed=true
 
 [Containments][61][Wallpaper][org.kde.image][General]
 FillMode=0
-Image=/usr/share/wallpapers/Nexus/
-PreviewImage=/usr/share/wallpapers/Nexus/
+Image=/usr/share/wallpapers/Next/
+PreviewImage=/usr/share/wallpapers/Next/
 SlidePaths=/usr/share/wallpapers/
 
 [Containments][62]

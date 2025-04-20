@@ -39,6 +39,7 @@ local project_types = {
                 makeprg = 'make',
                 makefile = 'CMakeLists.txt',
                 debug_bin = 'build/' .. dirname,
+                test_bin = 'build/tests/' .. dirname .. 'Tests',
             }
         end,
     },
@@ -218,6 +219,9 @@ function M.apply_config(config, bufnr)
     end
     if config.debug_bin then
         vim.b[bufnr].debugBin = config.debug_bin
+    end
+    if config.test_bin then
+        vim.b[bufnr].test_bin = config.test_bin
     end
     if config.wasm_bin then
         vim.b[bufnr].wasm = config.wasm_bin

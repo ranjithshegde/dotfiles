@@ -3,13 +3,16 @@
 ------------------------------------------------------------------------
 
 return require('which-key').add(require 'r.utils.expand_maps' {
+    -- Shift F6
+    ['<F18>'] = { require('dap').continue, 'continue to next breakpoint' },
+    ['<F11>'] = { require('dap').step_into, 'step into' },
+    -- Shift F11
+    ['<F23>'] = { require('dap').step_out, 'step Out' },
+    ['<F10>'] = { require('dap').step_over, 'step over' },
+    ['<F12>'] = { require('dap').terminate, 'End' },
+
     ['<leader>d'] = {
         name = 'debug',
-        c = { require('dap').continue, 'continue to next breakpoint' },
-        i = { require('dap').step_into, 'step into' },
-        o = { require('dap').step_out, 'step Out' },
-        O = { require('dap').step_over, 'step over' },
-        ['.'] = { require('dap').terminate, 'End' },
 
         e = { require('dap.ui.widgets').hover, 'Evaluate Hover', mode = { 'n', 'v', 's' } },
         E = { require('r.plugins.debug.settings').exp.toggle, 'Expressions buffer', mode = { 'n', 'v', 's' } },
@@ -28,11 +31,5 @@ return require('which-key').add(require 'r.utils.expand_maps' {
             end,
             'set breakpoint',
         },
-    },
-    ['<F10>'] = {
-        function()
-            require('dap').repl.toggle({ height = 15 }, 'split')
-        end,
-        'Repl Toggle',
     },
 })

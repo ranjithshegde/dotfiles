@@ -44,6 +44,7 @@ function Debugger.init()
         callback = function(args)
             if not package.loaded.dap then
                 require('r.utils').lazy_on_key('n', '<leader>d', 'Debuging', require, 'r.plugins.debug.mappings')
+                require('r.utils').lazy_on_key('n', '<F18>', 'Debuging', require, 'r.plugins.debug.mappings')
                 vim.api.nvim_del_autocmd(args.id)
             end
         end,

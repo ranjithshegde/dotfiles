@@ -1,11 +1,10 @@
 [Activities][LastVirtualDesktop]
-42cfd941-f257-4e76-9e6e-809cce6a5b82=69edae7f-a2df-4b3a-a4d5-e3a4c9cead31
+42cfd941-f257-4e76-9e6e-809cce6a5b82=1e893712-eee4-4ef3-b1b5-951ff2ba2926
 
 [Desktops]
 Id_1=1e893712-eee4-4ef3-b1b5-951ff2ba2926
 Id_2=69edae7f-a2df-4b3a-a4d5-e3a4c9cead31
-Id_3=22edca14-88a6-4442-a429-f5e3b6deadd2
-Number=3
+Number=2
 Rows=1
 
 [Effect-windowview]
@@ -31,7 +30,7 @@ enableSpiralLayout=false
 enableSpreadLayout=false
 enableStackedLayout=true
 enableStairLayout=false
-ignoreClass=krunner,yakuake,spectacle,kded5,xwaylandvideobridge,plasmashell,ksplashqml,org.kde.plasmashell,org.kde.polkit-kde-authentication-agent-1,org.kde.krule
+ignoreClass=krunner,yakuake,spectacle,kded5,xwaylandvideobridge,plasmashell,ksplashqml,org.kde.plasmashell,org.kde.polkit-kde-authentication-agent-1,org.kde.krule,ScreenKey
 maximizeSoleTile=true
 tileLayoutGap=4
 

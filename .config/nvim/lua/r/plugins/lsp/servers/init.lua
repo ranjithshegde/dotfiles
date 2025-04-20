@@ -42,7 +42,7 @@ return function()
         settings = { Lua = { completion = { callSnippet = 'Replace' } } },
     }
 
-    configs.ltex = require('r.plugins.lsp.servers.ltex').lsp()
+    configs.ltex_plus = require('r.plugins.lsp.servers.ltex').lsp()
 
     if vim.tbl_contains({ 'tex', 'bib', 'plaintex' }, vim.bo.filetype) then
         configs.texlab = require 'r.plugins.lsp.servers.texlab'
@@ -53,6 +53,9 @@ return function()
     end
 
     for ls, cfg in pairs(configs) do
-        require('lspconfig')[ls].setup(cfg)
+        vim.lsp.config(ls, cfg)
+        if ls ~= 'ltex_plus' then
+            vim.lsp.enable(ls, true)
+        end
     end
 end

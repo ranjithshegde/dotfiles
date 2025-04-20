@@ -62,14 +62,15 @@ local map = vim.keymap.set
 ------------------------------------------------------------------------
 
 function tasks.micro(bufnr)
-    map({ 'n', 't' }, '<F8>', function()
+    --Shift F9
+    map({ 'n', 't' }, '<F21>', function()
         vim.cmd.stopinsert()
         require('r.extensions').toggleTerm('pio device monitor', 'pio')
     end, { desc = 'Serial monitor toggle' })
 
-    map('n', '<F2>', pio_clean, { buffer = bufnr, desc = 'Regenerate tags' })
+    map('n', '<F3>', pio_clean, { buffer = bufnr, desc = 'Regenerate tags' })
 
-    map('n', '<F3>', function()
+    map('n', '<F4>', function()
         require('overseer').run_template { name = 'pio check --skip-packages' }
     end, { buffer = bufnr, desc = 'Verify code' })
 
@@ -87,23 +88,24 @@ end
 ------------------------------------------------------------------------
 
 function tasks.oF(bufnr)
-    map('n', '<F2>', function()
+    map('n', '<F3>', function()
         require('overseer').run_template { name = [[Build wasm]] }
     end, { buffer = bufnr, desc = 'Compile Emscripten' })
 
-    map('n', '<F3>', function()
+    map('n', '<F4>', function()
         require('overseer').run_template { name = [[Deploy wasm]] }
     end, { buffer = bufnr, desc = 'Run Emscripten' })
-
-    map('n', '<F4>', function()
-        require('overseer').run_template { name = [[oF Build]], params = { type = 'Debug' } }
-    end, { buffer = bufnr, desc = 'Compile Debug' })
 
     map('n', '<F5>', function()
         renderOffload(true)
     end, { buffer = bufnr, desc = 'Compile and Run Release' })
 
     map('n', '<F6>', renderOffload, { buffer = bufnr, desc = 'Run Release' })
+
+    -- Shift F5
+    map('n', '<F17>', function()
+        require('overseer').run_template { name = [[oF Build]], params = { type = 'Debug' } }
+    end, { buffer = bufnr, desc = 'Compile Debug' })
 end
 
 ------------------------------------------------------------------------
@@ -137,15 +139,16 @@ end
 ------------------------------------------------------------------------
 
 function tasks.cmake(bufnr)
-    map('n', '<F2>', function()
+    map('n', '<F3>', function()
         require('overseer').run_template { name = 'Cmake clean' }
     end, { buffer = bufnr, desc = 'Clean cmake' })
 
-    map('n', '<F3>', function()
+    map('n', '<F4>', function()
         require('overseer').run_template { name = 'Cmake configure', params = { type = 'Debug' } }
     end, { buffer = bufnr, desc = 'Generate Cmake Debug' })
 
-    map('n', '<F4>', function()
+    -- Shift F4
+    map('n', '<F16>', function()
         require('overseer').run_template { name = 'Cmake configure', params = { type = 'Release' } }
     end, { buffer = bufnr, desc = 'Generate Cmake Release' })
 

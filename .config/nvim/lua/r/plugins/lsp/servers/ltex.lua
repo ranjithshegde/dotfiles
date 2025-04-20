@@ -70,7 +70,7 @@ end
 function ltex.lsp()
     local dict = vim.api.nvim_get_option_value('spellfile', {})
     local config = {
-        name = 'ltex',
+        name = 'ltex_plus',
         filetypes = { 'bib', 'markdown', 'org', 'tex' },
         autostart = false,
         capabilities = vim.lsp.protocol.make_client_capabilities(),
@@ -104,6 +104,10 @@ function ltex.lsp()
                     ['en-GB'] = vim.uv.fs_stat(vim.uv.cwd() .. '/.ltex_rules') and require('r.utils').concat_fileLines(
                         vim.uv.cwd() .. '/.ltex_rules'
                     ) or {},
+                },
+                performance = {
+                    cacheSize = 4096,
+                    maxDocumentSize = 1000000,
                 },
             },
         },

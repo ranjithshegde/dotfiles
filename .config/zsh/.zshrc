@@ -180,10 +180,17 @@ alias yarn='yarn --use-yarnrc "${XDG_CONFIG_HOME:-$HOME/.config}/yarn/config"'
 # ==============================================================================
 #                   Load Functions
 # ==============================================================================
-for script in "$ZDOTDIR/functions/"*.sh; do
-    # source "$script"
-    zinit snippet "$script"
-done
+
+if [[ "${MACHINE_TYPE}" = "laptop" ]]; then
+    zinit snippet "$ZDOTDIR/functions/power_profiles.sh"
+fi
+
+if [[ "${XDG_SESSION_TYPE}" = "dwm" ]]; then
+    zinit snippet "$ZDOTDIR/functions/dmenus.sh"
+fi
+
+zinit snippet "$ZDOTDIR/functions/scripts.sh"
+zinit snippet "$ZDOTDIR/functions/fuzzy.sh"
 
 # Function to run commands with sudo
 sdo() {
