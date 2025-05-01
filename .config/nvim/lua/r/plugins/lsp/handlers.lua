@@ -139,6 +139,10 @@ function handlers.attach(client, bufnr)
         end, { expr = true, buffer = bufnr, desc = 'Incremental rename' })
     end
 
+    if client:supports_method 'textDocument/documentColor' then
+        vim.lsp.document_color.enable(true, bufnr)
+    end
+
     if client.name == 'ltex' then
         vim.lsp.commands['_ltex.addToDictionary'] = require('r.plugins.lsp.servers.ltex').add_to_dict
         vim.lsp.commands['_ltex.disableRules'] = require('r.plugins.lsp.servers.ltex').disable_rule

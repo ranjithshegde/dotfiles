@@ -1,25 +1,28 @@
 local adapters = {}
 
+local cpptools_path = '/usr/share/cpptools-debug/bin/OpenDebugAD7'
+
+if vim.g.is_win or vim.g.is_mac then
+    local ext_path = vim.fs.normalize '~/.vscode/extensions/'
+    local temp_path = vim.fs.find(function(name, _)
+        return name:match 'ms%-vscode%.cpptools'
+    end, {
+        type = 'directory',
+        path = ext_path,
+    })
+
+    cpptools_path = vim.fs.joinpath(temp_path[1], '/debugAdapters/bin/OpenDebugAD7')
+end
+
 adapters.lldb = {
     type = 'executable',
     command = '/usr/bin/lldb-vscode',
     name = 'lldb',
 }
 
-local cpp_tools = nil
-
-if vim.fn.has 'win32' == 1 then
-    cpp_tools =
-        vim.fs.normalize '~/.vscode/extensions/ms-vscode.cpptools-1.13.6-win32-x64/debugAdapters/bin/OpenDebugAD7'
-elseif _G.__MACHINE then
-    cpp_tools = vim.env.XDG_DATA_HOME .. '/debug-adapters/cpptools/extension/debugAdapters/bin/OpenDebugAD7'
-else
-    cpp_tools = '/usr/share/cpptools-debug/bin/OpenDebugAD7'
-end
-
 adapters.cppdbg = {
     type = 'executable',
-    command = cpp_tools,
+    command = cpptools_path,
 }
 
 adapters.python = {

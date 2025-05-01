@@ -1,5 +1,11 @@
 local configs = {}
 
+local gdb_path = '/usr/bin/gdb'
+
+if vim.g.is_mac then
+    gdb_path = '/opt/homebrew/bin/gdb'
+end
+
 local function get_cppdbg_base()
     return {
         type = 'cppdbg',
@@ -24,104 +30,22 @@ local function get_program_path(prompt, default_var)
 end
 
 configs.cpp = {
-    -- cpptools with gdb
-    --[[ {
-        name = 'Launch vscode-gdb',
-        type = 'cppdbg',
-        request = 'launch',
-        program = function()
-            if vim.b.debugBin then
-                return vim.b.debugBin
-            else
-                return vim.fn.input('Path to executable: ', vim.fn.getcwd() .. '/', 'file')
-            end
-        end,
-        visualizerFile = vim.env.XDG_DATA_HOME .. '/debug-adapters/natvis/concurrency.natvis',
-        cwd = '${workspaceFolder}',
-        stopOnEntry = false,
-        showDisplayString = true,
-        MIMode = 'gdb',
-        miDebuggerPath = '/usr/bin/gdb',
-        setupCommands = {
-            { text = '-enable-pretty-printing', description = 'enable pretty printing', ignoreFailures = true },
-        },
-    },
-    {
-        name = 'Launch vscode-gdb with custom binary',
-        type = 'cppdbg',
-        request = 'launch',
-        program = function()
-            return vim.fn.input('Path to executable: ', vim.fn.getcwd() .. '/', 'file')
-        end,
-        visualizerFile = vim.env.XDG_DATA_HOME .. '/debug-adapters/natvis/concurrency.natvis',
-        cwd = '${workspaceFolder}',
-        stopOnEntry = false,
-        showDisplayString = true,
-        MIMode = 'gdb',
-        miDebuggerPath = '/usr/bin/gdb',
-        setupCommands = {
-            { text = '-enable-pretty-printing', description = 'enable pretty printing', ignoreFailures = true },
-        },
-    },
-    {
-        name = 'Launch vscode-gdb for test binary',
-        type = 'cppdbg',
-        request = 'launch',
-        program = function()
-            if vim.b.test_bin then
-                return vim.b.test_bin
-            else
-                return vim.fn.input('Path to executable: ', vim.fn.getcwd() .. '/', 'file')
-            end
-        end,
-        visualizerFile = vim.env.XDG_DATA_HOME .. '/debug-adapters/natvis/concurrency.natvis',
-        cwd = '${workspaceFolder}',
-        stopOnEntry = false,
-        showDisplayString = true,
-        MIMode = 'gdb',
-        miDebuggerPath = '/usr/bin/gdb',
-        setupCommands = {
-            { text = '-enable-pretty-printing', description = 'enable pretty printing', ignoreFailures = true },
-        },
-    },
-    -- cpptools with gdb on nVidia
-    {
-        name = 'Launch vscode-gdb on Nvidia',
-        type = 'cppdbg',
-        request = 'launch',
-        program = function()
-            if vim.b.debugBin then
-                return vim.b.debugBin
-            else
-                return vim.fn.input('Path to executable: ', vim.fn.getcwd() .. '/', 'file')
-            end
-        end,
-        visualizerFile = vim.env.XDG_DATA_HOME .. '/debug-adapters/natvis/concurrency.natvis',
-        cwd = '${workspaceFolder}',
-        stopOnEntry = false,
-        showDisplayString = true,
-        MIMode = 'gdb',
-        miDebuggerPath = '/usr/local/bin/prime-debug',
-        setupCommands = {
-            { text = '-enable-pretty-printing', description = 'enable pretty printing', ignoreFailures = true },
-        },
-    }, ]]
     vim.tbl_extend('force', get_cppdbg_base(), {
         name = 'Launch vscode-gdb',
         program = get_program_path('Path to executable: ', 'debugBin'),
-        miDebuggerPath = '/usr/bin/gdb',
+        miDebuggerPath = gdb_path,
     }),
 
     vim.tbl_extend('force', get_cppdbg_base(), {
         name = 'Launch vscode-gdb with custom binary',
         program = get_program_path 'Path to executable: ',
-        miDebuggerPath = '/usr/bin/gdb',
+        miDebuggerPath = gdb_path,
     }),
 
     vim.tbl_extend('force', get_cppdbg_base(), {
         name = 'Launch vscode-gdb for test binary',
         program = get_program_path('Path to test executable: ', 'test_bin'),
-        miDebuggerPath = '/usr/bin/gdb',
+        miDebuggerPath = gdb_path,
     }),
 
     vim.tbl_extend('force', get_cppdbg_base(), {

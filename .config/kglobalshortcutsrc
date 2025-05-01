@@ -9,6 +9,13 @@ Switch to Last-Used Keyboard Layout=Meta+Alt+L,Meta+Alt+L,Switch to Last-Used Ke
 Switch to Next Keyboard Layout=Meta+Alt+K,Meta+Alt+K,Switch to Next Keyboard Layout
 _k_friendly_name=Keyboard Layout Switcher
 
+[brave]
+_k_friendly_name=brave
+open-dashboard=none,none,Open dashboard
+open-dashboard-with-running-scripts=none,none,Open dashboard with the current tab's URL used as filter
+open-new-script=none,none,Open new script tab
+toggle-enable=none,none,Toggle enable state
+
 [brave-browser]
 _k_friendly_name=brave-browser
 open-dashboard=none,none,Open dashboard
@@ -252,6 +259,13 @@ playmedia=none,,Play media playback
 playpausemedia=Media Play,Media Play,Play/Pause media playback
 previousmedia=Media Previous,Media Previous,Media playback previous
 stopmedia=Media Stop,Media Stop,Stop media playback
+
+[net.local.lnvim]
+_k_friendly_name=Nvim
+open-dashboard=none,none,Open dashboard
+open-dashboard-with-running-scripts=none,none,Open dashboard with the current tab's URL used as filter
+open-new-script=none,none,Open new script tab
+toggle-enable=none,none,Toggle enable state
 
 [org_kde_powerdevil]
 Decrease Keyboard Brightness=Keyboard Brightness Down,Keyboard Brightness Down,Decrease Keyboard Brightness

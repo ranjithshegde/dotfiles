@@ -10,9 +10,9 @@ local function c_cmd(cmd, args)
 end
 
 function lspmap.tex(bufnr)
-    map('n', '<F4>', vim.cmd.TexlabCleanArtifacts, { buffer = true, desc = 'Clean tex files' })
-    map('n', '<F5>', vim.cmd.TexlabBuild, { buffer = bufnr, desc = 'Compile tex document' })
-    map('n', '<F6>', vim.cmd.TexlabForward, { buffer = bufnr, desc = 'Launch zathura' })
+    map('n', '<F4>', vim.cmd.LspTexlabCleanArtifacts, { buffer = true, desc = 'Clean tex files' })
+    map('n', '<F5>', vim.cmd.LspTexlabBuild, { buffer = bufnr, desc = 'Compile tex document' })
+    map('n', '<F6>', vim.cmd.LspTexlabForward, { buffer = bufnr, desc = 'Launch zathura' })
 end
 
 function lspmap.ccls(buf)
@@ -45,8 +45,8 @@ function lspmap.ccls(buf)
 end
 
 function lspmap.clangd(buf)
-    map('n', 'sa', vim.cmd.ClangdSwitchSourceHeader, { desc = 'Switch to header/source/alternate', buffer = buf })
-    map('n', 'smi', vim.cmd.ClangdShowSymbolInfo, { desc = 'Show symbol info', buffer = buf })
+    map('n', 'sa', vim.cmd.LspClangdSwitchSourceHeader, { desc = 'Switch to header/source/alternate', buffer = buf })
+    map('n', 'smi', vim.cmd.LspClangdShowSymbolInfo, { desc = 'Show symbol info', buffer = buf })
 end
 
 return lspmap
