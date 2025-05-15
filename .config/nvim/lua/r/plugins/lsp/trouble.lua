@@ -6,7 +6,6 @@ local function float_win()
     return {
         type = 'float',
         relative = 'cursor',
-        border = 'rounded',
         position = { 0, 0 },
         size = {
             width = math.floor(vim.o.columns * 0.25),
@@ -31,7 +30,6 @@ local function float_preview()
             width = remaining_width,
             height = math.floor(vim.o.lines * 0.7),
         },
-        border = 'rounded',
         zindex = 200,
     }
 end

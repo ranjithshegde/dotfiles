@@ -36,6 +36,7 @@ return function()
     o.foldmethod = 'expr'
     o.jumpoptions = 'view'
     o.inccommand = 'split'
+    o.winborder = 'rounded'
     o.spelloptions = 'camel'
     o.grepformat = '%f:%l:%c:%m'
     o.grepprg = 'rg --vimgrep --smart-case --hidden'

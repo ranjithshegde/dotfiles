@@ -15,7 +15,6 @@ local blink_opts = {
         documentation = {
             auto_show = true,
             auto_show_delay_ms = 250,
-            window = { border = 'rounded' },
         },
         menu = {
             draw = {
@@ -25,6 +24,7 @@ local blink_opts = {
                     { 'kind_icon', gap = 1, 'kind' },
                 },
             },
+            border = 'none',
         },
         list = {
             selection = {

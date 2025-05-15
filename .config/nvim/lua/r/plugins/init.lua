@@ -40,7 +40,6 @@ return {
             show_help = false,
             show_keys = false,
             layout = { spacing = 10 },
-            win = { border = 'rounded' },
             triggers = {
                 { '<auto>', mode = 'nixsotc' },
                 { 'c', mode = { 'n', 'v' } },

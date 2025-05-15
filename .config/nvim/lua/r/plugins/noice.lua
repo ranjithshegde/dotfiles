@@ -27,7 +27,10 @@ noice.opts = {
         bottom_search = true,
         command_palette = true,
         inc_rename = true,
-        lsp_doc_border = 'rounded',
+    },
+    lsp = {
+        hover = { enabled = false },
+        signature = { enabled = false },
     },
     commands = { history = { view = 'popup' } },
     routes = {

@@ -20,7 +20,6 @@ local sign_conf = {
 local float_conf = {
     show_header = true,
     source = 'always',
-    border = 'rounded',
     format = function(diagnostic)
         if diagnostic.code then
             return ('[%s] %s'):format(diagnostic.code, diagnostic.message)

@@ -13,7 +13,6 @@ local function get_unreal_proj()
     return get_dirname() .. '.uproject'
 end
 
--- Detection rules for different project types
 local project_types = {
     unreal = {
         detect = function()
@@ -103,7 +102,6 @@ local project_types = {
     },
 }
 
--- Default configurations for single file projects
 local default_configs = {
     cpp = {
         type_name = 'Single',
@@ -117,11 +115,9 @@ local default_configs = {
     },
 }
 
--- Detect project type and store configuration
 function M.detect_project_type(bufnr)
     bufnr = bufnr or vim.api.nvim_get_current_buf()
 
-    -- Check if we already detected type for this buffer
     if M.state.buffers[bufnr] then
         return M.state.buffers[bufnr]
     end
@@ -134,23 +130,19 @@ function M.detect_project_type(bufnr)
         end
     end
 
-    -- Always start with default config based on filetype
     local ft = vim.bo[bufnr].filetype
     local base_config = vim.tbl_extend('force', {}, default_configs[ft] or {})
 
-    -- If we found a project-specific config, merge it on top of defaults
     if config then
         config = vim.tbl_extend('force', base_config, config)
     else
         config = base_config
     end
 
-    -- Store the configuration
     M.state.buffers[bufnr] = config
     return config
 end
 
--- Check if any buffer is of the given project type
 function M.has_project_type(type_name)
     for _, config in pairs(M.state.buffers) do
         if config.type_name == type_name then
@@ -160,16 +152,13 @@ function M.has_project_type(type_name)
     return false
 end
 
--- Get project type for a buffer
 function M.get_project_type(bufnr)
     bufnr = bufnr or vim.api.nvim_get_current_buf()
     local config = M.state.buffers[bufnr]
     return config and config.type_name
 end
 
--- Register a handler for a project type
 function M.register_handler(type_name, handler)
-    -- Only register if we have a buffer of this project type
     if not M.has_project_type(type_name) then
         return false
     end
@@ -179,14 +168,11 @@ function M.register_handler(type_name, handler)
     end
     table.insert(M.state.type_handlers[type_name], handler)
 
-    -- Apply handler to existing buffers of this type
     for bufnr, config in pairs(M.state.buffers) do
         if config.type_name == type_name then
-            -- For DAP and other plugins that need a valid buffer
             if package.loaded['dap'] then
                 handler(0, config)
             else
-                -- For other handlers, validate buffer first
                 if vim.api.nvim_buf_is_valid(bufnr) then
                     handler(bufnr, config)
                 end
@@ -197,14 +183,12 @@ function M.register_handler(type_name, handler)
     return true
 end
 
--- Apply configuration to buffer
 function M.apply_config(config, bufnr)
     if not config then
         return
     end
     bufnr = bufnr or vim.api.nvim_get_current_buf()
 
-    -- Set buffer/window variables
     if config.type_name then
         vim.b[bufnr].cpp_type = config.type_name
     end
@@ -235,7 +219,6 @@ function M.apply_config(config, bufnr)
         vim.b[bufnr].project_conf = config.project_conf
     end
 
-    -- Run any registered handlers for this type
     local handlers = M.state.type_handlers[config.type_name]
     if handlers then
         for _, handler in ipairs(handlers) do
@@ -244,7 +227,6 @@ function M.apply_config(config, bufnr)
     end
 end
 
--- Main setup function
 function M.setup(buffer)
     if not buffer then
         return
