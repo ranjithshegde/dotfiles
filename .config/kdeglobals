@@ -133,8 +133,8 @@ ForegroundPositive=39,174,96
 ForegroundVisited=155,89,182
 
 [DirSelect Dialog]
-DirSelectDialog Size=1667,937
-History Items[$e]=file:$HOME/Workspaces/cpp/FluxBackup/NoDoc,file:$HOME/Workspaces/cpp/FluxBackup/MayaFlux,file:$HOME/Workspaces/cpp/Projects/VulkanEngine,file:$HOME/Workspaces/cpp/Projects/MayaFlux,file:$HOME/Workspaces/cpp/FluxBackup/MayaFlux,file:$HOME/Workspaces/cpp/Projects/MayaFlux,file:$HOME/.config/nvim,file:$HOME/Workspaces/cpp/Projects/MayaFlux,file:$HOME/Documents/LaTeX/NewRes,file:$HOME/Workspaces/cpp/Projects/MayaFlux,file:///storage/Wine/Saints Row,file:///storage/Games/SaintsRow/sr5/_cloudfolder/saves,file:///storage/Wine/Dying Light/pfx/drive_c/users/steamuser/Documents/DyingLight,file:///storage/Wine/Alan Wake 2/pfx/drive_c/users/steamuser/AppData/Local/Remedy/AlanWake2/c8a6b84d52444415b219441d40e002b0
+DirSelectDialog Size=1667,623
+History Items[$e]=file:$HOME/Workspaces/cpp/FluxBackup/NoDoc,file:$HOME/Workspaces/cpp/Projects/MayaFlux,file:$HOME/Workspaces/cpp/FluxBackup/NoDoc,file:$HOME/Workspaces/cpp/FluxBackup/NoDoc,file:$HOME/Workspaces/cpp/FluxBackup/MayaFlux,file:$HOME/Workspaces/cpp/Projects/VulkanEngine,file:$HOME/Workspaces/cpp/Projects/MayaFlux,file:$HOME/Workspaces/cpp/FluxBackup/MayaFlux,file:$HOME/Workspaces/cpp/Projects/MayaFlux,file:$HOME/.config/nvim,file:$HOME/Workspaces/cpp/Projects/MayaFlux,file:$HOME/Documents/LaTeX/NewRes,file:$HOME/Workspaces/cpp/Projects/MayaFlux,file:///storage/Wine/Saints Row,file:///storage/Games/SaintsRow/sr5/_cloudfolder/saves,file:///storage/Wine/Dying Light/pfx/drive_c/users/steamuser/Documents/DyingLight,file:///storage/Wine/Alan Wake 2/pfx/drive_c/users/steamuser/AppData/Local/Remedy/AlanWake2/c8a6b84d52444415b219441d40e002b0
 Splitter State=\x00\x00\x00\xff\x00\x00\x00\x01\x00\x00\x00\x02\x00\x00\x00\x8c\x00\x00\x03\xa6\x00\xff\xff\xff\xff\x01\x00\x00\x00\x01\x00
 
 [General]

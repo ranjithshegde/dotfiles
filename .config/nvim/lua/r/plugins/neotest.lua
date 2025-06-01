@@ -12,7 +12,7 @@ return {
     'nvim-neotest/neotest',
     dependencies = {
         'nvim-lua/plenary.nvim',
-        'alfaix/neotest-gtest',
+        { 'ranjithshegde/neotest-gtest', branch = 'treesitter_main_fix' },
         'nvim-neotest/nvim-nio',
     },
     config = function()

@@ -55,7 +55,8 @@ export ANDROID_NDK="/opt/android-ndk"
 export ANDROID_NDK_HOME="/opt/android-ndk"
 export ANDROID_SDK_ROOT="/opt/android-sdk"
 export _JAVA_OPTIONS="-Djava.util.prefs.userRoot=${XDG_CONFIG_HOME}/java"
-export JDK_JAVA_OPTIONS='-Dsun.java2d.opengl=true -Dawt.useSystemAAFontSettings=on -Dswing.aatext=true -Dswing.defaultlaf=com.sun.java.swing.plaf.gtk.GTKLookAndFeel -Dswing.crossplatformlaf=com.sun.java.swing.plaf.gtk.GTKLookAndFeel'
+export JDK_JAVA_OPTIONS='-Dswing.defaultlaf=com.sun.java.swing.plaf.gtk.GTKLookAndFeel -Dswing.crossplatformlaf=com.sun.java.swing.plaf.gtk.GTKLookAndFeel'
+export JAVA_OPTS="-Djdk.xml.totalEntitySizeLimit=5000000 -Dsun.java2d.opengl=true -Dawt.useSystemAAFontSettings=on -Dswing.aatext=true"
 
 # Emscripten
 export EMSDK="$HOME/Repositories/libraries/emsdk"

@@ -73,7 +73,6 @@ function ltex.lsp()
         name = 'ltex_plus',
         filetypes = { 'bib', 'markdown', 'org', 'tex' },
         autostart = false,
-        capabilities = vim.lsp.protocol.make_client_capabilities(),
         settings = {
             ltex = {
                 additionalRules = {

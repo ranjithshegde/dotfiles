@@ -25,14 +25,13 @@ return function()
     local configs = {}
 
     for _, server in ipairs(base_servers) do
-        configs[server] = { capabilities = handlers.capabilities() }
+        configs[server] = {}
     end
 
     configs.bashls.filetypes = { 'sh', 'zsh', 'bash' }
     configs.glslls = {}
 
     configs.lua_ls = {
-        capabilities = handlers.capabilities(),
         before_init = function(_, config)
             local file = vim.fn.expand '%:t:r'
             if vim.uv.fs_stat(file .. '.pd_lua') then

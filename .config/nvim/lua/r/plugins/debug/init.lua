@@ -5,7 +5,10 @@ return {
         config = require('r.utils').plugin_setup('r.plugins.debug.settings', 'setup'),
         dependencies = {
             { 'theHamsta/nvim-dap-virtual-text', config = true },
-            { 'igorlfs/nvim-dap-view', opts = {} },
+            {
+                'igorlfs/nvim-dap-view',
+                opts = { winbar = { controls = { enabled = true } } },
+            },
         },
     },
 }

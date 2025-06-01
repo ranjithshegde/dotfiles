@@ -1,12 +1,10 @@
 [Activities][LastVirtualDesktop]
-42cfd941-f257-4e76-9e6e-809cce6a5b82=69edae7f-a2df-4b3a-a4d5-e3a4c9cead31
+42cfd941-f257-4e76-9e6e-809cce6a5b82=1e893712-eee4-4ef3-b1b5-951ff2ba2926
 
 [Desktops]
 Id_1=1e893712-eee4-4ef3-b1b5-951ff2ba2926
 Id_2=69edae7f-a2df-4b3a-a4d5-e3a4c9cead31
-Id_3=a85c4e0a-e1e9-49ea-ac91-73a048dd2892
-Id_4=5e0b0d25-ec99-4a2b-b3a8-f1269c931d41
-Number=4
+Number=2
 Rows=1
 
 [Effect-windowview]
@@ -52,7 +50,7 @@ tiles={"layoutDirection":"horizontal","tiles":[{"width":0.25},{"width":0.5},{"wi
 tiles={"layoutDirection":"horizontal","tiles":[{"width":0.25},{"width":0.5},{"width":0.25}]}
 
 [Xwayland]
-Scale=1.15
+Scale=1.1
 XwaylandEavesdrops=All
 
 [org.kde.kdecoration2]

@@ -4,7 +4,6 @@
 
 return {
     name = 'texlab',
-    capabilities = require('r.plugins.lsp.handlers').capabilities(),
     cmd = { 'texlab', '--log-file', './aux/texlab-log' },
     before_init = function(_, _)
         if vim.fn.isdirectory 'aux' ~= 1 then

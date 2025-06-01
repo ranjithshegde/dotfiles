@@ -14,10 +14,10 @@ function servers.clangd()
         '--fallback-style=webkit',
         '--offset-encoding=utf-32',
         '--header-insertion=never',
+        '--function-arg-placeholders',
     }
 
     return {
-        capabilities = require('r.plugins.lsp.handlers').capabilities(),
         filetypes = { 'c', 'cpp', 'opencl' },
         init_options = {
             clangdFileStatus = true,

@@ -100,7 +100,11 @@ tables.ignoreFiles = {
     'NeogitCommitView',
     'snacks_dashboard',
     'TelescopeResults',
+    'snacks_layout_box',
+    'snacks_picker_list',
+    'snacks_picker_input',
     'neotest-output-panel',
+    'snacks_picker_preview',
     'NeogitCommitSelectView',
     'blink-cmp-documentation',
 }

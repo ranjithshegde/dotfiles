@@ -23,6 +23,10 @@ end, { desc = 'Start Godot Server' })
 
 cmd('Su', 'w !sudo tee %', {})
 
+cmd('TSInstallAll', function()
+    require('nvim-treesitter').install(require('r.utils.tables').ts_parsers)
+end, { desc = 'Replacement for ensure installed' })
+
 -- ******************* Extensions mappings --------------------------------------------
 local map = vim.keymap.set
 

@@ -3,9 +3,9 @@ local setup = require('r.utils').plugin_setup
 return {
     {
         'nvim-treesitter/nvim-treesitter',
+        branch = 'main',
         event = 'VeryLazy',
         build = ':TSUpdate',
-        config = setup('r.plugins.treesitter.settings', 'setup'),
         init = setup('r.plugins.treesitter.settings', 'autocmds'),
     },
     { 'HiPhish/rainbow-delimiters.nvim', event = 'BufReadPre' },

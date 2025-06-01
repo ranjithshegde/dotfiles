@@ -14,12 +14,25 @@ function ts.autocmds()
         once = true,
         desc = 'Load mappings treesiiter after reading buffer',
     })
+    aucmd('User', {
+        pattern = 'VeryLazy',
+        group = id.Treesitter,
+        callback = function()
+            vim.treesitter.language.register('c', 'opencl')
+            vim.treesitter.language.register('bash', 'zsh')
+        end,
+        desc = 'Treesitter language extensions',
+    })
 
     aucmd('FileType', {
         group = id.Treesitter,
         callback = function(args)
             if vim.tbl_contains(require('r.utils.tables').ignoreFiles, args.match) then
                 return
+            end
+
+            if pcall(vim.treesitter.start, args.buf) then
+                vim.bo[args.buf].indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
             end
             if args.match == 'tex' then
                 require('r.plugins.treesitter.mappings').navigate_tex(args.buf)
@@ -31,22 +44,6 @@ function ts.autocmds()
     })
 
     require('r.utils').register_au_id(id)
-end
-
-function ts.setup()
-    vim.treesitter.language.register('c', 'opencl')
-    vim.treesitter.language.register('bash', 'zsh')
-
-    require('nvim-treesitter.configs').setup {
-        ensure_installed = require('r.utils.tables').ts_parsers,
-        auto_install = true,
-        ignore_install = { 'org' },
-        highlight = {
-            enable = true,
-            additional_vim_regex_highlighting = { 'latex' },
-        },
-        indent = { enable = true, disable = { 'python' } },
-    }
 end
 
 function ts.text_objects()

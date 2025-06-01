@@ -61,13 +61,6 @@ function handlers.init()
     require('r.utils').register_au_id(id)
 end
 
----**************************** Snippet capabilities
-function handlers.capabilities()
-    local capabilities = vim.lsp.protocol.make_client_capabilities()
-    capabilities = require('blink.cmp').get_lsp_capabilities(capabilities)
-    return capabilities
-end
-
 ---**************************** Global attach function
 function handlers.attach(client, bufnr)
     local id = {}
