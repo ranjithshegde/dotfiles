@@ -14,15 +14,6 @@ function ts.autocmds()
         once = true,
         desc = 'Load mappings treesiiter after reading buffer',
     })
-    aucmd('User', {
-        pattern = 'VeryLazy',
-        group = id.Treesitter,
-        callback = function()
-            vim.treesitter.language.register('c', 'opencl')
-            vim.treesitter.language.register('bash', 'zsh')
-        end,
-        desc = 'Treesitter language extensions',
-    })
 
     aucmd('FileType', {
         group = id.Treesitter,
@@ -31,7 +22,7 @@ function ts.autocmds()
                 return
             end
 
-            if pcall(vim.treesitter.start, args.buf) then
+            if pcall(vim.treesitter.get_parser, args.buf) then
                 vim.bo[args.buf].indentexpr = "v:lua.require'nvim-treesitter'.indentexpr()"
             end
             if args.match == 'tex' then

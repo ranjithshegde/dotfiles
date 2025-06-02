@@ -4,7 +4,6 @@ return {
     {
         'nvim-treesitter/nvim-treesitter',
         branch = 'main',
-        event = 'VeryLazy',
         build = ':TSUpdate',
         init = setup('r.plugins.treesitter.settings', 'autocmds'),
     },

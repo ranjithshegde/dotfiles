@@ -22,6 +22,34 @@ local function set_window_options(bufnr, options)
 end
 
 ------------------------------------------------------------------------
+--                             Treesitter                             --
+------------------------------------------------------------------------
+
+id.treesitter = augroup('treesitter', opts)
+aucmd('FileType', {
+    group = id.treesitter,
+    callback = function(args)
+        if is_ignored_filetype() or should_ignore_window() then
+            return
+        end
+        pcall(vim.treesitter.start, args.buf)
+        if args.match == 'tex' then
+            vim.bo[args.buf].syntax = 'on'
+        end
+    end,
+    desc = 'Start treesitter syntax highlighting',
+})
+
+aucmd('VimEnter', {
+    group = id.treesitter,
+    callback = function()
+        vim.treesitter.language.register('c', 'opencl')
+        vim.treesitter.language.register('bash', 'zsh')
+    end,
+    desc = 'Register extra TS parsers',
+})
+
+------------------------------------------------------------------------
 --                              Formatting and UI                     --
 ------------------------------------------------------------------------
 
