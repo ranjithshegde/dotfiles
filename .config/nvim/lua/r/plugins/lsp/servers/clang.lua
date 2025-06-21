@@ -14,7 +14,7 @@ function servers.clangd()
         '--fallback-style=webkit',
         '--offset-encoding=utf-32',
         '--header-insertion=never',
-        '--function-arg-placeholders',
+        '--function-arg-placeholders=1',
     }
 
     return {

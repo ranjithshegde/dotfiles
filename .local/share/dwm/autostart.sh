@@ -9,5 +9,6 @@ if [[ "${MACHINE_TYPE}" = "laptop" ]]; then
 fi
 
 nitrogen --force-setter=xinerama --restore &
+systemctl --user start redshift.service
 picom &
 xss-lock --notifier "$HOME/.local/bin/scripts/steam_sleep" -- "$HOME/.local/bin/scripts/dwm_lock" &
