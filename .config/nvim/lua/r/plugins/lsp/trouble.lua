@@ -1,6 +1,6 @@
 local trouble = {}
 
-local side_width = 40
+local side_width = 60
 
 local function float_win()
     return {
@@ -85,7 +85,12 @@ function trouble.config()
                     size = { width = side_width },
                 },
             },
-            symbols = { win = { position = 'left' } },
+            symbols = {
+                win = {
+                    position = 'left',
+                    size = 70,
+                },
+            },
         },
     }
 end

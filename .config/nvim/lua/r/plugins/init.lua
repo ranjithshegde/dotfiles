@@ -8,18 +8,22 @@ vim.keymap.set('n', '<leader>p', require('lazy').sync, { desc = 'Update plugins'
 return {
     -- Colorscheme
     {
+        --[[ 
         {
-            'neko-night/nvim',
-            name = 'nekonight',
-            config = function()
-                require('nekonight').setup {
-                    transparent = true,
-                    on_highlights = function(hl, c)
-                        hl.Folded = { bg = c.bg_dark1 }
-                    end,
-                }
-            end,
-        },
+        'neko-night/nvim',
+        name = 'nekonight',
+        config = function()
+            require('nekonight').setup {
+                transparent = true,
+                on_highlights = function(hl, c)
+                    hl.Folded = { bg = c.bg_dark1 }
+                end,
+            }
+        end,
+    }, 
+        { 'EdenEast/nightfox.nvim' },
+    ]]
+        { 'rebelot/kanagawa.nvim' },
     },
 
     -- Comment with TreeSitter
@@ -60,8 +64,10 @@ return {
 
     -- Markdown and orgmode headlines
     {
-        'lukas-reineke/headlines.nvim',
-        ft = 'markdown',
-        opts = { org = { codeblock_highlight = '' } },
+        'MeanderingProgrammer/render-markdown.nvim',
+        opts = {
+            file_types = { 'markdown', 'Avante' },
+        },
+        ft = { 'markdown', 'Avante' },
     },
 }

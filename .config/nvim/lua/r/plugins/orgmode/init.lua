@@ -7,7 +7,10 @@ return {
         ft = 'org',
         cmd = 'Org',
         init = settings.org_init,
-        dependencies = 'lukas-reineke/headlines.nvim',
+        dependencies = {
+            'lukas-reineke/headlines.nvim',
+            opts = { org = { codeblock_highlight = '' } },
+        },
         opts = {
             org_agenda_files = settings.paths.agenda_files,
             org_agenda_custom_commands = settings.agenda_custom_commmands,

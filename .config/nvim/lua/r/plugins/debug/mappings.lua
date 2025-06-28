@@ -22,6 +22,8 @@ return require('which-key').add(require 'r.utils.expand_maps' {
         S = { require('r.plugins.debug.settings').scopes.toggle, 'Scopes' },
         t = { require('r.plugins.debug.settings').threads.toggle, 'threads' },
 
+        r = { require('dap').restart, 'Restart current session' },
+        R = { require('dap').run_last, 'Rerun last session' },
         x = { require('dap').set_exception_breakpoints, 'set breakpoint' },
         w = { require('dap-view').add_expr, 'Watch element' },
         b = { require('dap').toggle_breakpoint, 'set breakpoint' },

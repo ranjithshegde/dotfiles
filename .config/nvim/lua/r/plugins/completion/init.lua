@@ -5,8 +5,11 @@ return {
         'saghen/blink.cmp',
         event = { 'InsertEnter', 'CmdlineEnter' },
         version = 'v1.*',
-        config = setup('r.plugins.completion.settings', 'blink'),
-        opts_extend = { 'sources.per_filetype' },
+        opts = require('r.plugins.completion.settings').blink_opts,
+        opts_extend = {
+            'sources.per_filetype',
+            'sources.default',
+        },
         dependencies = {
             {
                 'windwp/nvim-autopairs',

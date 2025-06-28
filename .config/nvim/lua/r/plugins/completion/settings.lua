@@ -3,7 +3,7 @@ local completion = {}
 --                             Completion                             --
 ------------------------------------------------------------------------
 
-local blink_opts = {
+completion.blink_opts = {
     enabled = function()
         return not vim.tbl_contains({ 'org-roam-select' }, vim.bo.filetype)
             and vim.bo.buftype ~= 'prompt'
@@ -58,10 +58,6 @@ local blink_opts = {
     },
     appearance = { nerd_font_variant = 'mono' },
 }
-
-function completion.blink()
-    require('blink.cmp').setup(blink_opts)
-end
 
 function completion.pairs()
     local npairs = require 'nvim-autopairs'
