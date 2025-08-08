@@ -173,7 +173,7 @@ immutability=1
 plugin=org.kde.kdeconnect
 
 [Containments][62][Applets][67][Applets][80][Configuration]
-PreloadWeight=52
+PreloadWeight=72
 
 [Containments][62][Applets][67][Applets][81]
 immutability=1
@@ -254,6 +254,8 @@ AppletOrder=63;64;65;66;67;78;79
 global=
 
 [Containments][81]
+ItemGeometries-3127x1309=
+ItemGeometriesHorizontal=
 activityId=42cfd941-f257-4e76-9e6e-809cce6a5b82
 formfactor=0
 immutability=1
@@ -271,9 +273,8 @@ positions={"2991x1252":[],"3127x1309":[],"3440x1440":[]}
 
 [Containments][81][Wallpaper][org.kde.image][General]
 Image=/usr/share/wallpapers/MilkyWay/
-PreviewImage=/usr/share/wallpapers/MilkyWay/
 SlidePaths=/usr/share/wallpapers/
 
 [ScreenMapping]
-itemsOnDisabledScreens=0,42cfd941-f257-4e76-9e6e-809cce6a5b82,3,http://0.0.0.0,,http://442d3150-bb06-4c87-bb53-37e4fdd1874c
+itemsOnDisabledScreens=0,42cfd941-f257-4e76-9e6e-809cce6a5b82,3,http://442d3150-bb06-4c87-bb53-37e4fdd1874c,,http://0.0.0.0
 screenMapping=desktop:/backup,0,42cfd941-f257-4e76-9e6e-809cce6a5b82

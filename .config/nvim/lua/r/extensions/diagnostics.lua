@@ -194,16 +194,12 @@ function Diagnostics.commands(bufnr)
         Diagnostics.toggle_underline(opts.args)
     end, { nargs = '*', complete = complete, desc = 'Toggle diagnostic underlines for a client' })
 
-    cmd(bufnr, 'ToggleAllDiagnostics', function(opts)
-        Diagnostics.toggle_all_diagnostics(opts.args)
-    end, { nargs = '*', complete = complete, desc = 'Toggle all diagnostic options for a client' })
-
     cmd(bufnr, 'DisableDiagnostics', function(opts)
-        Diagnostics.turn_off_diagnostics(opts.args)
+        Diagnostics.disable_all(opts.args)
     end, { nargs = '*', complete = complete, desc = 'Disable all diagnostic options for a client' })
 
     cmd(bufnr, 'EnableDiagnostics', function(opts)
-        Diagnostics.turn_on_diagnostics(opts.args)
+        Diagnostics.enable_all(opts.args)
     end, { nargs = '*', complete = complete, desc = 'Enable all diagnostic options for a client' })
 
     cmd(bufnr, 'DefaultDiagnostics', function(opts)

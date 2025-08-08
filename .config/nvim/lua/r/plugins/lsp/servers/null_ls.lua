@@ -9,6 +9,8 @@ return function()
         nb.formatting.stylua,
         nb.formatting.prettier,
 
+        -- nb.diagnostics.cppcheck,
+
         nb.code_actions.refactoring.with {
             filetypes = require('r.utils.tables').lspfiles,
         },

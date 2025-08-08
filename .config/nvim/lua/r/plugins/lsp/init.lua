@@ -1,6 +1,6 @@
 local setup = require('r.utils').plugin_setup
 
-local lua_src = { 'lazydev', 'lsp', 'path', 'snippets', 'buffer' }
+local lua_src = { inherit_defaults = true, 'lazydev' }
 
 return {
     {

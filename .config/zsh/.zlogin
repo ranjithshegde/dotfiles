@@ -38,6 +38,7 @@ if [[ "${MACHINE_TYPE}" = "laptop" ]]; then
     export OPENCV_OPENCL_DEVICE="NVIDIA:GPU:0"
 fi
 
+
 # Set SSH_AUTH_SOCK if not already set for this process
 : ${SSH_AUTH_SOCK:="$(gpgconf --list-dirs agent-ssh-socket)"}
 export SSH_AUTH_SOCK
@@ -58,10 +59,11 @@ else
 fi
 
 # Ensure GPG_AGENT_INFO is available (legacy variable, usually not needed)
-: ${GPG_AGENT_INFO:="$(gpgconf --list-dirs agent-socket)"}
+: ${GPG_AGENT_INFO:="$(gpgconf --list-dirs agent-ssh-socket)"}
 export GPG_AGENT_INFO
 
 gpg-connect-agent updatestartuptty /bye >/dev/null
+gpgconf --launch gpg-agent
 
 # Set platform-specific environment variables
 export SUDO_ASKPASS="/usr/local/bin/dpass"

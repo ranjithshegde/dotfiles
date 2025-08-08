@@ -8,6 +8,10 @@ return {
             workspace_folders = {
                 '~/Workspaces/cpp/Projects/MayaFlux/',
             },
+            filetypes = {
+                markdown = true,
+                gitcommit = true,
+            },
         },
         dependencies = 'fang2hou/blink-copilot',
     },
@@ -37,12 +41,15 @@ return {
         'yetone/avante.nvim',
         build = 'make',
         version = false,
-        opts = { provider = 'copilot' },
+        opts = {
+            provider = 'copilot',
+            selector = { provider = 'fzf_lua' },
+        },
         dependencies = {
             'nvim-lua/plenary.nvim',
             'MunifTanjim/nui.nvim',
             'zbirenbaum/copilot.lua',
         },
-        cmd = 'AvanteChat',
+        cmd = { 'AvanteChat', 'AvanteChatNew' },
     },
 }

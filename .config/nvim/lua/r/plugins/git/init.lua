@@ -33,7 +33,7 @@ return {
         'NeogitOrg/neogit',
         dependencies = {
             'nvim-lua/plenary.nvim',
-            'sindrets/diffview.nvim',
+            { 'sindrets/diffview.nvim', cmd = { 'DiffViewOpen', 'DiffViewFileHistory' } },
         },
         opts = {
             kind = 'split',
