@@ -68,6 +68,7 @@ return {
         opts = {
             file_types = { 'markdown', 'Avante' },
             completions = { blink = { enabled = true } },
+            --[[ 
             heading = {
                 render_modes = true,
                 border = true,
@@ -84,6 +85,7 @@ return {
                 left_pad = 0.2,
                 right_pad = 0.2,
             },
+            ]]
             document = { render_modes = true },
         },
         ft = { 'markdown', 'Avante' },

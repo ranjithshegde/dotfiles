@@ -84,7 +84,8 @@ return {
 
         config.options.disabled_filetypes.winbar = require('r.utils.tables').ignoreFiles
 
-        config.extensions = { 'fzf', 'lazy', 'oil', 'overseer', 'man', 'quickfix' }
+        -- config.extensions = { 'avante', 'fzf', 'lazy', 'man', 'oil', 'overseer', 'quickfix', 'trouble' }
+        config.extensions = { 'lazy', 'man', 'quickfix' }
 
         lualine.setup(config)
     end,

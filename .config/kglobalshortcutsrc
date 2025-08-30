@@ -21,6 +21,7 @@ AEB42048C955B5FF22021930A378120F-open-dashboard=none,none,Open dashboard
 AEB42048C955B5FF22021930A378120F-open-dashboard-with-running-scripts=none,none,Open dashboard with the current tab's URL used as filter
 AEB42048C955B5FF22021930A378120F-open-new-script=none,none,Open new script tab
 AEB42048C955B5FF22021930A378120F-toggle-enable=none,none,Toggle enable state
+DCD5832847D8562B6C4DC339ED514BBC-fillBest=none,none,Fill form with the best matching credentials
 _k_friendly_name=Brave
 open-dashboard=none,none,Open dashboard
 open-dashboard-with-running-scripts=none,none,Open dashboard with the current tab's URL used as filter
