@@ -24,8 +24,6 @@ fi
 export ZINIT_HOME="${HOME}/.local/share/zinit"
 export ZINIT_BIN="${ZINIT_HOME}/zinit.git"
 
-export VK_LAYER_PATH="/usr/share/vulkan/explicit_layer.d/"
-
 # CONFIG & PATHS
 # Development tools
 export CARGO_HOME="$XDG_DATA_HOME/cargo"

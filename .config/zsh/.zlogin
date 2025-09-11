@@ -66,12 +66,13 @@ gpg-connect-agent updatestartuptty /bye >/dev/null
 gpgconf --launch gpg-agent
 
 # Set platform-specific environment variables
-export SUDO_ASKPASS="/usr/local/bin/dpass"
+export VK_LAYER_PATH="/usr/share/vulkan/explicit_layer.d/"
 
 case "${XDG_SESSION_TYPE}" in
     wayland)
         export QT_QPA_PLATFORM='wayland'
         export ENABLE_HDR_WSI=1
+        export PROTON_ENABLE_WAYLAND=1
         export DXVK_HDR=1
         export TERMINAL=/usr/bin/ghostty
         export TERM=ghostty
@@ -79,5 +80,6 @@ case "${XDG_SESSION_TYPE}" in
     *)
         export TERMINAL="/usr/local/bin/st"
         export TERM=st
+        export SUDO_ASKPASS="/usr/local/bin/dpass"
         ;;
 esac

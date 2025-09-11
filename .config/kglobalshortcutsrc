@@ -99,7 +99,7 @@ KrohnkiteStackedLayout=Alt+Shift+G,none,Krohnkite: Stacked Layout
 KrohnkiteStairLayout=none,none,Krohnkite: Stair Layout
 KrohnkiteTileLayout=Alt+T,none,Krohnkite: Tile Layout
 KrohnkiteToggleFloat=Meta+F,none,Krohnkite: Toggle Float
-KrohnkiteTreeColumnLayout=none,none,Krohnkite: Tree Column Layout
+KrohnkiteTreeColumnLayout=none,none,Krohnkite: Three Column Layout
 KrohnkitegrowWidth=Alt+L,none,Krohnkite: Grow Width
 KrohnkitetoggleDock=none,none,Krohnkite: Toggle Dock
 Move Tablet to Next Output=none,none,Move the tablet to the next output
@@ -266,6 +266,14 @@ open-dashboard=none,none,Open dashboard
 open-dashboard-with-running-scripts=none,none,Open dashboard with the current tab's URL used as filter
 open-new-script=none,none,Open new script tab
 toggle-enable=none,none,Toggle enable state
+
+[org.chromium.Chromium]
+AEB42048C955B5FF22021930A378120F-open-dashboard=,none,Open dashboard
+AEB42048C955B5FF22021930A378120F-open-dashboard-with-running-scripts=,none,Open dashboard with the current tab's URL used as filter
+AEB42048C955B5FF22021930A378120F-open-new-script=,none,Open new script tab
+AEB42048C955B5FF22021930A378120F-toggle-enable=,none,Toggle enable state
+DCD5832847D8562B6C4DC339ED514BBC-fillBest=,none,Fill form with the best matching credentials
+_k_friendly_name=org.chromium.Chromium
 
 [org_kde_powerdevil]
 Decrease Keyboard Brightness=Keyboard Brightness Down,Keyboard Brightness Down,Decrease Keyboard Brightness

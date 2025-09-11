@@ -104,19 +104,8 @@ popupHeight=432
 popupWidth=432
 wallpaperplugin=org.kde.image
 
-[Containments][62][Applets][67][Applets][69]
-immutability=1
-plugin=com.github.korapp.nordvpn
-
 [Containments][62][Applets][67][Applets][69][Configuration]
-PreloadWeight=100
-
-[Containments][62][Applets][67][Applets][69][Configuration][ConfigDialog]
-DialogHeight=540
-DialogWidth=720
-
-[Containments][62][Applets][67][Applets][69][Shortcuts]
-global=
+PreloadWeight=42
 
 [Containments][62][Applets][67][Applets][70]
 immutability=1
@@ -155,7 +144,7 @@ immutability=1
 plugin=org.kde.kscreen
 
 [Containments][62][Applets][67][Applets][75][Configuration]
-PreloadWeight=65
+PreloadWeight=70
 
 [Containments][62][Applets][67][Applets][76]
 immutability=1
@@ -198,7 +187,7 @@ immutability=1
 plugin=org.kde.plasma.bluetooth
 
 [Containments][62][Applets][67][Applets][83][Configuration]
-PreloadWeight=5
+PreloadWeight=0
 
 [Containments][62][Applets][67][Applets][84]
 immutability=1
@@ -215,7 +204,7 @@ immutability=1
 plugin=org.kde.plasma.battery
 
 [Containments][62][Applets][67][Applets][89][Configuration]
-PreloadWeight=5
+PreloadWeight=0
 
 [Containments][62][Applets][67][ConfigDialog]
 DialogHeight=540
@@ -225,7 +214,7 @@ DialogWidth=720
 PreloadWeight=100
 
 [Containments][62][Applets][67][General]
-extraItems=com.github.korapp.nordvpn,org.kde.plasma.notifications,org.kde.plasma.keyboardlayout,org.kde.plasma.brightness,org.kde.plasma.volume,org.kde.plasma.manage-inputmethod,org.kde.plasma.bluetooth,org.kde.kscreen,org.kde.plasma.mediacontroller,org.kde.plasma.cameraindicator,org.kde.plasma.networkmanagement,org.kde.plasma.clipboard,org.kde.kdeconnect,org.kde.plasma.battery,org.kde.plasma.devicenotifier
+extraItems=org.kde.plasma.notifications,org.kde.plasma.keyboardlayout,org.kde.plasma.brightness,org.kde.plasma.volume,org.kde.plasma.manage-inputmethod,org.kde.plasma.bluetooth,org.kde.kscreen,org.kde.plasma.mediacontroller,org.kde.plasma.cameraindicator,org.kde.plasma.networkmanagement,org.kde.plasma.clipboard,org.kde.kdeconnect,org.kde.plasma.battery,org.kde.plasma.devicenotifier
 hiddenItems=org.kde.plasma.brightness,org.kde.plasma.clipboard
 knownItems=com.github.korapp.nordvpn,org.kde.plasma.notifications,org.kde.plasma.keyboardlayout,org.kde.plasma.devicenotifier,org.kde.plasma.brightness,org.kde.plasma.volume,org.kde.plasma.manage-inputmethod,org.kde.plasma.bluetooth,org.kde.kscreen,org.kde.plasma.mediacontroller,org.kde.plasma.battery,org.kde.plasma.cameraindicator,org.kde.plasma.networkmanagement,org.kde.plasma.clipboard,org.kde.kdeconnect
 scaleIconsToFit=true
@@ -276,5 +265,5 @@ Image=/usr/share/wallpapers/MilkyWay/
 SlidePaths=/usr/share/wallpapers/
 
 [ScreenMapping]
-itemsOnDisabledScreens=0,42cfd941-f257-4e76-9e6e-809cce6a5b82,3,http://442d3150-bb06-4c87-bb53-37e4fdd1874c,http://0.0.0.0,
+itemsOnDisabledScreens=0,42cfd941-f257-4e76-9e6e-809cce6a5b82,3,http://442d3150-bb06-4c87-bb53-37e4fdd1874c,,http://0.0.0.0
 screenMapping=desktop:/backup,0,42cfd941-f257-4e76-9e6e-809cce6a5b82
