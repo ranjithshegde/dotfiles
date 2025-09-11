@@ -1,55 +1,50 @@
 return {
     {
-        'zbirenbaum/copilot.lua',
-        cmd = 'Copilot',
+        'olimorris/codecompanion.nvim',
         opts = {
-            suggestion = { enabled = false },
-            panel = { enabled = false },
-            workspace_folders = {
-                '~/Workspaces/cpp/Projects/MayaFlux/',
+            strategies = {
+                chat = { adapter = 'copilot' },
+                inline = { adapter = 'copilot' },
+                cmd = { adapter = 'copilot' },
             },
-            filetypes = {
-                markdown = true,
-                gitcommit = true,
-            },
-        },
-        dependencies = 'fang2hou/blink-copilot',
-    },
-    {
-        'fang2hou/blink-copilot',
-        dependencies = {
-            {
-                'saghen/blink.cmp',
-                opts = {
-                    sources = {
-                        default = { 'copilot' },
-                        providers = {
-                            copilot = {
-                                name = 'copilot',
-                                module = 'blink-copilot',
-                                score_offset = 100,
-                                async = true,
+            extensions = {
+                vectorcode = {
+                    opts = {
+                        tool_group = {
+                            enabled = true,
+                            extras = { 'file_search' },
+                            collapse = true,
+                        },
+                        tool_opts = {
+                            ['*'] = {},
+                            query = {
+                                max_num = { chunk = -1, document = -1 },
+                                default_num = { chunk = 50, document = 30 },
+                                include_stderr = false,
+                                use_lsp = true,
+                                no_duplicate = true,
+                                chunk_mode = false,
+                                summarise = {
+                                    enabled = true,
+                                    adapter = nil,
+                                    query_augmented = true,
+                                },
                             },
                         },
                     },
                 },
-                opts_extend = { 'sources.default' },
             },
-        },
-    },
-    {
-        'yetone/avante.nvim',
-        build = 'make',
-        version = false,
-        opts = {
-            provider = 'copilot',
-            selector = { provider = 'fzf_lua' },
         },
         dependencies = {
             'nvim-lua/plenary.nvim',
-            'MunifTanjim/nui.nvim',
-            'zbirenbaum/copilot.lua',
+            'nvim-treesitter/nvim-treesitter',
         },
-        cmd = { 'AvanteChat', 'AvanteChatNew' },
+    },
+    {
+        'Davidyz/VectorCode',
+        version = '*',
+        build = 'uv tool upgrade vectorcode',
+        dependencies = { 'nvim-lua/plenary.nvim' },
+        cmd = 'VectorCode',
     },
 }

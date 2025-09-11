@@ -3,8 +3,6 @@
 ------------------------------------------------------------------------
 
 return function()
-    local handlers = require 'r.plugins.lsp.handlers'
-
     local base_servers = {
         'html',
         'ruff',
@@ -14,6 +12,7 @@ return function()
         'bashls',
         'jsonls',
         'yamlls',
+        'copilot',
         'gdscript',
         'marksman',
         'neocmake',
@@ -29,6 +28,7 @@ return function()
     end
 
     configs.bashls.filetypes = { 'sh', 'zsh', 'bash' }
+    configs.copilot.filetypes = { 'sh', 'zsh', 'c', 'cpp', 'lua', 'tex' }
     configs.glslls = {}
 
     configs.lua_ls = {

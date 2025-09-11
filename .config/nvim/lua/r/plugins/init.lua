@@ -66,28 +66,10 @@ return {
     {
         'MeanderingProgrammer/render-markdown.nvim',
         opts = {
-            file_types = { 'markdown', 'Avante' },
+            file_types = { 'markdown', 'codecompanion' },
             completions = { blink = { enabled = true } },
-            --[[ 
-            heading = {
-                render_modes = true,
-                border = true,
-                border_virtual = true,
-                width = 'block',
-                left_margin = 0.5,
-                left_pad = 0.5,
-                right_pad = 0.5,
-            },
-            code = {
-                render_modes = true,
-                width = 'block',
-                left_margin = 0.5,
-                left_pad = 0.2,
-                right_pad = 0.2,
-            },
-            ]]
             document = { render_modes = true },
         },
-        ft = { 'markdown', 'Avante' },
+        ft = { 'markdown', 'codecompanion' },
     },
 }

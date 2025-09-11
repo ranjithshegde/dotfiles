@@ -143,6 +143,19 @@ function handlers.attach(client, bufnr)
         vim.lsp.commands['_ltex.hideFalsePositives'] = require('r.plugins.lsp.servers.ltex').false_positive
     end
 
+    if client.name == 'copilot' then
+        vim.lsp.inline_completion.enable(true, { bufnr, client.id })
+
+        vim.keymap.set('i', '<Tab>', function()
+            if not vim.lsp.inline_completion.get() then
+                return '<Tab>'
+            end
+        end, {
+            expr = true,
+            desc = 'Get the current inline completion',
+        })
+    end
+
     vim.api.nvim_buf_create_user_command(bufnr, 'LspCapabilities', function(opt)
         local cap_client = vim.lsp.get_clients { name = opt.args, bufnr = bufnr }
         if cap_client and cap_client[1] then

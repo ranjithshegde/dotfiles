@@ -152,18 +152,35 @@ function treesitter.common()
         mapper({
             ['cr'] = {
                 name = 'Refactoring tools',
-                i = { refac.refac 'Inline Variable', 'Inline Variable', mode = { 'n', 'x' } },
+                i = { refac.refac 'Inline Variable', 'Inline Variable' },
                 b = { refac.refac 'Extract Block', 'extract block' },
                 B = { refac.refac 'Extract Block To File', 'extract block to file' },
-                v = { refac.refac 'Extract Variable', 'Extract Variable', mode = { 'n', 'x' } },
-                f = { refac.refac 'Extract Function', 'Extract Function', mode = { 'n', 'x' } },
-                F = { refac.refac 'Extract Function to File', 'Extract Function to File', mode = { 'n', 'x' } },
+                v = { refac.refac 'Extract Variable', 'Extract Variable' },
+                f = { refac.refac 'Extract Function', 'Extract Function' },
+                F = { refac.refac 'Extract Function to File', 'Extract Function to File' },
                 l = {
                     function()
                         require('refactoring').select_refactor()
                     end,
                     'Treesitter Refactoring options',
-                    mode = { 'n', 'v' },
+                },
+            },
+        }, { expr = true }),
+        mapper({
+            ['Cr'] = {
+                name = 'Refactoring tools',
+                i = { refac.refac 'Inline Variable', 'Inline Variable', mode = { 'v', 'x' } },
+                b = { refac.refac 'Extract Block', 'extract block', mode = { 'v', 'x' } },
+                B = { refac.refac 'Extract Block To File', 'extract block to file', mode = { 'v', 'x' } },
+                v = { refac.refac 'Extract Variable', 'Extract Variable', mode = { 'v', 'x' } },
+                f = { refac.refac 'Extract Function', 'Extract Function', mode = { 'v', 'x' } },
+                F = { refac.refac 'Extract Function to File', 'Extract Function to File', mode = { 'v', 'x' } },
+                l = {
+                    function()
+                        require('refactoring').select_refactor()
+                    end,
+                    'Treesitter Refactoring options',
+                    mode = { 'v', 'x' },
                 },
             },
         }, { expr = true }),
