@@ -13,6 +13,7 @@ return function()
         'jsonls',
         'yamlls',
         'copilot',
+        'digestif',
         'gdscript',
         'marksman',
         'neocmake',

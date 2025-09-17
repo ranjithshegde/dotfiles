@@ -1,6 +1,7 @@
 return {
     {
         'olimorris/codecompanion.nvim',
+        cmd = 'CodeCompanionChat',
         opts = {
             strategies = {
                 chat = { adapter = 'copilot' },
@@ -19,14 +20,14 @@ return {
                             ['*'] = {},
                             query = {
                                 max_num = { chunk = -1, document = -1 },
-                                default_num = { chunk = 50, document = 30 },
+                                default_num = { chunk = 50, document = 20 },
                                 include_stderr = false,
                                 use_lsp = true,
                                 no_duplicate = true,
                                 chunk_mode = false,
                                 summarise = {
                                     enabled = true,
-                                    adapter = nil,
+                                    adapter = 'copilot',
                                     query_augmented = true,
                                 },
                             },

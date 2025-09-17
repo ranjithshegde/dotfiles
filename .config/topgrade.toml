@@ -3,7 +3,7 @@
 #assume_yes = true
 
 # Disable specific steps - same options as the command line flag
-disable = ["vim", "containers", "dotnet"]
+disable = ["vim", "containers", "dotnet", "emacs", "jetbrains_clion", "lensfun"]
 
 # Ignore failures for these steps
 ignore_failures = ["shell"]
@@ -61,7 +61,7 @@ ignore_failures = ["shell"]
 "platform-io" = "pio pkg update -g"
 # "perl" = "ucpan"
 
-[linux]
+# [linux]
 # Arguments to pass yay when updating packages
 #yay_arguments = "--nodevel"
 #trizen_arguments = "--devel"
