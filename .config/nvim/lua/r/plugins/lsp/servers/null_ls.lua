@@ -6,7 +6,6 @@ return function()
     local nl = require 'null-ls'
     local nb = nl.builtins
     local sources = {
-        nb.formatting.stylua,
         nb.formatting.prettier,
 
         -- nb.diagnostics.cppcheck,

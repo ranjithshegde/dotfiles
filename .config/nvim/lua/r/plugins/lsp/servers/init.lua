@@ -10,7 +10,9 @@ return function()
         'taplo',
         'ts_ls',
         'bashls',
+        'glslls',
         'jsonls',
+        'stylua',
         'yamlls',
         'copilot',
         'digestif',
@@ -29,8 +31,11 @@ return function()
     end
 
     configs.bashls.filetypes = { 'sh', 'zsh', 'bash' }
-    configs.copilot.filetypes = { 'sh', 'zsh', 'c', 'cpp', 'lua', 'tex' }
-    configs.glslls = {}
+
+    configs.copilot = {
+        filetypes = { 'sh', 'zsh', 'c', 'cpp', 'lua', 'tex' },
+        settings = { telemetry = { telemetryLevel = 'none' } },
+    }
 
     configs.lua_ls = {
         before_init = function(_, config)
