@@ -141,7 +141,15 @@ zstyle ':fzf-tab:*' show-group brief
 #                   Aliases
 # ==============================================================================
 # File Management
-alias ls=lsd
+alias ls='eza --color=auto --group-directories-first --icons=always'
+alias lt='eza --color=auto --group-directories-first --icons=always -Tg -L=1'
+alias lt2='eza --color=auto --group-directories-first --icons=always -Tg -L=2'
+alias lt3='eza --color=auto --group-directories-first --icons=always -Tg -L=3'
+alias lt4='eza --color=auto --group-directories-first --icons=always -Tg -L=4'
+alias lta='eza --color=auto --group-directories-first --icons=always -Tga -L=1'
+alias lta2='eza --color=auto --group-directories-first --icons=always -Tga -L=2'
+alias lta3='eza --color=auto --group-directories-first --icons=always -Tga -L=3'
+alias lta4='eza --color=auto --group-directories-first --icons=always -Tga -L=4'
 alias cat=bat
 alias lf=yazi
 alias sxiv=nsxiv

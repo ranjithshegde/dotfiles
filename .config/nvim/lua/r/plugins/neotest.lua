@@ -9,10 +9,11 @@ local function nt(cmd, subcmd, args)
 end
 
 return {
-    'nvim-neotest/neotest',
+    'ribru17/neotest',
+    branch = 'fast_parse_fixup',
     dependencies = {
         'nvim-lua/plenary.nvim',
-        { 'ranjithshegde/neotest-gtest', branch = 'treesitter_main_fix' },
+        'alfaix/neotest-gtest',
         'nvim-neotest/nvim-nio',
     },
     config = function()
