@@ -24,7 +24,7 @@ return {
                                 include_stderr = false,
                                 use_lsp = true,
                                 no_duplicate = true,
-                                chunk_mode = false,
+                                chunk_mode = true,
                                 summarise = {
                                     enabled = true,
                                     adapter = 'copilot',

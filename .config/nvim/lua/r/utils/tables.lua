@@ -33,6 +33,7 @@ tables.lspfiles = {
     'org',
     'python',
     -- 'rust',
+    'swift',
     'toml',
     'yaml',
 }
@@ -261,6 +262,7 @@ tables.ts_parsers = {
     'python',
     'query',
     'regex',
+    'swift',
     'scheme',
     'supercollider',
     'toml',
@@ -278,6 +280,8 @@ tables.workspace_folderes = {
     '~/Workspaces/electronics',
     '~/Workspaces/openFrameworks',
     '~/Workspaces/Unreal',
+    '~/Workspaces/js',
+    '~/Workspaces/GUI',
 }
 
 return tables

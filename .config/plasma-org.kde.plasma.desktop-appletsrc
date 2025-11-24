@@ -42,7 +42,7 @@ warningResources_dismissed=true
 
 [Containments][61][Wallpaper][org.kde.image][General]
 FillMode=0
-Image=/usr/share/wallpapers/MilkyWay/
+Image=file:///usr/share/wallpapers/Flow/
 SlidePaths=/usr/share/wallpapers/
 
 [Containments][62]
@@ -187,7 +187,7 @@ immutability=1
 plugin=org.kde.plasma.bluetooth
 
 [Containments][62][Applets][67][Applets][83][Configuration]
-PreloadWeight=5
+PreloadWeight=0
 
 [Containments][62][Applets][67][Applets][84]
 immutability=1
@@ -225,7 +225,7 @@ plugin=org.kde.plasma.digitalclock
 
 [Containments][62][Applets][78][Configuration]
 PreloadWeight=100
-popupHeight=450
+popupHeight=451
 popupWidth=560
 
 [Containments][62][Applets][78][Configuration][ConfigDialog]
@@ -261,9 +261,9 @@ DialogWidth=720
 positions={"2991x1252":[],"3127x1309":[],"3440x1440":[]}
 
 [Containments][81][Wallpaper][org.kde.image][General]
-Image=/usr/share/wallpapers/MilkyWay/
+Image=/usr/share/wallpapers/Flow/
 SlidePaths=/usr/share/wallpapers/
 
 [ScreenMapping]
-itemsOnDisabledScreens=0,42cfd941-f257-4e76-9e6e-809cce6a5b82,3,http://0.0.0.0,,http://442d3150-bb06-4c87-bb53-37e4fdd1874c
+itemsOnDisabledScreens=1,42cfd941-f257-4e76-9e6e-809cce6a5b82,1,desktop:/adc.txt,0,42cfd941-f257-4e76-9e6e-809cce6a5b82,3,http://0.0.0.0,,http://442d3150-bb06-4c87-bb53-37e4fdd1874c
 screenMapping=desktop:/backup,0,42cfd941-f257-4e76-9e6e-809cce6a5b82

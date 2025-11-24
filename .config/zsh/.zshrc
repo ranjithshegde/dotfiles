@@ -176,11 +176,6 @@ alias pql="pacman -Ql"
 alias pqs="pacman -Qs"
 alias pqi="pacman -Qii"
 
-# VPN
-alias ns="nordvpn status"
-alias nc="nordvpn connect"
-alias nd="nordvpn disconnect"
-
 # XDG Compliance
 alias wget='wget --hsts-file="${XDG_CACHE_HOME:-$HOME/.cache}/wget-hsts"'
 alias yarn='yarn --use-yarnrc "${XDG_CONFIG_HOME:-$HOME/.config}/yarn/config"'

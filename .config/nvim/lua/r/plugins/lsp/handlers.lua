@@ -146,14 +146,6 @@ function handlers.attach(client, bufnr)
     if client.name == 'copilot' then
         vim.lsp.inline_completion.enable(true, { bufnr, client.id })
 
-        --[[ vim.keymap.set('i', '<Tab>', function()
-            if not vim.lsp.inline_completion.get() then
-                return '<Tab>'
-            end
-        end, {
-            expr = true,
-            desc = 'Get the current inline completion',
-        }) ]]
         vim.keymap.set(
             'i',
             '<C-F>',

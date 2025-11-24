@@ -19,6 +19,7 @@ return function()
         'gdscript',
         'marksman',
         'neocmake',
+        'sourcekit',
         'basedpyright',
         'glsl_analyzer',
         'rust_analyzer',
@@ -31,9 +32,10 @@ return function()
     end
 
     configs.bashls.filetypes = { 'sh', 'zsh', 'bash' }
+    configs.sourcekit.filetypes = { 'swift', 'objective-c', 'objective-cpp' }
 
     configs.copilot = {
-        filetypes = { 'sh', 'zsh', 'c', 'cpp', 'lua', 'tex' },
+        filetypes = { 'sh', 'zsh', 'c', 'cpp', 'lua', 'tex', 'gitcommit', 'markdown', 'yaml' },
         settings = { telemetry = { telemetryLevel = 'none' } },
     }
 

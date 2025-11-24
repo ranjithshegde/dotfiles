@@ -47,10 +47,6 @@
 ;;   (auto-package-update-maybe)
 ;;   (auto-package-update-at-time "09:00"))
 
-;; NOTE: If you want to move everything out of the ~/.emacs.d folder
-;; reliably, set `user-emacs-directory` before loading no-littering!
-;(setq user-emacs-directory "~/.cache/emacs")
-
 (use-package no-littering)
 
 ;; no-littering doesn't set this by default so we must place
@@ -60,10 +56,10 @@
 
 (setq inhibit-startup-message t)
 
-;; (scroll-bar-mode -1)        ; Disable visible scrollbar
 (tool-bar-mode -1)          ; Disable the toolbar
+(set-fringe-mode 10)        ; Give some breathing room
+;; (scroll-bar-mode -1)        ; Disable visible scrollbar
 ;; (tooltip-mode -1)           ; Disable tooltips
-;; (set-fringe-mode 10)        ; Give some breathing room
 ;; (menu-bar-mode -1)            ; Disable the menu bar
 
 ;; Set up the visible bell

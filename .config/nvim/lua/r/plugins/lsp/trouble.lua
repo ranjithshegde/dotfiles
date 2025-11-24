@@ -11,6 +11,7 @@ local function float_win()
             width = math.floor(vim.o.columns * 0.25),
             height = math.floor(vim.o.lines * 0.25),
         },
+        border = 'rounded',
     }
 end
 
@@ -31,6 +32,7 @@ local function float_preview()
             height = math.floor(vim.o.lines * 0.7),
         },
         zindex = 200,
+        border = 'rounded',
     }
 end
 

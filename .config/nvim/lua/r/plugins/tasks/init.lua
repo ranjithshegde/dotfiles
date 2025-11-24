@@ -1,5 +1,6 @@
 local overseer = {
     'stevearc/overseer.nvim',
+    tag = 'v1.6.0',
 }
 
 local map = vim.keymap.set

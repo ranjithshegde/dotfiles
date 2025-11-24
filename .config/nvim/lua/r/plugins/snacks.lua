@@ -141,5 +141,6 @@ return {
             sf('picker', 'projects', { dev = get_workspace_folders() }),
             desc = 'Projects',
         },
+        { '<leader><leader>e', sf 'explorer', desc = 'Toggle Explorer' },
     },
 }
