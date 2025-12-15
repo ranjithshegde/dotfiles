@@ -195,6 +195,8 @@ fi
 zinit snippet "$ZDOTDIR/functions/scripts.sh"
 zinit snippet "$ZDOTDIR/functions/fuzzy.sh"
 
+eval "$(atuin init zsh)"
+
 # Function to run commands with sudo
 sdo() {
     local func="$1"

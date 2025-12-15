@@ -265,5 +265,5 @@ Image=/usr/share/wallpapers/Flow/
 SlidePaths=/usr/share/wallpapers/
 
 [ScreenMapping]
-itemsOnDisabledScreens=1,42cfd941-f257-4e76-9e6e-809cce6a5b82,1,desktop:/adc.txt,0,42cfd941-f257-4e76-9e6e-809cce6a5b82,3,http://0.0.0.0,,http://442d3150-bb06-4c87-bb53-37e4fdd1874c
-screenMapping=desktop:/backup,0,42cfd941-f257-4e76-9e6e-809cce6a5b82
+itemsOnDisabledScreens=0,42cfd941-f257-4e76-9e6e-809cce6a5b82,3,,http://442d3150-bb06-4c87-bb53-37e4fdd1874c,http://0.0.0.0
+screenMapping=desktop:/backup,0,42cfd941-f257-4e76-9e6e-809cce6a5b82,desktop:/adc.txt,1,42cfd941-f257-4e76-9e6e-809cce6a5b82

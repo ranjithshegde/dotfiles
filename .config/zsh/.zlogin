@@ -2,14 +2,8 @@ typeset -U PATH LIBRARY_PATH
 
 # macOS-specific settings
 if [[ "$OSTYPE" == "darwin*" ]]; then
-    if [[ "$(uname -m)" == "arm64" ]]; then
-        path=("/opt/local/bin" "/opt/local/sbin" $path)
-        eval "$(/opt/homebrew/bin/brew shellenv)"
-    fi
-
-    export TERM=xterm-256color
-    export TERMINAL=/opt/homebrew/bin/ghostty
-    return
+    source $ZDOTDIR/boot_env/macos.zsh
+    exit 0
 fi
 
 # Function to append library paths if not already included
@@ -30,21 +24,7 @@ export LIBRARY_PATH
 
 # Laptop-specific settings
 if [[ "${MACHINE_TYPE}" = "laptop" ]]; then
-    # Unset Forward key
-    xmodmap -e 'keysym 0xff53 = NoSymbol'
-
-    # Disable Bluetooth by default
-    rfkill block bluetooth
-    export OPENCV_OPENCL_DEVICE="NVIDIA:GPU:0"
-
-    export LIBVA_DRIVER_PATH=/usr/lib/dri
-    export LIBVA_DRIVER_NAME=iHD
-    export VK_ICD_FILENAMES=/usr/share/vulkan/icd.d/intel_icd.x86_64.json
-    export __EGL_VENDOR_LIBRARY_FILENAMES=/usr/share/glvnd/egl_vendor.d/50_mesa.json
-
-    # export PROTON_ENABLE_NVAPI=1
-    # export PROTON_HIDE_NVIDIA_GPU=0
-    # export PRIMUS_SYNC=2
+    source $ZDOTDIR/boot_env/laptop.zsh
 fi
 
 
@@ -79,10 +59,8 @@ export VK_LAYER_PATH="/usr/share/vulkan/explicit_layer.d/"
 
 case "${XDG_SESSION_TYPE}" in
     wayland)
+        source $ZDOTDIR/boot_env/proton.zsh
         export QT_QPA_PLATFORM='wayland'
-        export ENABLE_HDR_WSI=1
-        export PROTON_ENABLE_WAYLAND=1
-        export DXVK_HDR=1
         export TERMINAL=/usr/bin/ghostty
         export TERM=ghostty
         ;;
