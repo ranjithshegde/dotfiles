@@ -1,7 +1,11 @@
 MenuBar=Disabled
 
 [General]
+BrowseThroughArchives=true
+EditableUrl=true
 ShowFullPath=true
+ShowStatusBar=FullWidth
+ShowZoomSlider=true
 Version=202
 ViewPropsTimestamp=2024,11,28,11,9,18.376
 

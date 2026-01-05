@@ -162,7 +162,7 @@ immutability=1
 plugin=org.kde.kdeconnect
 
 [Containments][62][Applets][67][Applets][80][Configuration]
-PreloadWeight=72
+PreloadWeight=77
 
 [Containments][62][Applets][67][Applets][81]
 immutability=1
@@ -204,7 +204,7 @@ immutability=1
 plugin=org.kde.plasma.battery
 
 [Containments][62][Applets][67][Applets][89][Configuration]
-PreloadWeight=0
+PreloadWeight=36
 
 [Containments][62][Applets][67][ConfigDialog]
 DialogHeight=540
@@ -264,6 +264,15 @@ positions={"2991x1252":[],"3127x1309":[],"3440x1440":[]}
 Image=/usr/share/wallpapers/Flow/
 SlidePaths=/usr/share/wallpapers/
 
+[Containments][90]
+activityId=42cfd941-f257-4e76-9e6e-809cce6a5b82
+formfactor=0
+immutability=1
+lastScreen=2
+location=0
+plugin=org.kde.plasma.folder
+wallpaperplugin=org.kde.image
+
 [ScreenMapping]
-itemsOnDisabledScreens=0,42cfd941-f257-4e76-9e6e-809cce6a5b82,3,,http://442d3150-bb06-4c87-bb53-37e4fdd1874c,http://0.0.0.0
-screenMapping=desktop:/backup,0,42cfd941-f257-4e76-9e6e-809cce6a5b82,desktop:/adc.txt,1,42cfd941-f257-4e76-9e6e-809cce6a5b82
+itemsOnDisabledScreens=0,42cfd941-f257-4e76-9e6e-809cce6a5b82,4,http://0.0.0.0,http://442d3150-bb06-4c87-bb53-37e4fdd1874c,desktop:/backup,,1,42cfd941-f257-4e76-9e6e-809cce6a5b82,3,desktop:/ubdeps.txt,desktop:/adc.txt,desktop:/list.txt
+screenMapping=

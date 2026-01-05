@@ -35,7 +35,7 @@ return function()
     configs.sourcekit.filetypes = { 'swift', 'objective-c', 'objective-cpp' }
 
     configs.copilot = {
-        filetypes = { 'sh', 'zsh', 'c', 'cpp', 'lua', 'tex', 'gitcommit', 'markdown', 'yaml' },
+        filetypes = { 'sh', 'zsh', 'c', 'cpp', 'lua', 'tex', 'gitcommit', 'markdown', 'yaml', 'html' },
         settings = { telemetry = { telemetryLevel = 'none' } },
     }
 

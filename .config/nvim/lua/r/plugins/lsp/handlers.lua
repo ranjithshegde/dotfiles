@@ -12,6 +12,7 @@ local au_opts = { clear = true }
 local nofmt = {
     'lua_ls',
     'jsonls',
+    'html',
 }
 
 local function filterfmt(client)
