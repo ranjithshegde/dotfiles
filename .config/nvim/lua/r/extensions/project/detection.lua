@@ -105,12 +105,12 @@ local project_types = {
 local default_configs = {
     cpp = {
         type_name = 'Single',
-        makeprg = vim.g.is_win32 and 'clang++' or 'g++',
+        makeprg = vim.g.is_win64 and 'clang++' or 'g++',
         debug_bin = vim.fn.expand '%<',
     },
     c = {
         type_name = 'Single',
-        makeprg = vim.g.is_win32 and 'clang' or 'gcc',
+        makeprg = vim.g.is_win64 and 'clang' or 'gcc',
         debug_bin = vim.fn.expand '%<',
     },
 }

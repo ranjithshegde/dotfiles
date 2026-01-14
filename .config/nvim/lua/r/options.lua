@@ -83,7 +83,7 @@ return function()
     vim.g.tex_conceal = 'abdmgs'
     vim.g.health = { style = 'float' }
 
-    if vim.g.is_win32 then
+    if vim.g.is_win64 then
         o.noshelltemp = true
         o.shell = 'powershell'
         o.shellcmdflag =

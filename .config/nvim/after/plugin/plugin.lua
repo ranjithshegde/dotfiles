@@ -41,7 +41,13 @@ end)
 -- Misc
 map({ 'n', 't' }, '<F9>', function()
     vim.cmd.stopinsert()
-    require('r.extensions').toggleTerm('zsh', 'shell', 1)
+    local shell
+    if vim.g.is_win64 then
+        shell = 'powershell.exe'
+    else
+        shell = 'zsh'
+    end
+    require('r.extensions').toggleTerm(shell, 'shell', 1)
 end, {
     desc = 'Toggle current/default terminal',
 })

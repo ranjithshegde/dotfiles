@@ -22,8 +22,14 @@ end
 ------------------------------------------------------------------------
 
 local function open_term(split, mods)
+    local shell
+    if vim.g.is_win64 then
+        shell = 'powershell.exe'
+    else
+        shell = 'zsh'
+    end
     return function()
-        require('r.utils').ex_cmd(split, { 'term://zsh' }, mods, { file = true, bar = true })
+        require('r.utils').ex_cmd(split, { 'term://' .. shell }, mods, { file = true, bar = true })
     end
 end
 

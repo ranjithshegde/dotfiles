@@ -72,4 +72,9 @@ return {
         },
         ft = { 'markdown', 'codecompanion' },
     },
+
+    {
+        'MayaFlux/lila.nvim',
+        config = true,
+    },
 }
