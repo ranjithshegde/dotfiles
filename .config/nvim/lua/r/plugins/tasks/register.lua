@@ -77,7 +77,23 @@ function register.cpp(id)
             end)
 
             build_config.register_handler('CMake', function(bufnr)
-                require('r.plugins.tasks.cpp').cmake(bufnr)
+                local cmake_file = vim.fn.getcwd() .. '/CMakeLists.txt'
+                local is_maya_flux = false
+                local lines = vim.fn.readfile(cmake_file)
+                for _, line in ipairs(lines) do
+                    local cleaned = line:gsub('#.*', ''):gsub('%s+', ' ')
+                    local proj = cleaned:match 'project%s*%(%s*([%w_]+)'
+                    if proj and proj:lower() == 'mayaflux' then
+                        is_maya_flux = true
+                        break
+                    end
+                end
+
+                if is_maya_flux then
+                    require('r.plugins.tasks.cpp').mayaflux(bufnr)
+                else
+                    require('r.plugins.tasks.cpp').cmake(bufnr)
+                end
             end)
 
             build_config.register_handler('Unreal', function(bufnr)

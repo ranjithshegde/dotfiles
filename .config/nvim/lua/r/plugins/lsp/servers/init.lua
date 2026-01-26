@@ -59,6 +59,10 @@ return function()
         configs.clangd = require('r.plugins.lsp.servers.clang').clangd()
     end
 
+    if vim.bo.filetype == 'org' then
+        configs.org = {}
+    end
+
     for ls, cfg in pairs(configs) do
         vim.lsp.config(ls, cfg)
         if ls ~= 'ltex_plus' then

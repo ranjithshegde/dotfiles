@@ -1,3 +1,3 @@
 #!/bin/sh
 
-nvr --remote +"set bufhidden=delete" "$@"
+nvim --server /tmp/nvimsocket --remote +"set bufhidden=delete" "$@"

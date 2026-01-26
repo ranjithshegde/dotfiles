@@ -42,6 +42,7 @@ return {
             process_spinner = true,
             integrations = {
                 diffview = true,
+                fzf_lua = true,
             },
         },
         cmd = 'Neogit',

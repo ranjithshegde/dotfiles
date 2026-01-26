@@ -39,12 +39,12 @@ function g.git()
             l = {
                 function()
                     local file = vim.fn.expand '%'
-                    neogit_lua('log', 'log_current', { '--graph', '--color', '--decorate', '--reflog', '--', file })()
+                    neogit_lua('log', 'log_current', { '--graph', '--color', '--decorate', '--', file })()
                 end,
                 'commit Log file',
             },
             L = {
-                neogit_lua('log', 'log_local_branches', { '--graph', '--color', '--decorate', '--reflog' }),
+                neogit_lua('log', 'log_local_branches', { '--graph', '--color', '--decorate' }),
                 'commit Log Local',
             },
             p = { neogit_command { 'push' }, 'push commits' },

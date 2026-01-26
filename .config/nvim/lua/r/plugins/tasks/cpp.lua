@@ -161,6 +161,28 @@ function tasks.cmake(bufnr)
     end, { buffer = bufnr, desc = 'Launch binary' })
 end
 
+function tasks.mayaflux(bufnr)
+    map('n', '<F3>', function()
+        require('overseer').run_template { name = 'Mayaflux clean' }
+    end, { buffer = bufnr, desc = 'Mayaflux: Clean build artifacts' })
+
+    map('n', '<F4>', function()
+        require('overseer').run_template {
+            name = 'Mayaflux configure',
+        }
+    end, { buffer = bufnr, desc = 'Mayaflux: Configure (Ninja + MAYAFLUX_DEV=ON)' })
+
+    map('n', '<F5>', function()
+        require('overseer').run_template { name = 'Mayaflux Build' }
+    end, { buffer = bufnr, desc = 'Mayaflux: Build (cmake --build --parallel)' })
+
+    map('n', '<F6>', function()
+        require('overseer').run_template {
+            name = 'Mayaflux Run',
+        }
+    end, { buffer = bufnr, desc = 'Mayaflux: Run project_launcher' })
+end
+
 function tasks.unreal(bufnr)
     map('n', '<F3>', function()
         require('overseer').run_template { name = 'generate compile_commands.json' }

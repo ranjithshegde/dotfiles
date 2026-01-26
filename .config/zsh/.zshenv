@@ -36,9 +36,9 @@ export PERL_LOCAL_LIB_ROOT="$XDG_DATA_HOME/perl${PERL_LOCAL_LIB_ROOT:+:$PERL_LOC
 export PERL_MB_OPT='--install_base ~/.local/share/perl'
 export PERL_MM_OPT='INSTALL_BASE=~/.local/share/perl'
 export PERL_CPANM_HOME="$XDG_DATA_HOME/cpan"
-export GEM_HOME="$XDG_DATA_HOME/gem"
-export GEM_SPEC_CACHE="$XDG_CACHE_HOME/gem"
-export PYTHONHISTFILE="$XDG_DATA_HOME/python_history"
+# export GEM_HOME="$XDG_DATA_HOME/gem"
+# export GEM_SPEC_CACHE="$XDG_CACHE_HOME/gem"
+# export PYTHONHISTFILE="$XDG_DATA_HOME/python_history"
 
 # Build tools
 export GRADLE_USER_HOME="$XDG_DATA_HOME/gradle"
@@ -64,7 +64,7 @@ export EM_NODE="$EMSDK/node/14.8.2_64bit/bin/node"
 
 # History files
 export HISTFILE="$XDG_DATA_HOME/zsh/history"
-export LESSHISTFILE="$XDG_CACHE_HOME/less/history"
+# export LESSHISTFILE="$XDG_CACHE_HOME/less/history"
 export MYSQL_HISTFILE="$XDG_DATA_HOME/mysql_history"
 export OCTAVE_HISTFILE="$XDG_CACHE_HOME/octave-hsts"
 export GDBHISTFILE="$XDG_DATA_HOME/gdb/history"
@@ -73,7 +73,7 @@ export RLWRAP_HOME="$XDG_DATA_HOME/rlwrap"
 # Cache directories
 export CUDA_CACHE_PATH="$XDG_CACHE_HOME/nv"
 export MYPY_CACHE_DIR="$XDG_CACHE_HOME/mypy"
-export PYLINTHOME="$XDG_CACHE_HOME/pylint"
+# export PYLINTHOME="$XDG_CACHE_HOME/pylint"
 export PUB_CACHE="$XDG_CACHE_HOME/pub"
 export NUGET_PACKAGES="$XDG_CACHE_HOME/NuGetPackages"
 

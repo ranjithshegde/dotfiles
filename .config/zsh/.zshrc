@@ -73,26 +73,7 @@ zinit wait:0 lucid for \
 #                   Utility Plugins
 # ==============================================================================
 # History
-zinit ice wait:1 lucid for \
-    atload"bindkey '^[[A' history-substring-search-up; bindkey '^[[B' history-substring-search-down" \
-    zsh-users/zsh-history-substring-search
-
-# Multiword History
-zinit ice wait:1 lucid
-zinit load zdharma-continuum/history-search-multi-word
-
-zstyle ":history-search-multi-word" highlight-color "fg=yellow,bold"
-zstyle ":history-search-multi-word" page-size "8"
-zstyle ":plugin:history-search-multi-word" active "underline"
-zstyle ":plugin:history-search-multi-word" check-paths "yes"
-zstyle ":plugin:history-search-multi-word" clear-on-cancel "no"
-zstyle ":plugin:history-search-multi-word" synhl "yes"
-zstyle :plugin:history-search-multi-word reset-prompt-protect 1
-
-# Find the command
-zinit ice wait lucid for \
-    atload"source ${ZINIT_HOME}/plugins/agura-lex---find-the-command/usr/share/doc/find-the-command/ftc.zsh" \
-    agura-lex/find-the-command
+zinit load atuinsh/atuin
 
 # Git
 zinit ice wait lucid
@@ -146,10 +127,12 @@ alias lt='eza --color=auto --group-directories-first --icons=always -Tg -L=1'
 alias lt2='eza --color=auto --group-directories-first --icons=always -Tg -L=2'
 alias lt3='eza --color=auto --group-directories-first --icons=always -Tg -L=3'
 alias lt4='eza --color=auto --group-directories-first --icons=always -Tg -L=4'
+alias lt5='eza --color=auto --group-directories-first --icons=always -Tg -L=5'
 alias lta='eza --color=auto --group-directories-first --icons=always -Tga -L=1'
 alias lta2='eza --color=auto --group-directories-first --icons=always -Tga -L=2'
 alias lta3='eza --color=auto --group-directories-first --icons=always -Tga -L=3'
 alias lta4='eza --color=auto --group-directories-first --icons=always -Tga -L=4'
+alias lta5='eza --color=auto --group-directories-first --icons=always -Tga -L=5'
 alias cat=bat
 alias lf=yazi
 alias sxiv=nsxiv
@@ -195,7 +178,7 @@ fi
 zinit snippet "$ZDOTDIR/functions/scripts.sh"
 zinit snippet "$ZDOTDIR/functions/fuzzy.sh"
 
-eval "$(atuin init zsh)"
+source /usr/share/doc/pkgfile/command-not-found.zsh
 
 # Function to run commands with sudo
 sdo() {

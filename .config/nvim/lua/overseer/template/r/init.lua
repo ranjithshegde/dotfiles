@@ -6,6 +6,7 @@ return {
     'r.valgrind',
     'r.wasm',
     'r.cmake',
+    'r.mayaflux',
     'r.openFrameworks',
     'r.cdox',
     'r.dotnet',
