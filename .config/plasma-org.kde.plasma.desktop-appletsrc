@@ -59,7 +59,6 @@ immutability=1
 plugin=org.kde.plasma.kickoff
 
 [Containments][62][Applets][63][Configuration]
-PreloadWeight=100
 popupHeight=510
 popupWidth=647
 
@@ -111,9 +110,6 @@ PreloadWeight=42
 immutability=1
 plugin=org.kde.plasma.notifications
 
-[Containments][62][Applets][67][Applets][70][Configuration]
-PreloadWeight=100
-
 [Containments][62][Applets][67][Applets][71]
 immutability=1
 plugin=org.kde.plasma.keyboardlayout
@@ -122,15 +118,9 @@ plugin=org.kde.plasma.keyboardlayout
 immutability=1
 plugin=org.kde.plasma.devicenotifier
 
-[Containments][62][Applets][67][Applets][72][Configuration]
-PreloadWeight=100
-
 [Containments][62][Applets][67][Applets][73]
 immutability=1
 plugin=org.kde.plasma.volume
-
-[Containments][62][Applets][67][Applets][73][Configuration]
-PreloadWeight=100
 
 [Containments][62][Applets][67][Applets][73][Configuration][General]
 migrated=true
@@ -143,9 +133,6 @@ plugin=org.kde.plasma.manage-inputmethod
 immutability=1
 plugin=org.kde.kscreen
 
-[Containments][62][Applets][67][Applets][75][Configuration]
-PreloadWeight=70
-
 [Containments][62][Applets][67][Applets][76]
 immutability=1
 plugin=org.kde.plasma.cameraindicator
@@ -154,22 +141,13 @@ plugin=org.kde.plasma.cameraindicator
 immutability=1
 plugin=org.kde.plasma.clipboard
 
-[Containments][62][Applets][67][Applets][77][Configuration]
-PreloadWeight=100
-
 [Containments][62][Applets][67][Applets][80]
 immutability=1
 plugin=org.kde.kdeconnect
 
-[Containments][62][Applets][67][Applets][80][Configuration]
-PreloadWeight=77
-
 [Containments][62][Applets][67][Applets][81]
 immutability=1
 plugin=org.kde.plasma.brightness
-
-[Containments][62][Applets][67][Applets][81][Configuration]
-PreloadWeight=0
 
 [Containments][62][Applets][67][Applets][81][Configuration][ConfigDialog]
 DialogHeight=540
@@ -179,22 +157,13 @@ DialogWidth=720
 immutability=1
 plugin=org.kde.plasma.mediacontroller
 
-[Containments][62][Applets][67][Applets][82][Configuration]
-PreloadWeight=0
-
 [Containments][62][Applets][67][Applets][83]
 immutability=1
 plugin=org.kde.plasma.bluetooth
 
-[Containments][62][Applets][67][Applets][83][Configuration]
-PreloadWeight=10
-
 [Containments][62][Applets][67][Applets][84]
 immutability=1
 plugin=org.kde.plasma.networkmanagement
-
-[Containments][62][Applets][67][Applets][84][Configuration]
-PreloadWeight=100
 
 [Containments][62][Applets][67][Applets][84][Configuration][General]
 currentDetailsTab=details
@@ -203,15 +172,9 @@ currentDetailsTab=details
 immutability=1
 plugin=org.kde.plasma.battery
 
-[Containments][62][Applets][67][Applets][89][Configuration]
-PreloadWeight=17
-
 [Containments][62][Applets][67][ConfigDialog]
 DialogHeight=540
 DialogWidth=720
-
-[Containments][62][Applets][67][Configuration]
-PreloadWeight=100
 
 [Containments][62][Applets][67][General]
 extraItems=org.kde.plasma.notifications,org.kde.plasma.keyboardlayout,org.kde.plasma.volume,org.kde.plasma.manage-inputmethod,org.kde.plasma.bluetooth,org.kde.kscreen,org.kde.plasma.mediacontroller,org.kde.plasma.cameraindicator,org.kde.plasma.networkmanagement,org.kde.plasma.clipboard,org.kde.kdeconnect,org.kde.plasma.battery,org.kde.plasma.devicenotifier,org.kde.plasma.brightness
@@ -224,7 +187,6 @@ immutability=1
 plugin=org.kde.plasma.digitalclock
 
 [Containments][62][Applets][78][Configuration]
-PreloadWeight=100
 popupHeight=451
 popupWidth=560
 
@@ -274,5 +236,5 @@ plugin=org.kde.plasma.folder
 wallpaperplugin=org.kde.image
 
 [ScreenMapping]
-itemsOnDisabledScreens=0,42cfd941-f257-4e76-9e6e-809cce6a5b82,4,,http://0.0.0.0,http://442d3150-bb06-4c87-bb53-37e4fdd1874c,desktop:/backup
-screenMapping=desktop:/adc.txt,1,42cfd941-f257-4e76-9e6e-809cce6a5b82,desktop:/list.txt,1,42cfd941-f257-4e76-9e6e-809cce6a5b82,desktop:/ubdeps.txt,1,42cfd941-f257-4e76-9e6e-809cce6a5b82,desktop:/backup,1,42cfd941-f257-4e76-9e6e-809cce6a5b82
+itemsOnDisabledScreens=0,42cfd941-f257-4e76-9e6e-809cce6a5b82,4,desktop:/backup,http://442d3150-bb06-4c87-bb53-37e4fdd1874c,,http://0.0.0.0,1,42cfd941-f257-4e76-9e6e-809cce6a5b82,3,desktop:/list.txt,desktop:/adc.txt,desktop:/ubdeps.txt
+screenMapping=

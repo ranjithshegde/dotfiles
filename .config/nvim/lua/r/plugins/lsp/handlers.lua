@@ -127,11 +127,17 @@ function handlers.attach(client, bufnr)
 
     if client:supports_method 'textDocument/rename' then
         vim.keymap.set('n', 'crr', function()
-            if not package.loaded['inc-rename'] then
-                require('lazy').load { plugins = { 'inc-rename.nvim' } }
+            --[[ if not package.loaded['inc-rename'] then
+                    require('lazy').load { plugins = { 'inc-rename.nvim' } }
+                end
+                return ':IncRename ' .. vim.fn.expand '<cword>'
+            end, { expr = true, buffer = bufnr, desc = 'Incremental rename' }) ]]
+
+            if not package.loaded['live-rename'] then
+                require('lazy').load { plugins = { 'live-rename.nvim' } }
             end
-            return ':IncRename ' .. vim.fn.expand '<cword>'
-        end, { expr = true, buffer = bufnr, desc = 'Incremental rename' })
+            require('live-rename').rename()
+        end, { buffer = bufnr, desc = 'Incremental rename' })
     end
 
     if client:supports_method 'textDocument/documentColor' then

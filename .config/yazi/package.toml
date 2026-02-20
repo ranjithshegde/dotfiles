@@ -1,7 +1,7 @@
 [[plugin.deps]]
 use = "yazi-rs/plugins:git"
-rev = "6c71385"
-hash = "36a484acf6a0a0219c543ccb4cee218f"
+rev = "25918dc"
+hash = "270915fa8282a19908449530ff66f7e2"
 
 [[plugin.deps]]
 use = "Reledia/glow"
@@ -10,13 +10,28 @@ hash = "92b5c58159a51c567f82b618cee2b78"
 
 [[plugin.deps]]
 use = "yazi-rs/plugins:smart-enter"
-rev = "6c71385"
+rev = "25918dc"
 hash = "56fdabc96fc1f4d53c96eb884b02a5be"
 
 [[plugin.deps]]
 use = "yazi-rs/plugins:mount"
-rev = "6c71385"
-hash = "e2d4bfccf31e5ab05f46fee4797c5215"
+rev = "25918dc"
+hash = "9ad20d763df07ce40fd09de549d914b0"
+
+[[plugin.deps]]
+use = "KKV9/compress"
+rev = "cb6e8ec"
+hash = "424ada4807b20ccd4fc85d1d7c26d1e4"
+
+[[plugin.deps]]
+use = "yazi-rs/plugins:mime-ext"
+rev = "25918dc"
+hash = "8b177921e50732b2c8e9d71aa5956270"
+
+[[plugin.deps]]
+use = "yazi-rs/plugins:diff"
+rev = "25918dc"
+hash = "2f08b8249b57737e7257298a3b2a2edc"
 
 [[flavor.deps]]
 use = "jamylak/rose-pine"

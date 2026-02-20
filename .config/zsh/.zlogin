@@ -33,13 +33,9 @@ export SSH_AUTH_SOCK
 # Reload gpg-agent TTY settings for ssh-agent forwarding
 gpg-connect-agent updatestartuptty /bye >/dev/null
 
-# Set platform-specific environment variables
-# export VK_LAYER_PATH="/usr/share/vulkan/explicit_layer.d/"
-
 case "${XDG_SESSION_TYPE}" in
     wayland)
         source "$ZDOTDIR"/boot_env/proton.zsh
-        # export QT_QPA_PLATFORM='wayland'
         export TERMINAL=/usr/bin/ghostty
         export TERM=ghostty
         ;;

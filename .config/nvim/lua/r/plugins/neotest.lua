@@ -9,8 +9,7 @@ local function nt(cmd, subcmd, args)
 end
 
 return {
-    'ribru17/neotest',
-    branch = 'fast_parse_fixup',
+    'nvim-neotest/neotest',
     dependencies = {
         'nvim-lua/plenary.nvim',
         'alfaix/neotest-gtest',

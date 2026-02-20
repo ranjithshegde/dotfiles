@@ -38,4 +38,5 @@ prepend_keymap = [
         "T",
     ], run = "cd ~/Videos/Tutorials/", desc = "Goto Games directory" },
     { on = "M", run = "plugin mount", desc = "Open mount manager menu" },
+    { on   = "<C-d>", run  = "plugin diff", desc = "Diff the selected with the hovered file" }
 ]

@@ -9,4 +9,8 @@ max_height = 1080
 
 [plugin]
 prepend_previewers = [{ name = "*.md", run = "glow" }]
-prepend_fetchers = [{ name = "*", id = "git", run = "git" }]
+prepend_fetchers = [
+{ name = "*", id = "git", run = "git" },
+{id   = "mime", url  = "local://*" ,run  = "mime-ext.local", prio = "high"},
+{id   = "mime", url  = "remote://*",  run  = "mime-ext.remote" ,prio = "high"}
+]

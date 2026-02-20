@@ -56,9 +56,9 @@ function servers.ccls()
             },
             disable_diagnostics = true,
             disable_signature = true,
-            codelens = {
-                enable = true,
-            },
+            -- codelens = {
+            --     enable = true,
+            -- },
         },
     }
 end
