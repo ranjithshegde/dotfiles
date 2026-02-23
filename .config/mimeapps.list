@@ -183,3 +183,5 @@ x-scheme-handler/signalcaptcha=signal-desktop.desktop
 x-scheme-handler/terminal=kitty.desktop
 x-scheme-handler/unknown=org.qutebrowser.qutebrowser.desktop
 x-terminal-emulator=kitty.desktop
+x-scheme-handler/io.element.desktop=io.element.Element.desktop
+x-scheme-handler/element=io.element.Element.desktop

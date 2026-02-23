@@ -1,7 +1,6 @@
 local constants = require 'overseer.constants'
 local overseer = require 'overseer'
 local TAG = constants.TAG
-local num_jobs = _G.__MACHINE and '-j12' or '-j32'
 
 local tmpl = {
     params = {
@@ -43,16 +42,22 @@ return {
     },
     generator = function(_, cb)
         local commands = {
-            { args = { 'make', '-C', 'build', 'clean' }, tags = { TAG.CLEAN }, priority = 70, dGPU = false },
             {
-                args = { 'cmake', '-B', 'build', '-S', '.' },
+                args = { 'cmake', '--build', 'build', '--target', 'clean' },
+                tags = { TAG.CLEAN },
+                priority = 70,
+                save = false,
+                dGPU = false,
+            },
+            {
+                args = { 'cmake', '-B', 'build', '-S', '.', '-G', 'Ninja' },
                 tags = { TAG.BUILD },
                 priority = 20,
                 save = true,
                 dGPU = false,
             },
             {
-                args = { 'make', num_jobs, '-C', 'build' },
+                args = { 'cmake', '--build', 'build', '--parallel' },
                 tags = { TAG.BUILD },
                 priority = 20,
                 save = true,
@@ -80,10 +85,10 @@ return {
             elseif vim.tbl_contains(command.args, '-B') then
                 name = name .. ' configure'
                 desc = 'configure project for build or release'
-            elseif vim.tbl_contains(command.args, num_jobs) then
+            elseif vim.tbl_contains(command.args, '--parallel') then
                 name = name .. ' Build'
                 desc = 'Compile project binary'
-            elseif vim.tbl_contains(command.args, '--config') then
+            elseif vim.tbl_contains(command.args, 'install') then
                 name = name .. ' install'
                 desc = 'Install binary in system prefix'
             else

@@ -1,10 +1,10 @@
-typeset -U PATH LIBRARY_PATH
-
 # macOS-specific settings
 if [[ "$OSTYPE" == "darwin*" ]]; then
     source "$ZDOTDIR"/boot_env/macos.zsh
     exit 0
 fi
+
+typeset -U PATH LIBRARY_PATH
 
 # Function to append library paths if not already included
 append_lib() {
@@ -30,8 +30,6 @@ fi
 # Set SSH_AUTH_SOCK if not already set for this process
 : ${SSH_AUTH_SOCK:="$(gpgconf --list-dirs agent-ssh-socket)"}
 export SSH_AUTH_SOCK
-# Reload gpg-agent TTY settings for ssh-agent forwarding
-gpg-connect-agent updatestartuptty /bye >/dev/null
 
 case "${XDG_SESSION_TYPE}" in
     wayland)
@@ -46,6 +44,6 @@ case "${XDG_SESSION_TYPE}" in
         ;;
 esac
 
-if [[ "${XDG_CURRENT_DESKTOP}" != *"KDE"* ]]; then 
+if [[ "${XDG_CURRENT_DESKTOP}" != *"KDE"* ]]; then
     [[ -x /usr/lib/pam_kwallet_init ]] && /usr/lib/pam_kwallet_init &
 fi

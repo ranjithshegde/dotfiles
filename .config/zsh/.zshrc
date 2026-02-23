@@ -192,3 +192,11 @@ precmd() {
         echo
     }
 }
+
+if [[ -o interactive ]]; then
+    local_tty=$(tty 2>/dev/null)
+    if [[ -n "$local_tty" && "$GPG_TTY" != "$local_tty" ]]; then
+        export GPG_TTY="$local_tty"
+        gpg-connect-agent updatestartuptty /bye >/dev/null 2>&1
+    fi
+fi

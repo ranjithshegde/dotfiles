@@ -9,6 +9,7 @@ RightButton;NoModifier=org.kde.contextmenu
 ItemGeometries-3127x1309=
 ItemGeometries-3339x1878=
 ItemGeometries-3491x1964=
+ItemGeometries-3511x1975=
 ItemGeometries-3840x2160=
 ItemGeometriesHorizontal=
 activityId=42cfd941-f257-4e76-9e6e-809cce6a5b82
@@ -236,5 +237,5 @@ plugin=org.kde.plasma.folder
 wallpaperplugin=org.kde.image
 
 [ScreenMapping]
-itemsOnDisabledScreens=0,42cfd941-f257-4e76-9e6e-809cce6a5b82,4,desktop:/backup,http://442d3150-bb06-4c87-bb53-37e4fdd1874c,,http://0.0.0.0,1,42cfd941-f257-4e76-9e6e-809cce6a5b82,3,desktop:/list.txt,desktop:/adc.txt,desktop:/ubdeps.txt
+itemsOnDisabledScreens=0,42cfd941-f257-4e76-9e6e-809cce6a5b82,4,,http://442d3150-bb06-4c87-bb53-37e4fdd1874c,desktop:/backup,http://0.0.0.0,1,42cfd941-f257-4e76-9e6e-809cce6a5b82,3,desktop:/list.txt,desktop:/adc.txt,desktop:/ubdeps.txt
 screenMapping=
