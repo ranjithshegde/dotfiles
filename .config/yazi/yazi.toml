@@ -12,3 +12,13 @@ prepend_previewers = [{ name = "*.md", run = "glow" }]
 prepend_fetchers = [
 { name = "*", id = "git", run = "git" },
 ]
+
+[opener]
+play = [
+	{ run = 'mpv "$@"', orphan = true, for = "unix" },
+]
+
+[open]
+rules = [
+	{ mime = "{audio,video}/*", use = [ "play", "reveal" ] },
+]

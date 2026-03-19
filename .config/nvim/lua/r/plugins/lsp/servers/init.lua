@@ -7,6 +7,7 @@ return function()
         'html',
         'ruff',
         'cssls',
+        'oxfmt',
         'taplo',
         'ts_ls',
         'bashls',

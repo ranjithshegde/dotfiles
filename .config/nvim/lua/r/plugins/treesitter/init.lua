@@ -7,7 +7,7 @@ return {
         build = ':TSUpdate',
         init = setup('r.plugins.treesitter.settings', 'autocmds'),
     },
-    { 'HiPhish/rainbow-delimiters.nvim', event = 'BufReadPre' },
+    { 'https://github.com/HiPhish/rainbow-delimiters.nvim', submodules = false, event = 'BufReadPre' },
     {
         'nvim-treesitter/nvim-treesitter-textobjects',
         branch = 'main',

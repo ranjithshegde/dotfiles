@@ -11,6 +11,7 @@ ItemGeometries-3339x1878=
 ItemGeometries-3491x1964=
 ItemGeometries-3511x1975=
 ItemGeometries-3840x2160=
+ItemGeometries-640x480=
 ItemGeometriesHorizontal=
 activityId=42cfd941-f257-4e76-9e6e-809cce6a5b82
 formfactor=0
@@ -60,7 +61,7 @@ immutability=1
 plugin=org.kde.plasma.kickoff
 
 [Containments][62][Applets][63][Configuration]
-popupHeight=510
+popupHeight=509
 popupWidth=647
 
 [Containments][62][Applets][63][Configuration][General]
@@ -237,5 +238,5 @@ plugin=org.kde.plasma.folder
 wallpaperplugin=org.kde.image
 
 [ScreenMapping]
-itemsOnDisabledScreens=0,42cfd941-f257-4e76-9e6e-809cce6a5b82,4,,http://442d3150-bb06-4c87-bb53-37e4fdd1874c,desktop:/backup,http://0.0.0.0,1,42cfd941-f257-4e76-9e6e-809cce6a5b82,3,desktop:/list.txt,desktop:/adc.txt,desktop:/ubdeps.txt
-screenMapping=
+itemsOnDisabledScreens=0,42cfd941-f257-4e76-9e6e-809cce6a5b82,4,http://442d3150-bb06-4c87-bb53-37e4fdd1874c,,http://0.0.0.0,desktop:/backup
+screenMapping=desktop:/index.html,1,42cfd941-f257-4e76-9e6e-809cce6a5b82,desktop:/ubdeps.txt,1,42cfd941-f257-4e76-9e6e-809cce6a5b82,desktop:/list.txt,1,42cfd941-f257-4e76-9e6e-809cce6a5b82,desktop:/backup,1,42cfd941-f257-4e76-9e6e-809cce6a5b82,desktop:/adc.txt,1,42cfd941-f257-4e76-9e6e-809cce6a5b82
