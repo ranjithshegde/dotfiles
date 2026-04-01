@@ -50,14 +50,12 @@ return function()
         settings = { Lua = { completion = { callSnippet = 'Replace' } } },
     }
 
-    configs.ltex_plus = require('r.plugins.lsp.servers.ltex').lsp()
-
     if vim.tbl_contains({ 'tex', 'bib', 'plaintex' }, vim.bo.filetype) then
-        configs.texlab = require 'r.plugins.lsp.servers.texlab'
+        vim.lsp.enable('texlab', true)
     end
 
     if vim.tbl_contains({ 'c', 'cpp', 'opencl' }, vim.bo.filetype) then
-        configs.clangd = require('r.plugins.lsp.servers.clang').clangd()
+        vim.lsp.enable('clangd', true)
     end
 
     if vim.bo.filetype == 'org' then
@@ -66,8 +64,6 @@ return function()
 
     for ls, cfg in pairs(configs) do
         vim.lsp.config(ls, cfg)
-        if ls ~= 'ltex_plus' then
-            vim.lsp.enable(ls, true)
-        end
+        vim.lsp.enable(ls, true)
     end
 end

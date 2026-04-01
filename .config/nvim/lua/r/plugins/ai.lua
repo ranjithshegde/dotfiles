@@ -27,7 +27,7 @@ return {
                                 chunk_mode = true,
                                 summarise = {
                                     enabled = true,
-                                    adapter = 'copilot',
+                                    adapter = nil,
                                     query_augmented = true,
                                 },
                             },

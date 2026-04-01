@@ -4,32 +4,10 @@ local servers = {}
 --                       Clangd  Lsp         	                      --
 ------------------------------------------------------------------------
 
-function servers.clangd()
-    local cmd = {
-        'clangd',
-        '--clang-tidy',
-        '--background-index',
-        '--all-scopes-completion',
-        '--completion-style=detailed',
-        '--fallback-style=webkit',
-        '--offset-encoding=utf-32',
-        '--header-insertion=never',
-        '--function-arg-placeholders=1',
-    }
-
-    return {
-        filetypes = { 'c', 'cpp', 'opencl' },
-        init_options = {
-            clangdFileStatus = true,
-        },
-        cmd = cmd,
-    }
-end
-
 function servers.ccls()
     local filetypes = { 'c', 'cpp', 'objc', 'objcpp', 'opencl' }
     local server_config = {
-        cmd = { 'ccls', '--log-file=/tmp/ccls.log', '--v=1' },
+        cmd = { 'ccls', '--log-file=/tmp/ccls.log', '--v=0' },
         filetypes = filetypes,
         autostart = true,
         root_dir = vim.fs.dirname(
@@ -37,10 +15,25 @@ function servers.ccls()
         ),
     }
 
+    local cpu_count = #vim.uv.cpu_info()
+    local ccls_threads = math.max(1, cpu_count - 1)
+
     require('ccls').setup {
         filetypes = filetypes,
         lsp = {
             server = server_config,
+            init_options = {
+                threads = ccls_threads,
+                index = {
+                    onChange = false,
+                    trackDependency = 1,
+                    multiVersion = 0,
+                    blacklist = { '^build/', '^.cache/', '^bin/', '^packaging', '^res' },
+                },
+                cache = {
+                    directory = '.ccls-cache',
+                },
+            },
             disable_capabilities = {
                 completionProvider = true,
                 documentFormattingProvider = true,

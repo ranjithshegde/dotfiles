@@ -141,7 +141,7 @@ function handlers.attach(client, bufnr)
     end
 
     if client:supports_method 'textDocument/documentColor' then
-        vim.lsp.document_color.enable(true, bufnr)
+        vim.lsp.document_color.enable(true, { bufnr = bufnr })
     end
 
     if client.name == 'ltex' then
