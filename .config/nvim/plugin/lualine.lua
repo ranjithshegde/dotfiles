@@ -1,3 +1,4 @@
+local utils = require 'r.utils'
 local center_sep = '%='
 
 local function sc_status()
@@ -60,33 +61,34 @@ local sections = {
     lualine_z = { 'location' },
 }
 
-return {
-    'nvim-lualine/lualine.nvim',
-    event = 'UIEnter',
-    config = function()
-        local lualine = require 'lualine'
+vim.pack.add({'https://github.com/nvim-lualine/lualine.nvim' },
+{
+    load = function(plug)
+        utils.lazy_plugin('lualine', plug.spec.name, function()
+            local lualine = require 'lualine'
 
-        local config = lualine.get_config()
+            local config = lualine.get_config()
 
-        config.sections = sections
-        config.options.disabled_filetypes.statusline = { 'snacks_dashboard', 'trouble' }
+            config.sections = sections
+            config.options.disabled_filetypes.statusline = { 'snacks_dashboard', 'trouble' }
 
-        config.options.section_separators = { right = '', left = '' }
-        config.options.component_separators = ''
+            config.options.section_separators = { right = '', left = '' }
+            config.options.component_separators = ''
 
-        -- ************** Tabline ----------------------------------------------
-        config.tabline = {
-            lualine_a = { { 'tabs', cond = tab_cond } },
-            lualine_c = { { 'buffers', cond = tab_cond } },
-            lualine_z = { { rootDir, cond = tab_cond } },
-        }
-        config.options.always_show_tabline = false
+            -- ************** Tabline ----------------------------------------------
+            config.tabline = {
+                lualine_a = { { 'tabs', cond = tab_cond } },
+                lualine_c = { { 'buffers', cond = tab_cond } },
+                lualine_z = { { rootDir, cond = tab_cond } },
+            }
+            config.options.always_show_tabline = false
 
-        config.options.disabled_filetypes.winbar = require('r.utils.tables').ignoreFiles
+            config.options.disabled_filetypes.winbar = require('r.utils.tables').ignoreFiles
 
-        -- config.extensions = { 'fzf', 'lazy', 'man', 'oil', 'overseer', 'quickfix', 'trouble' }
-        config.extensions = { 'lazy', 'man', 'quickfix' }
+            config.extensions = { 'lazy', 'man', 'quickfix' }
 
-        lualine.setup(config)
-    end,
-}
+            lualine.setup(config)
+        end)
+        utils.lazy_event('UIEnter', 'lualine')
+    end, confirm = false
+})

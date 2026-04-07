@@ -3,10 +3,10 @@
 #assume_yes = true
 
 # Disable specific steps - same options as the command line flag
-disable = ["vim", "containers", "dotnet", "jetbrains_clion", "lensfun"]
+disable = ["vim", "containers", "dotnet", "jetbrains_clion", "lensfun", "emacs"]
 
 # Ignore failures for these steps
-ignore_failures = ["shell"]
+# ignore_failures = ["shell"]
 
 # Run specific steps - same options as the command line flag
 #only = ["system", "emacs"]
@@ -34,14 +34,6 @@ ignore_failures = ["shell"]
 
 # Cleanup temporary or old files
 #cleanup = true
-
-#[git]
-#max_concurrency = 5
-#repos = [
-#    "/opt/vcpkg",
-#    "~/Repositories/libraries/openFrameworks/",
-#    "~/Repositories/libraries/emsdk/",
-#]
 
 # Don't pull the predefined git repos
 #predefined_repos = false

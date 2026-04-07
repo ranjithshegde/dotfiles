@@ -1,3 +1,5 @@
+local utils = require 'r.utils'
+
 local cached_workspace_folders = nil
 
 local function get_workspace_folders()
@@ -20,6 +22,20 @@ local sf = function(module, cmd, args)
     end
 end
 
+local keys = {
+    { ']r', sf('words', 'jump', vim.v.count1), desc = 'Next Reference', mode = { 'n', 't' } },
+    { '[r', sf('words', 'jump', -vim.v.count1), desc = 'Prev Reference', mode = { 'n', 't' } },
+    { '<leader>go', sf 'gitbrowse', desc = 'Open git remote for current file' },
+    { '<leader>sa', sf 'scratch', desc = 'Create scratch buffer' },
+    { '<leader>ss', sf('scratch', 'select'), desc = 'Select scratch buffer' },
+    {
+        '<Space>p',
+        sf('picker', 'projects', { dev = get_workspace_folders() }),
+        desc = 'Projects',
+    },
+    { '<leader><leader>e', sf 'explorer', desc = 'Toggle Explorer' },
+}
+
 local function init()
     local id = { OilRename = vim.api.nvim_create_augroup('OilRename', { clear = true }) }
     vim.api.nvim_create_autocmd('User', {
@@ -40,6 +56,16 @@ local function init()
     vim.print = function(...)
         ---@diagnostic disable-next-line
         return Snacks.debug.inspect(...)
+    end
+
+    for _, item in ipairs(keys) do
+        local mode = item[4] or 'n'
+        local key = item[1]
+        local callback = item[2]
+        local desc = item[3]
+        vim.keymap.set(mode, key, function()
+            callback()
+        end, { desc = desc })
     end
 end
 
@@ -111,9 +137,9 @@ local indent = {
 
 -- ************** general ---------------------------------------------
 local opts = {
-    dashboard = dashboard,
+    -- dashboard = dashboard,
     dim = default,
-    gitbrowse = default,
+    -- gitbrowse = default,
     image = default,
     indent = indent,
     notifier = default,
@@ -124,23 +150,12 @@ local opts = {
     zen = { toggle = { dim = true } },
 }
 
-return {
-    'folke/snacks.nvim',
-    priority = 1000,
-    lazy = false,
-    init = init,
-    opts = opts,
-    keys = {
-        { ']r', sf('words', 'jump', vim.v.count1), desc = 'Next Reference', mode = { 'n', 't' } },
-        { '[r', sf('words', 'jump', -vim.v.count1), desc = 'Prev Reference', mode = { 'n', 't' } },
-        { '<leader>go', sf 'gitbrowse', desc = 'Open git remote for current file' },
-        { '<leader>sa', sf 'scratch', desc = 'Create scratch buffer' },
-        { '<leader>ss', sf('scratch', 'select'), desc = 'Select scratch buffer' },
-        {
-            '<Space>p',
-            sf('picker', 'projects', { dev = get_workspace_folders() }),
-            desc = 'Projects',
-        },
-        { '<leader><leader>e', sf 'explorer', desc = 'Toggle Explorer' },
-    },
-}
+vim.pack.add({
+    'https://github.com/folke/snacks.nvim',
+}, { confirm = false })
+
+init()
+
+vim.schedule(function()
+    require('snacks').setup(opts)
+end)

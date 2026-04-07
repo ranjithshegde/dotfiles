@@ -28,4 +28,6 @@ return function()
     map('n', 'cr<Space>', function()
         vim.cmd.global "/^/pu=''"
     end, { desc = 'Double space entire file' })
+
+    map('n', '<leader>p', vim.pack.update, { desc = 'Update plugins' })
 end

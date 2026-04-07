@@ -117,4 +117,93 @@ function utils.write_and_source(buf)
     end, { buffer = buf, desc = 'Evaluate current file' })
 end
 
+local lazy_plugins = {}
+local original_require = _G.require
+
+local loading = {}
+
+_G.require = function(modname)
+    local spec = lazy_plugins[modname]
+    if spec and not package.loaded[modname] and not loading[modname] then
+        loading[modname] = true
+        local pack_dir = spec.pack
+        local ok, err = pcall(vim.cmd.packadd, pack_dir)
+        loading[modname] = nil
+        if not ok then
+            error(string.format('packadd failed for %s (%s): %s', modname, pack_dir, err))
+        end
+        local mod = original_require(modname)
+        if spec.setup then
+            spec.setup()
+        end
+        return mod
+    end
+    return original_require(modname)
+end
+
+---@param modname string The name used in `require(modname)`
+---@param pack string The directory name inside `pack/plugins/opt/`
+---@param setup function|boolean Called after the module is loaded.
+---        If a function, it is called directly.
+---        If `true`, calls `require(modname).setup()` with no arguments.
+function utils.lazy_plugin(modname, pack, setup)
+    local wrapped_setup = nil
+    if type(setup) == 'function' then
+        wrapped_setup = setup
+    elseif setup == true then
+        wrapped_setup = function()
+            require(modname).setup()
+        end
+    end
+    lazy_plugins[modname] = { pack = pack, setup = wrapped_setup }
+end
+
+-- Helper: create a lazy-loaded command
+-- @param cmd_name string - the command name (e.g., 'FzfLua')
+-- @param modname string - the module to require (e.g., 'fzf-lua')
+function utils.lazy_command(cmds, modname)
+    if type(cmds) == 'string' then
+        cmds = { cmds }
+    end
+
+    for _, cmd in ipairs(cmds) do
+        vim.api.nvim_create_user_command(cmd, function(args)
+            require(modname)
+            vim.cmd(cmd .. ' ' .. args.args)
+        end, { nargs = '*' })
+    end
+end
+
+--- Create an autocmd that loads the plugin on a given event
+---@param events string|table Event(s) (e.g., 'BufReadPost')
+---@param modname string Module to require
+---@param pattern string|nil File pattern (e.g., '*.md')
+function utils.lazy_event(events, modname, pattern)
+    local id = { LazyPlugin = vim.api.nvim_create_augroup(modname .. '_lazy_event', { clear = true }) }
+
+    vim.api.nvim_create_autocmd(events, {
+        group = id.LazyPlugin,
+        pattern = pattern,
+        callback = function()
+            require(modname)
+        end,
+        once = true,
+    })
+    utils.register_au_id(id)
+end
+
+--- List all lazy‑loaded modules that have been loaded
+function utils.loaded_plugins(print)
+    local loaded = {}
+    for modname, _ in pairs(lazy_plugins) do
+        if package.loaded[modname] then
+            table.insert(loaded, modname)
+        end
+    end
+    if print then
+        vim.notify('Loaded plugins:\n' .. table.concat(loaded, '\n'), vim.log.levels.INFO, { title = 'Lazy Plugins' })
+    end
+    return loaded
+end
+
 return utils

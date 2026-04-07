@@ -1,34 +1,34 @@
-local surround = {
-    'kylechui/nvim-surround',
-    keys = {
-        'cs',
-        'ds',
-        { 'gs', mode = { 'n', 'v' } },
-        { 'gS', mode = 'v' },
-    },
-    config = function()
-        vim.keymap.set('n', 'gs', '<Plug>(nvim-surround-normal)', {
-            desc = 'Add a surrounding pair around a motion (normal mode)',
-        })
-        vim.keymap.set('n', 'gss', '<Plug>(nvim-surround-normal-cur)', {
-            desc = 'Add a surrounding pair around the current line (normal mode)',
-        })
-        vim.keymap.set('n', 'gS', '<Plug>(nvim-surround-normal-line)', {
-            desc = 'Add a surrounding pair around a motion, on new lines (normal mode)',
-        })
-        vim.keymap.set('n', 'gSS', '<Plug>(nvim-surround-normal-cur-line)', {
-            desc = 'Add a surrounding pair around the current line, on new lines (normal mode)',
-        })
-        vim.keymap.set('x', 'gs', '<Plug>(nvim-surround-visual)', {
-            desc = 'Add a surrounding pair around a visual selection',
-        })
-        vim.keymap.set('x', 'gss', '<Plug>(nvim-surround-visual-line)', {
-            desc = 'Add a surrounding pair around a visual selection, on new lines',
-        })
-    end,
+local utils = require 'r.utils'
+
+local function config()
+    vim.keymap.set('n', 'gs', '<Plug>(nvim-surround-normal)', {
+        desc = 'Add a surrounding pair around a motion (normal mode)',
+    })
+    vim.keymap.set('n', 'gss', '<Plug>(nvim-surround-normal-cur)', {
+        desc = 'Add a surrounding pair around the current line (normal mode)',
+    })
+    vim.keymap.set('n', 'gS', '<Plug>(nvim-surround-normal-line)', {
+        desc = 'Add a surrounding pair around a motion, on new lines (normal mode)',
+    })
+    vim.keymap.set('n', 'gSS', '<Plug>(nvim-surround-normal-cur-line)', {
+        desc = 'Add a surrounding pair around the current line, on new lines (normal mode)',
+    })
+    vim.keymap.set('x', 'gs', '<Plug>(nvim-surround-visual)', {
+        desc = 'Add a surrounding pair around a visual selection',
+    })
+    vim.keymap.set('x', 'gss', '<Plug>(nvim-surround-visual-line)', {
+        desc = 'Add a surrounding pair around a visual selection, on new lines',
+    })
+end
+
+local surround_keys = {
+    { mode = 'n', key = 'cs', desc = 'Change surround' },
+    { mode = 'n', key = 'ds', desc = 'Delete surround' },
+    { mode = { 'n', 'v' }, key = 'gs', desc = 'Add surround (normal/visual)' },
+    { mode = 'v', key = 'gS', desc = 'Add surround (visual linewise)' },
 }
 
-function surround.init()
+local function init()
     local id = { TexRules = vim.api.nvim_create_augroup('TexRules', { clear = true }) }
     vim.api.nvim_create_autocmd('FileType', {
         pattern = 'tex',
@@ -123,4 +123,19 @@ function surround.init()
     require('r.utils').register_au_id(id)
 end
 
-return surround
+vim.pack.add({ 'https://github.com/kylechui/nvim-surround' }, {
+    load = function(plug)
+        utils.lazy_plugin('nvim-surround', plug.spec.name, function()
+            config()
+        end)
+
+        for _, item in ipairs(surround_keys) do
+            utils.lazy_on_key(item.mode, item.key, item.desc, function()
+                require 'nvim-surround'
+            end)
+        end
+    end,
+    confirm = false,
+})
+
+init()

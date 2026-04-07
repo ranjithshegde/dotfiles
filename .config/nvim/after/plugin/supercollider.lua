@@ -1,9 +1,6 @@
-local supercollider = {
-    'davidgranstrom/scnvim',
-    ft = 'supercollider',
-}
+local utils = require 'r.utils'
 
-function supercollider.init()
+local function init()
     local id = { scnvim = vim.api.nvim_create_augroup('scnvim', { clear = true }) }
     vim.api.nvim_create_autocmd('FileType', {
         group = id.scnvim,
@@ -21,7 +18,7 @@ function supercollider.init()
     require('r.utils').register_au_id(id)
 end
 
-supercollider.config = function()
+local function config()
     local scnvim = require 'scnvim'
     local map = scnvim.map
     local map_expr = scnvim.map_expr
@@ -64,4 +61,15 @@ supercollider.config = function()
     })
 end
 
-return supercollider
+vim.pack.add({ 'https://github.com/davidgranstrom/scnvim' }, {
+    load = function(plug)
+        utils.lazy_plugin('scnvim', plug.spec.name, function()
+            config()
+        end)
+
+        utils.lazy_event('FileType', 'scnvim', 'supercollider')
+    end,
+    confirm = false,
+})
+
+init()

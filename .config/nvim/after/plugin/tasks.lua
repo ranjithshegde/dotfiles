@@ -1,11 +1,8 @@
-local overseer = {
-    'stevearc/overseer.nvim',
-    tag = 'v1.6.0',
-}
-
+-- tag = 'v1.6.0',
+local utils = require 'r.utils'
 local map = vim.keymap.set
 
-function overseer.init()
+local function init()
     local id = { Overseer = vim.api.nvim_create_augroup('Overseer', { clear = true }) }
 
     require('r.plugins.tasks.register').cpp(id.Overseer)
@@ -44,7 +41,7 @@ function overseer.init()
     end, { desc = 'Run quick command with Overseer' })
 end
 
-function overseer.config()
+local function config()
     require('overseer').setup {
         templates = { 'builtin', 'r' },
         default_template_prompt = 'avoid',
@@ -53,4 +50,13 @@ function overseer.config()
     vim.keymap.set('n', '<Space>a', vim.cmd.OverseerQuickAction, { desc = 'Overseer task action list' })
 end
 
-return overseer
+vim.pack.add({ { src = 'https://github.com/stevearc/overseer.nvim', version = 'v1.6.0' } }, {
+    load = function(plug)
+        utils.lazy_plugin('overseer', plug.spec.name, function()
+            config()
+        end)
+    end,
+    confirm = false,
+})
+
+init()
