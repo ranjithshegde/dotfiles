@@ -87,10 +87,6 @@ function ts.node_action()
             ['initializer_list'] = require('ts-node-action.actions').toggle_multiline(),
             ['field_initializer_list'] = require('ts-node-action.actions').toggle_multiline(),
         },
-        supercollider = {
-            ['method_call'] = require('ts-node-action.actions').toggle_multiline(),
-            ['parameter_call_list'] = require('ts-node-action.actions').toggle_multiline(),
-        },
     }
 end
 

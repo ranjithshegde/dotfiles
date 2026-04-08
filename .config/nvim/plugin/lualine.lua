@@ -40,12 +40,6 @@ local sections = {
         center_sep,
         'diagnostics',
         {
-            sc_status,
-            cond = function()
-                return vim.bo.filetype == 'supercollider'
-            end,
-        },
-        {
             'filename',
             newfile_status = true,
             symbols = {

@@ -59,7 +59,6 @@ tables.projectTypes = {
     'lua',
     'js',
     'python',
-    'supercollider',
 }
 
 ---Filetypes that are read-only

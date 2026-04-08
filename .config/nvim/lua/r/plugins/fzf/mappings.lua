@@ -112,13 +112,6 @@ local maps = {
         g = {
             name = 'Live grep in',
             g = { fzf 'live_grep', 'current directory' },
-            s = {
-                fzf(
-                    'live_grep',
-                    { cwd = '~/Workspaces/supercollider/', prompt_title = 'SuperCollider Workspace grep' }
-                ),
-                'grep SuperCollider',
-            },
             o = {
                 fzf('live_grep', { cwd = '~/Workspaces/openFrameworks/', prompt_title = 'oF Workspace grep' }),
                 'ofWorkspace',
@@ -159,10 +152,6 @@ local maps = {
             C = {
                 fzf_cd(false, 'C++ Practice files/dirs', '$CWORK/Scratch'),
                 'Open C practice',
-            },
-            s = {
-                fzf_cd(true, 'SuperCollider Directory', '~/Workspaces/supercollider/'),
-                'SuperCollider files',
             },
             b = {
                 fzf('files', { cwd = '~/.local/bin/', prompt_title = 'Scripts and binaries in local' }),
