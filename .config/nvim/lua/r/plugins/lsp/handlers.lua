@@ -101,10 +101,6 @@ function handlers.attach(client, bufnr)
         end, { buffer = bufnr })
     end
 
-    if client.name == 'null-ls' then
-        return
-    end
-
     if client:supports_method 'textDocument/foldingRange' then
         vim.wo.foldexpr = 'v:lua.vim.lsp.foldexpr()'
     else

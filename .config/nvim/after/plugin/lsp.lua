@@ -22,16 +22,6 @@ add({ { src = 'https://github.com/neovim/nvim-lspconfig', name = 'lspconfig' } }
     confirm = false,
 })
 
-add({ 'https://github.com/nvimtools/none-ls.nvim' }, {
-    load = function(plug)
-        utils.lazy_plugin('null-ls', plug.spec.name, function()
-            require 'r.plugins.lsp.servers.null_ls'()
-        end)
-        utils.lazy_event('FileType', 'null-ls', require('r.utils.tables').lspfiles)
-    end,
-    confirm = false,
-})
-
 add({ 'https://github.com/saecki/live-rename.nvim' }, {
     load = function() end,
     confirm = false,
