@@ -40,22 +40,16 @@ return function()
         settings = { telemetry = { telemetryLevel = 'none' } },
     }
 
-    configs.lua_ls = {
-        before_init = function(_, config)
-            local file = vim.fn.expand '%:t:r'
-            if vim.uv.fs_stat(file .. '.pd_lua') then
-                config.settings.Lua.diagnostics = { globals = { 'pd' } }
-            end
-        end,
-        settings = { Lua = { completion = { callSnippet = 'Replace' } } },
-    }
-
     if vim.tbl_contains({ 'tex', 'bib', 'plaintex' }, vim.bo.filetype) then
         vim.lsp.enable('texlab', true)
     end
 
     if vim.tbl_contains({ 'c', 'cpp', 'opencl' }, vim.bo.filetype) then
         vim.lsp.enable('clangd', true)
+    end
+
+    if vim.tbl_contains({ 'lua', 'pd_lua', 'pdlua' }, vim.bo.filetype) then
+        vim.lsp.enable('lua_ls', true)
     end
 
     if vim.bo.filetype == 'org' then

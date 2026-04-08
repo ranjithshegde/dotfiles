@@ -6,10 +6,6 @@ return function()
     local nl = require 'null-ls'
     local nb = nl.builtins
     local sources = {
-        -- nb.formatting.prettier,
-
-        -- nb.diagnostics.cppcheck,
-
         nb.code_actions.refactoring.with {
             filetypes = require('r.utils.tables').lspfiles,
         },

@@ -47,36 +47,5 @@ add({ 'https://github.com/ranjithshegde/ccls.nvim' }, {
     confirm = false,
 })
 
-add({ 'https://github.com/folke/lazydev.nvim' }, {
-    load = function(plug)
-        utils.lazy_plugin('lazydev', plug.spec.name, function()
-            require('lazydev').setup {
-                library = {
-                    { path = 'luvit-meta/library', words = { 'vim%.uv' } },
-                    { path = '/usr/lib/pd/extra/pdlua', words = { 'pd', 'pdx' } },
-                },
-            }
-            local lua_src = { inherit_defaults = true, 'lazydev' }
-            require('blink.cmp').setup {
-                sources = {
-                    per_filetype = {
-                        lua = lua_src,
-                        pd_lua = lua_src,
-                    },
-                },
-            }
-        end)
-        utils.lazy_event('FileType', 'lazydev', { 'lua', 'pd_lua' })
-    end,
-    confirm = false,
-})
-
-add({ 'https://github.com/Bilal2453/luvit-meta' }, {
-    load = function(plug)
-        utils.lazy_plugin('luvit-meta', plug.spec.name)
-    end,
-    confirm = false,
-})
-
 require('r.plugins.lsp.handlers').init()
 require('r.plugins.lsp.trouble').init()
