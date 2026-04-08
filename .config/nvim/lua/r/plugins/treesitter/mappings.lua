@@ -53,6 +53,27 @@ function refac.debug(func, args)
     end
 end
 
+local function tsa()
+    local tsna = require 'ts-node-action'
+    local actions = tsna.available_actions()
+
+    if not actions or #actions == 0 then
+        vim.notify('No node actions available at cursor', vim.log.levels.WARN)
+        return
+    end
+
+    vim.ui.select(actions, {
+        prompt = 'Node Actions:',
+        format_item = function(item)
+            return item.title
+        end,
+    }, function(choice)
+        if choice and choice.action then
+            choice.action()
+        end
+    end)
+end
+
 function treesitter.navigate_tex(buf)
     wk.add(mapper({
         -- Motions
@@ -301,6 +322,8 @@ function treesitter.common()
             l = { to.select '@loop.inner', 'loop' },
         },
     }, { mode = 'o' }))
+
+    vim.keymap.set('n', 'gan', tsa, { desc = 'Available node actions' })
 end
 
 return treesitter
