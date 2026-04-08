@@ -1,6 +1,6 @@
-local utils = require 'r.utils'
+local M = {}
 
-local function config()
+function M.config()
     vim.keymap.set('n', 'gs', '<Plug>(nvim-surround-normal)', {
         desc = 'Add a surrounding pair around a motion (normal mode)',
     })
@@ -21,14 +21,7 @@ local function config()
     })
 end
 
-local surround_keys = {
-    { mode = 'n', key = 'cs', desc = 'Change surround' },
-    { mode = 'n', key = 'ds', desc = 'Delete surround' },
-    { mode = { 'n', 'v' }, key = 'gs', desc = 'Add surround (normal/visual)' },
-    { mode = 'v', key = 'gS', desc = 'Add surround (visual linewise)' },
-}
-
-local function init()
+function M.init()
     local id = { TexRules = vim.api.nvim_create_augroup('TexRules', { clear = true }) }
     vim.api.nvim_create_autocmd('FileType', {
         pattern = 'tex',
@@ -124,19 +117,4 @@ local function init()
     require('r.utils').register_au_id(id)
 end
 
-vim.pack.add({ 'https://github.com/kylechui/nvim-surround' }, {
-    load = function(plug)
-        utils.lazy_plugin('nvim-surround', plug.spec.name, function()
-            config()
-        end)
-
-        for _, item in ipairs(surround_keys) do
-            utils.lazy_on_key(item.mode, item.key, item.desc, function()
-                require 'nvim-surround'
-            end)
-        end
-    end,
-    confirm = false,
-})
-
-init()
+return M

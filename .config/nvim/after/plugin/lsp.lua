@@ -8,6 +8,7 @@ add({ 'https://github.com/folke/trouble.nvim' }, {
             require('trouble').setup(require('r.plugins.lsp.trouble').config())
         end)
         utils.lazy_command('Trouble', 'trouble')
+        require('r.plugins.lsp.trouble').init()
     end,
     confirm = false,
 })
@@ -18,6 +19,7 @@ add({ { src = 'https://github.com/neovim/nvim-lspconfig', name = 'lspconfig' } }
             require 'r.plugins.lsp.servers'()
         end)
         utils.lazy_event('FileType', 'lspconfig', require('r.utils.tables').lspfiles)
+        require('r.plugins.lsp.handlers').init()
     end,
     confirm = false,
 })
@@ -36,6 +38,3 @@ add({ 'https://github.com/ranjithshegde/ccls.nvim' }, {
     end,
     confirm = false,
 })
-
-require('r.plugins.lsp.handlers').init()
-require('r.plugins.lsp.trouble').init()

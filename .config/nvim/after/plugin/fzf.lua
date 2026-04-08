@@ -6,6 +6,8 @@ vim.pack.add({ 'https://github.com/ibhagwan/fzf-lua' }, {
             require('r.plugins.fzf.settings').setup()
         end)
         utils.lazy_command('FzfLua', 'fzf-lua')
+
+        require('r.plugins.fzf.settings').init()
     end,
 })
 
@@ -14,5 +16,3 @@ vim.pack.add({ 'https://github.com/nvim-tree/nvim-web-devicons' }, {
         utils.lazy_plugin('nvim-web-devicons', plug.spec.name)
     end,
 })
-
-require('r.plugins.fzf.settings').init()

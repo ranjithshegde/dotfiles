@@ -258,7 +258,6 @@ tables.ts_parsers = {
     'godot_resource',
     'gpg',
     'html',
-    'html_query',
     'ini',
     'java',
     'javascript',

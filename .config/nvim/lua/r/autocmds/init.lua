@@ -32,9 +32,12 @@ aucmd('FileType', {
         if is_ignored_filetype() or should_ignore_window() then
             return
         end
-        pcall(vim.treesitter.start, args.buf)
         if args.match == 'tex' then
+            vim.treesitter.language.register('latex', 'tex')
+            pcall(vim.treesitter.start, args.buf, 'latex')
             vim.bo[args.buf].syntax = 'on'
+        else
+            pcall(vim.treesitter.start, args.buf)
         end
     end,
     desc = 'Start treesitter syntax highlighting',
@@ -232,6 +235,21 @@ aucmd('BufEnter', {
         vim.api.nvim_buf_delete(vim.api.nvim_get_current_buf(), { force = true })
     end,
     desc = 'Open non text files with MIME',
+})
+
+id.NoRTP = augroup('NoRTP', opts)
+
+aucmd('VimEnter', {
+    group = id.NoRTP,
+    callback = function()
+        for _, name in ipairs(require('r.utils.tables').rtp) do
+            if name == 'tohtml' then
+                name = '2html_plugin'
+            end
+            vim.g['loaded_' .. name] = 1
+        end
+    end,
+    desc = 'Disable defualt runtimepath plugins',
 })
 
 require 'r.autocmds.filetype'(id)

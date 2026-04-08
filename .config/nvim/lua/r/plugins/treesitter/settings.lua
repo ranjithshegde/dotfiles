@@ -35,6 +35,10 @@ function ts.autocmds()
     })
 
     require('r.utils').register_au_id(id)
+
+    vim.api.nvim_create_user_command('TSInstallAll', function()
+        require('nvim-treesitter').install(require('r.utils.tables').ts_parsers)
+    end, { desc = 'Replacement for ensure installed' })
 end
 
 function ts.text_objects()

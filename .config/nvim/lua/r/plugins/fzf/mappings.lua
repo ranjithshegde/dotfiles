@@ -112,16 +112,12 @@ local maps = {
         g = {
             name = 'Live grep in',
             g = { fzf 'live_grep', 'current directory' },
-            o = {
-                fzf('live_grep', { cwd = '~/Workspaces/openFrameworks/', prompt_title = 'oF Workspace grep' }),
-                'ofWorkspace',
-            },
             d = {
                 fzf('live_grep', { cwd = '~/.config', prompt_title = 'Dotfiles' }),
                 'grep dotfiles',
             },
             v = {
-                fzf('live_grep', { cwd = '~/.local/share/nvim/lazy', prompt_title = 'Plugin files' }),
+                fzf('live_grep', { cwd = '~/.local/share/nvim/site/pack/core/opt/', prompt_title = 'Plugin files' }),
                 'Vim plugin Directory',
             },
             ['?'] = {
@@ -161,14 +157,10 @@ local maps = {
                 fzf('files', { cwd = '~/.config/', find_command = { 'fd', '--hidden' }, prompt_title = 'Dotfiles' }),
                 'Dotfiles',
             },
-            V = { fzf_cd(true, 'Vim plugins', '~/.local/share/nvim/lazy/'), 'Vim plugin Directory' },
+            V = { fzf_cd(true, 'Vim plugins', '~/.local/share/nvim/site/pack/core/opt/'), 'Vim plugin Directory' },
             v = {
-                fzf('files', { cwd = '~/.local/share/nvim/lazy', prompt_title = 'Plugin files' }),
+                fzf('files', { cwd = '~/.local/share/nvim/site/pack/core/opt/', prompt_title = 'Plugin files' }),
                 'Vim plugin Directory',
-            },
-            O = {
-                fzf('files', { cwd = '~/Workspaces/openFrameworks/', prompt_title = 'oF Workspace files' }),
-                'OfWorkspace',
             },
             ['?'] = {
                 function()

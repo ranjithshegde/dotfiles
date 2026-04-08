@@ -24,30 +24,30 @@ vim.pack.add({
 
         utils.lazy_on_key('n', '<leader>e', 'Open file explorer', function()
             require('oil').open_float(vim.uv.cwd())
-        end)
+        end, false)
 
         utils.lazy_on_key('n', '<leader>E', 'Open file explorer from current file dir', function()
             require('oil').open_float(vim.fs.dirname(vim.fn.expand '%'))
-        end)
+        end, false)
+
+        local id = { ProjectDrawer = vim.api.nvim_create_augroup('ProjectDrawer', { clear = true }) }
+
+        -- ************************ Handle netrw -------------------------------
+        vim.api.nvim_create_autocmd({ 'BufEnter', 'BufReadPre' }, {
+            group = id.ProjectDrawer,
+            callback = function(args)
+                local fs = vim.uv.fs_stat(args.file)
+                if fs and fs.type == 'directory' and not package.loaded.oil then
+                    vim.api.nvim_del_autocmd(args.id)
+                    vim.schedule(function()
+                        require('oil').open(args.file)
+                    end)
+                end
+            end,
+            desc = 'Hijack netrw with Oil.nvim',
+        })
+
+        utils.register_au_id(id)
     end,
     confirm = false,
 })
-
-local id = { ProjectDrawer = vim.api.nvim_create_augroup('ProjectDrawer', { clear = true }) }
-
--- ************************ Handle netrw -------------------------------
-vim.api.nvim_create_autocmd({ 'BufEnter', 'BufReadPre' }, {
-    group = id.ProjectDrawer,
-    callback = function(args)
-        local fs = vim.uv.fs_stat(args.file)
-        if fs and fs.type == 'directory' and not package.loaded.oil then
-            vim.api.nvim_del_autocmd(args.id)
-            vim.schedule(function()
-                require('oil').open(args.file)
-            end)
-        end
-    end,
-    desc = 'Hijack netrw with Oil.nvim',
-})
-
-utils.register_au_id(id)

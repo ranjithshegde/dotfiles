@@ -11,3 +11,4 @@ vim.g.ue_path = vim.g.is_mac and '/Users/Shared/Epic Games/UE_5.5/' or '/opt/unr
 require 'r.options'()
 require 'r.mappings'()
 require 'r.autocmds'
+require('r.extensions').setup()

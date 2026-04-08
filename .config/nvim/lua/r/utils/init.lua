@@ -80,7 +80,8 @@ end
 ---@param desc string The desription for the keymapping
 ---@param callback function The function to be evaluated on keypress
 ---@param args any Arguements to the callback if any
-function utils.lazy_on_key(mode, key, desc, callback, args)
+---@param is_operator boolean Whether the key is an operator (e.g., 'gc' for commenting). If true, the key will be fed in insert mode to allow chaining with motions. If false, the key will be fed in normal mode.
+function utils.lazy_on_key(mode, key, desc, callback, args, is_operator)
     vim.keymap.set(mode, key, function()
         vim.keymap.del(mode, key)
         if args and type(args) == 'table' then
@@ -88,9 +89,13 @@ function utils.lazy_on_key(mode, key, desc, callback, args)
         else
             callback(args)
         end
-        vim.schedule(function()
-            utils.feedkey(key, 'm')
-        end)
+        if is_operator then
+            vim.api.nvim_feedkeys(key, 'im', false)
+        else
+            vim.schedule(function()
+                utils.feedkey(key, 'm')
+            end)
+        end
     end, { desc = desc })
 end
 

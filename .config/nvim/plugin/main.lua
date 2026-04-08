@@ -11,16 +11,13 @@ add({ 'https://github.com/folke/which-key.nvim' }, {
                 layout = { spacing = 10 },
                 triggers = {
                     { '<auto>', mode = 'nixsotc' },
-                    { 'c', mode = { 'n', 'v' } },
-                    { 's', mode = { 'n', 'v' } },
+                    { 'd', mode = { 'n', 'v', 'o' } },
+                    { 'a', mode = { 'n', 'v', 'o' } },
+                    { 'c', mode = { 'n', 'v', 'o' } },
+                    { 's', mode = { 'n', 'v', 'o' } },
                 },
             }
         end)
-
-        local triggers = { '<auto>', 'c', 's' }
-        for _, t in ipairs(triggers) do
-            utils.lazy_on_key({ 'n', 'v' }, t, 'which-key', function() end, 'Load which-key')
-        end
     end,
 })
 

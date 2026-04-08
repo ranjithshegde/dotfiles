@@ -7,6 +7,8 @@ add({ 'https://github.com/mfussenegger/nvim-dap' }, {
             require 'nvim-dap-virtual-text'
             require('r.plugins.debug.settings').setup()
         end)
+
+        require('r.plugins.debug.settings').init()
     end,
     confirm = false,
 })
@@ -30,5 +32,3 @@ add({ 'https://github.com/igorlfs/nvim-dap-view' }, {
     end,
     confirm = false,
 })
-
-require('r.plugins.debug.settings').init()
