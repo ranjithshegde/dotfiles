@@ -1,10 +1,8 @@
-local servers = {}
-
 ------------------------------------------------------------------------
 --                       Clangd  Lsp         	                      --
 ------------------------------------------------------------------------
 
-function servers.ccls()
+return function()
     local filetypes = { 'c', 'cpp', 'objc', 'objcpp', 'opencl' }
     local server_config = {
         cmd = { 'ccls', '--log-file=/tmp/ccls.log', '--v=0' },
@@ -55,5 +53,3 @@ function servers.ccls()
         },
     }
 end
-
-return servers

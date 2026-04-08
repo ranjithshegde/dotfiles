@@ -8,27 +8,6 @@ vim.g.ue_path = vim.g.is_mac and '/Users/Shared/Epic Games/UE_5.5/' or '/opt/unr
 
 -- vim.g.local_plugins = vim.fs.normalize '~/Repositories/Maintained'
 
---[[ 
-require('vim._core.ui2').enable {
-    enable = true,
-    msg = {
-        targets = {
-            all = 'pager',
-            search_count = 'pager',
-            confirm = 'dialog',
-            return_prompt = 'pager',
-        },
-        msg = {
-            timeout = 3000,
-            height = 0.4,
-        },
-        cmd = {
-            height = 0.5,
-        },
-    },
-}
-]]
-
 require 'r.options'()
 require 'r.mappings'()
 require 'r.autocmds'

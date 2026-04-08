@@ -1,4 +1,5 @@
 local utils = require 'r.utils'
+local add = vim.pack.add
 
 local function nt(cmd, subcmd, args)
     return function()
@@ -10,7 +11,7 @@ local function nt(cmd, subcmd, args)
     end
 end
 
-keys = {
+local keys = {
     { '<leader>no', nt('output_panel', 'toggle'), desc = 'Neotest toggle output' },
     { '<leader>ns', nt('output', 'open'), desc = 'Neotest toggle output' },
     { '<leader>nw', nt('watch', 'toggle'), desc = 'Neotest toggle watch' },
@@ -27,11 +28,17 @@ keys = {
     },
 }
 
-vim.pack.add({ 'https://github.com/nvim-neotest/neotest' }, {
+add({ 'https://github.com/nvim-neotest/nvim-nio' }, {
     load = function(plug)
-        vim.cmd.packadd 'nvim-nio'
+        utils.lazy_plugin('nio', plug.spec.name)
+    end,
+    confirm = false,
+})
+
+add({ 'https://github.com/nvim-neotest/neotest' }, {
+    load = function(plug)
         utils.lazy_plugin('neotest', plug.spec.name, function()
-            vim.cmd.packadd 'neotest-gtest'
+            require 'nio'
             require('neotest').setup {
                 adapters = {
                     require('neotest-gtest').setup {
@@ -40,31 +47,26 @@ vim.pack.add({ 'https://github.com/nvim-neotest/neotest' }, {
                 },
             }
         end)
-        -- utils.lazy_cmd('Neotest', 'neotest')
+        utils.lazy_command('Neotest', 'neotest')
+
+        utils.lazy_event('FileType', 'neotest', { 'c', 'cpp' }, function()
+            for _, item in ipairs(keys) do
+                local mode = item[4] or 'n'
+                local key = item[1]
+                local callback = item[2]
+                local desc = item[3]
+                vim.keymap.set(mode, key, function()
+                    callback()
+                end, { desc = desc })
+            end
+        end)
     end,
     confirm = false,
 })
 
-vim.pack.add({ 'https://github.com/nvim-neotest/nvim-nio' }, {
-    load = function(plug)
-        utils.lazy_plugin('nvim-nio', plug.spec.name)
-    end,
-    confirm = false,
-})
-
-vim.pack.add({ 'https://github.com/alfaix/neotest-gtest' }, {
+add({ 'https://github.com/alfaix/neotest-gtest' }, {
     load = function(plug)
         utils.lazy_plugin('neotest-gtest', plug.spec.name)
     end,
     confirm = false,
 })
-
-for _, item in ipairs(keys) do
-    local mode = item[4] or 'n'
-    local key = item[1]
-    local callback = item[2]
-    local desc = item[3]
-    vim.keymap.set(mode, key, function()
-        callback()
-    end, { desc = desc })
-end

@@ -101,7 +101,7 @@ local dashboard = {
             gap = 2,
         },
         { icon = ' ', title = 'Projects', section = 'projects', indent = 2, padding = 2 },
-        { section = 'startup' },
+        -- { section = 'startup' },
     },
 }
 
@@ -137,9 +137,9 @@ local indent = {
 
 -- ************** general ---------------------------------------------
 local opts = {
-    -- dashboard = dashboard,
+    dashboard = dashboard,
     dim = default,
-    -- gitbrowse = default,
+    gitbrowse = default,
     image = default,
     indent = indent,
     notifier = default,

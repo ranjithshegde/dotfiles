@@ -34,15 +34,16 @@ local function init()
         pattern = 'tex',
         group = id.TexRules,
         callback = function()
+            local sr = require 'nvim-surround'
             local cfg = require 'nvim-surround.config'
             local function tex_find_environment()
                 if vim.g.loaded_nvim_treesitter then
                     local selection = cfg.get_selection {
                         node = 'generic_environment',
-                        -- query = {
-                        --   capture = "@block.outer",
-                        --   type = "textobjects",
-                        -- }
+                        query = {
+                            capture = '@block.outer',
+                            type = 'textobjects',
+                        },
                         -- NOTE: ^query doesn't seem to work very reliably with LaTeX environments
                     }
                     if selection then

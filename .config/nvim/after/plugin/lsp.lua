@@ -1,14 +1,8 @@
 local utils = require 'r.utils'
-local setup = utils.plugin_setup
 
--- local lua_src = { inherit_defaults = true, 'lazydev' }
+local add = vim.pack.add
 
--- local pd_lua = {
---     'saghen/blink.cmp',
---     opts = { sources = { per_filetype = { lua = lua_src, pd_lua = lua_src } } },
--- }
-
-vim.pack.add({ 'https://github.com/folke/trouble.nvim' }, {
+add({ 'https://github.com/folke/trouble.nvim' }, {
     load = function(plug)
         utils.lazy_plugin('trouble', plug.spec.name, function()
             require('trouble').setup(require('r.plugins.lsp.trouble').config())
@@ -18,19 +12,18 @@ vim.pack.add({ 'https://github.com/folke/trouble.nvim' }, {
     confirm = false,
 })
 
-vim.pack.add({ { src = 'https://github.com/neovim/nvim-lspconfig', name = 'lspconfig' } }, {
+add({ { src = 'https://github.com/neovim/nvim-lspconfig', name = 'lspconfig' } }, {
     load = function(plug)
         utils.lazy_plugin('lspconfig', plug.spec.name, function()
-            setup 'r.plugins.lsp.servers'()
+            require 'r.plugins.lsp.servers'()
         end)
         utils.lazy_event('FileType', 'lspconfig', require('r.utils.tables').lspfiles)
     end,
     confirm = false,
 })
 
-vim.pack.add({ 'https://github.com/nvimtools/none-ls.nvim' }, {
+add({ 'https://github.com/nvimtools/none-ls.nvim' }, {
     load = function(plug)
-        vim.cmd.packadd 'plenary.nvim'
         utils.lazy_plugin('null-ls', plug.spec.name, function()
             require 'r.plugins.lsp.servers.null_ls'()
         end)
@@ -39,22 +32,22 @@ vim.pack.add({ 'https://github.com/nvimtools/none-ls.nvim' }, {
     confirm = false,
 })
 
-vim.pack.add({ 'https://github.com/saecki/live-rename.nvim' }, {
+add({ 'https://github.com/saecki/live-rename.nvim' }, {
     load = function() end,
     confirm = false,
 })
 
-vim.pack.add({ 'https://github.com/ranjithshegde/ccls.nvim' }, {
+add({ 'https://github.com/ranjithshegde/ccls.nvim' }, {
     load = function(plug)
         utils.lazy_plugin('ccls', plug.spec.name, function()
-            setup('r.plugins.lsp.servers.clang', 'ccls')()
+            require 'r.plugins.lsp.servers.ccls'()
         end)
         utils.lazy_event('FileType', 'ccls', { 'c', 'cpp', 'opencl' })
     end,
     confirm = false,
 })
 
-vim.pack.add({ 'https://github.com/folke/lazydev.nvim' }, {
+add({ 'https://github.com/folke/lazydev.nvim' }, {
     load = function(plug)
         utils.lazy_plugin('lazydev', plug.spec.name, function()
             require('lazydev').setup {
@@ -63,18 +56,27 @@ vim.pack.add({ 'https://github.com/folke/lazydev.nvim' }, {
                     { path = '/usr/lib/pd/extra/pdlua', words = { 'pd', 'pdx' } },
                 },
             }
+            local lua_src = { inherit_defaults = true, 'lazydev' }
+            require('blink.cmp').setup {
+                sources = {
+                    per_filetype = {
+                        lua = lua_src,
+                        pd_lua = lua_src,
+                    },
+                },
+            }
         end)
         utils.lazy_event('FileType', 'lazydev', { 'lua', 'pd_lua' })
     end,
     confirm = false,
 })
 
-vim.pack.add({ 'https://github.com/Bilal2453/luvit-meta' }, {
+add({ 'https://github.com/Bilal2453/luvit-meta' }, {
     load = function(plug)
         utils.lazy_plugin('luvit-meta', plug.spec.name)
     end,
     confirm = false,
 })
 
-setup('r.plugins.lsp.handlers', 'init')()
-setup('r.plugins.lsp.trouble', 'init')()
+require('r.plugins.lsp.handlers').init()
+require('r.plugins.lsp.trouble').init()

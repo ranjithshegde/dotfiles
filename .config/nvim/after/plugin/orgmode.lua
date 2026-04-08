@@ -1,6 +1,6 @@
--- Plugin configuration
 local utils = require 'r.utils'
 local settings = require 'r.plugins.orgmode'
+local add = vim.pack.add
 
 local opts = {
     org_agenda_files = settings.paths.agenda_files,
@@ -22,7 +22,7 @@ local opts = {
     },
 }
 
-vim.pack.add({ 'https://github.com/lukas-reineke/headlines.nvim' }, {
+add({ 'https://github.com/lukas-reineke/headlines.nvim' }, {
     load = function(plug)
         utils.lazy_plugin('headlines', plug.spec.name, function()
             require('headlines').setup {
@@ -37,9 +37,8 @@ vim.pack.add({ 'https://github.com/lukas-reineke/headlines.nvim' }, {
     confirm = false,
 })
 
-vim.pack.add({ 'https://github.com/nvim-orgmode/orgmode' }, {
+add({ 'https://github.com/nvim-orgmode/orgmode' }, {
     load = function(plug)
-        -- vim.cmd.packadd 'headlines.nvim'
         utils.lazy_plugin('orgmode', plug.spec.name, function()
             require('orgmode').setup(opts)
         end)
@@ -49,7 +48,7 @@ vim.pack.add({ 'https://github.com/nvim-orgmode/orgmode' }, {
     confirm = false,
 })
 
-vim.pack.add({ 'https://github.com/chipsenkbeil/org-roam.nvim' }, {
+add({ 'https://github.com/chipsenkbeil/org-roam.nvim' }, {
     load = function(plug)
         utils.lazy_plugin('org-roam', plug.spec.name, function()
             require('org-roam').setup {

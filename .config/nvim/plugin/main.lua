@@ -1,6 +1,7 @@
 local utils = require 'r.utils'
+local add = vim.pack.add
 
-vim.pack.add({ 'https://github.com/folke/which-key.nvim' }, {
+add({ 'https://github.com/folke/which-key.nvim' }, {
     load = function(plug)
         utils.lazy_plugin('which-key', plug.spec.name, function()
             require('which-key').setup {
@@ -23,7 +24,7 @@ vim.pack.add({ 'https://github.com/folke/which-key.nvim' }, {
     end,
 })
 
-vim.pack.add({
+add({
     { src = 'https://github.com/neko-night/nvim', name = 'nekonight' },
 }, {
     load = function(plug)
@@ -39,11 +40,9 @@ vim.pack.add({
     end,
 })
 
-vim.pack.add({ 'https://github.com/nvim-lua/plenary.nvim' }, {
+add({ 'https://github.com/nvim-lua/plenary.nvim' }, {
     load = function(plug)
-        utils.lazy_plugin('plenary', plug.spec.name, function()
-            require 'plenary'
-        end)
+        utils.lazy_plugin('plenary', plug.spec.name)
     end,
     confirm = false,
 })

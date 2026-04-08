@@ -1,27 +1,10 @@
 local utils = require 'r.utils'
 
-local function init()
-    local id = { scnvim = vim.api.nvim_create_augroup('scnvim', { clear = true }) }
-    vim.api.nvim_create_autocmd('FileType', {
-        group = id.scnvim,
-        pattern = 'supercollider',
-        callback = function()
-            vim.wo.wrap = true
-            vim.wo.foldexpr = 'v:lua.vim.treesitter.foldexpr()'
-            if not require('scnvim').is_running() then
-                require('scnvim').start()
-            end
-        end,
-        desc = 'Load SCNvim settings and launch interpreter on filetype',
-    })
-
-    require('r.utils').register_au_id(id)
-end
-
 local function config()
     local scnvim = require 'scnvim'
     local map = scnvim.map
     local map_expr = scnvim.map_expr
+
     scnvim.setup {
         keymaps = {
             ['<F1>'] = map 'sclang.start',
@@ -61,11 +44,33 @@ local function config()
     })
 end
 
+local function init()
+    local id = { scnvim = vim.api.nvim_create_augroup('scnvim', { clear = true }) }
+    vim.api.nvim_create_autocmd('FileType', {
+        group = id.scnvim,
+        pattern = 'supercollider',
+        callback = function()
+            vim.wo.wrap = true
+            vim.wo.foldexpr = 'v:lua.vim.treesitter.foldexpr()'
+            if not package.loaded['scnvim'] then
+                config()
+            end
+            if not require('scnvim').is_running() then
+                require('scnvim').start()
+            end
+        end,
+        desc = 'Load SCNvim settings and launch interpreter on filetype',
+    })
+
+    require('r.utils').register_au_id(id)
+end
+
 vim.pack.add({ 'https://github.com/davidgranstrom/scnvim' }, {
     load = function(plug)
         utils.lazy_plugin('scnvim', plug.spec.name, function()
             config()
         end)
+        vim.cmd.packadd { args = { plug.spec.name }, bang = true }
 
         utils.lazy_event('FileType', 'scnvim', 'supercollider')
     end,

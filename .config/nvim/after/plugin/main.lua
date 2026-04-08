@@ -1,6 +1,7 @@
 local utils = require 'r.utils'
+local add = vim.pack.add
 
-vim.pack.add({ 'https://github.com/numToStr/Comment.nvim' }, {
+add({ 'https://github.com/numToStr/Comment.nvim' }, {
     load = function(plug)
         utils.lazy_plugin('Comment', plug.spec.name, function()
             require('Comment').setup { ignore = '^$' }
@@ -17,7 +18,7 @@ vim.pack.add({ 'https://github.com/numToStr/Comment.nvim' }, {
     confirm = false,
 })
 
-vim.pack.add({ 'https://github.com/Bekaboo/dropbar.nvim' }, {
+add({ 'https://github.com/Bekaboo/dropbar.nvim' }, {
     load = function(plug)
         utils.lazy_plugin('dropbar', plug.spec.name, function()
             require('dropbar').setup {
@@ -38,7 +39,7 @@ vim.pack.add({ 'https://github.com/Bekaboo/dropbar.nvim' }, {
     confirm = false,
 })
 
-vim.pack.add({ 'https://github.com/MeanderingProgrammer/render-markdown.nvim' }, {
+add({ 'https://github.com/MeanderingProgrammer/render-markdown.nvim' }, {
     load = function(plug)
         utils.lazy_plugin('render-markdown', plug.spec.name, function()
             require('render-markdown').setup {
@@ -52,7 +53,7 @@ vim.pack.add({ 'https://github.com/MeanderingProgrammer/render-markdown.nvim' },
     confirm = false,
 })
 
-vim.pack.add({ 'https://github.com/MayaFlux/lila.nvim' }, {
+add({ 'https://github.com/MayaFlux/lila.nvim' }, {
     load = function(plug)
         utils.lazy_plugin('lila', plug.spec.name, true)
     end,

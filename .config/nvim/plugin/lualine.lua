@@ -61,8 +61,7 @@ local sections = {
     lualine_z = { 'location' },
 }
 
-vim.pack.add({'https://github.com/nvim-lualine/lualine.nvim' },
-{
+vim.pack.add({ 'https://github.com/nvim-lualine/lualine.nvim' }, {
     load = function(plug)
         utils.lazy_plugin('lualine', plug.spec.name, function()
             local lualine = require 'lualine'
@@ -90,5 +89,6 @@ vim.pack.add({'https://github.com/nvim-lualine/lualine.nvim' },
             lualine.setup(config)
         end)
         utils.lazy_event('UIEnter', 'lualine')
-    end, confirm = false
+    end,
+    confirm = false,
 })

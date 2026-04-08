@@ -28,7 +28,7 @@ prepend_keymap = [
     { on = [
         "g",
         "P",
-    ], run = "cd ~/.local/share/nvim/lazy", desc = "Goto Nvim plugin directory" },
+    ], run = "cd ~/.local/share/nvim/site/pack/core/opt/", desc = "Goto Nvim plugin directory" },
     { on = [
         "g",
         "G",

@@ -118,25 +118,71 @@ function utils.write_and_source(buf)
 end
 
 local lazy_plugins = {}
-local original_require = _G.require
-
 local loading = {}
 
-_G.require = function(modname)
-    local spec = lazy_plugins[modname]
-    if spec and not package.loaded[modname] and not loading[modname] then
-        loading[modname] = true
-        local pack_dir = spec.pack
-        local ok, err = pcall(vim.cmd.packadd, pack_dir)
-        loading[modname] = nil
-        if not ok then
-            error(string.format('packadd failed for %s (%s): %s', modname, pack_dir, err))
+local function find_parent(modname)
+    local first_dot = modname:find('.', 1, true)
+    if not first_dot then
+        return nil
+    end
+    local root = modname:sub(1, first_dot - 1)
+    if not lazy_plugins[root] then
+        return nil
+    end
+    return root
+end
+
+local function load_lazy_plugin(original_require, modname, spec, is_parent)
+    if loading[modname] then
+        return
+    end
+    loading[modname] = true
+    local ok, err = pcall(vim.cmd.packadd, spec.pack)
+    loading[modname] = nil
+    if not ok then
+        error(string.format('packadd failed for %s (%s): %s', modname, spec.pack, err))
+    end
+    if not is_parent then
+        local mod_ok, mod = pcall(original_require, modname)
+        if not mod_ok then
+            error(mod)
         end
-        local mod = original_require(modname)
         if spec.setup then
-            spec.setup()
+            local setup_ok, setup_err = pcall(spec.setup)
+            if not setup_ok then
+                error(setup_err)
+            end
         end
         return mod
+    end
+    if spec.setup then
+        local setup_ok, setup_err = pcall(spec.setup)
+        if not setup_ok then
+            error(setup_err)
+        end
+    end
+end
+
+local original_require = _G.require
+
+_G.require = function(modname)
+    if package.loaded[modname] then
+        return package.loaded[modname]
+    end
+    local spec = lazy_plugins[modname]
+    if spec and not loading[modname] then
+        return load_lazy_plugin(original_require, modname, spec)
+    end
+    if modname:find('.', 1, true) then
+        local parent = find_parent(modname)
+        if parent and not package.loaded[parent] and not loading[parent] then
+            local pok, perr = pcall(load_lazy_plugin, original_require, parent, lazy_plugins[parent], true)
+            if not pok then
+                error(perr)
+            end
+            package.loaded[parent] = true
+            return _G.require(modname)
+        end
     end
     return original_require(modname)
 end
@@ -178,15 +224,26 @@ end
 ---@param events string|table Event(s) (e.g., 'BufReadPost')
 ---@param modname string Module to require
 ---@param pattern string|nil File pattern (e.g., '*.md')
-function utils.lazy_event(events, modname, pattern)
+---@param fn function|nil Optional callback to run before loading the plugin. If provided, the plugin will be loaded after the callback is executed.
+function utils.lazy_event(events, modname, pattern, fn)
     local id = { LazyPlugin = vim.api.nvim_create_augroup(modname .. '_lazy_event', { clear = true }) }
+
+    local cb
+    if fn and type(fn) == 'function' then
+        cb = function()
+            fn()
+            require(modname)
+        end
+    else
+        cb = function()
+            require(modname)
+        end
+    end
 
     vim.api.nvim_create_autocmd(events, {
         group = id.LazyPlugin,
         pattern = pattern,
-        callback = function()
-            require(modname)
-        end,
+        callback = cb,
         once = true,
     })
     utils.register_au_id(id)
@@ -204,6 +261,27 @@ function utils.loaded_plugins(print)
         vim.notify('Loaded plugins:\n' .. table.concat(loaded, '\n'), vim.log.levels.INFO, { title = 'Lazy Plugins' })
     end
     return loaded
+end
+
+--- Create an autocmd that triggers a callback when a plugin is installed or updated
+---@param modname string Module name to watch for (e.g., 'VectorCode')
+---@param hookname string Name for the autocmd group (e.g., 'BuildVectorCode')
+---@param fn function Callback to execute when the plugin is changed
+function utils.plugin_hook(modname, hookname, fn)
+    local id = { PluginHook = vim.api.nvim_create_augroup(hookname, { clear = true }) }
+
+    local function callback(ev)
+        local name, kind = ev.data.spec.name, ev.data.kind
+        if name == modname and (kind == 'install' or kind == 'update') then
+            fn(ev)
+        end
+    end
+
+    vim.api.nvim_create_autocmd('PackChanged', {
+        group = id.PluginHook,
+        callback = callback,
+    })
+    utils.register_au_id(id)
 end
 
 return utils

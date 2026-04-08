@@ -1,4 +1,5 @@
 local utils = require 'r.utils'
+local add = vim.pack.add
 
 local function sign_config()
     require('gitsigns').setup {
@@ -25,7 +26,7 @@ local function signs_init()
     require('r.utils').register_au_id(id)
 end
 
-vim.pack.add({ 'https://github.com/lewis6991/gitsigns.nvim' }, {
+add({ 'https://github.com/lewis6991/gitsigns.nvim' }, {
     load = function(plug)
         utils.lazy_plugin('gitsigns', plug.spec.name, function()
             sign_config()
@@ -34,7 +35,7 @@ vim.pack.add({ 'https://github.com/lewis6991/gitsigns.nvim' }, {
     confirm = false,
 })
 
-vim.pack.add({ 'https://github.com/NeogitOrg/neogit' }, {
+add({ 'https://github.com/NeogitOrg/neogit' }, {
     load = function(plug)
         utils.lazy_plugin('neogit', plug.spec.name, function()
             require 'plenary'
@@ -55,7 +56,7 @@ vim.pack.add({ 'https://github.com/NeogitOrg/neogit' }, {
     confirm = false,
 })
 
-vim.pack.add({ 'https://github.com/sindrets/diffview.nvim' }, {
+add({ 'https://github.com/sindrets/diffview.nvim' }, {
     load = function(plug)
         utils.lazy_plugin('diffview', plug.spec.name)
         utils.lazy_command({ 'DiffViewOpen', 'DiffViewFileHistory' }, 'diffview')
