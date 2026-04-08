@@ -43,14 +43,6 @@ add({ 'https://github.com/DanielMSussman/simpleCppTreesitterTools.nvim' }, {
     confirm = false,
 })
 
-add({ 'https://github.com/HiPhish/rainbow-delimiters.nvim' }, {
-    load = function(plug)
-        utils.lazy_plugin('rainbow-delimiters', plug.spec.name)
-        utils.lazy_event('BufReadPre', 'rainbow-delimiters')
-    end,
-    confirm = false,
-})
-
 utils.plugin_hook('nvim-treesitter', 'UpdateTreesitter', function(_)
     vim.cmd.TSUpdate()
 end)
