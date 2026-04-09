@@ -27,11 +27,10 @@ end
 function handlers.init()
     local id = { LspSettings = augroup('LspSettings', au_opts) }
 
-    vim.keymap.del('n', 'grn')
-    vim.keymap.del('n', 'gri')
-    vim.keymap.del('n', 'grr')
-    vim.keymap.del('n', 'grt')
-    vim.keymap.del({ 'n', 'v' }, 'gra')
+    for _, lhs in ipairs { 'grn', 'gri', 'grr', 'grt' } do
+        pcall(vim.keymap.del, 'n', lhs)
+    end
+    pcall(vim.keymap.del, { 'n', 'v' }, 'gra')
 
     aucmd('LspAttach', {
         group = id.LspSettings,

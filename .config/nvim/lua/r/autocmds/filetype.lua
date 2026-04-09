@@ -106,7 +106,7 @@ return function(id)
     --                              Misc                                  --
     ------------------------------------------------------------------------
 
-    ftcmd('FoldMaps', '', function(args)
+    ftcmd('FoldMaps', '*', function(args)
         if not vim.tbl_contains(require('r.utils.tables').ignoreFiles, args.match) or args.match ~= 'org' then
             vim.keymap.set('n', '<Tab>', 'za', { buffer = args.buf, desc = 'Toggle fold current' })
             vim.keymap.set('n', '<S-Tab>', 'zA', { buffer = args.buf, desc = 'Toggle fold All' })

@@ -15,6 +15,9 @@ return function()
         'jsonls',
         'stylua',
         'yamlls',
+        'clangd',
+        'lua_ls',
+        'texlab',
         'copilot',
         'digestif',
         'gdscript',
@@ -39,18 +42,6 @@ return function()
         filetypes = { 'sh', 'zsh', 'c', 'cpp', 'lua', 'tex', 'gitcommit', 'markdown', 'yaml', 'html', 'css', 'cmake' },
         settings = { telemetry = { telemetryLevel = 'none' } },
     }
-
-    if vim.tbl_contains({ 'tex', 'bib', 'plaintex' }, vim.bo.filetype) then
-        vim.lsp.enable('texlab', true)
-    end
-
-    if vim.tbl_contains({ 'c', 'cpp', 'opencl' }, vim.bo.filetype) then
-        vim.lsp.enable('clangd', true)
-    end
-
-    if vim.tbl_contains({ 'lua', 'pd_lua', 'pdlua' }, vim.bo.filetype) then
-        vim.lsp.enable('lua_ls', true)
-    end
 
     if vim.bo.filetype == 'org' then
         configs.org = {}

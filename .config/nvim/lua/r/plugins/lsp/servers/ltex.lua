@@ -4,13 +4,10 @@
 
 local ltex = {}
 
-local function write_file(path, data)
+local function write_file(path, line)
     local file = io.open(path, 'a+')
-    io.output(file)
-    for _, line in ipairs(data) do
-        io.write(line .. '\n')
-    end
-    io.close(file)
+    file:write(line .. '\n')
+    file:close()
 end
 
 local function update_dict()
@@ -41,8 +38,8 @@ end
 ---Add cword to dictionary
 function ltex.add_to_dict(command)
     local args = command.arguments[1].words
-    for _, words in pairs(args) do
-        write_file(vim.api.nvim_get_option_value('spellfile', {}), words)
+    for _, word in pairs(args) do
+        write_file(vim.api.nvim_get_option_value('spellfile', {}), word)
     end
     update_dict()
 end
@@ -51,8 +48,8 @@ end
 function ltex.disable_rule(command)
     local args = command.arguments[1].ruleIds
     local file = '.ltex_rules'
-    for _, rules in pairs(args) do
-        write_file(file, rules)
+    for _, rule in pairs(args) do
+        write_file(file, rule)
     end
     update_rule(file)
 end
@@ -61,8 +58,8 @@ end
 function ltex.false_positive(command)
     local args = command.arguments[1].falsePositives
     local file = '.ltex_false_positive'
-    for _, rules in pairs(args) do
-        write_file(file, rules)
+    for _, fp in pairs(args) do
+        write_file(file, fp)
     end
     hidden(file)
 end
