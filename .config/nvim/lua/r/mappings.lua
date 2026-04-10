@@ -30,4 +30,10 @@ return function()
     end, { desc = 'Double space entire file' })
 
     map('n', '<leader>p', vim.pack.update, { desc = 'Update plugins' })
+
+    map('n', '<leader>mm', vim.cmd.messages, { desc = 'Messages window' })
+
+    map('n', '<leader>mc', function()
+        vim.cmd.messages 'clear'
+    end, { desc = 'Clear all messaages' })
 end
