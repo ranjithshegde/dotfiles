@@ -9,6 +9,8 @@ vim.g.ue_path = vim.g.is_mac and '/Users/Shared/Epic Games/UE_5.5/' or '/opt/unr
 -- vim.g.local_plugins = vim.fs.normalize '~/Repositories/Maintained'
 
 require 'r.options'()
+require 'r.framework.cmdline'()
+
 require 'r.mappings'()
 require 'r.autocmds'
 require('r.extensions').setup()

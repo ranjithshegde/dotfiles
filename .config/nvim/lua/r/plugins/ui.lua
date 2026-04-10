@@ -178,15 +178,12 @@ end
 ui.noice_opts = {
     presets = {
         long_message_to_split = true,
-        bottom_search = true,
-        command_palette = true,
-        inc_rename = true,
     },
     lsp = {
         hover = { enabled = false },
         signature = { enabled = false },
     },
-    commands = { history = { view = 'popup' } },
+    cmdline = { enabled = false },
     routes = {
         {
             filter = {
