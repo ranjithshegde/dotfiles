@@ -23,6 +23,7 @@ add({ 'https://github.com/rafamadriz/friendly-snippets' }, {
 add({ { src = 'https://github.com/saghen/blink.cmp', version = vim.version.range '^1' } }, {
     load = function(plug)
         utils.lazy_plugin('blink.cmp', plug.spec.name, function()
+            vim.cmd.packadd 'friendly-snippets'
             require('blink.cmp').setup(require('r.plugins.completion').blink_opts)
         end)
         utils.lazy_event({ 'InsertEnter', 'CmdlineEnter' }, 'blink.cmp')

@@ -146,7 +146,6 @@ ui.snacks_opts = {
     gitbrowse = default,
     image = default,
     indent = indent,
-    notifier = default,
     scope = { treesitter = { blocks = { enabled = true } } },
     rename = default,
     statuscolumn = { folds = { open = true } },

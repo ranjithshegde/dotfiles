@@ -16,6 +16,12 @@ local SKIP_PATTERNS = {
     '%d more lines',
 }
 
+local DIALOG_KINDS = {
+    confirm = true,
+    confirm_sub = true,
+    list_cmd = true, -- swapfile and similar interactive list prompts (not fully sure, can also be progress)
+}
+
 local KIND_TITLES = {
     emsg = { '  Error', 'ErrorMsg' },
     echoerr = { '  Error', 'ErrorMsg' },
@@ -136,7 +142,7 @@ ui2.enable {
             undo = 'msg',
             wmsg = 'msg',
             completion = 'msg',
-            confirm = 'msg',
+            confirm = 'dialog',
             echoerr = 'msg',
             emsg = 'msg',
             list_cmd = 'msg',
@@ -189,31 +195,16 @@ msgs.msg_show = function(kind, content, replace_last, history, append, id, trigg
     orig_msg_show(kind, content, replace_last, history, append, id, trigger)
 end
 
---[[ local orig_show_msg = msgs.show_msg
-msgs.show_msg = function(tgt, kind, content, replace_last, append, id)
-    orig_show_msg(tgt, kind, content, replace_last, append, id)
-    if tgt == 'msg' then
-        local win = ui2.wins and ui2.wins.msg
-        if win and vim.api.nvim_win_is_valid(win) then
-            if vim.api.nvim_win_get_width(win) > math.floor(vim.o.columns * 0.5) then
-                vim.schedule(function()
-                    msgs.expand_msg('msg', 'pager')
-                end)
-            end
-        end
-    end
-end ]]
-
 local orig_show_msg = msgs.show_msg
 msgs.show_msg = function(tgt, kind, content, replace_last, append, id)
-    if tgt == 'msg' then
+    if tgt == 'msg' and not DIALOG_KINDS[kind] then
         local text = content_to_text(content)
         local width = 0
         for _, line in ipairs(vim.split(text, '\n')) do
             width = math.max(width, vim.api.nvim_strwidth(line))
         end
         local lines = #vim.split(text, '\n')
-        if width > math.floor(vim.o.columns * 0.5) or lines > 10 then
+        if width > math.floor(vim.o.columns * 0.75) or lines > 20 then
             vim.schedule(function()
                 msgs.show_msg('pager', kind, content, replace_last, append, id)
                 msgs.set_pos 'pager'
