@@ -397,5 +397,5 @@ AppletOrder=92;93;94;95;96;110;111
 global=
 
 [ScreenMapping]
-itemsOnDisabledScreens=0,42cfd941-f257-4e76-9e6e-809cce6a5b82,4,,desktop:/backup,http://442d3150-bb06-4c87-bb53-37e4fdd1874c,http://0.0.0.0,1,42cfd941-f257-4e76-9e6e-809cce6a5b82,6,desktop:/lazy,desktop:/adc.txt,desktop:/cpponlineaudiorecording.wav,desktop:/list.txt,desktop:/ubdeps.txt,desktop:/index.html
+itemsOnDisabledScreens=1,42cfd941-f257-4e76-9e6e-809cce6a5b82,6,desktop:/ubdeps.txt,desktop:/index.html,desktop:/adc.txt,desktop:/list.txt,desktop:/cpponlineaudiorecording.wav,desktop:/lazy,0,42cfd941-f257-4e76-9e6e-809cce6a5b82,4,desktop:/backup,http://442d3150-bb06-4c87-bb53-37e4fdd1874c,http://0.0.0.0,
 screenMapping=

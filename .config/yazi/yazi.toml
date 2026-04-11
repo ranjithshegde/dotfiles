@@ -13,12 +13,12 @@ prepend_fetchers = [
 { name = "*", id = "git", run = "git" },
 ]
 
-[opener]
-play = [
-	{ run = 'mpv --force-window "$@"', orphan = true, for = "unix" },
-]
+# [opener]
+# play = [
+# 	{ run = 'mpv --force-window "$@"', orphan = true, for = "unix" },
+# ]
 
-[open]
-rules = [
-	{ mime = "{audio,video}/*", use = [ "play", "reveal" ] },
-]
+# [open]
+# rules = [
+# 	{ mime = "{audio,video}/*", use = [ "play", "reveal" ] },
+# ]
