@@ -7,13 +7,9 @@ add({ 'https://github.com/numToStr/Comment.nvim' }, {
             require('Comment').setup { ignore = '^$' }
         end)
 
-        utils.lazy_on_key({ 'n', 'v' }, 'gc', 'Toggle comment', function()
-            require 'Comment'
-        end, true)
-
         utils.lazy_on_key({ 'n', 'v' }, 'gb', 'Toggle comment block', function()
             require 'Comment'
-        end, true)
+        end)
     end,
     confirm = false,
 })
@@ -27,7 +23,7 @@ add({ 'https://github.com/kylechui/nvim-surround' }, {
         local surround_keys = {
             { mode = 'n', key = 'cs', desc = 'Change surround' },
             { mode = 'n', key = 'ds', desc = 'Delete surround' },
-            { mode = 'n', key = 'gss', desc = 'Surround current line' },
+            -- { mode = 'n', key = 'gss', desc = 'Surround current line' },
             { mode = { 'n', 'v' }, key = 'gs', desc = 'Add surround (normal/visual)' },
             { mode = 'v', key = 'gS', desc = 'Add surround (visual linewise)' },
         }

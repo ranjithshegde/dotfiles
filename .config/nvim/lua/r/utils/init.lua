@@ -74,31 +74,6 @@ function utils.get_client_names()
     return buf_client_names
 end
 
----Load a plugin on key press or key sequence
----@param mode table|string The mapping modes
----@param key string The key sequence to map
----@param desc string The desription for the keymapping
----@param callback function The function to be evaluated on keypress
----@param args any Arguements to the callback if any
----@param is_operator boolean Whether the key is an operator (e.g., 'gc' for commenting). If true, the key will be fed in insert mode to allow chaining with motions. If false, the key will be fed in normal mode.
-function utils.lazy_on_key(mode, key, desc, callback, args, is_operator)
-    vim.keymap.set(mode, key, function()
-        vim.keymap.del(mode, key)
-        if args and type(args) == 'table' then
-            callback(unpack(args))
-        else
-            callback(args)
-        end
-        if is_operator then
-            vim.api.nvim_feedkeys(key, 'im', false)
-        else
-            vim.schedule(function()
-                utils.feedkey(key, 'm')
-            end)
-        end
-    end, { desc = desc })
-end
-
 function utils.plugin_setup(module, key, config)
     return function()
         if key then
@@ -120,6 +95,31 @@ function utils.write_and_source(buf)
         vim.cmd.write()
         vim.cmd.source '%'
     end, { buffer = buf, desc = 'Evaluate current file' })
+end
+
+---Load a plugin on key press or key sequence
+---@param mode table|string The mapping modes
+---@param key string The key sequence to map
+---@param desc string The desription for the keymapping
+---@param callback function The function to be evaluated on keypress
+---@param args any Arguements to the callback if any
+---@param is_operator boolean Whether the key is an operator (e.g., 'gc' for commenting). If true, the key will be fed in insert mode to allow chaining with motions. If false, the key will be fed in normal mode.
+function utils.lazy_on_key(mode, key, desc, callback, args, is_operator)
+    vim.keymap.set(mode, key, function()
+        vim.keymap.del(mode, key)
+        if args and type(args) == 'table' then
+            callback(unpack(args))
+        else
+            callback(args)
+        end
+        if is_operator then
+            vim.api.nvim_feedkeys(vim.keycode(key), 'im', false)
+        else
+            vim.schedule(function()
+                vim.api.nvim_feedkeys(vim.keycode(key), 'i', false)
+            end)
+        end
+    end, { desc = desc })
 end
 
 local lazy_plugins = {}
