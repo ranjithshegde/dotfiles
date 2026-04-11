@@ -30,13 +30,20 @@ local float_conf = {
 
 local lines_conf = { current_line = true }
 
+local on_jump = function(diagnostic, _)
+    if not diagnostic then
+        return
+    end
+    vim.schedule(vim.diagnostic.open_float)
+end
+
 local default_settings = {
     underline = false,
     virtual_text = false,
     signs = sign_conf,
     update_in_insert = false,
     float = float_conf,
-    jump = { float = true },
+    jump = { on_jump = on_jump },
     virtual_lines = lines_conf,
 }
 
