@@ -22,18 +22,17 @@ add({ 'https://github.com/folke/which-key.nvim' }, {
 })
 
 add({
-    { src = 'https://github.com/neko-night/nvim', name = 'nekonight' },
+    'https://github.com/nvim-mini/mini.nvim',
 }, {
     load = function(plug)
-        utils.lazy_plugin('nekonight', plug.spec.name, function()
-            require('nekonight').setup {
-                transparent = true,
-                on_highlights = function(hl, c)
-                    hl.Folded = { bg = c.bg_dark1 }
-                end,
+        utils.lazy_plugin('mini', plug.spec.name)
+        -- utils.lazy_plugin('mini.base16', 'mini.base16',
+        vim.schedule(function()
+            require('mini.base16').setup {
+                palette = require('r.framework.palettes').tokyonight_storm,
+                use_cterm = true,
             }
         end)
-        vim.cmd.colorscheme 'nekonight-moon'
     end,
 })
 

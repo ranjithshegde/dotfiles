@@ -8,5 +8,8 @@ vim.pack.add({
 ui.snacks_init()
 
 vim.schedule(function()
+    if not package.loaded['mini.icons'] then
+        pcall(require('mini.icons').setup)
+    end
     require('snacks').setup(ui.snacks_opts)
 end)
