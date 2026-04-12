@@ -25,10 +25,10 @@ add({ 'https://github.com/NeogitOrg/neogit' }, {
     confirm = false,
 })
 
-add({ 'https://github.com/sindrets/diffview.nvim' }, {
+add({ 'https://github.com/dlyongemallo/diffview.nvim' }, {
     load = function(plug)
         utils.lazy_plugin('diffview', plug.spec.name)
-        utils.lazy_command({ 'DiffViewOpen', 'DiffViewFileHistory' }, 'diffview')
+        utils.lazy_command({ 'DiffviewOpen', 'DiffviewFileHistory' }, 'diffview')
     end,
     confirm = false,
 })
