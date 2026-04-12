@@ -35,14 +35,6 @@ add({ 'https://github.com/ckolkey/ts-node-action' }, {
     confirm = false,
 })
 
-add({ 'https://github.com/DanielMSussman/simpleCppTreesitterTools.nvim' }, {
-    load = function(plug)
-        utils.lazy_plugin('simpleCppTreesitterTools', plug.spec.name, true)
-        utils.lazy_event('FileType', 'simpleCppTreesitterTools', 'cpp')
-    end,
-    confirm = false,
-})
-
 utils.plugin_hook('nvim-treesitter', 'UpdateTreesitter', function(_)
     vim.cmd.TSUpdate()
 end)

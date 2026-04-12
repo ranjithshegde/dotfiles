@@ -1,60 +1,19 @@
 local utils = require 'r.utils'
 
-local opts = {
-    strategies = {
-        chat = { adapter = 'copilot' },
-        inline = { adapter = 'copilot' },
-        cmd = { adapter = 'copilot' },
-    },
-    extensions = {
-        vectorcode = {
-            opts = {
-                tool_group = {
-                    enabled = true,
-                    extras = { 'file_search' },
-                    collapse = true,
-                },
-                tool_opts = {
-                    ['*'] = {},
-                    query = {
-                        max_num = { chunk = -1, document = -1 },
-                        default_num = { chunk = 50, document = 20 },
-                        include_stderr = false,
-                        use_lsp = true,
-                        no_duplicate = true,
-                        chunk_mode = true,
-                        summarise = {
-                            enabled = true,
-                            adapter = nil,
-                            query_augmented = true,
-                        },
-                    },
-                },
-            },
-        },
-    },
-}
-
 vim.pack.add({ 'https://github.com/olimorris/codecompanion.nvim' }, {
     load = function(plug)
         utils.lazy_plugin('codecompanion', plug.spec.name, function()
             require 'vectorcode'
-            require('codecompanion').setup(opts)
+            require('codecompanion').setup {
+                strategies = {
+                    chat = { adapter = 'copilot' },
+                    inline = { adapter = 'copilot' },
+                    cmd = { adapter = 'copilot' },
+                },
+            }
         end)
 
         utils.lazy_command('CodeCompanionChat', 'codecompanion')
     end,
     confirm = false,
 })
-
-vim.pack.add({ 'https://github.com/Davidyz/VectorCode' }, {
-    load = function(plug)
-        utils.lazy_plugin('vectorcode', plug.spec.name)
-        utils.lazy_command('VectorCode', 'vectorcode')
-    end,
-    confirm = false,
-})
-
-utils.plugin_hook('VectorCode', 'BuildVectorCode', function(ev)
-    vim.system({ 'uv', 'tool', 'upgrade', 'vectorcode' }, { cwd = ev.data.path })
-end)
