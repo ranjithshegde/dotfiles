@@ -72,7 +72,7 @@ M.rose_pine_moon = {
     base0B = '#3e8fb0', -- pine (green-teal / strings)  ← intentional non-green
     base0C = '#9ccfd8', -- foam (cyan)
     base0D = '#c4a7e7', -- iris (purple / functions)
-    base0E = '#f6c177', -- gold doubled as keyword accent
+    base0E = '#94e8f2', -- dawn (yellow-pink / keywords)
     base0F = '#56526e', -- muted (deprecated)
 }
 

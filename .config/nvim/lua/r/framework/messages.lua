@@ -15,6 +15,7 @@ local SKIP_PATTERNS = {
     '; before #%d+',
     '%d fewer lines',
     '%d more lines',
+    '%d lines yanked',
 }
 
 local KIND_TITLES = {

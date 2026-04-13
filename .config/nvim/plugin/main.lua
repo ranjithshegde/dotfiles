@@ -26,10 +26,9 @@ add({
 }, {
     load = function(plug)
         utils.lazy_plugin('mini', plug.spec.name)
-        -- utils.lazy_plugin('mini.base16', 'mini.base16',
         vim.schedule(function()
             require('mini.base16').setup {
-                palette = require('r.framework.palettes').tokyonight_storm,
+                palette = require('r.framework.palettes').catppuccin_mocha,
                 use_cterm = true,
             }
         end)

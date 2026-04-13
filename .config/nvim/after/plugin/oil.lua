@@ -22,13 +22,13 @@ vim.pack.add({
 
         utils.lazy_command('Oil', 'oil')
 
-        utils.lazy_on_key('n', '<leader>e', 'Open file explorer', function()
+        vim.keymap.set('n', '<leader>e', function()
             require('oil').open_float(vim.uv.cwd())
-        end, false)
+        end, { desc = 'Open file explorer' })
 
-        utils.lazy_on_key('n', '<leader>E', 'Open file explorer from current file dir', function()
-            require('oil').open_float(vim.fs.dirname(vim.fn.expand '%'))
-        end, false)
+        vim.keymap.set('n', '<leader>E', function()
+            require('oil').open_float()
+        end, { desc = 'Open file explorer from current file dir' })
 
         local id = { ProjectDrawer = vim.api.nvim_create_augroup('ProjectDrawer', { clear = true }) }
 

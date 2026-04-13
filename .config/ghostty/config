@@ -1,4 +1,5 @@
-theme = Rose Pine Moon
+# theme = Rose Pine Moon
+theme = Catppuccin Mocha
 background-opacity = 0.85
 window-decoration = false
 gtk-titlebar = false
