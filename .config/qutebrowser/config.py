@@ -286,7 +286,7 @@ c.colors.tabs.pinned.selected.even.bg = "#282c34"
 if os.environ["MACHINE_TYPE"] and os.environ["MACHINE_TYPE"] == "laptop":
     c.fonts.default_size = "10pt"
 else:
-    c.fonts.default_size = "12pt"
+    c.fonts.default_size = "14pt"
     c.fonts.web.size.default = 16
     c.fonts.web.size.minimum_logical = 16
     c.fonts.web.size.minimum = 16

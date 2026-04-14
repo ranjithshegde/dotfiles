@@ -208,6 +208,7 @@ function ui.lualine()
     local lualine = require 'lualine'
 
     local config = lualine.get_config()
+    config.options.theme = 'onedark'
 
     config.sections = line_sections
     config.options.disabled_filetypes.statusline = { 'snacks_dashboard', 'trouble' }

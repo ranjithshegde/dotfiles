@@ -3,7 +3,6 @@ local utils = require 'r.utils'
 vim.pack.add({ 'https://github.com/olimorris/codecompanion.nvim' }, {
     load = function(plug)
         utils.lazy_plugin('codecompanion', plug.spec.name, function()
-            require 'vectorcode'
             require('codecompanion').setup {
                 strategies = {
                     chat = { adapter = 'copilot' },

@@ -176,7 +176,7 @@ ui2.enable {
             wildlist = 'msg',
         },
         cmd = { height = 0.5 },
-        dialog = { height = 0.5 },
+        dialog = { height = 0.5, timeout = 2000 },
         msg = { height = 0.5, timeout = 2000 },
         pager = { height = 0.8 },
     },

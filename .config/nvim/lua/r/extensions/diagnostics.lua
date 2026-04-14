@@ -28,7 +28,7 @@ local float_conf = {
     end,
 }
 
-local lines_conf = { severity = vim.diagnostic.severity.ERROR }
+local lines_conf = { current_line = false, severity = vim.diagnostic.severity.ERROR }
 
 local on_jump = function(diagnostic, _)
     if not diagnostic then
