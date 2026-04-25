@@ -192,6 +192,7 @@ x-scheme-handler/signalcaptcha=signal.desktop
 x-scheme-handler/terminal=kitty.desktop
 x-scheme-handler/unknown=org.qutebrowser.qutebrowser.desktop
 x-terminal-emulator=kitty.desktop
+x-scheme-handler/claude-cli=claude-code-url-handler.desktop
 
 [Removed Associations]
 video/3gpp2=org.shotcut.Shotcut.desktop;

@@ -31,6 +31,11 @@ add({
                 palette = require('r.framework.palettes').catppuccin_mocha,
                 use_cterm = true,
             }
+            -- vim.cmd [[
+            --     hi Normal guibg=NONE
+            --     hi NormalFloat guibg=NONE
+            --     hi NormalNC guibg=NONE
+            -- ]]
         end)
     end,
 })

@@ -210,9 +210,16 @@ msgs.msg_show = function(kind, content, replace_last, history, append, id, trigg
     if should_skip(kind, content) then
         return
     end
+
+    if kind == 'progress' then
+        local text = vim.trim(content_to_text(content))
+        if text == '' then
+            return
+        end
+    end
+
     local title, hl = resolve_title(kind, content)
     last_title, last_hl = title, hl
-    -- orig_msg_show(kind, content, replace_last, history, append, id, trigger)
 
     local tgt = ui2.cfg.msg.targets[kind]
         or (trigger ~= '' and ui2.cfg.msg.targets[trigger])
@@ -225,11 +232,6 @@ end
 
 local orig_show_msg = msgs.show_msg
 msgs.show_msg = function(tgt, kind, content, replace_last, append, id)
-    -- local debug_chunk = { 0, ('[%s:%s] '):format(tgt, kind), 0 }
-    -- local debug_content = { debug_chunk }
-    -- for _, chunk in ipairs(content) do
-    --     debug_content[#debug_content + 1] = chunk
-    -- end
     if tgt == 'msg' then
         local text = content_to_text(content)
         local width = 0
@@ -239,14 +241,12 @@ msgs.show_msg = function(tgt, kind, content, replace_last, append, id)
         local lines = #vim.split(text, '\n')
         if width > math.floor(vim.o.columns * 0.75) or lines > 20 then
             vim.schedule(function()
-                -- msgs.show_msg('pager', kind, debug_content, replace_last, append, id)
                 msgs.show_msg('pager', kind, content, replace_last, append, id)
                 msgs.set_pos 'pager'
             end)
             return
         end
     end
-    -- orig_show_msg(tgt, kind, debug_content, replace_last, append, id)
     orig_show_msg(tgt, kind, content, replace_last, append, id)
 end
 

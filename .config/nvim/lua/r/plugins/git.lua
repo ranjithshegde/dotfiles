@@ -133,7 +133,13 @@ function g.signs_init()
         callback = function(args)
             local git_dir = vim.uv.fs_stat(vim.uv.cwd() .. '/.git')
             if (git_dir and git_dir.type == 'directory') or vim.env.GIT_DIR then
-                vim.cmd.packadd 'gitsigns.nvim'
+                vim.schedule(function()
+                    if not package.loaded['mini.git'] then
+                        pcall(require('mini.git').setup)
+                    end
+                    vim.cmd.packadd 'gitsigns.nvim'
+                    g.minigit_commands()
+                end)
                 vim.api.nvim_del_autocmd(args.id)
             end
         end,
@@ -148,6 +154,24 @@ function g.signs_config()
         end,
         preview_config = { focusable = false },
     }
+end
+
+function g.minigit_commands()
+    vim.api.nvim_create_user_command('Glog', function(args)
+        local count = args.args ~= '' and args.args or '25'
+        vim.cmd('Git log --graph --decorate --max-count=' .. count .. ' --oneline')
+    end, {
+        nargs = '?',
+        desc = 'Git log graph oneline, optional count: Glog [n]',
+    })
+
+    vim.api.nvim_create_user_command('GlogFull', function(args)
+        local count = args.args ~= '' and args.args or '25'
+        vim.cmd('Git log --graph --decorate --max-count=' .. count)
+    end, {
+        nargs = '?',
+        desc = 'Git log graph full, optional count: GlogFull [n]',
+    })
 end
 
 return g

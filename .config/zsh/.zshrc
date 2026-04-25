@@ -133,6 +133,7 @@ alias lta2='eza --color=auto --group-directories-first --icons=always -Tga -L=2'
 alias lta3='eza --color=auto --group-directories-first --icons=always -Tga -L=3'
 alias lta4='eza --color=auto --group-directories-first --icons=always -Tga -L=4'
 alias lta5='eza --color=auto --group-directories-first --icons=always -Tga -L=5'
+alias lta6='eza --color=auto --group-directories-first --icons=always -Tga -L=6'
 alias cat=bat
 alias lf=yazi
 alias sxiv=nsxiv
