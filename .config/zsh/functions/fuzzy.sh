@@ -13,8 +13,17 @@ fkill() {
     fi
 }
 
+# fparu() {
+#     paru -Slq | fzf -q "$1" -m --preview 'paru -Si {1} && paru -Fl {1}' | xargs -ro paru -S
+# }
+
 fparu() {
-    paru -Slq | fzf -q "$1" -m --preview 'paru -Si {1} && paru -Fl {1}' | xargs -ro paru -S
+    fzf --ansi --disabled --query "$1" \
+        --bind "start:reload(paru -Slq)" \
+        --bind "change:reload:paru -Ssq {q} || true" \
+        --preview '[[ -n {1} ]] && paru -Si {1} 2>/dev/null' \
+        --multi |
+        xargs -ro paru -S
 }
 
 rpac() {

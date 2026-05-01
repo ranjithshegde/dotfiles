@@ -169,15 +169,15 @@ alias yarn='yarn --use-yarnrc "${XDG_CONFIG_HOME:-$HOME/.config}/yarn/config"'
 # ==============================================================================
 
 if [[ "${MACHINE_TYPE}" = "laptop" ]]; then
-    zinit snippet "$ZDOTDIR/functions/power_profiles.sh"
+    source "$ZDOTDIR/functions/power_profiles.sh"
 fi
 
 if [[ "${XDG_SESSION_TYPE}" = "dwm" ]]; then
-    zinit snippet "$ZDOTDIR/functions/dmenus.sh"
+    source "$ZDOTDIR/functions/dmenus.sh"
 fi
 
-zinit snippet "$ZDOTDIR/functions/scripts.sh"
-zinit snippet "$ZDOTDIR/functions/fuzzy.sh"
+source "$ZDOTDIR/functions/scripts.sh"
+source "$ZDOTDIR/functions/fuzzy.sh"
 
 source /usr/share/doc/pkgfile/command-not-found.zsh
 
@@ -193,6 +193,10 @@ precmd() {
         echo
     }
 }
+
+# ==============================================================================
+#                   GPG Agent Configuration for TTY
+# ==============================================================================
 
 if [[ -o interactive ]]; then
     local_tty=$(tty 2>/dev/null)

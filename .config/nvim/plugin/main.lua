@@ -28,7 +28,7 @@ add({
         utils.lazy_plugin('mini', plug.spec.name)
         vim.schedule(function()
             require('mini.base16').setup {
-                palette = require('r.framework.palettes').catppuccin_mocha,
+                palette = require('r.framework.palettes').nekonight_moon,
                 use_cterm = true,
             }
             -- vim.cmd [[

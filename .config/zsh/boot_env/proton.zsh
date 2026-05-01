@@ -1,6 +1,5 @@
 #!/bin/zsh
 
-export ENABLE_HDR_WSI=1
 export PROTON_ENABLE_WAYLAND=1
 export PROTON_ENABLE_HDR=1
 export DXVK_HDR=1

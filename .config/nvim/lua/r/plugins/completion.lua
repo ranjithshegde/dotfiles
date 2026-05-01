@@ -67,6 +67,7 @@ completion.blink_opts = {
             },
         },
     },
+    signature = { enabled = true },
     appearance = { nerd_font_variant = 'mono' },
 }
 
