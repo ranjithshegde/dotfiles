@@ -88,7 +88,7 @@ DialogHeight=540
 DialogWidth=720
 
 [Containments][62][Applets][65][Configuration][General]
-launchers=applications:systemsettings.desktop,preferred://browser
+launchers=applications:systemsettings.desktop,preferred://browser,applications:org.kde.plasma-systemmonitor.desktop
 
 [Containments][62][Applets][66]
 immutability=1
@@ -125,7 +125,9 @@ immutability=1
 plugin=org.kde.plasma.volume
 
 [Containments][62][Applets][67][Applets][73][Configuration][General]
+currentTab=streams
 migrated=true
+showVirtualDevices=true
 
 [Containments][62][Applets][67][Applets][74]
 immutability=1
@@ -397,5 +399,5 @@ AppletOrder=92;93;94;95;96;110;111
 global=
 
 [ScreenMapping]
-itemsOnDisabledScreens=0,42cfd941-f257-4e76-9e6e-809cce6a5b82,4,http://0.0.0.0,http://442d3150-bb06-4c87-bb53-37e4fdd1874c,desktop:/backup,
-screenMapping=desktop:/lazy,1,42cfd941-f257-4e76-9e6e-809cce6a5b82,desktop:/backup,1,42cfd941-f257-4e76-9e6e-809cce6a5b82,desktop:/index.html,1,42cfd941-f257-4e76-9e6e-809cce6a5b82,desktop:/list.txt,1,42cfd941-f257-4e76-9e6e-809cce6a5b82,desktop:/ubdeps.txt,1,42cfd941-f257-4e76-9e6e-809cce6a5b82,desktop:/adc.txt,1,42cfd941-f257-4e76-9e6e-809cce6a5b82,desktop:/cpponlineaudiorecording.wav,1,42cfd941-f257-4e76-9e6e-809cce6a5b82
+itemsOnDisabledScreens=0,42cfd941-f257-4e76-9e6e-809cce6a5b82,4,desktop:/backup,,http://0.0.0.0,http://442d3150-bb06-4c87-bb53-37e4fdd1874c
+screenMapping=desktop:/lazy,1,42cfd941-f257-4e76-9e6e-809cce6a5b82,desktop:/backup,1,42cfd941-f257-4e76-9e6e-809cce6a5b82,desktop:/adc.txt,1,42cfd941-f257-4e76-9e6e-809cce6a5b82,desktop:/index.html,1,42cfd941-f257-4e76-9e6e-809cce6a5b82,desktop:/ubdeps.txt,1,42cfd941-f257-4e76-9e6e-809cce6a5b82,desktop:/list.txt,1,42cfd941-f257-4e76-9e6e-809cce6a5b82,desktop:/cpponlineaudiorecording.wav,1,42cfd941-f257-4e76-9e6e-809cce6a5b82
