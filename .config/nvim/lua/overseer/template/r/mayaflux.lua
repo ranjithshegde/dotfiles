@@ -37,13 +37,13 @@ return {
                 save = false,
             },
             {
-                args = { 'cmake', '-B', 'build', '-S', '.', '-G', 'Ninja', '-DMAYAFLUX_DEV=ON' },
+                args = { 'cmake', '--preset', 'unix-dev' },
                 tags = { TAG.BUILD },
                 priority = 20,
                 save = true,
             },
             {
-                args = { 'cmake', '--build', 'build', '--parallel' },
+                args = { 'cmake', '--build', '--preset', 'unix-dev' },
                 tags = { TAG.BUILD },
                 priority = 20,
                 save = true,
@@ -73,7 +73,7 @@ return {
             elseif vim.tbl_contains(command.args, '-B') then
                 name = name .. ' configure'
                 desc = 'Configure Mayaflux project (Ninja + MAYAFLUX_DEV=ON)'
-            elseif vim.tbl_contains(command.args, '--parallel') then
+            elseif vim.tbl_contains(command.args, '--build') then
                 name = name .. ' Build'
                 desc = 'Build project with parallel jobs'
             elseif vim.tbl_contains(command.args, 'install') then

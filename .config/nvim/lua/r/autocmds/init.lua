@@ -217,10 +217,10 @@ aucmd('BufReadPost', {
 
 id.TextYank = augroup('TextYank', opts)
 -- ************** HighlightOnYank ---------------------------------------------------------
-vim.api.nvim_create_autocmd('TextYankPost', {
+vim.api.nvim_create_autocmd({ 'TextYankPost', 'TextPutPost' }, {
     group = id.TextYank,
     callback = function()
-        vim.highlight.on_yank { higroup = 'IncSearch', timeout = 200 }
+        vim.hl.hl_op { higroup = 'IncSearch', timeout = 200 }
     end,
     desc = 'Highlight yanked text',
 })

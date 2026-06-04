@@ -13,6 +13,13 @@ add({ 'https://github.com/saghen/blink.pairs' }, {
     confirm = false,
 })
 
+add({ 'https://github.com/saghen/blink.lib' }, {
+    load = function(plug)
+        utils.lazy_plugin('blink.lib', plug.spec.name)
+    end,
+    confirm = false,
+})
+
 add({ 'https://github.com/rafamadriz/friendly-snippets' }, {
     load = function(plug)
         utils.lazy_plugin('friendly-snippets', plug.spec.name)
@@ -31,6 +38,7 @@ add({ { src = 'https://github.com/saghen/blink.cmp', version = vim.version.range
     confirm = false,
 })
 
-utils.plugin_hook('blink.pairs', 'DownloadBlink', function(ev)
-    vim.system({ 'cargo', 'build', '--release' }, { cwd = ev.data.path })
+utils.plugin_hook('blink.pairs', 'DownloadBlink', function()
+    vim.cmd.packadd 'blink.lib'
+    require('blink.pairs').build():pwait(60000)
 end)
