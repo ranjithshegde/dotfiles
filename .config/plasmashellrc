@@ -2,6 +2,7 @@
 floating=1
 panelLengthMode=1
 panelVisibility=2
+shell=org.kde.plasma.desktop
 
 [PlasmaViews][Panel 62][Defaults]
 thickness=44
@@ -10,6 +11,7 @@ thickness=44
 floating=1
 panelLengthMode=1
 panelVisibility=2
+shell=org.kde.plasma.desktop
 
 [PlasmaViews][Panel 91][Defaults]
 thickness=44

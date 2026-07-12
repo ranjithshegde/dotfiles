@@ -1,20 +1,4 @@
 set startup-with-shell off
 handle SIG32 nostop
 
-python
-import sys
-sys.path.insert(0, '/usr/share/gcc-12.1.0/python')
-sys.path.insert(0, "$XDG_DATA_HOME/gdb-natvis")
-
-from libstdcxx.v6.printers import register_libstdcxx_printers
-register_libstdcxx_printers(None)
-
-try:
-    import printer
-except ImportError:
-    printer = None
-    import traceback
-    traceback.print_exc()
-else:
-    printer.add_natvis_printers()
-end
+set debuginfod enabled on

@@ -20,7 +20,8 @@ add({ 'https://github.com/nvim-neotest/neotest' }, {
     confirm = false,
 })
 
-add({ 'https://github.com/alfaix/neotest-gtest' }, {
+-- add({ 'https://github.com/alfaix/neotest-gtest' }, {
+add({ 'https://github.com/andeshog/neotest-gtest' }, {
     load = function(plug)
         utils.lazy_plugin('neotest-gtest', plug.spec.name)
     end,

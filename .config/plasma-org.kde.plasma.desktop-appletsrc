@@ -180,10 +180,11 @@ DialogHeight=540
 DialogWidth=720
 
 [Containments][62][Applets][67][General]
-extraItems=org.kde.plasma.notifications,org.kde.plasma.keyboardlayout,org.kde.plasma.volume,org.kde.plasma.manage-inputmethod,org.kde.plasma.bluetooth,org.kde.kscreen,org.kde.plasma.mediacontroller,org.kde.plasma.cameraindicator,org.kde.plasma.networkmanagement,org.kde.plasma.clipboard,org.kde.kdeconnect,org.kde.plasma.battery,org.kde.plasma.devicenotifier,org.kde.plasma.brightness
+extraItems=org.kde.plasma.notifications,org.kde.plasma.keyboardlayout,org.kde.plasma.volume,org.kde.plasma.manage-inputmethod,org.kde.kscreen,org.kde.plasma.mediacontroller,org.kde.plasma.cameraindicator,org.kde.plasma.networkmanagement,org.kde.plasma.clipboard,org.kde.kdeconnect,org.kde.plasma.battery,org.kde.plasma.devicenotifier,org.kde.plasma.brightness,org.kde.plasma.bluetooth
 hiddenItems=org.kde.plasma.clipboard
 knownItems=org.kde.plasma.notifications,org.kde.plasma.keyboardlayout,org.kde.plasma.devicenotifier,org.kde.plasma.brightness,org.kde.plasma.volume,org.kde.plasma.manage-inputmethod,org.kde.plasma.bluetooth,org.kde.kscreen,org.kde.plasma.mediacontroller,org.kde.plasma.battery,org.kde.plasma.cameraindicator,org.kde.plasma.networkmanagement,org.kde.plasma.clipboard,org.kde.kdeconnect
 scaleIconsToFit=true
+shownItems=org.kde.plasma.bluetooth
 
 [Containments][62][Applets][78]
 immutability=1
@@ -191,7 +192,10 @@ plugin=org.kde.plasma.digitalclock
 
 [Containments][62][Applets][78][Configuration]
 popupHeight=451
-popupWidth=560
+popupWidth=810
+
+[Containments][62][Applets][78][Configuration][Appearance]
+selectedTimeZones=Europe/Warsaw,Local
 
 [Containments][62][Applets][78][Configuration][ConfigDialog]
 DialogHeight=540
@@ -379,6 +383,7 @@ immutability=1
 plugin=org.kde.plasma.volume
 
 [Containments][91][Applets][96][Applets][99][Configuration][General]
+currentTab=streams
 migrated=true
 
 [Containments][91][Applets][96][ConfigDialog]
@@ -398,5 +403,5 @@ AppletOrder=92;93;94;95;96;110;111
 global=
 
 [ScreenMapping]
-itemsOnDisabledScreens=0,42cfd941-f257-4e76-9e6e-809cce6a5b82,4,,desktop:/backup,http://0.0.0.0,http://442d3150-bb06-4c87-bb53-37e4fdd1874c,1,42cfd941-f257-4e76-9e6e-809cce6a5b82,6,desktop:/ubdeps.txt,desktop:/lazy,desktop:/adc.txt,desktop:/index.html,desktop:/list.txt,desktop:/cpponlineaudiorecording.wav
-screenMapping=
+itemsOnDisabledScreens=0,42cfd941-f257-4e76-9e6e-809cce6a5b82,4,desktop:/backup,http://442d3150-bb06-4c87-bb53-37e4fdd1874c,,http://0.0.0.0
+screenMapping=desktop:/ubdeps.txt,1,42cfd941-f257-4e76-9e6e-809cce6a5b82,desktop:/backup,1,42cfd941-f257-4e76-9e6e-809cce6a5b82,desktop:/adc.txt,1,42cfd941-f257-4e76-9e6e-809cce6a5b82,desktop:/index.html,1,42cfd941-f257-4e76-9e6e-809cce6a5b82,desktop:/cpponlineaudiorecording.wav,1,42cfd941-f257-4e76-9e6e-809cce6a5b82

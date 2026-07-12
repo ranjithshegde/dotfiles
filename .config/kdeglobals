@@ -133,7 +133,8 @@ ForegroundPositive=39,174,96
 ForegroundVisited=155,89,182
 
 [General]
-ColorSchemeHash=2c3f86428c11011a7c64ee1e7f47c274d498ff10
+ColorScheme=BreezeDark
+ColorSchemeHash=9d38eb71ded8ff549da26d57d7cbab9164da243a
 TerminalApplication=ghostty
 TerminalService=com.mitchellh.ghostty.desktop
 UseSystemBell=true
@@ -141,11 +142,13 @@ UseSystemBell=true
 [KDE]
 LookAndFeelPackage=org.kde.breezedark.desktop
 ShowDeleteCommand=true
+contrast=4
+frameContrast=0.2
 
 [KFileDialog Settings]
 Allow Expansion=false
 Automatically select filename extension=true
-Breadcrumb Navigation=true
+Breadcrumb Navigation=false
 Decoration position=2
 Show Full Path=false
 Show Inline Previews=true
@@ -155,7 +158,7 @@ Show hidden files=true
 Sort by=Name
 Sort directories first=true
 Sort hidden files last=false
-Sort reversed=false
+Sort reversed=true
 Speedbar Width=140
 View Style=DetailTree
 

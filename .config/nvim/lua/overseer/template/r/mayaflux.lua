@@ -70,9 +70,9 @@ return {
             if vim.tbl_contains(command.args, 'clean') then
                 name = name .. ' clean'
                 desc = 'Clean build artifacts'
-            elseif vim.tbl_contains(command.args, '-B') then
+            elseif vim.tbl_contains(command.args, '--preset') and not vim.tbl_contains(command.args, '--build') then
                 name = name .. ' configure'
-                desc = 'Configure Mayaflux project (Ninja + MAYAFLUX_DEV=ON)'
+                desc = 'Configure Mayaflux project (unix-dev preset)'
             elseif vim.tbl_contains(command.args, '--build') then
                 name = name .. ' Build'
                 desc = 'Build project with parallel jobs'
