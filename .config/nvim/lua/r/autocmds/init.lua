@@ -61,15 +61,15 @@ id.FormatOptions = augroup('FormatOptions', opts)
 aucmd('FileType', {
     group = id.FormatOptions,
     callback = function()
-        vim.opt.formatoptions = vim.opt.formatoptions
-            - 'o' -- O and o don't continue comments
-            - 'r' -- Return does not continue comments
-            + 't' -- Autowrap respecting textwidth
-            + 'c' -- comments respect textwidth
-            + 'q' -- Allow formatting comments w/ gq
-            + 'n' -- Recognize numbered lists
-            + 'j' -- Auto-remove comments if possible.
-            + '2' -- Indent according to 2nd line
+        --- - 'o' -- O and o don't continue comments
+        --- - 'r' -- Return does not continue comments
+        --- + 't' -- Autowrap respecting textwidth
+        --- + 'c' -- comments respect textwidth
+        --- + 'q' -- Allow formatting comments w/ gq
+        --- + 'n' -- Recognize numbered lists
+        --- + 'j' -- Auto-remove comments if possible.
+        --- + '2' -- Indent according to 2nd line
+        vim.o.formatoptions = 'tcqnj2'
     end,
     desc = 'Custom formatoptions',
 })

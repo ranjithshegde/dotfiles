@@ -403,5 +403,5 @@ AppletOrder=92;93;94;95;96;110;111
 global=
 
 [ScreenMapping]
-itemsOnDisabledScreens=0,42cfd941-f257-4e76-9e6e-809cce6a5b82,4,desktop:/backup,http://442d3150-bb06-4c87-bb53-37e4fdd1874c,,http://0.0.0.0
-screenMapping=desktop:/ubdeps.txt,1,42cfd941-f257-4e76-9e6e-809cce6a5b82,desktop:/backup,1,42cfd941-f257-4e76-9e6e-809cce6a5b82,desktop:/adc.txt,1,42cfd941-f257-4e76-9e6e-809cce6a5b82,desktop:/index.html,1,42cfd941-f257-4e76-9e6e-809cce6a5b82,desktop:/cpponlineaudiorecording.wav,1,42cfd941-f257-4e76-9e6e-809cce6a5b82
+itemsOnDisabledScreens=1,42cfd941-f257-4e76-9e6e-809cce6a5b82,6,desktop:/cpponlineaudiorecording.wav,desktop:/0110000134013bcc,desktop:/adc.txt,desktop:/ubdeps.txt,desktop:/mpv-shot0001.jpg,desktop:/index.html,0,42cfd941-f257-4e76-9e6e-809cce6a5b82,4,http://442d3150-bb06-4c87-bb53-37e4fdd1874c,http://0.0.0.0,desktop:/backup,
+screenMapping=

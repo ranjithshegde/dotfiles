@@ -141,6 +141,15 @@ local function override_dialog_win()
     })
 end
 
+local function close_dialog_win()
+    local win = ui2.wins and ui2.wins.dialog
+    if win and vim.api.nvim_win_is_valid(win) then
+        vim.schedule(function()
+            vim.api.nvim_win_close(win, true)
+        end)
+    end
+end
+
 -- ── ui2 enable ──────────────────────────────────────────────────────
 
 ui2.enable {
@@ -252,7 +261,10 @@ end
 
 -- ── LSP progress ─────────────────────────────────────────────────────
 
-local id = { LspProgressMessages = vim.api.nvim_create_augroup('LspProgressMessages', { clear = true }) }
+local id = {
+    LspProgressMessages = vim.api.nvim_create_augroup('LspProgressMessages', { clear = true }),
+    UI2DialogClose = vim.api.nvim_create_augroup('UI2DialogClose', { clear = true }),
+}
 
 vim.api.nvim_create_autocmd('LspProgress', {
     group = id.LspProgressMessages,
@@ -274,6 +286,11 @@ vim.api.nvim_create_autocmd('LspProgress', {
             percent = value.percentage,
         })
     end,
+})
+
+vim.api.nvim_create_autocmd({ 'CmdlineLeave', 'InsertLeave', 'BufLeave' }, {
+    group = id.UI2DialogClose,
+    callback = close_dialog_win,
 })
 
 require('r.utils').register_au_id(id)
