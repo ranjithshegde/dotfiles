@@ -36,7 +36,7 @@ add({ 'https://github.com/ckolkey/ts-node-action' }, {
 })
 
 utils.plugin_hook('nvim-treesitter', 'UpdateTreesitter', function(_)
-    vim.cmd.TSUpdate()
+    require('nvim-treesitter.install').update()
 end)
 
 require('r.plugins.treesitter.settings').autocmds()

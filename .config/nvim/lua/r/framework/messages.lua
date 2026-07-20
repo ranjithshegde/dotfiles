@@ -144,9 +144,7 @@ end
 local function close_dialog_win()
     local win = ui2.wins and ui2.wins.dialog
     if win and vim.api.nvim_win_is_valid(win) then
-        vim.schedule(function()
-            vim.api.nvim_win_close(win, true)
-        end)
+        vim.api.nvim_win_close(win, true)
     end
 end
 
