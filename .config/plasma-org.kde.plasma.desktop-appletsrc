@@ -44,7 +44,7 @@ warningResources_dismissed=true
 
 [Containments][61][Wallpaper][org.kde.image][General]
 FillMode=0
-Image=file:///home/ranjith/Pictures/Wallpapers/ds2_2.jpg
+Image=file:///home/ranjith/Pictures/ELDEN-RING-4K-WALLPAPERS/shadowtree.jpg
 SlidePaths=/usr/share/wallpapers/
 
 [Containments][62]
@@ -403,5 +403,5 @@ AppletOrder=92;93;94;95;96;110;111
 global=
 
 [ScreenMapping]
-itemsOnDisabledScreens=1,42cfd941-f257-4e76-9e6e-809cce6a5b82,7,desktop:/NBGI,desktop:/ubdeps.txt,desktop:/0110000134013bcc,desktop:/adc.txt,desktop:/cpponlineaudiorecording.wav,desktop:/mpv-shot0001.jpg,desktop:/index.html,0,42cfd941-f257-4e76-9e6e-809cce6a5b82,4,http://0.0.0.0,http://442d3150-bb06-4c87-bb53-37e4fdd1874c,desktop:/backup,
+itemsOnDisabledScreens=1,42cfd941-f257-4e76-9e6e-809cce6a5b82,9,desktop:/NBGI,desktop:/index.html,desktop:/0110000134013bcc,desktop:/adc.txt,desktop:/DarkSoulsIIold,desktop:/ubdeps.txt,desktop:/mpv-shot0001.jpg,desktop:/DarkSoulsII,desktop:/cpponlineaudiorecording.wav,0,42cfd941-f257-4e76-9e6e-809cce6a5b82,4,http://442d3150-bb06-4c87-bb53-37e4fdd1874c,http://0.0.0.0,desktop:/backup,
 screenMapping=

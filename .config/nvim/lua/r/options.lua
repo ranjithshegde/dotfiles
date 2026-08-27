@@ -73,6 +73,7 @@ return function()
     opt.clipboard:append 'unnamedplus'
     opt.sessionoptions:append 'terminal,tabpages'
     opt.diffopt:append 'indent-heuristic,linematch:60,algorithm:histogram'
+    opt.messagesopt:append 'timeout:2000'
 
     vim.g.loaded_ruby_provider = 0
     vim.g.loaded_perl_provider = 0

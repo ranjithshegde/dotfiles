@@ -1,4 +1,4 @@
 set startup-with-shell off
 handle SIG32 nostop
 
-set debuginfod enabled on
+set debuginfod enabled off
