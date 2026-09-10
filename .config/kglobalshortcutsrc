@@ -464,8 +464,6 @@ _launch=Search\tAlt+Space
 _launch=Meta+Ctrl+Alt+Shift+Space
 
 [services][org.kde.spectacle.desktop]
-CurrentMonitorScreenShot=none
-OpenWithoutScreenshot=none
 RecordRegion=none
 RecordWindow=none
 

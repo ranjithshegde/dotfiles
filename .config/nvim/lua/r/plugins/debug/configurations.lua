@@ -16,6 +16,11 @@ local function get_cppdbg_base()
         MIMode = 'gdb',
         setupCommands = {
             { text = '-enable-pretty-printing', description = 'enable pretty printing', ignoreFailures = true },
+            {
+                text = 'set debuginfod enabled off',
+                description = 'disable debuginfod',
+                ignoreFailures = false,
+            },
         },
     }
 end

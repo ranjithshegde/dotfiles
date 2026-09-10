@@ -60,7 +60,6 @@ export JAVA_OPTS="-Djdk.xml.totalEntitySizeLimit=5000000"
 # Emscripten
 export EMSDK="$HOME/Repositories/libraries/emsdk"
 export EM_CONFIG="$EMSDK/.emscripten"
-export EM_NODE="$EMSDK/node/14.8.2_64bit/bin/node"
 
 # History files
 export HISTFILE="$XDG_DATA_HOME/zsh/history"
@@ -93,7 +92,9 @@ export WORKSPACE="$HOME/Workspaces/"
 
 # Miscellaneous
 export CHROME_EXECUTABLE="/usr/bin/brave"
-export DEBUGINFOD_URLS="https://debuginfod.archlinux.org"
+export CLAUDE_CONFIG_DIR="$XDG_CONFIG_HOME"/claude
+export COPILOT_HOME="$XDG_CONFIG_HOME"/copilot
+# export DEBUGINFOD_URLS="https://debuginfod.archlinux.org"
 export GNUPGHOME="$XDG_DATA_HOME/gnupg"
 export GTK2_RC_FILES="$XDG_CONFIG_HOME/gtk-2.0/gtkrc"
 export IPYTHONDIR="$XDG_CONFIG_HOME/jupyter"
@@ -101,6 +102,8 @@ export NMBGIT="$XDG_DATA_HOME/notmuch/nmbug"
 export NOTMUCH_CONFIG="$XDG_CONFIG_HOME/notmuch/notmuchrc"
 export OCTAVE_SITE_INITFILE="$XDG_CONFIG_HOME/octave/octaverc"
 export PASSWORD_STORE_DIR="$HOME/.local/share/pass"
+export RENPY_PATH_TO_SAVES="$XDG_DATA_HOME/renpy"
+export RENPY_MULTIPERSISTENT="$XDG_DATA_HOME/renpy_shared"
 export SSB_HOME="$XDG_DATA_HOME/zoom"
 export TERMINFO="$XDG_DATA_HOME/terminfo"
 export TEXMFCONFIG="$XDG_CONFIG_HOME/texlive/texmf-config"
