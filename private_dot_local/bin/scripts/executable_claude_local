@@ -1,0 +1,3 @@
+#!/bin/sh
+
+CLAUDE_CONFIG_DIR=$HOME/.config/claude claude

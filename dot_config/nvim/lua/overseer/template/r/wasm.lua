@@ -1,0 +1,53 @@
+local constants = require 'overseer.constants'
+local overseer = require 'overseer'
+local TAG = constants.TAG
+local num_jobs = _G.__MACHINE and '-j12' or '-j32'
+
+local tmpl = {
+    params = {
+        args = { type = 'list', delimiter = ' ' },
+        save = { type = 'boolean', optional = true },
+    },
+    builder = function(params)
+        local cmd = {}
+        if params.args then
+            cmd = vim.list_extend(cmd, params.args)
+        end
+
+        return {
+            cmd = cmd,
+            components = { 'default', 'on_output_quickfix', 'unique', { 'r.dispatch', save = params.save } },
+        }
+    end,
+}
+
+return {
+    condition = {
+        filetype = { 'c', 'cpp' },
+        callback = function()
+            return vim.b.wasm ~= nil or vim.b.cpp_type == 'oF'
+        end,
+    },
+    generator = function(_, cb)
+        local commands = {
+            { args = { 'emmake', 'make', num_jobs }, tags = { TAG.BUILD }, priority = 50, save = true },
+            { args = { 'emrun', "--browser='brave'", vim.b.wasm }, tags = { TAG.TEST }, priority = 40 },
+        }
+        local ret = {}
+        for _, command in ipairs(commands) do
+            local name = command.args[1] == 'emmake' and 'Build' or 'Deploy'
+            local desc = name .. ' a WebAssembly binary using emscripten'
+            name = name .. ' wasm'
+            table.insert(
+                ret,
+                overseer.wrap_template(tmpl, {
+                    name = name,
+                    desc = desc,
+                    tags = command.tags,
+                    priority = command.priority,
+                }, { args = command.args, save = command.save })
+            )
+        end
+        cb(ret)
+    end,
+}

@@ -1,0 +1,3 @@
+#!/bin/sh
+
+nvim --server /tmp/nvimsocket --remote +"set bufhidden=delete" "$@"

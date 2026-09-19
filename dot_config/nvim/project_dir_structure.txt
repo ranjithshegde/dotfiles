@@ -1,0 +1,124 @@
+ .
+├──  .vscode
+│   └──  settings.json
+├──  after
+│   ├──  lsp
+│   │   ├──  clangd.lua
+│   │   ├──  ltex_plus.lua
+│   │   ├──  lua_ls.lua
+│   │   └──  texlab.lua
+│   ├──  plugin
+│   │   ├──  ai.lua
+│   │   ├──  completion.lua
+│   │   ├──  debug.lua
+│   │   ├──  editor.lua
+│   │   ├──  fzf.lua
+│   │   ├──  git.lua
+│   │   ├──  lsp.lua
+│   │   ├──  neotest.lua
+│   │   ├──  oil.lua
+│   │   ├──  orgmode.lua
+│   │   ├──  overseer.lua
+│   │   └──  treesitter.lua
+│   ├──  queries
+│   │   ├──  html
+│   │   ├──  latex
+│   │   │   └──  highlights.scm
+│   │   ├──  org
+│   │   │   └──  highlights.scm
+│   │   └──  supercollider
+│   │       └──  textobjects.scm
+│   └──  syntax
+│       └──  tex.vim
+├──  lua
+│   ├──  overseer
+│   │   ├──  component
+│   │   │   └──  r
+│   │   │       └──  dispatch.lua
+│   │   └──  template
+│   │       └──  r
+│   │           ├──  cdox.lua
+│   │           ├──  cmake.lua
+│   │           ├──  cxx.lua
+│   │           ├──  dotnet.lua
+│   │           ├──  init.lua
+│   │           ├──  live-server.lua
+│   │           ├──  mayaflux.lua
+│   │           ├──  meson.lua
+│   │           ├──  openFrameworks.lua
+│   │           ├──  pio.lua
+│   │           ├──  single_file.lua
+│   │           ├──  unreal.lua
+│   │           ├──  unreal_clang.lua
+│   │           ├──  unreal_compile.lua
+│   │           ├──  valgrind.lua
+│   │           └──  wasm.lua
+│   └──  r
+│       ├──  autocmds
+│       │   ├──  filetype.lua
+│       │   └──  init.lua
+│       ├──  extensions
+│       │   ├──  project
+│       │   │   ├──  detection.lua
+│       │   │   ├──  init.lua
+│       │   │   └──  scratchpad.lua
+│       │   ├──  diagnostics.lua
+│       │   ├──  docs.lua
+│       │   ├──  init.lua
+│       │   ├──  mappings.lua
+│       │   └──  server.lua
+│       ├──  framework
+│       │   ├──  cmdline.lua
+│       │   ├──  messages.lua
+│       │   └──  palettes.lua
+│       ├──  plugins
+│       │   ├──  debug
+│       │   │   ├──  adapters.lua
+│       │   │   ├──  configurations.lua
+│       │   │   ├──  mappings.lua
+│       │   │   └──  settings.lua
+│       │   ├──  fzf
+│       │   │   ├──  mappings.lua
+│       │   │   └──  settings.lua
+│       │   ├──  lsp
+│       │   │   ├──  mappings
+│       │   │   │   ├──  init.lua
+│       │   │   │   └──  servers.lua
+│       │   │   ├──  servers
+│       │   │   │   ├──  ccls.lua
+│       │   │   │   ├──  init.lua
+│       │   │   │   └──  ltex.lua
+│       │   │   ├──  handlers.lua
+│       │   │   └──  trouble.lua
+│       │   ├──  tasks
+│       │   │   ├──  cpp.lua
+│       │   │   └──  register.lua
+│       │   ├──  treesitter
+│       │   │   ├──  mappings.lua
+│       │   │   └──  settings.lua
+│       │   ├──  completion.lua
+│       │   ├──  git.lua
+│       │   ├──  neotest.lua
+│       │   ├──  orgmode.lua
+│       │   ├──  surround.lua
+│       │   └──  ui.lua
+│       ├──  utils
+│       │   ├──  expand_maps.lua
+│       │   ├──  init.lua
+│       │   └──  tables.lua
+│       ├──  mappings.lua
+│       └──  options.lua
+├──  plugin
+│   ├──  lualine.lua
+│   ├──  main.lua
+│   └──  snacks.lua
+├──  spell
+│   ├──  en.utf-8.add
+│   └──  en.utf-8.add.spl
+├── 󰊢 .gitignore
+├──  .luarc.json
+├──  .stylua.toml -> /home/ranjith/.config/stylua/stylua.toml
+├──  filetype.lua
+├──  init.lua
+├──  nvim-pack-lock.json
+└──  project_dir_structure.txt

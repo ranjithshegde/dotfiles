@@ -1,0 +1,8 @@
+{
+    "C_Cpp.default.includePath": [
+        "/usr/local/include",
+        "/usr/local/lib",
+        "/usr/local/include/MayaFlux"
+    ],
+    "C_Cpp.default.compilerPath": "/usr/bin/clang++"
+}

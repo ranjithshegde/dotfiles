@@ -1,0 +1,12 @@
+[Unit]
+Description=Session Bootstrap (zlogin replacement)
+Before=graphical-session.target
+Wants=graphical-session.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/zsh /home/ranjith/.config/session/bootstrap.zsh
+RemainAfterExit=true
+
+[Install]
+WantedBy=graphical-session.target

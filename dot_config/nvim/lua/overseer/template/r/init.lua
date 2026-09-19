@@ -1,0 +1,16 @@
+return {
+    'r.single_file',
+    'r.pio',
+    'r.live-server',
+    'r.cxx',
+    'r.valgrind',
+    'r.wasm',
+    'r.cmake',
+    'r.mayaflux',
+    'r.openFrameworks',
+    'r.cdox',
+    'r.dotnet',
+    'r.unreal',
+    'r.unreal_clang',
+    'r.unreal_compile',
+}

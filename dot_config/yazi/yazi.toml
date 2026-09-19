@@ -1,0 +1,21 @@
+# "$schema" = "https://yazi-rs.github.io/schemas/yazi.json"
+
+[mgr]
+linemode = "size"
+
+[preview]
+max_width = 1920
+max_height = 1080
+
+[plugin]
+prepend_previewers = [{ mime = "text/markdown", run = "glow" }]
+
+[[plugin.prepend_fetchers]]
+url   = "*"
+run   = "git"
+group = "git"
+
+[[plugin.prepend_fetchers]]
+url   = "*/"
+run   = "git"
+group = "git"

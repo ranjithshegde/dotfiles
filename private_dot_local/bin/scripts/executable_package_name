@@ -1,0 +1,30 @@
+#!/bin/sh
+
+# Prompt for the group name if not provided as argument
+if [ -z "$1" ]; then
+    read -p "Enter the package group name: " group_name
+else
+    group_name=$1
+fi
+
+# Get the list of packages in the group
+packages=$(pacman -Sg "$group_name" | awk '{print $2}')
+
+# Create the output file in the current working directory
+output_file="./${group_name}_package_info.txt"
+
+# Create or clear the output file
+>"$output_file"
+
+# For each package, get detailed information
+for package in $packages; do
+    echo "Package: $package" >>"$output_file"
+    pacman -Sii "$package" >>"$output_file"
+    echo -e "\n" >>"$output_file" # Add a new line for separation
+done
+
+# Print the content of the output file
+cat "$output_file"
+
+# Optionally, open the result file in Neovim
+# vim "$output_file"
