@@ -93,6 +93,7 @@ export WORKSPACE="$HOME/Workspaces/"
 # Miscellaneous
 export CHROME_EXECUTABLE="/usr/bin/brave"
 export CLAUDE_CONFIG_DIR="$XDG_CONFIG_HOME"/claude
+export CODEX_HOME="$XDG_CONFIG_HOME"/codex
 export COPILOT_HOME="$XDG_CONFIG_HOME"/copilot
 # export DEBUGINFOD_URLS="https://debuginfod.archlinux.org"
 export GNUPGHOME="$XDG_DATA_HOME/gnupg"

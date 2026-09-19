@@ -125,6 +125,7 @@ immutability=1
 plugin=org.kde.plasma.volume
 
 [Containments][62][Applets][67][Applets][73][Configuration][General]
+currentTab=streams
 migrated=true
 showVirtualDevices=true
 
@@ -403,5 +404,5 @@ AppletOrder=92;93;94;95;96;110;111
 global=
 
 [ScreenMapping]
-itemsOnDisabledScreens=1,42cfd941-f257-4e76-9e6e-809cce6a5b82,10,desktop:/cpponlineaudiorecording.wav,desktop:/0110000134013bcc,desktop:/adc.txt,desktop:/DarkSoulsIIold,desktop:/index.html,desktop:/mpv-shot0001.jpg,desktop:/ubdeps.txt,desktop:/NBGI,desktop:/com.blackmagicdesign.resolve.desktop,desktop:/DarkSoulsII,0,42cfd941-f257-4e76-9e6e-809cce6a5b82,4,,http://0.0.0.0,http://442d3150-bb06-4c87-bb53-37e4fdd1874c,desktop:/backup
-screenMapping=desktop:/adc.txt,1,42cfd941-f257-4e76-9e6e-809cce6a5b82,desktop:/cpponlineaudiorecording.wav,1,42cfd941-f257-4e76-9e6e-809cce6a5b82,desktop:/com.blackmagicdesign.resolve.desktop,1,42cfd941-f257-4e76-9e6e-809cce6a5b82,desktop:/DarkSoulsIIold,1,42cfd941-f257-4e76-9e6e-809cce6a5b82,desktop:/mpv-shot0001.jpg,1,42cfd941-f257-4e76-9e6e-809cce6a5b82,desktop:/index.html,1,42cfd941-f257-4e76-9e6e-809cce6a5b82,desktop:/backup,1,42cfd941-f257-4e76-9e6e-809cce6a5b82,desktop:/NBGI,1,42cfd941-f257-4e76-9e6e-809cce6a5b82,desktop:/0110000134013bcc,1,42cfd941-f257-4e76-9e6e-809cce6a5b82,desktop:/DarkSoulsII,1,42cfd941-f257-4e76-9e6e-809cce6a5b82,desktop:/ubdeps.txt,1,42cfd941-f257-4e76-9e6e-809cce6a5b82
+itemsOnDisabledScreens=0,42cfd941-f257-4e76-9e6e-809cce6a5b82,4,desktop:/backup,http://0.0.0.0,,http://442d3150-bb06-4c87-bb53-37e4fdd1874c,1,42cfd941-f257-4e76-9e6e-809cce6a5b82,11,desktop:/DarkSoulsII,desktop:/0110000134013bcc,desktop:/com.blackmagicdesign.resolve.desktop,desktop:/cpponlineaudiorecording.wav,desktop:/ubdeps.txt,desktop:/index.html,desktop:/NBGI,desktop:/DarkSoulsIIold,desktop:/smoke,desktop:/adc.txt,desktop:/mpv-shot0001.jpg
+screenMapping=

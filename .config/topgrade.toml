@@ -3,7 +3,7 @@
 #assume_yes = true
 
 # Disable specific steps - same options as the command line flag
-disable = ["vim", "containers", "dotnet", "jetbrains_clion", "lensfun", "emacs"]
+disable = ["vim", "containers", "dotnet", "jetbrains_clion", "lensfun", "emacs", "claude_code", "claude_code_plugins"]
 
 # Ignore failures for these steps
 # ignore_failures = ["shell"]
@@ -42,7 +42,7 @@ disable = ["vim", "containers", "dotnet", "jetbrains_clion", "lensfun", "emacs"]
 #arguments = "--rebase --autostash"
 
 # [composer]
-#self_update = true
+# self_update = false
 
 # Commands to run before anything
 # [pre_commands]
