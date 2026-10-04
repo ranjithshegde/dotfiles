@@ -147,11 +147,6 @@ alias CM="compiledb -n make"
 alias grep='grep --color=auto'
 alias rocks='sudo luarocks --lua-version 5.1'
 
-# Git
-alias config='/usr/bin/git --git-dir=$WORKSPACE/Repos/dotfiles --work-tree=$HOME'
-alias cgit='GIT_DIR="${HOME}/Repositories/Maintained/dotbare" GIT_WORK_TREE="${HOME}" git'
-alias cvim='GIT_DIR="${HOME}/Repositories/Maintained/dotbare" GIT_WORK_TREE="${HOME}" nvim'
-
 # Package Management
 alias pss="paru -Ps"
 alias pu="paru -Syu"

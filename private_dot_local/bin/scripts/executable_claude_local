@@ -1,3 +1,3 @@
 #!/bin/sh
 
-CLAUDE_CONFIG_DIR=$HOME/.config/claude claude
+CLAUDE_CONFIG_DIR="$HOME/.config/claude" CLAUDE_MEM_DATA_DIR="$HOME/.local/share/claude-mem" claude

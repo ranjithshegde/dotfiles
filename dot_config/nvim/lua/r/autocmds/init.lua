@@ -179,6 +179,13 @@ aucmd('TermEnter', {
                     vim.api.nvim_buf_delete(vim.fn.winbufnr(winid), { force = true })
                 end
             end, { buffer = true, desc = 'Close Yazi' })
+        elseif
+            args.file:match 'snacks_terminal'
+            or args.file:match 'sidekick_terminal'
+            or vim.bo.filetype == 'snacks_terminal'
+            or vim.bo.filetype == 'sidekick_terminal'
+        then
+            vim.keymap.set('t', '<S-Esc>', '<C-\\><C-n>', { buffer = true, desc = 'Escape Insert' })
         elseif vim.bo.filetype ~= 'fzf' then
             vim.keymap.set('t', '<Esc>', '<C-\\><C-n>', { buffer = true, desc = 'Escape Insert' })
         end

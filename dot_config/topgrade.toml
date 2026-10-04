@@ -3,7 +3,7 @@
 #assume_yes = true
 
 # Disable specific steps - same options as the command line flag
-disable = ["vim", "containers", "dotnet", "jetbrains_clion", "lensfun", "emacs", "claude_code", "claude_code_plugins"]
+disable = ["vim", "containers", "dotnet", "jetbrains_clion", "lensfun", "emacs", "self_update", "claude_code", "claude_code_plugins", "chezmoi"]
 
 # Ignore failures for these steps
 # ignore_failures = ["shell"]

@@ -1,23 +1,17 @@
 local utils = require 'r.utils'
 
-vim.pack.add({ 'https://github.com/coder/claudecode.nvim' }, {
+vim.pack.add({ 'https://github.com/folke/sidekick.nvim' }, {
     load = function(plug)
-        utils.lazy_plugin('claudecode', plug.spec.name, function()
-            require('claudecode').setup {
-                terminal_cmd = 'claude_local',
-            }
-        end)
+        utils.lazy_plugin('sidekick', plug.spec.name, true)
+        utils.lazy_command('Sidekick', 'sidekick')
 
-        utils.lazy_command('ClaudeCode', 'claudecode')
-    end,
-    confirm = false,
-})
+        vim.keymap.set('n', '<leader>ac', function()
+            require('sidekick.cli').toggle { name = 'claude', focus = true }
+        end, { desc = 'Sidekick: Claude' })
 
-vim.pack.add({ 'https://github.com/nwiizo/codex.nvim' }, {
-    load = function(plug)
-        utils.lazy_plugin('codex', plug.spec.name, true)
-        utils.lazy_command('Codex', 'codex')
-        utils.lazy_command('CodexResume', 'codex')
+        vim.keymap.set('n', '<leader>ag', function()
+            require('sidekick.cli').toggle { name = 'codex', focus = true }
+        end, { desc = 'Sidekick: Codex' })
     end,
     confirm = false,
 })

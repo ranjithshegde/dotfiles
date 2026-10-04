@@ -149,6 +149,12 @@ function handlers.attach(client, bufnr)
             { desc = 'LSP: accept inline completion', buffer = bufnr }
         )
         vim.keymap.set(
+            'n',
+            '<C-l>',
+            vim.lsp.inline_completion.get,
+            { desc = 'LSP: accept inline completion', buffer = bufnr }
+        )
+        vim.keymap.set(
             'i',
             '<C-G>',
             vim.lsp.inline_completion.select,
