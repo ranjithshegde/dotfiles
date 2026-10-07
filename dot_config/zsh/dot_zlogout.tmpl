@@ -1,5 +1,9 @@
+{{- if and (eq .chezmoi.os "linux") (eq .session "x11") }}
+
 if [[ ${DISPLAY} ]]; then
     if [[ ${DESKTOP_SESSION} == "dwm" ]]; then
         systemctl --user stop redshift.service
     fi
 fi
+
+{{- end }}

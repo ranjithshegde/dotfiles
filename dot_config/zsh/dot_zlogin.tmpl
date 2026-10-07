@@ -1,8 +1,4 @@
-# macOS-specific settings
-if [[ "$OSTYPE" == "darwin*" ]]; then
-    source "$ZDOTDIR"/boot_env/macos.zsh
-    exit 0
-fi
+{{- if and (eq .chezmoi.os "linux") (eq .session "x11") }}
 
 typeset -U PATH LIBRARY_PATH
 
@@ -31,19 +27,10 @@ fi
 : ${SSH_AUTH_SOCK:="$(gpgconf --list-dirs agent-ssh-socket)"}
 export SSH_AUTH_SOCK
 
-case "${XDG_SESSION_TYPE}" in
-    wayland)
-        source "$ZDOTDIR"/boot_env/proton.zsh
-        export TERMINAL=/usr/bin/ghostty
-        export TERM=ghostty
-        ;;
-    *)
-        export TERMINAL="/usr/local/bin/st"
-        export TERM=st
-        export SUDO_ASKPASS="/usr/local/bin/dpass"
-        ;;
-esac
+export TERMINAL="/usr/local/bin/st"
+export TERM=st
+export SUDO_ASKPASS="/usr/local/bin/dpass"
 
-if [[ "${XDG_CURRENT_DESKTOP}" != *"KDE"* ]]; then
-    [[ -x /usr/lib/pam_kwallet_init ]] && /usr/lib/pam_kwallet_init &
-fi
+[[ -x /usr/lib/pam_kwallet_init ]] && /usr/lib/pam_kwallet_init &
+
+{{- end }}
