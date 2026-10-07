@@ -1,8 +1,12 @@
 # theme = Rose Pine Moon
 theme = Catppuccin Mocha
 background-opacity = 0.85
+
+{{- if eq .chezmoi.os "linux" }}
 window-decoration = false
 gtk-titlebar = false
+{{- end }}
+
 font-size = 13
 font-synthetic-style = true
 confirm-close-surface = false
