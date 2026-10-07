@@ -1,3 +1,7 @@
+{{- if eq .chezmoi.os "darwin" }}
+eval "$(/opt/homebrew/bin/brew shellenv)"
+{{- end }}
+
 # ==============================================================================
 #                   Zinit Configuration
 # ==============================================================================
@@ -82,9 +86,15 @@ zinit load wfxr/forgit
 # ==============================================================================
 #                   External snippets
 # ==============================================================================
+# Linux-only snippets
+{{- if eq .chezmoi.os "linux" }}
 zinit wait:1 lucid for \
     OMZP::sudo \
     OMZP::systemd
+{{- else }}
+zinit wait:1 lucid for \
+    OMZP::sudo
+{{- end }}
 
 # ==============================================================================
 #                   Completion plugins
@@ -114,13 +124,9 @@ zinit wait"0" lucid for Aloxaf/fzf-tab
 zinit ice wait:0 lucid
 zinit snippet OMZP::fzf
 # FZF-tab specific styles
-zstyle ':fzf-tab:complete:cd:*' fzf-preview 'ls --color $realpath'
-zstyle ':fzf-tab:complete:__zoxide_z:*' fzf-preview 'ls --color $realpath'
+zstyle ':fzf-tab:complete:cd:*' fzf-preview 'eza --color=always $realpath'
+zstyle ':fzf-tab:complete:__zoxide_z:*' fzf-preview 'eza --color=always $realpath'
 zstyle ':fzf-tab:*' show-group brief
-
-{{ if eq .chezmoi.os "darwin" -}}
-eval "$(/opt/homebrew/bin/brew shellenv)"
-{{ end -}}
 
 # ==============================================================================
 #                   Aliases
@@ -140,7 +146,6 @@ alias lta5='eza --color=auto --group-directories-first --icons=always -Tga -L=5'
 alias lta6='eza --color=auto --group-directories-first --icons=always -Tga -L=6'
 alias cat=bat
 alias lf=yazi
-alias sxiv=nsxiv
 
 # Development
 alias python=python3
@@ -151,6 +156,7 @@ alias CM="compiledb -n make"
 alias grep='grep --color=auto'
 alias rocks='sudo luarocks --lua-version 5.1'
 
+{{- if eq .chezmoi.os "linux" }}
 # Package Management
 alias pss="paru -Ps"
 alias pu="paru -Syu"
@@ -158,6 +164,7 @@ alias pU="paru -Syyu"
 alias pql="pacman -Ql"
 alias pqs="pacman -Qs"
 alias pqi="pacman -Qii"
+{{- end }}
 
 # XDG Compliance
 alias wget='wget --hsts-file="${XDG_CACHE_HOME:-$HOME/.cache}/wget-hsts"'
@@ -167,6 +174,9 @@ alias yarn='yarn --use-yarnrc "${XDG_CONFIG_HOME:-$HOME/.config}/yarn/config"'
 #                   Load Functions
 # ==============================================================================
 
+{{- if eq .chezmoi.os "linux" }}
+alias sxiv=nsxiv
+
 if [[ "${MACHINE_TYPE}" = "laptop" ]]; then
     source "$ZDOTDIR/functions/power_profiles.sh"
 fi
@@ -174,6 +184,9 @@ fi
 if [[ "${XDG_SESSION_TYPE}" = "dwm" ]]; then
     source "$ZDOTDIR/functions/dmenus.sh"
 fi
+
+source /usr/share/doc/pkgfile/command-not-found.zsh
+{{- end }}
 
 source "$ZDOTDIR/functions/scripts.sh"
 source "$ZDOTDIR/functions/fuzzy.sh"
