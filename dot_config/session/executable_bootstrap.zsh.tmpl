@@ -1,3 +1,4 @@
+{{- if eq .chezmoi.os "linux" -}}
 typeset -U PATH LIBRARY_PATH
 
 append_lib() {
@@ -26,3 +27,4 @@ fi
 systemctl --user set-environment \
     LIBRARY_PATH="$LIBRARY_PATH" \
     SSH_AUTH_SOCK="$SSH_AUTH_SOCK" \
+{{ end -}}

@@ -1,3 +1,4 @@
+{{- if eq .chezmoi.os "linux" -}}
 #!/bin/sh
 
 ultra() {
@@ -54,3 +55,4 @@ beast() {
     asusctl bios -O true
     echo "boost on, cpu & pci-e ports on performance mode"
 }
+{{ end -}}

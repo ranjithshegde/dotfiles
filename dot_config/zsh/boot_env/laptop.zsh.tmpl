@@ -1,3 +1,4 @@
+{{- if eq .chezmoi.os "linux" -}}
 #!/bin/zsh
 
 # Unset Forward key
@@ -15,3 +16,4 @@ export __EGL_VENDOR_LIBRARY_FILENAMES=/usr/share/glvnd/egl_vendor.d/50_mesa.json
 # export PROTON_ENABLE_NVAPI=1
 # export PROTON_HIDE_NVIDIA_GPU=0
 # export PRIMUS_SYNC=2
+{{ end -}}

@@ -1,3 +1,4 @@
+{{- if eq .chezmoi.os "linux" -}}
 [Unit]
 Description=Session Bootstrap (zlogin replacement)
 Before=graphical-session.target
@@ -10,3 +11,4 @@ RemainAfterExit=true
 
 [Install]
 WantedBy=graphical-session.target
+{{ end -}}

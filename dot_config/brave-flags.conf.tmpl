@@ -1,3 +1,4 @@
+{{- if eq .chezmoi.os "linux" -}}
 # --enable-features=VaapiVideoEncoder,Vulkan,VulkanFromANGLE,DefaultANGLEVulkan,VaapiIgnoreDriverChecks,HdrAgtm,AcceleratedVideoDecodeLinuxZeroCopyGL,AcceleratedVideoDecodeLinuxGL,TreesInViz
 --enable-features=Vulkan,VulkanFromANGLE,DefaultANGLEVulkan,AcceleratedVideoEncoder,AcceleratedVideoDecodeLinuxZeroCopyGL,AcceleratedVideoDecodeLinuxGL,TreesInViz
 --password-store=kwallet6
@@ -14,3 +15,4 @@
 # --enable-features=VaapiVideoDecoder,VaapiVideoEncoder,UseOzonePlatform,UseLibscret,CanvasOopRasterization,Vulkan,VulkanFromANGLE,DefaultANGLEVulkan,VaapiIgnoreDriverChecks,UseMultiPlaneFormatForHardwareVideo,HdrAgtm,WaylandLinuxDrmSyncobj
 # --ozone-platform=wayland
 # --ozone-platform-hint=wayland
+{{ end -}}

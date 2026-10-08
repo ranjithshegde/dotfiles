@@ -1,3 +1,4 @@
+{{- if eq .chezmoi.os "linux" -}}
 # Core video/HDR settings
 vo=gpu-next
 gpu-api=vulkan
@@ -52,3 +53,4 @@ demuxer-max-back-bytes=200M
 
 keep-open=yes
 save-position-on-quit=yes
+{{ end -}}
