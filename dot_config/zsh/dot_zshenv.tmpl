@@ -13,16 +13,26 @@ export VISUAL="editor"
 export GST_VAAPI_ALL_DRIVERS=1
 export SCLANG_LSP_ENABLE=1
 
-# Not in a Wayland session, apply your flags here
-if [[ -z "$WAYLAND_DISPLAY" ]]; then
-    export AWT_TOOLKIT="MToolkit"
-fi
-
 # CONFIG & PATHS - group related variables
 
 # Zinit configuration
 export ZINIT_HOME="${HOME}/.local/share/zinit"
 export ZINIT_BIN="${ZINIT_HOME}/zinit.git"
+
+{{- if eq .chezmoi.os "darwin" }}
+eval "$(/opt/homebrew/bin/brew shellenv)"
+
+if [[ "$TERM_PROGRAM" == "ghostty" ]]; then
+    export TERM=xterm-256color
+    export TERMINAL=/opt/homebrew/bin/ghostty
+fi
+
+{{- else }}
+# Linux: outside a Wayland session
+if [[ -z "$WAYLAND_DISPLAY" ]]; then
+    export AWT_TOOLKIT="MToolkit"
+fi
+{{- end }}
 
 # CONFIG & PATHS
 # Development tools
@@ -132,6 +142,9 @@ path=(
     "/opt/unreal-engine/Engine/Binaries/Linux"
     "/opt/unreal-engine/Engine/Build/BatchFiles/"
     "/opt/unreal-engine/Engine/Build/BatchFiles/Linux"
+    {{- if eq .chezmoi.os "darwin" }}
+    "$(brew --prefix rustup)/bin"
+    {{- end }}
     $path
 )
 export PATH

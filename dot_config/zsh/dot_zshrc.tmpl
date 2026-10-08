@@ -1,13 +1,3 @@
-{{- if eq .chezmoi.os "darwin" }}
-eval "$(/opt/homebrew/bin/brew shellenv)"
-
-if [[ "$TERM_PROGRAM" == "ghostty" ]]; then
-  export TERM=xterm-256color
-  export TERMINAL=/opt/homebrew/bin/ghostty
-fi
-
-{{- end }}
-
 # ==============================================================================
 #                   Zinit Configuration
 # ==============================================================================
@@ -213,6 +203,10 @@ precmd() {
 # ==============================================================================
 #                   GPG Agent Configuration for TTY
 # ==============================================================================
+
+{{- if eq .chezmoi.os "darwin" }}
+export SSH_AUTH_SOCK="$(gpgconf --list-dirs agent-ssh-socket)"
+{{- end }}
 
 if [[ -o interactive ]]; then
     local_tty=$(tty 2>/dev/null)
