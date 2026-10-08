@@ -4,6 +4,7 @@ refile() {
     nvim -c "autocmd BufEnter * only" -c "lua require('orgmode').capture:open_template_by_shortcut('t')"
 }
 
+{{ if eq .chezmoi.os "linux" -}}
 nvp() {
     cat /sys/bus/pci/devices/0000:01:00.0/power_state
 }
@@ -43,6 +44,7 @@ nopac() {
     SEARCH_DIRS="/etc:/usr:/opt"
     fd ${SEARCH_DIRS//:/ } | LC_ALL=C.UTF-8 pacman -Qqo - 2>&1 >&- >/dev/null | cut -d ' ' -f 5- >excess.txt
 }
+{{ end }}
 
 # OSC 133 (Prompt Marking)
 function osc133_prompt() {

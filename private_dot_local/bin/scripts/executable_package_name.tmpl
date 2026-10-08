@@ -1,3 +1,4 @@
+{{- if eq .chezmoi.os "linux" -}}
 #!/bin/sh
 
 # Prompt for the group name if not provided as argument
@@ -28,3 +29,4 @@ cat "$output_file"
 
 # Optionally, open the result file in Neovim
 # vim "$output_file"
+{{ end -}}

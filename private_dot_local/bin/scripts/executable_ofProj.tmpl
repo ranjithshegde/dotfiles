@@ -1,3 +1,4 @@
+{{- if eq .chezmoi.os "linux" -}}
 #!/bin/sh
 
 DR=$(echo -e '' | dmenu -c -p "Enter directory: ")
@@ -30,3 +31,4 @@ clang-format -style=webkit -dump-config >.clang-format
 } >>.gitignore
 
 st -e nvim src/ofApp.h
+{{ end -}}
